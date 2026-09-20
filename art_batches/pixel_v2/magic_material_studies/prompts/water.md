@@ -1,0 +1,8 @@
+Use case: stylized-concept. NEWFLUXpixelartMATERIALanimationloop. Referenceimage1 isONLYsharedpixelchunk/outline/volumeclarityreference ofFire. DO NOTcopyitsfirepalette, flamelicks, shapeorembers.
+ExactlyFOURcolumnsandTWOrows, EIGHTequalsquarespritecells on2:1landscapecanvas, chronologicalrowmajororder. No textlabels/borders/gridlines. Solidflatpuremagenta#FF00FFmatte outsidesprites; NOcheckerboard, NOgroundshadow,noprops,nocharacters,noUI,nospellrunes.
+Originalcharmingdetailedbutreadablepixelart: believablephysicalmaterialmotion, restrainedpixelclusters,strongsilhouette, crispsteppededgewithoutblur orlargeglow. Fixed55degreeelevatedadventurecamera. Eachsprite fitscentral60%widthand65%heightofitscell; SAMEscaleandgroundrootat(50%,81.25%)ALLframes. Rootdoesnotwanderandframe8connectsbackto1. Style suitablefor32pxmaterialcells atactualgameplay, enlargedforsourceinspection. No photorealism/3Drender/vector, noelementfaces.
+ELEMENT WATER.
+Palette:#0C3D57 deepblue, #368CF0 saturatedblue, #7DE2EF teal-whitehighlights.
+Subject:one compact LOW three-dimensional connected water patch, a short rounded curling crest above a little coherent liquid mass, clean turquoise rim and deepblueundersides; notan ocean waveicon orbigwave andnotafountain.
+Animation:Frame1 connected low bulge;2 bulge travels right;3 crest curls forward;4 crest edgebreaksintotwoSMALLdropletswhilebodyremainsconnected;5dropletsfallintopatch;6returnflowtravelstoleft;7bodyreformsshortcrest;8closetoframe1. Naturalvolumeconservationandliquidinertia; continuousNOTeightdisconnectedwaterblobs..
+Makeexact8distinctbuttemporallycoherentframes, singlematerialonly.

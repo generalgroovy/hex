@@ -1,0 +1,15 @@
+# Clarity character sources
+
+Built-in image generation, targeted raster edits. Original outputs preserved in the generated-images archive; these copies are the reproducible project inputs. Red Baron remains unchanged in ../wellspring_v3/red_baron-source.png. Compiler: scripts/build_illustrated_visuals.gd, template order small -> middle -> large.
+
+## S. Wayne
+
+Dark-skinned hobbit in every pose/direction, matching the user's explicit direction.
+
+Use case: precise-object-edit. Edit the supplied original S. Wayne sprite sheet in place with minimal changes. KEEP EXACT SAME IMAGE DIMENSIONS AND EXACT SAME 8 BY 8 GRID AND ALL 64 SPRITES IN EXACT ORIGINAL PIXEL POSITIONS. Do not recompose or re-space this image. It is essential there are EIGHT columns, not seven. Eight headings conceptually south, southeast, east, northeast, north, northwest, west, southwest, no labels drawn. Change ONLY two attributes on every existing sprite: 1) all exposed skin on face, ears, hands, knees and bare feet becomes rich dark brown, clearly a dark-skinned hobbit with curly very dark hair; 2) slightly shrink each head/hair by about 15 percent while retaining its neck attachment, to give smaller head/larger body proportions like a compact adult cartoon adventure hero, head including hair roughly 22 percent of standing body height. Everything else unchanged: original poses, all directions, purple/indigo coat gold trim cream shirt brown pants, empty hands, body proportions below neck, sprite cell positions, alpha background. Preserve ACTUAL transparent background, absolutely no baked checker pattern, no shadows/effects/weapons/props. Output the complete unchanged-format 8 columns x 8 rows animation sheet.
+
+## Oh Tipi
+
+Use case: precise-object-edit. Edit Image 1 Oh Tipi sheet in place, minimal changes. Image 2 Red Baron is ONLY head/body proportions reference, not character clothing or identity. Preserve EXACT 8 COLUMNS BY 8 ROWS, all 64 original sprites at original pixel positions with original poses and all eight directions. Do not recompose or re-space. Change only head/face/fin size of Oh Tipi: reduce each head including fins about 20 percent while keeping neck attachment, to share Red Baron's compact relatively small-head large-body ratio about 22 percent upright height. Oh Tipi remains a charming blue anthropomorphic seakin with blue finned head,cream chest,indigo vest,gold trim,blue tail and empty hands. Original body below neck and all animations unchanged. Retain elevated top-down 55 degree camera and symmetrical front, cardinal/diagonal facings exactly as original sheet. Keep actual transparent background, no checkerboard, no text/grid/shadows/auras/magic/props/weapons. Exactly EIGHT columns and EIGHT rows, no missing cells. Output only edited Oh Tipi sheet, not Red Baron.
+
+Review: retained eight columns and eight source poses; no held equipment or embedded effects. The earlier seven-column S. Wayne draft was rejected and is not consumed by the project. Target head/body ratio 20-23%; actual pixel acceptance uses contact sheet inspection, not metadata as a substitute for art.

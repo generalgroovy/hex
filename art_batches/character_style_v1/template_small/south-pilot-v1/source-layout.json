@@ -1,0 +1,28 @@
+{
+  "schema_version": 2,
+  "asset_kind": "neutral_body_template",
+  "champion_id": "template_small",
+  "body": "small",
+  "standing_height": 58,
+  "visual_review": {
+    "status": "partial_review_pending",
+    "limits": "One actual South-grounded calibration cell only. Not a complete template or human approval. NE pair remains unassembled because source-wide anatomical calibration is uncertain."
+  },
+  "pages": [
+    {
+      "id": "south_base",
+      "path": "res://art_batches/character_style_v1/template_v2/small-south-base-v1.png",
+      "sha256": "b67f0ae46673f51350f56cb7d23764109a01a0bfbd45b4bbc36a43fa5e4852e3",
+      "reference_cell_width": 1254,
+      "background_removal": {
+        "method": "edge_connected_neutral_checker",
+        "minimum_channel": 170,
+        "maximum_spread": 18,
+        "authorization": "User-approved technical assembly and reviewed source-hash-locked matte removal; preserve immutable source and exact output mask. Neutral checker inspected against skin, teal clothing and brown boots. Enclosed highlights are not erased."
+      },
+      "cells": [
+        {"state": "grounded", "direction": "south", "rect": [408, 118, 438, 1031]}
+      ]
+    }
+  ]
+}

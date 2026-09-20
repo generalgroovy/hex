@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "id": "burst-projectile-runtime-v3",
+  "status": "runtime-approved",
+  "runtime_approved": true,
+  "release_approved": false,
+  "authority": "presentation-only",
+  "provenance": {
+    "source_method": "built-in-image-generation-style-board",
+    "source_path": "res://reference/art/projectiles/burst_v3/burst_element_style_board_v3.png",
+    "source_sha256": "9f1792ef4ad65181b63113c0c39059c918e583ae34a968ba2bd7b505211499c7",
+    "generator_path": "res://tools/assets/prepare_burst_runtime_v3.py",
+    "generator_sha256": "5e5e654762332719a290f226385a00302b0121ddef5e0913c6dd3230c711a1ee",
+    "third_party_pixel_inputs": false,
+    "distribution_license": "pending-project-license",
+    "review": "C2 runtime readability candidate; replaceable until integrated zoom/accessibility acceptance"
+  },
+  "contract": {
+    "cell_size": [
+      32,
+      32
+    ],
+    "columns": 16,
+    "rows": 8,
+    "pivot": [
+      16,
+      16
+    ],
+    "direction_order": [
+      "north",
+      "north_east",
+      "east",
+      "south_east",
+      "south",
+      "south_west",
+      "west",
+      "north_west"
+    ],
+    "phase_columns": {
+      "spawn": [
+        0,
+        1
+      ],
+      "travel": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "impact": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "residue": [
+        12,
+        13,
+        14
+      ],
+      "reserved_blank": [
+        15
+      ]
+    },
+    "texture_filter": "nearest",
+    "mipmaps": false,
+    "simulation_aim": "continuous-normalized-vector",
+    "visual_orientation": "nearest-eight-direction",
+    "collision_core": "simulation-owned"
+  },
+  "budgets": {
+    "asset_count": 9,
+    "png_disk_bytes": 454480,
+    "maximum_png_disk_bytes": 1000000,
+    "decoded_rgba_bytes": 4718592,
+    "maximum_decoded_rgba_bytes": 5000000
+  },
+  "assets": [
+    {
+      "element": "neutral",
+      "path": "res://assets/effects/projectiles/burst_v3/burst_neutral_runtime_32.png",
+      "sha256": "8f2899bbc09146206d2ea1962025dcd042c3e54f358c1b86e5464ce6a8452d3c",
+      "png_disk_bytes": 50908
+    },
+    {
+      "element": "fire",
+      "path": "res://assets/effects/projectiles/burst_v3/burst_fire_runtime_32.png",
+      "sha256": "a173b6a4208f0cc4552fd464208fbe9310ff45b492102bdfcc257e677d4b1226",
+      "png_disk_bytes": 43283
+    },
+    {
+      "element": "water",
+      "path": "res://assets/effects/projectiles/burst_v3/burst_water_runtime_32.png",
+      "sha256": "bc1f9dc07362b1a5b73c1ee7d327901f927ff57513cef7efd55b92bfd646a419",
+      "png_disk_bytes": 48707
+    },
+    {
+      "element": "wind",
+      "path": "res://assets/effects/projectiles/burst_v3/burst_wind_runtime_32.png",
+      "sha256": "d32d3b6e41e3761ccb0c9b7fe633ba95beed8e2504661cedb6deefd6a98621dc",
+      "png_disk_bytes": 72420
+    },
+    {
+      "element": "earth",
+      "path": "res://assets/effects/projectiles/burst_v3/burst_earth_runtime_32.png",
+      "sha256": "b39dbbb91c280d265458f96b069c23dc8b51a4ae7d31d09bdce7d2e938b64f54",
+      "png_disk_bytes": 38323
+    },
+    {
+      "element": "charge",
+      "path": "res://assets/effects/projectiles/burst_v3/burst_charge_runtime_32.png",
+      "sha256": "7643df4d37f1b11d60ec7743faf029326a84e776f9077c786452aa56e15bc1f2",
+      "png_disk_bytes": 44303
+    },
+    {
+      "element": "ice",
+      "path": "res://assets/effects/projectiles/burst_v3/burst_ice_runtime_32.png",
+      "sha256": "c4aead0293485884c71d2af3ab2bdec5079899606bb6e3fce813fd28f9fbf81b",
+      "png_disk_bytes": 59903
+    },
+    {
+      "element": "light",
+      "path": "res://assets/effects/projectiles/burst_v3/burst_light_runtime_32.png",
+      "sha256": "1a7a8675bb5c8b9c73f536c363023e8a6726c001d26d70e9fa1b097c4f488331",
+      "png_disk_bytes": 52148
+    },
+    {
+      "element": "dark",
+      "path": "res://assets/effects/projectiles/burst_v3/burst_dark_runtime_32.png",
+      "sha256": "23f0ebf2e55c84cdd9fd1bf728fb8adb99e4e3f83e664f6826fbd020a51d5b7f",
+      "png_disk_bytes": 44485
+    }
+  ]
+}

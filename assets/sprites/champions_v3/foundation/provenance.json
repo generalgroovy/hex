@@ -1,0 +1,73 @@
+{
+  "schema_version": 7,
+  "asset_id": "flux-foundation-cartoon-champions-complete-eight-way-action-v8",
+  "status": "integrated_candidate_pending_human_acceptance",
+  "source": "Built-in ImageGen, directed for this FLUX repository on 2026-08-26 through 2026-08-28",
+  "originality": "Original Oh Tipi and S. Wayne production exploration based only on repository-owned character identity art; no third-party pixels, characters, symbols, maps, or interface assets may be copied into the result.",
+  "reference_boundary": "Repository-owned source sheets supplied identity, clothing, proportions, palette, and pixel treatment. Zelda and Gungeon references remain mood-level only and supplied no pixels or protected visual identity.",
+  "sources": [
+    {"champion": "oh_tipi", "role": "cardinal_core", "file": "source_cardinal_oh_tipi_v4.png", "sha256": "fd1bbb9503f7a4f25098665c4f5dac8717b6656a849e8c9f12ef4aabc99ea1c0", "dimensions": [1254, 1254]},
+    {"champion": "s_wayne", "role": "cardinal_core", "file": "source_cardinal_s_wayne_v4.png", "sha256": "71c61ec36a63e0054632786cc38d5fc9261166f69e14c6a258a51dc83aa6418e", "dimensions": [1254, 1254]},
+    {"champion": "oh_tipi", "role": "cardinal_movement_and_evasion", "file": "source_movement_oh_tipi_v5.png", "sha256": "557e5938e1ba9a75769315c39cf7b6c3a6740a2614e7adf59aca03d4df52143c", "dimensions": [1254, 1254]},
+    {"champion": "s_wayne", "role": "cardinal_movement_and_evasion", "file": "source_movement_s_wayne_v5.png", "sha256": "a96dc394eac9f20d20a45a99687616501a29cfa08b180c4ad867fde3c5bacf79", "dimensions": [1254, 1254]},
+    {"champion": "oh_tipi", "role": "diagonal_core", "file": "source_diagonal_core_oh_tipi_v6.png", "sha256": "2ad73a345e5178fcb73a56c83fa64ff0cfd02f7d4dca63f26e80bd1cc0a79186", "dimensions": [1254, 1254]},
+    {"champion": "s_wayne", "role": "diagonal_core", "file": "source_diagonal_core_s_wayne_v6.png", "sha256": "72b29e95a77380d115c8518d103d445271f62d5f26352363985d4415354320ea", "dimensions": [1254, 1254]},
+    {"champion": "oh_tipi", "role": "diagonal_locomotion", "file": "source_diagonal_locomotion_oh_tipi_v7.png", "sha256": "49ce1b109a809a1cbeb0e87da53d1e9cc3a8ddf9f090ab87f2064d96909bb667", "dimensions": [1774, 887]},
+    {"champion": "s_wayne", "role": "diagonal_locomotion", "file": "source_diagonal_locomotion_s_wayne_v7.png", "sha256": "80d782e4466df28c1001267bc9558182d47ab4575465ab793970b973c82fe9d5", "dimensions": [1254, 1254]},
+    {"champion": "oh_tipi", "role": "cardinal_locomotion_phase_b", "file": "source_cardinal_locomotion_phase_b_oh_tipi_v8.png", "sha256": "7f39fe36c9231d188c37120d574f2404fe86c4ff4fc90f65decb2f3938b9ee6e", "dimensions": [1254, 1254]},
+    {"champion": "s_wayne", "role": "cardinal_locomotion_phase_b", "file": "source_cardinal_locomotion_phase_b_s_wayne_v8.png", "sha256": "2fe9da0bd53422260588c9907727896b1612a4ff3446eca95d583c7760679690", "dimensions": [1254, 1254]},
+    {"champion": "oh_tipi", "role": "diagonal_actions_and_phase_b", "file": "source_diagonal_actions_oh_tipi_v8.png", "sha256": "21dbea5f27bc6dca18081c04d4be10a166fc8abcf1231c958b33dacd8363e7ce", "dimensions": [1254, 1254]},
+    {"champion": "s_wayne", "role": "diagonal_actions_and_phase_b", "file": "source_diagonal_actions_s_wayne_v8.png", "sha256": "e470aef0ee9bef6da3f8df5d5fd2bef8398ca7c4acceccde460645996c617ad8", "dimensions": [1254, 1254]}
+  ],
+  "source_grids": {
+    "cardinal_core": {"columns": ["south", "east", "north", "west"], "rows": ["grounded", "jump", "cast", "hit"]},
+    "cardinal_movement_and_evasion": {"columns": ["south", "east", "north", "west"], "rows": ["walk", "sprint", "slide", "roll"]},
+    "diagonal_core": {"columns": ["south_east", "north_east", "north_west", "south_west"], "rows": ["grounded", "cast", "hit"]},
+    "diagonal_locomotion": {"columns": ["south_east", "north_east", "north_west", "south_west"], "rows": ["walk", "sprint"], "normalization": "source_cell_width_to_1254px_four_column_basis"},
+    "cardinal_locomotion_phase_b": {"columns": ["south", "east", "north", "west"], "rows": ["walk_b", "sprint_b"]},
+    "diagonal_actions_and_phase_b": {"columns": ["south_east", "north_east", "north_west", "south_west"], "rows": ["walk_b", "sprint_b", "jump", "slide", "roll"]}
+  },
+  "runtime_file": "runtime_atlas_eight_v8.png",
+  "runtime_sha256": "0c105cbce46d5dd13f9d19b9252ac2717a4f873c32ead65ac7724ec9e8f96401",
+  "runtime_imported_rgba_sha256": "758e2f76e766ae852d25348421dc315587892cb30a46bed89f9e8da7622dcdea",
+  "runtime_dimensions": [768, 1920],
+  "runtime_cell": [96, 96],
+  "runtime_pivot": [48, 84],
+  "runtime_champions": ["oh_tipi", "s_wayne"],
+  "runtime_states": ["grounded", "jump", "cast", "hit", "walk", "sprint", "slide", "roll", "walk_b", "sprint_b"],
+  "runtime_directions": ["south", "south_east", "east", "north_east", "north", "north_west", "west", "south_west"],
+  "runtime_row_layout": "champion_major_state_minor",
+  "diagonal_core_contract": {
+    "promoted_states": ["grounded", "jump", "cast", "hit", "walk", "sprint", "slide", "roll"],
+    "fallback_states": [],
+    "fallback_policy": "none_all_states_promoted"
+  },
+  "diagonal_locomotion_contract": {
+    "promoted_states": ["walk", "sprint"],
+    "directions": ["south_east", "north_east", "north_west", "south_west"],
+    "gaits": ["idle", "forward", "backward", "strafe_left", "strafe_right"],
+    "facing_policy": "travel_when_free_aim_when_combat_intent",
+    "authority": "presentation_only"
+  },
+  "diagonal_evasion_contract": {
+    "states": ["jump", "slide", "roll"],
+    "directions": ["south_east", "north_east", "north_west", "south_west"],
+    "coverage": "every_foundation_champion_has_every_diagonal_evasion_cell",
+    "art_status": "reviewed_source_integrated",
+    "authority": "presentation_only"
+  },
+  "locomotion_phase_contract": {
+    "states": ["walk", "sprint"],
+    "contacts": ["a", "b"],
+    "coverage": "two_contacts_per_champion_per_eight_directions",
+    "timing": "motion_profile_half_cycle",
+    "authority": "presentation_only"
+  },
+  "build_command": "python scripts/build_cardinal_champion_atlas.py assets/sprites/champions_v3/foundation/source_cardinal_oh_tipi_v4.png assets/sprites/champions_v3/foundation/source_cardinal_s_wayne_v4.png assets/sprites/champions_v3/foundation/runtime_atlas_eight_v8.png --oh-tipi-movement assets/sprites/champions_v3/foundation/source_movement_oh_tipi_v5.png --s-wayne-movement assets/sprites/champions_v3/foundation/source_movement_s_wayne_v5.png --oh-tipi-diagonal-core assets/sprites/champions_v3/foundation/source_diagonal_core_oh_tipi_v6.png --s-wayne-diagonal-core assets/sprites/champions_v3/foundation/source_diagonal_core_s_wayne_v6.png --oh-tipi-diagonal-locomotion assets/sprites/champions_v3/foundation/source_diagonal_locomotion_oh_tipi_v7.png --s-wayne-diagonal-locomotion assets/sprites/champions_v3/foundation/source_diagonal_locomotion_s_wayne_v7.png --oh-tipi-locomotion-phase-b assets/sprites/champions_v3/foundation/source_cardinal_locomotion_phase_b_oh_tipi_v8.png --s-wayne-locomotion-phase-b assets/sprites/champions_v3/foundation/source_cardinal_locomotion_phase_b_s_wayne_v8.png --oh-tipi-diagonal-actions assets/sprites/champions_v3/foundation/source_diagonal_actions_oh_tipi_v8.png --s-wayne-diagonal-actions assets/sprites/champions_v3/foundation/source_diagonal_actions_s_wayne_v8.png",
+  "atlas_role": "body_and_clothing_only",
+  "excluded_layers": ["spell", "element", "projectile", "aura", "shadow", "environment", "equipment", "focus"],
+  "direction_policy": "south_front; south_east_front_right; east_profile; north_east_back_right; north_centered_back; north_west_back_left; west_profile; south_west_front_left",
+  "generation_prompt_file": "README.md",
+  "import": "RGBA PNG, nearest-neighbor runtime sampling, no mipmaps, separate authoritative shadow and hitbox",
+  "license_note": "Repository-owned generated candidate; retain this provenance and perform human visual/originality review before release promotion."
+}

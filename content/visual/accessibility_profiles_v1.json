@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "id": "flux-accessibility-profiles-v1",
+  "authority": "presentation only; profiles never change simulation, collision, visibility, timing, damage or network authority",
+  "screen_filter": {
+    "shader_path": "res://assets/shaders/visual_accessibility.gdshader",
+    "provenance": "original repository-authored FLUX shader; no external pixels or protected palette data",
+    "license": "project license",
+    "dimensions": "current viewport",
+    "pivot": "none; full-screen CanvasLayer",
+    "sampling": "one nearest-neighbor screen read per output pixel",
+    "maximum_passes": 1
+  },
+  "profiles": [
+    {"id": "standard", "label": "STANDARD", "kind": "player", "shader_mode": 0},
+    {"id": "high_contrast", "label": "HIGH CONTRAST", "kind": "player", "shader_mode": 1},
+    {"id": "grayscale", "label": "GRAYSCALE REVIEW", "kind": "review", "shader_mode": 2},
+    {"id": "protanopia", "label": "PROTANOPIA REVIEW", "kind": "review", "shader_mode": 3},
+    {"id": "deuteranopia", "label": "DEUTERANOPIA REVIEW", "kind": "review", "shader_mode": 4},
+    {"id": "tritanopia", "label": "TRITANOPIA REVIEW", "kind": "review", "shader_mode": 5}
+  ],
+  "player_cycle": ["standard", "high_contrast"],
+  "review_only": ["grayscale", "protanopia", "deuteranopia", "tritanopia"],
+  "reduced_effects": {
+    "label": "REDUCED EFFECTS",
+    "preserve_shape_timing_impact": true,
+    "maximum_particle_percent": 35
+  }
+}

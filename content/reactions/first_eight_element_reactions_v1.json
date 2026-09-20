@@ -1,0 +1,94 @@
+{
+  "schema_version": 2,
+  "id": "first-eight-element-reactions-v1",
+  "status": "bounded_level_one",
+  "runtime_enabled": true,
+  "fundamental_elements": ["earth", "fire", "water", "wind", "ice", "charge", "light", "dark"],
+  "deferred_elements": ["spirit", "chaos", "gravity", "time"],
+  "policy": {
+    "pair_order_is_symmetric": true,
+    "worldbone_immutable": true,
+    "strong_effects_require_thresholds": true,
+    "required_lifecycle": ["formation", "active", "residue_or_decay"],
+    "required_runtime_bounds": ["area", "propagation_depth", "lifetime", "work", "ownership"],
+    "priority": "map_interaction_before_damage_multiplier",
+    "worldbone_policy": "reject",
+    "mutation_gate": "bounded_level_one"
+  },
+  "channels": ["structure", "heat", "saturation", "pressure_momentum", "charge", "radiance_vitality", "decay"],
+  "element_channel_vectors": {
+    "earth": {"structure": 700, "heat": 0, "saturation": 0, "pressure_momentum": 0, "charge": 0, "radiance_vitality": 0, "decay": 0},
+    "fire": {"structure": 0, "heat": 700, "saturation": 0, "pressure_momentum": 100, "charge": 0, "radiance_vitality": 0, "decay": 0},
+    "water": {"structure": 0, "heat": 0, "saturation": 700, "pressure_momentum": 100, "charge": 0, "radiance_vitality": 0, "decay": 0},
+    "wind": {"structure": 0, "heat": 0, "saturation": 0, "pressure_momentum": 700, "charge": 0, "radiance_vitality": 0, "decay": 0},
+    "ice": {"structure": 150, "heat": -700, "saturation": 150, "pressure_momentum": 0, "charge": 0, "radiance_vitality": 0, "decay": 0},
+    "charge": {"structure": 0, "heat": 0, "saturation": 0, "pressure_momentum": 0, "charge": 700, "radiance_vitality": 0, "decay": 0},
+    "light": {"structure": 0, "heat": 0, "saturation": 0, "pressure_momentum": 0, "charge": 0, "radiance_vitality": 700, "decay": 0},
+    "dark": {"structure": 0, "heat": 0, "saturation": 0, "pressure_momentum": 0, "charge": 0, "radiance_vitality": -200, "decay": 700}
+  },
+  "runtime_bounds": {
+    "maximum_active_reactions": 128,
+    "maximum_active_cells": 512,
+    "maximum_area_cells_per_reaction": 32,
+    "maximum_propagation_depth": 8,
+    "maximum_work_units_per_tick": 256,
+    "maximum_events_per_tick": 64,
+    "maximum_owners_per_reaction": 8,
+    "maximum_phase_ms": 12000
+  },
+  "runtime_profiles": {
+    "surface_route": {"primitive": "surface", "formation_threshold": 1000, "formation_ms": 240, "active_ms": 5000, "residue_ms": 2000, "maximum_area_cells": 24, "maximum_propagation_depth": 1, "work_units_per_tick": 24},
+    "moving_flow": {"primitive": "flow", "formation_threshold": 1200, "formation_ms": 320, "active_ms": 4000, "residue_ms": 2500, "maximum_area_cells": 32, "maximum_propagation_depth": 8, "work_units_per_tick": 32},
+    "temporary_cover": {"primitive": "cover", "formation_threshold": 1400, "formation_ms": 420, "active_ms": 5000, "residue_ms": 2000, "maximum_area_cells": 12, "maximum_propagation_depth": 2, "work_units_per_tick": 16},
+    "bounded_field": {"primitive": "field", "formation_threshold": 1000, "formation_ms": 260, "active_ms": 3500, "residue_ms": 1200, "maximum_area_cells": 24, "maximum_propagation_depth": 4, "work_units_per_tick": 24},
+    "conductor_path": {"primitive": "conduction", "formation_threshold": 1200, "formation_ms": 300, "active_ms": 2500, "residue_ms": 800, "maximum_area_cells": 32, "maximum_propagation_depth": 8, "work_units_per_tick": 32},
+    "visibility_volume": {"primitive": "visibility", "formation_threshold": 900, "formation_ms": 220, "active_ms": 3500, "residue_ms": 1000, "maximum_area_cells": 28, "maximum_propagation_depth": 4, "work_units_per_tick": 24},
+    "damage_hazard": {"primitive": "hazard", "formation_threshold": 1400, "formation_ms": 360, "active_ms": 2600, "residue_ms": 1500, "maximum_area_cells": 20, "maximum_propagation_depth": 4, "work_units_per_tick": 24},
+    "optical_path": {"primitive": "refraction", "formation_threshold": 1000, "formation_ms": 260, "active_ms": 4000, "residue_ms": 800, "maximum_area_cells": 16, "maximum_propagation_depth": 3, "work_units_per_tick": 16},
+    "fracture_pulse": {"primitive": "fracture", "formation_threshold": 1500, "formation_ms": 460, "active_ms": 500, "residue_ms": 2500, "maximum_area_cells": 12, "maximum_propagation_depth": 2, "work_units_per_tick": 20}
+  },
+  "reactions": [
+    {"id":"fortify","wire_id":301,"runtime_profile":"temporary_cover","name":"Rampart","input_elements":["earth","earth"],"map_effects":["temporary_ridge","wallrun_surface","breakable_cover"],"actor_effects":["movement_block","walljump_contact","projectile_block"],"residue":"rubble","counters":["damage","go_around","expiry"],"telegraph":"compaction_and_crack_stages"},
+    {"id":"magma","wire_id":302,"runtime_profile":"moving_flow","name":"Magma","input_elements":["earth","fire"],"map_effects":["molten_flow","wood_growth_ignition","stone_softening","basalt_creation"],"actor_effects":["damage_over_time","ground_denial"],"residue":"basalt_then_rubble","counters":["water","ice","elevation_escape"],"telegraph":"heat_buildup_molten_edge_cooling_crust"},
+    {"id":"mud","wire_id":303,"runtime_profile":"surface_route","name":"Mud","input_elements":["earth","water"],"map_effects":["viscous_surface","downhill_creep"],"actor_effects":["acceleration_slow","shorter_slide","weaker_takeoff"],"residue":"dried_or_frozen_soil","counters":["fire","ice","wind"],"telegraph":"darkened_churned_surface"},
+    {"id":"dustfront","wire_id":304,"runtime_profile":"visibility_volume","name":"Dustfront","input_elements":["earth","wind"],"map_effects":["moving_dust_cloud","loose_matter_transport"],"actor_effects":["partial_visibility_loss","weak_lateral_push"],"residue":"settled_dust","counters":["water","solid_cover"],"telegraph":"visible_directional_particulates"},
+    {"id":"permafrost","wire_id":305,"runtime_profile":"temporary_cover","name":"Permafrost","input_elements":["earth","ice"],"map_effects":["rigid_frozen_soil","temporary_cover"],"actor_effects":["route_creation","brittle_setup"],"residue":"ice_and_rubble","counters":["fire","repeated_impact"],"telegraph":"frost_growth_and_cracks"},
+    {"id":"grounding_network","wire_id":306,"runtime_profile":"conductor_path","name":"Grounding Network","input_elements":["earth","charge"],"map_effects":["charge_drain_path","ground_node_storage"],"actor_effects":["reduced_charge_threat_zone"],"residue":"drained_ground","counters":["node_overload","water_bridge","network_break"],"telegraph":"ground_pulse_to_nodes"},
+    {"id":"crystal_prism","wire_id":307,"runtime_profile":"optical_path","name":"Crystal Prism","input_elements":["earth","light"],"map_effects":["reflective_facets","angled_cover","ray_redirect"],"actor_effects":["predictable_ricochet_lane"],"residue":"fractured_crystal","counters":["fracture","dark"],"telegraph":"facet_growth_and_reflection_lines"},
+    {"id":"blightsoil","wire_id":308,"runtime_profile":"surface_route","name":"Blightsoil","input_elements":["earth","dark"],"map_effects":["growth_suppression","structure_attrition"],"actor_effects":["mild_slow","reduced_authored_healing_growth"],"residue":"exhausted_soil","counters":["light","fresh_water"],"telegraph":"dark_spreading_soil_veins"},
+
+    {"id":"conflagration","wire_id":309,"runtime_profile":"damage_hazard","name":"Conflagration","input_elements":["fire","fire"],"map_effects":["hotter_burn_front","accelerated_fuel_consumption"],"actor_effects":["increased_damage_over_time","area_denial"],"residue":"smoke_and_ash","counters":["water","fuel_exhaustion"],"telegraph":"large_high_value_flame_front"},
+    {"id":"steam","wire_id":310,"runtime_profile":"visibility_volume","name":"Steam","input_elements":["fire","water"],"map_effects":["occluding_gas_volume"],"actor_effects":["brief_scald","visibility_pressure"],"residue":"condensation","counters":["wind","ice","water_cooling"],"telegraph":"expanding_white_gas_front"},
+    {"id":"firestorm","wire_id":311,"runtime_profile":"damage_hazard","name":"Firestorm","input_elements":["fire","wind"],"map_effects":["directional_flame_front","bounded_fuel_gap_jump"],"actor_effects":["moving_damage_over_time","route_cutoff"],"residue":"smoke_and_ash","counters":["water_barrier","nonflammable_cover"],"telegraph":"wind_vector_and_stretched_flame"},
+    {"id":"thermal_shock","wire_id":312,"runtime_profile":"fracture_pulse","name":"Thermal Shock","input_elements":["fire","ice"],"map_effects":["structural_fracture","glass_stone_ice_stress"],"actor_effects":["small_stagger","brittle_setup"],"residue":"cracks_or_rubble","counters":["avoid_temperature_delta","structural_support"],"telegraph":"temperature_stress_crack_warning"},
+    {"id":"plasma_arc","wire_id":313,"runtime_profile":"conductor_path","name":"Plasma Arc","input_elements":["fire","charge"],"map_effects":["brief_conductor_branching","secondary_ignition"],"actor_effects":["burst_damage","short_interrupt"],"residue":"hot_ionized_air","counters":["grounding","cover"],"telegraph":"branch_preview_before_arc"},
+    {"id":"solar_flare","wire_id":314,"runtime_profile":"visibility_volume","name":"Solar Flare","input_elements":["fire","light"],"map_effects":["high_intensity_illumination","concealment_burnoff"],"actor_effects":["facing_glare","reveal_pressure"],"residue":"bright_embers","counters":["cover","dark"],"telegraph":"rapid_brightness_buildup"},
+    {"id":"cinderveil","wire_id":315,"runtime_profile":"visibility_volume","name":"Cinderveil","input_elements":["fire","dark"],"map_effects":["dim_ember_smoke_field"],"actor_effects":["longer_low_damage_over_time","concealment"],"residue":"dark_ash","counters":["wind","light","water"],"telegraph":"low_burning_ember_edges"},
+
+    {"id":"flood","wire_id":316,"runtime_profile":"moving_flow","name":"Flood","input_elements":["water","water"],"map_effects":["deeper_water","basin_fill","elevation_flow"],"actor_effects":["acceleration_slow","longer_displacement","unstable_slide"],"residue":"wetness","counters":["drain","pump","barrier","elevation"],"telegraph":"visible_depth_and_flow"},
+    {"id":"mistcurrent","wire_id":317,"runtime_profile":"visibility_volume","name":"Mistcurrent","input_elements":["water","wind"],"map_effects":["moving_mist_corridor","fire_suppression"],"actor_effects":["mild_visibility_loss","flow_air_steering"],"residue":"wetness","counters":["continued_wind","ice"],"telegraph":"streaming_mist_direction"},
+    {"id":"freeze","wire_id":318,"runtime_profile":"surface_route","name":"Freeze","input_elements":["water","ice"],"map_effects":["progressive_ice_route","temporary_shortcut"],"actor_effects":["low_friction","longer_slide","weaker_braking"],"residue":"water_after_melt","counters":["impact","fire","load_break"],"telegraph":"advancing_freeze_edge_and_cracks"},
+    {"id":"conductive_flood","wire_id":319,"runtime_profile":"conductor_path","name":"Conductive Flood","input_elements":["water","charge"],"map_effects":["wet_network_charge_propagation"],"actor_effects":["periodic_damage","brief_interrupt"],"residue":"charged_then_drained_water","counters":["leave_water","break_connectivity","grounding","dissipation"],"telegraph":"warning_pulse_through_connected_cells"},
+    {"id":"mirrorwater","wire_id":320,"runtime_profile":"optical_path","name":"Mirrorwater","input_elements":["water","light"],"map_effects":["reflective_surface","light_redirect"],"actor_effects":["disturbance_reveal"],"residue":"ordinary_water","counters":["wind","earth","dark"],"telegraph":"calm_reflective_surface_and_ripples"},
+    {"id":"blackwater","wire_id":321,"runtime_profile":"visibility_volume","name":"Blackwater","input_elements":["water","dark"],"map_effects":["opaque_contaminated_water","hazard_concealment"],"actor_effects":["slight_slow","weak_immersed_attrition"],"residue":"diluted_dark_water","counters":["light","fresh_water","ice"],"telegraph":"dark_surface_with_disturbance_edges"},
+
+    {"id":"vortex","wire_id":322,"runtime_profile":"bounded_field","name":"Vortex","input_elements":["wind","wind"],"map_effects":["rotating_airflow","loose_matter_orbit"],"actor_effects":["airborne_redirect","light_projectile_redirect","movement_slingshot"],"residue":"calm_air","counters":["mass","center_path","opposing_flow"],"telegraph":"rotating_streamers_and_center"},
+    {"id":"hailstream","wire_id":323,"runtime_profile":"damage_hazard","name":"Hailstream","input_elements":["wind","ice"],"map_effects":["directional_ice_particle_lane"],"actor_effects":["repeated_light_damage","slow"],"residue":"ice_fragments_or_mist","counters":["solid_cover","fire"],"telegraph":"visible_hail_lane"},
+    {"id":"ion_storm","wire_id":324,"runtime_profile":"bounded_field","name":"Ion Storm","input_elements":["wind","charge"],"map_effects":["drifting_charged_weather_field"],"actor_effects":["periodic_low_damage","bounded_interrupt_pressure"],"residue":"static_air","counters":["grounding","enclosure","opposing_wind"],"telegraph":"charged_particles_and_drift_vector"},
+    {"id":"lightbend","wire_id":325,"runtime_profile":"optical_path","name":"Lightbend","input_elements":["wind","light"],"map_effects":["curved_light_geometry"],"actor_effects":["redirected_beam_or_projectile_lane"],"residue":"none","counters":["remove_or_change_wind"],"telegraph":"visible_flow_vectors_and_bent_path_preview"},
+    {"id":"shadowdraft","wire_id":326,"runtime_profile":"visibility_volume","name":"Shadowdraft","input_elements":["wind","dark"],"map_effects":["moving_concealment_bands"],"actor_effects":["mobile_concealment","edge_disturbance_on_movement"],"residue":"fading_shadow","counters":["light","opposing_wind"],"telegraph":"moving_dark_bands_with_edge_motion"},
+
+    {"id":"glacier","wire_id":327,"runtime_profile":"surface_route","name":"Frostway","input_elements":["ice","ice"],"map_effects":["finite_stationary_ice_lane","physical_projectiles_65_percent_travel"],"actor_effects":["all_teams_ground_walk_sprint_75_percent_target","slide_and_air_movement_unchanged"],"residue":"harmless_melting_ice","counters":["slide_across","jump_over","leave_lane","wait_for_decay"],"telegraph":"flat_cyan_ice_spreading_into_shallow_cracks"},
+    {"id":"superconduct","wire_id":328,"runtime_profile":"conductor_path","name":"Superconduct","input_elements":["ice","charge"],"map_effects":["focused_extended_charge_path"],"actor_effects":["faster_farther_but_predictable_charge"],"residue":"ordinary_conductor","counters":["break_conductor","heat"],"telegraph":"narrow_bright_charge_lane"},
+    {"id":"crystal_lens","wire_id":329,"runtime_profile":"optical_path","name":"Crystal Lens","input_elements":["ice","light"],"map_effects":["light_split","light_redirect","concealment_exposure"],"actor_effects":["multiple_weaker_predictable_light_paths"],"residue":"ice_shards","counters":["impact","fire"],"telegraph":"facet_and_split_path_preview"},
+    {"id":"black_ice","wire_id":330,"runtime_profile":"surface_route","name":"Black Ice","input_elements":["ice","dark"],"map_effects":["low_visibility_slippery_surface"],"actor_effects":["very_low_friction","brief_disturbed_frost_mark"],"residue":"dark_meltwater","counters":["light","fire"],"telegraph":"subtle_edge_highlight_and_disturbed_tracks"},
+
+    {"id":"overload","wire_id":331,"runtime_profile":"conductor_path","name":"Capacitor","input_elements":["charge","charge"],"map_effects":["conductor_saturation","node_discharge"],"actor_effects":["damage","interrupt","knockback"],"residue":"drained_conductor","counters":["grounding","early_discharge","network_break"],"telegraph":"public_saturation_threshold"},
+    {"id":"arcflash","wire_id":332,"runtime_profile":"conductor_path","name":"Arcflash","input_elements":["charge","light"],"map_effects":["bright_conductive_arc_path"],"actor_effects":["short_interrupt","reveal_along_arc"],"residue":"fading_light_path","counters":["cover","dark"],"telegraph":"arc_preview_and_flash"},
+    {"id":"static_shroud","wire_id":333,"runtime_profile":"visibility_volume","name":"Static Shroud","input_elements":["charge","dark"],"map_effects":["electrical_concealment_field"],"actor_effects":["concealment","entry_exit_static_silhouette","weak_interrupt_risk"],"residue":"fading_static","counters":["light","grounding"],"telegraph":"edge_static_and_silhouette_noise"},
+
+    {"id":"radiance","wire_id":334,"runtime_profile":"visibility_volume","name":"Radiance","input_elements":["light","light"],"map_effects":["persistent_illumination_zone"],"actor_effects":["strong_reveal","concealment_suppression"],"residue":"fading_light","counters":["solid_cover","dark"],"telegraph":"bounded_bright_zone"},
+    {"id":"penumbra","wire_id":335,"runtime_profile":"visibility_volume","name":"Penumbra","input_elements":["light","dark"],"map_effects":["movable_high_contrast_boundary"],"actor_effects":["brief_outline_on_crossing","crossing_projectile_readability"],"residue":"none","counters":["move_or_remove_either_source"],"telegraph":"explicit_light_dark_boundary"},
+    {"id":"umbral_field","wire_id":336,"runtime_profile":"visibility_volume","name":"Umbral Field","input_elements":["dark","dark"],"map_effects":["bounded_low_information_region"],"actor_effects":["concealment","reduced_external_reveal","weak_prolonged_attrition"],"residue":"fading_shadow","counters":["movement_ripples","light"],"telegraph":"bounded_edges_and_motion_ripples"}
+  ]
+}

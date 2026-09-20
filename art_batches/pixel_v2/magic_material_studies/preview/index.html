@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file:; img-src 'self' file: data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>FLUX / Magic material studies</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="study-data.js"></script>
+  <script defer src="study-model.js"></script>
+  <script defer src="viewer.js"></script>
+</head>
+<body>
+<main>
+  <header>
+    <div><p class="eyebrow">FLUX / OFFLINE ART WORKBENCH</p><h1>Magic material studies</h1></div>
+    <span class="badge">SOURCE STUDIES · NOT PRODUCTION APPROVAL</span>
+  </header>
+  <p class="intro">Review material motion before spell forms or reactions. These isolated drawings do not change game mechanics, approved assets, or runtime timing.</p>
+  <nav class="stages" aria-label="Review stage">
+    <button id="basics" class="selected" aria-pressed="true">1 · Eight elements</button>
+    <button id="steam" aria-pressed="false" disabled title="Not started — stopped before first-level interactions">2 · Interactions not started</button>
+    <a href="#reaction-queue">36 reactions · paused future queue</a>
+  </nav>
+  <section class="toolbar" aria-label="Playback and display controls">
+    <button id="pause" aria-pressed="false">Pause</button>
+    <button id="step">Step frame</button>
+    <button id="restart">Restart</button>
+    <label>Speed <select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label>
+    <label>Pixels <select id="size"><option value="32">32 px</option><option value="64" selected>64 px</option><option value="128">128 px</option></select></label>
+    <label>Read <select id="source"><option value="raw">Raw generated sheet</option><option value="packed">Packed 32 px cells</option></select></label>
+    <label>Matte <select id="background"><option value="dark">Dark water</option><option value="stone">Warm stone</option></select></label>
+    <label class="toggle"><input id="grayscale" type="checkbox"> Grayscale</label>
+    <label class="toggle disabled" title="No reduced-density source studies are supplied. Nothing is being simulated."><input type="checkbox" disabled> Reduced density — unavailable</label>
+    <button id="reload">Reload files</button>
+  </section>
+  <div class="readout"><span id="clock">120 Hz study clock</span><span id="availability" role="status">Looking for local sheets…</span></div>
+  <p id="stage-note" class="note">Each card loops its eight supplied frames for inspection. Preview sizes are exact CSS pixels; the raw source cell keeps its aspect ratio and may contain a baked-in matte.</p>
+  <section id="cards" class="cards" aria-label="Animated material studies"></section>
+  <p class="note" id="timing-note"></p>
+  <details id="reaction-queue">
+    <summary>Complete audited reaction queue — 36 named pairs, no fabricated assets</summary>
+    <p class="note">Names and pairs are copied from the current simulation recipe table, not new chemistry rules. All 36 reaction studies, including Steam, are paused and not generated in this batch: stopped before first-level interactions.</p>
+    <div class="table-scroll"><table><thead><tr><th>Wire</th><th>Reaction</th><th>Element pair</th><th>Art-review state</th></tr></thead><tbody id="queue-rows"></tbody></table></div>
+  </details>
+  <footer>Local files only · no fetch, server, CDN, uploads or saved settings · Space pauses · → advances to the next visible frame boundary · R restarts · Browser screenshots can record the current view.</footer>
+</main>
+</body>
+</html>

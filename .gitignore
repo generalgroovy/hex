@@ -1,0 +1,30 @@
+.godot/
+.autocode/*
+!.autocode/roles.toml
+*.import
+# The shared skeleton validator checks exact decoded RGBA; preserve these
+# lossless import settings instead of recreating alpha-border repair defaults.
+!assets/sprites/wireframe_motion_v2/*.png.import
+*.pyc
+__pycache__/
+build/
+exports/
+reports/
+node_modules/
+*.lnk
+
+# Local validation archives contain generated profiles/caches; originals remain local.
+/docs/evidence/
+/.agent/verification/
+/.codex/
+# Curated portable payloads are delivered separately from Git source.
+
+# Import recipes inside the declared runtime identity are source inputs, not caches.
+!src/**/*.import
+!content/**/*.import
+!scenes/**/*.import
+!addons/**/*.import
+!assets/**/*.import
+!art_batches/pixel_v1/magic/export/**/*.import
+!art_batches/pixel_v1/map/export/**/*.import
+!art_batches/wellspring_style_v2/runtime/**/*.import

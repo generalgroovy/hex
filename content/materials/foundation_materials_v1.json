@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "id": "foundation-materials-v1",
+  "fixed_scale": 1000,
+  "cell_fields": ["amount", "temperature", "wetness", "charge", "elevation"],
+  "required_material_ids": [
+    "empty",
+    "worldbone",
+    "stone",
+    "brick",
+    "wood",
+    "water",
+    "oil",
+    "fire",
+    "steam",
+    "ice",
+    "rubble"
+  ],
+  "materials": [
+    {
+      "id": "empty",
+      "wire_id": 1,
+      "phase": "empty",
+      "collision": "none",
+      "immutable": false,
+      "default_amount": 0,
+      "default_temperature": 20000
+    },
+    {
+      "id": "worldbone",
+      "wire_id": 2,
+      "phase": "solid",
+      "collision": "solid",
+      "immutable": true,
+      "default_amount": 1000,
+      "default_temperature": 20000
+    },
+    {
+      "id": "stone",
+      "wire_id": 3,
+      "phase": "solid",
+      "collision": "solid",
+      "immutable": false,
+      "default_amount": 1000,
+      "default_temperature": 20000
+    },
+    {
+      "id": "brick",
+      "wire_id": 4,
+      "phase": "solid",
+      "collision": "solid",
+      "immutable": false,
+      "default_amount": 1000,
+      "default_temperature": 20000
+    },
+    {
+      "id": "wood",
+      "wire_id": 5,
+      "phase": "solid",
+      "collision": "solid",
+      "immutable": false,
+      "default_amount": 1000,
+      "default_temperature": 20000
+    },
+    {
+      "id": "water",
+      "wire_id": 6,
+      "phase": "liquid",
+      "collision": "none",
+      "immutable": false,
+      "default_amount": 1000,
+      "default_temperature": 20000
+    },
+    {
+      "id": "oil",
+      "wire_id": 7,
+      "phase": "liquid",
+      "collision": "none",
+      "immutable": false,
+      "default_amount": 1000,
+      "default_temperature": 20000
+    },
+    {
+      "id": "fire",
+      "wire_id": 8,
+      "phase": "energy",
+      "collision": "none",
+      "immutable": false,
+      "default_amount": 1000,
+      "default_temperature": 600000
+    },
+    {
+      "id": "steam",
+      "wire_id": 9,
+      "phase": "gas",
+      "collision": "none",
+      "immutable": false,
+      "default_amount": 1000,
+      "default_temperature": 120000
+    },
+    {
+      "id": "ice",
+      "wire_id": 10,
+      "phase": "solid",
+      "collision": "soft",
+      "immutable": false,
+      "default_amount": 1000,
+      "default_temperature": -10000
+    },
+    {
+      "id": "rubble",
+      "wire_id": 11,
+      "phase": "loose",
+      "collision": "soft",
+      "immutable": false,
+      "default_amount": 1000,
+      "default_temperature": 20000
+    }
+  ]
+}

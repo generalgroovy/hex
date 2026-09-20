@@ -1,0 +1,8 @@
+Use case: stylized-concept. NEWFLUXpixelartMATERIALanimationloop. Referenceimage1 isONLYsharedpixelchunk/outline/volumeclarityreference ofFire. DO NOTcopyitsfirepalette, flamelicks, shapeorembers.
+ExactlyFOURcolumnsandTWOrows, EIGHTequalsquarespritecells on2:1landscapecanvas, chronologicalrowmajororder. No textlabels/borders/gridlines. Solidflatpuremagenta#FF00FFmatte outsidesprites; NOcheckerboard, NOgroundshadow,noprops,nocharacters,noUI,nospellrunes.
+Originalcharmingdetailedbutreadablepixelart: believablephysicalmaterialmotion, restrainedpixelclusters,strongsilhouette, crispsteppededgewithoutblur orlargeglow. Fixed55degreeelevatedadventurecamera. Eachsprite fitscentral60%widthand65%heightofitscell; SAMEscaleandgroundrootat(50%,81.25%)ALLframes. Rootdoesnotwanderandframe8connectsbackto1. Style suitablefor32pxmaterialcells atactualgameplay, enlargedforsourceinspection. No photorealism/3Drender/vector, noelementfaces.
+ELEMENT WIND.
+Palette:#25524D deepgreen-teal, #67CF92 mintgreen, #C8F2D4 paleairhighlights.
+Subject:twoTHINopenairflowribbonsand3tinywinddashaccents, atLEAST65%emptyspacewithinwholeshape; asymmetricalopeneddy, airnotasolidgreenobject, notatornadoemblem, noleaves/dust/earth.
+Animation:8framecontinuouslefttorightcirculatingaircurrent: front ribbon slipsforward, trailingcurl rolls, ribbonscrosseachotherwithopengaps, righttipbreaksintothindashes, newlefttailfeedsin, eddyreforms. Elegantcurvedarcspreserveflowcontinuity. NOTexpandedshrinkingcircles, notwhitedenseclouds..
+Makeexact8distinctbuttemporallycoherentframes, singlematerialonly.

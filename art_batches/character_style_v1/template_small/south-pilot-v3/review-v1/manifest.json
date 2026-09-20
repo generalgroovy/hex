@@ -1,0 +1,211 @@
+{
+	"asset_kind": "neutral_body_template",
+	"body_scale": 0.0694610778443114,
+	"body_type": "small",
+	"cell": [
+		96,
+		96
+	],
+	"champion_id": "template_small",
+	"complete_coverage": false,
+	"dimensions": [
+		288,
+		96
+	],
+	"directions": [
+		"south",
+		"south_east",
+		"east",
+		"north_east",
+		"north",
+		"north_west",
+		"west",
+		"south_west"
+	],
+	"display_name": "Small neutral body template",
+	"frame_count": 3,
+	"frames": [
+		{
+			"direction": "south",
+			"output_region": [
+				0,
+				0,
+				96,
+				96
+			],
+			"output_visible_bounds": [
+				36,
+				26,
+				25,
+				58
+			],
+			"resampled_dimensions": [
+				25,
+				58
+			],
+			"resampled_occupied_bounds": [
+				0,
+				0,
+				25,
+				58
+			],
+			"source": "south_contacts",
+			"source_cell_width_normalization": 1.0,
+			"source_rect": [
+				0.0,
+				0.0,
+				512.0,
+				1024.0
+			],
+			"source_visible_bounds": [
+				107,
+				110,
+				356,
+				835
+			],
+			"state": "grounded"
+		},
+		{
+			"direction": "south",
+			"output_region": [
+				96,
+				0,
+				96,
+				96
+			],
+			"output_visible_bounds": [
+				38,
+				26,
+				21,
+				58
+			],
+			"resampled_dimensions": [
+				21,
+				58
+			],
+			"resampled_occupied_bounds": [
+				0,
+				0,
+				21,
+				58
+			],
+			"source": "south_contacts",
+			"source_cell_width_normalization": 1.0,
+			"source_rect": [
+				512.0,
+				0.0,
+				512.0,
+				1024.0
+			],
+			"source_visible_bounds": [
+				109,
+				110,
+				296,
+				841
+			],
+			"state": "walk"
+		},
+		{
+			"direction": "south",
+			"output_region": [
+				192,
+				0,
+				96,
+				96
+			],
+			"output_visible_bounds": [
+				37,
+				26,
+				22,
+				58
+			],
+			"resampled_dimensions": [
+				22,
+				58
+			],
+			"resampled_occupied_bounds": [
+				0,
+				0,
+				22,
+				58
+			],
+			"source": "south_contacts",
+			"source_cell_width_normalization": 1.0,
+			"source_rect": [
+				1024.0,
+				0.0,
+				512.0,
+				1024.0
+			],
+			"source_visible_bounds": [
+				78,
+				109,
+				313,
+				839
+			],
+			"state": "walk_b"
+		}
+	],
+	"id": "template_small-style-pilot",
+	"live_promotion": false,
+	"path": "res://art_batches/character_style_v1/template_small/south-pilot-v3/review-v1/template_small-partial-review.png",
+	"pivot": [
+		48,
+		84
+	],
+	"registration_policy": "visible bottom center at shared pivot; source anatomy drift not compensated",
+	"required_frame_count": 80,
+	"rgba_sha256": "d1e0d68decab9aef747320a53a86f8428370522163c3ae3391e7bdac063fa1cf",
+	"sampling": "nearest",
+	"scale_policy": "one body scale after page cell-width normalization",
+	"schema_version": 2,
+	"sha256": "7d1e146f33ae3af16be3baf7c2629ffc570e0db2cc130047b106b9456d294d8a",
+	"source_spec": "res://art_batches/character_style_v1/template_small/south-pilot-v3/source-layout.json",
+	"sources": [
+		{
+			"background_removal": {
+				"authorization": "User-approved reviewed background removal and assembly; immutable corrected source and exact removal mask retained. Source inspected: neutral pale checker against dark hair/trousers, tan skin, cream-gold trim, teal tunic and brown boots. Only edge-connected neutral pixels are removable; enclosed details are preserved. Native dark/light review is required.",
+				"maximum_spread": 18.0,
+				"method": "edge_connected_neutral_checker",
+				"minimum_channel": 170.0
+			},
+			"cell_width": 512.0,
+			"id": "south_contacts",
+			"import_mode": "reviewed_neutral_checker",
+			"matte": "cacac9ff",
+			"original_alpha": {
+				"maximum": 255,
+				"minimum": 255,
+				"partial_pixels": 0,
+				"transparent_pixels": 0
+			},
+			"path": "res://art_batches/character_style_v1/template_small/south-pilot-v3/source-corrected-v1.png",
+			"removal_mask_path": "res://art_batches/character_style_v1/template_small/south-pilot-v3/review-v1/south_contacts-removal-mask.png",
+			"removal_mask_sha256": "940de7aae9566809cda9228934c6946f06007a37f175de2ec4664c08e4e33269",
+			"removed_pixels": 1135201,
+			"sha256": "97f1cf793f43f8a1c7126f08972e9cacbdfa070c2501db1f8af1a1baaf4ee5ac",
+			"size": [
+				1536,
+				1024
+			]
+		}
+	],
+	"standing_height": 58,
+	"states": [
+		"grounded",
+		"jump",
+		"cast",
+		"hit",
+		"walk",
+		"sprint",
+		"slide",
+		"roll",
+		"walk_b",
+		"sprint_b"
+	],
+	"status": "partial_review_only",
+	"visual_review": {
+		"limits": "Three South cells only. Opposite arm and leg contacts visible in corrected source; native-size, matte, scale and user acceptance remain gates. Not a full neutral template or live promotion.",
+		"status": "partial_review_pending"
+	}
+}

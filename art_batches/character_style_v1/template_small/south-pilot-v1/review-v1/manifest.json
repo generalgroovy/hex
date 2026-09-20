@@ -1,0 +1,131 @@
+{
+	"asset_kind": "neutral_body_template",
+	"body_scale": 0.0563654033041788,
+	"body_type": "small",
+	"cell": [
+		96,
+		96
+	],
+	"champion_id": "template_small",
+	"complete_coverage": false,
+	"dimensions": [
+		96,
+		96
+	],
+	"directions": [
+		"south",
+		"south_east",
+		"east",
+		"north_east",
+		"north",
+		"north_west",
+		"west",
+		"south_west"
+	],
+	"display_name": "Small neutral body template",
+	"frame_count": 1,
+	"frames": [
+		{
+			"direction": "south",
+			"output_region": [
+				0,
+				0,
+				96,
+				96
+			],
+			"output_visible_bounds": [
+				36,
+				26,
+				25,
+				58
+			],
+			"resampled_dimensions": [
+				25,
+				58
+			],
+			"resampled_occupied_bounds": [
+				0,
+				0,
+				25,
+				58
+			],
+			"source": "south_base",
+			"source_cell_width_normalization": 1.0,
+			"source_rect": [
+				408.0,
+				118.0,
+				438.0,
+				1031.0
+			],
+			"source_visible_bounds": [
+				1,
+				1,
+				436,
+				1029
+			],
+			"state": "grounded"
+		}
+	],
+	"id": "template_small-style-pilot",
+	"live_promotion": false,
+	"path": "res://art_batches/character_style_v1/template_small/south-pilot-v1/review-v1/template_small-partial-review.png",
+	"pivot": [
+		48,
+		84
+	],
+	"registration_policy": "visible bottom center at shared pivot; source anatomy drift not compensated",
+	"required_frame_count": 80,
+	"rgba_sha256": "7f4714cbe34cd28491d7e926c1e737063fd59c18d865c26da5c5ae5e1943a5ce",
+	"sampling": "nearest",
+	"scale_policy": "one body scale after page cell-width normalization",
+	"schema_version": 2,
+	"sha256": "786607ea6f6b94aed977d6624432792727b520e71367ca8ed65998e35c13f238",
+	"source_spec": "res://art_batches/character_style_v1/template_small/south-pilot-v1/source-layout.json",
+	"sources": [
+		{
+			"background_removal": {
+				"authorization": "User-approved technical assembly and reviewed source-hash-locked matte removal; preserve immutable source and exact output mask. Neutral checker inspected against skin, teal clothing and brown boots. Enclosed highlights are not erased.",
+				"maximum_spread": 18.0,
+				"method": "edge_connected_neutral_checker",
+				"minimum_channel": 170.0
+			},
+			"cell_width": 1254.0,
+			"id": "south_base",
+			"import_mode": "reviewed_neutral_checker",
+			"matte": "fdfdfeff",
+			"original_alpha": {
+				"maximum": 255,
+				"minimum": 255,
+				"partial_pixels": 0,
+				"transparent_pixels": 0
+			},
+			"path": "res://art_batches/character_style_v1/template_v2/small-south-base-v1.png",
+			"removal_mask_path": "res://art_batches/character_style_v1/template_small/south-pilot-v1/review-v1/south_base-removal-mask.png",
+			"removal_mask_sha256": "fdde98f93292ea47757a793006166e7adbad27aa2c2d635646527e118fc78d31",
+			"removed_pixels": 223312,
+			"sha256": "b67f0ae46673f51350f56cb7d23764109a01a0bfbd45b4bbc36a43fa5e4852e3",
+			"size": [
+				1254,
+				1254
+			]
+		}
+	],
+	"standing_height": 58,
+	"states": [
+		"grounded",
+		"jump",
+		"cast",
+		"hit",
+		"walk",
+		"sprint",
+		"slide",
+		"roll",
+		"walk_b",
+		"sprint_b"
+	],
+	"status": "partial_review_only",
+	"visual_review": {
+		"limits": "One actual South-grounded calibration cell only. Not a complete template or human approval. NE pair remains unassembled because source-wide anatomical calibration is uncertain.",
+		"status": "partial_review_pending"
+	}
+}

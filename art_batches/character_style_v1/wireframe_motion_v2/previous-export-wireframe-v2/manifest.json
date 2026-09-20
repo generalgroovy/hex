@@ -1,0 +1,114 @@
+{
+  "schema_version": 2,
+  "cell": [
+    96,
+    96
+  ],
+  "pivot": [
+    48,
+    84
+  ],
+  "directions": [
+    "south",
+    "south_east",
+    "east",
+    "north_east",
+    "north",
+    "north_west",
+    "west",
+    "south_west"
+  ],
+  "base_rows": [
+    "grounded",
+    "jump",
+    "cast",
+    "hit",
+    "walk",
+    "sprint",
+    "slide",
+    "roll",
+    "walk_b",
+    "sprint_b"
+  ],
+  "locomotion": {
+    "columns": 16,
+    "rows": 32,
+    "phases": 8,
+    "index_formula": "((travel*8+aim)*8+phase)",
+    "gait_policy": "distinct_walk_sprint_fixed_bone_banks"
+  },
+  "sizes": {
+    "small": {
+      "reference_height": 58,
+      "base": "res://assets/sprites/wireframe_motion_v2/small-base.png",
+      "base_dimensions": [
+        768,
+        960
+      ],
+      "base_sha256": "8df83142463ee5b6a7ecfab5279dc0b43d3cb8ae6f207befc5d97e9a8294e9e6",
+      "base_rgba_sha256": "ae2f6b04b9b94dce9750e0a04caef57d838dfb241fc2d3ea837450736a06fd35",
+      "locomotion": "res://assets/sprites/wireframe_motion_v2/small-locomotion.png",
+      "locomotion_dimensions": [
+        1536,
+        3072
+      ],
+      "locomotion_sha256": "45033f88eee2fc76fa3b3be480b9207ce3e7007607647cd28ad75ff3058852d6",
+      "locomotion_rgba_sha256": "5067228be31fb564f118a526e275a7df73fbe12a437cc6da739dde83ffe4031d",
+      "sprint": "res://assets/sprites/wireframe_motion_v2/small-sprint.png",
+      "sprint_dimensions": [
+        1536,
+        3072
+      ],
+      "sprint_sha256": "6a48de531b2b1109479d236779ee4bab22af2a388cf9c6c1c336128cc3fd2717",
+      "sprint_rgba_sha256": "fe0b8c57cbb6eeb280a06d36a8517c11e73648c00e07b4dfa0d5dcbb61ef1d68"
+    },
+    "middle": {
+      "reference_height": 68,
+      "base": "res://assets/sprites/wireframe_motion_v2/middle-base.png",
+      "base_dimensions": [
+        768,
+        960
+      ],
+      "base_sha256": "597aff34f2884b117dc05e714a73962d97e4dca26a539912af7fffcebb68f716",
+      "base_rgba_sha256": "1c0c3302e95d53813878ff414a02168f385d7e7ab1dc3f33b67c0c550dc7f3ce",
+      "locomotion": "res://assets/sprites/wireframe_motion_v2/middle-locomotion.png",
+      "locomotion_dimensions": [
+        1536,
+        3072
+      ],
+      "locomotion_sha256": "2392c0ff91384e36c351cf6492d50e98e16d5a68852679dce74697c21719e985",
+      "locomotion_rgba_sha256": "813c2206622d0822278386f03bd81fcca9e99698aeef878c27fd3ff071ef997a",
+      "sprint": "res://assets/sprites/wireframe_motion_v2/middle-sprint.png",
+      "sprint_dimensions": [
+        1536,
+        3072
+      ],
+      "sprint_sha256": "ac53a79fba38342d3c5e8b998bd847b56592eab88729c71bcd0b9b2ecb208c22",
+      "sprint_rgba_sha256": "c5782e3844474aa59ca8e6a9974900dbd98d5337ff7cdf432a79e25eda07fe44"
+    },
+    "large": {
+      "reference_height": 76,
+      "base": "res://assets/sprites/wireframe_motion_v2/large-base.png",
+      "base_dimensions": [
+        768,
+        960
+      ],
+      "base_sha256": "52b35b28220ba18f2d77388f78e430023ecd7f9e8f070416a2a7d3529ff65a43",
+      "base_rgba_sha256": "9f6628bd6be692d4f4285745f77fea952d6c4ba56ec70eb56c89c098bdc7bc55",
+      "locomotion": "res://assets/sprites/wireframe_motion_v2/large-locomotion.png",
+      "locomotion_dimensions": [
+        1536,
+        3072
+      ],
+      "locomotion_sha256": "8f669f051d336bdb7b3717ef375e6509a9c39b6c65d92223a4c3b3acfdb32dbb",
+      "locomotion_rgba_sha256": "01079cab0ffc1c4d371ae6351392b395e7e6c0cf11eb476bfa681beb3467c268",
+      "sprint": "res://assets/sprites/wireframe_motion_v2/large-sprint.png",
+      "sprint_dimensions": [
+        1536,
+        3072
+      ],
+      "sprint_sha256": "7b5ee5434276a06209ec9e7e5692305d603b6ad199b13ea727c5ab1cf8c13538",
+      "sprint_rgba_sha256": "a9a3bcba4cd0792410440f3599f15389decc649e771c568951aaeda80f0fb0d1"
+    }
+  }
+}

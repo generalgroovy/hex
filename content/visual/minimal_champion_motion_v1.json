@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "id": "minimal-champion-motion-v1",
+  "authority": "presentation only; motion samples never change simulation position, collision, timing or outcomes",
+  "base_hz": 60,
+  "movement_accents": {
+    "counter_strafe": {"kind": "brake_ticks", "ramp": "warm_stone", "index": 4, "opacity": 0.46},
+    "double_jump": {"kind": "lift_ring", "ramp": "aged_brass", "index": 4, "opacity": 0.56},
+    "slide": {"kind": "ground_wake", "ramp": "warm_stone", "index": 4, "opacity": 0.42},
+    "slide_jump": {"kind": "lift_ring", "ramp": "aged_brass", "index": 3, "opacity": 0.48},
+    "air_dodge": {"kind": "speed_fins", "ramp": "deep_water", "index": 4, "opacity": 0.54},
+    "roll": {"kind": "ground_chevron", "ramp": "parchment", "index": 4, "opacity": 0.58},
+    "wave_dash": {"kind": "ground_chevron", "ramp": "aged_brass", "index": 4, "opacity": 0.52},
+    "wall_kick": {"kind": "kick_burst", "ramp": "warm_stone", "index": 4, "opacity": 0.58},
+    "vault": {"kind": "crest_arc", "ramp": "aged_brass", "index": 3, "opacity": 0.48},
+    "superglide": {"kind": "speed_fins", "ramp": "aged_brass", "index": 4, "opacity": 0.56},
+    "fast_fall": {"kind": "fall_lines", "ramp": "deep_water", "index": 3, "opacity": 0.48},
+    "wall_skim": {"kind": "wall_sparks", "ramp": "aged_brass", "index": 4, "opacity": 0.52},
+    "impact_recovery": {"kind": "recovery_brace", "ramp": "stamina", "index": 4, "opacity": 0.56}
+  },
+  "profiles": {
+    "buoyant_keeper": {
+      "idle": {
+        "loop": true,
+        "duration_ticks": 84,
+        "keyframes": [
+          {"at": 0.0, "offset": [0.0, 0.0], "scale": [1.0, 1.0], "aura": 0.96},
+          {"at": 0.5, "offset": [0.0, -1.0], "scale": [1.012, 0.988], "aura": 1.04},
+          {"at": 1.0, "offset": [0.0, 0.0], "scale": [1.0, 1.0], "aura": 0.96}
+        ]
+      },
+      "walk": {
+        "loop": true,
+        "duration_ticks": 22,
+        "keyframes": [
+          {"at": 0.0, "offset": [-1.0, 0.0], "scale": [1.018, 0.982], "aura": 0.98},
+          {"at": 0.25, "offset": [0.0, -2.0], "scale": [0.988, 1.012], "aura": 1.03},
+          {"at": 0.5, "offset": [1.0, 0.0], "scale": [1.018, 0.982], "aura": 0.98},
+          {"at": 0.75, "offset": [0.0, -2.0], "scale": [0.988, 1.012], "aura": 1.03},
+          {"at": 1.0, "offset": [-1.0, 0.0], "scale": [1.018, 0.982], "aura": 0.98}
+        ]
+      },
+      "sprint": {
+        "loop": true,
+        "duration_ticks": 16,
+        "keyframes": [
+          {"at": 0.0, "offset": [-1.5, 0.0], "scale": [1.03, 0.97], "aura": 1.0},
+          {"at": 0.5, "offset": [1.5, -2.5], "scale": [0.98, 1.02], "aura": 1.08},
+          {"at": 1.0, "offset": [-1.5, 0.0], "scale": [1.03, 0.97], "aura": 1.0}
+        ]
+      },
+      "low": {
+        "loop": true,
+        "duration_ticks": 18,
+        "keyframes": [
+          {"at": 0.0, "offset": [-2.0, 2.0], "scale": [1.055, 0.945], "aura": 0.92},
+          {"at": 0.5, "offset": [1.0, 1.0], "scale": [1.035, 0.965], "aura": 1.0},
+          {"at": 1.0, "offset": [-2.0, 2.0], "scale": [1.055, 0.945], "aura": 0.92}
+        ]
+      },
+      "air": {
+        "loop": false,
+        "duration_ticks": 30,
+        "keyframes": [
+          {"at": 0.0, "offset": [0.0, 1.0], "scale": [1.04, 0.96], "aura": 1.0},
+          {"at": 0.45, "offset": [0.0, -2.0], "scale": [0.965, 1.035], "aura": 1.1},
+          {"at": 1.0, "offset": [0.0, 1.0], "scale": [1.045, 0.955], "aura": 1.0}
+        ]
+      },
+      "cast": {
+        "loop": false,
+        "duration_ticks": 22,
+        "keyframes": [
+          {"at": 0.0, "offset": [0.0, 1.0], "scale": [1.035, 0.965], "aura": 0.88},
+          {"at": 0.45, "offset": [0.0, -2.0], "scale": [0.975, 1.025], "aura": 1.14},
+          {"at": 1.0, "offset": [0.0, 0.0], "scale": [1.0, 1.0], "aura": 1.02}
+        ]
+      },
+      "hit": {
+        "loop": false,
+        "duration_ticks": 16,
+        "keyframes": [
+          {"at": 0.0, "offset": [3.0, 0.0], "scale": [1.05, 0.95], "aura": 0.82},
+          {"at": 0.35, "offset": [-2.0, 1.0], "scale": [0.97, 1.03], "aura": 1.08},
+          {"at": 1.0, "offset": [0.0, 0.0], "scale": [1.0, 1.0], "aura": 0.92}
+        ]
+      }
+    },
+    "grounded_weaver": {
+      "idle": {
+        "loop": true,
+        "duration_ticks": 102,
+        "keyframes": [
+          {"at": 0.0, "offset": [0.0, 0.0], "scale": [1.0, 1.0], "aura": 0.94},
+          {"at": 0.5, "offset": [0.0, -0.75], "scale": [1.008, 0.992], "aura": 1.04},
+          {"at": 1.0, "offset": [0.0, 0.0], "scale": [1.0, 1.0], "aura": 0.94}
+        ]
+      },
+      "walk": {
+        "loop": true,
+        "duration_ticks": 26,
+        "keyframes": [
+          {"at": 0.0, "offset": [-0.75, 0.0], "scale": [1.015, 0.985], "aura": 0.98},
+          {"at": 0.25, "offset": [0.0, -1.5], "scale": [0.99, 1.01], "aura": 1.02},
+          {"at": 0.5, "offset": [0.75, 0.0], "scale": [1.015, 0.985], "aura": 0.98},
+          {"at": 0.75, "offset": [0.0, -1.5], "scale": [0.99, 1.01], "aura": 1.02},
+          {"at": 1.0, "offset": [-0.75, 0.0], "scale": [1.015, 0.985], "aura": 0.98}
+        ]
+      },
+      "sprint": {
+        "loop": true,
+        "duration_ticks": 18,
+        "keyframes": [
+          {"at": 0.0, "offset": [-1.0, 0.0], "scale": [1.025, 0.975], "aura": 1.0},
+          {"at": 0.5, "offset": [1.0, -2.0], "scale": [0.985, 1.015], "aura": 1.07},
+          {"at": 1.0, "offset": [-1.0, 0.0], "scale": [1.025, 0.975], "aura": 1.0}
+        ]
+      },
+      "low": {
+        "loop": true,
+        "duration_ticks": 20,
+        "keyframes": [
+          {"at": 0.0, "offset": [-1.5, 2.0], "scale": [1.05, 0.95], "aura": 0.9},
+          {"at": 0.5, "offset": [1.0, 1.0], "scale": [1.03, 0.97], "aura": 0.98},
+          {"at": 1.0, "offset": [-1.5, 2.0], "scale": [1.05, 0.95], "aura": 0.9}
+        ]
+      },
+      "air": {
+        "loop": false,
+        "duration_ticks": 30,
+        "keyframes": [
+          {"at": 0.0, "offset": [0.0, 1.0], "scale": [1.035, 0.965], "aura": 1.0},
+          {"at": 0.45, "offset": [0.0, -1.5], "scale": [0.975, 1.025], "aura": 1.08},
+          {"at": 1.0, "offset": [0.0, 1.0], "scale": [1.04, 0.96], "aura": 1.0}
+        ]
+      },
+      "cast": {
+        "loop": false,
+        "duration_ticks": 24,
+        "keyframes": [
+          {"at": 0.0, "offset": [0.0, 1.0], "scale": [1.03, 0.97], "aura": 0.86},
+          {"at": 0.5, "offset": [0.0, -1.5], "scale": [0.98, 1.02], "aura": 1.16},
+          {"at": 1.0, "offset": [0.0, 0.0], "scale": [1.0, 1.0], "aura": 1.02}
+        ]
+      },
+      "hit": {
+        "loop": false,
+        "duration_ticks": 18,
+        "keyframes": [
+          {"at": 0.0, "offset": [-3.0, 0.0], "scale": [1.045, 0.955], "aura": 0.8},
+          {"at": 0.4, "offset": [2.0, 1.0], "scale": [0.975, 1.025], "aura": 1.06},
+          {"at": 1.0, "offset": [0.0, 0.0], "scale": [1.0, 1.0], "aura": 0.92}
+        ]
+      }
+    },
+    "iron_regent": {
+      "idle": {
+        "loop": true,
+        "duration_ticks": 108,
+        "keyframes": [
+          {"at": 0.0, "offset": [0.0, 0.0], "scale": [1.0, 1.0], "aura": 0.96},
+          {"at": 0.5, "offset": [0.0, -0.5], "scale": [1.006, 0.994], "aura": 1.03},
+          {"at": 1.0, "offset": [0.0, 0.0], "scale": [1.0, 1.0], "aura": 0.96}
+        ]
+      },
+      "walk": {
+        "loop": true,
+        "duration_ticks": 28,
+        "keyframes": [
+          {"at": 0.0, "offset": [-0.75, 0.5], "scale": [1.018, 0.982], "aura": 0.98},
+          {"at": 0.25, "offset": [0.0, -1.0], "scale": [0.99, 1.01], "aura": 1.02},
+          {"at": 0.5, "offset": [0.75, 0.5], "scale": [1.018, 0.982], "aura": 0.98},
+          {"at": 0.75, "offset": [0.0, -1.0], "scale": [0.99, 1.01], "aura": 1.02},
+          {"at": 1.0, "offset": [-0.75, 0.5], "scale": [1.018, 0.982], "aura": 0.98}
+        ]
+      },
+      "sprint": {
+        "loop": true,
+        "duration_ticks": 20,
+        "keyframes": [
+          {"at": 0.0, "offset": [-1.0, 0.5], "scale": [1.028, 0.972], "aura": 1.0},
+          {"at": 0.5, "offset": [1.0, -1.5], "scale": [0.982, 1.018], "aura": 1.07},
+          {"at": 1.0, "offset": [-1.0, 0.5], "scale": [1.028, 0.972], "aura": 1.0}
+        ]
+      },
+      "low": {
+        "loop": true,
+        "duration_ticks": 22,
+        "keyframes": [
+          {"at": 0.0, "offset": [-1.25, 2.0], "scale": [1.055, 0.945], "aura": 0.90},
+          {"at": 0.5, "offset": [0.75, 1.5], "scale": [1.035, 0.965], "aura": 0.98},
+          {"at": 1.0, "offset": [-1.25, 2.0], "scale": [1.055, 0.945], "aura": 0.90}
+        ]
+      },
+      "air": {
+        "loop": false,
+        "duration_ticks": 32,
+        "keyframes": [
+          {"at": 0.0, "offset": [0.0, 1.0], "scale": [1.04, 0.96], "aura": 1.0},
+          {"at": 0.45, "offset": [0.0, -1.25], "scale": [0.975, 1.025], "aura": 1.08},
+          {"at": 1.0, "offset": [0.0, 1.0], "scale": [1.045, 0.955], "aura": 1.0}
+        ]
+      },
+      "cast": {
+        "loop": false,
+        "duration_ticks": 24,
+        "keyframes": [
+          {"at": 0.0, "offset": [0.0, 1.5], "scale": [1.04, 0.96], "aura": 0.84},
+          {"at": 0.5, "offset": [0.0, -1.0], "scale": [0.978, 1.022], "aura": 1.16},
+          {"at": 1.0, "offset": [0.0, 0.0], "scale": [1.0, 1.0], "aura": 1.02}
+        ]
+      },
+      "hit": {
+        "loop": false,
+        "duration_ticks": 20,
+        "keyframes": [
+          {"at": 0.0, "offset": [-2.5, 0.5], "scale": [1.05, 0.95], "aura": 0.80},
+          {"at": 0.4, "offset": [1.5, 1.0], "scale": [0.975, 1.025], "aura": 1.06},
+          {"at": 1.0, "offset": [0.0, 0.0], "scale": [1.0, 1.0], "aura": 0.92}
+        ]
+      }
+    }
+  }
+}

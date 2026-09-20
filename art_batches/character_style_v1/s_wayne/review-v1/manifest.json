@@ -1,0 +1,180 @@
+{
+	"body_scale": 0.0736975857687421,
+	"body_type": "small",
+	"cell": [
+		96,
+		96
+	],
+	"champion_id": "s_wayne",
+	"complete_coverage": false,
+	"dimensions": [
+		288,
+		96
+	],
+	"directions": [
+		"south",
+		"south_east",
+		"east",
+		"north_east",
+		"north",
+		"north_west",
+		"west",
+		"south_west"
+	],
+	"display_name": "S. Wayne",
+	"frame_count": 3,
+	"frames": [
+		{
+			"direction": "south",
+			"output_region": [
+				0,
+				0,
+				96,
+				96
+			],
+			"output_visible_bounds": [
+				35,
+				26,
+				27,
+				58
+			],
+			"source": "south_contacts_v1",
+			"source_cell_width_normalization": 1.0,
+			"source_rect": [
+				0.0,
+				0.0,
+				591.0,
+				887.0
+			],
+			"source_visible_bounds": [
+				200,
+				49,
+				362,
+				787
+			],
+			"state": "grounded"
+		},
+		{
+			"direction": "south",
+			"output_region": [
+				96,
+				0,
+				96,
+				96
+			],
+			"output_visible_bounds": [
+				35,
+				26,
+				26,
+				58
+			],
+			"source": "south_contacts_v1",
+			"source_cell_width_normalization": 1.0,
+			"source_rect": [
+				591.0,
+				0.0,
+				591.0,
+				887.0
+			],
+			"source_visible_bounds": [
+				122,
+				59,
+				351,
+				782
+			],
+			"state": "walk"
+		},
+		{
+			"direction": "south",
+			"output_region": [
+				192,
+				0,
+				96,
+				96
+			],
+			"output_visible_bounds": [
+				35,
+				27,
+				26,
+				57
+			],
+			"source": "south_contacts_v1",
+			"source_cell_width_normalization": 1.0,
+			"source_rect": [
+				1182.0,
+				0.0,
+				592.0,
+				887.0
+			],
+			"source_visible_bounds": [
+				31,
+				65,
+				350,
+				780
+			],
+			"state": "walk_b"
+		}
+	],
+	"id": "s_wayne-style-pilot",
+	"live_promotion": false,
+	"path": "res://art_batches/character_style_v1/s_wayne/review-v1/s_wayne-partial-review.png",
+	"pivot": [
+		48,
+		84
+	],
+	"registration_policy": "visible bottom center at shared pivot; source anatomy drift not compensated",
+	"required_frame_count": 80,
+	"rgba_sha256": "72d10d1256a3c6fcbf80eb22ba5555779f9ed76af34335dc36d417e8d96833f2",
+	"sampling": "nearest",
+	"scale_policy": "one body scale after page cell-width normalization",
+	"schema_version": 2,
+	"sha256": "ff6f2a172b199b1a0bde6da6ef97ff59d5e514eeb1e0ca46a81cd6530d1ec034",
+	"source_spec": "res://art_batches/character_style_v1/s_wayne/source-layout-v1.json",
+	"sources": [
+		{
+			"background_removal": {
+				"authorization": "User2026-09-08: Yes—use reviewed background removal and assembly.",
+				"maximum_spread": 18.0,
+				"method": "edge_connected_neutral_checker",
+				"minimum_channel": 170.0,
+				"risk": "Light neutral subject pixels connected to outer checkerboard may be lost; inspect borders. Enclosed highlights are preserved."
+			},
+			"cell_width": 591.333333333333,
+			"id": "south_contacts_v1",
+			"import_mode": "reviewed_neutral_checker",
+			"matte": "fdfdfeff",
+			"original_alpha": {
+				"maximum": 255,
+				"minimum": 255,
+				"partial_pixels": 0,
+				"transparent_pixels": 0
+			},
+			"path": "res://art_batches/character_style_v1/s_wayne/south-idle-walk-ab-v1.png",
+			"removed_pixels": 1055290,
+			"sha256": "dc659fdf21e2bde8c237905e2b08b98937927543f10b8bc4c18205ebd7907bae",
+			"size": [
+				1774,
+				887
+			]
+		}
+	],
+	"standing_height": 58,
+	"states": [
+		"grounded",
+		"jump",
+		"cast",
+		"hit",
+		"walk",
+		"sprint",
+		"slide",
+		"roll",
+		"walk_b",
+		"sprint_b"
+	],
+	"status": "partial_review_only",
+	"visual_review": {
+		"alpha": "OriginalRGB24 baked checkerboard. Explicit user-authorized source-specific removal; originals immutable.",
+		"gait": "SouthA/B visibly reverse anatomical planted foot and opposite arm; native review pending.",
+		"limits": "Three south-facing poses only; not a complete8-direction/80-cell character."
+	}
+}

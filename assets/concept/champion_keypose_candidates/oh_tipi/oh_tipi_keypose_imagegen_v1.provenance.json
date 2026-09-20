@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "id": "oh_tipi_keypose_imagegen_v1",
+  "champion_id": "oh_tipi",
+  "status": "quarantined_visual_candidate",
+  "runtime_approved": false,
+  "license_status": "not_assessed_for_runtime_distribution",
+  "created_at": "2026-08-09T11:16:00+02:00",
+  "generator": {
+    "provider": "OpenAI built-in image generation",
+    "model_version": "not exposed by tool"
+  },
+  "artifact": {
+    "path": "res://assets/concept/champion_keypose_candidates/oh_tipi/oh_tipi_keypose_imagegen_v1.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "444db9b77d34a1a5a4e792ff9465eb20dbdf3f0862d17ab7adc618ff03bfcee8"
+  },
+  "grid": {
+    "columns": 5,
+    "rows": 5,
+    "exact_cells": false
+  },
+  "references": [
+    {
+      "role": "minimum visual quality and character identity reference",
+      "path": "res://assets/concept/flux-champions-visual-style-v1.png",
+      "sha256": "cb8aa1b3f4e1c41498a35dd37303a3783b0f8fa2c0bbb0b75a89cbd02934732f"
+    },
+    {
+      "role": "action ordering and layout reference only",
+      "path": "res://assets/sprites/champions_v2/oh_tipi/keyframe_board.png",
+      "sha256": "fa32c3641c42cc7df3d07fd9ad299b9561ed2e6349de1330c49f075fb55045ff"
+    }
+  ],
+  "intended_pose_order": [
+    "idle",
+    "walk",
+    "sprint",
+    "hop",
+    "double_jump",
+    "rise",
+    "fall",
+    "land",
+    "wall_contact",
+    "wall_kick",
+    "air_dodge",
+    "wavedash",
+    "slide",
+    "slide_jump",
+    "vault",
+    "superglide",
+    "attack_primary",
+    "cast",
+    "defend",
+    "hit",
+    "stunned",
+    "rooted",
+    "defeated",
+    "interact",
+    "taunt"
+  ],
+  "observed_strengths": [
+    "five-by-five pose organization",
+    "coherent Seakin identity and equipment",
+    "readable Water, Ice and Charge language",
+    "substantially richer silhouette and material detail than the current runtime candidate"
+  ],
+  "promotion_blockers": [
+    "1254-pixel dimension is not evenly divisible by the intended five-cell grid",
+    "single view per action rather than eight directions",
+    "key poses are not extracted transparent animation frames",
+    "action effects and incidental props require separation from the body layer",
+    "no frame timing, pivot alignment, gameplay-zoom or accessibility acceptance",
+    "license and explicit visual approval remain pending",
+    "no runtime import or semantic playback validation"
+  ],
+  "authority": "presentation_only"
+}

@@ -1,0 +1,8 @@
+Use case: stylized-concept. NEWFLUXpixelartMATERIALanimationloop. Referenceimage1 isONLYsharedpixelchunk/outline/volumeclarityreference ofFire. DO NOTcopyitsfirepalette, flamelicks, shapeorembers.
+ExactlyFOURcolumnsandTWOrows, EIGHTequalsquarespritecells on2:1landscapecanvas, chronologicalrowmajororder. No textlabels/borders/gridlines. Solidflatpuremagenta#FF00FFmatte outsidesprites; NOcheckerboard, NOgroundshadow,noprops,nocharacters,noUI,nospellrunes.
+Originalcharmingdetailedbutreadablepixelart: believablephysicalmaterialmotion, restrainedpixelclusters,strongsilhouette, crispsteppededgewithoutblur orlargeglow. Fixed55degreeelevatedadventurecamera. Eachsprite fitscentral60%widthand65%heightofitscell; SAMEscaleandgroundrootat(50%,81.25%)ALLframes. Rootdoesnotwanderandframe8connectsbackto1. Style suitablefor32pxmaterialcells atactualgameplay, enlargedforsourceinspection. No photorealism/3Drender/vector, noelementfaces.
+ELEMENT EARTH.
+Palette:#44321F darkbrown, #936F3F ochre-brown, #D4B06B sandyhighlight.
+Subject:onecompactweightyangularstoneclumpwiththreeinterlockingfacetsand4tinygritpieces, noface,nocrystals,nofloatingisland,noenvironmentbase. Mineralvolume, warmrockfaces, strongboldsilhouette.
+Animation:MostrockmassstaysPERFECTLYSTILL.8framequietloop: a fewloosegrains settlealongonecrack; anuppercrumbtilts/fallsandisreplacedbyasmallnewcrumb; dustmotionveryrestrained. Fixedfacets catchatinyshallowhighlight. NOrockwobble, NOsquashstretch, NOmagicalrotatingstones, NOorangeglowingmagma..
+Makeexact8distinctbuttemporallycoherentframes, singlematerialonly.

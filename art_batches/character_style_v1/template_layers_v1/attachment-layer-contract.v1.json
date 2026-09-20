@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "id": "flux-shared-template-attachment-layers-v1",
+  "status": "preparation_only_pending_human_shared_template_approval",
+  "authority": "Offline shared-template layer declarations only. This contract does not authorize named skins, live atlases, runtime paper-doll rendering, roster changes, or promotion.",
+  "source_provenance": [
+    {
+      "role": "current_cast_proportions_authority",
+      "path": "reference/art/cast_proportions_v5/README.md",
+      "sha256": "03d0a8dc275d219e0a7da3f289d071a8f72584501552331e607d98ae3704e65d"
+    },
+    {
+      "role": "three_body_construction_contract",
+      "path": "art_batches/character_style_v1/template_v2/contract.json",
+      "sha256": "874ef913499444bb92b9cf6a7ecea9cf2658d52d7a56d49361994dac6ccf4837"
+    },
+    {
+      "role": "fixed_bone_pose_model",
+      "path": "art_batches/character_style_v1/template_v2/pose_guide_model.gd",
+      "sha256": "d266224d9bddd6b830eed9a2131ff28674362ef47111bbbeacd6529a88694874"
+    },
+    {
+      "role": "rig_export_schema",
+      "path": "art_batches/character_style_v1/wireframe_motion_v2/export_rig.gd",
+      "sha256": "5b90f77a36a72bfb20622b809bd324196294fb1471ece2cf0622a7435afa7786"
+    },
+    {
+      "role": "rig_export_snapshot",
+      "path": "art_batches/character_style_v1/wireframe_motion_v2/rig-data.json",
+      "sha256": "281ffb6db150bc94f5381b1ff4a0715c769f75cf3a9e129f0deaf0d3cc5f53b1"
+    },
+    {
+      "role": "current_fixed_bone_raster_baker",
+      "path": "art_batches/character_style_v1/wireframe_motion_v2/build.py",
+      "sha256": "a74a6e003454f6a29e8a9257ec03e9bf2402337110942869e476f67f9212abe1"
+    },
+    {
+      "role": "current_character_style_pack_assembler",
+      "path": "scripts/build_character_style_pack.gd",
+      "sha256": "ce1d2d37b509fe5500c4b3ab9f52754bcf17978215145285b8822cb0dcd98d67"
+    }
+  ],
+  "registration": {
+    "coordinate_space": "baked_cell_pixels",
+    "cell": [96, 96],
+    "feet_pivot": [48, 84],
+    "last_opaque_y": 83,
+    "transform_formula": "display_point = feet_pivot + (rig_point - feet_pivot) * presentation_scale",
+    "scale_policy": "One fixed scale per body size about the feet pivot; never fit or warp per pose or per layer."
+  },
+  "sizes": {
+    "small": {
+      "rig_source_height": 58,
+      "display_height": 58,
+      "presentation_scale": 1.0,
+      "exact_scale_ratio": "58/58"
+    },
+    "middle": {
+      "rig_source_height": 68,
+      "display_height": 63,
+      "presentation_scale": 0.9264705882352942,
+      "exact_scale_ratio": "63/68"
+    },
+    "large": {
+      "rig_source_height": 76,
+      "display_height": 68,
+      "presentation_scale": 0.8947368421052632,
+      "exact_scale_ratio": "68/76"
+    }
+  },
+  "rig": {
+    "schema_version": 2,
+    "joint_source_fields": ["poses[*].points", "poses[*].landmarks"],
+    "joint_names": [
+      "ankle_l",
+      "ankle_r",
+      "elbow_l",
+      "elbow_r",
+      "hand_l",
+      "hand_r",
+      "head",
+      "hip_l",
+      "hip_r",
+      "knee_l",
+      "knee_r",
+      "neck",
+      "nose",
+      "pelvis",
+      "shoulder_l",
+      "shoulder_r",
+      "toe_l",
+      "toe_r"
+    ],
+    "side_semantics": "Suffixes _l and _r mean anatomical left and right, never screen left and right.",
+    "directions": ["south", "south_east", "east", "north_east", "north", "north_west", "west", "south_west"],
+    "base_rows": ["grounded", "jump", "cast", "hit", "walk", "sprint", "slide", "roll", "walk_b", "sprint_b"]
+  },
+  "layer_declaration": {
+    "template_ids": ["template_small", "template_middle", "template_large"],
+    "allowed_semantics": ["body", "anatomy_detail", "plain_clothing", "identity_clothing", "hair", "ancestry_trait"],
+    "allowed_depth_bands": ["rear", "body", "front"],
+    "required_layer_fields": ["id", "semantic", "depth_band", "anchors", "texture"],
+    "maximum_layers": 64,
+    "maximum_anchors_per_layer": 8,
+    "texture_policy": "Repository-relative PNG path with forward slashes; no absolute path, traversal, or reparse resolution.",
+    "composition_policy": "Bake reviewed body-only layers into an isolated candidate after human approval; do not add a live runtime layer renderer."
+  },
+  "forbidden_layer_families": [
+    "weapon",
+    "weapons",
+    "staff",
+    "staffs",
+    "wand",
+    "wands",
+    "sword",
+    "swords",
+    "shield",
+    "shields",
+    "magic",
+    "spell",
+    "spells",
+    "effect",
+    "effects",
+    "aura",
+    "auras",
+    "shadow",
+    "shadows",
+    "ground",
+    "marker",
+    "markers",
+    "environment"
+  ],
+  "approval_gate": "A human must approve the shared template and its layer vocabulary before any layer source art, named skin, candidate atlas, or live integration is produced."
+}

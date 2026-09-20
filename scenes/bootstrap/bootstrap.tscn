@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/app/bootstrap.gd" id="1_bootstrap"]
+[ext_resource type="Script" path="res://src/net/lan_lobby.gd" id="2_lan_lobby"]
+
+[node name="Bootstrap" type="Node2D"]
+script = ExtResource("1_bootstrap")
+
+[node name="LanLobby" type="CanvasLayer" parent="."]
+script = ExtResource("2_lan_lobby")

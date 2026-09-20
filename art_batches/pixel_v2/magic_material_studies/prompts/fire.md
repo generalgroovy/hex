@@ -1,0 +1,9 @@
+Use case: stylized-concept
+Asset: FLUX pixel-game animation SOURCE SHEET, FIRE material, eight-frame continuous active loop.
+Composition: EXACTLY4 columns and2 rows,8 equal square cells, landscape2:1canvas. Readframesleft-to-rightontoprow thenleft-to-rightonbottomrow. No text, numbers, borders, gridlines or decorations.
+Background: solidflatPUREmagenta#FF00FF, no transparency checkerboard, no shadow, no groundtile. All firepixelsmuststaywellinsidecells.
+Style: charming hand-crafted detailed but SIMPLE readable pixelart, believable firebehavior, 55degree elevatedtopdownadventure camera. Original fantasybullethell style, warmroundedclustersandsharpflametips, NOTflatSVGicon,notsmoothvector,NOTphotorealistic,no blurryglow,no3Drender. Thinkanimatedtinybonfirematerial WITHOUTlogsorwood. Sparseopaqueembers, notacomplexparticleexplosion.
+Palette: darkred#5B1D12, vividwarmorange#DD5930, goldeninnerheat#FFD169, optionaldarkink#16212A onlywhereclarityneeded. Fireisorangeyellow, nevergreen/cyan/purple. Crispsteppedpixelclusters, noantialiasing.
+Subject: ONEcompactgroundanchored firetuftwiththreeunequalintertwiningflametongues, brightinnerpocket, orangeouterbody, darkredbase. No face/eyes. Theflamehasvolumeandcurlswithrisingbuoyantmotion, notanidenticalflamelogorepeated.
+Animation: frame1lefttonguecurlsright, centerlow;2centerrisesandlefttipseparatesasatinyember;3righttongueriseswhilecenterbendsleft;4centersplits into2shortlicks;5rightlickpinchesoffsmallrisingember;6leftlickriseswhilecentercollapses;7centerreformsandcurlsmatchtheinitialrhythm;8approachesframe1forseamlesswrap. Masscontinuity, smallcontrolledshapechanges, NOTeightdifferentobjectsandNOTgrow-to-explosion.
+Allframes SAMEscaleandSAMErootpivot atcell(50%,81.25%). Flamebodyfitscentral60%cellwidthand65%cellheight; highestemberstaysbelow10%topmargin. Lowbasefixed. Builtfromreadablepixelclustersappropriatefor32pxgamematerialcells, shownenlargedforsourceclarity. OutputONLYthe8spriteframesonmagenta.

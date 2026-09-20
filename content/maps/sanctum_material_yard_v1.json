@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "id": "sanctum-material-yard-v1",
+  "material_catalog_id": "foundation-materials-v1",
+  "width": 128,
+  "height": 128,
+  "chunk_size": 16,
+  "reset_group": "material-yard-all",
+  "ambient_temperature": 20000,
+  "max_awake_cells_per_second": 30720,
+  "worldbone_perimeter_required": true,
+  "required_seed_materials": [
+    "worldbone",
+    "stone",
+    "brick",
+    "wood",
+    "water",
+    "oil",
+    "fire",
+    "steam",
+    "ice",
+    "rubble"
+  ],
+  "seed_rects": [
+    {"x": 0, "y": 0, "width": 128, "height": 1, "material": "worldbone", "elevation": 2000},
+    {"x": 0, "y": 127, "width": 128, "height": 1, "material": "worldbone", "elevation": 2000},
+    {"x": 0, "y": 1, "width": 1, "height": 126, "material": "worldbone", "elevation": 2000},
+    {"x": 127, "y": 1, "width": 1, "height": 126, "material": "worldbone", "elevation": 2000},
+    {"x": 60, "y": 58, "width": 8, "height": 12, "material": "worldbone", "elevation": 3000},
+    {"x": 8, "y": 16, "width": 16, "height": 4, "material": "brick", "elevation": 1000},
+    {"x": 8, "y": 30, "width": 16, "height": 4, "material": "wood", "elevation": 1000},
+    {"x": 36, "y": 16, "width": 20, "height": 8, "material": "water", "charge": 700, "elevation": -1000},
+    {"x": 36, "y": 30, "width": 12, "height": 4, "material": "oil", "elevation": -500},
+    {"x": 76, "y": 16, "width": 4, "height": 4, "material": "fire", "temperature": 600000},
+    {"x": 84, "y": 16, "width": 4, "height": 4, "material": "steam", "temperature": 120000},
+    {"x": 92, "y": 16, "width": 8, "height": 4, "material": "ice", "temperature": -10000},
+    {"x": 76, "y": 30, "width": 12, "height": 4, "material": "rubble", "elevation": 500},
+    {"x": 92, "y": 30, "width": 12, "height": 4, "material": "stone", "elevation": 1000}
+  ]
+}

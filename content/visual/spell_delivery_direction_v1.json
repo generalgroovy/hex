@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "id": "spell-delivery-direction-v1",
+  "authority": "presentation-only",
+  "direction_order": ["south", "south_east", "east", "north_east", "north", "north_west", "west", "south_west"],
+  "zero_vector_fallback": "south",
+  "channels": {
+    "simulation_aim": "continuous-normalized-vector",
+    "hand_origin": "continuous-aim-presentation-offset",
+    "body_cast_and_recovery": "nearest-eight-direction",
+    "hand_gather_and_release_art": "nearest-eight-direction",
+    "projectile_orientation_and_trail_art": "nearest-eight-direction",
+    "beam_and_spray_geometry": "continuous-simulation-owned",
+    "field_and_impact_anchors": "simulation-owned"
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "id": "flux-three-body-art-production-v2",
+  "authority": "Offline art construction and review only; no gameplay, collision, timing, stats or runtime-registry authority.",
+  "style_reference": "reference/art/oh_tipi_authority_v1/oh-tipi-authoritative-reference.png",
+  "style_reference_sha256": "d50ed37439cc788dd36d1a8216d3621c034d1d7cc68d91200fdd4bafd25ee106",
+  "body_build_order": [
+    "small",
+    "middle",
+    "large"
+  ],
+  "standing_height_pixels": {
+    "small": 58,
+    "middle": 68,
+    "large": 76
+  },
+  "cell": [
+    96,
+    96
+  ],
+  "feet_pivot": [
+    48,
+    84
+  ],
+  "new_page_last_opaque_y": 83,
+  "runtime_page_dimensions": [
+    768,
+    960
+  ],
+  "runtime_scale": [
+    1,
+    1
+  ],
+  "scale_policy": "One immutable body scale across all actions; page-wide source calibration only, never per-pose fitting or anatomy warping.",
+  "head_ratio_range": [
+    0.2,
+    0.23
+  ],
+  "head_measurement": "Ordinary cranium excludes hair, fins, horns, wings and ancestry crowns.",
+  "camera_elevation_degrees": 55,
+  "yaw_convention": "South/front is 0; increasing yaw proceeds S, SE, E, NE, N, NW, W, SW. These are art-facing targets, not simulation angle units.",
+  "directions": [
+    {
+      "id": "south",
+      "yaw_degrees": 0,
+      "cue": "Centered front chest, both shoulders balanced, nose and feet toward camera; not diagonal."
+    },
+    {
+      "id": "south_east",
+      "yaw_degrees": 45,
+      "cue": "Front-right three-quarter; chest and near cheek visible, shoulders staggered, near hand/leg overlap; neither square front nor right profile."
+    },
+    {
+      "id": "east",
+      "yaw_degrees": 90,
+      "cue": "True right profile; nose, knees and toes point screen-right; far shoulder/limbs overlap behind near side."
+    },
+    {
+      "id": "north_east",
+      "yaw_degrees": 135,
+      "cue": "Rear-right three-quarter; back and rear skull dominate, no frontal chest or full visible face; right shoulder and rightward toe/heel axis; not right profile."
+    },
+    {
+      "id": "north",
+      "yaw_degrees": 180,
+      "cue": "Centered full back, rear skull and both shoulders balanced; no face or chest; heels toward viewer."
+    },
+    {
+      "id": "north_west",
+      "yaw_degrees": 225,
+      "cue": "Rear-left three-quarter; back and rear skull dominate, no frontal chest or full visible face; left shoulder and leftward toe/heel axis; not left profile."
+    },
+    {
+      "id": "west",
+      "yaw_degrees": 270,
+      "cue": "True left profile; nose, knees and toes point screen-left; far shoulder/limbs overlap behind near side."
+    },
+    {
+      "id": "south_west",
+      "yaw_degrees": 315,
+      "cue": "Front-left three-quarter; chest and near cheek visible, shoulders staggered, near hand/leg overlap; neither square front nor left profile."
+    }
+  ],
+  "rows": [
+    "grounded",
+    "jump",
+    "cast",
+    "hit",
+    "walk",
+    "sprint",
+    "slide",
+    "roll",
+    "walk_b",
+    "sprint_b"
+  ],
+  "contact_support": {
+    "walk": "left",
+    "walk_b": "right",
+    "sprint": "left",
+    "sprint_b": "right"
+  },
+  "contact_policy": "Anatomical left/right, never screen-left/right. A/B visibly exchange planted and passing legs, with opposite arm counter-swing. Costume mirroring, moved toes, whole-body translations and different pixel hashes do not establish a second contact.",
+  "source_board": {
+    "default_heading_count": 1,
+    "maximum_heading_count": 2,
+    "poses_per_heading": 10,
+    "suggested_grid_one_heading": [
+      2,
+      5
+    ],
+    "pair_layout": "Place walk beside walk_b and sprint beside sprint_b. Preserve a neutral calibration pose on each source board."
+  },
+  "portrait": {
+    "source": "grounded/south",
+    "crop": "Exactly the top third of occupied south-grounded bounds: all occupied width and ceil(occupied_height/3) rows, fitted into a transparent32px portrait. No separate manual portrait artwork.",
+    "runtime_pixels": [
+      32,
+      32
+    ],
+    "authority": "Presentation only; does not alter atlas geometry."
+  },
+  "layers": {
+    "included": [
+      "body",
+      "anatomy",
+      "plain_or_identity_clothing"
+    ],
+    "excluded": [
+      "weapons",
+      "staffs",
+      "wands",
+      "magic",
+      "auras",
+      "shadows",
+      "environment",
+      "ground_markers"
+    ]
+  },
+  "pixel_policy": "Binary alpha, transparent gutters, nearest sampling, no mipmaps, no filtered sprite edges. Reviewed source-hash-locked matte extraction only; retain immutable originals and masks.",
+  "reuse_policy": "Share size guides, landmarks, camera, facing/contact grammar and registration; do not reuse another champion's identity pixels as unique art. No new live paper-doll renderer.",
+  "review_gate": "Exact candidate PNG SHA plus all80 reviewed cells and opposite locomotion contacts; explicit held/pending cells block new promotion. Technical validation checks the attestation, not anatomy or visual quality. Existing live pages are not disabled by absent retrospective receipts."
+}

@@ -1,0 +1,528 @@
+{
+  "format": "hex.balance.handoff.v1",
+  "format_notice": "Standalone review/experiment specification. Not an existing repository schema, executable test harness, game configuration, or source patch.",
+  "task_id": "BALANCE",
+  "source": {
+    "label": "S1",
+    "filename": "Pasted text.txt",
+    "sha256": "00dbf3516287d746be3f7127bd0b36eb1cddb35b5df90392bac138a140bbb549",
+    "byte_count": 11049,
+    "task_lines": [
+      112,
+      127
+    ],
+    "boundary_lines": [
+      21,
+      33
+    ],
+    "completion_lines": [
+      160,
+      173
+    ],
+    "authoritative_build_identifier": null
+  },
+  "observed_implementation_facts": [],
+  "retrieval_note": "Conversation/library searches recovered only the assignment; separate searches did not recover the referenced contract, queue, or checkpoint. This is not a claim that those files do not exist.",
+  "recommended_solution": "Keep existing production mechanics and values. First map and measure the existing Steam exposure path; change at most one existing coefficient only if BAL-E1 accepts it. A passing baseline means no change.",
+  "principal_tradeoff": "A narrow Steam pilot will not by itself resolve balance across all ten reactions or four delivery families.",
+  "strongest_counterargument": "Steam may already be correct, or the actual problem may be accounting, stacking, geometry, or counterplay rather than its coefficient. In that case do not tune the coefficient.",
+  "source_needed": [
+    "Current design contract",
+    "Active implementation queue",
+    "Checkpoint with authoritative commit/build identifier",
+    "Ten reaction definitions and four projectile-family definitions",
+    "Authoritative payment, impact selection, allocation, interception, reaction consumption, Steam exposure/exit/overlap, and protection implementations plus relevant tests"
+  ],
+  "contract_changes": [],
+  "unsupported_role_policy": "Discard or hold any provisional role that conflicts with the current source; do not silently implement it as a contract change.",
+  "repository_changes_made": false,
+  "runtime_acceptance_claimed": false,
+  "reactions": [
+    {
+      "pair": [
+        "Water",
+        "Water"
+      ],
+      "identity": "Flood",
+      "purpose": "Broad Water preparation rather than concentrated finishing damage.",
+      "player_option": "Seed an anticipated route for a later paid reaction instead of aiming only at the opponent.",
+      "counter": "Rotate through untreated ground before committing to the prepared route.",
+      "base_element_synergy": "Use Water as the setup ingredient for a later first-four pair, only where the actual registry permits retained ingredients.",
+      "resource_tradeoff": "Commit two Water contributions to preparation; spreading one finite output budget must not create a full-strength copy in each cell.",
+      "abuse_hypothesis": "Repeated wetting or refreshing reissues the original quantity without new payment.",
+      "mechanic_prerequisite": "Verify actual Water retention, reaction output, lifetime, and refresh rules; a name alone does not establish these.",
+      "status": "PROVISIONAL_AUDIT_CRITERION_NOT_A_FEATURE_REQUEST",
+      "association_basis": "Inferred from the parallel order of the pair and identity lists in S1; registry verification required.",
+      "current_implementation": null
+    },
+    {
+      "pair": [
+        "Water",
+        "Earth"
+      ],
+      "identity": "Mud",
+      "purpose": "Chokepoint tempo control, conditional on existing movement-affecting behavior.",
+      "player_option": "Place at a likely turn or landing point rather than covering an entire arena.",
+      "counter": "Use an untreated alternate route; do not assume jumping grants immunity.",
+      "base_element_synergy": "Water supplies one ingredient and Earth the other; time the second contribution when the route matters.",
+      "resource_tradeoff": "Spend two elements on position-dependent utility instead of immediate direct pressure.",
+      "abuse_hypothesis": "Tiny repeat contributions renew a maximum movement penalty or create a station/spawn trap.",
+      "mechanic_prerequisite": "Verify any movement penalty, refresh rule, and airborne interaction; do not add them from this proposal.",
+      "status": "PROVISIONAL_AUDIT_CRITERION_NOT_A_FEATURE_REQUEST",
+      "association_basis": "Inferred from the parallel order of the pair and identity lists in S1; registry verification required.",
+      "current_implementation": null
+    },
+    {
+      "pair": [
+        "Water",
+        "Fire"
+      ],
+      "identity": "Steam",
+      "purpose": "Punish sustained occupation through accumulating scalding exposure, not concealment.",
+      "player_option": "Force a choice between holding a useful position and leaving before exposure becomes costly.",
+      "counter": "Leave affected cells promptly; recovery follows the existing exit/decay rule, which is not supplied.",
+      "base_element_synergy": "Combine paid Water and Fire contributions at a chosen position; check real consumption before assuming leftovers remain.",
+      "resource_tradeoff": "Commit setup and Fire expenditure to dwell-time pressure rather than an immediate direct hit.",
+      "abuse_hypothesis": "Boundary re-entry creates repeated entry damage, or overlapping fields charge the same exposure contribution twice.",
+      "mechanic_prerequisite": "Verify accumulation, damage conversion, merging/stacking, exit persistence, decay/reset, and protection rules.",
+      "status": "PROVISIONAL_AUDIT_CRITERION_NOT_A_FEATURE_REQUEST",
+      "association_basis": "Inferred from the parallel order of the pair and identity lists in S1; registry verification required.",
+      "current_implementation": null
+    },
+    {
+      "pair": [
+        "Water",
+        "Air"
+      ],
+      "identity": "Mistcurrent",
+      "purpose": "Pressure an approach or escape route using the existing Water/Air behavior.",
+      "player_option": "Prepare a flank rather than compete with Flood for stationary area coverage.",
+      "counter": "Enter from an unprepared angle rather than follow the prepared route.",
+      "base_element_synergy": "Combine Water setup with the actual Air interaction; no new movement boost, projectile redirection, or cleanse is implied.",
+      "resource_tradeoff": "Spend two ingredients on route utility; carrying or relocating an effect, if supported, cannot replenish its budget for free.",
+      "abuse_hypothesis": "Relocation or cell traversal recreates full ingredient quantity or strength.",
+      "mechanic_prerequisite": "Verify what the current effect actually does; mobility, transport, and replenishment behavior are not documented here.",
+      "status": "PROVISIONAL_AUDIT_CRITERION_NOT_A_FEATURE_REQUEST",
+      "association_basis": "Inferred from the parallel order of the pair and identity lists in S1; registry verification required.",
+      "current_implementation": null
+    },
+    {
+      "pair": [
+        "Earth",
+        "Earth"
+      ],
+      "identity": "Rampart",
+      "purpose": "Defensive Earth positioning; cover is conditional on source-confirmed blocking geometry.",
+      "player_option": "Split approach angles using existing blocking behavior, rather than seal every route.",
+      "counter": "Flank the position; do not assume the effect is destructible.",
+      "base_element_synergy": "Concentrate two Earth contributions at a useful defensive position.",
+      "resource_tradeoff": "Commit Earth resources to a location an opponent can choose not to contest.",
+      "abuse_hypothesis": "Cheap indefinite refresh, impassable trap combinations, or denied station access.",
+      "mechanic_prerequisite": "Verify whether Rampart blocks movement/projectiles, its dimensions, lifetime, refresh, and legal placement.",
+      "status": "PROVISIONAL_AUDIT_CRITERION_NOT_A_FEATURE_REQUEST",
+      "association_basis": "Inferred from the parallel order of the pair and identity lists in S1; registry verification required.",
+      "current_implementation": null
+    },
+    {
+      "pair": [
+        "Earth",
+        "Fire"
+      ],
+      "identity": "Magma",
+      "purpose": "Committed ground pressure, conditional on the actual hazard behavior.",
+      "player_option": "Threaten a predicted landing or return route instead of chasing current position.",
+      "counter": "Bait the placement and change route.",
+      "base_element_synergy": "Combine Earth positioning and Fire expenditure through the existing recipe.",
+      "resource_tradeoff": "Trade two-element commitment for local pressure; do not assume a longer lifetime or higher damage than Steam without evidence.",
+      "abuse_hypothesis": "Every selected cell receives the full output budget, or small additions renew a full-strength hazard.",
+      "mechanic_prerequisite": "Verify hazard, duration, output budget, allocation, and refresh semantics.",
+      "status": "PROVISIONAL_AUDIT_CRITERION_NOT_A_FEATURE_REQUEST",
+      "association_basis": "Inferred from the parallel order of the pair and identity lists in S1; registry verification required.",
+      "current_implementation": null
+    },
+    {
+      "pair": [
+        "Earth",
+        "Air"
+      ],
+      "identity": "Dustfront",
+      "purpose": "Earth/Air approach disruption through its existing effect.",
+      "player_option": "Time pressure to an opponent crossing an exposed lane.",
+      "counter": "Change approach angle or stagger entry rather than repeatedly contest the same lane.",
+      "base_element_synergy": "Combine Earth and Air to support a follow-up shot; no blind, silence, or stagger is assumed.",
+      "resource_tradeoff": "Pay for a timing opportunity instead of guaranteed burst damage.",
+      "abuse_hypothesis": "Each tiny Rapid/Spray contribution grants a full-strength control or reaction effect.",
+      "mechanic_prerequisite": "Verify actual utility and any per-hit or per-reaction minimum effect.",
+      "status": "PROVISIONAL_AUDIT_CRITERION_NOT_A_FEATURE_REQUEST",
+      "association_basis": "Inferred from the parallel order of the pair and identity lists in S1; registry verification required.",
+      "current_implementation": null
+    },
+    {
+      "pair": [
+        "Fire",
+        "Fire"
+      ],
+      "identity": "Conflagration",
+      "purpose": "Concentrated Fire escalation using paid follow-up commitment.",
+      "player_option": "Commit the second Fire contribution only when the opponent chooses to stay.",
+      "counter": "Disengage before the follow-up expenditure is useful.",
+      "base_element_synergy": "Combine two Fire contributions without assuming an extra multiplier or new stacking mechanic.",
+      "resource_tradeoff": "Spend additional Fire resources on a punish window rather than retain them for a later exchange.",
+      "abuse_hypothesis": "Refresh increments output indefinitely or increases strength without consuming new ingredients.",
+      "mechanic_prerequisite": "Verify stacking, any amplification yield, lifetime, and finite output authorization.",
+      "status": "PROVISIONAL_AUDIT_CRITERION_NOT_A_FEATURE_REQUEST",
+      "association_basis": "Inferred from the parallel order of the pair and identity lists in S1; registry verification required.",
+      "current_implementation": null
+    },
+    {
+      "pair": [
+        "Fire",
+        "Air"
+      ],
+      "identity": "Firestorm",
+      "purpose": "Fire/Air pressure along a moving fight, without assuming the effect itself moves.",
+      "player_option": "Lead an escape route instead of firing at the current location.",
+      "counter": "Reverse or leave the threatened route laterally.",
+      "base_element_synergy": "Combine Fire threat and the existing Air interaction.",
+      "resource_tradeoff": "Spatial reach, where supported, must be paid for or distribute a finite budget rather than duplicate it.",
+      "abuse_hypothesis": "Spread, relocation, or repeated contact reissues an undiminished reaction budget.",
+      "mechanic_prerequisite": "Verify actual propagation/mobility, output allocation, and repeat-contact rules.",
+      "status": "PROVISIONAL_AUDIT_CRITERION_NOT_A_FEATURE_REQUEST",
+      "association_basis": "Inferred from the parallel order of the pair and identity lists in S1; registry verification required.",
+      "current_implementation": null
+    },
+    {
+      "pair": [
+        "Air",
+        "Air"
+      ],
+      "identity": "Vortex",
+      "purpose": "Air-based positional control, conditional on source-confirmed force behavior.",
+      "player_option": "Set a reversal or crossfire point using existing displacement behavior.",
+      "counter": "Contest from outside the affected cells and another angle; do not assume an escape button or immunity.",
+      "base_element_synergy": "Combine two Air contributions to support subsequent aimed pressure.",
+      "resource_tradeoff": "Commit resources to control whose value depends on positioning and follow-up.",
+      "abuse_hypothesis": "Repeated applications or several casters create an inescapable control loop.",
+      "mechanic_prerequisite": "Verify any force, its integration, stacking, duration, and supported ways to leave; no new pull or hard control is proposed.",
+      "status": "PROVISIONAL_AUDIT_CRITERION_NOT_A_FEATURE_REQUEST",
+      "association_basis": "Inferred from the parallel order of the pair and identity lists in S1; registry verification required.",
+      "current_implementation": null
+    }
+  ],
+  "projectile_families": [
+    {
+      "family": "Bolt",
+      "proposed_comparison": {
+        "speed": "Reference flight time and cast cadence; no current velocity ranking is known.",
+        "strength": "Concentrated, readable per-projectile commitment.",
+        "mana_efficiency": "Reference aimed damage and delivered quantity per actual mana spent.",
+        "coverage": "Precision rather than broad initial distribution; impact footprint still follows the actual selector.",
+        "interception": "Reference equal/unequal encounters; apply the real resolver rather than assume mutual deletion.",
+        "reaction_usefulness": "Finish a planned pair at a specific position."
+      },
+      "current_values": {
+        "speed": null,
+        "strength": null,
+        "mana_efficiency": null,
+        "coverage": null,
+        "interception": null,
+        "reaction_usefulness": null
+      },
+      "status": "UNMEASURED_PROPOSED_COMPARISON"
+    },
+    {
+      "family": "Heavy",
+      "proposed_comparison": {
+        "speed": "Test a slower arrival or larger cast commitment as the price of concentration; do not change both automatically.",
+        "strength": "Larger individual packet, not automatically more strength per mana.",
+        "mana_efficiency": "Potential interception value, with a punishable miss or timing commitment.",
+        "coverage": "Do not equate Heavy with a larger radius without the current definition.",
+        "interception": "Potential stronger-packet niche; any survivor/remainder is determined by the existing finite-strength rule.",
+        "reaction_usefulness": "Commit a substantial paid contribution to a chosen reaction site."
+      },
+      "current_values": {
+        "speed": null,
+        "strength": null,
+        "mana_efficiency": null,
+        "coverage": null,
+        "interception": null,
+        "reaction_usefulness": null
+      },
+      "status": "UNMEASURED_PROPOSED_COMPARISON"
+    },
+    {
+      "family": "Rapid",
+      "proposed_comparison": {
+        "speed": "Shorter firing intervals are distinct from higher projectile velocity.",
+        "strength": "Smaller independently paid packets where the current definition supports them.",
+        "mana_efficiency": "Value from correction and frequent opportunities, not an assumed best damage-per-mana ratio.",
+        "coverage": "Repeated aimed contacts over time rather than automatically broad simultaneous coverage.",
+        "interception": "Track cumulative spent strength and hostile remainder across every contact.",
+        "reaction_usefulness": "Fine ingredient dosing, without a free full reaction for every tiny contact."
+      },
+      "current_values": {
+        "speed": null,
+        "strength": null,
+        "mana_efficiency": null,
+        "coverage": null,
+        "interception": null,
+        "reaction_usefulness": null
+      },
+      "status": "UNMEASURED_PROPOSED_COMPARISON"
+    },
+    {
+      "family": "Spray",
+      "proposed_comparison": {
+        "speed": "Measure actual flight speed, emission duration, and arrival spread separately.",
+        "strength": "One cast budget distributed among its source-defined components.",
+        "mana_efficiency": "Breadth and hit probability in exchange for concentrated yield, as a hypothesis.",
+        "coverage": "Candidate broadest initial distribution; eligible affected cells remain whole cells.",
+        "interception": "Many contacts cannot imply unlimited hostile-strength removal.",
+        "reaction_usefulness": "Prime multiple cells only with the ingredient quantities each actually receives."
+      },
+      "current_values": {
+        "speed": null,
+        "strength": null,
+        "mana_efficiency": null,
+        "coverage": null,
+        "interception": null,
+        "reaction_usefulness": null
+      },
+      "status": "UNMEASURED_PROPOSED_COMPARISON"
+    }
+  ],
+  "experiments": [
+    {
+      "id": "BAL-E1",
+      "name": "Steam crossing versus holding",
+      "status": "NOT_RUN",
+      "priority": "recommended_first",
+      "production_change": "At most one existing Steam exposure-rate coefficient after source review and accepted results.",
+      "prerequisites": [
+        "Pin the authoritative build and extract current Steam, payment, merge, exposure, reset/decay, and damage rules.",
+        "An existing independently adjustable exposure-rate coefficient must exist; otherwise BLOCKED, do not add one.",
+        "The legal baseline field must remain active for 240 ticks without free renewal; otherwise the planned long-dwell fixture is BLOCKED.",
+        "Use authoritative fixed-step inputs, the real whole-cell contact convention, and actual size templates."
+      ],
+      "independent_variable": {
+        "existing_exposure_rate_multiplier": [
+          0.8,
+          1.0,
+          1.2
+        ]
+      },
+      "fixed_controls": [
+        "mana costs",
+        "ingredient inputs and consumption",
+        "authorized output budget",
+        "selected whole cells",
+        "field lifetime",
+        "overlap rules",
+        "exit/decay rules",
+        "actor maximum health and defenses",
+        "movement and hurtboxes"
+      ],
+      "simulation_hz_basis": 120,
+      "contact_windows_ticks": [
+        12,
+        30,
+        60,
+        120,
+        240
+      ],
+      "contact_windows_seconds": [
+        0.1,
+        0.25,
+        0.5,
+        1.0,
+        2.0
+      ],
+      "size_templates": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "placement_cases": [
+        "field interior",
+        "outer affected-cell portion outside the selection circle when such a portion exists"
+      ],
+      "replicate_seed_count": 10,
+      "repeat_entry_trace": {
+        "visits": 5,
+        "inside_ticks_per_visit": 12,
+        "outside_ticks_between_visits": 15,
+        "continuous_comparator_inside_ticks": 60
+      },
+      "measurements": [
+        "paid input vector",
+        "output allocation",
+        "selected cells",
+        "actor contact ticks",
+        "exposure trace",
+        "first damage tick",
+        "Steam-attributed cumulative damage through natural status expiry",
+        "peak exposure",
+        "exit/reset/decay behavior"
+      ],
+      "numeric_hypotheses": {
+        "median_damage_at_30_ticks_max_fraction_of_max_health": 0.05,
+        "p95_damage_at_30_ticks_max_fraction_of_max_health": 0.08,
+        "median_damage_at_240_ticks_fraction_of_max_health_range": [
+          0.25,
+          0.45
+        ],
+        "repeat_entry_damage_to_continuous_damage_ratio_max_when_contract_has_no_paid_entry_bonus": 1.05
+      },
+      "acceptance": [
+        "For each size and placement, meet the median and p95 brief-crossing bounds and the sustained-exposure band.",
+        "More contact time must not reduce accumulated Steam-attributed damage when all other inputs match.",
+        "Re-entry must match the declared reset/decay semantics. In the absence of an explicitly paid entry bonus it must not exceed 1.05 times the continuous comparator. If comparator damage is zero, repeated-entry damage must also be zero; do not divide by zero.",
+        "No allocation, consumption, whole-cell, replay, or existing spawn-protection regressions.",
+        "Retain the baseline when it passes. Otherwise choose the passing coefficient closest to baseline; on an equal-distance tie select the one with less brief-crossing damage. If the tie persists, retain baseline pending evidence. If no candidate passes, make no change."
+      ],
+      "interpretation": "These bands are untested tuning hypotheses, not evidence that the present Steam effect is wrong or that one coefficient is sufficient."
+    },
+    {
+      "id": "BAL-E2",
+      "name": "Equal-budget delivery-role comparison",
+      "status": "NOT_RUN",
+      "priority": "baseline_role_audit",
+      "production_change": "None proposed by this experiment.",
+      "prerequisites": [
+        "Pin real costs, projectile parameters, legal cadence, paid strength/quantity, family definitions, and interception/recipe rules.",
+        "Use existing actor and target scripts through the real simulation."
+      ],
+      "independent_variable": {
+        "delivery_family": [
+          "Bolt",
+          "Heavy",
+          "Rapid",
+          "Spray"
+        ]
+      },
+      "fixed_controls": [
+        "base element",
+        "target size within each comparison",
+        "target movement",
+        "initial range within shared legal reach",
+        "mana and timing budget",
+        "initial ingredients",
+        "aim policy within each role fixture",
+        "seed"
+      ],
+      "mana_cap_in_current_bolt_cast_costs": 20,
+      "input_window_ticks": 600,
+      "simulation_hz_basis": 120,
+      "paired_seeds": 12,
+      "size_templates": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "fixtures": [
+        "single moving target and stationary precision control",
+        "source-defined unequal-strength interception encounters",
+        "broad ingredient preparation and recipe completion"
+      ],
+      "measurement_rules": [
+        "Stop legal casts before exceeding the gross mana cap; report unused mana and normalize outcomes by actual spending.",
+        "Do not manufacture fractional casts or free refills to equalize expenditure.",
+        "Record results at 600 ticks and also after already-paid outputs naturally finish; do not hide delayed Heavy impacts.",
+        "Use the minimum shared reachable range for matched-range comparisons, and a separate no-extrapolation range profile.",
+        "Reaction completion cost includes setup ingredients and failed or intercepted attempts."
+      ],
+      "numeric_hypotheses_relative_to_bolt": {
+        "Heavy": {
+          "hostile_strength_neutralized_per_mana_min_ratio": 1.1,
+          "matched_range_arrival_time_min_ratio": 1.15
+        },
+        "Rapid": {
+          "median_interval_between_independently_aimable_legal_emissions_max_ratio": 0.75,
+          "stationary_target_damage_per_mana_max_ratio": 1.05
+        },
+        "Spray": {
+          "distinct_cells_receiving_nonzero_paid_ingredient_per_mana_min_ratio": 1.5,
+          "stationary_single_target_damage_per_mana_max_ratio": 0.9
+        }
+      },
+      "acceptance": [
+        "For a candidate role, its efficiency and price-of-specialization bounds must both hold in every size stratum on the paired-seed aggregate.",
+        "Do not divide by a zero Bolt comparator; mark that metric NOT_COMPARABLE and do not claim the role is validated.",
+        "Report all 12 paired outcomes and their range, not just a favorable average; these scripted comparisons do not establish population balance.",
+        "Reject a blanket buff when a family already wins all measured axes; propose no production changes without actual measurements.",
+        "Finite-strength and recipe-consumption checks remain mandatory; numeric role preferences never override current documented semantics."
+      ],
+      "interpretation": "These inequalities test a proposed niche split. Failure falsifies that proposal, not necessarily the current game design."
+    },
+    {
+      "id": "BAL-E3",
+      "name": "Paid-budget fan-out and fragmentation",
+      "status": "NOT_RUN",
+      "priority": "abuse_audit",
+      "production_change": "None without a reproducible, source-located accounting or refresh defect.",
+      "prerequisites": [
+        "The existing resolver/harness must support equivalent paid input partitions and exact geometry fixtures without changing production mechanics.",
+        "Use the recipe-authorized finite output budget, including documented yields; never assume raw input damage equals reaction output strength.",
+        "Unsupported partition or cell counts are explicitly NOT_RUN, not simulated with a replacement resolver."
+      ],
+      "independent_variables": {
+        "requested_paid_partition_counts": [
+          1,
+          4,
+          16
+        ],
+        "requested_selected_cell_counts": [
+          1,
+          7,
+          19
+        ]
+      },
+      "fixed_controls": [
+        "total paid ingredient vector",
+        "authorized output budget",
+        "target contact time",
+        "field age at observation",
+        "same intended merged state for fragmentation-only comparisons"
+      ],
+      "replay_repeats_per_supported_fixture": 10,
+      "numeric_hypotheses": {
+        "maximum_allocated_output_to_authorized_budget_ratio": 1.0,
+        "maximum_consumed_to_available_ratio_per_ingredient": 1.0,
+        "proposed_relative_tolerance_for_floating_point_accounting": 1e-06,
+        "integer_accounting_tolerance": 0,
+        "damage_ratio_range_for_contract_equivalent_fragmentation": [
+          0.95,
+          1.05
+        ]
+      },
+      "acceptance": [
+        "Allocated child budgets do not exceed the recipe-authorized parent budget, within the declared arithmetic tolerance.",
+        "Reservation/consumption of each ingredient does not exceed that ingredient available to the resolver, including documented finite transformations.",
+        "Where the source contract requires the same authoritative merged state, require exact state/replay equivalence; the five-percent damage screen is not permission to violate exact semantics.",
+        "Where the contract intentionally gives different threshold or recipe outcomes, classify the difference rather than call it duplication.",
+        "No full-budget copy is created per packet, cell, refresh, or lineage restart.",
+        "Do not impose a global health-damage cap across multiple victims: multi-target damage and input-budget conservation are different quantities."
+      ],
+      "interpretation": "This is a source-gated sensitivity and abuse experiment, not a proposed equal-split allocation formula or a new interception algorithm."
+    }
+  ],
+  "integration_acceptance": [
+    "Source/build pinned",
+    "Existing Steam path and baseline values mapped",
+    "Baseline authoritative trace captured",
+    "One coefficient candidate accepted or explicit NO_CHANGE result",
+    "Whole-cell selection, finite budgets, replay, and existing spawn protection preserved",
+    "Other reactions and delivery-family values untouched"
+  ],
+  "not_run": [
+    "Source-level implementation audit",
+    "Godot execution",
+    "Windows build",
+    "Replay execution",
+    "Multiplayer tests including eight-player target",
+    "BAL-E1",
+    "BAL-E2",
+    "BAL-E3",
+    "Human playtesting"
+  ]
+}

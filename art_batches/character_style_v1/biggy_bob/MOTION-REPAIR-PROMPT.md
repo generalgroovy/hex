@@ -1,0 +1,14 @@
+# Biggy Bob targeted motion repair
+
+Built-in imagegen call2/4. Edits immutable full-page-v1.png; north slide plus selected ambiguous contact-B cells only. All other cells/layout/identity held invariant. Candidate only.
+
+Use case: identity-preserve, targeted animation repair. Image1 is the EDIT TARGET: exact Biggy Bob8columns×10rows sheet. Keep canvas, cell layout, all gutters, brown hair/beard, thick eyebrows, ochre scarf, dark brown practical leather, brass cuffs, empty hands, adult dwarf proportions and fixed head/torso scale. Preserve all unlisted cells. Genuine transparent background, no text/grid/effects/shadows/weapons.
+Column order remains S,SE,E,NE,N,NW,W,SW. SOURCE row order remains1grounded,2jump,3cast,4hit,5walkA,6walkB,7sprintA,8sprintB,9slide,10roll. IMPORTANT: do not rearrange rows.
+
+REPAIR1: row9 column5 NORTH SLIDE currently looks like upright standing. Replace only that pose with a genuine very LOW backward-visible sliding dwarf: hips close to floor, torso folded forward, shoulders and back form a low broad diagonal silhouette, one leg extends toward the direction AWAY from viewer while the other knee bends sideways with boot visible, both hands free out to balance. Head/shoulders sit about one-third lower than grounded north. Correct true back with no face. This is an articulated seated heel-first slide, not merely a shorter squashed idle and not a roll.
+
+REPAIR2: these WALK B cells still resemble the same contact as WALK A above them: row6 columns2(SE),4(NE),6(NW),7(W),8(SW). Swap the anatomical leading leg and counter-swinging arm, with near/far leg occlusion genuinely exchanged. Both sturdy boots clearly visible. In SE B plant the SCREEN-LEFT boot lower, other boot lifted higher/back. In NE B plant SCREEN-RIGHT lower and SCREEN-LEFT boot lifted higher. In NW B plant SCREEN-LEFT lower and SCREEN-RIGHT lifted. In W B plant SCREEN-LEFT lower, other boot higher behind. In SW B plant SCREEN-RIGHT lower, other boot higher. Heel separation must read as two different contacts, not just shifted toes. Keep WALK torso upright, no running lean, identical crownless hair/head and shoulders height to row5, no shrink/growth. Leave the already clearer S/E/N walk cells alone.
+
+REPAIR3: Sprint B row8 columns3(E),4(NE),5(N),6(NW),7(W) must exchange leg lead relative row7: E andNE B use SCREEN-RIGHT raised/forward knee and SCREEN-LEFT planted extended leg; N B plantsSCREEN-LEFT lower withSCREEN-RIGHT boot raised; NW andW B use SCREEN-LEFT raised/forward knee andSCREEN-RIGHT planted extended leg. Swap arms accordingly. Preserve the running torso lean, body volume, hair height and scarf proportions; no extra jump height or bigger body. Keep other sprint columns unchanged.
+
+Everything else is locked. Exactly80 isolated full bodies, no clipped cells. Keep original crisp clustered pixel rendering and natural dwarf identity, not chibi redesign, no magic or new props.

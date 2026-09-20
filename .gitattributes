@@ -1,0 +1,56 @@
+* text=auto
+.gitattributes text eol=lf
+
+# Engine, data, documentation, and portable scripts use one canonical newline.
+*.gd text eol=lf
+*.gdshader text eol=lf
+*.tscn text eol=lf
+*.tres text eol=lf
+*.cfg text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.uid text eol=lf
+
+# Windows entrypoints remain directly consumable by native Windows tooling.
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary assets must never be newline-normalized.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.wav binary
+*.ogg binary
+*.ttf binary
+*.otf binary
+*.zip binary
+*.exe binary
+*.pck binary
+
+# HEX publication preserves the exact bytes used by the runtime build identity.
+# Normalizing this scope after validation would make a fresh checkout a different build.
+project.godot -text
+src/** -text
+content/** -text
+scenes/** -text
+addons/** -text
+assets/** -text
+art_batches/pixel_v1/magic/manifest.json -text
+art_batches/pixel_v1/map/manifest.json -text
+art_batches/pixel_v1/magic/export/** -text
+art_batches/pixel_v1/map/export/** -text
+art_batches/wellspring_style_v2/ground_style.gd -text
+art_batches/wellspring_style_v2/runtime/** -text
+
+# Preserve receipt hashes, supplied originals, and the exact tested harness bytes.
+docs/verification/** -text
+reference/hex-handoff-20260920/** -text
+tests/** -text
+scripts/** -text

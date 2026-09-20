@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "champion_id": "s_wayne",
+  "body": "small",
+  "standing_height": 58,
+  "status": "partial_source_review",
+  "planned_cells": 3,
+  "live_promotion": false,
+  "visual_review": {
+    "gait": "SouthA/B visibly reverse anatomical planted foot and opposite arm; native review pending.",
+    "alpha": "OriginalRGB24 baked checkerboard. Explicit user-authorized source-specific removal; originals immutable.",
+    "limits": "Three south-facing poses only; not a complete8-direction/80-cell character."
+  },
+  "pages": [
+    {
+      "id": "south_contacts_v1",
+      "path": "res://art_batches/character_style_v1/s_wayne/south-idle-walk-ab-v1.png",
+      "sha256": "dc659fdf21e2bde8c237905e2b08b98937927543f10b8bc4c18205ebd7907bae",
+      "dimensions": [
+        1774,
+        887
+      ],
+      "reference_cell_width": 591.3333333333334,
+      "background_removal": {
+        "method": "edge_connected_neutral_checker",
+        "minimum_channel": 170,
+        "maximum_spread": 18,
+        "authorization": "User2026-09-08: Yes—use reviewed background removal and assembly.",
+        "risk": "Light neutral subject pixels connected to outer checkerboard may be lost; inspect borders. Enclosed highlights are preserved."
+      },
+      "cells": [
+        {
+          "state": "grounded",
+          "direction": "south",
+          "rect": [
+            0,
+            0,
+            591,
+            887
+          ]
+        },
+        {
+          "state": "walk",
+          "direction": "south",
+          "rect": [
+            591,
+            0,
+            591,
+            887
+          ]
+        },
+        {
+          "state": "walk_b",
+          "direction": "south",
+          "rect": [
+            1182,
+            0,
+            592,
+            887
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+Use case: stylized-concept. NEWFLUXpixelartMATERIALanimationloop. Referenceimage1 isONLYsharedpixelchunk/outline/volumeclarityreference ofFire. DO NOTcopyitsfirepalette,flamelicks,shapeorembers.
+ExactlyFOURcolumnsandTWOrows, EIGHTequalsquarespritecells on2:1landscapecanvas, chronologicalrowmajororder. No textlabels/borders/gridlines. Solidflatpuremagenta#FF00FFmatteoutsidesprites; NOcheckerboard, NOgroundshadow,noprops,nocharacters,noUI,nospellrunes.
+Originalcharmingdetailedbutreadablepixelart: believablematerialmotion,restrainedpixelclusters,strongsilhouette,crispsteppededgewithoutblurorlargeglow. Fixed55degreeelevatedadventurecamera. Eachsprite fitscentral60%widthand65%heightofitscell; SAMEscaleandgroundrootat(50%,81.25%)ALLframes. IMPORTANTbottomrowrootpositionismatchingtoprowplusEXACTonecellheight,notcenteredbywhitespacearoundobjects. Rootdoesnotwanderandframe8connectsbackto1. Suitablefor32pxmaterialcells atgameplayscale, enlargedforsourceinspection. Nophotorealism/3Drender/vector.
+ELEMENTICE.
+Palette:#214D74 blue-shadow, #91E6EF ice-cyan, #D5F4FF frosthighlight.
+Subject:low rigid clump of THREE sharpconnectedicefacets, clearfrostplaneswithcoolrefraction, onlyonesmallrimechip. No snowflakeicon. Stablerocklikecrystallinemass, noflamecurves..
+Animation:8framequietloop: maincrystalverticesstayEXACTLYfixed; thinbrightglintcrossesleftfacetthenmiddlethenright, tinyfrostflakefalls. No wholeobjectwobble/rotation. Firstandlastposescloselymatch..
+Exactly8temporallycoherentframesofoneelement.

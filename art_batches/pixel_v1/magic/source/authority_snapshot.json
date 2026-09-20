@@ -1,0 +1,796 @@
+{
+  "source_checkpoint": "local-chemistry-p3-20260912-uncommitted",
+  "source_files": [
+    {
+      "path": "src/sim/chemistry/element_chemistry_system.gd",
+      "sha256": "d7e3b5aa669b0f29b97a5588753c0a0be1472c868af2990c7b0b911492701653"
+    },
+    {
+      "path": "content/reactions/first_eight_element_reactions_v1.json",
+      "sha256": "4431e33377773874f24037dd8382772903622c38bc2c79e6ed525e5124662cbc"
+    },
+    {
+      "path": "content/visual/visual_language_v1.json",
+      "sha256": "7593fe27a5dafd92dad9fd3f84b5ae9abeee06e08990803f9b8e76429aa76df1"
+    },
+    {
+      "path": "content/visual/foundation_spell_visuals_v1.json",
+      "sha256": "e99d40aa92944b08971828b0f20673a2858db53d6fc7a562b14ef45286199033"
+    },
+    {
+      "path": "content/visual/spell_animation_skeletons_v1.json",
+      "sha256": "b8cff0a65bb145471c43ef1a2aebbd3b6a872c000c930da5520735310261cbd5"
+    }
+  ],
+  "recipes": [
+    {
+      "id": "fortify",
+      "wire_id": 301,
+      "elements": [
+        "earth",
+        "earth"
+      ],
+      "shape": "cover",
+      "formation_ms": 180,
+      "active_ms": 3125,
+      "decay_ms": 400,
+      "formation_ticks": 22,
+      "active_ticks": 375,
+      "decay_ticks": 48,
+      "nominal_radius_px": 22.5,
+      "nominal_length_px": 80.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 32,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "magma",
+      "wire_id": 302,
+      "elements": [
+        "earth",
+        "fire"
+      ],
+      "shape": "front",
+      "formation_ms": 350,
+      "active_ms": 2750,
+      "decay_ms": 500,
+      "formation_ticks": 42,
+      "active_ticks": 330,
+      "decay_ticks": 60,
+      "nominal_radius_px": 30.0,
+      "nominal_length_px": 100.0,
+      "speed_px_per_second": 30.0,
+      "pulse_ms": 400,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "mud",
+      "wire_id": 303,
+      "elements": [
+        "earth",
+        "water"
+      ],
+      "shape": "disk",
+      "formation_ms": 200,
+      "active_ms": 3250,
+      "decay_ms": 350,
+      "formation_ticks": 24,
+      "active_ticks": 390,
+      "decay_ticks": 42,
+      "nominal_radius_px": 77.5,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "dustfront",
+      "wire_id": 304,
+      "elements": [
+        "earth",
+        "wind"
+      ],
+      "shape": "corridor",
+      "formation_ms": 250,
+      "active_ms": 2250,
+      "decay_ms": 350,
+      "formation_ticks": 30,
+      "active_ticks": 270,
+      "decay_ticks": 42,
+      "nominal_radius_px": 35.0,
+      "nominal_length_px": 150.0,
+      "speed_px_per_second": 38.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "permafrost",
+      "wire_id": 305,
+      "elements": [
+        "earth",
+        "ice"
+      ],
+      "shape": "cover",
+      "formation_ms": 240,
+      "active_ms": 3000,
+      "decay_ms": 650,
+      "formation_ticks": 29,
+      "active_ticks": 360,
+      "decay_ticks": 78,
+      "nominal_radius_px": 17.5,
+      "nominal_length_px": 100.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 18,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "grounding_network",
+      "wire_id": 306,
+      "elements": [
+        "earth",
+        "charge"
+      ],
+      "shape": "node",
+      "formation_ms": 250,
+      "active_ms": 3250,
+      "decay_ms": 300,
+      "formation_ticks": 30,
+      "active_ticks": 390,
+      "decay_ticks": 36,
+      "nominal_radius_px": 47.5,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 16,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "crystal_prism",
+      "wire_id": 307,
+      "elements": [
+        "earth",
+        "light"
+      ],
+      "shape": "plane",
+      "formation_ms": 400,
+      "active_ms": 2750,
+      "decay_ms": 400,
+      "formation_ticks": 48,
+      "active_ticks": 330,
+      "decay_ticks": 48,
+      "nominal_radius_px": 10.0,
+      "nominal_length_px": 87.5,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 18,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "blightsoil",
+      "wire_id": 308,
+      "elements": [
+        "earth",
+        "dark"
+      ],
+      "shape": "disk",
+      "formation_ms": 300,
+      "active_ms": 3000,
+      "decay_ms": 400,
+      "formation_ticks": 36,
+      "active_ticks": 360,
+      "decay_ticks": 48,
+      "nominal_radius_px": 67.5,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "conflagration",
+      "wire_id": 309,
+      "elements": [
+        "fire",
+        "fire"
+      ],
+      "shape": "ring",
+      "formation_ms": 400,
+      "active_ms": 3000,
+      "decay_ms": 400,
+      "formation_ticks": 48,
+      "active_ticks": 360,
+      "decay_ticks": 48,
+      "nominal_radius_px": 90.0,
+      "nominal_length_px": 30.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 600,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "steam",
+      "wire_id": 310,
+      "elements": [
+        "fire",
+        "water"
+      ],
+      "shape": "expanding_veil",
+      "formation_ms": 240,
+      "active_ms": 2625,
+      "decay_ms": 500,
+      "formation_ticks": 29,
+      "active_ticks": 315,
+      "decay_ticks": 60,
+      "nominal_radius_px": 112.5,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "firestorm",
+      "wire_id": 311,
+      "elements": [
+        "fire",
+        "wind"
+      ],
+      "shape": "corridor",
+      "formation_ms": 350,
+      "active_ms": 2250,
+      "decay_ms": 350,
+      "formation_ticks": 42,
+      "active_ticks": 270,
+      "decay_ticks": 42,
+      "nominal_radius_px": 22.5,
+      "nominal_length_px": 162.5,
+      "speed_px_per_second": 68.0,
+      "pulse_ms": 350,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "thermal_shock",
+      "wire_id": 312,
+      "elements": [
+        "fire",
+        "ice"
+      ],
+      "shape": "fracture",
+      "formation_ms": 600,
+      "active_ms": 100,
+      "decay_ms": 550,
+      "formation_ticks": 72,
+      "active_ticks": 12,
+      "decay_ticks": 66,
+      "nominal_radius_px": 112.5,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "plasma_arc",
+      "wire_id": 313,
+      "elements": [
+        "fire",
+        "charge"
+      ],
+      "shape": "branch",
+      "formation_ms": 450,
+      "active_ms": 120,
+      "decay_ms": 400,
+      "formation_ticks": 54,
+      "active_ticks": 15,
+      "decay_ticks": 48,
+      "nominal_radius_px": 12.5,
+      "nominal_length_px": 225.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "solar_flare",
+      "wire_id": 314,
+      "elements": [
+        "fire",
+        "light"
+      ],
+      "shape": "reveal_pulse",
+      "formation_ms": 220,
+      "active_ms": 100,
+      "decay_ms": 650,
+      "formation_ticks": 27,
+      "active_ticks": 12,
+      "decay_ticks": 78,
+      "nominal_radius_px": 125.0,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "cinderveil",
+      "wire_id": 315,
+      "elements": [
+        "fire",
+        "dark"
+      ],
+      "shape": "ember_veil",
+      "formation_ms": 300,
+      "active_ms": 3000,
+      "decay_ms": 400,
+      "formation_ticks": 36,
+      "active_ticks": 360,
+      "decay_ticks": 48,
+      "nominal_radius_px": 70.0,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 350,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "flood",
+      "wire_id": 316,
+      "elements": [
+        "water",
+        "water"
+      ],
+      "shape": "flow",
+      "formation_ms": 220,
+      "active_ms": 3125,
+      "decay_ms": 350,
+      "formation_ticks": 27,
+      "active_ticks": 375,
+      "decay_ticks": 42,
+      "nominal_radius_px": 80.0,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "mistcurrent",
+      "wire_id": 317,
+      "elements": [
+        "water",
+        "wind"
+      ],
+      "shape": "corridor",
+      "formation_ms": 220,
+      "active_ms": 2750,
+      "decay_ms": 400,
+      "formation_ticks": 27,
+      "active_ticks": 330,
+      "decay_ticks": 48,
+      "nominal_radius_px": 31.25,
+      "nominal_length_px": 200.0,
+      "speed_px_per_second": 25.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "freeze",
+      "wire_id": 318,
+      "elements": [
+        "water",
+        "ice"
+      ],
+      "shape": "growing_strip",
+      "formation_ms": 300,
+      "active_ms": 2500,
+      "decay_ms": 350,
+      "formation_ticks": 36,
+      "active_ticks": 300,
+      "decay_ticks": 42,
+      "nominal_radius_px": 20.0,
+      "nominal_length_px": 175.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "conductive_flood",
+      "wire_id": 319,
+      "elements": [
+        "water",
+        "charge"
+      ],
+      "shape": "water_path",
+      "formation_ms": 500,
+      "active_ms": 2625,
+      "decay_ms": 350,
+      "formation_ticks": 60,
+      "active_ticks": 315,
+      "decay_ticks": 42,
+      "nominal_radius_px": 25.0,
+      "nominal_length_px": 225.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 600,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "mirrorwater",
+      "wire_id": 320,
+      "elements": [
+        "water",
+        "light"
+      ],
+      "shape": "observation",
+      "formation_ms": 220,
+      "active_ms": 3250,
+      "decay_ms": 350,
+      "formation_ticks": 27,
+      "active_ticks": 390,
+      "decay_ticks": 42,
+      "nominal_radius_px": 68.75,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "blackwater",
+      "wire_id": 321,
+      "elements": [
+        "water",
+        "dark"
+      ],
+      "shape": "motion_veil",
+      "formation_ms": 260,
+      "active_ms": 3000,
+      "decay_ms": 400,
+      "formation_ticks": 32,
+      "active_ticks": 360,
+      "decay_ticks": 48,
+      "nominal_radius_px": 77.5,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "vortex",
+      "wire_id": 322,
+      "elements": [
+        "wind",
+        "wind"
+      ],
+      "shape": "annulus",
+      "formation_ms": 400,
+      "active_ms": 2750,
+      "decay_ms": 400,
+      "formation_ticks": 48,
+      "active_ticks": 330,
+      "decay_ticks": 48,
+      "nominal_radius_px": 90.0,
+      "nominal_length_px": 30.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "hailstream",
+      "wire_id": 323,
+      "elements": [
+        "wind",
+        "ice"
+      ],
+      "shape": "pulse_lane",
+      "formation_ms": 400,
+      "active_ms": 2813,
+      "decay_ms": 350,
+      "formation_ticks": 48,
+      "active_ticks": 338,
+      "decay_ticks": 42,
+      "nominal_radius_px": 17.5,
+      "nominal_length_px": 225.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 450,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "ion_storm",
+      "wire_id": 324,
+      "elements": [
+        "wind",
+        "charge"
+      ],
+      "shape": "drifting_node",
+      "formation_ms": 450,
+      "active_ms": 2625,
+      "decay_ms": 400,
+      "formation_ticks": 54,
+      "active_ticks": 315,
+      "decay_ticks": 48,
+      "nominal_radius_px": 50.0,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 22.0,
+      "pulse_ms": 700,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "lightbend",
+      "wire_id": 325,
+      "elements": [
+        "wind",
+        "light"
+      ],
+      "shape": "bend",
+      "formation_ms": 250,
+      "active_ms": 3000,
+      "decay_ms": 300,
+      "formation_ticks": 30,
+      "active_ticks": 360,
+      "decay_ticks": 36,
+      "nominal_radius_px": 56.25,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "shadowdraft",
+      "wire_id": 326,
+      "elements": [
+        "wind",
+        "dark"
+      ],
+      "shape": "bands",
+      "formation_ms": 300,
+      "active_ms": 3000,
+      "decay_ms": 350,
+      "formation_ticks": 36,
+      "active_ticks": 360,
+      "decay_ticks": 42,
+      "nominal_radius_px": 37.5,
+      "nominal_length_px": 187.5,
+      "speed_px_per_second": 30.0,
+      "pulse_ms": 300,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "glacier",
+      "wire_id": 327,
+      "elements": [
+        "ice",
+        "ice"
+      ],
+      "shape": "corridor",
+      "formation_ms": 650,
+      "active_ms": 3500,
+      "decay_ms": 600,
+      "formation_ticks": 78,
+      "active_ticks": 420,
+      "decay_ticks": 72,
+      "nominal_radius_px": 30.0,
+      "nominal_length_px": 200.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "superconduct",
+      "wire_id": 328,
+      "elements": [
+        "ice",
+        "charge"
+      ],
+      "shape": "frost_path",
+      "formation_ms": 500,
+      "active_ms": 2250,
+      "decay_ms": 350,
+      "formation_ticks": 60,
+      "active_ticks": 270,
+      "decay_ticks": 42,
+      "nominal_radius_px": 10.0,
+      "nominal_length_px": 325.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 900,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "crystal_lens",
+      "wire_id": 329,
+      "elements": [
+        "ice",
+        "light"
+      ],
+      "shape": "lens",
+      "formation_ms": 450,
+      "active_ms": 2875,
+      "decay_ms": 400,
+      "formation_ticks": 54,
+      "active_ticks": 345,
+      "decay_ticks": 48,
+      "nominal_radius_px": 22.5,
+      "nominal_length_px": 75.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 20,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "black_ice",
+      "wire_id": 330,
+      "elements": [
+        "ice",
+        "dark"
+      ],
+      "shape": "entry_mark",
+      "formation_ms": 300,
+      "active_ms": 3125,
+      "decay_ms": 400,
+      "formation_ticks": 36,
+      "active_ticks": 375,
+      "decay_ticks": 48,
+      "nominal_radius_px": 67.5,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "overload",
+      "wire_id": 331,
+      "elements": [
+        "charge",
+        "charge"
+      ],
+      "shape": "corridor",
+      "formation_ms": 650,
+      "active_ms": 2000,
+      "decay_ms": 450,
+      "formation_ticks": 78,
+      "active_ticks": 240,
+      "decay_ticks": 54,
+      "nominal_radius_px": 30.0,
+      "nominal_length_px": 200.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "arcflash",
+      "wire_id": 332,
+      "elements": [
+        "charge",
+        "light"
+      ],
+      "shape": "reveal_line",
+      "formation_ms": 300,
+      "active_ms": 140,
+      "decay_ms": 400,
+      "formation_ticks": 36,
+      "active_ticks": 17,
+      "decay_ticks": 48,
+      "nominal_radius_px": 15.0,
+      "nominal_length_px": 225.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "static_shroud",
+      "wire_id": 333,
+      "elements": [
+        "charge",
+        "dark"
+      ],
+      "shape": "entry_veil",
+      "formation_ms": 320,
+      "active_ms": 2750,
+      "decay_ms": 400,
+      "formation_ticks": 39,
+      "active_ticks": 330,
+      "decay_ticks": 48,
+      "nominal_radius_px": 72.5,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "radiance",
+      "wire_id": 334,
+      "elements": [
+        "light",
+        "light"
+      ],
+      "shape": "reveal_area",
+      "formation_ms": 300,
+      "active_ms": 3125,
+      "decay_ms": 400,
+      "formation_ticks": 36,
+      "active_ticks": 375,
+      "decay_ticks": 48,
+      "nominal_radius_px": 97.5,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "penumbra",
+      "wire_id": 335,
+      "elements": [
+        "light",
+        "dark"
+      ],
+      "shape": "border",
+      "formation_ms": 220,
+      "active_ms": 3000,
+      "decay_ms": 250,
+      "formation_ticks": 27,
+      "active_ticks": 360,
+      "decay_ticks": 30,
+      "nominal_radius_px": 82.5,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 0,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    },
+    {
+      "id": "umbral_field",
+      "wire_id": 336,
+      "elements": [
+        "dark",
+        "dark"
+      ],
+      "shape": "attrition_veil",
+      "formation_ms": 350,
+      "active_ms": 3500,
+      "decay_ms": 450,
+      "formation_ticks": 42,
+      "active_ticks": 420,
+      "decay_ticks": 54,
+      "nominal_radius_px": 92.5,
+      "nominal_length_px": 0.0,
+      "speed_px_per_second": 0.0,
+      "pulse_ms": 600,
+      "cover_health": 0,
+      "source_scope": "RECIPE_ROWS plus verified integer EXTENT_RATIO policy and live contains/update/apply functions; catalog descriptive map_effects are not implemented promises"
+    }
+  ],
+  "deposit_lifetime_ticks": {
+    "earth": 600,
+    "fire": 480,
+    "water": 600,
+    "wind": 360,
+    "ice": 600,
+    "charge": 360,
+    "light": 480,
+    "dark": 480
+  },
+  "source_not_modified": false,
+  "metadata_precedence": "live GDScript > catalog legacy prose",
+  "candidate_revision": "Consolidation boolean chemistry sampling preserves M2b authority and native pixels"
+}

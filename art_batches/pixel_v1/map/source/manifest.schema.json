@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FLUX standalone map pixel asset manifest v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "contract_id",
+    "namespace",
+    "tick_rate_hz",
+    "ground_cell_px",
+    "assets",
+    "atlases",
+    "palette",
+    "usage_authority"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "contract_id": {
+      "const": "flux-pixel-assets-v1"
+    },
+    "namespace": {
+      "const": "map"
+    },
+    "tick_rate_hz": {
+      "const": 120
+    },
+    "ground_cell_px": {
+      "const": [
+        32,
+        32
+      ]
+    },
+    "assets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "path",
+          "group",
+          "frames",
+          "loop",
+          "pivot_px",
+          "frame_size_px",
+          "tile_dimensions_px",
+          "nominal_ground_cells",
+          "layer_role",
+          "completion_status",
+          "visual_ground_footprint",
+          "connectors",
+          "autotile",
+          "occlusion_suggestions",
+          "sha256",
+          "atlas_frames"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^map\\.[a-z0-9_.]+$"
+          },
+          "path": {
+            "type": "string",
+            "pattern": "^export/(terrain|architecture|props|ambient)/[^/]+\\.png$"
+          },
+          "group": {
+            "enum": [
+              "terrain",
+              "architecture",
+              "props",
+              "ambient"
+            ]
+          },
+          "frames": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "rect",
+                "duration_ticks"
+              ],
+              "properties": {
+                "rect": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  ],
+                  "minItems": 4,
+                  "maxItems": 4
+                },
+                "duration_ticks": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            }
+          },
+          "loop": {
+            "type": "boolean"
+          },
+          "pivot_px": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "frame_size_px": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "tile_dimensions_px": {
+            "const": [
+              32,
+              32
+            ]
+          },
+          "nominal_ground_cells": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "completion_status": {
+            "const": "complete_standalone_palette_unverified"
+          },
+          "layer_role": {
+            "type": "string"
+          },
+          "visual_ground_footprint": {
+            "type": "object",
+            "required": [
+              "rect_px",
+              "polygon_px",
+              "descriptive_only",
+              "collision_authority"
+            ],
+            "properties": {
+              "rect_px": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "minItems": 4,
+                "maxItems": 4
+              },
+              "descriptive_only": {
+                "const": true
+              },
+              "collision_authority": {
+                "const": false
+              }
+            }
+          },
+          "connectors": {
+            "type": "object"
+          },
+          "autotile": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "occlusion_suggestions": {
+            "type": "object"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "atlas_frames": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "rect",
+                "duration_ticks"
+              ],
+              "properties": {
+                "rect": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  ],
+                  "minItems": 4,
+                  "maxItems": 4
+                },
+                "duration_ticks": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "atlases": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "palette": {
+      "type": "object"
+    },
+    "usage_authority": {
+      "type": "object",
+      "properties": {
+        "collision_authority": {
+          "const": false
+        },
+        "navigation_authority": {
+          "const": false
+        }
+      }
+    }
+  }
+}

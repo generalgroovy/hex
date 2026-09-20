@@ -1,0 +1,192 @@
+{
+	"active_workload_ticks": 40,
+	"assertions": 332,
+	"authority_hash": "60ea78901da9490850357901ae2ee3df6edd2f8ad585a40c973559b49f88cb30",
+	"engine": "4.7.1-stable (official)",
+	"failures": 0,
+	"hex_authority_hash": "3265dd3d4b4d4db79a2d355b803927f058440a4100fcd8062433b07d76908b19",
+	"profile_version": "hex-snapshot-stages-v1",
+	"schema_version": 1,
+	"scope": "Headless isolated inclusive stage timings on the genuine 1493-cell campus after the existing eight-champion dense-crucible warmup and first 40 paid workload ticks. No sockets, rendering, capacity override, gameplay mutation, or performance acceptance.",
+	"seed": 906190,
+	"source_sha256": {
+		"src/net/client_prediction.gd": "706696e60cfa2ee43bed7afbfa64d27a94c07a26fb82e36de79454fae47fa126",
+		"src/net/hex_chemistry_snapshot.gd": "5624b2f71e6b6e13e799c13e09f17a7abbff641da830d8bb77709fa9f7f1504c",
+		"src/net/hex_snapshot_wire_packing.gd": "d3d5cfb801811244eca8113174e931820266835f2733329368454a32849ed07b",
+		"src/net/hex_world_snapshot.gd": "5686b2e9bee40525d436676bf351c889a7b562992ea46dcdea2fa75439fedc7e",
+		"src/sim/hex/hex_chemistry_world.gd": "b87e2cafa243646395db58a0ad7071806be129eca1eb12de647e16aed7fd27cd",
+		"tests/performance/profile_hex_snapshot_stages.gd": "c108276a163da072d282ae9a488695cb2daa3ce6ea431ddee567e482995124c3",
+		"tests/performance/profile_unified_wellspring.gd": "88c4175635683ec83b04c3e18d22c1ad83fdec1e2543ed1e0921f1fc2c8549a6"
+	},
+	"stage_repetitions": 5,
+	"stages": {
+		"blank_world": {
+			"inclusive_us": {
+				"max": 49821,
+				"p50": 45902,
+				"p95": 49821,
+				"p99": 49821,
+				"samples": 5
+			},
+			"samples": [
+				36303,
+				49821,
+				48022,
+				45902,
+				45243
+			],
+			"stage": "blank_world",
+			"topology_cells": 1493
+		},
+		"chemistry_capture": {
+			"encoded_bytes": 3392,
+			"inclusive_us": {
+				"max": 99739,
+				"p50": 84455,
+				"p95": 99739,
+				"p99": 99739,
+				"samples": 5
+			},
+			"samples": [
+				99739,
+				84455,
+				85561,
+				84386,
+				82676
+			],
+			"stage": "chemistry_capture"
+		},
+		"chemistry_restore": {
+			"inclusive_us": {
+				"max": 188399,
+				"p50": 172453,
+				"p95": 188399,
+				"p99": 188399,
+				"samples": 5
+			},
+			"samples": [
+				172453,
+				173053,
+				165265,
+				164670,
+				188399
+			],
+			"stage": "chemistry_restore"
+		},
+		"prediction_bind": {
+			"inclusive_us": {
+				"max": 44291,
+				"p50": 41956,
+				"p95": 44291,
+				"p99": 44291,
+				"samples": 5
+			},
+			"samples": [
+				41956,
+				42102,
+				41778,
+				40946,
+				44291
+			],
+			"stage": "prediction_bind"
+		},
+		"topology_hash": {
+			"hash": "b9d8f9c761f2600fea705caf7d0af28732f3b742453f7c836f7b99fc1a118765",
+			"inclusive_us": {
+				"max": 5495,
+				"p50": 4704,
+				"p95": 5495,
+				"p99": 5495,
+				"samples": 5
+			},
+			"ordered_cells": 1493,
+			"samples": [
+				5495,
+				4680,
+				4704,
+				4665,
+				4980
+			],
+			"stage": "topology_hash"
+		},
+		"world_capture": {
+			"inclusive_us": {
+				"max": 383758,
+				"p50": 366323,
+				"p95": 383758,
+				"p99": 383758,
+				"samples": 5
+			},
+			"samples": [
+				364568,
+				383758,
+				366323,
+				365814,
+				378093
+			],
+			"stage": "world_capture",
+			"wire_bytes": 8228
+		},
+		"world_hash": {
+			"hash": "60ea78901da9490850357901ae2ee3df6edd2f8ad585a40c973559b49f88cb30",
+			"inclusive_us": {
+				"max": 49431,
+				"p50": 45369,
+				"p95": 49431,
+				"p99": 49431,
+				"samples": 5
+			},
+			"samples": [
+				49431,
+				43659,
+				45317,
+				46922,
+				45369
+			],
+			"stage": "world_hash"
+		},
+		"world_prepare": {
+			"inclusive_us": {
+				"max": 257171,
+				"p50": 227807,
+				"p95": 257171,
+				"p99": 257171,
+				"samples": 5
+			},
+			"samples": [
+				257171,
+				237295,
+				225595,
+				227807,
+				226354
+			],
+			"stage": "world_prepare"
+		}
+	},
+	"timing_semantics": "Validation, equality checks, malformed-input checks, fixture setup, warmup, command work, and destination allocation are outside timed regions unless the named production stage itself owns that allocation. Each stage runs five times against one unchanged authority state.",
+	"topology_cells": 1493,
+	"topology_hash": "b9d8f9c761f2600fea705caf7d0af28732f3b742453f7c836f7b99fc1a118765",
+	"warmup_ticks": 120,
+	"workload": {
+		"actors": 8,
+		"metrics": {
+			"admitted": 8,
+			"deposited": 32,
+			"exposure_queries": 40,
+			"matter_consumed": 1200,
+			"matter_expired": 0,
+			"matter_paid": 4800,
+			"modifiers": 0,
+			"reactions": 1,
+			"refused": 0,
+			"requested": 8
+		},
+		"occupancy": {
+			"active_cells": 30,
+			"product_quantity": 1200,
+			"source_quantity": 3600
+		}
+	},
+	"workload_version": "unified-wellspring-profile-v1/dense-crucible-first-40",
+	"world_tick": 160
+}

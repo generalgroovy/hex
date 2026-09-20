@@ -1,0 +1,69 @@
+{
+  "schema_version": 2,
+  "id": "natural-map-kit-v2-bullet-room",
+  "authority": "presentation only; authored map topology, collision, elevation and routes remain canonical elsewhere",
+  "seed": 17041,
+  "budgets": {
+    "detail_step": 48,
+    "maximum_details_per_district": 180,
+    "maximum_contact_marks_per_actor": 6,
+    "maximum_arena_marks": 24
+  },
+  "combat_floor": {
+    "masonry_cell": [40, 24],
+    "masonry_alpha": 0.08,
+    "garden_alpha": 0.04,
+    "arena": {
+      "outer_inset": 14,
+      "inner_inset": 30,
+      "lane_width": 76,
+      "safe_pocket_radius": 54,
+      "marker_count": 12,
+      "outline_alpha": 0.34
+    }
+  },
+  "district_profiles": {
+    "garden": {
+      "ground_ramp": "garden",
+      "contact_ramp": "garden",
+      "edge_density": 0.78,
+      "interior_density": 0.24,
+      "edge_scale": 1.38,
+      "edge_props": ["tree", "bush", "bush"],
+      "features": ["grass_tuft", "leaf_pair", "blossom", "small_stone"]
+    },
+    "nexus": {
+      "ground_ramp": "warm_stone",
+      "contact_ramp": "warm_stone",
+      "edge_density": 0.52,
+      "interior_density": 0.12,
+      "edge_scale": 1.16,
+      "edge_props": ["bush", "tree", "bush"],
+      "features": ["moss_seam", "small_stone", "brass_leaf", "blossom"]
+    },
+    "proving": {
+      "ground_ramp": "warm_stone",
+      "contact_ramp": "timber",
+      "edge_density": 0.42,
+      "interior_density": 0.10,
+      "edge_scale": 1.20,
+      "edge_props": ["dry_bush", "bush", "dry_bush"],
+      "features": ["small_stone", "dry_tuft", "brass_leaf", "moss_seam"]
+    }
+  },
+  "contact_profiles": {
+    "walk": {"period": 13, "opacity": 0.30, "length": 4.0},
+    "sprint": {"period": 8, "opacity": 0.42, "length": 7.0},
+    "low": {"period": 6, "opacity": 0.44, "length": 14.0},
+    "air": {"period": 10, "opacity": 0.28, "length": 9.0}
+  },
+  "receiving_shadows": {
+    "elevation_opacity_step": 0.035,
+    "profiles": {
+      "water": {"ramp": "deep_water", "fill_step": 0, "rim_step": 3, "opacity_scale": 0.66, "rim_opacity": 0.24},
+      "garden": {"ramp": "garden", "fill_step": 0, "rim_step": 3, "opacity_scale": 0.82, "rim_opacity": 0.20},
+      "nexus": {"ramp": "worldbone", "fill_step": 0, "rim_step": 3, "opacity_scale": 0.90, "rim_opacity": 0.18},
+      "proving": {"ramp": "timber", "fill_step": 0, "rim_step": 3, "opacity_scale": 0.86, "rim_opacity": 0.20}
+    }
+  }
+}

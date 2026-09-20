@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "record_kind": "held_source_candidate_review_not_production_admission",
+  "asset_kind": "neutral_body_template",
+  "template_id": "template_small",
+  "date": "2026-09-09",
+  "status": "held",
+  "reviewer_kind": "agent",
+  "human_accepted": false,
+  "generation": {
+    "mode": "built_in_image_gen",
+    "attempts": 1,
+    "original_default_path": "C:/Users/sende/.codex/generated_images/01a0836d-f64f-7f61-84a8-d1ec30b09d04/exec-8d1fac9e-a593-41bd-9e70-22b089d2c03d.png",
+    "workspace_copy": "source-original.png",
+    "sha256": "85089fa23a7b1ecd31e48e11afba4107c40935321a0cd1eaf1ea67e54c3c7d90",
+    "prompt": "prompt.txt",
+    "prompt_sha256": "d12014a8770bc009e8d86b177c8b3d4825e3a2c932ea4003521626067e98a959",
+    "post_generation_raster_edits": false
+  },
+  "references": [
+    {
+      "role": "neutral_wardrobe_identity_and_standing_reference",
+      "path": "art_batches/character_style_v1/template_v2/small-south-base-v1.png",
+      "sha256": "b67f0ae46673f51350f56cb7d23764109a01a0bfbd45b4bbc36a43fa5e4852e3"
+    },
+    {
+      "role": "current_anatomical_south_contact_construction_only",
+      "path": "art_batches/character_style_v1/template_v2/contact-guides-v2/small-south.png",
+      "sha256": "fb13f40ee2a9feebcca70259b4bf02594877e3f2ff54c2d229780fa4cfad32b7"
+    },
+    {
+      "role": "pixel_cluster_and_outline_grammar_only_not_identity_or_props",
+      "path": "reference/art/oh_tipi_authority_v1/oh-tipi-authoritative-reference.png",
+      "sha256": "d50ed37439cc788dd36d1a8216d3621c034d1d7cc68d91200fdd4bafd25ee106"
+    }
+  ],
+  "technical_inspection": {
+    "method": "read_only_System.Drawing.Bitmap",
+    "dimensions": [1536, 1024],
+    "pixel_format": "Format24bppRgb",
+    "has_alpha_channel": false,
+    "corner_rgba": [253, 253, 254, 255],
+    "transparent_alpha_gate": "failed",
+    "painted_checkerboard_observed": true,
+    "source_crops": null,
+    "source_scale": null,
+    "native_58px_qa": "not_run",
+    "registration_96px_cell_pivot_48_84": "not_established",
+    "live_engine_or_atlas_assembly": "not_run"
+  },
+  "cells": [
+    {"state": "grounded", "direction": "south", "column": 0, "status": "held", "reason": "Neutral frontal calibration exists, but alpha failed and native-scale anatomy/registration remain unverified."},
+    {"state": "walk", "direction": "south", "column": 1, "status": "held", "requested_support": "anatomical_left", "reason": "Viewer-right extended leg and viewer-left lifted boot are visible, but the pair lacks accepted opposing arm counter-swing; alpha also failed."},
+    {"state": "walk_b", "direction": "south", "column": 2, "status": "held", "requested_support": "anatomical_right", "reason": "Leg silhouettes alternate, but viewer-left arm remains bent near waist as in A; the required opposite arm phase is not defensible. Alpha also failed."}
+  ],
+  "approved_cells": 0,
+  "other_required_cells_status": "pending_not_attempted",
+  "complete_coverage": false,
+  "live_promotion": false,
+  "production_sources_modified": false,
+  "scope_stop": "one_attempt_and_review_complete_no_retry"
+}

@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "id": "flux2-spell-animation-skeletons-v1",
+  "authority": "presentation only; simulation owns spell membership, geometry, timing, collision, resources, damage, control and outcomes",
+  "phase_order": ["startup", "release", "travel", "impact", "residue"],
+  "budgets": {
+    "maximum_phase_count": 5,
+    "maximum_draw_layers": 4,
+    "maximum_particle_density": 35
+  },
+  "skeletons": {
+    "projectile": {
+      "shape": "projectile",
+      "delivery_read": "compact_owned_lane",
+      "phases": [
+        {"id": "startup", "start": 0.00, "end": 0.20, "draw_family": "hand_gather", "cue": "origin_ring"},
+        {"id": "release", "start": 0.20, "end": 0.32, "draw_family": "forward_snap", "cue": "release_flash"},
+        {"id": "travel", "start": 0.32, "end": 0.88, "draw_family": "owned_lane", "cue": "shape_plus_trail"},
+        {"id": "impact", "start": 0.88, "end": 0.96, "draw_family": "contact_burst", "cue": "edge_ring"},
+        {"id": "residue", "start": 0.96, "end": 1.00, "draw_family": "quiet_fade", "cue": "last_known_edge"}
+      ]
+    },
+    "beam": {
+      "shape": "beam",
+      "delivery_read": "anchored_line_with_endpoint",
+      "phases": [
+        {"id": "startup", "start": 0.00, "end": 0.24, "draw_family": "paired_focus", "cue": "hand_to_endpoint"},
+        {"id": "release", "start": 0.24, "end": 0.36, "draw_family": "line_open", "cue": "endpoint_diamond"},
+        {"id": "travel", "start": 0.36, "end": 0.82, "draw_family": "stable_lane", "cue": "parallel_edges"},
+        {"id": "impact", "start": 0.82, "end": 0.94, "draw_family": "endpoint_bloom", "cue": "contact_diamond"},
+        {"id": "residue", "start": 0.94, "end": 1.00, "draw_family": "edge_fade", "cue": "boundary_fade"}
+      ]
+    },
+    "spray": {
+      "shape": "spray",
+      "delivery_read": "fan_with_negative_space",
+      "phases": [
+        {"id": "startup", "start": 0.00, "end": 0.18, "draw_family": "fan_gather", "cue": "hand_arc"},
+        {"id": "release", "start": 0.18, "end": 0.30, "draw_family": "fan_open", "cue": "center_lane"},
+        {"id": "travel", "start": 0.30, "end": 0.78, "draw_family": "curved_lanes", "cue": "safe_gap"},
+        {"id": "impact", "start": 0.78, "end": 0.93, "draw_family": "breaker_arc", "cue": "outer_edges"},
+        {"id": "residue", "start": 0.93, "end": 1.00, "draw_family": "droplet_fade", "cue": "quiet_center"}
+      ]
+    },
+    "field": {
+      "shape": "field",
+      "delivery_read": "grounded_boundary_and_center",
+      "phases": [
+        {"id": "startup", "start": 0.00, "end": 0.26, "draw_family": "ground_sigil", "cue": "center_mark"},
+        {"id": "release", "start": 0.26, "end": 0.38, "draw_family": "boundary_grow", "cue": "edge_rays"},
+        {"id": "travel", "start": 0.38, "end": 0.78, "draw_family": "stable_field", "cue": "inside_outside"},
+        {"id": "impact", "start": 0.78, "end": 0.92, "draw_family": "radial_contact", "cue": "affected_marker"},
+        {"id": "residue", "start": 0.92, "end": 1.00, "draw_family": "boundary_decay", "cue": "remaining_radius"}
+      ]
+    }
+  }
+}

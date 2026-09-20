@@ -1,0 +1,45 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/presentation/wellspring_district_view.gd" id="1_district"]
+[ext_resource type="Script" path="res://src/presentation/wellspring_character_sprite.gd" id="2_character"]
+
+[node name="WellspringVisualGallery" type="Node2D"]
+
+[node name="SourceCourt" type="Node2D" parent="."]
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_district")
+district_id = "source_court"
+build_collision = false
+
+[node name="OhTipi" type="Sprite2D" parent="."]
+position = Vector2(270, 190)
+scale = Vector2(1.5, 1.5)
+script = ExtResource("2_character")
+source_kind = "champion"
+source_id = "oh_tipi"
+body_type = "middle"
+animation_id = "idle"
+direction_index = 0
+
+[node name="NicoLai" type="Sprite2D" parent="."]
+position = Vector2(320, 205)
+scale = Vector2(1.5, 1.5)
+script = ExtResource("2_character")
+source_kind = "champion"
+source_id = "nico_lai"
+body_type = "small"
+animation_id = "cast"
+direction_index = 0
+
+[node name="Treevor" type="Sprite2D" parent="."]
+position = Vector2(380, 190)
+scale = Vector2(1.5, 1.5)
+script = ExtResource("2_character")
+source_kind = "champion"
+source_id = "treevor_mason"
+body_type = "large"
+animation_id = "taunt"
+direction_index = 0
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(320, 180)

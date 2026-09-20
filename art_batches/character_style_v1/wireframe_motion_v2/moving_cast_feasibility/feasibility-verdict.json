@@ -1,0 +1,45 @@
+{
+  "status": "candidate_only_packing_passed_drop_in_atlas_image_contract_failed",
+  "production_promoted": false,
+  "scope": "Large walk; 64 travel/aim pairs x 8 unchanged leg phases x 3 upper-body poses",
+  "offline": {
+    "frames": 1536,
+    "neutral_frames_byte_identical_to_w2": 512,
+    "non_arm_landmark_and_projected_anchor_checks": 21504,
+    "fixed_bone_checks": 15360,
+    "logical_96px_pixel_roundtrips_passed": 1536,
+    "page_dimensions": [1536, 3072],
+    "occupied_shelf_height": 2454,
+    "remaining_rows": 618,
+    "crop_rectangle_area_percent": 72.44,
+    "candidate_page_decoded_mib": 18.0
+  },
+  "engine": {
+    "version": "4.7.1-stable (official)",
+    "atlas_logical_image_roundtrips": 1536,
+    "failed": 1536,
+    "first_view_size": [96, 96],
+    "first_get_image_size": [40, 71],
+    "finding": "AtlasTexture get_image returns the cropped region without logical margin padding; not a drop-in for full-cell CPU image consumers",
+    "raw_receipt": "atlas-roundtrip-evidence.json",
+    "raw_log": "moving-cast-atlas-roundtrip-v1.log"
+  },
+  "runtime_unchanged": {
+    "verified_live_png_source_hashes": 9,
+    "shared_decoded_mib": 116.4375,
+    "manifest_sha256": "64eaf0c118b5acdb039d7ae2d147dd8bd4f233006ad5f8ad4c9fd33916c3ef98",
+    "rig_sha256": "7d5018303ce6bafbd492db2d7ffa8aa52f8447af20520ed1d21ae1a30b1d145c"
+  },
+  "candidate_source_sha256": {
+    "export_candidate.gd": "36adb11f6c8d109c1e7861f0f151c78c0eb0f9d134966c0b4c23c266e9f9266a",
+    "build_candidate.py": "153f923c0b03e2b89e9730bf9ca2dc48cf5dc1c66fce5c24e288dfe644778c79",
+    "check_atlas_roundtrip.gd": "59d14dbe6fd0ca59db598a614c909ef50621ed4ad60bc670ad159881a849cd0e"
+  },
+  "candidate_manifest_sha256": "fd4b088974c7c66ae93eedfd52c3b3070c8052330e49cd08c8d227e5a3a8a758",
+  "visual_review": {
+    "boards": ["candidate-native-light.png", "candidate-4x-dark.png"],
+    "finding": "Raised preparation forearms and extended recovery hand are clearest in side and diagonal views; south-facing stage distinction is subtler",
+    "normal_speed_transition_acceptance": "not tested"
+  },
+  "next_slice": "Review explicit packed-frame rectangle/offset and bounded padded-image reconstruction adapters, then ordinary/POV/afterimage and accepted-cast state timing tests; no production migration is included here"
+}

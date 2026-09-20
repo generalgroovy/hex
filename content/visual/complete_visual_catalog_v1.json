@@ -1,0 +1,952 @@
+{
+  "schema_version": 1,
+  "id": "flux2-complete-visual-catalog-v1",
+  "generated_by": "tools/assets/generate_complete_visual_catalog_v1.py",
+  "status": "production_foundation",
+  "character_contract": {
+    "cell_size": [
+      32,
+      32
+    ],
+    "pivot": [
+      16,
+      28
+    ],
+    "directions": [
+      "south",
+      "south_east",
+      "east",
+      "north_east",
+      "north",
+      "north_west",
+      "west",
+      "south_west"
+    ],
+    "animations": [
+      "idle",
+      "walk",
+      "sprint",
+      "hop",
+      "double_jump",
+      "rise",
+      "fall",
+      "land",
+      "wall_contact",
+      "wall_kick",
+      "air_dodge",
+      "wavedash",
+      "slide",
+      "slide_jump",
+      "vault",
+      "superglide",
+      "attack_primary",
+      "cast",
+      "defend",
+      "hit",
+      "stunned",
+      "rooted",
+      "defeated",
+      "interact",
+      "taunt"
+    ]
+  },
+  "ancestries": {
+    "human": {
+      "status": "production_foundation",
+      "size": "size_3_medium",
+      "feature": "none",
+      "atlas": "res://assets/sprites/ancestries/human/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/human/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/human/attachment_preview.png"
+    },
+    "dwarf": {
+      "status": "production_foundation",
+      "size": "size_3_medium",
+      "feature": "beard",
+      "atlas": "res://assets/sprites/ancestries/dwarf/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/dwarf/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/dwarf/attachment_preview.png"
+    },
+    "gnome": {
+      "status": "production_foundation",
+      "size": "size_1_tiny",
+      "feature": "device",
+      "atlas": "res://assets/sprites/ancestries/gnome/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/gnome/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/gnome/attachment_preview.png"
+    },
+    "hobbit": {
+      "status": "production_foundation",
+      "size": "size_2_small",
+      "feature": "cloak",
+      "atlas": "res://assets/sprites/ancestries/hobbit/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/hobbit/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/hobbit/attachment_preview.png"
+    },
+    "elf": {
+      "status": "production_foundation",
+      "size": "size_3_medium",
+      "feature": "long_ears",
+      "atlas": "res://assets/sprites/ancestries/elf/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/elf/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/elf/attachment_preview.png"
+    },
+    "orc": {
+      "status": "production_foundation",
+      "size": "size_4_large",
+      "feature": "tusks",
+      "atlas": "res://assets/sprites/ancestries/orc/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/orc/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/orc/attachment_preview.png"
+    },
+    "troll": {
+      "status": "production_foundation",
+      "size": "size_5_huge",
+      "feature": "brow",
+      "atlas": "res://assets/sprites/ancestries/troll/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/troll/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/troll/attachment_preview.png"
+    },
+    "minotaur": {
+      "status": "production_foundation",
+      "size": "size_5_huge",
+      "feature": "horns",
+      "atlas": "res://assets/sprites/ancestries/minotaur/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/minotaur/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/minotaur/attachment_preview.png"
+    },
+    "seakin": {
+      "status": "production_foundation",
+      "size": "size_3_medium",
+      "feature": "fins",
+      "atlas": "res://assets/sprites/ancestries/seakin/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/seakin/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/seakin/attachment_preview.png"
+    },
+    "wyrmborn": {
+      "status": "production_foundation",
+      "size": "size_4_large",
+      "feature": "dragon_wings",
+      "atlas": "res://assets/sprites/ancestries/wyrmborn/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/wyrmborn/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/wyrmborn/attachment_preview.png"
+    },
+    "stoneborn": {
+      "status": "production_foundation",
+      "size": "size_4_large",
+      "feature": "stone",
+      "atlas": "res://assets/sprites/ancestries/stoneborn/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/stoneborn/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/stoneborn/attachment_preview.png"
+    },
+    "treefolk": {
+      "status": "production_foundation",
+      "size": "size_4_large",
+      "feature": "roots",
+      "atlas": "res://assets/sprites/ancestries/treefolk/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/treefolk/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/treefolk/attachment_preview.png"
+    },
+    "sylph": {
+      "status": "production_foundation",
+      "size": "size_2_small",
+      "feature": "streamer_wings",
+      "atlas": "res://assets/sprites/ancestries/sylph/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/sylph/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/sylph/attachment_preview.png"
+    },
+    "undead": {
+      "status": "production_foundation",
+      "size": "size_3_medium",
+      "feature": "runes",
+      "atlas": "res://assets/sprites/ancestries/undead/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/undead/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/undead/attachment_preview.png"
+    },
+    "goblin": {
+      "status": "production_foundation",
+      "size": "size_2_small",
+      "feature": "long_ears",
+      "atlas": "res://assets/sprites/ancestries/goblin/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/goblin/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/goblin/attachment_preview.png"
+    },
+    "nymph": {
+      "status": "production_foundation",
+      "size": "size_2_small",
+      "feature": "bloom",
+      "atlas": "res://assets/sprites/ancestries/nymph/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/nymph/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/nymph/attachment_preview.png"
+    },
+    "vampire": {
+      "status": "production_foundation",
+      "size": "size_3_medium",
+      "feature": "cloak",
+      "atlas": "res://assets/sprites/ancestries/vampire/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/vampire/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/vampire/attachment_preview.png"
+    },
+    "werewolf": {
+      "status": "production_foundation",
+      "size": "size_4_large",
+      "feature": "wolf",
+      "atlas": "res://assets/sprites/ancestries/werewolf/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/werewolf/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/werewolf/attachment_preview.png"
+    },
+    "angel": {
+      "status": "production_foundation",
+      "size": "size_3_medium",
+      "feature": "feather_wings",
+      "atlas": "res://assets/sprites/ancestries/angel/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/angel/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/angel/attachment_preview.png"
+    },
+    "demon": {
+      "status": "production_foundation",
+      "size": "size_3_medium",
+      "feature": "demon",
+      "atlas": "res://assets/sprites/ancestries/demon/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/demon/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/demon/attachment_preview.png"
+    },
+    "weaverkin": {
+      "status": "body_plan_candidate",
+      "size": "size_3_medium",
+      "feature": "spider",
+      "atlas": "res://assets/sprites/ancestries/weaverkin/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/weaverkin/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/weaverkin/attachment_preview.png"
+    },
+    "scorpionkin": {
+      "status": "body_plan_candidate",
+      "size": "size_4_large",
+      "feature": "scorpion",
+      "atlas": "res://assets/sprites/ancestries/scorpionkin/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/scorpionkin/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/scorpionkin/attachment_preview.png"
+    },
+    "harvestkin": {
+      "status": "body_plan_candidate",
+      "size": "size_4_large",
+      "feature": "harvest",
+      "atlas": "res://assets/sprites/ancestries/harvestkin/base_atlas.png",
+      "debug_atlas": "res://assets/sprites/ancestries/harvestkin/base_overlay_debug_atlas.png",
+      "preview": "res://assets/sprites/ancestries/harvestkin/attachment_preview.png"
+    }
+  },
+  "champions": {
+    "oh_tipi": {
+      "display_name": "Oh Tipi",
+      "status": "integrated_candidate",
+      "ancestry": "seakin",
+      "size": "size_3_medium",
+      "elements": [
+        "water",
+        "ice",
+        "charge"
+      ],
+      "weapon": "conduit",
+      "atlas": "res://assets/sprites/champions/oh_tipi/oh_tipi_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/oh_tipi/oh_tipi_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/oh_tipi/oh_tipi_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/oh_tipi/oh_tipi_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/oh_tipi/oh_tipi_selection_icon.png"
+    },
+    "s_wayne": {
+      "display_name": "S. Wayne",
+      "status": "integrated_candidate",
+      "ancestry": "hobbit",
+      "size": "size_2_small",
+      "elements": [
+        "dark",
+        "light"
+      ],
+      "weapon": "disc",
+      "atlas": "res://assets/sprites/champions/s_wayne/s_wayne_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/s_wayne/s_wayne_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/s_wayne/s_wayne_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/s_wayne/s_wayne_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/s_wayne/s_wayne_selection_icon.png"
+    },
+    "red_baron": {
+      "display_name": "The Red Baron",
+      "status": "integrated_candidate",
+      "ancestry": "undead",
+      "size": "size_3_medium",
+      "elements": [
+        "dark",
+        "fire",
+        "ice"
+      ],
+      "weapon": "sabre",
+      "atlas": "res://assets/sprites/champions/red_baron/red_baron_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/red_baron/red_baron_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/red_baron/red_baron_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/red_baron/red_baron_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/red_baron/red_baron_selection_icon.png"
+    },
+    "steezo": {
+      "display_name": "Steezo",
+      "status": "integrated_candidate",
+      "ancestry": "goblin",
+      "size": "size_2_small",
+      "elements": [
+        "fire",
+        "charge",
+        "light"
+      ],
+      "weapon": "detonator",
+      "atlas": "res://assets/sprites/champions/steezo/steezo_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/steezo/steezo_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/steezo/steezo_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/steezo/steezo_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/steezo/steezo_selection_icon.png"
+    },
+    "treevor_mason": {
+      "display_name": "Treevor the Mason",
+      "status": "integrated_candidate",
+      "ancestry": "treefolk",
+      "size": "size_4_large",
+      "elements": [
+        "earth",
+        "wind",
+        "fire"
+      ],
+      "weapon": "mason_hammer",
+      "atlas": "res://assets/sprites/champions/treevor_mason/treevor_mason_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/treevor_mason/treevor_mason_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/treevor_mason/treevor_mason_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/treevor_mason/treevor_mason_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/treevor_mason/treevor_mason_selection_icon.png"
+    },
+    "oll_i": {
+      "display_name": "Oll' I",
+      "status": "integrated_candidate",
+      "ancestry": "werewolf",
+      "size": "size_4_large",
+      "elements": [
+        "earth",
+        "fire",
+        "light"
+      ],
+      "weapon": "gauntlets",
+      "atlas": "res://assets/sprites/champions/oll_i/oll_i_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/oll_i/oll_i_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/oll_i/oll_i_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/oll_i/oll_i_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/oll_i/oll_i_selection_icon.png"
+    },
+    "fluup": {
+      "display_name": "Fluup",
+      "status": "integrated_candidate",
+      "ancestry": "orc",
+      "size": "size_4_large",
+      "elements": [
+        "charge",
+        "wind",
+        "ice"
+      ],
+      "weapon": "storm_maul",
+      "atlas": "res://assets/sprites/champions/fluup/fluup_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/fluup/fluup_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/fluup/fluup_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/fluup/fluup_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/fluup/fluup_selection_icon.png"
+    },
+    "wa_bidi": {
+      "display_name": "Wa Bidi",
+      "status": "integrated_candidate",
+      "ancestry": "goblin",
+      "size": "size_2_small",
+      "elements": [
+        "charge",
+        "wind",
+        "fire"
+      ],
+      "weapon": "horn",
+      "atlas": "res://assets/sprites/champions/wa_bidi/wa_bidi_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/wa_bidi/wa_bidi_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/wa_bidi/wa_bidi_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/wa_bidi/wa_bidi_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/wa_bidi/wa_bidi_selection_icon.png"
+    },
+    "grace_reava": {
+      "display_name": "Grace Reava",
+      "status": "integrated_candidate",
+      "ancestry": "sylph",
+      "size": "size_2_small",
+      "elements": [
+        "wind",
+        "water",
+        "light"
+      ],
+      "weapon": "rapier",
+      "atlas": "res://assets/sprites/champions/grace_reava/grace_reava_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/grace_reava/grace_reava_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/grace_reava/grace_reava_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/grace_reava/grace_reava_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/grace_reava/grace_reava_selection_icon.png"
+    },
+    "nico_lai": {
+      "display_name": "Nico Lai",
+      "status": "integrated_candidate",
+      "ancestry": "gnome",
+      "size": "size_1_tiny",
+      "elements": [
+        "charge",
+        "light"
+      ],
+      "weapon": "charge_gauntlet",
+      "atlas": "res://assets/sprites/champions/nico_lai/nico_lai_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/nico_lai/nico_lai_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/nico_lai/nico_lai_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/nico_lai/nico_lai_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/nico_lai/nico_lai_selection_icon.png"
+    },
+    "spai_si": {
+      "display_name": "Spai Si",
+      "status": "integrated_candidate",
+      "ancestry": "demon",
+      "size": "size_3_medium",
+      "elements": [
+        "wind",
+        "light",
+        "earth"
+      ],
+      "weapon": "redirect_blade",
+      "atlas": "res://assets/sprites/champions/spai_si/spai_si_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/spai_si/spai_si_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/spai_si/spai_si_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/spai_si/spai_si_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/spai_si/spai_si_selection_icon.png"
+    },
+    "leaf_hidden": {
+      "display_name": "Leaf the Hidden",
+      "status": "integrated_candidate",
+      "ancestry": "treefolk",
+      "size": "size_3_medium",
+      "elements": [
+        "water",
+        "earth",
+        "light"
+      ],
+      "weapon": "rootweaving_hands",
+      "atlas": "res://assets/sprites/champions/leaf_hidden/leaf_hidden_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/leaf_hidden/leaf_hidden_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/leaf_hidden/leaf_hidden_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/leaf_hidden/leaf_hidden_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/leaf_hidden/leaf_hidden_selection_icon.png"
+    },
+    "ha_rekt": {
+      "display_name": "Ha Rekt",
+      "status": "integrated_candidate",
+      "ancestry": "wyrmborn",
+      "size": "size_4_large",
+      "elements": [
+        "ice",
+        "wind",
+        "fire"
+      ],
+      "weapon": "cold_lance",
+      "atlas": "res://assets/sprites/champions/ha_rekt/ha_rekt_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/ha_rekt/ha_rekt_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/ha_rekt/ha_rekt_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/ha_rekt/ha_rekt_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/ha_rekt/ha_rekt_selection_icon.png"
+    },
+    "dr_apex": {
+      "display_name": "Dr. Apex",
+      "status": "integrated_candidate",
+      "ancestry": "stoneborn",
+      "size": "size_4_large",
+      "elements": [
+        "earth",
+        "light",
+        "water"
+      ],
+      "weapon": "medic_prism",
+      "atlas": "res://assets/sprites/champions/dr_apex/dr_apex_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/dr_apex/dr_apex_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/dr_apex/dr_apex_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/dr_apex/dr_apex_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/dr_apex/dr_apex_selection_icon.png"
+    },
+    "haara": {
+      "display_name": "Haara",
+      "status": "integrated_candidate",
+      "ancestry": "nymph",
+      "size": "size_2_small",
+      "elements": [
+        "light",
+        "wind",
+        "spirit"
+      ],
+      "weapon": "bloom_orb",
+      "atlas": "res://assets/sprites/champions/haara/haara_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/haara/haara_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/haara/haara_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/haara/haara_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/haara/haara_selection_icon.png"
+    },
+    "hesus_christo": {
+      "display_name": "Hesus Christo",
+      "status": "integrated_candidate",
+      "ancestry": "elf",
+      "size": "size_3_medium",
+      "elements": [
+        "earth",
+        "water"
+      ],
+      "weapon": "renewal_hands",
+      "atlas": "res://assets/sprites/champions/hesus_christo/hesus_christo_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/hesus_christo/hesus_christo_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/hesus_christo/hesus_christo_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/hesus_christo/hesus_christo_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/hesus_christo/hesus_christo_selection_icon.png"
+    },
+    "grimm_bow": {
+      "display_name": "Grimm Bow",
+      "status": "integrated_candidate",
+      "ancestry": "troll",
+      "size": "size_5_huge",
+      "elements": [
+        "dark",
+        "earth",
+        "water"
+      ],
+      "weapon": "greatbow",
+      "atlas": "res://assets/sprites/champions/grimm_bow/grimm_bow_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/grimm_bow/grimm_bow_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/grimm_bow/grimm_bow_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/grimm_bow/grimm_bow_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/grimm_bow/grimm_bow_selection_icon.png"
+    },
+    "biggy_bob": {
+      "display_name": "Biggy Bob",
+      "status": "integrated_candidate",
+      "ancestry": "dwarf",
+      "size": "size_3_medium",
+      "elements": [
+        "earth",
+        "fire",
+        "light"
+      ],
+      "weapon": "breach_hammer",
+      "atlas": "res://assets/sprites/champions/biggy_bob/biggy_bob_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/biggy_bob/biggy_bob_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/biggy_bob/biggy_bob_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/biggy_bob/biggy_bob_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/biggy_bob/biggy_bob_selection_icon.png"
+    },
+    "jan_wicked": {
+      "display_name": "Jan Wicked",
+      "status": "integrated_candidate",
+      "ancestry": "human",
+      "size": "size_3_medium",
+      "elements": [
+        "ice",
+        "dark",
+        "charge"
+      ],
+      "weapon": "ice_blade",
+      "atlas": "res://assets/sprites/champions/jan_wicked/jan_wicked_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/jan_wicked/jan_wicked_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/jan_wicked/jan_wicked_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/jan_wicked/jan_wicked_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/jan_wicked/jan_wicked_selection_icon.png"
+    },
+    "ba_djoh": {
+      "display_name": "Ba Djoh",
+      "status": "integrated_candidate",
+      "ancestry": "minotaur",
+      "size": "size_5_huge",
+      "elements": [
+        "earth",
+        "fire",
+        "water"
+      ],
+      "weapon": "breaker",
+      "atlas": "res://assets/sprites/champions/ba_djoh/ba_djoh_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/ba_djoh/ba_djoh_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/ba_djoh/ba_djoh_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/ba_djoh/ba_djoh_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/ba_djoh/ba_djoh_selection_icon.png"
+    },
+    "urzh": {
+      "display_name": "Urzh",
+      "status": "integrated_candidate",
+      "ancestry": "stoneborn",
+      "size": "size_4_large",
+      "elements": [
+        "earth",
+        "fire",
+        "charge"
+      ],
+      "weapon": "kiln_shield",
+      "atlas": "res://assets/sprites/champions/urzh/urzh_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/urzh/urzh_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/urzh/urzh_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/urzh/urzh_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/urzh/urzh_selection_icon.png"
+    },
+    "donnok": {
+      "display_name": "Donnok",
+      "status": "integrated_candidate",
+      "ancestry": "dwarf",
+      "size": "size_3_medium",
+      "elements": [
+        "earth",
+        "fire",
+        "water"
+      ],
+      "weapon": "terrain_hammer",
+      "atlas": "res://assets/sprites/champions/donnok/donnok_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/donnok/donnok_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/donnok/donnok_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/donnok/donnok_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/donnok/donnok_selection_icon.png"
+    },
+    "djonah_thaan": {
+      "display_name": "Djonah Thaan",
+      "status": "integrated_candidate",
+      "ancestry": "vampire",
+      "size": "size_3_medium",
+      "elements": [
+        "dark",
+        "charge",
+        "fire"
+      ],
+      "weapon": "grave_coil",
+      "atlas": "res://assets/sprites/champions/djonah_thaan/djonah_thaan_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/djonah_thaan/djonah_thaan_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/djonah_thaan/djonah_thaan_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/djonah_thaan/djonah_thaan_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/djonah_thaan/djonah_thaan_selection_icon.png"
+    },
+    "unnamed_angel": {
+      "display_name": "Unnamed Angel",
+      "status": "placeholder_unapproved",
+      "ancestry": "angel",
+      "size": "size_3_medium",
+      "elements": [
+        "wind",
+        "light",
+        "spirit"
+      ],
+      "weapon": "placeholder_orb",
+      "atlas": "res://assets/sprites/champions/unnamed_angel/unnamed_angel_atlas.png",
+      "debug_atlas": "res://assets/sprites/champions/unnamed_angel/unnamed_angel_overlay_debug_atlas.png",
+      "direction_preview": "res://assets/sprites/champions/unnamed_angel/unnamed_angel_direction_preview.png",
+      "portrait": "res://assets/sprites/champions/unnamed_angel/unnamed_angel_portrait.png",
+      "selection_icon": "res://assets/sprites/champions/unnamed_angel/unnamed_angel_selection_icon.png"
+    }
+  },
+  "districts": {
+    "nexus_court": {
+      "display_name": "Nexus Court",
+      "status": "presentation_only",
+      "preview": "res://assets/maps/sanctum/districts/nexus_court_preview.png",
+      "layout": "res://content/maps/districts/nexus_court_visual_v1.json",
+      "landmarks": [
+        {
+          "id": "grand_fountain",
+          "tile": [
+            40,
+            22
+          ]
+        }
+      ],
+      "routes": [
+        {
+          "id": "fountain_ring",
+          "kind": "ordinary"
+        },
+        {
+          "id": "radial_launch_lines",
+          "kind": "advanced"
+        }
+      ]
+    },
+    "wayfarer_concourse": {
+      "display_name": "Wayfarer Concourse",
+      "status": "presentation_only",
+      "preview": "res://assets/maps/sanctum/districts/wayfarer_concourse_preview.png",
+      "layout": "res://content/maps/districts/wayfarer_concourse_visual_v1.json",
+      "landmarks": [
+        {
+          "id": "portal_rotunda",
+          "tile": [
+            40,
+            22
+          ]
+        }
+      ],
+      "routes": [
+        {
+          "id": "balcony_chain",
+          "kind": "advanced"
+        },
+        {
+          "id": "gatehouse_roofs",
+          "kind": "advanced"
+        }
+      ]
+    },
+    "movement_conservatory": {
+      "display_name": "Movement Conservatory",
+      "status": "presentation_only",
+      "preview": "res://assets/maps/sanctum/districts/movement_conservatory_preview.png",
+      "layout": "res://content/maps/districts/movement_conservatory_visual_v1.json",
+      "landmarks": [
+        {
+          "id": "rail_causeway",
+          "tile": [
+            40,
+            10
+          ]
+        },
+        {
+          "id": "conservatory_spire",
+          "tile": [
+            64,
+            22
+          ]
+        }
+      ],
+      "routes": [
+        {
+          "id": "wall_kick_wells",
+          "kind": "advanced"
+        },
+        {
+          "id": "vault_slide_loop",
+          "kind": "advanced"
+        },
+        {
+          "id": "island_leaps",
+          "kind": "advanced"
+        }
+      ]
+    },
+    "alchemical_proving_grounds": {
+      "display_name": "Alchemical Proving Grounds",
+      "status": "presentation_only",
+      "preview": "res://assets/maps/sanctum/districts/alchemical_proving_grounds_preview.png",
+      "layout": "res://content/maps/districts/alchemical_proving_grounds_visual_v1.json",
+      "landmarks": [
+        {
+          "id": "seven_basin_crater",
+          "tile": [
+            40,
+            22
+          ]
+        }
+      ],
+      "routes": [
+        {
+          "id": "basin_rim_run",
+          "kind": "advanced"
+        },
+        {
+          "id": "crater_superglide",
+          "kind": "advanced"
+        }
+      ]
+    },
+    "living_archive": {
+      "display_name": "Living Archive",
+      "status": "presentation_only",
+      "preview": "res://assets/maps/sanctum/districts/living_archive_preview.png",
+      "layout": "res://content/maps/districts/living_archive_visual_v1.json",
+      "landmarks": [
+        {
+          "id": "oracular_dome",
+          "tile": [
+            40,
+            14
+          ]
+        }
+      ],
+      "routes": [
+        {
+          "id": "book_stack_vaults",
+          "kind": "advanced"
+        },
+        {
+          "id": "archive_roofline",
+          "kind": "advanced"
+        }
+      ]
+    },
+    "verdant_recovery": {
+      "display_name": "Verdant Recovery",
+      "status": "presentation_only",
+      "preview": "res://assets/maps/sanctum/districts/verdant_recovery_preview.png",
+      "layout": "res://content/maps/districts/verdant_recovery_visual_v1.json",
+      "landmarks": [
+        {
+          "id": "suspended_garden",
+          "tile": [
+            40,
+            22
+          ]
+        }
+      ],
+      "routes": [
+        {
+          "id": "root_canopy",
+          "kind": "advanced"
+        },
+        {
+          "id": "garden_platforms",
+          "kind": "ordinary"
+        }
+      ]
+    },
+    "foundry_deep": {
+      "display_name": "Foundry Deep",
+      "status": "presentation_only",
+      "preview": "res://assets/maps/sanctum/districts/foundry_deep_preview.png",
+      "layout": "res://content/maps/districts/foundry_deep_visual_v1.json",
+      "landmarks": [
+        {
+          "id": "transmutation_engine",
+          "tile": [
+            40,
+            16
+          ]
+        }
+      ],
+      "routes": [
+        {
+          "id": "machine_line",
+          "kind": "advanced"
+        },
+        {
+          "id": "flooded_shortcut",
+          "kind": "advanced"
+        }
+      ]
+    },
+    "crown_observatory": {
+      "display_name": "Crown Observatory",
+      "status": "presentation_only",
+      "preview": "res://assets/maps/sanctum/districts/crown_observatory_preview.png",
+      "layout": "res://content/maps/districts/crown_observatory_visual_v1.json",
+      "landmarks": [
+        {
+          "id": "twin_astrolabes",
+          "tile": [
+            40,
+            22
+          ]
+        }
+      ],
+      "routes": [
+        {
+          "id": "rooftop_redirects",
+          "kind": "advanced"
+        },
+        {
+          "id": "astrolabe_ring",
+          "kind": "advanced"
+        }
+      ]
+    },
+    "seasonal_expanse": {
+      "display_name": "Seasonal Expanse",
+      "status": "presentation_only",
+      "preview": "res://assets/maps/sanctum/districts/seasonal_expanse_preview.png",
+      "layout": "res://content/maps/districts/seasonal_expanse_visual_v1.json",
+      "landmarks": [
+        {
+          "id": "four_season_orrery",
+          "tile": [
+            40,
+            22
+          ]
+        }
+      ],
+      "routes": [
+        {
+          "id": "changing_surface_run",
+          "kind": "advanced"
+        },
+        {
+          "id": "island_leaps",
+          "kind": "advanced"
+        }
+      ]
+    }
+  },
+  "props": {
+    "path": "res://assets/props/world_interaction_props_v1.png",
+    "cell_size": [
+      32,
+      32
+    ],
+    "order": [
+      "door",
+      "switch",
+      "relay",
+      "capacitor",
+      "pump",
+      "sluice",
+      "furnace",
+      "prism",
+      "mirror",
+      "lift",
+      "crane",
+      "trap",
+      "portal",
+      "movable_cover",
+      "training_dummy",
+      "grapple_anchor"
+    ],
+    "states": [
+      "idle",
+      "focused",
+      "disabled",
+      "pending",
+      "active",
+      "success",
+      "failure",
+      "damaged"
+    ]
+  },
+  "element_vfx": {
+    "path": "res://assets/effects/element_vfx_v1.png",
+    "cell_size": [
+      32,
+      32
+    ],
+    "elements": [
+      "earth",
+      "fire",
+      "water",
+      "wind",
+      "ice",
+      "charge",
+      "light",
+      "dark"
+    ],
+    "phases": [
+      "startup",
+      "active",
+      "travel",
+      "impact",
+      "residue",
+      "reduced_motion"
+    ]
+  },
+  "ui": {
+    "skin": "res://assets/ui/sanctum_ui_skin_v1.png",
+    "status": "production_foundation"
+  },
+  "overviews": {
+    "roster": "res://assets/sprites/champions/roster_overview_v1.png",
+    "districts": "res://assets/maps/sanctum/sanctum_district_overview_v1.png"
+  }
+}

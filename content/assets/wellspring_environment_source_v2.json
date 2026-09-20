@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "id": "wellspring-environment-source-v2",
+  "authority": "presentation-only",
+  "source": {
+    "path": "res://assets/concept/wellspring-environment-modules-source-v2.png",
+    "sha256": "526f42093c3392789adbbc91abb4420c594a1365d2d25a4e4ee319d94359e7e0",
+    "width": 1536,
+    "height": 1024,
+    "columns": 4,
+    "rows": 4,
+    "transparent": true,
+    "method": "openai-built-in-imagegen-plus-background-extraction",
+    "reference_role": "broad mood, material, perspective and readability reference only; no copied pixels, layout, symbols, UI or characters",
+    "generation_prompt": "Original transparent 4x4 modular FLUX old-world academy environment sheet: quiet cobblestone, cardinal bridge, worldbone cliff, water channel; timber-masonry facade, blue-green roof, arched door and window; lantern, planter, fountain and portal; training target, abstract brass floor inlay, tree and flowering bush. Crisp clustered pixel art, screen-cardinal floors, gently tilted facades, no text/UI/characters/weapons/spells/logos/watermarks."
+  },
+  "extraction": {
+    "alpha_padding": 6,
+    "interpolation": "nearest",
+    "maximum_runtime_width": 160,
+    "maximum_runtime_height": 112
+  },
+  "modules": [
+    {"id": "quiet-cobblestone", "role": "ground_overlay", "column": 0, "row": 0, "maximum_size": [128, 96]},
+    {"id": "cardinal-bridge", "role": "bridge", "column": 1, "row": 0, "maximum_size": [128, 96]},
+    {"id": "worldbone-ledge", "role": "worldbone", "column": 2, "row": 0, "maximum_size": [112, 96]},
+    {"id": "water-channel", "role": "water", "column": 3, "row": 0, "maximum_size": [96, 112]},
+    {"id": "academy-facade", "role": "facade", "column": 0, "row": 1, "maximum_size": [144, 96]},
+    {"id": "academy-roof", "role": "roof", "column": 1, "row": 1, "maximum_size": [144, 96]},
+    {"id": "academy-door", "role": "door", "column": 2, "row": 1, "maximum_size": [80, 96]},
+    {"id": "academy-window", "role": "window", "column": 3, "row": 1, "maximum_size": [64, 88]},
+    {"id": "brass-lantern", "role": "prop", "column": 0, "row": 2, "maximum_size": [56, 72]},
+    {"id": "garden-planter", "role": "prop", "column": 1, "row": 2, "maximum_size": [96, 64]},
+    {"id": "source-fountain", "role": "landmark", "column": 2, "row": 2, "maximum_size": [96, 80]},
+    {"id": "farflow-portal", "role": "landmark", "column": 3, "row": 2, "maximum_size": [96, 96]},
+    {"id": "training-target", "role": "prop", "column": 0, "row": 3, "maximum_size": [72, 88]},
+    {"id": "brass-inlay", "role": "ground_overlay", "column": 1, "row": 3, "maximum_size": [104, 88]},
+    {"id": "broad-canopy-tree", "role": "scenic_edge", "column": 2, "row": 3, "maximum_size": [112, 96]},
+    {"id": "flowering-bush", "role": "scenic_edge", "column": 3, "row": 3, "maximum_size": [96, 72]}
+  ]
+}

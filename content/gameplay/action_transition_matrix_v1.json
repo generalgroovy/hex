@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "action-transition-matrix-v1",
+  "authority": "authoritative simulation policy; presentation may explain refusals but never changes transition legality",
+  "coverage": {
+    "movement_modes": [
+      "idle", "walk", "sprint", "hop", "double_jump", "slide",
+      "slide_jump", "air_dodge", "wave_dash", "wall_kick", "vault",
+      "superglide", "launched", "grappled", "charging", "stunned",
+      "rooted", "slowed", "fast_fall", "wall_skim", "impact_recovery", "roll"
+    ],
+    "spell_shapes": ["projectile", "beam", "spray", "field"]
+  },
+  "rules": [
+    {"from": "movement_any", "to": "spell_start", "allowed": true, "gate": "control_state"},
+    {"from": "spell_start", "to": "movement_any", "allowed": true, "gate": "physical_requirements"},
+    {"from": "spell_recovery", "to": "spell_start", "allowed": true, "gate": "own_cooldown_resource"},
+    {"from": "spell_start", "to": "spell_start", "allowed": false, "gate": "startup_commitment"}
+  ],
+  "spell_start": {
+    "execution_channels": 1,
+    "allow_during_movement": true,
+    "allow_during_recovery": true,
+    "startup_commitment_reason": "startup_commitment",
+    "blocked_control_states": ["launched", "grappled", "charging", "stunned", "rooted"]
+  },
+  "declared_refusal_reasons": [
+    "empty_slot",
+    "kit",
+    "flux",
+    "cooldown",
+    "startup_commitment",
+    "control_launched",
+    "control_grappled",
+    "control_charging",
+    "control_stunned",
+    "control_rooted"
+  ]
+}

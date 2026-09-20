@@ -1,0 +1,13 @@
+# Red Baron south/north contact-B correction
+
+Built-in imagegen. Complete candidate v2 is the immutable identity/style reference. Two-cell focused repair requested after the16-cell board failed gait review. No runtime promotion.
+
+Use case: identity-preserve. This is a TWO-SPRITE animation repair, not a character redesign. Image1 is the exact finished Red Baron identity, pixel style, anatomy and costume reference. Make ONLY TWO full-body sprites side by side on a genuinely transparent background with generous space between them. No additional sprites or text. Keep the source's natural adult skull-to-body ratio, slender black armored shins, exact small crown, ivory skull, oxblood noble coat, gold trim and front jewel, empty hands. Do not enlarge head/hands, simplify into chibi, add weapons, shadows or effects. Retain crisp pixel clusters and the same camera pitch. Both figures use precisely the SAME skeleton/body scale.
+
+These are the missing WALK B contacts, not idle or jump. In source image row5, the SOUTH walk A has the SCREEN-LEFT boot nearest/bottom and the NORTH walk A has SCREEN-RIGHT boot nearest/bottom. We need the opposite visible contact, deliberately impossible to confuse with A:
+
+LEFT sprite: SOUTH / true FRONT view. The SCREEN-RIGHT boot is the ONLY fully planted nearer foot at the bottommost baseline, extended forward toward the viewer. Its shin is nearly straight and carries the body's weight. The SCREEN-LEFT boot is farther behind and visibly HIGHER, heel lifted, knee bent; the left boot sole must end at least one whole boot-height ABOVE the planted right boot sole. There must be clear background between both boots. The left arm (screen-left) swings forward while the right arm swings back; subtly open the coat panels to show both legs. No parallel-standing feet and no face turn.
+
+RIGHT sprite: NORTH / true BACK view, no face visible. The SCREEN-LEFT boot is the ONLY fully planted nearer foot at the bottommost baseline, trailing slightly toward the viewer; the SCREEN-RIGHT boot reaches away from the viewer, visibly HIGHER by one boot-height, heel lifted and knee flexed. This is exactly the OPPOSITE contact from source row5 north. Part/lift the lower coat slightly to expose both shins and clear separation; do not cover either boot with cape. Swing arms oppositely, preserve back cloak and armor identity. No face visible.
+
+Keep both torsos upright in a WALK, not a sprint lean. Exaggerate only the leg contact separation enough to read at76px tall. Entire crown-to-boot silhouettes visible with wide clean margins. Exactly2 full-body sprites, FRONT B then BACK B, same height/scale, isolated on transparent background. Do not include the existing A contacts or whole source sheet.

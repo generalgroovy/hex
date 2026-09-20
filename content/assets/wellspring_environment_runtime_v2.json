@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "wellspring-environment-runtime-v2",
+  "status": "runtime-candidate",
+  "authority": "presentation-only",
+  "provenance": {
+    "source_contract": "res://content/assets/wellspring_environment_source_v2.json",
+    "source_sha256": "526f42093c3392789adbbc91abb4420c594a1365d2d25a4e4ee319d94359e7e0",
+    "generator": "res://scripts/prepare_wellspring_environment_v2.gd",
+    "generator_sha256": "a749f50e6e96ee532e68d223df9b2e9f67824fe9015017109c505207fb2acd0c",
+    "third_party_pixel_inputs": false,
+    "distribution_license": "pending-project-license",
+    "review": "Original project-bound ImageGen source, deterministic crop/downscale, presentation-only runtime candidate; release approval remains gated."
+  },
+  "sampling": {
+    "world_units_per_pixel": 1,
+    "texture_filter": "nearest",
+    "mipmaps": false
+  },
+  "budgets": {
+    "module_count": 16,
+    "png_disk_bytes": 270324,
+    "maximum_png_disk_bytes": 524288,
+    "decoded_rgba_bytes": 479872,
+    "maximum_decoded_rgba_bytes": 786432
+  },
+  "modules": [
+    {"id":"quiet-cobblestone","role":"ground_overlay","path":"res://assets/environment/wellspring_v2/runtime_kit_v2/quiet-cobblestone.png","width":104,"height":96,"pivot":[52,94],"sha256":"1224fb447db1ac570d181340616ba4f6b0d53c2f09a470dad961ee96ee5836c3"},
+    {"id":"cardinal-bridge","role":"bridge","path":"res://assets/environment/wellspring_v2/runtime_kit_v2/cardinal-bridge.png","width":128,"height":93,"pivot":[64,91],"sha256":"9e2907784677f315ca0bf5b7e3f73aaedcdaee19c800350b8ec3d349cefda73f"},
+    {"id":"worldbone-ledge","role":"worldbone","path":"res://assets/environment/wellspring_v2/runtime_kit_v2/worldbone-ledge.png","width":110,"height":96,"pivot":[55,94],"sha256":"b4995aa69b3262c40a249bcc9b67c59abb03f96a4c6f03f28144e36d192355fe"},
+    {"id":"water-channel","role":"water","path":"res://assets/environment/wellspring_v2/runtime_kit_v2/water-channel.png","width":96,"height":69,"pivot":[48,67],"sha256":"66e83561ec1b2787d095c9593298b84bdd9e568d94735f9479bfaf950174bc58"},
+    {"id":"academy-facade","role":"facade","path":"res://assets/environment/wellspring_v2/runtime_kit_v2/academy-facade.png","width":100,"height":96,"pivot":[50,94],"sha256":"321ac0ddca70abfb582c187c2e1aac013215892521f8ee0f16f58ff0037c6e2d"},
+    {"id":"academy-roof","role":"roof","path":"res://assets/environment/wellspring_v2/runtime_kit_v2/academy-roof.png","width":143,"height":96,"pivot":[71,94],"sha256":"534b7bf2fdf609ab1702126791c3a36518760f13773b665ed7d30799e7078669"},
+    {"id":"academy-door","role":"door","path":"res://assets/environment/wellspring_v2/runtime_kit_v2/academy-door.png","width":80,"height":56,"pivot":[40,54],"sha256":"0b33592b550eaf0dc99019b52b03086dd59a28a79cfa77a4e1882a54ac5c668d"},
+    {"id":"academy-window","role":"window","path":"res://assets/environment/wellspring_v2/runtime_kit_v2/academy-window.png","width":64,"height":46,"pivot":[32,44],"sha256":"4855bee4c1d16d8e14b03ca1261496b4eff8b398abe5732f4c9a4f4db2351cbb"},
+    {"id":"brass-lantern","role":"prop","path":"res://assets/environment/wellspring_v2/runtime_kit_v2/brass-lantern.png","width":56,"height":38,"pivot":[28,36],"sha256":"9bc80a40fbe30204d9a567fd439a3bb63ce44ca181bfddf2e3f4b1cf59a9f638"},
+    {"id":"garden-planter","role":"prop","path":"res://assets/environment/wellspring_v2/runtime_kit_v2/garden-planter.png","width":90,"height":64,"pivot":[45,62],"sha256":"dcf3bc70d20117d0f5f2f32d2502be9a9142f0a0caee545b001e9fdb4f704705"},
+    {"id":"source-fountain","role":"landmark","path":"res://assets/environment/wellspring_v2/runtime_kit_v2/source-fountain.png","width":96,"height":68,"pivot":[48,66],"sha256":"aedb681774e8aad4a8ba08e560ca65cb98c3f68ad9523b31a7a0b510b0896f12"},
+    {"id":"farflow-portal","role":"landmark","path":"res://assets/environment/wellspring_v2/runtime_kit_v2/farflow-portal.png","width":96,"height":70,"pivot":[48,68],"sha256":"533b981d4ba06079a61ea868b061d425ee62f127d39ec9e869f0b3d66f81ed08"},
+    {"id":"training-target","role":"prop","path":"res://assets/environment/wellspring_v2/runtime_kit_v2/training-target.png","width":72,"height":73,"pivot":[36,71],"sha256":"d7bfe7fff65dd0a6c5a23bdc5dfcfc385da0f59dad62b909b7bad2e66df418ba"},
+    {"id":"brass-inlay","role":"ground_overlay","path":"res://assets/environment/wellspring_v2/runtime_kit_v2/brass-inlay.png","width":104,"height":85,"pivot":[52,83],"sha256":"cd6850926c602344fe31b94ae9827bbe5c3ff853a20b71f3305a050f060abd7e"},
+    {"id":"broad-canopy-tree","role":"scenic_edge","path":"res://assets/environment/wellspring_v2/runtime_kit_v2/broad-canopy-tree.png","width":112,"height":80,"pivot":[56,78],"sha256":"636f6b3f6262e8ee9ade5821c5f88c7c3e83dc4f0e43ad7c91a721b63bb7835a"},
+    {"id":"flowering-bush","role":"scenic_edge","path":"res://assets/environment/wellspring_v2/runtime_kit_v2/flowering-bush.png","width":96,"height":62,"pivot":[48,60],"sha256":"75ca3c3374afe40b1c785dbab620b9e063bd9cf283e8a3ebf95bd9f82de3b1fa"}
+  ]
+}

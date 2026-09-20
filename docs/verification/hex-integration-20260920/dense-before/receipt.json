@@ -1,0 +1,233 @@
+{
+	"assertions": 1244,
+	"failures": 0,
+	"runs": [
+		{
+			"admitted_by_wire": {
+				"140": 2,
+				"141": 2,
+				"145": 2,
+				"154": 2,
+				"159": 2,
+				"160": 2,
+				"163": 2,
+				"164": 2,
+				"179": 2,
+				"180": 7,
+				"181": 2,
+				"182": 7,
+				"183": 2,
+				"184": 8,
+				"185": 2,
+				"186": 7
+			},
+			"alive_work": {
+				"alive_actor_instance_ticks": 3840,
+				"alive_actor_instance_ticks_per_simulated_second": 960.0,
+				"alive_end": 8,
+				"deaths": 0,
+				"mean_alive_actors": 8.0,
+				"ticks_with_authority_work": 480,
+				"work_ticks_per_simulated_second": 120.0
+			},
+			"authority_metrics": {
+				"admitted": 53,
+				"deposited": 80,
+				"exposure_queries": 6544,
+				"matter_consumed": 26356,
+				"matter_expired": 5444,
+				"matter_paid": 31800,
+				"modifiers": 3,
+				"reactions": 22,
+				"refused": 72,
+				"requested": 125
+			},
+			"case": "dense-crucible",
+			"cleanup_ticks": 522,
+			"contact_queries": 6544,
+			"contact_semantics": "contact_queries is the authoritative hex exposure-query counter; processed_clashes counts emitted real hex_clash outcomes. It is not an invented narrowphase-call estimate.",
+			"deadline_misses_over_8333us": {
+				"host": 406,
+				"step": 326
+			},
+			"envelope_capture_and_wire_pack_us": {
+				"max": 754582,
+				"p50": 590566,
+				"p95": 623716,
+				"p99": 735118,
+				"samples": 240
+			},
+			"event_counts": {
+				"cast_blocked": 4,
+				"cast_refused": 72,
+				"cast_started": 53,
+				"hex_clash": 20,
+				"hex_conflagration": 5,
+				"hex_product_flow": 178,
+				"projectile_expired": 13,
+				"projectile_spawned": 41,
+				"spray_fired": 2
+			},
+			"final_hash": "2c9367cc903c9f046ca7caf4dcb12786fe9b6e2c141d8b387dc3bc4fe0cc9d3c",
+			"final_occupancy_after_cleanup": {
+				"active_cells": 0,
+				"product_quantity": 0,
+				"source_quantity": 0
+			},
+			"host_step_event_retention_and_60hz_envelope_us": {
+				"max": 793432,
+				"p50": 76942,
+				"p95": 667246,
+				"p99": 738921,
+				"samples": 480
+			},
+			"input_semantics": "Pressed intents and held Rapid input-ticks are reported separately. Held cooldown, recovery, Flux, and capacity nonadmission may be silent and is exposed by the admitted count rather than fabricated as a refusal.",
+			"inventory_totals": {
+				"active_cell_instance_ticks": 15147,
+				"alive_actor_instance_ticks": 3840,
+				"cast_instance_ticks": 3268,
+				"pending_cast_instance_ticks": 495,
+				"product_instance_ticks": 3725,
+				"product_quantity_instance_ticks": 4136514,
+				"projectile_instance_ticks": 1762,
+				"source_quantity_instance_ticks": 1878782,
+				"ticks_with_authority_work": 480
+			},
+			"measurement_scope": "Timing covers real SimWorld.step; host timing adds production event retention and every-other-tick envelope capture/packing. Cleanup is excluded from quantiles but included in terminal counters and hashes.",
+			"peaks": {
+				"active_cells": 43,
+				"casts": 21,
+				"datagram_bytes": 1324,
+				"events_per_tick": 10,
+				"fragments_per_envelope": 6,
+				"pending_casts": 8,
+				"product_quantity": 22156,
+				"products": 20,
+				"projectiles": 16,
+				"retained_events": 12,
+				"snapshot_raw_bytes": 12208,
+				"source_quantity": 12300,
+				"static_memory_bytes": 54282238
+			},
+			"processed_clashes": 20,
+			"processed_products": 22,
+			"publication": {
+				"accepted_events": 185,
+				"capture_attempts": 501,
+				"cleanup_capture_attempts": 261,
+				"evicted_events": 83,
+				"fragmented_envelopes": 501,
+				"fragments": 1995,
+				"mtu_violations": 0,
+				"raw_bytes": 4413276,
+				"rejections": 0,
+				"unencodable_events": 203,
+				"wire_bytes": 2291748
+			},
+			"refusals_by_wire_and_reason": {
+				"180:hex_capacity": 15,
+				"182:hex_capacity": 21,
+				"184:hex_capacity": 11,
+				"186:hex_capacity": 25
+			},
+			"released_by_wire": {
+				"140": 2,
+				"141": 1,
+				"145": 2,
+				"159": 2,
+				"163": 2,
+				"164": 1,
+				"179": 2,
+				"180": 7,
+				"181": 2,
+				"182": 3,
+				"183": 2,
+				"184": 8,
+				"185": 2,
+				"186": 7
+			},
+			"repeat": 1,
+			"requested_held_ticks_by_wire": {
+				"180": 120,
+				"182": 120,
+				"184": 120,
+				"186": 120
+			},
+			"requested_pressed_by_wire": {
+				"140": 2,
+				"141": 2,
+				"145": 2,
+				"154": 2,
+				"159": 2,
+				"160": 2,
+				"163": 2,
+				"164": 2,
+				"179": 2,
+				"181": 2,
+				"183": 2,
+				"185": 2
+			},
+			"sample_end_hash": "7bdb4ea9c441fd1595fa48136508e86fc337eac9bf7411b7b967ff170dd32d3e",
+			"sample_ticks": 480,
+			"static_memory_bytes": {
+				"after_cleanup": 54027878,
+				"process_peak_after": 111599771,
+				"process_peak_before": 111599771,
+				"sample_end": 54203450,
+				"sampled_peak": 54282238,
+				"start": 53949542
+			},
+			"step_us": {
+				"max": 204575,
+				"p50": 12074,
+				"p95": 62835,
+				"p99": 75866,
+				"samples": 480
+			},
+			"trace_sha256": "55320d5a59074f5d780e6b9d09978d1d0db6cde101f9434072b410b8a541c643",
+			"workload_totals": {
+				"active_cell_instance_ticks": 15147,
+				"admitted": 53,
+				"contact_queries": 6544,
+				"processed_clashes": 20,
+				"processed_products": 22,
+				"refusals": 72,
+				"releases": 43,
+				"requested_held_ticks": 480,
+				"requested_pressed": 24,
+				"source_quantity_instance_ticks": 1878782
+			}
+		}
+	],
+	"runtime_identity": {
+		"authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate.",
+		"build_id": "p53-cb264f9358a4",
+		"canonical_encoding": "utf8-lf-tagged-length-v1",
+		"engine_identity": "4.7.1.stable.official.a13da4feb",
+		"protocol_version": 53.0,
+		"record_count": 2790.0,
+		"runtime_source_sha256": "cb264f9358a43f9d131afc2a313cfeeed108c5e72f8786dd261f507f1c281ac7",
+		"schema_version": 1.0,
+		"scope_id": "production-runtime-source-v1",
+		"snapshot_schema": 20.0,
+		"status": "candidate_generated_not_promoted"
+	},
+	"scope": "480 sampled ticks in one complete authored cycle of existing dense8-player paid workload;120Hz sim,60Hz host snapshot/packing; one command order;120 warmup ticks and full finite expiry cleanup. Short probe, not the historical720-tick workload or a long soak. No render/socket/input-latency acceptance.",
+	"source_sha256": {
+		"content/abilities/foundation_abilities_v1.json": "4505c483682a20b996b986f1ca2469b49baaefdc572b9f922c32dcbb03d310dc",
+		"content/champions/foundation_champions_v1.json": "23a1f624a9de6c2bf88dc76578a69b23613465707605528e2988e209abba458a",
+		"content/maps/sanctum_campus_g2_v1.json": "496c96c80168dd6e4053e03ece86b8a8f010a44c24c5fca7eaebe8cd13b51cea",
+		"src/net/authoritative_session.gd": "4f00015bff5e9fd7388d9795dd6130256e355292f64b0195be858f6f3116d883",
+		"src/net/hex_world_snapshot.gd": "14fc03676fff8ef18b5f1979ac7d23eca27444daa35fc0e81aa38833ddbc7276",
+		"src/net/session_transport.gd": "bcf9b1ad259e9ed2c00f3f7b858208e656528e5e2d590ed39316598e83627237",
+		"src/net/world_snapshot_envelope.gd": "a66175221a6e23e3b03d2c37875fe35990878c74f9ccd792b5cad31f309ffdf0",
+		"src/sim/core/sim_world.gd": "13c4037ae110e0085b81463c255ee500d660e4ff5159316952150a2f77ff4c60",
+		"src/sim/hex/hex_chemistry_world.gd": "ce04cda6ab82f369af04dcbdf0a81f4b1f3c5199b8d769f3fa9e7c0d4e0a6d8e",
+		"src/sim/hex/hex_product_effects.gd": "6c2f4f1a02a00cada569f73056f2df290f167558fc3723f08d40c7674217d9a9",
+		"src/sim/hex/hex_projectile_combat.gd": "aaa289ff77614a775c949f2f0c2836af90d93d445405618336dfc79a591a58b2",
+		"src/sim/hex/hex_world_definition.gd": "e15d75d48ddedc6bc891400f508ae43d892742c151e54bb5b93aef68dfa23f18",
+		"tests/performance/profile_unified_wellspring.gd": "88c4175635683ec83b04c3e18d22c1ad83fdec1e2543ed1e0921f1fc2c8549a6"
+	},
+	"status": "passed",
+	"topology_cells": 1493
+}

@@ -1,0 +1,73 @@
+{
+  "schema_version": 2,
+  "id": "flux2-skeleton-animation-v2-three-body-types",
+  "casting_origin": "hands",
+  "aliases": {
+    "jump": "hop",
+    "roll": "air_dodge",
+    "impact_recovery": "land"
+  },
+  "action_contracts": {
+    "jump": {"simulation_timer": "hop_ticks", "invulnerability_ms": 90, "world_collision": "solid", "magic_origin": "hands"},
+    "roll": {"simulation_timer": "air_dodge_ticks", "invulnerability_ms": 130, "world_collision": "solid", "magic_origin": "hands"},
+    "air_dodge": {"simulation_timer": "air_dodge_ticks", "invulnerability_ms": 120, "world_collision": "solid", "magic_origin": "hands"},
+    "cast": {"simulation_timer": "pending_cast_ticks", "invulnerability_ms": 0, "world_collision": "solid", "magic_origin": "hands"}
+  },
+  "cell_size": [32, 32],
+  "pivot": [16, 28],
+  "direction_order": [
+    "south",
+    "south_east",
+    "east",
+    "north_east",
+    "north",
+    "north_west",
+    "west",
+    "south_west"
+  ],
+  "cardinal_direction_order": ["south", "east", "north", "west"],
+  "cardinal_coverage": {
+    "required_for_every_animation": true,
+    "diagonal_policy": "authored_or_derived",
+    "diagonal_directions": ["south_east", "north_east", "north_west", "south_west"]
+  },
+  "atlas_layout": {
+    "block_columns": 5,
+    "block_rows": 5,
+    "block_size": [192, 256],
+    "atlas_size": [960, 1280],
+    "max_frames_per_animation": 6
+  },
+  "animations": {
+    "idle": {"block": [0, 0], "frames": 4, "fps": 6, "loop": true, "tags": ["loop"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "walk": {"block": [1, 0], "frames": 4, "fps": 10, "loop": true, "tags": ["locomotion"], "events": {"footstep_frames": [1, 3], "active_frames": [], "landing_frame": -1}},
+    "sprint": {"block": [2, 0], "frames": 6, "fps": 14, "loop": true, "tags": ["locomotion", "stamina"], "events": {"footstep_frames": [1, 4], "active_frames": [], "landing_frame": -1}},
+    "hop": {"block": [3, 0], "frames": 4, "fps": 12, "loop": false, "tags": ["airborne", "startup", "invulnerability"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "double_jump": {"block": [4, 0], "frames": 4, "fps": 14, "loop": false, "tags": ["airborne", "stamina"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "rise": {"block": [0, 1], "frames": 2, "fps": 10, "loop": true, "tags": ["airborne"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "fall": {"block": [1, 1], "frames": 2, "fps": 10, "loop": true, "tags": ["airborne"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "land": {"block": [2, 1], "frames": 3, "fps": 12, "loop": false, "tags": ["recovery"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": 1}},
+    "wall_contact": {"block": [3, 1], "frames": 2, "fps": 8, "loop": true, "tags": ["airborne", "wall"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "wall_kick": {"block": [4, 1], "frames": 4, "fps": 14, "loop": false, "tags": ["airborne", "wall", "stamina"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "air_dodge": {"block": [0, 2], "frames": 4, "fps": 16, "loop": false, "tags": ["evasion", "invulnerability", "stamina", "ground_or_air"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "wavedash": {"block": [1, 2], "frames": 4, "fps": 16, "loop": false, "tags": ["grounded", "stamina"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "slide": {"block": [2, 2], "frames": 4, "fps": 14, "loop": true, "tags": ["grounded", "stamina"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "slide_jump": {"block": [3, 2], "frames": 4, "fps": 14, "loop": false, "tags": ["airborne", "stamina"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "vault": {"block": [4, 2], "frames": 5, "fps": 14, "loop": false, "tags": ["airborne", "obstacle"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "superglide": {"block": [0, 3], "frames": 5, "fps": 16, "loop": false, "tags": ["airborne", "obstacle", "stamina"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "attack_primary": {"block": [1, 3], "frames": 4, "fps": 12, "loop": false, "tags": ["combat"], "events": {"footstep_frames": [], "active_frames": [2], "landing_frame": -1}},
+    "cast": {"block": [2, 3], "frames": 5, "fps": 10, "loop": false, "tags": ["combat", "flux", "hands_only"], "events": {"footstep_frames": [], "active_frames": [2, 3], "landing_frame": -1}},
+    "defend": {"block": [3, 3], "frames": 3, "fps": 8, "loop": true, "tags": ["combat"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "hit": {"block": [4, 3], "frames": 2, "fps": 12, "loop": false, "tags": ["reaction"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "stunned": {"block": [0, 4], "frames": 3, "fps": 6, "loop": true, "tags": ["control_loss"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "rooted": {"block": [1, 4], "frames": 2, "fps": 6, "loop": true, "tags": ["control_loss"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "defeated": {"block": [2, 4], "frames": 4, "fps": 8, "loop": false, "tags": ["terminal"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "interact": {"block": [3, 4], "frames": 3, "fps": 8, "loop": false, "tags": ["utility"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}},
+    "taunt": {"block": [4, 4], "frames": 4, "fps": 8, "loop": false, "tags": ["cosmetic"], "events": {"footstep_frames": [], "active_frames": [], "landing_frame": -1}}
+  },
+  "body_types": {
+    "small": {"index": 1, "body_height": 16, "body_width": 8, "atlas": "res://assets/sprites/skeletons/size_2_small/skeleton_atlas.png", "debug_atlas": "res://assets/sprites/skeletons/size_2_small/skeleton_overlay_debug_atlas.png"},
+    "middle": {"index": 2, "body_height": 20, "body_width": 10, "atlas": "res://assets/sprites/skeletons/size_3_medium/skeleton_atlas.png", "debug_atlas": "res://assets/sprites/skeletons/size_3_medium/skeleton_overlay_debug_atlas.png"},
+    "large": {"index": 3, "body_height": 24, "body_width": 12, "atlas": "res://assets/sprites/skeletons/size_4_large/skeleton_atlas.png", "debug_atlas": "res://assets/sprites/skeletons/size_4_large/skeleton_overlay_debug_atlas.png"}
+  }
+}

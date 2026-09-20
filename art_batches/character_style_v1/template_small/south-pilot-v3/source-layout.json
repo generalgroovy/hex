@@ -1,0 +1,28 @@
+{
+  "schema_version": 2,
+  "asset_kind": "neutral_body_template",
+  "champion_id": "template_small",
+  "body": "small",
+  "standing_height": 58,
+  "visual_review": {
+    "status": "partial_review_pending",
+    "limits": "Three South cells only. Opposite arm and leg contacts visible in corrected source; native-size, matte, scale and user acceptance remain gates. Not a full neutral template or live promotion."
+  },
+  "pages": [{
+    "id": "south_contacts",
+    "path": "res://art_batches/character_style_v1/template_small/south-pilot-v3/source-corrected-v1.png",
+    "sha256": "97f1cf793f43f8a1c7126f08972e9cacbdfa070c2501db1f8af1a1baaf4ee5ac",
+    "reference_cell_width": 512,
+    "background_removal": {
+      "method": "edge_connected_neutral_checker",
+      "minimum_channel": 170,
+      "maximum_spread": 18,
+      "authorization": "User-approved reviewed background removal and assembly; immutable corrected source and exact removal mask retained. Source inspected: neutral pale checker against dark hair/trousers, tan skin, cream-gold trim, teal tunic and brown boots. Only edge-connected neutral pixels are removable; enclosed details are preserved. Native dark/light review is required."
+    },
+    "cells": [
+      {"state": "grounded", "direction": "south", "rect": [0, 0, 512, 1024]},
+      {"state": "walk", "direction": "south", "rect": [512, 0, 512, 1024]},
+      {"state": "walk_b", "direction": "south", "rect": [1024, 0, 512, 1024]}
+    ]
+  }]
+}

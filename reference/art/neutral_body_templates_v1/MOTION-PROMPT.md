@@ -1,0 +1,8 @@
+Use case: stylized-concept. Sourceimage1 is STYLE/IDENTITY reference ofone neutral bipedmannequin. Createa NEWspriteatlas matchingthatEXACTmannequin, head/body/limblengths,costumeandpixelartstyle, butnewposesgivenbelow. Bodyonly: nohair/raceanatomy/horns/wings/tail, noequipment/weapon, NOmagic/effects/groundshadow/text. Emptyhands. Plaincharcoal tunic,slatetrousers,taupehands,brown-grayankleshoes, smallblankhead. Camera55degelevatedadventureview. Keepstandingheightincellandbodyunits EXACTLYlikereference, NOTindependentlyfittingposes. Pixelclean, nonewoutlineartifacts. Transparentbackgroundwithgenuinealpha, NOTpaintedcheckerboard. IfalphaunavailableuseflatuniformPUREmagenta#FF00FF.
+GRID FOUR equalcolumnsandFOUR equalrows, exactly16sprites. Squarecanvas. Onefullbodypercell,samecharacterbody/limb/headsize allcells, centeredx, contacty87.5%cell. Noheadersorfooters,nogridlines.
+COLUMN1SOUTH straightfrontfacecamera, COLUMN2EASTtruerightprofile, COLUMN3NORTHcenteredbacknoface, COLUMN4WESTtrueleftprofile. FacingmustmatchdirectionALLposes.
+ROW1WALKcontactA: anatomicalLEFTlegforward, RIGHTarmforward, rightlegbackleftarmback. Slowreadablestride.
+ROW2SPRINTcontactA: sameLEFTlegforward/oppositearm withlongerstrideandforwardlean.
+ROW3SLIDE lowbody withonelegextended TOWARD facingdirection: column1legforeshortenedtowardcamera/frontface; column2rightprofilelegextendsright; column3backviewlegaway; column4leftprofilelegextendsleft. DoNOTusethefrontviewforprofiles.
+ROW4ROLL tuckedforwardsomersault alignedfacingdirection. Bentknees,sameheadsize, noeffects.
+Noextraneousframes. Exactly4rows.

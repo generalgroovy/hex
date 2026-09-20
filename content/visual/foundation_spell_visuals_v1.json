@@ -1,0 +1,29 @@
+{
+  "schema_version": 3,
+  "id": "foundation-spell-visuals-v4-first-eight-burst",
+  "authority": "presentation only; simulation owns spell membership, geometry, timing, collision, resources, damage, control and outcomes",
+  "direction_contract": "res://content/visual/spell_delivery_direction_v1.json",
+  "animation_skeleton_contract": "res://content/visual/spell_animation_skeletons_v1.json",
+  "budgets": {
+    "profile_count": 14,
+    "maximum_curve_samples": 24,
+    "maximum_lane_rays": 5,
+    "maximum_effect_alpha": 0.82
+  },
+  "profiles": [
+    {"id": "rillshot", "wire_id": 140, "shape": "projectile", "skeleton_id": "projectile", "element": "water", "startup": "gathered_drop", "silhouette": "droplet", "trail": "split_rill", "impact": "splash_ring", "residue": "none"},
+    {"id": "cinderbolt", "wire_id": 145, "shape": "projectile", "skeleton_id": "projectile", "element": "fire", "startup": "banked_coal", "silhouette": "ember_spear", "trail": "cinder_forks", "impact": "ash_burst", "residue": "none"},
+    {"id": "cinder-fan", "wire_id": 146, "shape": "projectile", "skeleton_id": "projectile", "element": "fire", "delivery_kernel": "burst", "startup": "elemental_burst", "silhouette": "burst_mote", "trail": "burst_wake", "impact": "burst_break", "residue": "none"},
+    {"id": "stone-burst", "wire_id": 147, "shape": "projectile", "skeleton_id": "projectile", "element": "earth", "delivery_kernel": "burst", "startup": "elemental_burst", "silhouette": "burst_mote", "trail": "burst_wake", "impact": "burst_break", "residue": "none"},
+    {"id": "rill-burst", "wire_id": 148, "shape": "projectile", "skeleton_id": "projectile", "element": "water", "delivery_kernel": "burst", "startup": "elemental_burst", "silhouette": "burst_mote", "trail": "burst_wake", "impact": "burst_break", "residue": "none"},
+    {"id": "gale-burst", "wire_id": 149, "shape": "projectile", "skeleton_id": "projectile", "element": "wind", "delivery_kernel": "burst", "startup": "elemental_burst", "silhouette": "burst_mote", "trail": "burst_wake", "impact": "burst_break", "residue": "none"},
+    {"id": "rime-burst", "wire_id": 150, "shape": "projectile", "skeleton_id": "projectile", "element": "ice", "delivery_kernel": "burst", "startup": "elemental_burst", "silhouette": "burst_mote", "trail": "burst_wake", "impact": "burst_break", "residue": "none"},
+    {"id": "arc-burst", "wire_id": 151, "shape": "projectile", "skeleton_id": "projectile", "element": "charge", "delivery_kernel": "burst", "startup": "elemental_burst", "silhouette": "burst_mote", "trail": "burst_wake", "impact": "burst_break", "residue": "none"},
+    {"id": "prism-burst", "wire_id": 152, "shape": "projectile", "skeleton_id": "projectile", "element": "light", "delivery_kernel": "burst", "startup": "elemental_burst", "silhouette": "burst_mote", "trail": "burst_wake", "impact": "burst_break", "residue": "none"},
+    {"id": "eclipse-burst", "wire_id": 153, "shape": "projectile", "skeleton_id": "projectile", "element": "dark", "delivery_kernel": "burst", "startup": "elemental_burst", "silhouette": "burst_mote", "trail": "burst_wake", "impact": "burst_break", "residue": "none"},
+    {"id": "tideline", "wire_id": 141, "shape": "spray", "skeleton_id": "spray", "element": "water", "startup": "rising_fan", "silhouette": "wave_fan", "trail": "curling_lanes", "impact": "breaker_arc", "residue": "none"},
+    {"id": "rimewake", "wire_id": 144, "shape": "field", "skeleton_id": "field", "element": "ice", "startup": "frost_sigil", "silhouette": "crystal_wake", "trail": "none", "impact": "freeze_star", "residue": "field"},
+    {"id": "eclipse-disc", "wire_id": 142, "shape": "projectile", "skeleton_id": "projectile", "element": "dark", "startup": "orbiting_crescents", "silhouette": "eclipse_disc", "trail": "orbit_echo", "impact": "crescent_break", "residue": "none"},
+    {"id": "pocket-eclipse", "wire_id": 143, "shape": "beam", "skeleton_id": "beam", "element": "light", "startup": "paired_focus", "silhouette": "eclipse_beam", "trail": "paired_boundary", "impact": "revealed_diamond", "residue": "none"}
+  ]
+}

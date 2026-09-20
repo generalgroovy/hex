@@ -1,0 +1,67 @@
+schema_version = 1
+
+[roles.flux-director]
+purpose = "Select the next repository-approved slice, enforce dependencies and acceptance, and prevent scope growth."
+capabilities = ["planning", "dependency-ordering", "scope-control"]
+acceptance_focus = ["repository-roadmap", "bounded-slice", "validator-evidence"]
+preferred_model_traits = ["reasoning", "tool-use"]
+
+[roles.simulation-architect]
+purpose = "Protect fixed-tick canonical state, deterministic ordering, serialization, hashing, replay, and command semantics."
+capabilities = ["simulation-architecture", "determinism", "replay"]
+acceptance_focus = ["fixed-tick", "stable-order", "state-hash", "renderer-independence"]
+preferred_model_traits = ["reasoning", "coding"]
+
+[roles.movement]
+purpose = "Implement bounded movement mechanics without bypassing collision, recovery, speed, replay, or worldbone contracts."
+capabilities = ["movement-implementation", "collision-analysis", "exploit-testing"]
+acceptance_focus = ["60-120-hz", "speed-bounds", "recovery", "deterministic-replay"]
+preferred_model_traits = ["coding", "reasoning"]
+
+[roles.combat]
+purpose = "Implement semantic combat volumes, damage, launch, defense, statuses, cooldowns, resources, and counterplay."
+capabilities = ["combat-implementation", "counterplay-analysis", "content-contracts"]
+acceptance_focus = ["authority", "timing", "counterplay", "deterministic-tests"]
+preferred_model_traits = ["coding", "reasoning"]
+
+[roles.chemistry]
+purpose = "Implement bounded deterministic material reactions, phase changes, structural damage, reset, and replication while preserving worldbone."
+capabilities = ["material-simulation", "bounded-work-queues", "reaction-design"]
+acceptance_focus = ["worldbone-safety", "work-budget", "reset", "replay"]
+preferred_model_traits = ["coding", "reasoning"]
+
+[roles.networking]
+purpose = "Design host-authoritative ENet protocol slices with validated commands, snapshots, prediction, reconnect, visibility, and fuzz boundaries."
+capabilities = ["network-architecture", "protocol-design", "fuzz-testing"]
+acceptance_focus = ["host-authority", "protocol-version", "content-hash", "input-validation"]
+preferred_model_traits = ["reasoning", "coding"]
+
+[roles.map-design]
+purpose = "Own gameplay topology, worldbone, routes, elevation, spawns, objectives, LOS, mutable regions, devices, and bot costs independently of visual composition."
+capabilities = ["topology-design", "map-validation", "navigation-costs"]
+acceptance_focus = ["route-safety", "worldbone", "accessibility-routes", "destruction-bounds"]
+preferred_model_traits = ["reasoning", "vision"]
+
+[roles.champion-design]
+purpose = "Complete one champion vertically through body plan, kit, counterplay, bot profile, replay, networking, accessibility, and animation requirements."
+capabilities = ["champion-contracts", "counterplay-analysis", "vertical-slicing"]
+acceptance_focus = ["complete-kit", "counterplay", "bot-replay-network", "animation-contract"]
+preferred_model_traits = ["reasoning", "coding"]
+
+[roles.asset-pipeline]
+purpose = "Turn approved original visual specifications into provenance-bound pixel candidates, frames, pivots, manifests, validation, and Godot imports."
+capabilities = ["sprite-pipeline", "manifest-validation", "asset-provenance"]
+acceptance_focus = ["originality", "alpha-grid-pivot", "frame-alignment", "runtime-import"]
+preferred_model_traits = ["vision", "coding"]
+
+[roles.performance]
+purpose = "Measure and bound simulation, rendering, memory, loading, and platform costs without weakening deterministic contracts."
+capabilities = ["profiling", "budget-analysis", "optimization"]
+acceptance_focus = ["measured-evidence", "frame-budget", "memory-budget", "parity"]
+preferred_model_traits = ["reasoning", "coding"]
+
+[roles.qa]
+purpose = "Find the smallest reproducible state, input, or sequence that violates FLUX determinism, collision, content, reset, replay, route, network, or platform contracts."
+capabilities = ["adversarial-testing", "boundary-analysis", "regression-design"]
+acceptance_focus = ["determinism", "malformed-content", "reset-replay", "route-network-platform"]
+preferred_model_traits = ["reasoning", "coding"]

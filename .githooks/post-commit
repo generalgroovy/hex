@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# Push reviewed Aider commits immediately, but only from isolated agent branches.
+# A failed push never discards or rewrites the local commit.
+
+branch="$(git symbolic-ref --quiet --short HEAD 2>/dev/null || true)"
+case "$branch" in
+  agent/aider-*) ;;
+  *)
+    printf '[aider-push] skipped: branch %s is not agent/aider-*\n' "${branch:-detached}" >&2
+    exit 0
+    ;;
+esac
+
+if [[ "${AIDER_AUTO_PUSH:-1}" == "0" ]]; then
+  printf '[aider-push] disabled by AIDER_AUTO_PUSH=0\n' >&2
+  exit 0
+fi
+
+remote="${AIDER_PUSH_REMOTE:-origin}"
+git_dir="$(git rev-parse --git-dir)"
+log_file="$git_dir/aider-push.log"
+sha="$(git rev-parse --short HEAD)"
+stamp="$(date --iso-8601=seconds)"
+
+{
+  printf '%s branch=%s commit=%s remote=%s\n' "$stamp" "$branch" "$sha" "$remote"
+  if git push --set-upstream "$remote" "HEAD:$branch"; then
+    printf '%s result=success commit=%s\n' "$(date --iso-8601=seconds)" "$sha"
+    printf '[aider-push] pushed %s to %s/%s\n' "$sha" "$remote" "$branch" >&2
+  else
+    status=$?
+    printf '%s result=failure status=%s commit=%s\n' "$(date --iso-8601=seconds)" "$status" "$sha"
+    printf '[aider-push] push failed; local commit %s is intact. See %s\n' "$sha" "$log_file" >&2
+  fi
+} 2>&1 | tee -a "$log_file"
+
+exit 0

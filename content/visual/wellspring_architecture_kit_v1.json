@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "id": "wellspring-architecture-kit-v1",
+  "authority": "presentation only; authored campus topology, collision, elevation, station commands and interaction radii remain canonical elsewhere",
+  "budgets": {
+    "maximum_facade_ratio": 0.42,
+    "maximum_roof_overhang": 8,
+    "maximum_modules_per_building": 48,
+    "station_footprint": 48,
+    "landmark_footprint": 96
+  },
+  "surface_alignment": {
+    "collision_marker_length": 12,
+    "collision_marker_inset": 2,
+    "collision_edge_alpha": 0.58,
+    "door_threshold_width": 34,
+    "door_threshold_depth": 6,
+    "cutaway_outer_margin": 44,
+    "cutaway_inner_margin": 18,
+    "cutaway_fade_distance": 26
+  },
+  "court_profile": {
+    "district_style": "nexus",
+    "width": 720,
+    "height": 540,
+    "center_offset_y": -48,
+    "corner_step": 28,
+    "cell_size": 32,
+    "accent": "water",
+    "decorations": [
+      {"kind": "lantern", "offset": [-248, -166], "accent": "light", "scale": 1.0},
+      {"kind": "lantern", "offset": [248, -166], "accent": "light", "scale": 1.0},
+      {"kind": "planter", "offset": [-248, 166], "accent": "wind", "scale": 1.0},
+      {"kind": "planter", "offset": [248, 166], "accent": "wind", "scale": 1.0},
+      {"kind": "rune", "offset": [0, -186], "accent": "charge", "scale": 1.0},
+      {"kind": "rune", "offset": [0, 186], "accent": "water", "scale": 1.0}
+    ]
+  },
+  "building_profiles": [
+    {"style": "timber_hall", "roof_shape": "gable", "roof_ramp": "garden", "facade": "timber_frame", "motif": "route", "accent": "wind", "facade_ratio": 0.30, "bay_width": 36, "roof_rise": 18},
+    {"style": "garden_gate", "roof_shape": "hipped", "roof_ramp": "garden", "facade": "garden_stone", "motif": "garden", "accent": "light", "facade_ratio": 0.28, "bay_width": 34, "roof_rise": 16},
+    {"style": "archive_hall", "roof_shape": "hipped", "roof_ramp": "indigo_roof", "facade": "stone_timber", "motif": "archive", "accent": "time", "facade_ratio": 0.29, "bay_width": 40, "roof_rise": 20},
+    {"style": "spire", "roof_shape": "spire", "roof_ramp": "indigo_roof", "facade": "stone_timber", "motif": "attunement", "accent": "spirit", "facade_ratio": 0.34, "bay_width": 34, "roof_rise": 24},
+    {"style": "service_tower", "roof_shape": "gable", "roof_ramp": "indigo_roof", "facade": "stone_timber", "motif": "service", "accent": "charge", "facade_ratio": 0.32, "bay_width": 32, "roof_rise": 20},
+    {"style": "portal_rotunda", "roof_shape": "dome", "roof_ramp": "indigo_roof", "facade": "stone_timber", "motif": "farflow", "accent": "water", "facade_ratio": 0.30, "bay_width": 38, "roof_rise": 22},
+    {"style": "foundry_hall", "roof_shape": "industrial", "roof_ramp": "timber", "facade": "foundry_brick", "motif": "foundry", "accent": "fire", "facade_ratio": 0.34, "bay_width": 36, "roof_rise": 14}
+  ],
+  "station_profiles": [
+    {"kind": "guide", "furniture": "lectern", "accent": "wind"},
+    {"kind": "training", "furniture": "bell", "accent": "fire"},
+    {"kind": "champion", "furniture": "loom", "accent": "spirit"},
+    {"kind": "spell", "furniture": "loom", "accent": "charge"},
+    {"kind": "farflow", "furniture": "gate", "accent": "water"},
+    {"kind": "charter", "furniture": "desk", "accent": "time"},
+    {"kind": "hearth", "furniture": "hearth", "accent": "fire"},
+    {"kind": "ledger", "furniture": "desk", "accent": "earth"},
+    {"kind": "parting", "furniture": "bell", "accent": "dark"},
+    {"kind": "controls", "furniture": "lectern", "accent": "charge"}
+  ],
+  "landmark_profiles": [
+    {"kind": "attunement_spire", "frame": "spire", "accent": "charge"},
+    {"kind": "grand_fountain", "frame": "basin", "accent": "water"},
+    {"kind": "archive_orrey", "frame": "orrery", "accent": "time"},
+    {"kind": "portal_ring", "frame": "gate", "accent": "spirit"},
+    {"kind": "attunement_crucible", "frame": "crucible", "accent": "fire"}
+  ]
+}

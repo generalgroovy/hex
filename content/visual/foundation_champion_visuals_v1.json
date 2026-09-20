@@ -1,0 +1,313 @@
+{
+  "schema_version": 15,
+  "id": "foundation-champion-visuals-v15-motion-facing",
+  "art_camera": {"elevation_degrees": 55, "ground_axes": "screen_cardinal"},
+  "derived_pose_sources": {"hit": "grounded_with_bounded_recoil", "sprint_b": "walk_b_with_sprint_timing"},
+  "authority": "presentation only; hitboxes, movement, casts and outcomes remain authoritative elsewhere",
+  "atlas_role": "body_and_clothing_only",
+  "front_pose": "camera_facing_symmetrical",
+  "direction_policy": "south_front_camera_facing; south_east_front_three_quarter; east_profile; north_east_back_three_quarter; north_centered_back; north_west_back_three_quarter; west_profile; south_west_front_three_quarter",
+  "excluded_layers": ["spell", "element", "projectile", "aura", "shadow", "environment", "equipment", "focus"],
+  "cell": [96, 96],
+  "pivot": [48, 84],
+  "body_template_contract": {
+    "types": ["small", "middle", "large"],
+    "template_build_order": ["small", "middle", "large"],
+    "proportion_reference": "res://assets/concept/foundation-proportion-reference-small-to-large-v3.png",
+    "ordinary_head_ratio_range": [0.20, 0.23],
+    "head_measurement_policy": "ordinary_cranium_excludes_hair_fins_horns_and_ancestry_crowns",
+    "anatomy_reference_champion": "red_baron",
+    "runtime_scale": [1.0, 1.0],
+    "shared_cell": [96, 96],
+    "shared_feet_pivot": [48, 84],
+    "shared_collision_policy": "shared_wall_clearance_size_specific_hurtboxes_independent_of_pose_pixels",
+    "animation_policy": "pose_and_offset_only_never_rescale_body",
+    "templates": {
+      "small": {
+        "exemplar": "s_wayne",
+        "reference_height": 58,
+        "silhouette": "compact_low_center"
+      },
+      "middle": {
+        "exemplar": "oh_tipi",
+        "reference_height": 68,
+        "silhouette": "balanced_clear_limbs"
+      },
+      "large": {
+        "exemplar": "red_baron",
+        "reference_height": 76,
+        "silhouette": "broad_high_mass"
+      }
+    }
+  },
+  "shared_style_contract": {
+    "reference_champion": "red_baron",
+    "outline_source": "shared_64_color_old_world_material_palette",
+    "outline_radius_pixels": 1,
+    "outline_application": "cell_bounded_exterior_ink_without_rescale",
+    "palette_budget": 64,
+    "material_language": "compact_cartoon_pixel_clusters_with_dark_ink_and_bounded_highlights",
+    "identity_policy": "share rendering grammar while preserving ancestry silhouette body template clothing and palette",
+    "authority": "presentation_only"
+  },
+  "atlas": {
+    "path": "res://assets/sprites/champions_v3/foundation/runtime_atlas_eight_v15.png",
+    "sha256": "3a0f8bb6187b360f8de1e93809447b809503af6c4ae79c3b12046dc2df273e7b",
+    "imported_rgba_sha256": "ee7ce98f8b78676d7289d8245714c4844984b7713ceb6e70608a666a287a15e4",
+    "dimensions": [768, 2880],
+    "champions": ["oh_tipi", "s_wayne", "red_baron"],
+    "states": ["grounded", "jump", "cast", "hit", "walk", "sprint", "slide", "roll", "walk_b", "sprint_b"],
+    "directions": ["south", "south_east", "east", "north_east", "north", "north_west", "west", "south_west"],
+    "row_layout": "champion_major_state_minor"
+  },
+  "cardinal_animation_contract": {
+    "directions": ["south", "east", "north", "west"],
+    "states": ["grounded", "jump", "cast", "hit", "walk", "sprint", "slide", "roll"],
+    "coverage": "every_champion_has_every_state_in_every_cardinal_direction",
+    "row_layout": "champion_major_state_minor",
+    "diagonal_policy": "state_scoped_promoted_diagonals"
+  },
+  "diagonal_core_contract": {
+    "directions": ["south_east", "north_east", "north_west", "south_west"],
+    "states": ["grounded", "cast", "hit"],
+    "coverage": "every_foundation_champion_has_every_diagonal_core_cell",
+    "fallback_states": [],
+    "fallback_policy": "none_all_states_promoted"
+  },
+  "diagonal_locomotion_contract": {
+    "directions": ["south_east", "north_east", "north_west", "south_west"],
+    "states": ["walk", "sprint"],
+    "coverage": "every_foundation_champion_has_every_diagonal_locomotion_cell",
+    "gaits": ["idle", "forward", "backward", "strafe_left", "strafe_right"],
+    "facing_policy": "live_aim_all_poses_independent_of_travel",
+    "authority": "presentation_only"
+  },
+  "diagonal_evasion_contract": {
+    "directions": ["south_east", "north_east", "north_west", "south_west"],
+    "states": ["jump", "slide", "roll"],
+    "coverage": "every_foundation_champion_has_every_diagonal_evasion_cell",
+    "art_status": "reviewed_source_integrated",
+    "authority": "presentation_only"
+  },
+  "locomotion_phase_contract": {
+    "states": ["walk", "sprint"],
+    "frame_states": {
+      "walk": ["walk", "walk_b"],
+      "sprint": ["sprint", "sprint_b"]
+    },
+    "coverage": "two_contacts_per_champion_per_eight_directions",
+    "timing": "motion_profile_half_cycle",
+    "authority": "presentation_only"
+  },
+  "semantic_state_aliases": {
+    "idle": "grounded",
+    "walk": "walk",
+    "sprint": "sprint",
+    "jump": "jump",
+    "double_jump": "jump",
+    "slide": "slide",
+    "slide_jump": "jump",
+    "air_dodge": "jump",
+    "wave_dash": "slide",
+    "wall_kick": "jump",
+    "vault": "jump",
+    "superglide": "jump",
+    "launched": "hit",
+    "grappled": "hit",
+    "charging": "cast",
+    "stunned": "hit",
+    "rooted": "grounded",
+    "slowed": "walk",
+    "fast_fall": "jump",
+    "wall_skim": "slide",
+    "impact_recovery": "hit",
+    "roll": "roll",
+    "cast": "cast",
+    "cast_recovery": "cast",
+    "attack_primary": "cast",
+    "defend": "grounded",
+    "interact": "grounded",
+    "taunt": "grounded",
+    "defeated": "hit"
+  },
+  "extension_atlases": {
+    "wa_bidi": {
+      "path": "res://assets/sprites/champions_v3/expansion_v1/wa_bidi.png",
+      "sha256": "30746b5a7b3a059e945ef5e3cd8986cf881d29728ae44c43a330590c1dc54b7d",
+      "imported_rgba_sha256": "3f8bea62f64cc60080f4c4774cfc5d30188ed82cd8016a2f8e777cfe6fd134d7"
+    },
+    "grace_reava": {
+      "path": "res://assets/sprites/champions_v3/expansion_v1/grace_reava.png",
+      "sha256": "45503ae437872ccabbd80ffa19c793cf01808c805844576c08e1ab27987cf12c",
+      "imported_rgba_sha256": "78e3848fed3d3bde61796599024f948a5864f345d6aecb5df81295707126d62e"
+    }
+  },
+  "champions": {
+    "oh_tipi": {
+      "display_name": "Oh Tipi",
+      "ancestry": "seakin",
+      "body_type": "middle",
+      "atlas_row": 0,
+      "height": 68,
+      "head_ratio": 0.22,
+      "build": "sturdy_current_keeper",
+      "motion_profile": "buoyant_keeper",
+      "equipment": "body_clothing_only",
+      "casting_origin": "hands",
+      "silhouette_features": ["fin_crown", "cheek_fins", "curling_tail", "open_empty_hands"],
+      "affinities": ["water", "ice", "charge"],
+      "materials": {
+        "outline": ["worldbone", 0],
+        "skin_dark": ["deep_water", 2],
+        "skin": ["deep_water", 4],
+        "armor": ["indigo_roof", 2],
+        "trim": ["aged_brass", 3],
+        "eye": ["parchment", 4]
+      }
+    },
+    "s_wayne": {
+      "display_name": "S. Wayne",
+      "ancestry": "hobbit",
+      "body_type": "small",
+      "atlas_row": 1,
+      "height": 58,
+      "head_ratio": 0.22,
+      "build": "small_compact_boundary_mage",
+      "skin_tone": "dark_brown",
+      "motion_profile": "grounded_weaver",
+      "equipment": "body_clothing_only",
+      "casting_origin": "hands",
+      "silhouette_features": ["round_hair", "short_cloak", "large_bare_feet", "open_empty_hands"],
+      "affinities": ["dark", "light"],
+      "materials": {
+        "outline": ["worldbone", 0],
+        "skin_dark": ["timber", 1],
+        "skin": ["timber", 3],
+        "armor": ["indigo_roof", 1],
+        "trim": ["aged_brass", 3],
+        "hair": ["timber", 0],
+        "eye": ["parchment", 4]
+      }
+    },
+    "red_baron": {
+      "display_name": "The Red Baron",
+      "ancestry": "undead",
+      "body_type": "large",
+      "atlas_row": 2,
+      "height": 76,
+      "head_ratio": 0.22,
+      "build": "broad_undead_lane_warden",
+      "motion_profile": "iron_regent",
+      "equipment": "body_clothing_only",
+      "casting_origin": "hands",
+      "silhouette_features": ["horned_crown", "broad_cape", "crowned_skull", "open_empty_hands"],
+      "affinities": ["fire", "ice"],
+      "materials": {
+        "outline": ["worldbone", 0],
+        "skin_dark": ["warm_stone", 1],
+        "skin": ["parchment", 4],
+        "armor": ["health", 1],
+        "trim": ["aged_brass", 3],
+        "eye": ["parchment", 4]
+      }
+    },
+    "grace_reava": {
+      "display_name": "Grace Riva",
+      "ancestry": "sylph",
+      "body_type": "small",
+      "atlas_row": 0,
+      "height": 58,
+      "head_ratio": 0.22,
+      "build": "small_stream_dancer",
+      "motion_profile": "buoyant_keeper",
+      "equipment": "body_clothing_only",
+      "casting_origin": "hands",
+      "silhouette_features": [
+        "tied_teal_hair",
+        "compact_wings",
+        "practical_tunic",
+        "closed_boots"
+      ],
+      "affinities": [
+        "wind",
+        "water",
+        "light"
+      ],
+      "materials": {
+        "outline": [
+          "worldbone",
+          0
+        ],
+        "skin_dark": [
+          "warm_stone",
+          1
+        ],
+        "skin": [
+          "warm_stone",
+          3
+        ],
+        "armor": [
+          "garden",
+          2
+        ],
+        "trim": [
+          "aged_brass",
+          3
+        ],
+        "eye": [
+          "parchment",
+          4
+        ]
+      }
+    },
+    "wa_bidi": {
+      "display_name": "Wa Bidi",
+      "ancestry": "goblin",
+      "body_type": "small",
+      "atlas_row": 0,
+      "height": 58,
+      "head_ratio": 0.22,
+      "build": "small_pressure_skirmisher",
+      "motion_profile": "grounded_weaver",
+      "equipment": "body_clothing_only",
+      "casting_origin": "hands",
+      "silhouette_features": [
+        "wide_pointed_ears",
+        "short_charcoal_hair",
+        "orange_scarf",
+        "stout_boots"
+      ],
+      "affinities": [
+        "charge",
+        "wind",
+        "fire"
+      ],
+      "materials": {
+        "outline": [
+          "worldbone",
+          0
+        ],
+        "skin_dark": [
+          "garden",
+          1
+        ],
+        "skin": [
+          "garden",
+          3
+        ],
+        "armor": [
+          "timber",
+          1
+        ],
+        "trim": [
+          "aged_brass",
+          3
+        ],
+        "eye": [
+          "parchment",
+          4
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+model: ollama_chat/qwen2.5-coder:3b
+edit-format: whole
+
+read:
+  - CONVENTIONS.md
+  - README.md
+  - reference/character-sprites/README.md
+
+show-diffs: true
+auto-commits: true
+dirty-commits: false
+git-commit-verify: true
+attribute-co-authored-by: false
+commit-prompt: "Write a concise imperative commit message describing only this reviewed slice."
+
+git: true
+gitignore: false
+aiderignore: .aiderignore
+
+analytics-disable: true
+check-update: true
+disable-playwright: true
+
+auto-lint: false
+auto-test: false
+suggest-shell-commands: true
+notifications: true
+detect-urls: true
+fancy-input: true
+multiline: false
+yes-always: false

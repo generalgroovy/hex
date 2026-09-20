@@ -1,0 +1,77 @@
+{
+  "authorization": "User: Yes\u2014use reviewed background removal and assembly.",
+  "operation": "edge-connected neutral removal; connected-component translation ONLY; no scaling/recoloring/pose edits",
+  "background_rule": {
+    "minimum_channel": 170,
+    "maximum_spread": 18
+  },
+  "edge_risk": "Light neutral highlights connected to outer backdrop may be removed; exact masks retained.",
+  "base_spec": "prepared-v4\\source-layout.json",
+  "base_spec_sha256": "87f8255ab9daf2c0a9a41f1651a827d4d4a6b2eb3c1c3d99038614c6bad8a788",
+  "replaced_slots": [
+    "sprint_b/east",
+    "sprint_b/west"
+  ],
+  "boards": [
+    {
+      "source": "sprint-b-profiles-v2.png",
+      "source_sha256": "6564eab35f4bfc4c8e1a4b43aa0a7b459f380f06c28730a35a84df332215883d",
+      "source_size": [
+        1448,
+        1086
+      ],
+      "source_alpha": {
+        "minimum": 255,
+        "maximum": 255,
+        "transparent_pixels": 0
+      },
+      "prepared": "sprint_b_profiles.png",
+      "prepared_sha256": "11eee97514f1fce05eba627be028c9b7f5d1ea7b018c982ac3fa7850db4514a3",
+      "mask": "sprint_b_profiles-removal-mask.png",
+      "mask_sha256": "3d74c8f6294ea53432fdc3ee6bb6b091e191b8ad4aa87a630766e14a00688530",
+      "removed_pixels": 1121872,
+      "retained_pixels": 450656,
+      "components": [
+        {
+          "original_bounds": [
+            102,
+            118,
+            559,
+            871
+          ],
+          "translation": [
+            -86,
+            -102
+          ],
+          "retained_pixels": 228005,
+          "rect": [
+            0,
+            0,
+            612,
+            905
+          ]
+        },
+        {
+          "original_bounds": [
+            787,
+            116,
+            580,
+            873
+          ],
+          "translation": [
+            -159,
+            -100
+          ],
+          "retained_pixels": 222651,
+          "rect": [
+            612,
+            0,
+            612,
+            905
+          ]
+        }
+      ],
+      "source_column_width": 724.0
+    }
+  ]
+}

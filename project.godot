@@ -1,0 +1,47 @@
+; Engine configuration file.
+; Edit through reviewed repository changes so runtime compatibility stays explicit.
+
+config_version=5
+
+[application]
+
+config/name="HEX"
+; Explicit compatibility: keep existing saves and custom controls in their original directory.
+config/use_custom_user_dir=true
+config/custom_user_dir_name="Godot/app_userdata/FLUX 2"
+config/description="Deterministic top-down elemental arena foundation"
+run/main_scene="res://scenes/bootstrap/bootstrap.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+config/icon=""
+run/max_fps=120
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/pixel_assets_export/plugin.cfg")
+
+[flux]
+
+simulation/default_tick_rate=120
+simulation/supported_tick_rates=PackedInt32Array(120)
+
+[physics]
+
+common/physics_ticks_per_second=120
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+gl_compatibility/driver.windows="opengl3_angle"
+gl_compatibility/fallback_to_angle=true
+gl_compatibility/fallback_to_native=true
+textures/default_filters/use_nearest_mipmap_filter=false
+textures/canvas_textures/default_texture_filter=0

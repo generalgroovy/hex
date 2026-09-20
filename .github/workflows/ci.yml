@@ -1,0 +1,42 @@
+name: Windows foundation (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  headless:
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Current build guidance (source only)
+        shell: pwsh
+        run: |
+          scripts/test-current-build-summary.ps1
+          scripts/current-build-summary.ps1 -CheckPath README.md
+          scripts/test-runtime-build-identity.ps1
+          scripts/runtime-build-identity.ps1 -Mode Check
+      - name: Install pinned Godot
+        shell: pwsh
+        run: |
+          $url = 'https://github.com/godotengine/godot-builds/releases/download/4.7.1-stable/Godot_v4.7.1-stable_win64.exe.zip'
+          $expected = 'c7a289051eaefb460b0106b60e9cd5bee0ef55fd102dcb2bed1eb356cf3d90a1'
+          $archive = Join-Path $env:RUNNER_TEMP 'godot-4.7.1-win64.zip'
+          $root = Join-Path $env:RUNNER_TEMP 'godot-4.7.1'
+          Invoke-WebRequest -Uri $url -OutFile $archive
+          $actual = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "Godot archive checksum mismatch: $actual" }
+          Expand-Archive -LiteralPath $archive -DestinationPath $root
+          $binary = Join-Path $root 'Godot_v4.7.1-stable_win64.exe'
+          if (-not (Test-Path -LiteralPath $binary -PathType Leaf)) { throw 'Pinned Godot binary was not extracted.' }
+          "FLUX2_GODOT_BIN=$binary" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          & $binary --version
+      - name: Headless import and tests
+        shell: pwsh
+        run: scripts\test.ps1
+      - name: Diff hygiene
+        shell: pwsh
+        run: git diff --check

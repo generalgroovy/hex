@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "id": "wellspring-interaction-language-v1",
+  "authority": "presentation only; station proximity, commands, authority, social events and outcomes remain owned elsewhere",
+  "budgets": {
+    "station_style_count": 10,
+    "maximum_prompt_width": 244,
+    "maximum_expanded_width": 300,
+    "maximum_station_lines": 6,
+    "maximum_social_width": 132,
+    "maximum_notice_width": 420,
+    "screen_margin": 16,
+    "corner_step": 6,
+    "line_height": 18
+  },
+  "layout": {
+    "prompt_width": 232,
+    "prompt_height": 52,
+    "expanded_width": 296,
+    "expanded_header_height": 46,
+    "social_height": 36,
+    "notice_height": 42,
+    "station_anchor_lift": 58,
+    "traveller_anchor_lift": 72,
+    "tail_height": 10
+  },
+  "copy": {
+    "notice_title": "WELLSPRING",
+    "interact_fallback": "F",
+    "social_fallback": "HELLO!"
+  },
+  "station_styles": [
+    {"kind": "guide", "glyph": "route", "ramp": "stamina", "ramp_index": 3},
+    {"kind": "training", "glyph": "bell", "ramp": "health", "ramp_index": 3},
+    {"kind": "champion", "glyph": "mask", "ramp": "flux", "ramp_index": 3},
+    {"kind": "spell", "glyph": "weave", "ramp": "flux", "ramp_index": 4},
+    {"kind": "farflow", "glyph": "gate", "ramp": "deep_water", "ramp_index": 4},
+    {"kind": "charter", "glyph": "scroll", "ramp": "parchment", "ramp_index": 3},
+    {"kind": "hearth", "glyph": "hearth", "ramp": "health", "ramp_index": 4},
+    {"kind": "ledger", "glyph": "ledger", "ramp": "parchment", "ramp_index": 4},
+    {"kind": "parting", "glyph": "bell", "ramp": "aged_brass", "ramp_index": 4},
+    {"kind": "controls", "glyph": "keys", "ramp": "stamina", "ramp_index": 4}
+  ]
+}

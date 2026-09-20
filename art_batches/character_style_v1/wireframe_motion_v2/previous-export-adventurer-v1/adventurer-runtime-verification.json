@@ -1,0 +1,44 @@
+{
+  "status": "styled_character_suite_passed_combined_integration_pending",
+  "style_id": "warm_adventurer_foundation_v1",
+  "presentation_scale": 0.92,
+  "display_heights": {"small": 53, "middle": 63, "large": 70},
+  "source_reference_heights": {"small": 58, "middle": 68, "large": 76},
+  "source_rig_unchanged_from_previous_export": true,
+  "previous_nine_png_hashes_match_saved_manifest": true,
+  "manifest_sha256": "b9bcc1b0788351d8e995aae216fb9a409374e0134951a90c6a26f308ccea8fbc",
+  "evidence_sha256": "53ec9013d3e3af12329d0b16e7c0e0ac48287e3d36d31bfa66444fda38ed5244",
+  "presenter_sha256": "98a83a2e6fd64928165ddd736b09e4b7b93670913e754e27468f59e0597f0856",
+  "presenter_test_sha256": "9d90dfcbcf60d38b144cb8033d56c3f10e88c018fda0b59b8cc854bb69a3fd29",
+  "checked_import": {
+    "status": "passed",
+    "log": "adventurer-import-v1.log",
+    "sha256": "1251fb65c50b1aec1f5f35f8d4d92ae2e2f98e4e8c49994e25fe1ba9a8b5bd68"
+  },
+  "combined_focused": {
+    "status": "failed",
+    "log": "adventurer-focused-v1.log",
+    "sha256": "4b4212d631593ab54d0de2e88e0132ab90625fa1b8b53305133284c3da73dc9c",
+    "failures": 9,
+    "suite_results": {
+      "wireframe-body-presenter": {"assertions": 30522, "failures": 0},
+      "character-gallery-integration": {"assertions": 236, "failures": 0},
+      "minimal-champion-motion": {"assertions": 17736, "failures": 0},
+      "actor-motion-history": {"assertions": 944, "failures": 0},
+      "cartoon-champion-presenter": {"assertions": 41931, "failures": 4},
+      "pov-presentation": {"assertions": 18, "failures": 5}
+    },
+    "integration_note": "Pixel movement registry readiness and production POV fixture setup failed while integration owner was updating magic metadata. The latter caused a follow-on offset access error and exit leaks. Combined run is not a pass; integration owner must refresh dependencies and rerun. No unrelated source was changed in this art task."
+  },
+  "visual_review": [
+    "Native and enlarged light/dark three-size eight-facing overview",
+    "Small then Middle then Large native 64 travel/aim boards",
+    "Small complete eight-phase walk/sprint static strip"
+  ],
+  "not_claimed": [
+    "27 distinct race or named-character skins",
+    "Exact chibi proportions or final illustrated reference quality",
+    "Combined integration, Full or packaged-build acceptance",
+    "Human in-game acceptance"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "id": "wellspring-new-district-v2",
+  "district_id": "new_district",
+  "name": "New District",
+  "authority": "integrated_candidate",
+  "tile_size": [
+    16,
+    16
+  ],
+  "size_tiles": [
+    80,
+    45
+  ],
+  "tileset": "res://assets/tiles/wellspring/wellspring_tiles_v2.png",
+  "landmarks": [
+    {
+      "id": "signature_landmark",
+      "name": "Signature Landmark",
+      "tile": [
+        40,
+        22
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "id": "ordinary_route",
+      "kind": "ordinary"
+    },
+    {
+      "id": "advanced_route",
+      "kind": "advanced"
+    }
+  ],
+  "required_layers": [
+    "rows_rle",
+    "collision_rows",
+    "worldbone_rows",
+    "navigation_rows",
+    "elevation_rows"
+  ],
+  "reset_groups": [
+    {
+      "id": "new_district_visual_reset",
+      "scope": "mutable_visuals"
+    }
+  ],
+  "safety": {
+    "critical_topology_immutable": true,
+    "spawn_safe": true,
+    "los_authority": "simulation"
+  }
+}

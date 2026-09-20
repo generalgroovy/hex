@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HEX UX · Annotated review prototype</title>
+<style>
+:root{color-scheme:dark;--bg:#111416;--panel:#1a1f22;--raised:#22292d;--ink:#f1eee7;--muted:#bbc1c4;--line:#465057;--focus:#f2d38b;--water:#86c8e7;--earth:#d9c283;--fire:#f1a091;--air:#c5c5ee}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select{font:inherit}button{color:inherit;background:var(--raised);border:1px solid var(--line);border-radius:5px;cursor:pointer;padding:9px 13px;min-height:42px}button:hover{border-color:var(--muted)}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--focus);outline-offset:3px}button:disabled{opacity:.5;cursor:not-allowed}input,select{min-height:42px;background:#101619;color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:8px;min-width:0}input[type=checkbox]{min-height:auto;width:17px;height:17px}h1,h2,h3,p{margin:0}h1{font-size:24px;line-height:1.2;letter-spacing:-.5px}h2{font-size:19px}h3{font-size:16px}p+p{margin-top:8px}small,.small{font-size:13px}.muted{color:var(--muted)}.eyebrow{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:750;color:var(--muted)}.wrap{max-width:1240px;margin:auto;padding:22px 24px 36px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px}.top-title{display:flex;align-items:center;gap:13px}.mark{border:2px solid var(--focus);padding:5px 9px;font-weight:800;letter-spacing:2px}.badge{display:inline-block;font-size:11px;font-weight:750;letter-spacing:.8px;border:1px solid #7e704c;border-radius:30px;padding:5px 10px;color:var(--focus)}.banner{background:#24251f;border-left:3px solid var(--focus);padding:11px 14px;font-size:13px;margin-bottom:17px}.tabs{display:flex;gap:7px;flex-wrap:wrap;padding-bottom:16px;margin-bottom:18px;border-bottom:1px solid var(--line)}.tabs button[aria-selected=true]{background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:750}.section-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:14px}.section-head p{color:var(--muted);font-size:14px;margin-top:4px}.panel{background:var(--panel);border:1px solid var(--line);padding:16px;border-radius:7px}.desk-layout{display:grid;grid-template-columns:.94fr 1.25fr;gap:16px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.annotation{display:inline-flex;align-items:center;justify-content:center;border:1px solid #aa9059;color:var(--focus);font-size:11px;font-weight:750;min-width:21px;height:21px;border-radius:50%;margin-right:6px;vertical-align:middle}.slot-row{margin-bottom:12px}.row-label{font-size:11px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}.slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.slot{min-width:0;padding:9px 8px;text-align:left;background:#151a1d;display:flex;flex-direction:column;gap:4px;min-height:105px;overflow-wrap:anywhere}.slot[aria-pressed=true]{border:2px solid var(--focus);padding:8px 7px;background:#282921}.slot-top{display:flex;justify-content:space-between;gap:4px;font-size:11px;color:var(--muted)}.slot-name{font-size:14px;line-height:1.25;font-weight:700}.slot-family{font-size:12px;color:var(--muted);line-height:1.3}.binding{font-size:11px;line-height:1.4;color:#d8dcde;white-space:normal;overflow-wrap:anywhere}.draft-dot{color:var(--focus)}.footer-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}.primary{background:var(--focus);color:#171c20;border-color:var(--focus);font-weight:750}.selection-detail{border-top:1px solid var(--line);margin-top:15px;padding-top:12px;min-height:90px}.selection-detail strong{font-size:16px}table{border-collapse:collapse;width:100%;font-size:14px}caption{text-align:left;font-size:12px;color:var(--muted);padding:0 0 10px}th,td{text-align:left;padding:9px 7px;border-bottom:1px solid #394248;vertical-align:top}th{font-size:12px;color:var(--muted);font-weight:650}.catalogue{table-layout:fixed}.catalogue th{padding:6px 4px}.catalogue td{padding:5px 3px;border:0}.catalogue th:first-child{width:76px}.catalogue tbody th{vertical-align:middle;font-size:13px}.catalogue button{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:74px;padding:7px 3px;gap:3px;font-size:12px;background:#161d20}.catalogue button[aria-pressed=true]{border:2px solid var(--focus);background:#2a2a21}.element-symbol{font-size:18px;font-weight:750}.water{color:var(--water)}.earth{color:var(--earth)}.fire{color:var(--fire)}.air{color:var(--air)}.notes{margin-top:16px;background:#171d20;border:1px dashed var(--line);border-radius:6px;padding:12px 14px}.notes summary{cursor:pointer;font-weight:650;font-size:13px}.notes ol{padding-left:22px;margin:10px 0 0}.notes li{margin:6px 0;font-size:13px;color:var(--muted)}.review-controls{margin-top:22px;border-top:1px solid var(--line);padding-top:15px}.controls-form{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-top:10px}.controls-form label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}.controls-form label.grow{flex:1;min-width:190px}.status{min-height:24px;color:var(--focus);font-size:13px;margin-top:10px;overflow-wrap:anywhere}.hud-stage{position:relative;min-height:615px;background:#171e20;border:1px solid var(--line);border-radius:8px;padding:20px;display:flex;flex-direction:column;justify-content:space-between;gap:22px}.hud-top{display:flex;justify-content:space-between;align-items:flex-start;gap:15px}.resource{background:#111719;border:1px solid var(--line);padding:10px 14px;border-radius:4px}.state{padding:10px 14px;border:1px solid var(--line);background:#202720;max-width:270px;font-size:14px}.playfield-placeholder{text-align:center;color:var(--muted);padding:26px 0}.playfield-placeholder strong{display:block;font-size:14px;letter-spacing:1.5px;text-transform:uppercase}.playfield-placeholder p{font-size:13px;max-width:440px;margin:8px auto 0}.hud-bottom{max-width:770px;width:100%;margin:auto auto 0}.context-prompt{text-align:center;font-size:13px;margin-bottom:12px;color:var(--muted)}.hud-row{display:grid;grid-template-columns:45px 1fr;gap:8px;align-items:center;margin-top:7px}.hud-row>span{font-size:11px;color:var(--muted)}.hud-slot{border:1px solid var(--line);background:#101719;padding:7px 9px;border-radius:4px;min-height:72px;overflow-wrap:anywhere}.hud-slot .name{font-size:13px;font-weight:650}.hud-slot .binding{margin-top:4px}.inline{display:flex;gap:8px;align-items:center;font-size:13px}.guide-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px}.guide-layout .panel>p{margin-top:10px}.station-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}.station{padding:13px;border:1px solid var(--line);border-radius:5px;background:#171d20;font-size:13px}.station p{margin-top:6px;color:var(--muted)}.station .sample-prompt{margin-top:12px;color:var(--ink);border-top:1px solid var(--line);padding-top:8px;overflow-wrap:anywhere}.station-section{margin-top:20px}.step-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.step{padding:15px;border:1px solid var(--line);background:var(--panel);border-radius:6px}.step header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.step-time{font-size:12px;color:var(--focus);white-space:nowrap}.step-copy{border-left:2px solid var(--focus);padding-left:10px;margin:10px 0;color:var(--ink)}.step details{font-size:12px;color:var(--muted);margin-top:9px}.step summary{cursor:pointer}.step details p{margin-top:8px}.evidence-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.evidence-grid .panel p{margin-top:10px;font-size:14px}.hash{font-family:ui-monospace,monospace;font-size:12px;overflow-wrap:anywhere}.evidence-list{margin:12px 0 0;padding-left:22px;color:var(--muted);font-size:14px}.evidence-list li{margin:5px 0}.bottom-note{margin-top:19px;color:var(--muted);font-size:12px}.chip{font-size:11px;border:1px solid var(--line);border-radius:3px;padding:2px 5px;display:inline-block}.section-divider{margin-top:17px;border-top:1px solid var(--line);padding-top:13px}dialog{color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:8px;max-width:480px;padding:23px}dialog::backdrop{background:#000a}dialog p{margin:12px 0}.dialog-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}[hidden]{display:none!important}
+@media(max-width:950px){.desk-layout,.guide-layout,.evidence-grid{grid-template-columns:1fr}.station-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hud-stage{min-height:660px}.wrap{padding:18px 16px}.desk-layout .slots{gap:10px}.slot{min-height:98px}}
+@media(max-width:600px){.wrap{padding:14px 10px}.top{align-items:flex-start;flex-direction:column;gap:9px}.section-head{align-items:flex-start;flex-direction:column;gap:10px}.panel{padding:12px}.catalogue th:first-child{width:57px}.catalogue th{font-size:11px}.slot{padding:7px 5px}.slot[aria-pressed=true]{padding:6px 4px}.slot-name{font-size:12px}.binding{font-size:10px}.station-grid,.step-list{grid-template-columns:1fr}.hud-stage{padding:12px;min-height:730px}.hud-top{flex-direction:column}.hud-row{grid-template-columns:26px 1fr;gap:5px}.hud-row .slots{gap:4px}.hud-slot{padding:6px 4px;min-height:90px}.hud-slot .name{font-size:11px}.catalogue button{font-size:11px}.controls-form label{flex:1;min-width:130px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="top"><div class="top-title"><span class="mark" aria-hidden="true">HEX</span><div><h1>One loadout. One visual language.</h1><p class="small muted">UX workstream · source project: FLUX</p></div></div><span class="badge">PROPOSAL · NO BUILD CONNECTED</span></header>
+<p class="banner"><strong>Review prototype, not the game.</strong> Layouts and interactions are proposed. No actual screens, bindings, registry or checkpoint were supplied. Example edits stay in this page and disappear on reload.</p>
+<nav class="tabs" role="tablist" aria-label="UX review surfaces">
+<button id="tab-desk" role="tab" data-view="desk" aria-controls="view-desk" aria-selected="true">Spell desk</button>
+<button id="tab-hud" role="tab" data-view="hud" aria-controls="view-hud" aria-selected="false" tabindex="-1">Combat HUD</button>
+<button id="tab-guide" role="tab" data-view="guide" aria-controls="view-guide" aria-selected="false" tabindex="-1">Field guide & stations</button>
+<button id="tab-intro" role="tab" data-view="intro" aria-controls="view-intro" aria-selected="false" tabindex="-1">3-minute introduction</button>
+<button id="tab-evidence" role="tab" data-view="evidence" aria-controls="view-evidence" aria-selected="false" tabindex="-1">Evidence & handoff</button>
+</nav>
+<section id="view-desk" role="tabpanel" aria-labelledby="tab-desk">
+<div class="section-head"><div><h2><span class="annotation">1</span>Spells</h2><p>Choose a slot. Choose a spell.</p></div><span class="chip">Local example model only</span></div>
+<div class="desk-layout">
+<section class="panel"><div class="panel-head"><h3><span class="annotation">2</span>Your twelve slots</h3><span id="draft-count" class="small muted">No draft changes</span></div><div id="desk-slots"></div><div class="footer-actions"><button id="apply" class="primary" disabled>Apply preview changes</button><button id="discard" disabled>Discard changes</button></div><p class="small muted" style="margin-top:10px">No loadout is seeded. Empty cards are demonstration data, not your saved slots.</p></section>
+<section class="panel"><div class="panel-head"><h3><span class="annotation">3</span>Catalogue</h3><span class="small muted">Element down. Delivery across.</span></div><div id="catalogue"></div><div class="selection-detail"><p class="eyebrow" id="editing-label">Editing slot 01</p><p id="selected-spell"><strong>Choose a spell</strong></p><p class="small muted" style="margin-top:7px">No guessed cost, strength, speed or unlock rule. Every cell here is illustrative; the game must use its available-spell registry.</p></div></section>
+</div>
+<details class="notes" open><summary>Layout annotations · design proposal</summary><ol><li>One instruction and one destination: choose the slot before the spell.</li><li>Keep the same 3 × 4 arrangement in combat. Rows are layout groups, not new casting modes. Each full binding label comes from player settings.</li><li>Water / Earth / Fire / Air are rows; Bolt / Heavy / Rapid / Spray are columns. Render Air without renaming internal wind identifiers.</li><li>Draft choices are separate from the committed example model. Production must wait for its existing owner's acknowledgement, which this page does not simulate.</li></ol></details>
+</section>
+<section id="view-hud" role="tabpanel" aria-labelledby="tab-hud" hidden>
+<div class="section-head"><div><h2>Combat HUD</h2><p>Committed example slots only. Editor focus never becomes gameplay selection.</p></div><label class="inline"><input id="show-steam" type="checkbox">Show documented Steam state example</label></div>
+<div class="hud-stage"><div class="hud-top"><div class="resource"><span class="annotation">1</span><strong>Health — &nbsp; Mana —</strong><p class="small muted">Values not connected</p></div><div id="steam-state" class="state" hidden><span class="annotation">2</span><strong>Steam · Scalding exposure</strong><p>Leave the affected hexes.</p><p class="small muted">Illustrative condition, not a live exposure reading.</p></div></div><div class="playfield-placeholder"><strong>Playfield placeholder</strong><p>No current screenshot supplied. No terrain, hex geometry, character position or live reaction is invented here.</p></div><div class="hud-bottom"><p class="context-prompt"><span class="annotation">3</span><span id="hud-prompt"></span><br><span class="small">Illustrative station-role hint · no station connected</span></p><div id="hud-slots"></div></div></div>
+<details class="notes"><summary>HUD annotations and limits</summary><ol><li>Use actual health/mana data only. Missing values must not become zero or fake bars.</li><li>Only show Steam exposure or spawn protection from their real states. No invented timers, concealment or protection from station use.</li><li>Use the existing interaction target. Do not create a second nearest-station selector, global pause, or automatic panel.</li><li>All twelve slots stay visible. Full names and bindings distinguish entries without hue alone. The actual game still needs resolution, scale, long-label and reduced-effects review.</li></ol></details>
+</section>
+<section id="view-guide" role="tabpanel" aria-labelledby="tab-guide" hidden>
+<div class="section-head"><div><h2>Field guide</h2><p>Names first. Only verified triggers and effects become player instructions.</p></div><span class="chip">Reference proposal</span></div>
+<div class="guide-layout"><section class="panel"><h3><span class="annotation">1</span>Movement</h3><div id="movement-table"></div><p class="small muted">Jump, Slide, Wallrun, Walljump and Air dodge are optional rows until their real triggers are supplied. Naming a move in the brief does not verify it in a build.</p></section><section class="panel"><h3><span class="annotation">2</span>First-four reactions</h3><div id="reaction-table"></div><p class="small muted">Pair/name mapping follows the brief's list order, not a verified registry. Other effect descriptions are absent; none are invented.</p></section></div>
+<p class="panel section-divider">Move freely. Ground reactions use whole hexes.<br><span class="muted">Reaching more hexes does not multiply your spell’s strength.</span></p>
+<section class="station-section"><h2><span class="annotation">3</span>Wellspring station copy</h2><p class="small muted">Map these roles onto existing stations only. These cards are not new station names or map placements.</p><div id="stations" class="station-grid"></div><p class="small muted" style="margin-top:12px">Reactions also work on eligible ground near stations. Keep existing spawn protection separate; station use grants no new protection.</p></section>
+<details class="notes"><summary>Reference annotations and gates</summary><ol><li>Resolve move, aim and interaction instructions from current settings. Do not invent standard shooter bindings or casting semantics.</li><li>Steam is scalding exposure, not a smoke screen. Recipe thresholds, sequence, doses and other reactions' effects require the real registry.</li><li>One station action and one short explanation. No successful reconnect, eight-player capacity, Return to Hearth or second-round claim.</li></ol></details>
+</section>
+<section id="view-intro" role="tabpanel" aria-labelledby="tab-intro" hidden>
+<div class="section-head"><div><h2>Try the basics</h2><p>Six action-led lessons · 180-second design target, not a measured duration.</p></div><span class="badge">BLOCKED · BUILD EVIDENCE REQUIRED</span></div>
+<p class="panel" style="margin-bottom:14px">No practical lesson is enabled in this prototype. Advance only on real local gameplay evidence; never on a timer or demonstration click. Keep <strong>Skip for now</strong> and <strong>Leave introduction</strong> available in the eventual game flow.</p>
+<div id="intro-steps" class="step-list"></div>
+<p class="small muted" style="margin-top:15px">Do not grant resources, rewrite the loadout, spawn training targets, reset chemistry, or require deliberate injury. Missing capabilities shorten or block the lesson; they do not count as completed.</p>
+</section>
+<section id="view-evidence" role="tabpanel" aria-labelledby="tab-evidence" hidden>
+<div class="section-head"><div><h2>Source basis & integration boundary</h2><p>One brief. No current implementation facts observed.</p></div><span class="chip">No contract changes</span></div>
+<div class="evidence-grid"><section class="panel"><h3>Received</h3><p><strong>Pasted text.txt</strong> · 11,044 bytes<br>Specialist assignment brief, not a checkpoint.</p><p class="hash">SHA-256<br>99104993c1c839c9838451e1f7c24f22c5cb2579ceb5cc41ca82a451a0d267f8</p><p><strong>Source build / commit:</strong> not supplied.<br>No screenshots, current bindings or relevant source received.</p><p class="muted">The user calls this workstream HEX UX. The source calls the project FLUX. This is not a product rename.</p></section><section class="panel"><h3>Needed before a patch</h3><ul class="evidence-list"><li>Current design contract, active implementation queue and identified checkpoint.</li><li>Combat HUD, spell/loadout and Wellspring station captures.</li><li>Effective bindings and actual slot activation semantics.</li><li>Relevant UI/registry/loadout source or read-only excerpts.</li></ul><p class="muted">No matching additional contract/checkpoint was found in Library searches. Unrelated files were not used.</p></section><section class="panel"><h3>Smallest next slice</h3><p>Map the real twelve committed slots and effective bindings into a read-only 3 × 4 view in the existing configuration screen.</p><p class="muted">Accept only after every slot is correct, one rebind propagates without changing any assignments, empty/unbound states differ, Air preserves the internal identifier, and viewing changes no game state.</p></section><section class="panel"><h3>Tradeoff & counterargument</h3><p>Twelve visible slots cost more HUD space than a four-slot bar.</p><p class="muted">The current UI might already be clearer. Without captures and baseline measurement, do not replace it wholesale. Test a reversible view/label slice first.</p><p><strong>Godot / Windows / game tests: NOT_RUN.</strong></p></section></div>
+<details class="notes" open><summary>Source-to-screen anchors</summary><p class="small muted" style="margin-top:9px">Brief lines 24–29 → HUD, slot/cell labels and chemistry boundary. Lines 72–74 and 123 → Steam. Lines 99–101 → optional movement/aim reference. Lines 116–123 → provisional reaction correspondence. Lines 129–143 → UX surfaces and settings-resolved bindings. Lines 160–173 → handoff, no publishing.</p></details>
+</section>
+<section class="review-controls" aria-label="Reviewer binding demonstration"><p class="eyebrow">Reviewer control · not proposed game UI</p><p class="small muted">Change a demonstration input label and inspect its matching hints. Nothing is bound on your keyboard or saved to the game.</p><form id="binding-form" class="controls-form"><label>Presentation alias<select id="binding-alias"></select></label><label>Evidence state<select id="binding-state"><option value="verified">Verified demo label</option><option value="unbound">Confirmed unbound (demo)</option><option value="unknown">Unknown / not connected</option></select></label><label class="grow">Full input label<input id="binding-input" maxlength="96" autocomplete="off" placeholder="Enter the full label for this demonstration"></label><button id="binding-submit" type="submit">Set preview label</button></form><p id="status" class="status" role="status" aria-live="polite">Ready. This page has no connection to the game.</p></section>
+<footer class="bottom-note">HEX UX v1 · source-only proposal · no repository writes, persistence, network calls, gameplay authority or runtime-acceptance claim.</footer>
+</main>
+<dialog id="discard-dialog" aria-labelledby="discard-title"><h2 id="discard-title">Discard your changes?</h2><p>You have uncommitted preview changes. Keep editing, or discard them before changing views.</p><div class="dialog-actions"><button id="keep-editing">Keep editing</button><button id="discard-and-leave" class="primary">Discard changes</button></div></dialog>
+<script id="ux-data" type="application/json">{
+  "format": "HEX-UX-review-contract/1.0",
+  "status": "PROPOSED_NOT_INTEGRATED",
+  "date": "2026-09-20",
+  "project_label": "HEX UX",
+  "source_project_name": "FLUX",
+  "source_build_id": null,
+  "source_files": [
+    {
+      "name": "Pasted text.txt",
+      "bytes": 11044,
+      "sha256": "99104993c1c839c9838451e1f7c24f22c5cb2579ceb5cc41ca82a451a0d267f8",
+      "role": "specialist assignment brief; not an implementation checkpoint"
+    }
+  ],
+  "missing_inputs": [
+    "current design contract",
+    "active implementation queue",
+    "checkpoint with commit/build identifier",
+    "combat HUD capture",
+    "spell/loadout screen capture",
+    "Wellspring station capture",
+    "effective player bindings and slot activation semantics",
+    "relevant UI/loadout/chemistry source or read-only excerpts"
+  ],
+  "evidence_classes": [
+    "OBSERVED_ARTIFACT",
+    "DOCUMENTED_INTENTION",
+    "INFERENCE",
+    "HYPOTHESIS",
+    "PROPOSED_CHANGE",
+    "EXECUTED_CHECK",
+    "NOT_RUN"
+  ],
+  "observed_implementation_facts": [],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "text": "A stable 3-by-4 arrangement across configuration and combat may reduce wrong-slot errors.",
+      "status": "NOT_TESTED"
+    },
+    {
+      "id": "H2",
+      "text": "One verb per station and short action-led lessons may reduce reading before useful play.",
+      "status": "NOT_TESTED"
+    }
+  ],
+  "slot_aliases": [
+    "slot_01",
+    "slot_02",
+    "slot_03",
+    "slot_04",
+    "slot_05",
+    "slot_06",
+    "slot_07",
+    "slot_08",
+    "slot_09",
+    "slot_10",
+    "slot_11",
+    "slot_12"
+  ],
+  "alias_note": "All alias names in this contribution are presentation aliases, not claims about existing Godot InputMap identifiers.",
+  "rows": [
+    {
+      "name": "Row A",
+      "slots": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "Row B",
+      "slots": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "name": "Row C",
+      "slots": [
+        9,
+        10,
+        11,
+        12
+      ]
+    }
+  ],
+  "documented_default_groups": [
+    "plain 1–4",
+    "Ctrl 1–4",
+    "Alt 1–4"
+  ],
+  "binding_states": [
+    "unknown",
+    "unbound",
+    "verified"
+  ],
+  "elements": [
+    "Water",
+    "Earth",
+    "Fire",
+    "Air"
+  ],
+  "delivery_families": [
+    "Bolt",
+    "Heavy",
+    "Rapid",
+    "Spray"
+  ],
+  "catalogue_entries_verified": false,
+  "air_rule": "Render Air. Preserve any existing internal wind identifier; resolve through an adapter without renaming source data.",
+  "reaction_reference": [
+    {
+      "ingredients": [
+        "Water",
+        "Water"
+      ],
+      "name": "Flood",
+      "mapping_status": "INFERRED_FROM_ORDERED_LISTS_NOT_REGISTRY_VERIFIED",
+      "description": null,
+      "source": "Pasted text.txt:116-123"
+    },
+    {
+      "ingredients": [
+        "Water",
+        "Earth"
+      ],
+      "name": "Mud",
+      "mapping_status": "INFERRED_FROM_ORDERED_LISTS_NOT_REGISTRY_VERIFIED",
+      "description": null,
+      "source": "Pasted text.txt:116-123"
+    },
+    {
+      "ingredients": [
+        "Water",
+        "Fire"
+      ],
+      "name": "Steam",
+      "mapping_status": "INFERRED_FROM_ORDERED_LISTS_NOT_REGISTRY_VERIFIED",
+      "description": "Scalding exposure builds while you are exposed. Leave the affected hexes.",
+      "source": "Pasted text.txt:116-123"
+    },
+    {
+      "ingredients": [
+        "Water",
+        "Air"
+      ],
+      "name": "Mistcurrent",
+      "mapping_status": "INFERRED_FROM_ORDERED_LISTS_NOT_REGISTRY_VERIFIED",
+      "description": null,
+      "source": "Pasted text.txt:116-123"
+    },
+    {
+      "ingredients": [
+        "Earth",
+        "Earth"
+      ],
+      "name": "Rampart",
+      "mapping_status": "INFERRED_FROM_ORDERED_LISTS_NOT_REGISTRY_VERIFIED",
+      "description": null,
+      "source": "Pasted text.txt:116-123"
+    },
+    {
+      "ingredients": [
+        "Earth",
+        "Fire"
+      ],
+      "name": "Magma",
+      "mapping_status": "INFERRED_FROM_ORDERED_LISTS_NOT_REGISTRY_VERIFIED",
+      "description": null,
+      "source": "Pasted text.txt:116-123"
+    },
+    {
+      "ingredients": [
+        "Earth",
+        "Air"
+      ],
+      "name": "Dustfront",
+      "mapping_status": "INFERRED_FROM_ORDERED_LISTS_NOT_REGISTRY_VERIFIED",
+      "description": null,
+      "source": "Pasted text.txt:116-123"
+    },
+    {
+      "ingredients": [
+        "Fire",
+        "Fire"
+      ],
+      "name": "Conflagration",
+      "mapping_status": "INFERRED_FROM_ORDERED_LISTS_NOT_REGISTRY_VERIFIED",
+      "description": null,
+      "source": "Pasted text.txt:116-123"
+    },
+    {
+      "ingredients": [
+        "Fire",
+        "Air"
+      ],
+      "name": "Firestorm",
+      "mapping_status": "INFERRED_FROM_ORDERED_LISTS_NOT_REGISTRY_VERIFIED",
+      "description": null,
+      "source": "Pasted text.txt:116-123"
+    },
+    {
+      "ingredients": [
+        "Air",
+        "Air"
+      ],
+      "name": "Vortex",
+      "mapping_status": "INFERRED_FROM_ORDERED_LISTS_NOT_REGISTRY_VERIFIED",
+      "description": null,
+      "source": "Pasted text.txt:116-123"
+    }
+  ],
+  "tutorial": {
+    "status": "BLOCKED_PENDING_BUILD_EVIDENCE",
+    "target_seconds": 180,
+    "timing": "Design budgets, not observed completion times; the lesson does not auto-pass or time out.",
+    "steps": [
+      {
+        "id": "move",
+        "seconds": 20,
+        "title": "Find your feet",
+        "copy": "Move with {bind:move}.",
+        "gate": [
+          "continuous_movement",
+          "move_input_label",
+          "local_movement_evidence"
+        ],
+        "complete": "Movement by the local actor, confirmed through the existing presentation/event path. Distance and marker placement must be set from the supplied map; none is invented here.",
+        "fallback": "Do not start this step without a resolved movement instruction."
+      },
+      {
+        "id": "aim",
+        "seconds": 30,
+        "title": "Move one way. Aim another.",
+        "copy": "Keep moving. Aim with {bind:aim}.",
+        "gate": [
+          "independent_aim",
+          "aim_input_label",
+          "local_movement_and_aim_evidence"
+        ],
+        "complete": "Local movement and aim change both observed during this step. No required angle, direction snap, or speed threshold is added.",
+        "fallback": "Omit without verified aim behavior; do not claim the step succeeded."
+      },
+      {
+        "id": "spell",
+        "seconds": 35,
+        "title": "Use one spell",
+        "copy": "Use {spell} with {slot_instruction}.",
+        "gate": [
+          "available_equipped_spell",
+          "slot_binding",
+          "slot_activation_semantics",
+          "confirmed_local_cast"
+        ],
+        "complete": "A cast from the demonstrated occupied slot is accepted by the existing game path; a key press or preview animation alone is insufficient.",
+        "fallback": "Resolve resource shortage or an unbound input using existing game affordances. Do not grant free resources."
+      },
+      {
+        "id": "configure",
+        "seconds": 30,
+        "title": "Make one slot yours",
+        "copy": "Choose a slot. Choose a spell. Apply changes.",
+        "gate": [
+          "existing_loadout_entry",
+          "available_spell_registry",
+          "mutation_allowed_here",
+          "confirmed_loadout_change"
+        ],
+        "complete": "One requested slot change is acknowledged by the existing owner handler; a draft selection is not completion.",
+        "fallback": "Skip if configuration is not currently supported or permitted. Do not teleport to an invented station."
+      },
+      {
+        "id": "steam",
+        "seconds": 40,
+        "title": "Recognize Steam",
+        "copy": "Combine Water and Fire using {recipe_instruction}. When Steam forms, leave the affected hexes.",
+        "gate": [
+          "verified_water_fire_steam_recipe",
+          "verified_recipe_instruction",
+          "finite_resources_sufficient",
+          "safe_existing_practice_context",
+          "confirmed_reaction_and_player_position",
+          "authoritative_affected_cells"
+        ],
+        "complete": "The existing game reports the intended local Steam reaction and the local actor moves outside its affected cells. No deliberate damage or exposure threshold is required.",
+        "fallback": "Offer the reaction reference; mark the practical lesson not demonstrated. Do not simulate success, grant resources, reset the world, or assume either ingredient order."
+      },
+      {
+        "id": "finish",
+        "seconds": 25,
+        "title": "Try your own combination",
+        "copy": "Choose another available spell and try it. The field guide is here when you need it.",
+        "gate": [
+          "available_equipped_spell",
+          "confirmed_local_cast",
+          "existing_guide_entry"
+        ],
+        "complete": "Another accepted local cast; finish or exit remains available independently of completion.",
+        "fallback": "End with the reference available. No multiplayer, return-to-hub, or second-round requirement."
+      }
+    ]
+  },
+  "ownership": {
+    "gameplay": "Existing Godot authority only.",
+    "ui": "Labels, view state, navigation, a local loadout draft, and read-only onboarding progress.",
+    "writes": "Use the existing validated mutation path. Do not introduce an RPC, owner, resource grant, recipe executor, or chemistry selector."
+  },
+  "no_contract_changes": true
+}
+</script>
+<script>
+'use strict';
+const DATA=JSON.parse(document.getElementById('ux-data').textContent);
+const $=id=>document.getElementById(id);
+const clone=value=>JSON.parse(JSON.stringify(value));
+const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const slotAlias=i=>`slot_${String(i+1).padStart(2,'0')}`;
+const aliases=[...DATA.slot_aliases,'move','aim','interact'];
+let committed=Array.from({length:12},()=>null);
+let draft=clone(committed), editing=0, currentView='desk', pendingView=null, pendingFocus=null;
+const bindings=Object.fromEntries(aliases.map(a=>[a,{status:'unknown',label:''}]));
+const spellName=s=>s?`${s.element} · ${s.family}`:'Empty';
+const bindingLabel=a=>{const b=bindings[a];return !b||b.status==='unknown'?'Binding not verified':b.status==='unbound'?'Not bound':b.label;};
+const changed=i=>JSON.stringify(draft[i])!==JSON.stringify(committed[i]);
+const dirty=()=>draft.some((_,i)=>changed(i));
+const report=text=>{$('status').textContent=text;};
+function slotMarkup(s,i,editable){
+ const label=bindingLabel(slotAlias(i)), name=spellName(s);
+ if(!editable)return `<div class="hud-slot" data-hud-slot="${i}" aria-label="Slot ${i+1}: ${esc(name)}; ${esc(label)}"><div class="name">${String(i+1).padStart(2,'0')} · ${esc(name)}</div><div class="binding" data-binding="${slotAlias(i)}">${esc(label)}</div></div>`;
+ return `<button type="button" class="slot" data-slot="${i}" aria-pressed="${i===editing}" aria-label="Edit slot ${i+1}: ${esc(name)}"><span class="slot-top"><span>${String(i+1).padStart(2,'0')}</span><span class="draft-dot">${changed(i)?'Draft':''}</span></span><span class="slot-name">${esc(s?s.element:'Empty')}</span><span class="slot-family">${esc(s?s.family:'Choose a spell')}</span><span class="binding" data-binding="${slotAlias(i)}">${esc(label)}</span></button>`;
+}
+function renderSlots(){
+ $('desk-slots').innerHTML=DATA.rows.map((r,ri)=>`<div class="slot-row"><div class="row-label">${r.name}</div><div class="slots">${draft.slice(ri*4,ri*4+4).map((s,j)=>slotMarkup(s,ri*4+j,true)).join('')}</div></div>`).join('');
+ $('hud-slots').innerHTML=DATA.rows.map((r,ri)=>`<div class="hud-row"><span>${r.name}</span><div class="slots">${committed.slice(ri*4,ri*4+4).map((s,j)=>slotMarkup(s,ri*4+j,false)).join('')}</div></div>`).join('');
+ const n=draft.filter((_,i)=>changed(i)).length;
+ $('draft-count').textContent=n?`${n} changed ${n===1?'slot':'slots'}`:'No draft changes';
+ $('apply').disabled=!n;$('discard').disabled=!n;
+ $('editing-label').textContent=`Editing slot ${String(editing+1).padStart(2,'0')}`;
+ $('selected-spell').innerHTML=`<strong>${esc(draft[editing]?spellName(draft[editing]):'Choose a spell')}</strong>`;
+}
+function renderCatalogue(){
+ $('catalogue').innerHTML=`<table class="catalogue"><caption>Illustrative matrix · availability not verified</caption><thead><tr><th scope="col">Element</th>${DATA.delivery_families.map(f=>`<th scope="col">${f}</th>`).join('')}</tr></thead><tbody>${DATA.elements.map(e=>`<tr><th scope="row">${e}</th>${DATA.delivery_families.map(f=>`<td><button type="button" data-element="${e}" data-family="${f}" aria-label="Preview ${e} ${f} in selected slot" aria-pressed="${draft[editing]?.element===e&&draft[editing]?.family===f}"><span class="element-symbol ${e.toLowerCase()}" aria-hidden="true">${e[0]}</span><span>${f}</span></button></td>`).join('')}</tr>`).join('')}</tbody></table>`;
+}
+function renderGuide(){
+ const movement=[['Move',bindingLabel('move')],['Aim',bindingLabel('aim')],['Use spell','Activation semantics not verified'],['Interact',bindingLabel('interact')],['Jump / Slide','Trigger not verified'],['Wallrun / Walljump','Trigger not verified'],['Air dodge','Trigger not verified']];
+ $('movement-table').innerHTML=`<table><caption>Reviewer placeholders, not current controls</caption><thead><tr><th scope="col">Action</th><th scope="col">Input / trigger</th></tr></thead><tbody>${movement.map(([a,b])=>`<tr><th scope="row">${a}</th><td>${esc(b)}</td></tr>`).join('')}</tbody></table>`;
+ $('reaction-table').innerHTML=`<table><caption>Provisional pair/name correspondence</caption><thead><tr><th scope="col">Ingredients</th><th scope="col">Reaction</th></tr></thead><tbody>${DATA.reaction_reference.map(r=>`<tr><td>${r.ingredients.join(' + ')}</td><td><strong>${r.name}</strong>${r.name==='Steam'?'<br><span class="small muted">Scalding exposure; leave affected hexes.</span>':''}</td></tr>`).join('')}</tbody></table>`;
+ const stations=[['Configuration role','Choose a slot. Choose a spell.','Configure spells'],['Movement role','Move and aim independently.','View movement guide'],['Chemistry role','Learn which elements react.','View reactions'],['Lobby role','Show only a verified existing entry; no lifecycle success claim.','Open lobby']];
+ $('stations').innerHTML=stations.map(([name,copy,action])=>`<article class="station"><h3>${name}</h3><p>${copy}</p><p class="sample-prompt">${esc(bindingLabel('interact'))}<br><strong>${action}</strong></p></article>`).join('');
+ $('hud-prompt').textContent=`${bindingLabel('interact')} · Configure spells`;
+}
+function reviewCopy(template){return template.replace(/\{([^}]+)\}/g,(_,token)=>token.startsWith('bind:')?bindingLabel(token.slice(5)):token==='spell'?'a verified equipped spell':token==='slot_instruction'?`activation not verified (slot 01: ${bindingLabel('slot_01')})`:token==='recipe_instruction'?'a recipe sequence not yet verified':'Not verified');}
+function renderIntro(){let elapsed=0;$('intro-steps').innerHTML=DATA.tutorial.steps.map((s,i)=>{const start=elapsed;elapsed+=s.seconds;const fmt=v=>`${Math.floor(v/60)}:${String(v%60).padStart(2,'0')}`;return `<article class="step"><header><h3>${i+1}. ${s.title}</h3><span class="step-time">${fmt(start)}–${fmt(elapsed)}</span></header><span class="chip">BLOCKED · not demonstrated</span><p class="step-copy">${esc(reviewCopy(s.copy))}</p><details><summary>Required evidence and fallback</summary><p><strong>Gate:</strong> ${esc(s.gate.join(', '))}</p><p><strong>Completion:</strong> ${esc(s.complete)}</p><p><strong>Missing evidence:</strong> ${esc(s.fallback)}</p></details></article>`;}).join('');}
+function render(){renderSlots();renderCatalogue();renderGuide();renderIntro();}
+function changeView(next){currentView=next;document.querySelectorAll('[data-view]').forEach(b=>{const selected=b.dataset.view===next;b.setAttribute('aria-selected',String(selected));b.tabIndex=selected?0:-1;});document.querySelectorAll('[role=tabpanel]').forEach(p=>{p.hidden=p.id!==`view-${next}`;});}
+function requestView(next,button){if(next===currentView)return;if(dirty()){pendingView=next;pendingFocus=button;$('discard-dialog').showModal();$('keep-editing').focus();}else changeView(next);}
+$('desk-slots').addEventListener('click',e=>{const b=e.target.closest('[data-slot]');if(!b)return;editing=Number(b.dataset.slot);renderSlots();renderCatalogue();document.querySelector(`[data-slot="${editing}"]`).focus();});
+$('catalogue').addEventListener('click',e=>{const b=e.target.closest('[data-element]');if(!b)return;const {element,family}=b.dataset;if(!DATA.elements.includes(element)||!DATA.delivery_families.includes(family))return;draft[editing]={element,family};renderSlots();renderCatalogue();document.querySelector(`[data-element="${element}"][data-family="${family}"]`).focus();report(`Draft slot ${editing+1}: ${element} · ${family}. Committed preview unchanged.`);});
+$('apply').addEventListener('click',()=>{committed=clone(draft);renderSlots();renderCatalogue();report('Preview applied in memory. No game files changed; no game acknowledgement tested.');});
+$('discard').addEventListener('click',()=>{draft=clone(committed);renderSlots();renderCatalogue();report('Draft discarded. Committed preview retained.');});
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>requestView(b.dataset.view,b)));
+document.querySelector('[role=tablist]').addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;const tabs=[...document.querySelectorAll('[data-view]')],i=tabs.indexOf(document.activeElement);if(i<0)return;e.preventDefault();const n=e.key==='Home'?0:e.key==='End'?tabs.length-1:(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;tabs[n].focus();requestView(tabs[n].dataset.view,tabs[n]);});
+$('keep-editing').addEventListener('click',()=>{$('discard-dialog').close();pendingView=null;pendingFocus=null;$(`tab-${currentView}`).focus();});
+$('discard-and-leave').addEventListener('click',()=>{draft=clone(committed);const next=pendingView,focus=pendingFocus;pendingView=null;pendingFocus=null;$('discard-dialog').close();render();if(next)changeView(next);focus?.focus();report('Uncommitted preview discarded.');});
+$('discard-dialog').addEventListener('cancel',()=>{pendingView=null;pendingFocus=null;});
+$('show-steam').addEventListener('change',e=>{$('steam-state').hidden=!e.target.checked;});
+$('binding-alias').innerHTML=aliases.map(a=>`<option value="${a}">${a}</option>`).join('');
+$('binding-state').addEventListener('change',()=>{$('binding-input').disabled=$('binding-state').value!=='verified';});
+$('binding-form').addEventListener('submit',e=>{e.preventDefault();const alias=$('binding-alias').value,status=$('binding-state').value,label=$('binding-input').value.trim();if(!aliases.includes(alias)||!['unknown','unbound','verified'].includes(status)){report('Invalid preview binding state.');return;}if(status==='verified'&&!label){report('Enter a full label, or choose unbound / unknown.');$('binding-input').focus();return;}bindings[alias]={status,label:status==='verified'?label:''};render();report(`Preview ${alias}: ${bindingLabel(alias)}. No keyboard binding or game setting was changed.`);});
+window.addEventListener('beforeunload',e=>{if(dirty()){e.preventDefault();e.returnValue='';}});
+window.HEXUX_TEST=Object.freeze({snapshot:()=>clone({committed,draft,bindings,editing,currentView,dirty:dirty()}),bindingLabel});
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "id": "sanctum-hub-v1",
+  "display_name": "The Sanctum",
+  "design_units": "world_units",
+  "world_bounds": [-6400, -3600, 12800, 7200],
+  "layers": ["terraces", "crown", "undercroft"],
+  "spawn_district_id": "nexus-court",
+  "fast_travel": {
+    "network_id": "sanctum-attunement-v1",
+    "initial_node_id": "nexus-fountain",
+    "minimum_node_count": 8,
+    "unlock_rule": "safe_interaction_once",
+    "authority": "session_host",
+    "solo_cost": 0,
+    "blocked_states": ["combat", "timed_trial", "transition", "material_reset"],
+    "destination_clearance_required": true
+  },
+  "districts": [
+    {
+      "id": "nexus-court",
+      "layer": "terraces",
+      "center": [0, 0],
+      "radius": 1050,
+      "landmark": "grand alchemical fountain",
+      "functions": ["arrival", "onboarding", "central_map", "attunement"],
+      "entrances": ["north_colonnade", "south_bridge", "east_arcade", "west_garden_walk"],
+      "movement_routes": ["fountain_ring", "radial_launch_lines"],
+      "connections": ["wayfarer-concourse", "movement-conservatory", "alchemical-proving-grounds", "living-archive", "verdant-recovery", "foundry-deep"],
+      "travel_node": {"id": "nexus-fountain", "kind": "grand_fountain", "enabled": true}
+    },
+    {
+      "id": "wayfarer-concourse",
+      "layer": "terraces",
+      "center": [2600, -750],
+      "radius": 1150,
+      "landmark": "four-gate portal rotunda",
+      "functions": ["social", "wardrobe", "host_join", "modes", "expedition_staging"],
+      "entrances": ["nexus_arcade", "east_bridge", "gatehouse_lift"],
+      "movement_routes": ["balcony_chain", "gatehouse_roofs"],
+      "connections": ["nexus-court", "crown-observatory", "seasonal-expanse"],
+      "travel_node": {"id": "wayfarer-gate", "kind": "portal_ring", "enabled": true}
+    },
+    {
+      "id": "movement-conservatory",
+      "layer": "terraces",
+      "center": [-3150, 500],
+      "radius": 1500,
+      "landmark": "suspended rail causeway",
+      "functions": ["movement_fundamentals", "advanced_tech", "races", "time_trials"],
+      "entrances": ["nexus_west_walk", "garden_bridge", "undercroft_lift"],
+      "movement_routes": ["rail_causeway", "wall_kick_wells", "slide_jump_loop", "island_leaps"],
+      "connections": ["nexus-court", "verdant-recovery", "foundry-deep"],
+      "travel_node": {"id": "conservatory-spire", "kind": "attunement_spire", "enabled": true}
+    },
+    {
+      "id": "alchemical-proving-grounds",
+      "layer": "terraces",
+      "center": [3350, 1650],
+      "radius": 1450,
+      "landmark": "seven-basin transmutation crater",
+      "functions": ["firing_range", "bot_arena", "destructibles", "chemistry_labs", "combat_trials"],
+      "entrances": ["nexus_south_east", "foundry_causeway", "observatory_drop"],
+      "movement_routes": ["basin_rim_run", "basin_landing_turn", "target_tower_redirects"],
+      "connections": ["nexus-court", "foundry-deep", "crown-observatory"],
+      "travel_node": {"id": "proving-crucible", "kind": "attunement_crucible", "enabled": true}
+    },
+    {
+      "id": "living-archive",
+      "layer": "crown",
+      "center": [850, -2050],
+      "radius": 1100,
+      "landmark": "oracular library dome",
+      "functions": ["codex", "lore", "build_library", "replays", "analytics", "research"],
+      "entrances": ["nexus_colonnade", "observatory_bridge", "archive_lift"],
+      "movement_routes": ["archive_circulation", "archive_roofline", "observatory_lift"],
+      "connections": ["nexus-court", "crown-observatory", "foundry-deep"],
+      "travel_node": {"id": "archive-orrey", "kind": "attunement_orrey", "enabled": true}
+    },
+    {
+      "id": "verdant-recovery",
+      "layer": "terraces",
+      "center": [-2400, 2250],
+      "radius": 1250,
+      "landmark": "suspended seasonal garden",
+      "functions": ["rest", "ingredients", "crafting", "interaction_training", "dummy_grove"],
+      "entrances": ["nexus_garden_walk", "conservatory_bridge", "root_lift"],
+      "movement_routes": ["root_canopy", "garden_platforms", "waterfall_slide"],
+      "connections": ["nexus-court", "movement-conservatory", "seasonal-expanse"],
+      "travel_node": {"id": "verdant-well", "kind": "attunement_well", "enabled": true}
+    },
+    {
+      "id": "foundry-deep",
+      "layer": "undercroft",
+      "center": [900, 2350],
+      "radius": 1350,
+      "landmark": "grand transmutation engine",
+      "functions": ["fabrication", "transmutation", "material_reset", "flooded_laboratory", "utility_routes"],
+      "entrances": ["nexus_descent", "proving_causeway", "archive_lift", "conservatory_lift"],
+      "movement_routes": ["machine_line", "flooded_shortcut", "pressure_rail"],
+      "connections": ["nexus-court", "movement-conservatory", "alchemical-proving-grounds", "living-archive"],
+      "travel_node": {"id": "foundry-coil", "kind": "attunement_coil", "enabled": true}
+    },
+    {
+      "id": "crown-observatory",
+      "layer": "crown",
+      "center": [3500, -2200],
+      "radius": 1050,
+      "landmark": "twin astrolabe towers",
+      "functions": ["settings", "accessibility", "diagnostics", "session_monitoring"],
+      "entrances": ["wayfarer_lift", "archive_bridge", "proving_drop"],
+      "movement_routes": ["rooftop_redirects", "astrolabe_ring", "lift_shafts"],
+      "connections": ["wayfarer-concourse", "living-archive", "alchemical-proving-grounds"],
+      "travel_node": {"id": "crown-astrolabe", "kind": "attunement_astrolabe", "enabled": true}
+    },
+    {
+      "id": "seasonal-expanse",
+      "layer": "terraces",
+      "center": [-5100, -1900],
+      "radius": 1200,
+      "landmark": "four-season biome orrery",
+      "functions": ["biome_pockets", "private_trials", "weather_laboratory", "exploration"],
+      "entrances": ["wayfarer_outer_gate", "verdant_root_bridge"],
+      "movement_routes": ["changing_surface_run", "island_leaps", "storm_rail"],
+      "connections": ["wayfarer-concourse", "verdant-recovery"],
+      "travel_node": {"id": "seasonal-orb", "kind": "attunement_orb", "enabled": true}
+    }
+  ],
+  "outbound_exits": [
+    {"id": "north-realms-gate", "from": "living-archive", "purpose": "adventure_realms"},
+    {"id": "south-arena-gate", "from": "alchemical-proving-grounds", "purpose": "matchmaking_queue"},
+    {"id": "east-social-bridge", "from": "wayfarer-concourse", "purpose": "social_instances"},
+    {"id": "west-private-path", "from": "seasonal-expanse", "purpose": "private_islands"}
+  ]
+}

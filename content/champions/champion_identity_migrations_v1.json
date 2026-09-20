@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "id": "champion-identity-migrations-v1",
+  "status": "compatibility_contract",
+  "migrations": [
+    {
+      "legacy_technical_id": "nico_lai",
+      "canonical_display_name": "Waka Aren Si",
+      "planned_canonical_technical_id": "waka_aren_si",
+      "current_action": "retain_legacy_technical_id_until_atomic_runtime_asset_save_and_replay_migration",
+      "preserve_wire_id_where_feasible": true,
+      "required_migration_surfaces": [
+        "champion_content",
+        "wire_manifest",
+        "sprite_and_animation_manifests",
+        "asset_paths",
+        "loadouts",
+        "saved_profiles",
+        "replay_metadata",
+        "bots_and_training",
+        "selection_ui",
+        "localization",
+        "tests_and_fixtures",
+        "documentation"
+      ],
+      "compatibility_requirements": [
+        "old saves using nico_lai resolve to Waka Aren Si",
+        "old replay metadata resolves through an explicit versioned adapter or fails clearly",
+        "player-facing UI never presents Nico Lai as the current canonical name",
+        "historical provenance may retain the former name when context requires it"
+      ]
+    },
+    {
+      "legacy_technical_id": "donnok",
+      "canonical_display_name": "Don Doko Don",
+      "planned_canonical_technical_id": "don_doko_don",
+      "current_action": "retain_legacy_technical_id_until_atomic_runtime_asset_save_and_replay_migration",
+      "preserve_wire_id_where_feasible": true,
+      "required_migration_surfaces": [
+        "champion_content",
+        "wire_manifest",
+        "sprite_and_animation_manifests",
+        "asset_paths",
+        "loadouts",
+        "saved_profiles",
+        "replay_metadata",
+        "bots_and_training",
+        "selection_ui",
+        "localization",
+        "tests_and_fixtures",
+        "documentation"
+      ],
+      "compatibility_requirements": [
+        "old content using donnok resolves to Don Doko Don",
+        "old replay metadata resolves through an explicit versioned adapter or fails clearly",
+        "player-facing UI never presents Donnok as the canonical name after promotion",
+        "historical provenance may retain the former name when context requires it"
+      ]
+    }
+  ]
+}

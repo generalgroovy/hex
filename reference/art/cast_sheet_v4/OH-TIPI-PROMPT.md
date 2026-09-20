@@ -1,0 +1,9 @@
+# Oh Tipi adaptation prompt
+
+Use case: style-transfer. Asset type: single reusable FLUX Oh Tipi character-reference illustration.
+Image1 is the AUTHORITATIVE COMPACT PIXEL-ART STYLE and character proportion reference: the FLUX group poster. Image2 is the Oh Tipi artwork to ADAPT into that group style. Do not adopt Image2's elongated detailed concept-illustration proportions.
+Redraw ONLY OH TIPI in the group poster's charming compact fantasy pixel-art style, rich limited color ramps, visibly crisp stepped pixels, strong readable dark outline, simplified material details and sensible adult cartoon proportions. Full body, three-quarter FRONT facing SLIGHTLY toward the VIEWER'S LEFT about20degrees from frontal; both eyes still visible, head/chest/hips/feet consistently angled left. Not a hard side profile, not looking right. Middle size role, balanced limbs and torso, no giant head, sturdy readable stance.
+Preserve OhTipi identity from Image2: teal aquatic Seakin, pale seafoam face, central fin crest and cheek fins, brass ear accents, plum/charcoal layered tunic with gold/brass edges, cream tabard and small rust-red accents, scaled limbs and attached tail. Simplify these to match the scale/detail level of Image1. Hands open and EMPTY.
+Remove trident entirely. Remove all lightning, water/aura rings, magical sparkles, all VFX and environment. No weapon/staff/wand/orb/shield/ground prop. Only body/costume plus faint grounding shadow on pale parchment, consistent with the group reference.
+One centered character on square warm parchment; no extra pose or character. Above name "OH TIPI", below it "Seakin - Middle". Beneath feet one Water-drop icon then label "WATER 2", one Charge-lightning icon then "CHARGE 1". Exact labels legible in group-style pixel font. One icon per affinity regardless of level. This image establishes the slight-left pose and rendering to share with the entire group.
+
