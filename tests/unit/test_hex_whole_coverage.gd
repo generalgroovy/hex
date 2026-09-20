@@ -22,7 +22,7 @@ func run() -> int:
 	var actor := PlayerState.new(91)
 	actor.spawn_protection_ticks = 0
 	actor.health_recovery_per_second = 0
-	actor.position_x = court.origin.x + 80_000
+	actor.position_x = court.origin.x + 64_000
 	actor.position_y = court.origin.y
 	var before := actor.health
 	var config := SimConfig.new(120)
@@ -34,7 +34,7 @@ func run() -> int:
 	equal(actor.health, before, "unselected neighboring hex is harmless")
 	court.advance([actor], {91: court.origin + Vector2i(-100_000, 0)}, 90, config, [])
 	check(actor.health < before, "fast full-field traversal cannot skip selected cells")
-	actor.position_x = court.origin.x + 80_000
+	actor.position_x = court.origin.x + 64_000
 	actor.air_height = 1
 	before = actor.health
 	court.advance([actor], {}, 120, config, [])
@@ -47,7 +47,7 @@ func run() -> int:
 	actor.position_x = court.origin.x + 100_000
 	court.advance([actor], {91: {"point": court.origin, "height": 1}}, 180, config, [])
 	equal(actor.health, before, "landing outside field cannot expose airborne swept segment")
-	actor.position_x = court.origin.x + 80_000
+	actor.position_x = court.origin.x + 64_000
 	var events: Array[Dictionary] = []
 	court.advance([actor], {91: court.origin}, 210, config, events)
 	equal(events.size(), 1, "crossing multiple cells yields one pressure pulse")
@@ -90,13 +90,13 @@ func _test_authored_allocation_envelope(catalog: AbilityCatalog) -> void:
 		var wire := _wire(catalog, "fire", family_name)
 		var definition := CombatTuning.cast_definition(wire)
 		var minimum_stock: int = 600 / int(definition.reaction_strength)
-		for offset: Vector2i in [Vector2i.ZERO, Vector2i(32_000, 0), Vector2i(0, 36_950), Vector2i(-31_999, -18_475)]:
+		for offset: Vector2i in [Vector2i.ZERO, Vector2i(24_000, 0), Vector2i(0, 27_712), Vector2i(-23_999, -13_856)]:
 			var point := court.origin + offset
 			var record := {"wire": wire, "origin": point - Vector2i(int(definition.get("range", 0)), 0)}
 			var selected := court.footprint({"position": point, "direction": Vector2i(1000, 0)}, record)
 			check(selected.size() <= minimum_stock, "authored %s minimum stock covers all selected cells" % family_name)
 			for cell: Vector2i in selected:
 				check(court.cells.has(cell), "authored selection stays within eligible map")
-	for offset: Vector2i in [Vector2i.ZERO, Vector2i(32_000, 0), Vector2i(0, 36_950)]:
+	for offset: Vector2i in [Vector2i.ZERO, Vector2i(24_000, 0), Vector2i(0, 27_712)]:
 		var selected := HexFootprint.selected_cells(HexFootprint.disk(court.origin + offset, 64_000), court.origin, court.cells)
 		check(selected.size() < 80, "smallest paid medium budget covers every selected hex")

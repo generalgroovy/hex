@@ -56,6 +56,7 @@ func configure_fixture(catalog: AbilityCatalog, cached_clips: Dictionary) -> boo
 	if not campus_layout.load_from_file(CAMPUS_LAYOUT_PATH):
 		return false
 	current_position = Vector2(world.player().position_x, world.player().position_y) / SimConfig.FIXED_SCALE
+	previous_position = current_position
 	preference_overrides_are_transient = true
 	element_audio = ElementAudioScript.new()
 	element_audio.clips = cached_clips.duplicate()

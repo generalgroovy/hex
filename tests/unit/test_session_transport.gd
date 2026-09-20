@@ -151,7 +151,7 @@ func _test_validation_fails_closed() -> void:
 
 
 func _test_runtime_identity_handshake_contract() -> void:
-	equal(SimConfig.PROTOCOL_VERSION, 54, "remote hex-clash semantics own the explicit protocol54 boundary")
+	equal(SimConfig.PROTOCOL_VERSION, 55, "48px hex authority owns the explicit protocol55 boundary")
 	var local := _transport()
 	equal(local.runtime_source_sha256, TEST_RUNTIME_SOURCE_HASH, "configured transport exposes the full validated local source identity")
 	equal(local.build_id, "p%d-%s" % [SimConfig.PROTOCOL_VERSION, TEST_RUNTIME_SOURCE_HASH.left(12)], "configured transport exposes only the derived short display identity")

@@ -78,11 +78,13 @@ func advance(delta_seconds: float) -> void:
 			cues[index] = cue
 
 
-func draw(canvas: CanvasItem, language: VisualLanguage, reduced_effects: bool) -> int:
+func draw(canvas: CanvasItem, language: VisualLanguage, reduced_effects: bool, point_visible: Callable = Callable()) -> int:
 	if canvas == null or language == null:
 		return 0
 	var drawn := 0
 	for cue: Dictionary in cues:
+		if point_visible.is_valid() and not bool(point_visible.call(cue.position)):
+			continue
 		if _draw_cue(canvas, language, cue, reduced_effects):
 			drawn += 1
 	return drawn

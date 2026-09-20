@@ -14,5 +14,5 @@ foreach ($required in @('project.godot', 'scenes\bootstrap\bootstrap.tscn', 'tes
 $templates = Get-FluxExportTemplateRoot
 $hasTemplates = Test-Path -LiteralPath $templates -PathType Container
 if ($RequireExportTemplates) { $templates = Assert-FluxExportTemplates $ExportTarget }
-Write-Output "OK: Godot $actual and HEX source foundation are present."
+Write-Output "OK: Godot $actual and H.E.X. source foundation are present."
 Write-Output ("Export templates: " + $(if ($RequireExportTemplates) { "$ExportTarget ready at $templates" } elseif ($hasTemplates) { $templates } else { 'missing (source run/test remains available)' }))

@@ -6,7 +6,7 @@ func run() -> int:
 	var definition := HexWorldDefinition.from_campus(layout)
 	check(definition != null, "campus has bounded whole-map chemistry topology")
 	if definition == null: return finish("hex-world-definition")
-	equal(definition.eligible_cells.size(), 1493, "trusted campus admits every whole hex outside expanded worldbone")
+	equal(definition.eligible_cells.size(), 2766, "48px campus admits every whole hex outside unchanged expanded worldbone")
 	check(definition.eligible_cells.size() <= HexChemistryWorld.MAX_CELLS, "whole-map topology stays within the shared finite cap")
 	equal(HexChemistryWorld.MAX_CELLS, 4096, "whole-map topology retains an explicit finite authority cap")
 	var playable_top := layout.reserved_ui_top * SimConfig.FIXED_SCALE
@@ -40,8 +40,8 @@ func run() -> int:
 	# Independent simple cases guard the rectangle exclusion predicate itself.
 	var polygon := HexGrid.vertices(Vector2i.ZERO)
 	check(HexWorldDefinition._overlaps_rectangle(polygon, Rect2i(-1, -1, 2, 2)), "inside rectangle overlaps")
-	check(not HexWorldDefinition._overlaps_rectangle(polygon, Rect2i(32_000, -100, 100, 200)), "exact face tangency is not positive overlap")
-	check(HexWorldDefinition._overlaps_rectangle(polygon, Rect2i(31_999, -100, 100, 200)), "one fixed unit of face overlap is detected")
-	check(not HexWorldDefinition._overlaps_rectangle(polygon, Rect2i(30_000, -36_000, 1000, 1000)), "hex corner empty space is not rectangular cover")
+	check(not HexWorldDefinition._overlaps_rectangle(polygon, Rect2i(24_000, -100, 100, 200)), "exact face tangency is not positive overlap")
+	check(HexWorldDefinition._overlaps_rectangle(polygon, Rect2i(23_999, -100, 100, 200)), "one fixed unit of face overlap is detected")
+	check(not HexWorldDefinition._overlaps_rectangle(polygon, Rect2i(22_000, -26_000, 1000, 1000)), "hex corner empty space is not rectangular cover")
 	print("CAMPUS_HEX_TOPOLOGY cells=%d hash=%s" % [definition.eligible_cells.size(), definition.definition_hash])
 	return finish("hex-world-definition")

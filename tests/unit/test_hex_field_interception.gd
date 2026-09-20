@@ -92,7 +92,7 @@ func _test_strength_chain_multicell_and_later_tick(catalog: AbilityCatalog) -> v
 	var world: SimWorld = fixture.world
 	var court: HexCourt = fixture.court
 	var y := court.origin.y
-	var field_five := _field(court, catalog, 2, "fire", "bolt", 2001, Vector2i(300_000, y))
+	var field_five := _field(court, catalog, 2, "fire", "bolt", 2001, Vector2i(360_000, y))
 	var field_three := _field(court, catalog, 3, "fire", "spray", 2002, Vector2i(530_000, y), 0, Vector2i(450_000, y))
 	check(field_five.cells.size() > 1 and field_three.cells.size() > 1, "each source field spans multiple storage cells in the traversal fixture")
 	var heavy := _shot(world, court, catalog, 1000, 1, "water", "heavy", 1000, Vector2i(200_000, y), Vector2i(48_000_000, 0))
@@ -119,7 +119,7 @@ func _test_equal_exhaustion_has_no_terminal_or_product_recursion(catalog: Abilit
 	var world: SimWorld = fixture.world
 	var court: HexCourt = fixture.court
 	var y := court.origin.y
-	var field := _field(court, catalog, 2, "fire", "bolt", 3001, Vector2i(300_000, y))
+	var field := _field(court, catalog, 2, "fire", "bolt", 3001, Vector2i(360_000, y))
 	_shot(world, court, catalog, 3000, 1, "water", "bolt", 3000, Vector2i(200_000, y), Vector2i(24_000_000, 0))
 	HexProjectileCombat.advance(world)
 	equal(_field_events(world).size(), 1, "equal projectile and field strengths resolve one contact")
@@ -142,7 +142,7 @@ func _test_surviving_field_retiles_proportionally(catalog: AbilityCatalog) -> vo
 	var world: SimWorld = fixture.world
 	var court: HexCourt = fixture.court
 	var y := court.origin.y
-	var field := _field(court, catalog, 2, "fire", "bolt", 4001, Vector2i(300_000, y))
+	var field := _field(court, catalog, 2, "fire", "bolt", 4001, Vector2i(360_000, y))
 	var before: Dictionary = field.cells.duplicate(true)
 	_shot(world, court, catalog, 4000, 1, "water", "rapid", 4000, Vector2i(200_000, y), Vector2i(24_000_000, 0))
 	HexProjectileCombat.advance(world)
@@ -217,8 +217,8 @@ func _test_ordered_requeue_after_retile(catalog: AbilityCatalog) -> void:
 func _test_closed_stored_geometry() -> void:
 	var footprint := HexFootprint.disk(Vector2i.ZERO, 100_000)
 	var stored := {Vector2i.ZERO: 1}
-	var face := Vector2i(32_000, 0)
-	var vertex := Vector2i(0, -36_950)
+	var face := Vector2i(HexGrid.HALF_WIDTH, 0)
+	var vertex := Vector2i(0, -HexGrid.HALF_HEIGHT)
 	check(bool(HexFootprint.stored_segment_interval(footprint, stored, Vector2i.ZERO, face, face).get("hit", false)), "stored union includes a stationary point on a closed hex face")
 	check(bool(HexFootprint.stored_segment_interval(footprint, stored, Vector2i.ZERO, vertex, vertex).get("hit", false)), "stored union includes an exact hex vertex")
 	check(bool(HexFootprint.stored_segment_interval(footprint, stored, Vector2i.ZERO, vertex + Vector2i(-20_000, 0), vertex + Vector2i(20_000, 0)).get("hit", false)), "stored union includes segment tangency along a vertex")
@@ -227,7 +227,10 @@ func _test_closed_stored_geometry() -> void:
 		footprint, stored, Vector2i.ZERO,
 		Vector2i(23_796, 70_811), Vector2i(-487, -44_962))
 	check(bool(diagonal.get("hit", false)), "continuous diagonal crossing retains its true stored-cell entry")
-	equal(diagonal.get("point", Vector2i.ZERO), Vector2i(14_890, 28_353), "nearest constrained lattice witness stays inside instead of rounding across the sloped edge")
+	# Independent lower-right plane: 866*x + 1500*y = 41_568_000.
+	# Continuous entry is (13162.26130379,20112.98780728); its nearest
+	# interior lattice witness is (13162,20113), not an outward rounded point.
+	equal(diagonal.get("point", Vector2i.ZERO), Vector2i(13_162, 20_113), "nearest constrained lattice witness stays inside instead of rounding across the sloped edge")
 	check(HexGrid._point_in_cell(Vector2i(diagonal.point), Vector2i.ZERO), "quantized diagonal witness remains in the authoritative closed stored hex")
 	check(not bool(diagonal.get("quantization_outside", true)), "representable diagonal contact does not require a bounded outside witness")
 	# Two integer-centered disks can be exactly tangent at a non-lattice point.
@@ -261,7 +264,7 @@ func _test_stored_union_and_center_query(catalog: AbilityCatalog) -> void:
 	world = fixture.world
 	court = fixture.court
 	y = court.origin.y
-	_field(court, catalog, 2, "fire", "bolt", 5101, Vector2i(300_000, y))
+	_field(court, catalog, 2, "fire", "bolt", 5101, Vector2i(360_000, y))
 	var offset_shot := _shot(world, court, catalog, 5100, 1, "water", "heavy", 5100, Vector2i(200_000, y + 100_000), Vector2i(24_000_000, 0))
 	HexProjectileCombat.advance(world)
 	equal(offset_shot.remaining_strength, 15, "projectile collision radius cannot enlarge center-only field eligibility")
@@ -273,9 +276,9 @@ func _test_wall_tie_height_and_same_source(catalog: AbilityCatalog) -> void:
 	var world: SimWorld = fixture.world
 	var court: HexCourt = fixture.court
 	var y := court.origin.y
-	var field := _field(court, catalog, 2, "fire", "bolt", 6001, Vector2i(300_000, y))
+	var field := _field(court, catalog, 2, "fire", "bolt", 6001, Vector2i(360_000, y))
 	var shot := _shot(world, court, catalog, 6000, 1, "water", "heavy", 6000, Vector2i(200_000, y), Vector2i(24_000_000, 0))
-	world.collision.add_obstacle(CollisionWorld.Obstacle.new(61, 243_200, y - 80_000, 320_000, y + 80_000, false))
+	world.collision.add_obstacle(CollisionWorld.Obstacle.new(61, 347_200, y - 80_000, 400_000, y + 80_000, false))
 	HexProjectileCombat.advance(world)
 	equal(_field_events(world).size(), 0, "cover wins the exact center-entry tie with the field boundary")
 	equal(int(field.ledger.remaining_strength), 5, "wall-tied field keeps its full resistance")
@@ -283,9 +286,9 @@ func _test_wall_tie_height_and_same_source(catalog: AbilityCatalog) -> void:
 	fixture = _world()
 	world = fixture.world
 	court = fixture.court
-	field = _field(court, catalog, 2, "fire", "bolt", 6051, Vector2i(300_000, y))
+	field = _field(court, catalog, 2, "fire", "bolt", 6051, Vector2i(360_000, y))
 	shot = _shot(world, court, catalog, 6050, 1, "water", "bolt", 6050, Vector2i(200_000, y), Vector2i(24_000_000, 0))
-	shot.remaining_distance = 24_001 # First fixed point inside the selected cell after canonical boundary ownership.
+	shot.remaining_distance = 128_001 # First fixed point inside the selected cell after canonical boundary ownership.
 	HexProjectileCombat.advance(world)
 	equal(_field_events(world).size(), 1, "field entry at the exact range endpoint remains eligible")
 	equal(_events(world, "projectile_terminal", shot.entity_id).size(), 0, "endpoint clash exhausts the projectile before range termination can duplicate it")
@@ -296,7 +299,7 @@ func _test_wall_tie_height_and_same_source(catalog: AbilityCatalog) -> void:
 	fixture = _world()
 	world = fixture.world
 	court = fixture.court
-	field = _field(court, catalog, 2, "fire", "bolt", 6101, Vector2i(300_000, y))
+	field = _field(court, catalog, 2, "fire", "bolt", 6101, Vector2i(360_000, y))
 	var self_plan := {"source_id": 6101, "start": Vector2i(200_000, y), "finish": Vector2i(400_000, y), "terminal_fraction": 1.0, "reason": ""}
 	equal(HexProjectileCombat._field_contacts(self_plan, world).size(), 0, "a source can never intercept its own deposited footprint")
 	var high_actor := PlayerState.new(99)
@@ -319,7 +322,7 @@ func _test_phase_zero_spray_fields_and_cover(catalog: AbilityCatalog) -> void:
 	var court: HexCourt = fixture.court
 	var y := court.origin.y
 	# Reverse spatial order to prove phase-zero ties use stable source ids.
-	var field_7202 := _field(court, catalog, 2, "fire", "rapid", 7202, Vector2i(300_000, y))
+	var field_7202 := _field(court, catalog, 2, "fire", "rapid", 7202, Vector2i(360_000, y))
 	var field_7201 := _field(court, catalog, 3, "fire", "rapid", 7201, Vector2i(400_000, y))
 	var stored_before := {
 		7201: {"footprint": field_7201.footprint.duplicate(true), "cells": field_7201.cells.duplicate(true)},
@@ -412,7 +415,7 @@ func _test_phase_zero_equal_exhaustion_and_wall_cutoff(catalog: AbilityCatalog) 
 		world = fixture.world
 		court = fixture.court
 		y = court.origin.y
-		court.origin.x = 427_000 - inward_overlap
+		court.origin.x = 419_000 - inward_overlap
 		var near_side_cell: Dictionary = court.cells[Vector2i(-1, 0)].duplicate(true)
 		# A single eligible map cell isolates its x=395000 face from diagonal whole-cell coverage.
 		for cell: Vector2i in court.cells.keys():

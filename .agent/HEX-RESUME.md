@@ -1,59 +1,68 @@
-# HEX integration handoff
+# H.E.X. smaller-grid handoff
 
-Status: PAUSED FOR USER PLAYTEST, September20,2026. Cutoff is33% remaining/67%used.
-Latest account check47%used/53%remaining. No purchase/reset. Work ONLY in
-C:\Users\sende\Projects\hex; original FLUX preserved. One root owns every
-Godot wrapper. Never run two engine jobs or mutate frozen runtime concurrently.
+Status: CODE SLICE COMPLETE; local playtest candidate, multiplayer gate FAILED.
+Date: September 21, 2026. Stop for human playtesting after the authorized source
+push; do not start further mechanics or silently promote a release.
 
-Frozen runtime: p54-8cb4def57da9 / source8cb4def57da9552610662b00b09000055860e5f50f29257de84ea2bc776c1c87.
-Protocol54/SessionSnapshot21 deliberately adds bounded remoteclash kind27;
-HexWorldSnapshot3/chemistry3/envelope1 unchanged. No gameplay/stat/control changes.
-Root verified p53 snapshot optimization hash equality before this explicit wire
-extension. GitHub repository https://github.com/generalgroovy/hex is created;
-source push is authorized. Preserve originalFLUX; work in the new HEX directory.
+| Authority | Value |
+| --- | --- |
+| Checkout | `C:\Users\sende\Projects\hex` (the old FLUX checkout is preserved) |
+| Repository / branch | Public `https://github.com/generalgroovy/hex`, `main`; check Git for exact publication state |
+| Frozen runtime | `p55-c7b7694f8d23` |
+| Runtime SHA256 | `c7b7694f8d23a6ca1c7b069729760302a6c11a7ef6f6ff53e16548a832c937b5` |
+| Schemas | Protocol 55 / SessionSnapshot21 / HexWorldSnapshot3 / chemistry3 / envelope1 |
+| Usage boundary | Stop before 33% weekly remaining; last successful check 42% remaining, no credits redeemed |
+| Effort | High through code/validation; Medium is sufficient for final branding/docs/push; current-turn effort cannot be changed by available tools |
 
-Fresh gates: focused-v3 8/5508; focused-p54-v1 5/2516; both0stderr.
-Snapshotstagev3 PASS332, capture median593→279ms. Productionlocalhost p54-v1
-PASSED256926ms underunchanged300sdeadline, all lifecycle transitions.
-Dense480after PASS2253; hostp95348.571ms vs667.246, snapshot295.136vs623.716,
-sim69.368vs62.835: capacity FAILED. Same53admissions/22products/31800paid and
-exactdemand/inventory.20clashesencode;16included,4trimmedbeforefirstenvelope.
-183diagnosticeventsremainoffwire. Fullauthorityoutcomespersistinsnapshots.
-Steammeasurement PASS1101 no tuning. Nativehandoff-v5 PASS22/0stderr; v4images
-byte-identical toreviewedv5. Failedv1-v4fixturelogsretained. Contactpilot-v1PASS14;
-REJECT stridepromotion maxdriftdidnotimprove. Livegait/rigassetsunchanged.
+The user requested smaller hexes and the public H.E.X. rename. The already
+created HEX repository is authoritative; do not recreate it or force-push.
+The completed dirty vision work is included, not reverted. Original source,
+assets, user profiles and earlier packages remain untouched.
 
-Final Full passed157 suites/776169 assertions/zero failures and stderr,
-240.062s, import/asset audit/120Hz boot. Actual client clash apply/inbox/cue
-focused regression passed35 assertions. Rendered profile passed8131 assertions,
-zero stderr, normal/reduced authority equality; frame p95 is153-192ms, so
-capacity remains FAILED. No selectedcheckpointpromotion.
+Hex width is 48 px, previously 64, with 2,766 eligible cells under the 4,096 cap.
+World bounds, obstacles, character visuals/hurtboxes, 18 px common wall clearance,
+spell radii/costs and authored damage coefficients stay fixed. Radius selects
+whole cells; material remains finite. Fire/Steam pressure uses per-cell density,
+so finer coverage can lower pressure. Do not silently multiply material or tune
+damage to hide that consequence. Protocol 55 rejects old geometry peers/replays.
 
-Windows portable passed exact PCK identity, actual EXE native launch and safe
-close, zero stderr; ZIP entries match payload hashes. Launch
-exports/hex-p54-20260920/windows/PLAY-HEX.cmd. ZIP:
-exports/hex-p54-20260920/HEX-p54-8cb4def57da9-Windows-x64.zip.
-No validation helpers should remain running. Stop for human playtest.
-The final owner launches once if no conflicting user game is already running.
+Vision remains character-centered 360/720 under 55-degree projection, independent
+of aim/zoom. Opaque buildings and actual solid hex cover occlude other actors and
+attached feedback; own body stays visible. Legacy profiles migrate without
+resetting controls or twelve-slot weaves. This is rendering, not state redaction.
+All 30 playable profiles still use three shared size templates, not 30 finished skins.
 
-Sources: SPECIFICATION.md; onequeue OVERHAUL-IMPLEMENTATION.md;
-docs/HEX-INTEGRATION-CHECKPOINT.md; docs/HEX-HANDOFF-RECONCILIATION.md.
-Evidence originalraw .godot paths plus docs/evidence/hex-integration-20260920;
-curatedpublishable docs/verification/hex-integration-20260920 contains copied
-logs/receipts/nativeimages. Preservelogs withreceipts; noisolatedprofiles/cache
-publication. SourceGitmustpreserve exacthashedbytes: runtime-specific -text
-attributes and import-recipeexceptions areintentional. Beforecommit verifyall
-runtimeidentitymembers reachindex byte-for-byte.
+| Fresh evidence | Result |
+| --- | --- |
+| Geometry Focused v3 | PASS 9 suites / 62,515 assertions / zero stderr |
+| Chemistry/branding Focused v5 | PASS 7 / 7,741; all ten first-four pairs, both orders and three paid trigger paths |
+| Full v3 | PASS 157 / 803,865; zero failures/stderr; import, asset audit,120 Hz configured boot |
+| Native Wellspring | PASS 7 reviewed frames; paid Water/Fire without dummy, Steam/contact, normal/reduced |
+| Windows portable | PASS exact PCK/source identity, actual EXE launch, safe close, zero stderr and 7-entry ZIP byte audit |
+| Same-export localhost lifecycle | FAILED 300 s deadline (300,939 ms including cleanup); first round/reconnect/spectating observed, second-round completion/stewardship not established |
 
-Final package script scripts/package-hex.ps1 is newportable-only, noinstaller.
-It uses actualexport cwd, rawEXE --separator forsafequit; PLAY-HEX.cmd supplies
---before userargs. Export and safeclose PASSED. Originalfallbackstill:
-C:\Users\sende\Projects\flux\exports\windows-overnight-p48-20260913\windows\flux2.exe.
-Userasks finalverifiedcandidate launchedonceif noexistinggame, thenstophumanplaytest.
+Use `scripts/run.cmd` for source, or open
+`exports/hex-small-grid-20260921/windows/PLAY-HEX.cmd`.
+ZIP: `exports/hex-small-grid-20260921/HEX-p55-c7b7694f8d23-Windows-x64.zip`.
+Previous protocol 54 fallback: `exports/hex-vision-20260920/windows/PLAY-HEX.cmd`.
+Never mix builds. Payloads are local, not in Git or a new GitHub release.
 
-Read docs/HEX-FIRST-FOUR-REVIEW.md for all ten reaction purposes/counters.
-Remaining independent oracles: Vortex selected center coverage, exact Mistcurrent
-Fire/non-Fire suppression and same-tick three-input contention. A safe Vortex
-center is not established; Firestorm is not jump-safe. No new runtime changes.
-NOT RUN: physical two-PC/Internet, actual package multiplayer, installer/updater,
-human animation/readability/balance acceptance. No next expansion before feedback.
+Routes: `SPECIFICATION.md` -> `.agent/OVERHAUL-IMPLEMENTATION.md` ->
+`docs/HEX-SMALL-GRID-CHECKPOINT.md`. Curated receipts/logs/frames:
+`docs/verification/hex-small-grid-20260921/`. Earlier success/failure attempts
+are retained. Full fixture corrections did not change gameplay coefficients.
+Historical vision/integration evidence is separately labeled.
+
+Next authorized engineering priority: profile and reduce snapshot/topology cost
+on the identical 48 px workload until the unchanged lifecycle and 8.333 ms capacity
+gates pass. Current host trace samples spend about 0.4-0.6s capturing/sending a
+snapshot; these are trace samples, not a new p95 benchmark. Do not enlarge the
+timeout, drop authority or relax validation to manufacture acceptance. Then
+measure density-normalized balance and close focused Vortex/Mistcurrent oracles.
+
+No current dense/rendered performance certification, physical two-PC/Internet
+acceptance, installer/updater, human art/feel acceptance or pointer promotion.
+`docs/current-checkpoint.json` retains its historical P48 delivery in original FLUX.
+One integration owner serializes Godot work through isolated-profile wrappers.
+Preserve raw runtime/evidence bytes and their Git `-text` rules. Close only owned
+helpers; never delete original assets, working evidence, fallbacks or user data.

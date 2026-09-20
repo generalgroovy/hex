@@ -93,8 +93,12 @@ func _test_pair(first: int, second: int) -> void:
 	while world.tick <= int(product.active_tick): check(world.step([]), "formation advances to actual active phase")
 	var actor := world.player()
 	var cells: Array = product.coverage.keys()
-	var selected: Vector2i = cells[0]
+	# Prefer the impact cell rather than an arbitrary outer dictionary entry;
+	# a translating Firestorm may leave its trailing edge before the next pulse.
+	var selected := HexGrid.world_to_cell(Vector2i(product.position) - world.hex_court.origin)
+	if not product.coverage.has(selected): selected = cells[0]
 	var foot: Vector2i = HexGrid.center(selected) + world.hex_court.origin
+	check(world.hex_court.contains_stored(product, foot), "observable effect actor starts inside actual selected coverage")
 	actor.reset_for_spawn(foot)
 	actor.team_id = 99 # Observable hostile damage without injecting any effect state.
 	actor.spawn_protection_ticks = 0
@@ -112,6 +116,8 @@ func _test_pair(first: int, second: int) -> void:
 		if wire == 301 and not world.collision.can_occupy(foot, 18_000): did_effect = true
 		if did_effect: break
 	check(did_effect, "recipe%d has an observable distinct gameplay outcome" % wire)
+	if not did_effect:
+		print("PAID EFFECT DIAGNOSTIC recipe=%d foot=%s final=%s health=%d/%d product=%s contact=%s" % [wire, foot, Vector2i(actor.position_x, actor.position_y), actor.health, start_health, product.position, product.get("contacts", {})])
 	if wire == 311: check(product.position != before_position, "Firestorm advances without cloning material")
 	check(world.hex_court.conservation_valid(), "active effects preserve source/product accounting")
 	print("UNIFIED PAID PAIR: %d+%d recipe=%d quantity=%d cells=%d outcome=%s" % [first, second, wire, int(product.quantity), product.coverage.size(), str(did_effect)])

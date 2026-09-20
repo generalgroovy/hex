@@ -96,7 +96,8 @@ func _test_pre_movement_exit_and_precedence() -> void:
 func _test_mistcurrent_visible_ground_steering() -> void:
 	var authority := _authority()
 	authority.products[1] = _product(1, 317, {Vector2i.ZERO: 100})
-	var actor := _actor(2, 1)
+	# Remain inside one48px cell throughout the unchanged25px flow journey.
+	var actor := _actor(2, 1, ORIGIN - Vector2i(12_000, 0))
 	var start := Vector2i(actor.position_x, actor.position_y)
 	var events: Array = []
 	var collision := CollisionWorld.new(2_000_000, 1_500_000)

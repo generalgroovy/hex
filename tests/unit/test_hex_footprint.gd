@@ -11,15 +11,15 @@ func run() -> int:
 
 
 func _test_disk_predicates_and_cells() -> void:
-	var footprint := HexFootprint.disk(Vector2i(31_000, 0), 2_000)
+	var footprint := HexFootprint.disk(Vector2i(23_000, 0), 2_000)
 	check(HexFootprint.validate(footprint), "bounded disk validates")
-	check(HexFootprint.contains(footprint, Vector2i(33_000, 0)), "disk includes exact point tangency")
-	check(not HexFootprint.contains(footprint, Vector2i(33_001, 0)), "disk excludes a one-unit radial miss")
-	check(HexFootprint.segment_intersects(footprint, Vector2i(29_000, 2_000), Vector2i(33_000, 2_000)), "disk includes exact segment tangency")
-	check(not HexFootprint.segment_intersects(footprint, Vector2i(29_000, 2_001), Vector2i(33_000, 2_001)), "disk excludes a one-unit segment miss")
+	check(HexFootprint.contains(footprint, Vector2i(25_000, 0)), "disk includes exact point tangency")
+	check(not HexFootprint.contains(footprint, Vector2i(25_001, 0)), "disk excludes a one-unit radial miss")
+	check(HexFootprint.segment_intersects(footprint, Vector2i(21_000, 2_000), Vector2i(25_000, 2_000)), "disk includes exact segment tangency")
+	check(not HexFootprint.segment_intersects(footprint, Vector2i(21_000, 2_001), Vector2i(25_000, 2_001)), "disk excludes a one-unit segment miss")
 	var cells := HexFootprint.intersected_cells(footprint, Vector2i.ZERO)
 	equal(cells, [Vector2i.ZERO, Vector2i(1, 0)], "off-center disk clips across the touched shared face without nearest-N expansion")
-	var negative := HexFootprint.intersected_cells(HexFootprint.disk(Vector2i(-32_000, -18_475), 0), Vector2i.ZERO)
+	var negative := HexFootprint.intersected_cells(HexFootprint.disk(Vector2i(-24_000, -13_856), 0), Vector2i.ZERO)
 	check(negative.size() >= 3 and negative.has(Vector2i.ZERO) and negative.has(Vector2i(-1, 0)), "zero-radius negative vertex retains every closed polygon contact")
 
 

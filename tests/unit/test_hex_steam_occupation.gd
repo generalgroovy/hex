@@ -8,7 +8,8 @@ extends "res://tests/unit/test_hex_chemistry.gd"
 
 const BODY_TYPES: Array[String] = ["small", "middle", "large"]
 const EXPECTED_RADII := {"small": 17_000, "middle": 18_000, "large": 19_000}
-const OUTSIDE_RADIUS_POINT := Vector2i(80_000, 0)
+# Outside the unchanged64px radius but inside the selected east cell (24..72px).
+const OUTSIDE_RADIUS_POINT := Vector2i(68_000, 0)
 
 
 func run() -> int:

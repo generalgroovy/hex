@@ -26,7 +26,7 @@ if (Test-Path -LiteralPath $importedRoot -PathType Container) {
 if (-not $hasImportedResources) {
     $preflightLog = Join-Path $runLogRoot 'preflight.log'
     Write-Host ''
-    Write-Host 'Preparing HEX resources for first launch...' -ForegroundColor Cyan
+    Write-Host 'Preparing H.E.X. resources for first launch...' -ForegroundColor Cyan
     Write-Host 'Godot import output will appear below. This step is skipped on later launches.' -ForegroundColor DarkGray
     Write-Host ''
 
@@ -44,20 +44,20 @@ if (-not $hasImportedResources) {
     $preflightExitCode = $LASTEXITCODE
 
     if ($preflightExitCode -ne 0) {
-        throw "HEX resource preparation failed with code $preflightExitCode. Review .godot\run\preflight.log."
+        throw "H.E.X. resource preparation failed with code $preflightExitCode. Review .godot\run\preflight.log."
     }
 
     $bad = $preflightOutput | Select-String -Pattern 'SCRIPT ERROR|Parse Error|Compile Error|Failed to load script|Invalid call'
     if ($bad) {
-        throw 'HEX resource preparation reported a script/import/runtime error. Review .godot\run\preflight.log.'
+        throw 'H.E.X. resource preparation reported a script/import/runtime error. Review .godot\run\preflight.log.'
     }
 
     Write-Host ''
-    Write-Host 'HEX resources ready. Opening game...' -ForegroundColor Green
+    Write-Host 'H.E.X. resources ready. Opening game...' -ForegroundColor Green
     Write-Host ''
 }
 else {
-    Write-Host 'HEX resources already prepared. Opening game...' -ForegroundColor Green
+    Write-Host 'H.E.X. resources already prepared. Opening game...' -ForegroundColor Green
 }
 
 # FLUX uses Godot's Compatibility renderer. Do not force native OpenGL on
@@ -82,7 +82,7 @@ try { while (-not $gameProcess.WaitForExit(250)) { } }
 finally { if (-not $gameProcess.HasExited) { $gameProcess.Kill(); $gameProcess.WaitForExit() } }
 
 if ($gameProcess.ExitCode -ne 0) {
-    throw "HEX exited with code $($gameProcess.ExitCode). Review the logs in .godot\run."
+    throw "H.E.X. exited with code $($gameProcess.ExitCode). Review the logs in .godot\run."
 }
 
 } finally { Exit-FluxEngineRun $workflowLease }

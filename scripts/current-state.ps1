@@ -504,7 +504,7 @@ Add-FluxIssue ($simulationHz -eq 120) "Simulation rate is $simulationHz Hz; curr
 Add-FluxIssue ($projectPhysicsHz -eq $simulationHz) "Project physics rate $projectPhysicsHz disagrees with simulation rate $simulationHz"
 Add-FluxIssue ($projectMaximumFps -eq 120) "Project frame cap is $projectMaximumFps; current Windows target requires 120"
 Add-FluxIssue ($projectText -match 'simulation/supported_tick_rates=PackedInt32Array\(120\)') 'Project exposes a gameplay tick rate other than the single supported 120 Hz cadence'
-Add-FluxIssue ($protocolVersion -eq 54) "Protocol is $protocolVersion; bounded remote hex-clash cues require 54"
+Add-FluxIssue ($protocolVersion -eq 55) "Protocol is $protocolVersion; the 48px authoritative hex lattice requires 55"
 Add-FluxIssue ($snapshotSchema -eq 21) "Snapshot schema is $snapshotSchema; bounded hex-clash feedback requires 21"
 Add-FluxIssue ($preferencesSchema -eq 11) "Preferences schema is $preferencesSchema; current documentation requires 11"
 Add-FluxIssue ($snapshotHz -eq 60) "Transport snapshot cadence is $snapshotHz Hz; current contract requires 60 Hz"
@@ -587,7 +587,7 @@ $state = [ordered]@{
         dirty_entry_count = $dirtyEntryCount
     }
     runtime = [ordered]@{
-        product = 'FLUX 2'
+        product = 'H.E.X.'
         platform_acceptance = 'Windows'
         godot = '4.7.1.stable.official.a13da4feb'
         protocol = $protocolVersion
@@ -645,7 +645,7 @@ $stateJson = $state | ConvertTo-Json -Depth 12
 if ($Json) {
     Write-Output $stateJson
 } elseif (-not $Quiet) {
-    Write-Output ("FLUX state: protocol {0}, 120 Hz, {1}/{2} runtime/authored abilities, {3} reactions ({4}), {5}/{6} playable/planned champions, {7} players." -f $protocolVersion, $runtimeWireIds.Count, $abilityCount, @($reactions.reactions).Count, $(if ($reactions.runtime_enabled) { 'enabled' } else { 'gated' }), $playableIds.Count, $plannedIds.Count, $maximumPlayers)
+    Write-Output ("H.E.X. state: protocol {0}, 120 Hz, {1}/{2} runtime/authored abilities, {3} reactions ({4}), {5}/{6} playable/planned champions, {7} players." -f $protocolVersion, $runtimeWireIds.Count, $abilityCount, @($reactions.reactions).Count, $(if ($reactions.runtime_enabled) { 'enabled' } else { 'gated' }), $playableIds.Count, $plannedIds.Count, $maximumPlayers)
     if ($characterArt.source_validation_passed) {
         Write-Output ("Character art (source default): {0} profiles mapped to {1} shared size wireframes ({3} base/walk/sprint textures); {2} individual live skins. Not executed/imported-RGBA or human approval." -f $characterArt.playable_count, $characterArt.active_presentation.shared_body_count, $characterArt.effective_individual_count, $characterArt.active_presentation.shared_texture_count)
         Write-Output ("Legacy provenance only: {0} catalog fallback declarations; {1} registered overrides; opt-in old-page coverage {2} individual / {3} template. These are not current live totals." -f $legacyCharacterArt.catalog_fallback_declaration_count, $legacyCharacterArt.override_declared_ids.Count, $legacyCharacterArt.effective_individual_count, $legacyCharacterArt.effective_template_count)

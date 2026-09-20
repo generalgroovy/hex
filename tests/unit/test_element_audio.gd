@@ -221,11 +221,11 @@ func _test_inherited_bootstrap_gates() -> void:
 	equal(node.ingest_fresh(cast), 1, "combat-cue hook actually routes local startup into audio")
 	equal(node.ingest_fresh(contact), 1, "visible confirmed contact passes inherited guard")
 	node.player_preferences.set_pov_mode(PlayerPreferences.POV_CONE)
-	equal(node.ingest_fresh(contact), 0, "optional cone/building mask fails closed for contact audio")
+	equal(node.ingest_fresh(contact), 1, "unified relative sight admits an actually visible contact after a legacy mode input")
 	equal(node.ingest_fresh(cast), 1, "own startup does not depend on cone target visibility")
 	node.player_preferences.set_pov_mode(PlayerPreferences.POV_FULL)
 	node.world.player(2).position_x = 1_900_000
-	equal(node.ingest_fresh(contact), 0, "full view still rejects off-screen contact")
+	equal(node.ingest_fresh(contact), 0, "legacy full input cannot reveal an off-screen contact")
 	equal(node.ingest_fresh(cast), 1, "off-screen target does not suppress own startup")
 	node.world.player(2).position_x = 420_000
 	equal(node.ingest_fresh(contact), 1, "returning target to actual viewport restores contact")

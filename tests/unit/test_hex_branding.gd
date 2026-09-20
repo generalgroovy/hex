@@ -1,7 +1,7 @@
 extends FluxTestSuite
 
 func run() -> int:
- equal(String(ProjectSettings.get_setting("application/config/name")), "HEX", "new product title is HEX")
+ equal(String(ProjectSettings.get_setting("application/config/name")), "H.E.X.", "public product title is H.E.X.")
  var roaming := OS.get_environment("APPDATA").replace("\\", "/").trim_suffix("/")
  if OS.get_name() == "Windows":
   equal(OS.get_user_data_dir().replace("\\", "/"), roaming + "/Godot/app_userdata/FLUX 2", "branding preserves the exact existing Windows profile directory")

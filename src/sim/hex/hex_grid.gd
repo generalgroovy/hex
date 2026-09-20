@@ -5,25 +5,25 @@ extends RefCounted
 
 
 # Pointy-top axial geometry in fixed world units (1000 units per pixel).
-# HALF_HEIGHT is the integer rational approximation of 32000 / sin(60 deg),
+# HALF_HEIGHT is the even integer approximation of 24000 / sin(60 deg),
 # and ROW_PITCH is exactly 3 * HALF_HEIGHT / 2. These authored integers make
-# shared faces coincide exactly; they are a simulation contract, not final art
-# scale acceptance.
-const HALF_WIDTH: int = 32_000
-const HALF_HEIGHT: int = 36_950
-const ROW_PITCH: int = 55_425
-const COLUMN_PITCH: int = 64_000
+# shared faces coincide exactly. The 48px face-to-face width is 25% smaller
+# than the previous 64px grid; actor sizes and world-space spell radii stay fixed.
+const HALF_WIDTH: int = 24_000
+const HALF_HEIGHT: int = 27_712
+const ROW_PITCH: int = HALF_HEIGHT * 3 / 2
+const COLUMN_PITCH: int = HALF_WIDTH * 2
 const MAX_ABS_QUERY_COORDINATE: int = 8_000_000
 const MAX_SWEEP_RADIUS: int = 512_000
 const NAT_BASE: int = 1_000_000
 
 const LOCAL_VERTICES: Array[Vector2i] = [
-	Vector2i(0, -36_950),
-	Vector2i(32_000, -18_475),
-	Vector2i(32_000, 18_475),
-	Vector2i(0, 36_950),
-	Vector2i(-32_000, 18_475),
-	Vector2i(-32_000, -18_475),
+	Vector2i(0, -HALF_HEIGHT),
+	Vector2i(HALF_WIDTH, -HALF_HEIGHT / 2),
+	Vector2i(HALF_WIDTH, HALF_HEIGHT / 2),
+	Vector2i(0, HALF_HEIGHT),
+	Vector2i(-HALF_WIDTH, HALF_HEIGHT / 2),
+	Vector2i(-HALF_WIDTH, -HALF_HEIGHT / 2),
 ]
 
 const AXIAL_DIRECTIONS: Array[Vector2i] = [

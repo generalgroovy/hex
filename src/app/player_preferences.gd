@@ -12,14 +12,18 @@ const PRE_S4_CONTROLS_BACKUP_SUFFIX: String = ".pre_s4_controls.bak"
 const DEFAULT_FARFLOW_JOIN_ADDRESS: String = "127.0.0.1"
 const MOVEMENT_WORLD_RELATIVE: String = "world_relative"
 const MOVEMENT_AIM_RELATIVE: String = "aim_relative"
+const POV_RELATIVE: String = "relative"
+# Legacy input tokens only; neither grants an alternate effective view.
 const POV_FULL: String = "full"
 const POV_CONE: String = "cone"
 const MIN_POV_ANGLE_DEGREES: int = 15
 const MAX_POV_ANGLE_DEGREES: int = 360
 const MIN_POV_RANGE: int = 160
 const MAX_POV_RANGE: int = 4096
-const DEFAULT_POV_ANGLE_DEGREES: int = 120
-const DEFAULT_POV_RANGE: int = 720
+const RELATIVE_SIGHT_ANGLE_DEGREES: int = 360
+const RELATIVE_SIGHT_RANGE: int = 720
+const DEFAULT_POV_ANGLE_DEGREES: int = RELATIVE_SIGHT_ANGLE_DEGREES
+const DEFAULT_POV_RANGE: int = RELATIVE_SIGHT_RANGE
 const MIN_CAMERA_ZOOM_PERCENT: int = 50
 const MAX_CAMERA_ZOOM_PERCENT: int = 100
 const DEFAULT_CAMERA_ZOOM_PERCENT: int = 75
@@ -274,9 +278,26 @@ const DEFAULT_CONTROLLER_BINDINGS: Dictionary = {
 }
 
 var movement_reference: String = MOVEMENT_WORLD_RELATIVE
-var pov_mode: String = POV_FULL
-var pov_angle_degrees: int = DEFAULT_POV_ANGLE_DEGREES
-var pov_range: int = DEFAULT_POV_RANGE
+# Effective sight is common to every profile. Guard direct property writes as
+# well as migration/setter APIs so legacy captures cannot restore local modes.
+var pov_mode: String = POV_RELATIVE:
+	set(value):
+		if is_valid_pov_mode(value):
+			pov_mode = POV_RELATIVE
+		else:
+			last_error = "Invalid pov_mode: %s" % value
+var pov_angle_degrees: int = DEFAULT_POV_ANGLE_DEGREES:
+	set(value):
+		if value >= MIN_POV_ANGLE_DEGREES and value <= MAX_POV_ANGLE_DEGREES:
+			pov_angle_degrees = DEFAULT_POV_ANGLE_DEGREES
+		else:
+			last_error = "pov_angle_degrees must be between %d and %d" % [MIN_POV_ANGLE_DEGREES, MAX_POV_ANGLE_DEGREES]
+var pov_range: int = DEFAULT_POV_RANGE:
+	set(value):
+		if value >= MIN_POV_RANGE and value <= MAX_POV_RANGE:
+			pov_range = DEFAULT_POV_RANGE
+		else:
+			last_error = "pov_range must be between %d and %d" % [MIN_POV_RANGE, MAX_POV_RANGE]
 var camera_zoom_percent: int = DEFAULT_CAMERA_ZOOM_PERCENT
 var keyboard_bindings: Dictionary[StringName, int] = {}
 var mouse_bindings: Dictionary[StringName, int] = {}
@@ -295,7 +316,7 @@ func _init() -> void:
 
 func reset_to_defaults() -> void:
 	movement_reference = MOVEMENT_WORLD_RELATIVE
-	pov_mode = POV_FULL
+	pov_mode = POV_RELATIVE
 	pov_angle_degrees = DEFAULT_POV_ANGLE_DEGREES
 	pov_range = DEFAULT_POV_RANGE
 	camera_zoom_percent = DEFAULT_CAMERA_ZOOM_PERCENT
@@ -400,6 +421,11 @@ func apply_dictionary(data: Dictionary) -> bool:
 	if requested_range < MIN_POV_RANGE or requested_range > MAX_POV_RANGE:
 		last_error = "pov_range must be between %d and %d" % [MIN_POV_RANGE, MAX_POV_RANGE]
 		return false
+	if requested_pov_mode != POV_RELATIVE or requested_angle != DEFAULT_POV_ANGLE_DEGREES or requested_range != DEFAULT_POV_RANGE:
+		requested_migration_notices.append(_migration_notice(
+			"relative_vision_unified", "info", "vision", StringName(), 0, StringName(),
+			"Vision now uses 360-degree character-centered sight at a shared range of 720. Legacy full/cone and custom sight values were migrated; controls and camera settings were preserved.",
+		))
 	if requested_camera_zoom < MIN_CAMERA_ZOOM_PERCENT or requested_camera_zoom > MAX_CAMERA_ZOOM_PERCENT:
 		last_error = "camera_zoom_percent must be between %d and %d" % [MIN_CAMERA_ZOOM_PERCENT, MAX_CAMERA_ZOOM_PERCENT]
 		return false
@@ -731,12 +757,22 @@ func set_pov_mode(requested_mode: String) -> bool:
 	return true
 
 
-func set_pov_angle_degrees(requested_angle: int) -> void:
-	pov_angle_degrees = clampi(requested_angle, MIN_POV_ANGLE_DEGREES, MAX_POV_ANGLE_DEGREES)
+func set_pov_angle_degrees(requested_angle: Variant) -> bool:
+	if not _is_whole_number(requested_angle) or float(requested_angle) < MIN_POV_ANGLE_DEGREES or float(requested_angle) > MAX_POV_ANGLE_DEGREES:
+		last_error = "pov_angle_degrees must be an integer between %d and %d" % [MIN_POV_ANGLE_DEGREES, MAX_POV_ANGLE_DEGREES]
+		return false
+	pov_angle_degrees = int(requested_angle)
+	last_error = ""
+	return true
 
 
-func set_pov_range(requested_range: int) -> void:
-	pov_range = clampi(requested_range, MIN_POV_RANGE, MAX_POV_RANGE)
+func set_pov_range(requested_range: Variant) -> bool:
+	if not _is_whole_number(requested_range) or float(requested_range) < MIN_POV_RANGE or float(requested_range) > MAX_POV_RANGE:
+		last_error = "pov_range must be an integer between %d and %d" % [MIN_POV_RANGE, MAX_POV_RANGE]
+		return false
+	pov_range = int(requested_range)
+	last_error = ""
+	return true
 
 
 func set_camera_zoom_percent(requested_zoom_percent: int) -> void:
@@ -748,7 +784,7 @@ static func is_valid_movement_reference(requested_reference: String) -> bool:
 
 
 static func is_valid_pov_mode(requested_mode: String) -> bool:
-	return requested_mode == POV_FULL or requested_mode == POV_CONE
+	return requested_mode in [POV_RELATIVE, POV_FULL, POV_CONE]
 
 
 static func is_valid_farflow_join_address(address: String) -> bool:

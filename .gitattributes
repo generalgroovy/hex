@@ -51,6 +51,9 @@ art_batches/wellspring_style_v2/runtime/** -text
 
 # Preserve receipt hashes, supplied originals, and the exact tested harness bytes.
 docs/verification/** -text
+# Captured engine output retains its original trailing spaces and hashes.
+docs/verification/**/*.log -whitespace
+docs/verification/**/*.out -whitespace
 reference/hex-handoff-20260920/** -text
 tests/** -text
 scripts/** -text

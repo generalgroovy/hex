@@ -1,5 +1,12 @@
 # First-four reaction gameplay review
 
+Status: historical source review of p54-8cb4def57da9, September 20, 2026; not verification of later vision changes.
+
+The current 48 px grid also supersedes this review's old hex geometry. In
+particular, the Vortex center calculation below is a historical risk, not a
+proven result for the new lattice. Recheck actual selected-cell occupancy at
+both cell centers and off-center impacts before advertising a safe center.
+
 ## Evidence status
 
 This is a read-only source and test review of the ten unordered reactions among Earth, Fire, Water, and Air (`wind` in simulation identifiers). No engine run was performed for this review and no production values were tuned.

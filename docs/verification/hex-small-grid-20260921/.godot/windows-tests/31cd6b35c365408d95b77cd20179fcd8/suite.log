@@ -1,0 +1,24 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+hex-authored-shapes: 61 assertions, 0 failures
+hex-collision-world: 598 assertions, 0 failures
+FAIL: trusted campus admits every whole hex outside expanded worldbone (expected=1493 actual=2766)
+FAIL: one fixed unit of face overlap is detected
+CAMPUS_HEX_TOPOLOGY cells=2766 hash=6122177196f65528fd9291827319778a82faf4ee5dbc2cf7a629a59390f1e23e
+hex-world-definition: 60870 assertions, 2 failures
+hex-selection: 56 assertions, 0 failures
+FAIL: selected hex damages far beyond original 12px disk
+hex-whole-coverage: 341 assertions, 1 failures
+FAIL: each source field spans multiple storage cells in the traversal fixture
+FAIL: field entry at the exact range endpoint remains eligible (expected=1 actual=0)
+FAIL: endpoint clash exhausts the projectile before range termination can duplicate it (expected=0 actual=1)
+FAIL: equal endpoint contact exhausts the field once (expected=0 actual=5)
+FAIL: exact Spray wall tie is excluded while one fixed-unit whole-cell overlap remains eligible (expected=1 actual=0)
+FAIL: wall cutoff changes field strength only for real pre-wall overlap (expected=2 actual=5)
+FAIL: one-unit pre-wall field overlap exhausts the weaker Spray without a duplicate terminal (expected=0 actual=1)
+hex-field-interception: 170 assertions, 7 failures
+FAIL: off-center disk clips across the touched shared face without nearest-N expansion (expected=[(0, 0), (1, 0)] actual=[(1, 0)])
+hex-footprint: 54 assertions, 1 failures
+hex-court-presenter: 79 assertions, 0 failures
+hex-grid: 265 assertions, 0 failures
+FAIL: 11 assertion(s) failed

@@ -4,7 +4,9 @@ extends RefCounted
 
 # Heavy terminal blasts, authored held-slot Rapid firing and the expanded Loom.
 # Existing wire fields remain; old peers must not simulate different attacks.
-const PROTOCOL_VERSION: int = 54
+# The 48px hex lattice changes cell ownership, structures and map identity.
+# Older 64px peers/replays must not enter the same authoritative simulation.
+const PROTOCOL_VERSION: int = 55
 const FIXED_SCALE: int = 1000
 const TICK_RATE: int = 120
 # Cast admission and replication share one finite authority envelope. Pending

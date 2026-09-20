@@ -22,13 +22,13 @@ try {
  try { Invoke-FluxGodotChecked $hexExe @('--windowed','--resolution','1280x720','--','--safe-quit-smoke','--no-lan-discovery') (Join-Path $hexLogs 'export-smoke.log') -RejectWarnings -TimeoutSeconds 120 | Out-Null } finally { Pop-Location }
  $hexSmoke=Get-Content (Join-Path $hexLogs 'export-smoke.log') -Raw
  if(-not $hexSmoke.Contains($hexIdentity.build_id) -or -not $hexSmoke.Contains('safe quit: local state flushed and network peer closed')) {throw 'Export did not prove expected identity and safe close'}
- [IO.File]::WriteAllText((Join-Path $hexPayload 'PLAY-HEX.cmd'), "@echo off`r`ncd /d `"%~dp0`"`r`nstart `"HEX`" `"%~dp0hex.exe`" -- %*`r`n", [Text.UTF8Encoding]::new($false))
+ [IO.File]::WriteAllText((Join-Path $hexPayload 'PLAY-HEX.cmd'), "@echo off`r`ncd /d `"%~dp0`"`r`nstart `"H.E.X.`" `"%~dp0hex.exe`" -- %*`r`n", [Text.UTF8Encoding]::new($false))
  Copy-Item -LiteralPath (Join-Path $hexRoot 'content/runtime/runtime_build_identity_v1.json') -Destination (Join-Path $hexPayload 'SOURCE-IDENTITY.json')
- [IO.File]::WriteAllText((Join-Path $hexPayload 'README-FIRST.txt'), "HEX $($hexIdentity.build_id)`r`nOpen PLAY-HEX.cmd. Keep hex.exe and hex.pck together.`r`nHost: PLAY-HEX.cmd --farflow=host --session-port=24892`r`nJoin: PLAY-HEX.cmd --farflow=join --join-address=HOST_IP --session-port=24892`r`nSame build required;8 players maximum. Read current checkpoint for exact tested network and performance scope.`r`nProfiles retain the legacy Godot/app_userdata/FLUX 2 directory explicitly.`r`n",[Text.UTF8Encoding]::new($false))
+ [IO.File]::WriteAllText((Join-Path $hexPayload 'README-FIRST.txt'), "H.E.X. $($hexIdentity.build_id)`r`nOpen PLAY-HEX.cmd. Keep hex.exe and hex.pck together.`r`nHost: PLAY-HEX.cmd --farflow=host --session-port=24892`r`nJoin: PLAY-HEX.cmd --farflow=join --join-address=HOST_IP --session-port=24892`r`nSame build required;8 players maximum. Read current checkpoint for exact tested network and performance scope.`r`nProfiles retain the legacy Godot/app_userdata/FLUX 2 directory explicitly.`r`n",[Text.UTF8Encoding]::new($false))
  $hexHashes=@(Get-ChildItem -LiteralPath $hexPayload -File | Sort-Object Name | ForEach-Object {"$(Get-FluxFileSha256 $_.FullName)  $($_.Name)"})
  [IO.File]::WriteAllLines((Join-Path $hexPayload 'SHA256SUMS.txt'),[string[]]$hexHashes,[Text.UTF8Encoding]::new($false))
  $hexZip=Join-Path $hexOutput "HEX-$($hexIdentity.build_id)-Windows-x64.zip"
  Compress-Archive -LiteralPath (Get-ChildItem -LiteralPath $hexPayload -File | ForEach-Object FullName) -DestinationPath $hexZip -CompressionLevel Optimal
  [ordered]@{status='passed';build_id=$hexIdentity.build_id;runtime_source_sha256=$hexIdentity.runtime_source_sha256;executable=$hexExe;pack_sha256=(Get-FluxFileSha256 (Join-Path $hexPayload 'hex.pck'));zip=$hexZip;zip_sha256=(Get-FluxFileSha256 $hexZip);export_smoke='native launch plus source identity and safe close';logs=$hexLogs;installer='NOT_RUN';checkpoint_promoted=$false} | ConvertTo-Json | Set-Content (Join-Path $hexOutput 'receipt.json') -Encoding utf8
- Write-Output "PASS: HEX portable $hexZip"
+ Write-Output "PASS: H.E.X. portable $hexZip"
 } finally {$env:APPDATA=$hexSavedAppData;Exit-FluxEngineRun $hexLease}

@@ -14,6 +14,7 @@ class FailedReplacementPreferences:
 func run() -> int:
 	_test_defaults_and_presets()
 	_test_validation()
+	_test_unified_relative_vision()
 	_test_schema_v1_migration_and_reduced_motion()
 	_test_keyboard_bindings()
 	_test_persistence_round_trip()
@@ -107,9 +108,9 @@ func _test_recoverable_profile_preservation() -> void:
 func _test_defaults_and_presets() -> void:
 	var preferences := PlayerPreferences.new()
 	equal(preferences.movement_reference, PlayerPreferences.MOVEMENT_WORLD_RELATIVE, "world-relative movement is the safe default")
-	equal(preferences.pov_mode, PlayerPreferences.POV_FULL, "full view is the safe default")
-	equal(preferences.pov_angle_degrees, 120, "cone angle remains ready when cone view is selected")
-	equal(preferences.pov_range, 720, "cone range remains ready when cone view is selected")
+	equal(preferences.pov_mode, PlayerPreferences.POV_RELATIVE, "relative vision is the only effective mode")
+	equal(preferences.pov_angle_degrees, 360, "character-centered sight covers all directions")
+	equal(preferences.pov_range, 720, "all profiles use the common sight range")
 	equal(preferences.camera_zoom_percent, 75, "the default camera exposes more connected movement space")
 	equal(PlayerPreferences.SCHEMA_VERSION, 11, "player preferences save schema v11")
 	equal(preferences.keyboard_bindings[&"evade"], KEY_B, "B is the default evade key")
@@ -236,7 +237,7 @@ func _test_validation() -> void:
 	var preferences := PlayerPreferences.new()
 	check(preferences.apply_dictionary(valid), "valid exact settings load")
 	equal(preferences.pov_angle_degrees, 360, "360-degree ranged view is legal")
-	equal(preferences.pov_range, 2048, "custom view length is legal")
+	equal(preferences.pov_range, 720, "legacy custom view length normalizes to shared sight")
 	equal(preferences.farflow_join_address, "friend.example.test", "valid Farflow address loads")
 	for mutation: Dictionary in [
 		{"schema_version": 12},
@@ -264,18 +265,79 @@ func _test_validation() -> void:
 	check(preferences.set_pov_mode(PlayerPreferences.POV_FULL), "full POV is accepted")
 	check(preferences.set_pov_mode(PlayerPreferences.POV_CONE), "cone POV is accepted")
 	check(not preferences.set_pov_mode("omniscient"), "unknown POV mode fails closed")
-	preferences.set_pov_angle_degrees(-500)
-	equal(preferences.pov_angle_degrees, PlayerPreferences.MIN_POV_ANGLE_DEGREES, "runtime angle clamps to minimum")
-	preferences.set_pov_angle_degrees(500)
-	equal(preferences.pov_angle_degrees, PlayerPreferences.MAX_POV_ANGLE_DEGREES, "runtime angle clamps to 360")
-	preferences.set_pov_range(1)
-	equal(preferences.pov_range, PlayerPreferences.MIN_POV_RANGE, "runtime range clamps to minimum")
-	preferences.set_pov_range(99999)
-	equal(preferences.pov_range, PlayerPreferences.MAX_POV_RANGE, "runtime range clamps to maximum")
+	check(not preferences.set_pov_angle_degrees(-500), "invalid runtime angle is rejected")
+	equal(preferences.pov_angle_degrees, 360, "rejected angle preserves common sight")
+	check(not preferences.set_pov_angle_degrees(500), "out-of-range runtime angle is rejected")
+	check(not preferences.set_pov_range(1), "invalid runtime range is rejected")
+	equal(preferences.pov_range, 720, "rejected range preserves common sight")
+	check(not preferences.set_pov_range(99999), "out-of-range runtime range is rejected")
 	preferences.set_camera_zoom_percent(1)
 	equal(preferences.camera_zoom_percent, PlayerPreferences.MIN_CAMERA_ZOOM_PERCENT, "runtime camera zoom clamps to its widest view")
 	preferences.set_camera_zoom_percent(999)
 	equal(preferences.camera_zoom_percent, PlayerPreferences.MAX_CAMERA_ZOOM_PERCENT, "runtime camera zoom clamps to its closest view")
+
+
+func _test_unified_relative_vision() -> void:
+	var custom := PlayerPreferences.new()
+	custom.apply_control_preset(PlayerPreferences.MOVEMENT_AIM_RELATIVE)
+	custom.set_camera_zoom_percent(50)
+	custom.keyboard_bindings[&"jump"] = KEY_J
+	custom.keyboard_bindings[&"toggle_pov_mode"] = KEY_F12
+	custom.mouse_bindings[&"jump"] = MOUSE_BUTTON_MIDDLE
+	custom.controller_bindings[&"jump"] = PlayerPreferences.unbound_controller_binding()
+	custom.sound_volume_percent = 65
+	custom.reduced_motion = true
+	custom.high_contrast = true
+	custom.farflow_join_address = "192.0.2.55"
+	var canonical := custom.to_dictionary().duplicate(true)
+	for legacy: Array in [["full", 120, 720], ["cone", 15, 160], ["cone", 360, 4096], ["relative", 225, 1360]]:
+		var profile := canonical.duplicate(true)
+		profile.pov_mode = legacy[0]
+		profile.pov_angle_degrees = legacy[1]
+		profile.pov_range = legacy[2]
+		var original := profile.duplicate(true)
+		var migrated := PlayerPreferences.new()
+		check(migrated.apply_dictionary(profile), "recognized legacy sight profile loads: %s" % str(legacy))
+		equal(profile, original, "migration never mutates caller's source profile")
+		equal(migrated.to_dictionary(), canonical, "sight migration preserves every unrelated field and custom binding")
+		equal(_notice_codes(migrated.migration_notices), ["relative_vision_unified"], "sight-only migration emits one explicit notice")
+		check(String(migrated.migration_notices[0].message).contains("360-degree"), "notice describes the common character-centered policy")
+		check(migrated.apply_dictionary(migrated.to_dictionary()), "normalized sight profile reloads")
+		equal(migrated.migration_notices.size(), 0, "relative sight migration is idempotent")
+	for mode: String in [PlayerPreferences.POV_FULL, PlayerPreferences.POV_CONE, PlayerPreferences.POV_RELATIVE]:
+		check(custom.set_pov_mode(mode), "recognized legacy mode setter normalizes")
+		equal(custom.pov_mode, PlayerPreferences.POV_RELATIVE, "mode setter cannot bypass relative sight")
+		custom.pov_mode = mode
+		equal(custom.pov_mode, PlayerPreferences.POV_RELATIVE, "direct legacy mode assignment cannot bypass relative sight")
+	for angle: int in [15, 120, 225, 360]:
+		check(custom.set_pov_angle_degrees(angle), "legal legacy angle setter normalizes")
+		custom.pov_angle_degrees = angle
+		equal(custom.pov_angle_degrees, 360, "direct angle assignment cannot restrict shared omnidirectional sight")
+	for sight_range: int in [160, 720, 1360, 4096]:
+		check(custom.set_pov_range(sight_range), "legal legacy range setter normalizes")
+		custom.pov_range = sight_range
+		equal(custom.pov_range, 720, "direct range assignment cannot extend shared sight")
+	for invalid: Variant in [null, true, "120", 90.5, NAN, INF, -1, 4097]:
+		check(not custom.set_pov_angle_degrees(invalid), "invalid legacy angle setter fails closed")
+		check(not custom.set_pov_range(invalid), "invalid legacy range setter fails closed")
+	custom.pov_mode = "omniscient"
+	check(custom.last_error.contains("pov_mode"), "invalid direct mode assignment reports its field")
+	custom.pov_angle_degrees = 0
+	check(custom.last_error.contains("pov_angle_degrees"), "invalid direct angle assignment reports its field")
+	custom.pov_range = 99999
+	check(custom.last_error.contains("pov_range"), "invalid direct range assignment reports its field")
+	equal(custom.to_dictionary(), canonical, "all setter and direct-write probes leave unrelated settings intact")
+	var bad := canonical.duplicate(true)
+	bad.pov_mode = "full"
+	bad.pov_angle_degrees = 120
+	bad.keyboard_bindings[&"jump"] = KEY_K
+	bad.controller_bindings[&"jump"] = {"kind": "axis", "index": 99, "direction": 1}
+	var notices_before := custom.migration_notices.duplicate(true)
+	check(not custom.apply_dictionary(bad), "late control validation rejects otherwise migratable sight profile")
+	equal(custom.to_dictionary(), canonical, "failed migration commits no partial sight or control changes")
+	equal(custom.migration_notices, notices_before, "failed migration commits no misleading sight notice")
+	custom.reset_to_defaults()
+	equal([custom.pov_mode, custom.pov_angle_degrees, custom.pov_range], ["relative", 360, 720], "reset restores the single common sight policy")
 
 
 func _base_preferences(schema_version: int, bindings: Dictionary) -> Dictionary:

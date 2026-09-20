@@ -23,6 +23,7 @@ func _test_live_combat_feedback_hook() -> void:
 	# Synthetic legacy events retain bounded neutral rendering for archived
 	# presentation coverage; their source spells are rejected by live authority.
 	var node := FeedbackHarness.new()
+	node.session_transport = SessionTransport.new()
 	node.ability_catalog = AbilityCatalog.new()
 	check(node.ability_catalog.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "live feedback hook catalog loads")
 	node.visual_language = VisualLanguage.new()

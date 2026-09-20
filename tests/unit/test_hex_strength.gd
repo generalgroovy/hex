@@ -184,7 +184,7 @@ func _test_edge_effects_and_expiry() -> void:
 		court.chemistry_enabled = true
 		_add_source(court, 1, 901, element, 5, false)
 		_add_source(court, 2, 902, element, 5, false)
-		var point := court.origin + Vector2i(416_000, 0)
+		var point := court.origin + Vector2i(312_000, 0) # Six48px columns plus one24px half-width.
 		var outcome: Dictionary = court.resolve_contact(901, 902, point, 0)
 		check(outcome.accepted, "edge medium retains its intersecting stored cell")
 		var product: Dictionary = court.products[outcome.product_id]

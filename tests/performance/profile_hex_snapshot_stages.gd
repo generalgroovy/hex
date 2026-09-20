@@ -6,7 +6,7 @@ extends "res://tests/performance/profile_unified_wellspring.gd"
 # paid command schedule; it does not change capacity, cadence, or authority.
 const STAGE_REPETITIONS := 5
 const ACTIVE_WORKLOAD_TICKS := 40
-const EXPECTED_TOPOLOGY_CELLS := 1_493
+const EXPECTED_TOPOLOGY_CELLS := 2_766
 
 
 func _run() -> void:
@@ -25,7 +25,7 @@ func _run() -> void:
 	_check(layout.load_from_file("res://content/maps/sanctum_campus_g2_v1.json"), "normal Wellspring campus loads")
 	definition = HexWorldDefinition.from_campus(layout)
 	_check(definition != null, "normal campus produces one trusted whole-hex definition")
-	_check(definition != null and definition.eligible_cells.size() == EXPECTED_TOPOLOGY_CELLS, "stage profile uses the genuine 1493-cell campus topology")
+	_check(definition != null and definition.eligible_cells.size() == EXPECTED_TOPOLOGY_CELLS, "stage profile uses the genuine 2766-cell campus topology")
 	if failures > 0:
 		quit(1)
 		return
@@ -90,7 +90,7 @@ func _run() -> void:
 		"source_sha256": _stage_source_hashes(),
 		"assertions": assertions,
 		"failures": failures,
-		"scope": "Headless isolated inclusive stage timings on the genuine 1493-cell campus after the existing eight-champion dense-crucible warmup and first 40 paid workload ticks. No sockets, rendering, capacity override, gameplay mutation, or performance acceptance.",
+		"scope": "Headless isolated inclusive stage timings on the genuine 2766-cell campus after the existing eight-champion dense-crucible warmup and first 40 paid workload ticks. No sockets, rendering, capacity override, gameplay mutation, or performance acceptance.",
 		"timing_semantics": "Validation, equality checks, malformed-input checks, fixture setup, warmup, command work, and destination allocation are outside timed regions unless the named production stage itself owns that allocation. Each stage runs five times against one unchanged authority state.",
 	}
 	var output: FileAccess = FileAccess.open(output_path, FileAccess.WRITE)

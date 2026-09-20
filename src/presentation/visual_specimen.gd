@@ -11,7 +11,7 @@ static func draw(canvas: CanvasItem, language: VisualLanguage, viewport_size: Ve
 	PixelPrimitives.draw_panel(canvas, panel, language, true, false)
 	var pad := float(language.ui_metric("panel_padding")) * 2.0
 	var title_position := panel.position + Vector2(pad, 38)
-	canvas.draw_string(ThemeDB.fallback_font, title_position, "HEX VISUAL LANGUAGE / CURRENT TOKENS", HORIZONTAL_ALIGNMENT_LEFT, panel.size.x - pad * 2.0, 22, language.ui_color("text_primary"))
+	canvas.draw_string(ThemeDB.fallback_font, title_position, "H.E.X. VISUAL LANGUAGE / CURRENT TOKENS", HORIZONTAL_ALIGNMENT_LEFT, panel.size.x - pad * 2.0, 22, language.ui_color("text_primary"))
 	canvas.draw_string(ThemeDB.fallback_font, title_position + Vector2(0, 24), "PRESENTATION ONLY / 2PX GRID / 50 75 100 CAMERA / ORIGINAL RUNTIME TOKENS", HORIZONTAL_ALIGNMENT_LEFT, panel.size.x - pad * 2.0, 11, language.ui_color("focus"))
 	PixelPrimitives.draw_divider(canvas, Vector2(panel.position.x + pad, panel.position.y + 78), Vector2(panel.end.x - pad, panel.position.y + 78), language)
 

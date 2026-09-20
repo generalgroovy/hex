@@ -17,7 +17,7 @@ static func configure(world: SimWorld, catalog: AbilityCatalog, with_target: boo
 	world.hex_court = HexCourt.new()
 	world.hex_court.chemistry_enabled = true
 	world.map_id = "hex-court-v1"
-	world.map_hash = "pointy64;radius6;water-fire-steam;solo-v1"
+	world.map_hash = "pointy48;radius6;water-fire-steam;solo-v1"
 	world.collision = CollisionWorld.new(1_280_000, 960_000)
 	world.reaction_movement = ReactionMovementWorld.new(world.collision)
 	world.players = [actor]

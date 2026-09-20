@@ -1,7 +1,21 @@
-# HEX five-minute playtest
+# H.E.X. five-minute playtest
 
-Status: playtest route for the HEX integration candidate; human acceptance pending.
-Check HEX-INTEGRATION-CHECKPOINT.md for the exact verified source/package first.
+Status: playtest route for smaller-grid build p55-c7b7694f8d23; human acceptance pending.
+Check [the current checkpoint](HEX-SMALL-GRID-CHECKPOINT.md) for exact evidence.
+Open `exports/hex-small-grid-20260921/windows/PLAY-HEX.cmd` locally, or run
+`scripts/run.cmd` from the HEX checkout. Do not mix protocol54/55 clients.
+
+First compare the 48 px hexes (previously64): the world, actor size, spell radii
+and corridor clearance are unchanged. Form Earth cover beside an existing
+wall, move along its faces and wait for expiry. Note any awkward seams or
+unexpected blocked route. Selected whole cells remain the gameplay authority.
+
+Check sight: aim all eight ways while standing still. Characters in clear
+LOS should remain visible behind you; characters behind an opaque pavilion or
+active solid hex cover should disappear with their name and health. Walk around
+the corner to reveal them. Repeat with reduced effects, different body sizes,
+and zoom. F8-F10 must not change the area. Your existing controls and weave must
+remain saved. The following chemistry/movement route is otherwise unchanged.
 
 1. Start in Wellspring. Follow the Source Court and Chemistry / Crucible route
    labels. Confirm the route to Loom / Settings is understandable and stations

@@ -41,15 +41,15 @@ func _six_faces() -> void:
 			check(not nearby.is_empty(), "each real face is available for wall attachment")
 
 func _corner_and_clearance() -> void:
-	check(not Geometry.box_overlaps(Vector2i(30_000, -34_000), 0, Vector2i.ZERO, Vector2i.ZERO), "empty corner of bounding rectangle is traversable")
-	check(Geometry.sweep_circle(Vector2i(30_000, -34_000), Vector2i(31_000, -34_000), 1000, Vector2i.ZERO, Vector2i.ZERO).is_empty(), "projectile passes empty rectangle corner")
-	check(not Geometry.box_overlaps(Vector2i(0, -54_950), 18_000, Vector2i.ZERO, Vector2i.ZERO), "square bottom face tangency at hex top is clear")
-	check(Geometry.box_overlaps(Vector2i(0, -54_949), 18_000, Vector2i.ZERO, Vector2i.ZERO), "one fixed unit penetration at hex tip is blocked")
-	check(Geometry.sweep_box(Vector2i(50_000, 0), Vector2i(50_000, 10_000), 18_000, Vector2i.ZERO, Vector2i.ZERO).is_empty(), "square may slide exactly along the vertical face")
-	check(Geometry.sweep_box(Vector2i(50_000, 0), Vector2i(60_000, 0), 18_000, Vector2i.ZERO, Vector2i.ZERO).is_empty(), "square separates from exact contact")
-	check(not Geometry.sweep_box(Vector2i(50_000, 0), Vector2i(49_999, 0), 18_000, Vector2i.ZERO, Vector2i.ZERO).is_empty(), "inward motion from exact face is blocked")
-	check(Geometry.sweep_box(Vector2i(60_000, 0), Vector2i(50_000, 0), 18_000, Vector2i.ZERO, Vector2i.ZERO).is_empty(), "ending at exact tangency does not report positive movement collision")
-	var overlap := Geometry.sweep_circle(Vector2i(34_000, 0), Vector2i(35_000, 0), 5000, Vector2i.ZERO, Vector2i.ZERO)
+	check(not Geometry.box_overlaps(Vector2i(22_000, -24_712), 0, Vector2i.ZERO, Vector2i.ZERO), "empty corner of bounding rectangle is traversable")
+	check(Geometry.sweep_circle(Vector2i(22_000, -24_712), Vector2i(23_000, -24_712), 1000, Vector2i.ZERO, Vector2i.ZERO).is_empty(), "projectile passes empty rectangle corner")
+	check(not Geometry.box_overlaps(Vector2i(0, -45_712), 18_000, Vector2i.ZERO, Vector2i.ZERO), "square bottom face tangency at hex top is clear")
+	check(Geometry.box_overlaps(Vector2i(0, -45_711), 18_000, Vector2i.ZERO, Vector2i.ZERO), "one fixed unit penetration at hex tip is blocked")
+	check(Geometry.sweep_box(Vector2i(42_000, 0), Vector2i(42_000, 10_000), 18_000, Vector2i.ZERO, Vector2i.ZERO).is_empty(), "square may slide exactly along the vertical face")
+	check(Geometry.sweep_box(Vector2i(42_000, 0), Vector2i(52_000, 0), 18_000, Vector2i.ZERO, Vector2i.ZERO).is_empty(), "square separates from exact contact")
+	check(not Geometry.sweep_box(Vector2i(42_000, 0), Vector2i(41_999, 0), 18_000, Vector2i.ZERO, Vector2i.ZERO).is_empty(), "inward motion from exact face is blocked")
+	check(Geometry.sweep_box(Vector2i(52_000, 0), Vector2i(42_000, 0), 18_000, Vector2i.ZERO, Vector2i.ZERO).is_empty(), "ending at exact tangency does not report positive movement collision")
+	var overlap := Geometry.sweep_circle(Vector2i(26_000, 0), Vector2i(27_000, 0), 5000, Vector2i.ZERO, Vector2i.ZERO)
 	check(not overlap.is_empty() and float(overlap.fraction) == 0.0, "initial strict face overlap is a projectile contact even when separating")
 	var tangent := Geometry.tangent(Vector2i(50_000, 60_000), Vector2i(500, -866))
 	check(tangent != Vector2i.ZERO, "oblique contact retains tangent movement")
@@ -68,21 +68,21 @@ func _composite_and_escape() -> void:
 	equal(escaped.position, origin + Vector2i(160_000, 0), "actor beneath newly formed connected pillars can escape through entire component")
 	world.begin_actor(escaped.position, 18_000)
 	var blocked := world.move_box(escaped.position, Vector2i(-300_000, 0), 18_000)
-	equal(blocked.position.x, origin.x + 114_000, "once clear the same component prevents reentry with common18px clearance")
+	equal(blocked.position.x, origin.x + 90_000, "once clear the same component prevents reentry with common18px clearance")
 	check(blocked.wall_id >= HexWorld.FACE_ID_BASE, "physical collision supplies stable face ID")
 	var id := blocked.wall_id
 	check(world.has_live_surface(id), "exposed collided face remains live")
 	check(not world.hex_segment_clear(origin + Vector2i(-100_000, 0), origin + Vector2i(200_000, 0)), "pillars block a continuous sight and Spray segment")
 	var flight := world.hex_wall_contact(origin + Vector2i(-100_000, 0), origin + Vector2i(200_000, 0), 5000)
 	check(not flight.is_empty(), "pillars stop swept projectile")
-	equal(flight.point.x, origin.x - 32_000, "projectile physical point is actual hex edge")
+	equal(flight.point.x, origin.x - 24_000, "projectile physical point is actual hex edge")
 	check(world.configure_hexes(origin, topology, []), "expiry clears authority-derived geometry")
 	check(not world.has_live_surface(id), "expiry removes attached face identity")
 	check(world.can_occupy(origin, 18_000), "expiry leaves no invisible collision")
 	check(world.hex_segment_clear(origin + Vector2i(-100_000, 0), origin + Vector2i(200_000, 0)), "expiry removes sight obstruction")
 	equal(base.obstacle_view().size(), 0, "temporary geometry never mutates immutable worldbone")
 	check(world.configure_hexes(origin, topology, [Vector2i(-1, 0), Vector2i(1, 0)]), "two pillars retain real open gap")
-	check(world.can_occupy(origin, 18_000), "64px physical gap fits common36px body clearance")
+	check(world.can_occupy(origin, 18_000), "48px physical gap fits common36px body clearance")
 	world.begin_actor(origin + Vector2i(0, -120_000), 18_000)
 	equal(world.move_box(origin + Vector2i(0, -120_000), Vector2i(0, 240_000), 18_000).position, origin + Vector2i(0, 120_000), "continuous traversal through a real gap is not blocked by rectangular substitutes")
 
@@ -141,7 +141,7 @@ func _movement_contacts() -> void:
 	var finish := origin + Vector2i(100_000, 0)
 	check(not ContinuousContact.wall_contact(start, finish, 5000, world).is_empty(), "standard projectile contact dispatches to hex geometry")
 	check(not SprayInterception.clear_ray(start, finish, world, [], 0), "standard Spray obstruction dispatches to hex geometry")
-	var corner := origin + Vector2i(30_000, -34_000)
+	var corner := origin + Vector2i(22_000, -24_712)
 	check(SprayInterception.clear_ray(corner, corner + Vector2i(1000, 0), world, [], 0), "standard Spray ray passes an empty bounding rectangle corner")
 
 func _composite_regressions() -> void:
@@ -162,8 +162,8 @@ func _composite_regressions() -> void:
 	world.begin_actor(tip_start, 18_000)
 	var tip := world.move_box(tip_start, Vector2i(0, 100_000), 18_000)
 	equal(tip.wall_id, 0, "square support contact at hex tip never aliases a runnable face")
-	equal(tip.position.y, origin.y - 54_950, "top tip still blocks at exact common clearance")
-	check(not world.hex_segment_clear(origin + Vector2i(32_000, -10_000), origin + Vector2i(32_000, 10_000)), "collinear partial face blocks sight and Spray")
+	equal(tip.position.y, origin.y - 45_712, "top tip still blocks at exact common clearance")
+	check(not world.hex_segment_clear(origin + Vector2i(24_000, -10_000), origin + Vector2i(24_000, 10_000)), "collinear partial face blocks sight and Spray")
 	var constraints: Array[Vector2i] = [Vector2i(500, -866), Vector2i(-1000, 0)]
 	for velocity: Vector2i in [Vector2i(100_000, 100_000), Vector2i(-100_000, 100_000), Vector2i(0, -100_000)]:
 		var clipped := Geometry.clip_motion(velocity, constraints)
@@ -190,9 +190,9 @@ func _pillar_los_policy() -> void:
 		var outside := midpoint + Geometry.NORMALS[face] * 100
 		check(not world.hex_pillar_segment_clear(outside, origin), "each actual pillar face is opaque to exact LOS")
 	check(not world.hex_pillar_segment_clear(origin, origin), "a point inside the solid polygon is blocked")
-	check(not world.hex_pillar_segment_clear(origin + Vector2i(32_000, -10_000), origin + Vector2i(32_000, 10_000)), "collinear face tangency is opaque")
-	check(not world.hex_pillar_segment_clear(origin + Vector2i(-10_000, -36_950), origin + Vector2i(10_000, -36_950)), "single-vertex tangency is opaque")
-	check(world.hex_pillar_segment_clear(origin + Vector2i(31_000, -35_000), origin + Vector2i(31_000, -30_000)), "ray inside the AABB corner but outside the clear Hex triangle remains visible")
+	check(not world.hex_pillar_segment_clear(origin + Vector2i(24_000, -10_000), origin + Vector2i(24_000, 10_000)), "collinear face tangency is opaque")
+	check(not world.hex_pillar_segment_clear(origin + Vector2i(-10_000, -27_712), origin + Vector2i(10_000, -27_712)), "single-vertex tangency is opaque")
+	check(world.hex_pillar_segment_clear(origin + Vector2i(23_000, -26_000), origin + Vector2i(23_000, -24_000)), "ray inside the AABB corner but outside the clear Hex triangle remains visible")
 	check(world.configure_hexes(origin, topology, []), "destroyed or expired pillar clears the same trusted topology")
 	check(world.hex_pillar_segment_clear(origin - Vector2i(100_000, 0), origin + Vector2i(100_000, 0)), "destruction or expiry immediately restores pillar LOS")
 	equal(world.hex_occluders(), [], "destruction or expiry removes the presentation polygon")
@@ -218,7 +218,7 @@ func _later_cover_actor_compatibility() -> void:
 			check(int(shot.sort_id) >= HexWorld.FACE_ID_BASE, "later-four shot cover %d retains deterministic topology face identity" % wire)
 			equal(int(shot.id), 0, "later-four cover %d cannot become a runnable attachment" % wire)
 			check(not world.has_live_surface(int(shot.sort_id)), "later-four cover %d exposes no live actor face" % wire)
-		check(world.nearby_hex_face(origin + Vector2i(50_001, 0), 18_000, 4).is_empty(), "actor cannot wallrun or walljump from later-four cover %d" % wire)
+		check(world.nearby_hex_face(origin + Vector2i(42_001, 0), 18_000, 4).is_empty(), "actor cannot wallrun or walljump from later-four cover %d" % wire)
 		check(not world.hex_pillar_segment_clear(start, finish), "later-four cover %d remains opaque to exact pillar LOS" % wire)
 		equal(world.hex_occluders().size(), 1, "later-four cover %d remains one six-face presentation polygon" % wire)
 		authority.products[1].health = 0
@@ -306,7 +306,7 @@ func _prediction_geometry() -> void:
 	host.set_hex_surfaces(authority, 8)
 	client.set_hex_surfaces(authority, 8)
 	var state := PlayerState.new(2)
-	state.position_x = origin.x - 53_000
+	state.position_x = origin.x - 45_000
 	state.position_y = origin.y
 	var prediction := ClientPrediction.new()
 	check(prediction.configure(SimConfig.new(), client, 2), "prediction accepts trusted physical hex world")
@@ -325,4 +325,4 @@ func _prediction_geometry() -> void:
 		check(prediction.queue_input(tick - 7, command), "predicted input advances across pillar phases")
 		equal(Vector2i(prediction.predicted_state.position_x, prediction.predicted_state.position_y), Vector2i(state.position_x, state.position_y), "host and prediction agree through pillar formation and expiry")
 		equal(prediction.predicted_state.wall_contact_id, state.wall_contact_id, "host and prediction use identical stable wall IDs")
-	check(state.position_x > origin.x - 50_000, "expiry allows traversal beyond the former pillar face")
+	check(state.position_x > origin.x - 42_000, "expiry allows traversal beyond the former pillar face")

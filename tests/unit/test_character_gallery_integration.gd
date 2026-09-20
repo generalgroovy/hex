@@ -171,7 +171,7 @@ func run() -> int:
 
 func _test_missing_presenter_procedural_fallback_contract() -> void:
 	var source := FileAccess.get_file_as_string("res://src/app/bootstrap.gd").replace("\r\n", "\n")
-	check(source.contains("if not sprite_drawn:\n\t\tdraw_circle(body_position, player_radius"), "missing local body presentation retains the bounded procedural circle")
+	check(source.contains("if not sprite_drawn:\n\t\t\tdraw_circle(body_position, player_radius"), "missing visible local body presentation retains the bounded procedural circle")
 	check(source.contains("if not sprite_drawn:\n\t\t\tvar body_color"), "missing remote body presentation retains the bounded procedural circle")
 
 

@@ -11,7 +11,7 @@ $ErrorActionPreference = 'Stop'
 $scriptsRoot = Join-Path $PSScriptRoot 'scripts'
 
 function Show-FluxTasks {
-    Write-Output 'HEX Windows developer tasks:'
+    Write-Output 'H.E.X. Windows developer tasks:'
     Write-Output '  .\hex.cmd play [game arguments]'
     Write-Output '  .\hex.cmd check'
     Write-Output '  .\hex.cmd assets'
@@ -20,7 +20,7 @@ function Show-FluxTasks {
     Write-Output '  .\hex.cmd doctor'
     Write-Output '  .\hex.cmd package'
     Write-Output ''
-    Write-Output 'Players use the verified HEX portable launcher documented in README.md.'
+    Write-Output 'Players use the verified H.E.X. portable launcher documented in README.md.'
 }
 
 function Invoke-FluxTaskScript([string]$Name, [string[]]$PrefixArguments = @()) {
@@ -59,7 +59,7 @@ switch ($normalizedTask) {
     }
     default {
         Show-FluxTasks
-        throw "Unknown HEX task '$Task'."
+        throw "Unknown H.E.X. task '$Task'."
     }
 }
 

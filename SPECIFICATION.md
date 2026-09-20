@@ -1,12 +1,54 @@
-# HEX current design contract
+# H.E.X. current design contract
 
-Status: current authority, amended 2026-09-20; replaces the historical production specification.
+Status: current authority, amended 2026-09-21; replaces the historical production specification.
+
+## H.E.X. smaller-hex amendment — September 21
+
+The public game name is **H.E.X.**, repository `generalgroovy/hex`. ASCII
+filenames (`hex.cmd`, `hex.exe`, `HEX-*.zip`), the Flux resource and the existing
+Windows profile directory remain compatible. The original FLUX checkout and
+previous verified packages are preserved.
+
+Hexes are now **48 px face-to-face**, 25% narrower than the previous 64 px grid.
+The Wellspring bounds, obstacles, character sizes/hurtboxes, common 18 px wall
+clearance, movement costs and world-space spell radii do not change. The finer
+lattice has 2,766 eligible whole cells inside the existing 4,096-cell cap.
+Radius still selects cells; each selected hex is fully affected. Finite paid
+material is distributed across that selection, never multiplied per cell.
+
+Protocol **55** rejects peers/replays with the old geometry. SessionSnapshot21,
+HexWorldSnapshot3, chemistry3 and envelope1 remain unchanged. The existing
+always-on 360-degree/720-unit character-centered visibility policy is retained.
+The finer topology requires fresh functional, visual and networking checks;
+previous timing receipts are not evidence of performance for this build.
+Fire/Steam currently scale pressure from material per selected cell. A finer
+selection may spread the same paid budget thinner: unchanged coefficients do
+not imply identical per-actor damage. Preserve this rule in this geometry-only
+slice; measure density-normalized balance separately before further expansion.
 
 Historical FLUX baseline `p53-cb264f9358a4` (not verification of subsequent HEX source): chemistry works on eligible ground throughout Wellspring, without a dummy. Final Full passed **152 suites /775,657 assertions**, zero failures/stderr, import, asset audit and120Hz configured boot. Protocol53 / legacy snapshot20 / HexWorldSnapshot3 / chemistry snapshot3 / world envelope1. Native review passed7 frames. Production localhost lifecycle: **FAILED**. This is not a release or120Hz capacity claim.
 
 ## HEX integration amendment — September 20
 
-HEX is the game and new repository name, explicitly authorized by the user.
+The unified sight correction supersedes Full/cone modes: every observer has
+360-degree character-centered sight with a fixed 720 ground-unit range under
+the existing 55-degree projection. Aim and camera zoom do not change eligibility.
+Opaque authored buildings and active solid hex cover block other characters,
+their names, health, speech and attached feedback. Ordinary low cover remains
+non-opaque. Transparent Steam and the first-four reaction policy remain intact.
+The living local character, or followed living spectator character, supplies
+the viewpoint. Missing or dead viewpoints fail closed. Rendering and visibility
+use the same interpolated ground positions, including around cover edges.
+
+Legacy Full/cone, angle and range preferences migrate to Relative/360/720;
+other settings, controls and custom weaves are preserved. F8/F9/F10 no longer
+change sight. Saved binding metadata remains compatible. The shared visibility
+predicate also gates contact feedback; it grants no additional combat authority.
+This is presentation visibility, not network packet redaction: supported
+same-build snapshots still carry the world state. No wire or simulation change
+is part of this correction. Human sight/readability acceptance remains pending.
+
+H.E.X. is the game name; `hex` is the repository name, explicitly authorized by the user.
 Flux remains the paid resource; internal identifiers and the existing Windows
 `Godot/app_userdata/FLUX 2` profile location remain compatible. Renaming does not
 rebalance gameplay or promote the selected historical checkpoint.
@@ -283,9 +325,9 @@ setup ground. Its Court-only restriction no longer describes ordinary Wellspring
 current active Fire uses the same authored finite hazard there as well.
 
 H1 geometry: pointy-top axial(q,r), cube distance/neighbor operations; integer
-world units at 1000 per pixel. Trial opposite-face width64px, half-width32000,
-half-height36950, row pitch55425. Centers=(64000q+32000r,55425r); local vertices
-(0,-36950),(32000,-18475),(32000,18475),(0,36950),(-32000,18475),(-32000,-18475).
+world units at 1000 per pixel. Opposite-face width48px, half-width24000,
+half-height27712, row pitch41568. Centers=(48000q+24000r,41568r); local vertices
+(0,-27712),(24000,-13856),(24000,13856),(0,27712),(-24000,13856),(-24000,-13856).
 This fixed rational approximation tiles exactly; it is not a final art scale
 acceptance. Screen projection remains a separate presenter concern. Closed-cell
 edge/vertex ownership chooses lexicographically smallest(q,r). Swept, radius-aware
@@ -663,7 +705,7 @@ retaining all fixed bone/foot registrations. Moving-cast arm variants are an
 isolated feasibility candidate, not a live feature or a reason to grow runtime
 texture banks. Human template acceptance still gates detailed named skins.
 
-Awareness/tempo amendment: cone geometry uses the55-degree ground projection;
+Historical awareness presentation (superseded by unified 360-degree sight): cone geometry uses the55-degree ground projection;
 72ground-pixel near awareness reveals slightly behind the observer but never
 bypasses opaque cover or chemistry concealment. The observer's body alone draws
 above the mask; it creates no rectangular world reveal. Full-view default stays.
@@ -850,8 +892,8 @@ this list between ticks or treat measured p95 as sustained120FPS acceptance.
 Sound is feedback, not a sensor or new combat rule. It follows local authoritative
 cast-starts and validated projectile/beam/spray/field contacts, never guessed
 damage, other players' casts, chemistry activation or raw terminal deposits.
-Full-view contacts require an on-screen, chemistry-visible target; cone mode
-suppresses contact sounds until exact mask parity exists. Menus, spectating,
+Contacts require an on-screen target visible through the shared relative-sight
+predicate; the historical cone-mode blanket mute is superseded. Menus, spectating,
 focus loss, mute and exit silence it. Six/eight-tick contact/cast admission gaps,
 four fixed voices and a bounded peak prevent effect pileups; clips are generated
 once, never in the simulation or per shot. Controls Lectern owns volume/mute.

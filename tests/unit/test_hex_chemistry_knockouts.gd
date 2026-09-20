@@ -173,7 +173,7 @@ func _round_fixture(abilities: AbilityCatalog, champions: ChampionCatalog, score
 		"result_seconds": 2,
 		"respawn_ms": 500,
 		"spawn_protection_ms": 250,
-		"spawns": [[900, 700], [640, 480]],
+		"spawns": [[800, 600], [640, 480]],
 	}), "knockout fixture begins an active round")
 	for actor: PlayerState in world.players:
 		actor.spawn_protection_ticks = 0

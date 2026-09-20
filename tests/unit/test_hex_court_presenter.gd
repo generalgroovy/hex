@@ -43,8 +43,8 @@ func _test_configuration_and_fail_closed_regions() -> void:
 	presenter = _configured_presenter()
 	presenter._cells = [Vector2i.ZERO]
 	var full_fixed := PackedVector2Array([
-		Vector2(0, -36_950), Vector2(32_000, -18_475), Vector2(32_000, 18_475),
-		Vector2(0, 36_950), Vector2(-32_000, 18_475), Vector2(-32_000, -18_475),
+		Vector2(0, -27_712), Vector2(24_000, -13_856), Vector2(24_000, 13_856),
+		Vector2(0, 27_712), Vector2(-24_000, 13_856), Vector2(-24_000, -13_856),
 	])
 	var full_display := PackedVector2Array()
 	for point: Vector2 in full_fixed:

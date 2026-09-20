@@ -73,7 +73,7 @@ func _draw() -> void:
 
 	draw_rect(Rect2(12, 12, 1256, 58), Color("111514e8"), true)
 	draw_rect(Rect2(12, 12, 1256, 58), Color("74532b"), false, 2.0)
-	draw_string(ThemeDB.fallback_font, Vector2(28, 39), "HEX VISUAL ASSET FOUNDATION V1", HORIZONTAL_ALIGNMENT_LEFT, -1.0, 20, Color("e2d8b2"))
+	draw_string(ThemeDB.fallback_font, Vector2(28, 39), "H.E.X. VISUAL ASSET FOUNDATION V1", HORIZONTAL_ALIGNMENT_LEFT, -1.0, 20, Color("e2d8b2"))
 	draw_string(
 		ThemeDB.fallback_font,
 		Vector2(670, 39),

@@ -19,7 +19,7 @@ const STEWARD_CONFIRMATION_MS: int = 3000
 const SAFE_QUIT_GRACE_MS: int = 500
 const GUEST_RELEASE_REASON: String = "The host released you from the Farflow company."
 const COMPANY_CLOSE_REASON: String = "The host closed the Farflow company."
-const APPLICATION_CLOSE_REASON: String = "The host safely closed HEX."
+const APPLICATION_CLOSE_REASON: String = "The host safely closed H.E.X."
 const HUB_DEFINITION_PATH: String = "res://content/maps/sanctum_hub_v1.json"
 const CAMPUS_LAYOUT_PATH: String = "res://content/maps/sanctum_campus_g2_v1.json"
 const ABILITY_CATALOG_PATH: String = "res://content/abilities/foundation_abilities_v1.json"
@@ -1177,49 +1177,50 @@ func _draw() -> void:
 		observed_state = state
 	_draw_remote_travellers(camera_origin, state.entity_id, visual_tick)
 	var presentation_state: PlayerState = client_prediction.predicted_state if session_transport.is_connected_client() and client_prediction.is_ready() else state
-	var presentation := JumpPresentation.sample(presentation_state, world.config, alpha, _reduced_effects_enabled(), previous_air_height)
-	var landing := LandingPresentation.sample(presentation_state, world.config, alpha, _reduced_effects_enabled())
-	var player_radius: float = float(MovementTuning.PLAYER_RADIUS) / 1000.0
-	var shadow_center := rendered_position + Vector2(0.0, player_radius * 0.58)
-	if campus_renderer.natural_kit != null and not _is_hex_practice():
-		campus_renderer.natural_kit.draw_actor_contact(self, campus_layout, presentation_state, shadow_center, roundi(visual_tick), _reduced_effects_enabled())
-	var shadow_scale: Vector2 = landing.shadow_scale if landing.active else presentation.shadow_scale
-	_draw_receiving_surface_shadow(
-		shadow_center,
-		Vector2(player_radius * shadow_scale.x, player_radius * shadow_scale.y),
-		presentation.shadow_opacity,
-		camera_origin,
-	)
-	if landing.active:
-		_draw_landing_cue(shadow_center, landing)
-	var body_position := rendered_position + Vector2(0.0, -float(presentation.body_lift_pixels))
-	var sprite_drawn: bool = false
-	# Movement prediction has no champion identity field; world art and HUD must
-	# resolve the same authoritative identity while motion stays immediate.
-	var presentation_champion_id := _champion_visual_id(state)
-	var sprite_anchor := shadow_center + Vector2(0.0, -float(presentation.body_lift_pixels))
-	if cartoon_champion_presenter != null:
-		sprite_drawn = cartoon_champion_presenter.draw(
-			self,
-			presentation_state,
-			presentation_champion_id,
-			sprite_anchor,
-			visual_tick,
-			world.config,
-			_reduced_effects_enabled(),
+	if _chemistry_actor_visible(state):
+		var presentation := JumpPresentation.sample(presentation_state, world.config, alpha, _reduced_effects_enabled(), previous_air_height)
+		var landing := LandingPresentation.sample(presentation_state, world.config, alpha, _reduced_effects_enabled())
+		var player_radius: float = float(MovementTuning.PLAYER_RADIUS) / 1000.0
+		var shadow_center := rendered_position + Vector2(0.0, player_radius * 0.58)
+		if campus_renderer.natural_kit != null and not _is_hex_practice():
+			campus_renderer.natural_kit.draw_actor_contact(self, campus_layout, presentation_state, shadow_center, roundi(visual_tick), _reduced_effects_enabled())
+		var shadow_scale: Vector2 = landing.shadow_scale if landing.active else presentation.shadow_scale
+		_draw_receiving_surface_shadow(
 			shadow_center,
-			actor_motion_history.gait_phase(presentation_state.entity_id),
+			Vector2(player_radius * shadow_scale.x, player_radius * shadow_scale.y),
+			presentation.shadow_opacity,
+			camera_origin,
 		)
-	if not sprite_drawn:
-		draw_circle(body_position, player_radius + 5.0, Color(ATTUNEMENT_COLOR, 0.18))
-		draw_circle(body_position, player_radius, PLAYER_COLOR)
-		draw_arc(body_position, player_radius + 2.0, 0.0, TAU, 24, PARCHMENT_COLOR, 2.0)
-	if show_debug_overlay:
-		_draw_actor_hitbox_diagnostic(body_position, float(presentation_state.radius) / 1000.0, presentation_champion_id)
-	_draw_spell_startup(presentation_state, sprite_anchor, roundi(visual_tick))
-	if state.spawn_protection_ticks > 0:
-		var protection_ratio := clampf(float(state.spawn_protection_ticks) / float(maxi(1, world.config.milliseconds_to_ticks(1200))), 0.0, 1.0)
-		draw_arc(body_position, player_radius + 9.0, 0.0, TAU, 28, Color(ATTUNEMENT_COLOR, 0.32 + protection_ratio * 0.42), 2.0)
+		if landing.active:
+			_draw_landing_cue(shadow_center, landing)
+		var body_position := rendered_position + Vector2(0.0, -float(presentation.body_lift_pixels))
+		var sprite_drawn: bool = false
+		# Movement prediction has no champion identity field; world art and HUD must
+		# resolve the same authoritative identity while motion stays immediate.
+		var presentation_champion_id := _champion_visual_id(state)
+		var sprite_anchor := shadow_center + Vector2(0.0, -float(presentation.body_lift_pixels))
+		if cartoon_champion_presenter != null:
+			sprite_drawn = cartoon_champion_presenter.draw(
+				self,
+				presentation_state,
+				presentation_champion_id,
+				sprite_anchor,
+				visual_tick,
+				world.config,
+				_reduced_effects_enabled(),
+				shadow_center,
+				actor_motion_history.gait_phase(presentation_state.entity_id),
+			)
+		if not sprite_drawn:
+			draw_circle(body_position, player_radius + 5.0, Color(ATTUNEMENT_COLOR, 0.18))
+			draw_circle(body_position, player_radius, PLAYER_COLOR)
+			draw_arc(body_position, player_radius + 2.0, 0.0, TAU, 24, PARCHMENT_COLOR, 2.0)
+		if show_debug_overlay:
+			_draw_actor_hitbox_diagnostic(body_position, float(presentation_state.radius) / 1000.0, presentation_champion_id)
+		_draw_spell_startup(presentation_state, sprite_anchor, roundi(visual_tick))
+		if state.spawn_protection_ticks > 0:
+			var protection_ratio := clampf(float(state.spawn_protection_ticks) / float(maxi(1, world.config.milliseconds_to_ticks(1200))), 0.0, 1.0)
+			draw_arc(body_position, player_radius + 9.0, 0.0, TAU, 28, Color(ATTUNEMENT_COLOR, 0.32 + protection_ratio * 0.42), 2.0)
 	_draw_social_bubbles(camera_origin)
 	_draw_station_bubble(camera_origin)
 	draw_set_transform(Vector2.ZERO)
@@ -1441,12 +1442,10 @@ func _draw_spell_loom_editor() -> void:
 
 func _ingest_combat_cues(events: Array[Dictionary]) -> void:
 	for event: Dictionary in events:
-		# The optional cone mask has no shared point-visibility query. Keep
-		# contact labels local and fail closed under that mask, as audio does.
-		if String(event.get("type", "")) == "spray_intercepted" and player_preferences != null and player_preferences.pov_mode != PlayerPreferences.POV_CONE:
+		if String(event.get("type", "")) == "spray_intercepted":
 			var contact_point := Vector2(int(event.get("x", 0)), int(event.get("y", 0))) / 1000.0
 			var contact_view := Rect2(_camera_origin(_camera_focus_position(current_position)), get_viewport_rect().size / _camera_zoom_scale())
-			if contact_view.has_point(contact_point):
+			if contact_view.has_point(contact_point) and _pov_point_visible(contact_point):
 				interception_feedback.ingest(event, ability_catalog)
 		_ingest_element_audio(event)
 		_ingest_magic_release(event)
@@ -1502,6 +1501,7 @@ func _ingest_combat_cues(events: Array[Dictionary]) -> void:
 				color = PARCHMENT_COLOR
 		var cue: Dictionary = {
 			"position": anchor["position"],
+			"visibility_entity_id": int(event.get("target_id", event.get("entity_id", 0))),
 			"label": label,
 			"color": color,
 			"event_type": kind,
@@ -1512,15 +1512,17 @@ func _ingest_combat_cues(events: Array[Dictionary]) -> void:
 		if kind == "beam_fired":
 			var owner: PlayerState = world.player(int(event.get("owner_id", 0)))
 			cue["kind"] = "beam"
-			cue["start"] = Vector2(float(owner.position_x) / 1000.0, float(owner.position_y) / 1000.0) if owner != null else anchor["position"]
+			cue["visibility_source_id"] = int(event.get("owner_id", 0))
+			cue["start"] = _pov_actor_ground_position(owner) if owner != null else anchor["position"]
 			if event.has("origin_x") and event.has("origin_y"):
 				cue["start"] = Vector2(float(event["origin_x"]), float(event["origin_y"])) / 1000.0
 			cue["end"] = anchor["position"]
 		elif kind == "spray_fired":
 			var spray_owner: PlayerState = world.player(int(event.get("owner_id", 0)))
 			cue["kind"] = "spray"
+			cue["visibility_source_id"] = int(event.get("owner_id", 0))
 			cue["range"] = int(event.get("range", -1))
-			cue["start"] = Vector2(float(spray_owner.position_x) / 1000.0, float(spray_owner.position_y) / 1000.0) if spray_owner != null else anchor["position"]
+			cue["start"] = _pov_actor_ground_position(spray_owner) if spray_owner != null else anchor["position"]
 			cue["end"] = anchor["position"]
 		combat_cues.append(cue)
 	while combat_cues.size() > 24:
@@ -1539,21 +1541,15 @@ func _ingest_element_audio(event: Dictionary) -> void:
 	if ElementAudioScript.describe(event, actor.entity_id, ability_catalog).is_empty():
 		return
 	if String(event.get("type", "")) == "spray_intercepted":
-		if player_preferences == null or player_preferences.pov_mode == PlayerPreferences.POV_CONE:
-			return
 		var contact_point := Vector2(int(event.get("x", 0)), int(event.get("y", 0))) / 1000.0
 		var contact_view := Rect2(_camera_origin(_camera_focus_position(current_position)), get_viewport_rect().size / _camera_zoom_scale())
-		if not contact_view.has_point(contact_point):
+		if not contact_view.has_point(contact_point) or not _pov_point_visible(contact_point):
 			return
 	elif String(event.get("type", "")) != "cast_started":
-		# The optional cone/building mask has no shared point-visibility query.
-		# Fail closed until exact presentation-mask parity is available.
-		if player_preferences == null or player_preferences.pov_mode == PlayerPreferences.POV_CONE:
-			return
 		var target := world.player(int(event.get("target_id", 0)))
 		if target == null or not _chemistry_actor_visible(target):
 			return # No extra information about concealed or absent targets.
-		var target_position := Vector2(target.position_x, target.position_y) / SimConfig.FIXED_SCALE
+		var target_position := _pov_actor_ground_position(target)
 		var visible_world := Rect2(_camera_origin(_camera_focus_position(current_position)), get_viewport_rect().size / _camera_zoom_scale())
 		if not visible_world.has_point(target_position):
 			return # Off-screen hits do not become an extra source of information.
@@ -1576,10 +1572,11 @@ func _ingest_magic_release(event: Dictionary) -> void:
 		if String(existing.get("release_key", "")) == key:
 			return
 	var lift := JumpPresentation.sample(actor, world.config, 0.0, _reduced_effects_enabled())
-	var body := Vector2(actor.position_x, actor.position_y) / 1000.0 - Vector2(0.0, float(lift.body_lift_pixels))
+	var body := _pov_actor_ground_position(actor) - Vector2(0.0, float(lift.body_lift_pixels))
 	body.y += float(MovementTuning.PLAYER_RADIUS) / 1000.0 * 0.58
 	combat_cues.append({
 		"kind": "pixel_release", "release_key": key,
+		"visibility_entity_id": actor.entity_id,
 		"source_wire_id": int(admission.wire_id),
 		"position": CartoonChampionPresenter.hand_cast_origin(body, Vector2(actor.aim_x, actor.aim_y)),
 		"remaining": 0.20, "duration": 0.20,
@@ -1602,7 +1599,7 @@ func _combat_event_anchor(event: Dictionary) -> Dictionary:
 	if entity_id > 0:
 		var state: PlayerState = world.player(entity_id)
 		if state != null:
-			return {"position": Vector2(float(state.position_x) / 1000.0, float(state.position_y) / 1000.0)}
+			return {"position": _pov_actor_ground_position(state)}
 	var projectile_id := int(event.get("projectile_id", 0))
 	for projectile: ProjectileState in world.projectiles:
 		if projectile.entity_id == projectile_id:
@@ -1622,8 +1619,10 @@ func _update_combat_cues(delta: float) -> void:
 
 func _draw_combat_cues(camera_origin: Vector2) -> void:
 	_set_world_transform(camera_origin)
-	interception_feedback.draw(self, visual_language, _reduced_effects_enabled())
+	interception_feedback.draw(self, visual_language, _reduced_effects_enabled(), _pov_point_visible)
 	for cue: Dictionary in combat_cues:
+		if not _combat_cue_visible(cue):
+			continue
 		var remaining := float(cue.get("remaining", 0.0))
 		var duration := maxf(0.001, float(cue.get("duration", 0.55)))
 		cue["age_ticks"] = maxi(0, roundi((duration - remaining) * float(tick_rate)))
@@ -1684,8 +1683,7 @@ func _draw_remote_travellers(camera_origin: Vector2, local_entity_id: int, visua
 			continue
 		if not _chemistry_actor_visible(remote_state):
 			continue
-		var motion_point: Vector3 = actor_motion_history.sample(remote_state, motion_alpha)
-		var position := Vector2(motion_point.x, motion_point.y)
+		var position := _pov_actor_ground_position(remote_state)
 		var presentation := JumpPresentation.sample(remote_state, world.config, motion_alpha, _reduced_effects_enabled(), actor_motion_history.previous_height(remote_state))
 		var landing := LandingPresentation.sample(remote_state, world.config, 0.0, _reduced_effects_enabled())
 		var radius := float(MovementTuning.PLAYER_RADIUS) / 1000.0
@@ -2366,7 +2364,7 @@ func _draw_social_bubbles(camera_origin: Vector2) -> void:
 			continue
 		if not _chemistry_actor_visible(state):
 			continue
-		var world_position := Vector2(float(state.position_x), float(state.position_y)) / SimConfig.FIXED_SCALE
+		var world_position := _pov_actor_ground_position(state)
 		var entity_id := int(bubble.get("entity_id", 0))
 		interaction_presenter.draw_social(
 			self,
@@ -3092,11 +3090,12 @@ func _start_requested_farflow() -> void:
 			_start_join_session_now()
 
 
-func _draw_pov_mask(origin: Vector2, aim: Vector2, camera_origin: Vector2) -> void:
-	if player_preferences.pov_mode != PlayerPreferences.POV_CONE:
+func _draw_pov_mask(origin: Vector2, _aim: Vector2, camera_origin: Vector2) -> void:
+	if _pov_observer() == null:
+		draw_rect(get_viewport_rect(), POV_MASK_COLOR)
 		return
 	var zoom := _camera_zoom_scale()
-	var sight_range: float = float(player_preferences.pov_range) * zoom
+	var sight_range: float = float(PlayerPreferences.RELATIVE_SIGHT_RANGE) * zoom
 	var viewport_size: Vector2 = get_viewport_rect().size
 	var segment_count: int = SightOcclusion.MASK_SEGMENTS
 	var outer_radius: float = SightOcclusion.projected_viewport_cover_radius(origin, get_viewport_rect())
@@ -3108,24 +3107,10 @@ func _draw_pov_mask(origin: Vector2, aim: Vector2, camera_origin: Vector2) -> vo
 			var angle_b: float = TAU * float(segment + 1) / float(segment_count)
 			_draw_mask_quad(origin, sight_range, outer_radius, angle_a, angle_b)
 
-	var visible_radians: float = deg_to_rad(float(player_preferences.pov_angle_degrees))
-	var aim_angle: float = SightOcclusion.ground_aim_angle(aim)
-	var half_visible: float = visible_radians * 0.5
-	if player_preferences.pov_angle_degrees < PlayerPreferences.MAX_POV_ANGLE_DEGREES:
-		var hidden_span: float = TAU - visible_radians
-		var hidden_segments: int = maxi(1, ceili(float(segment_count) * hidden_span / TAU))
-		var hidden_start: float = aim_angle + half_visible
-		var player_safe_radius: float = SightOcclusion.REAR_AWARENESS_RADIUS * zoom
-		for segment: int in range(hidden_segments):
-			var angle_a: float = hidden_start + hidden_span * float(segment) / float(hidden_segments)
-			var angle_b: float = hidden_start + hidden_span * float(segment + 1) / float(hidden_segments)
-			_draw_mask_quad(origin, player_safe_radius, sight_range, angle_a, angle_b)
-		draw_line(origin + SightOcclusion.project_ground(Vector2.from_angle(aim_angle - half_visible) * player_safe_radius), origin + SightOcclusion.project_ground(Vector2.from_angle(aim_angle - half_visible) * sight_range), POV_EDGE_COLOR, 1.5)
-		draw_line(origin + SightOcclusion.project_ground(Vector2.from_angle(aim_angle + half_visible) * player_safe_radius), origin + SightOcclusion.project_ground(Vector2.from_angle(aim_angle + half_visible) * sight_range), POV_EDGE_COLOR, 1.5)
 	# Keep building shadow reach unchanged; distant walls are not radial masks.
 	_draw_building_occlusion_shadows(origin, camera_origin, maxf(outer_radius, maxf(viewport_size.x, viewport_size.y) * 2.25))
 	_draw_hex_pillar_occlusion_shadows(origin, camera_origin, maxf(outer_radius, maxf(viewport_size.x, viewport_size.y) * 2.25))
-	draw_polyline(SightOcclusion.projected_arc(origin, sight_range, aim_angle - half_visible, aim_angle + half_visible, maxi(12, ceili(48.0 * visible_radians / TAU))), POV_EDGE_COLOR, 1.5)
+	draw_polyline(SightOcclusion.projected_arc(origin, sight_range, 0.0, TAU, segment_count), POV_EDGE_COLOR, 1.5)
 
 
 func _draw_building_occlusion_shadows(origin: Vector2, camera_origin: Vector2, outer_distance: float) -> void:
@@ -3152,16 +3137,14 @@ func _draw_mask_quad(origin: Vector2, inner_radius: float, outer_radius: float, 
 func _pov_observer_ground_position(observer: PlayerState, spectating: bool, rendered_local: Vector2) -> Vector2:
 	if not spectating:
 		return rendered_local
-	var motion_alpha := clampf(remote_snapshot_age_seconds * 60.0 if session_transport.is_connected_client() else accumulator_seconds * float(tick_rate), 0.0, 1.0)
-	var point := actor_motion_history.sample(observer, motion_alpha)
-	return Vector2(point.x, point.y)
+	return _pov_actor_ground_position(observer)
 
 
 func _pov_observer_overlay_frame(visual_tick: float, alpha: float) -> Dictionary:
-	if world == null or player_preferences == null or player_preferences.pov_mode != PlayerPreferences.POV_CONE or cartoon_champion_presenter == null:
+	if world == null or player_preferences == null or cartoon_champion_presenter == null:
 		return {}
 	var spectating := _is_spectating()
-	var observer := _spectator_state() if spectating else _local_player_state()
+	var observer := _pov_observer()
 	# The exemption belongs only to the living viewpoint owner. Never redraw a
 	# hidden third party or the dead local avatar during spectating.
 	if observer == null or observer.health <= 0 or observer.actor_kind != PlayerState.ActorKind.CHAMPION:
@@ -3193,7 +3176,7 @@ func _draw_pov_observer_body(camera_origin: Vector2, visual_tick: float, alpha: 
 	if frame.is_empty():
 		return
 	# Repaint only the exact binary-alpha owned body pixels. Ground shadows,
-	# afterimages, spells and world objects stay under the cone/obstacle mask.
+	# afterimages, spells and world objects stay under the range/obstacle mask.
 	_set_world_transform(camera_origin)
 	draw_texture_rect_region(frame["texture"], frame["destination"], frame["source_region"])
 	draw_set_transform(Vector2.ZERO)
@@ -3597,29 +3580,71 @@ func _material_color(material_id: String) -> Color:
 			return Color("151711")
 
 
-func _chemistry_actor_visible(target: PlayerState) -> bool:
-	var observer := _spectator_state() if _is_spectating() else _local_player_state()
-	if target == null:
-		return false
-	if observer == null or target.entity_id == observer.entity_id:
-		return true
-	if player_preferences != null and player_preferences.pov_mode == PlayerPreferences.POV_CONE:
-		var spectating := _is_spectating()
+func _pov_observer() -> PlayerState:
+	if world == null:
+		return null
+	var spectating := _is_spectating()
+	var observer := _spectator_state() if spectating else _local_player_state()
+	if observer == null or observer.health <= 0:
+		return null
+	if not spectating and session_transport.is_connected_client() and observer.entity_id != session_transport.local_entity_id:
+		return null # A missing guest must not inherit the host's view.
+	return observer
+
+
+func _pov_actor_ground_position(actor: PlayerState) -> Vector2:
+	if actor.entity_id == session_transport.local_entity_id:
 		var alpha := clampf(accumulator_seconds * float(tick_rate), 0.0, 1.0)
-		var origin := _pov_observer_ground_position(observer, spectating, previous_position.lerp(current_position, alpha))
-		var aim_state := observer
-		if not spectating and session_transport.is_connected_client() and client_prediction.is_ready():
-			aim_state = client_prediction.predicted_state
-		if not SightOcclusion.point_visible(origin, Vector2(target.position_x, target.position_y) / 1000.0, Vector2(CartoonChampionPresenter.presentation_facing_vector(aim_state)), float(player_preferences.pov_angle_degrees), float(player_preferences.pov_range), _pov_opaque_bounds()):
-			return false
-		if world.collision is HexCollisionWorld and not world.collision.hex_pillar_segment_clear(Vector2i(roundi(origin.x * 1000.0), roundi(origin.y * 1000.0)), Vector2i(target.position_x, target.position_y)):
-			return false
-	# Chemical reveal never bypasses the directional/range/opaque-world test.
-	if target.chemistry_reveal_ticks > 0:
-		return true
+		return previous_position.lerp(current_position, alpha)
+	if actor.actor_kind == PlayerState.ActorKind.CHAMPION:
+		var alpha := clampf(remote_snapshot_age_seconds * 60.0 if session_transport.is_connected_client() else accumulator_seconds * float(tick_rate), 0.0, 1.0)
+		var point := actor_motion_history.sample(actor, alpha)
+		return Vector2(point.x, point.y)
+	return Vector2(actor.position_x, actor.position_y) / SimConfig.FIXED_SCALE
+
+
+# Shared presentation authority: character feet, contact marks and the fog mask
+# use the same viewed actor, ground metric and authored opaque geometry.
+# Network snapshots still contain complete state; this is not packet redaction.
+func _pov_point_visible(point: Vector2, chemical_reveal: bool = false) -> bool:
+	var observer := _pov_observer()
+	if observer == null or not point.is_finite():
+		return false
+	var origin := _pov_actor_ground_position(observer)
+	if not SightOcclusion.point_visible(origin, point, Vector2.RIGHT, 360.0, float(PlayerPreferences.RELATIVE_SIGHT_RANGE), _pov_opaque_bounds()):
+		return false
+	var start := Vector2i(roundi(origin.x * SimConfig.FIXED_SCALE), roundi(origin.y * SimConfig.FIXED_SCALE))
+	var finish := Vector2i(roundi(point.x * SimConfig.FIXED_SCALE), roundi(point.y * SimConfig.FIXED_SCALE))
+	if world.collision is HexCollisionWorld and not world.collision.hex_pillar_segment_clear(start, finish):
+		return false
+	if chemical_reveal:
+		return true # Reveal can defeat chemistry, never opaque geometry or range.
 	if world.hex_court != null:
-		return not HexProductEffects.blocks_sight(world.hex_court, Vector2i(observer.position_x, observer.position_y), Vector2i(target.position_x, target.position_y), world.tick, world.config)
-	return not ElementChemistrySystem.blocks_sight(Vector2i(observer.position_x, observer.position_y), Vector2i(target.position_x, target.position_y), world.reactions, world.tick)
+		return not HexProductEffects.blocks_sight(world.hex_court, start, finish, world.tick, world.config)
+	return not ElementChemistrySystem.blocks_sight(start, finish, world.reactions, world.tick)
+
+
+func _chemistry_actor_visible(target: PlayerState) -> bool:
+	var observer := _pov_observer()
+	if target == null or observer == null:
+		return false
+	if target.entity_id == observer.entity_id:
+		return true
+	return _pov_point_visible(_pov_actor_ground_position(target), target.chemistry_reveal_ticks > 0)
+
+
+func _combat_cue_visible(cue: Dictionary) -> bool:
+	if cue.has("visibility_source_id") and not _chemistry_actor_visible(world.player(int(cue.visibility_source_id))):
+		return false
+	var entity_id := int(cue.get("visibility_entity_id", 0))
+	if entity_id > 0 and not _chemistry_actor_visible(world.player(entity_id)):
+		return false
+	if not _pov_point_visible(cue.get("position", Vector2(INF, INF))):
+		return false
+	# A visible endpoint never reveals the hidden caster at the other end.
+	if cue.has("start") and not _pov_point_visible(cue.start):
+		return false
+	return not cue.has("end") or _pov_point_visible(cue.end)
 
 
 func _draw_element_chemistry(visual_tick: float, camera_origin: Vector2) -> void:
@@ -3650,7 +3675,7 @@ func _draw_field(field: FieldState) -> void:
 		var owner := world.player(field.owner_id)
 		if owner != null and _chemistry_actor_visible(owner):
 			var lift := JumpPresentation.sample(owner, world.config, 0.0, _reduced_effects_enabled())
-			var body := Vector2(owner.position_x, owner.position_y) / 1000.0 + Vector2(0.0, float(MovementTuning.PLAYER_RADIUS) / 1000.0 * 0.58 - float(lift.body_lift_pixels))
+			var body := _pov_actor_ground_position(owner) + Vector2(0.0, float(MovementTuning.PLAYER_RADIUS) / 1000.0 * 0.58 - float(lift.body_lift_pixels))
 			var hand := CartoonChampionPresenter.hand_cast_origin(body, Vector2(owner.aim_x, owner.aim_y))
 			foundation_spell_presenter.draw_release(self, field.source_wire_id, hand, release_age, _reduced_effects_enabled())
 	if foundation_spell_presenter != null and foundation_spell_presenter.draw_field(self, field, life_ratio, world.tick, _reduced_effects_enabled()):
@@ -4216,17 +4241,7 @@ func _handle_preference_actions() -> void:
 		changed = player_preferences.apply_control_preset(next_reference)
 		if changed and input_router != null:
 			input_router.configure_movement_reference(next_reference)
-	if Input.is_action_just_pressed(&"toggle_pov_mode"):
-		var next_mode := PlayerPreferences.POV_CONE if player_preferences.pov_mode == PlayerPreferences.POV_FULL else PlayerPreferences.POV_FULL
-		changed = player_preferences.set_pov_mode(next_mode) or changed
-	if Input.is_action_just_pressed(&"adjust_pov_angle"):
-		var angle_delta: int = -15 if Input.is_key_pressed(KEY_SHIFT) else 15
-		player_preferences.set_pov_angle_degrees(player_preferences.pov_angle_degrees + angle_delta)
-		changed = true
-	if Input.is_action_just_pressed(&"adjust_pov_range"):
-		var range_delta: int = -80 if Input.is_key_pressed(KEY_SHIFT) else 80
-		player_preferences.set_pov_range(player_preferences.pov_range + range_delta)
-		changed = true
+	# F8/F9/F10 metadata remains load-compatible; sight is no longer a setting.
 	if Input.is_action_just_pressed(&"adjust_camera_zoom"):
 		var zoom_delta: int = -25 if Input.is_key_pressed(KEY_SHIFT) else 25
 		var requested_zoom := player_preferences.camera_zoom_percent + zoom_delta

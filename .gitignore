@@ -19,6 +19,22 @@ node_modules/
 /.codex/
 # Curated portable payloads are delivered separately from Git source.
 
+# Reviewed evidence mirrors the original receipt-relative paths. Unignore only
+# these curated bundles, not the live engine/export trees. Profiles and payloads
+# remain excluded even inside a bundle.
+!docs/verification/hex-vision-20260920/.godot/
+!docs/verification/hex-vision-20260920/.godot/**
+!docs/verification/hex-vision-20260920/exports/
+!docs/verification/hex-vision-20260920/exports/**
+!docs/verification/hex-small-grid-20260921/.godot/
+!docs/verification/hex-small-grid-20260921/.godot/**
+docs/verification/**/isolated-roaming/
+docs/verification/**/imported/
+docs/verification/**/shader_cache/
+docs/verification/**/*.exe
+docs/verification/**/*.pck
+docs/verification/**/*.zip
+
 # Import recipes inside the declared runtime identity are source inputs, not caches.
 !src/**/*.import
 !content/**/*.import
