@@ -64,6 +64,10 @@ and [the agent archive](../../.agent/archive/source-publication-20261011/).
 - Source validation recognizes the terrain baker's exact authoring-provenance
   entry without exempting executable dependencies. The asset checker accepts
   empty evidence files as having zero references.
+- Cold-checkout validation gives the editor import a separate 600-second
+  budget. The first fresh attempt reached the old 180-second limit while still
+  importing art with zero stderr; that failed attempt is preserved locally.
+  Full suites retain 1800 seconds and Focused suites/boot retain 180 seconds.
 - Current design, character, spell, networking, development and handoff guides
   agree with the current source. Older originals remain archived as evidence.
 - The README explains source prerequisites, launch commands and building a new

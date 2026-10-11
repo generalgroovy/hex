@@ -56,8 +56,10 @@ personal preferences, progress and weaves out of Git. Automated qualification
 uses isolated userdata. The [player guide](PLAYER-GUIDE.md) owns controls.
 
 Focused runs require named stable suite IDs. Full runs the complete registry,
-import, canonical identity checks and bounded boot; its 1800-second supervision
-limit is not a frame-time allowance. Engine workflows share an execution guard.
+import, canonical identity checks and bounded boot. The editor import has a
+separate 600-second limit for cold checkouts; the Full suite has an 1800-second
+limit. Focused suites and boot retain their 180-second limits. These supervision
+budgets are not frame-time allowances. Engine workflows share an execution guard.
 Do not start parallel Godot imports, tests, captures, profiles or exports against
 one checkout or delete a guard journal to bypass its owner.
 

@@ -28,6 +28,8 @@ $env:FLUX2_GODOT_BIN = 'C:\path\to\Godot_v4.7.1-stable_win64.exe'
 ```
 
 The helper checks the exact engine identity, `4.7.1.stable.official.a13da4feb`.
+The first source launch imports the art and can take several minutes; it shows
+progress and reuses the prepared resources on later launches.
 For an independent portable, install matching Windows export templates and run
 `.\hex.cmd package -PixelCast`. Each run creates a fresh folder under `exports/`.
 See [development and verification](docs/DEVELOPMENT.md) for checks and packaging.

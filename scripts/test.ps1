@@ -34,9 +34,12 @@ $runAssetAudit = $Tier -in @('Full', 'Release')
 # 1200s watchdog, with ongoing progress and zero stderr. Preserve the complete
 # registry and per-suite timing; allow a bounded1800s Full-only workload budget.
 # The remaining21 suites and corrected menu fixture are separately diagnosed
-# before the full rerun. Import/capture/Focused defaults remain180s. This test
+# before the full rerun. Capture/Focused defaults remain180s. This test
 # supervision budget is not a simulation frame-time or performance allowance.
 $suiteTimeoutSeconds = if ($Tier -eq 'Full') { 1800 } else { 180 }
+# A fresh checkout must import all original art without a prepopulated cache.
+# Bound that one-time editor step separately; boot and suite budgets stay fixed.
+$importTimeoutSeconds = 600
 if ($ListSuites) {
     $runImport = $false
     $runSuites = $false
@@ -96,7 +99,7 @@ try {
     }
     if ($runImport) {
         $didImport = $true
-        Invoke-FluxGodotChecked $godotBin @('--headless', '--editor', '--path', $repoRoot, '--quit') $importLog -RejectWarnings
+        Invoke-FluxGodotChecked $godotBin @('--headless', '--editor', '--path', $repoRoot, '--quit') $importLog -RejectWarnings -TimeoutSeconds $importTimeoutSeconds
         # Import may create .gd.uid source sidecars. Do not validate a stale
         # identity for minutes and discover the drift only when exporting.
         & (Join-Path $PSScriptRoot 'runtime-build-identity.ps1') -Mode Check
@@ -191,7 +194,7 @@ $receipt = [ordered]@{
         asset_inventory_sha256 = if ($didAssetAudit -and (Test-Path -LiteralPath $assetReportPath -PathType Leaf)) { Get-FluxFileSha256 $assetReportPath } else { $null }
     }
     requested_suite_ids = @($Suite)
-    supervision = [ordered]@{ default_engine_timeout_seconds = 180; suite_timeout_seconds = $suiteTimeoutSeconds }
+    supervision = [ordered]@{ default_engine_timeout_seconds = 180; import_timeout_seconds = $importTimeoutSeconds; suite_timeout_seconds = $suiteTimeoutSeconds }
     isolation = [ordered]@{
         appdata_path = $isolatedRoamingPath.Substring($repoRoot.Length + 1).Replace('\', '/')
         scope = 'Godot import, suite and boot user data; packaging retains its own isolation policy'
