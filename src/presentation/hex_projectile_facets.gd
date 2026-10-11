@@ -24,6 +24,8 @@ const COMPACT_SHAPES := {
 	7: [Vector2(4,0),Vector2(1,1),Vector2(0,4),Vector2(-1,1),Vector2(-4,0),Vector2(-1,-1),Vector2(0,-4),Vector2(1,-1)],
 	8: [Vector2(2,-3),Vector2(0,0),Vector2(2,3),Vector2(-3,1),Vector2(-3,-1)],
 }
+const LIGHT_DIRECTION := Vector2(-0.70710678, -0.70710678)
+static var _triangles: Dictionary = {}
 
 
 static func polygon(element_wire: int, direction: Vector2, radius: float, core_size: float) -> PackedVector2Array:
@@ -57,14 +59,39 @@ static func draw(canvas: CanvasItem, position: Vector2, direction: Vector2, radi
 	var points := polygon(element_wire, direction, radius, core_size)
 	if points.is_empty():
 		return false
+	var colors := surface_colors(points, color)
+	var compact := minf(radius, core_size * 0.35) - 0.5 < 2.25
+	var key := element_wire + (8 if compact else 0)
+	if not _triangles.has(key):
+		# Sixteen immutable authored silhouettes, never world-position keys.
+		# Triangulating near zero also avoids distant-world cancellation.
+		_triangles[key] = Geometry2D.triangulate_polygon(PackedVector2Array((COMPACT_SHAPES if compact else SHAPES)[element_wire]))
 	for index: int in points.size():
 		points[index] += position
 		if not points[index].is_finite():
 			return false
-	# No outline, particles, trail, timer, cache or effects-mode split. The atlas
-	# supplies the dark body; this one bright cut is the material's entire detail.
-	canvas.draw_colored_polygon(points, color)
+	# One existing material cut now catches the same northwest light as terrain.
+	# Its colors do not depend on time, camera position or optional effect budget.
+	RenderingServer.canvas_item_add_triangle_array(canvas.get_canvas_item(), _triangles[key], points,
+		colors, PackedVector2Array(), PackedInt32Array(), PackedFloat32Array())
 	return true
+
+
+static func surface_colors(points: PackedVector2Array, color: Color) -> PackedColorArray:
+	var colors := PackedColorArray()
+	if points.is_empty() or not is_finite(color.r) or not is_finite(color.g) or not is_finite(color.b) or not is_finite(color.a):
+		return colors
+	var extent := 0.0
+	for point: Vector2 in points:
+		if not point.is_finite(): return PackedColorArray()
+		extent = maxf(extent, point.length())
+	if not is_finite(extent) or extent <= 0.0: return colors
+	var shade := color.darkened(0.58)
+	var light := color.lightened(0.10)
+	for point: Vector2 in points:
+		var incidence := clampf(0.5 + point.dot(LIGHT_DIRECTION) / (extent * 2.0), 0.0, 1.0)
+		colors.append(Color(shade.lerp(light, incidence), color.a))
+	return colors
 
 
 static func spray_origin(geometry: Dictionary) -> Dictionary:

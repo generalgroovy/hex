@@ -5,10 +5,15 @@ extends FluxTestSuite
 # and drawing are suppressed; this fixture neither loads art nor saves settings.
 class FrameHarness:
 	extends "res://src/app/bootstrap.gd"
+	var camera_sample_ticks: Array[int] = []
+	var camera_sample_points: Array[Vector2] = []
 	func _ready() -> void:
 		set_process(false)
 	func _draw() -> void:
 		pass
+	func _advance_player_camera(_delta: float, _blocked: bool) -> void:
+		camera_sample_ticks.append(world.tick)
+		camera_sample_points.append(previous_position.lerp(current_position, clampf(accumulator_seconds * tick_rate, 0.0, 1.0)))
 
 
 class CountedTransport:
@@ -79,9 +84,12 @@ func _test_real_frame_catch_up(hosting: bool, frame_delta: float = 0.1, close_du
 		equal(node.world.tick, 0, "host close during catch-up leaves the replacement offline world unstepped")
 		equal(transport.polled_ticks, [0, 1], "closing the host ends the current frame's authority loop")
 		check(not transport.is_online() and not node.host_close_pending, "actual pending host close completes the offline transition")
+		equal(node.camera_sample_ticks, [0], "a replacement world gets one camera sample before its first rendered frame")
 		equal(node.accumulator_seconds, 0.0, "world replacement cannot subtract old frame time into a negative accumulator")
 	else:
 		equal(node.world.tick, 8, "a rendered hitch advances exactly eight ordinary 120 Hz ticks")
+		equal(node.camera_sample_ticks, [node.world.tick], "camera follows the completed frame once, after all catch-up ticks")
+		equal(node.camera_sample_points[0], node.previous_position.lerp(node.current_position, clampf(node.accumulator_seconds * node.tick_rate, 0.0, 1.0)), "camera and sprite share the same interpolation sample")
 		equal(transport.polled_ticks, [0, 1, 2, 3, 4, 5, 6, 7] if hosting else [0], "host services transport before each catch-up tick; offline stays frame-only")
 		check(absf(node.dropped_time_seconds - (0.1 - 8.0 / 120.0)) < 0.000001, "unserved whole-tick time remains explicitly reported")
 	check(node.accumulator_seconds < 1.0 / 120.0, "bounded catch-up retains only the fractional remainder")

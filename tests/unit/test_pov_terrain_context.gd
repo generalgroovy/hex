@@ -35,6 +35,7 @@ func run() -> int:
 	_test_context_before_configuration()
 	_test_signature_context_transitions()
 	_test_production_trial_lifecycle()
+	_test_atomic_capture_handoff()
 	return finish("pov-terrain-context")
 
 
@@ -43,6 +44,117 @@ func _layout() -> SanctumCampusLayout:
 	layout.canvas_size = Vector2i(128, 128)
 	layout.arena_definition = {"score_limit": 3, "bounds": [0, 0, 128, 128]}
 	return layout
+
+
+func _complete_capture_sample(backdrop: SubViewport) -> void:
+	# A deterministic completion seam checks ownership/state only. The native
+	# transition capture separately verifies pixels across real post-draw frames.
+	var target: SubViewport = backdrop._pending_view
+	if target != null: target.render_target_update_mode = SubViewport.UPDATE_DISABLED
+	backdrop._complete_capture(backdrop._revision)
+
+
+func _test_atomic_capture_handoff() -> void:
+	var renderer := RendererSpy.new()
+	var backdrop := Backdrop.new()
+	backdrop.configure(renderer, _layout())
+	var first := Rect2(100, 100, 320, 240)
+	check(not backdrop.prepare_view(first) and not backdrop.ready_for(first), "first view stays unready until its pixels finish")
+	check(backdrop.backdrop_texture() == null, "no unfinished viewport texture is published")
+	var first_completion: Callable = backdrop._pending_completion
+	check(RenderingServer.frame_post_draw.is_connected(first_completion), "pending capture owns one renderer completion callback")
+	_complete_capture_sample(backdrop)
+	check(not RenderingServer.frame_post_draw.is_connected(first_completion) and not backdrop._pending_completion.is_valid(), "completion releases its callback even when invoked through the deterministic test seam")
+	check(backdrop.ready_for(first), "completed first view publishes readiness")
+	var first_rect := backdrop.world_rect
+	var first_texture := backdrop.backdrop_texture()
+	var first_revision: int = backdrop._revision
+	for query: int in 100:
+		check(backdrop.prepare_view(first), "unchanged view remains warm")
+	equal(backdrop._revision, first_revision, "stationary frames schedule zero additional captures")
+	equal(backdrop.get_child_count(), 1, "stationary view has not allocated a spare render target")
+
+	# Approach the edge while the old captured image still covers all pixels.
+	var edge := Rect2(230, 100, 320, 240)
+	check(first_rect.encloses(edge) and not first_rect.encloses(edge.grow(Backdrop.REFRESH_GUARD)), "control reaches refresh guard before exposing missing pixels")
+	check(backdrop.prepare_view(edge), "ordinary motion keeps completed terrain available during proactive capture")
+	equal(backdrop.world_rect, first_rect, "capture cannot publish new UV origin against old pixels")
+	equal(backdrop.backdrop_texture(), first_texture, "committed texture survives until replacement has rendered")
+	check(backdrop._pending_view != backdrop._committed_view, "capture renders only the inactive target")
+	var next_rect: Rect2 = backdrop._pending_rect
+	var pending_revision: int = backdrop._revision
+	for query: int in 100:
+		check(backdrop.prepare_view(edge), "pending replacement cannot blank a still-covered view")
+	equal(backdrop._revision, pending_revision, "same pending view does not queue duplicate captures")
+	backdrop._complete_capture(first_revision)
+	equal(backdrop.world_rect, first_rect, "stale completion cannot change published geometry")
+	_complete_capture_sample(backdrop)
+	equal(backdrop.world_rect, next_rect, "completion publishes exact pending world coordinates")
+	check(backdrop.backdrop_texture() != first_texture and backdrop.ready_for(edge), "completion swaps pixels and readiness together")
+	equal(backdrop.get_child_count(), 2, "moving views retain exactly one spare target")
+
+	var committed_rect := backdrop.world_rect
+	var committed_texture := backdrop.backdrop_texture()
+	var destination := Rect2(4200, 3800, 320, 240)
+	check(not backdrop.prepare_view(destination), "teleport beyond committed pixels remains safely unready")
+	check(not backdrop.ready_for(destination), "old origin is never passed off as destination terrain")
+	equal(backdrop.world_rect, committed_rect, "teleport staging does not mutate committed UVs")
+	equal(backdrop.backdrop_texture(), committed_texture, "teleport staging does not resize or overwrite sampled target")
+	var superseded: int = backdrop._revision
+	var superseded_completion: Callable = backdrop._pending_completion
+	check(backdrop.prepare_view(edge), "return to already covered view can reuse original pixels immediately")
+	check(backdrop._pending_view == null, "return cancels irrelevant pending capture")
+	check(not RenderingServer.frame_post_draw.is_connected(superseded_completion), "cancellation releases obsolete completion ownership before any subsequent capture")
+	backdrop._complete_capture(superseded)
+	equal(backdrop.world_rect, committed_rect, "late abandoned capture cannot replace useful current pixels")
+	equal(backdrop.backdrop_texture(), committed_texture, "abandoned completion never causes a one-frame texture swap")
+
+	# A return may sit inside the old texture but outside its refresh guard,
+	# while the tiles needed for the next recapture have become unavailable.
+	backdrop.prepare_view(destination)
+	var cold_return_revision: int = backdrop._revision
+	var cold_edge := Rect2(committed_rect.end.x - 325.0, 100, 320, 240)
+	check(committed_rect.encloses(cold_edge) and not committed_rect.encloses(cold_edge.grow(Backdrop.REFRESH_GUARD)), "cold-return control occupies the narrow completed edge")
+	renderer.prepared = false
+	check(backdrop.prepare_view(cold_edge), "completed edge stays usable while its requested refresh tiles are cold")
+	check(backdrop._pending_view == null, "cold edge return cancels unrelated pending destination before checking terrain readiness")
+	backdrop._complete_capture(cold_return_revision)
+	check(backdrop.ready_for(cold_edge), "late distant completion cannot blank cold edge coverage")
+	equal(backdrop.backdrop_texture(), committed_texture, "cold edge cancellation retains the same completed texture")
+
+	renderer.prepared = false
+	check(not backdrop.prepare_view(destination), "cold destination cannot schedule incomplete terrain")
+	check(backdrop.ready_for(edge), "unready destination leaves original completed coverage intact")
+	renderer.prepared = true
+	for index: int in 8:
+		var distant := Rect2(4200 if index % 2 == 0 else 100, 3800 if index % 2 == 0 else 100, 320, 240)
+		backdrop.prepare_view(distant)
+		_complete_capture_sample(backdrop)
+		check(backdrop.ready_for(distant), "successive arrivals become ready only on completion")
+		equal(backdrop.get_child_count(), 2, "repeated movement alternates the same pair without unbounded allocation")
+		for target: SubViewport in [backdrop, backdrop._spare_view]:
+			check(target.size.x <= Backdrop.MAX_VIEWPORT.x and target.size.y <= Backdrop.MAX_VIEWPORT.y, "each retained render target respects explicit pixel bound")
+	var wide := Rect2(-500, -500, 9000, 6000)
+	backdrop.prepare_view(wide)
+	_complete_capture_sample(backdrop)
+	check(backdrop.ready_for(wide), "very large view has bounded-resolution coverage rather than cropped pixels")
+	check(backdrop._committed_view.size.x <= Backdrop.MAX_VIEWPORT.x and backdrop._committed_view.size.y <= Backdrop.MAX_VIEWPORT.y, "ultrawide capture cannot exceed allocation cap")
+	backdrop.set_court_context(SanctumCampusRenderer.SOLO_DUEL_CONTEXT)
+	var previous_completion: Callable = backdrop._pending_completion
+	check(RenderingServer.frame_post_draw.is_connected(previous_completion), "context refresh owns a pending completion")
+	backdrop.set_court_context(SanctumCampusRenderer.SIGNATURE_CHALLENGE_CONTEXT)
+	check(RenderingServer.frame_post_draw.is_connected(backdrop._pending_completion), "replacement owns exactly its current completion")
+	var completion_count := 0
+	for connection: Dictionary in RenderingServer.frame_post_draw.get_connections():
+		var connected: Callable = connection.callable
+		if connected.get_object() == backdrop:
+			completion_count += 1
+			equal(connected.get_bound_arguments(), [backdrop._revision], "context replacement retains only the current completion revision")
+	equal(completion_count, 1, "context replacement does not accumulate renderer callbacks")
+	var last_completion: Callable = backdrop._pending_completion
+	backdrop._exit_tree()
+	check(not RenderingServer.frame_post_draw.is_connected(last_completion) and backdrop._pending_view == null, "teardown leaves no owned completion or queued capture")
+	backdrop.free()
 
 
 func _draw_sample(backdrop: SubViewport, renderer: RendererSpy) -> Dictionary:

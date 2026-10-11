@@ -1,5 +1,17 @@
 # H.E.X. single implementation queue
 
+Status: **PAUSED, October 11, 2026, at the user's request to pause and push at
+the next best state.** Current branch: `codex/hex-screen-smoothness-20261011`;
+source identity: **p60-33606f016138**. The
+[presentation checkpoint](../docs/presentation-checkpoint-20261011/README.md)
+records completed implementation, tests, cross-reviews and the remaining
+qualification. No automatic continuation is authorized while paused.
+
+## Historical completed performance/publication batch
+
+The following completed queue belongs to the preceding **p60-be3efd332e1a**
+source and its own portable, not the paused presentation checkpoint.
+
 Status: **source maintenance and publication record, October 11, 2026.**
 The gameplay/performance implementation and local qualification completed on
 October 10. The October 11 request authorizes repository cleanup, documentation,

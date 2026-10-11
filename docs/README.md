@@ -1,10 +1,11 @@
 # H.E.X. documentation map
 
-Status: current documentation index, October 11, 2026. The optimized 504-spell
-source and locally qualified portable are **p60-be3efd332e1a**. The October 10
-performance implementation and qualification batch is complete; dense overlapping
-fields still exceed the 60 FPS budget. Source publication excludes local binaries.
-The resume owns exact source/package identity; earlier fallbacks retain their own evidence.
+Status: current documentation index, October 11, 2026. The presentation branch is
+paused at **p60-33606f016138** at the user's request. Its
+[checkpoint record](presentation-checkpoint-20261011/README.md) owns current checks
+and unfinished qualification. The previously qualified portable remains
+**p60-be3efd332e1a**; its historical timing results do not qualify newer source.
+Source publication excludes local binaries. The resume owns the active handoff.
 
 Start with the document that owns your question. The repository retains older
 designs, experiments and release receipts, but they do not override the current
@@ -12,6 +13,7 @@ contract or qualify a newer build.
 
 | Need | Authoritative document |
 |---|---|
+| Current paused presentation work, cross-reviews and next checks | [October 11 presentation checkpoint](presentation-checkpoint-20261011/README.md) |
 | Run from source, build, and local portable paths | [Project README](../README.md); [development guide](DEVELOPMENT.md) |
 | Source publication and repository cleanup | [October 11 publication record](source-publication-20261011/README.md) |
 | Performance changes, measurements and remaining limits | [Implementation report](performance-implementation-20261010.md); [historical diagnosis](performance-assessment-20261010/assessment.md) |

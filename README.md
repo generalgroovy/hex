@@ -1,6 +1,6 @@
 # H.E.X. — Help, Everything eXploded!
 
-Status: **current source p60-be3efd332e1a**, with the October 10, 2026 gameplay/performance qualification and October 11 source-publication cleanup. Dense overlapping fields still miss the 60 FPS budget. See the [implementation and measurements](docs/performance-implementation-20261010.md).
+Status: **presentation checkpoint p60-33606f016138, paused at the user's request on October 11, 2026.** This branch adds screen-wide sight, stable terrain-buffer handoffs, camera timing fixes, dimensional projectiles, district floor details and revised sound. See the [checkpoint, checks and remaining work](docs/presentation-checkpoint-20261011/README.md). The previously qualified portable is still p60-be3efd332e1a; its [performance measurements](docs/performance-implementation-20261010.md) do not qualify this newer source.
 
 A movement-led elemental combat sandbox in Godot. Move and aim independently,
 build a twelve-slot spell weave, combine finite elemental effects, and learn a
@@ -143,7 +143,7 @@ Temporary Range/Developer weaves do not overwrite the player's saved weave.
 
 ## Evidence, design and limits
 
-The final build's [Full v5 gate](docs/performance-qualification-20261010/full-v5.json)
+The previous p60-be3efd332e1a build's [Full v5 gate](docs/performance-qualification-20261010/full-v5.json)
 passed **244 suites / 6,880,581 assertions**, with zero failures and zero
 stderr. The final field-rendering pass matched **614 exact RGBA comparisons**,
 including actual paid overlapping fields and retained glow. Earlier material/HUD

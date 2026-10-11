@@ -13,6 +13,7 @@ func run() -> int:
 	_test_direction_modes_and_authority()
 	_test_invalid_and_detached()
 	_test_spray_origin_bounds()
+	_test_directional_surface()
 	_test_production_seam()
 	return finish("hex-projectile-facets")
 
@@ -133,9 +134,25 @@ func _test_spray_origin_bounds() -> void:
 		check(Facets.spray_origin(invalid).is_empty(),"invalid or fully blocked Spray cannot manufacture origin geometry")
 
 
+func _test_directional_surface() -> void:
+	var points := PackedVector2Array([Vector2(-2, -2), Vector2(2, -2), Vector2(2, 2), Vector2(-2, 2)])
+	var source := Color(0.8, 0.6, 0.3, 0.42)
+	var colors := Facets.surface_colors(points, source)
+	equal(colors.size(), points.size(), "one shade per existing vertex adds depth without additional geometry")
+	check(colors[0].get_luminance() > colors[2].get_luminance(), "northwest light and southeast shade agree with terrain relief")
+	for color: Color in colors: equal(color.a, source.a, "directional shading never invents a pulse or increases cue opacity")
+	var smaller := PackedVector2Array()
+	for point: Vector2 in points: smaller.append(point * 0.25)
+	var reduced := Facets.surface_colors(smaller, source)
+	for index: int in colors.size(): check(colors[index].is_equal_approx(reduced[index]), "strength shrink preserves illumination without brightness popping")
+	for invalid: PackedVector2Array in [PackedVector2Array(), PackedVector2Array([Vector2.ZERO]), PackedVector2Array([Vector2(INF, 0)])]:
+		check(Facets.surface_colors(invalid, source).is_empty(), "invalid normals cannot reach per-vertex rendering")
+	check(Facets.surface_colors(points, Color(NAN, 0, 0)).is_empty(), "nonfinite light fails closed")
+
+
 func _test_production_seam() -> void:
 	var source := FileAccess.get_file_as_string("res://src/presentation/hex_projectile_facets.gd")
-	equal(source.count("canvas.draw_colored_polygon("),1,"one filled silhouette replaces the two old nose draws")
+	equal(source.count("RenderingServer.canvas_item_add_triangle_array("),1,"one indexed silhouette supplies light and shade without extra draw layers")
 	for forbidden: String in ["draw_arc(","draw_circle(","draw_line(","Image.create","ImageTexture.create","lifetime_ticks =","remaining_strength =","load_from_file("]:
 		check(not source.contains(forbidden),"facets add no halo, outline, asset loading or gameplay mutation: " + forbidden)
 	var presenter := FileAccess.get_file_as_string("res://src/presentation/hex_court_presenter.gd")

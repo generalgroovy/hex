@@ -3,6 +3,9 @@ extends SceneTree
 
 
 const SUITES: Array[Script] = [
+	preload("res://tests/unit/test_hex_render_polygon_cache.gd"),
+	preload("res://tests/unit/test_projectile_surface_depth.gd"),
+	preload("res://tests/unit/test_wellspring_environment_details.gd"),
 	preload("res://tests/unit/test_paid_field_rendering.gd"),
 	preload("res://tests/unit/test_movement_hot_path.gd"),
 	preload("res://tests/unit/test_sim_empty_work.gd"),

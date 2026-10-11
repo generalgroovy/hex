@@ -1412,13 +1412,19 @@ func _region_edge_key(region: Dictionary, first: Vector2, second: Vector2, prefi
 func _region_edge_prefix(region: Dictionary) -> String:
 	# Every dynamic boundary input is read now. The ordinary ground draw clears
 	# this bounded cache each pass; direct callers also key all current values.
-	var owner_key := JSON.stringify(region.get("owner_key", null))
+	var owner_value: Variant = region.get("owner_key", null)
+	# Ordinary world regions carry integer owners. Use that exact immutable value
+	# for lookup and serialize only on a miss. Generic arrays/dictionaries still
+	# serialize before lookup, preserving order and observing in-place mutations.
+	var scalar_owner := typeof(owner_value) == TYPE_INT
+	var owner_cache_key: Variant = owner_value if scalar_owner else JSON.stringify(owner_value)
 	var material := String(region.material)
 	var legacy := material in LEGACY_HEX_MATERIALS
-	var key: Array = [material, String(region.phase), bool(region.danger), owner_key,
+	var key: Array = [material, String(region.phase), bool(region.danger), owner_cache_key,
 		int(region.footprint_id) if legacy else 0, int(region.intensity) if legacy else 0,
 		int(region.get("expiry_tick", 0)) if legacy else 0, int(region.get("decay_tick", 0)) if material == "cinderveil" else 0]
 	if _edge_prefixes.has(key): return _edge_prefixes[key]
+	var owner_key := JSON.stringify(owner_value) if scalar_owner else String(owner_cache_key)
 	var result: String
 	if String(region.material) == "cinderveil":
 		# Adjacent Backdrafts with different real fuse endpoints must keep their

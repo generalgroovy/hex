@@ -11,6 +11,8 @@ var PANEL := Color("11140ee8")
 var language: VisualLanguage
 var natural_kit: NaturalMapKit
 var illustrated_kit: WellspringIllustratedKit
+const EnvironmentDetails = preload("res://src/presentation/wellspring_environment_details.gd")
+var environment_details := EnvironmentDetails.new()
 var last_error: String = ""
 const FLOOR_GUIDE_PATH := "res://content/presentation/wellspring_floor_guides_v1.json"
 const FLOOR_STAGE_ORDER := ["source-court", "movement-garden", "crucible", "duel-court"]
@@ -45,6 +47,7 @@ func configure(visual_language: VisualLanguage) -> bool:
 	illustrated_kit = null
 	last_error = ""
 	_clear_floor_guides()
+	environment_details.clear()
 	if visual_language == null or visual_language.ramps.is_empty():
 		return _fail("Campus renderer requires a validated visual language")
 	language = visual_language
@@ -71,6 +74,8 @@ func configure_campus(layout: SanctumCampusLayout) -> bool:
 		return _fail(illustrated_kit.last_error)
 	if not illustrated_kit.ground_ready() or illustrated_kit.content_hash.is_empty():
 		return _fail("Illustrated campus must supply validated ground before drawing")
+	if not environment_details.configure(layout):
+		return _fail(environment_details.last_error)
 	var descriptor: Variant = JSON.parse_string(FileAccess.get_file_as_string(FLOOR_GUIDE_PATH))
 	if not descriptor is Dictionary or not prepare_floor_guides(layout, descriptor):
 		return _fail(last_error if not last_error.is_empty() else "Campus floor guides require their presentation-only descriptor")
@@ -123,7 +128,7 @@ func draw(
 	if illustrated_kit == null or not illustrated_kit.ground_ready() or layout == null or illustrated_kit.campus != layout:
 		return
 	illustrated_kit.draw_ground(canvas, visible_world_rect)
-	_draw_district_ornaments(canvas, layout, visible_world_rect)
+	environment_details.draw(canvas, visible_world_rect)
 	_draw_activity_areas(canvas, layout, focus_world_position, visible_world_rect, practice_details)
 	if visible_in_world_rect(Rect2(SanctumCampusLayout._parse_bounds(layout.arena_definition.get("bounds", []))).grow(8), visible_world_rect):
 		_draw_arena(canvas, layout.arena_definition, court_context)
@@ -191,14 +196,6 @@ static func visible_floor_segments(points: PackedVector2Array, visible: Rect2) -
 		var bounds := Rect2(points[index], Vector2.ZERO).expand(points[index + 1]).grow(2.0)
 		if bounds.intersects(visible, true): selected.append_array(PackedVector2Array([points[index], points[index + 1]]))
 	return selected
-
-
-func _draw_district_ornaments(canvas: CanvasItem, layout: SanctumCampusLayout, visible: Rect2) -> void:
-	for district: Dictionary in layout.data.get("districts", []):
-		if not visible_in_world_rect(Rect2(SanctumCampusLayout._parse_bounds(district["bounds"])), visible): continue
-		var style := DistrictStyle.style_for(DistrictStyle.environment_for(district))
-		for ornament: Dictionary in DistrictStyle.ground_ornaments(district):
-			if visible_in_world_rect(ornament.bounds, visible): canvas.draw_multiline(ornament.lines, Color(style.edge, 0.22), 2.0)
 
 
 func _draw_waypoint_inlay(canvas: CanvasItem, layout: SanctumCampusLayout, landmark: Dictionary) -> void:

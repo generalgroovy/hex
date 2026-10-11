@@ -24,6 +24,17 @@ static func projected_viewport_cover_radius(origin: Vector2, viewport: Rect2) ->
 	return viewport_cover_radius(inverse_project_ground(origin), Rect2(inverse_project_ground(viewport.position), inverse_project_ground(viewport.size)), MASK_SEGMENTS)
 
 
+# A shared world-space range for actor visibility and the terrain mask. The
+# camera may place the observer away from center (HUD, lead, world edges), so a
+# half-diagonal alone cannot cover every visible corner. Opaque LOS is still
+# evaluated separately by point_visible; a wider view never sees through walls.
+static func viewport_sight_range(origin: Vector2, viewport: Rect2, minimum_range: float = 720.0) -> float:
+	var minimum := maxf(0.0, minimum_range) if is_finite(minimum_range) else 0.0
+	if not origin.is_finite() or not viewport.has_area() or not viewport.position.is_finite() or not viewport.end.is_finite():
+		return minimum
+	return maxf(minimum, projected_viewport_cover_radius(origin, viewport))
+
+
 static func projected_arc(origin: Vector2, radius: float, start: float, end: float, segments: int) -> PackedVector2Array:
 	var points := PackedVector2Array()
 	var count := maxi(1, segments)

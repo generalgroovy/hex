@@ -1,8 +1,9 @@
 # H.E.X. current design contract
 
-Status: **current contract, locally qualified with p60-6d80c3bce71e, October 9, 2026.**
-Exact source/package evidence and remaining human acceptance gates are recorded
-in the [resume](.agent/HEX-RESUME.md) and [integration record](docs/element-expansion-evidence-20261009/integration.md).
+Status: **current contract, including the October 11, 2026 presentation checkpoint.**
+Implementation and qualification are separate. Exact source/package evidence and
+remaining checks are recorded in the [resume](.agent/HEX-RESUME.md) and
+[presentation checkpoint](docs/presentation-checkpoint-20261011/README.md).
 
 H.E.X. (Help, Everything eXploded!) is a movement-led, top-down elemental combat
 sandbox for Windows. Its depth comes from movement execution, finite resources,
@@ -31,6 +32,14 @@ The [player guide](docs/PLAYER-GUIDE.md), [roster](docs/CURRENT-CAST.md) and
 | Grid | 24 px face-to-face; 59,466 eligible Wellspring cells; topology cap 65,536 and selection cap 511; unchanged 64 paid casts / 32 products |
 | Wire | Protocol 60 / SessionSnapshot 24 / SessionRound 2 / HexWorldSnapshot 5 / HexChemistrySnapshot 5; mixture/delivery state, finite reaction provenance and local prediction context |
 | Delivery | Latest tested source and existing portable/installer are distinct; exact paths and evidence live in the resume |
+
+The October 11 presentation revision expands the character-centered 360-degree
+view to cover every viewport corner, including camera lead, world edges and
+wide windows. The former 720-ground-unit radius remains a minimum for detached
+fixtures and compatibility preferences. Opaque buildings, solid hex cover and
+chemical concealment retain their existing occlusion rules. Spectators use the
+same interpolated observer policy; wider sight does not change collision or
+network state.
 
 At least 64 players is a future capacity target, not an enabled option.
 Spirit, Chaos, Gravity and Time, arbitrary recursive
@@ -519,6 +528,23 @@ frame limit. New and migrated preferences default to Low and 60. Low reduces
 optional glows and decorative Garden samples while every paid footprint, phase,
 ownership cue and essential warning remains available. Reduced Motion/Effects
 retains its independent accessibility setting. Simulation cadence stays 120 Hz.
+
+Camera follow samples the completed frame's interpolated feet, after fixed
+simulation steps. Input is resolved against the previously displayed camera.
+Static occlusion terrain captures into an inactive bounded target and publishes
+pixels and world coordinates together after rendering completes; ordinary
+camera movement keeps the previous completed image during refresh.
+
+Projectile surfaces use stable topology and directional vertex shading with a
+small inset raised core and ground shadow. These details stay inside existing
+material bounds; warning, contact and expiry geometry retain simulation
+authority. District floor details are compiled once and spatially culled, with
+route centers, buildings and travel arrival pockets left clear.
+
+Elemental sound uses three cached variations for each cast/contact identity,
+four fixed voices and one voice reserved for confirmed contacts. Short attack,
+body and tail layers retain click-free ends and bounded mixed peak amplitude;
+muting, modal input and visibility continue to gate local feedback.
 
 Wellspring ground is prepared as exact, lossless chunks up to 512×512 pixels before play.
 Runtime admits at most two background decodes and two texture uploads per frame,

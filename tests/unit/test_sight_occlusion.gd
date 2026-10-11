@@ -8,6 +8,7 @@ func run() -> int:
 	_test_convex_hex_shadow()
 	_test_invalid_shadow_inputs()
 	_test_viewport_cover_radius()
+	_test_screen_covering_sight()
 	_test_projected_ground_geometry()
 	_test_rear_awareness_and_opaque_lines()
 	return finish("sight-occlusion")
@@ -91,6 +92,32 @@ func _test_viewport_cover_radius() -> void:
 				check(sight_range * cos(PI / 96.0) > size.length() * 0.5, "skipped annulus cannot intersect the screen at zoom %s" % zoom)
 			else:
 				check(radius > sight_range, "retained annulus never reverses radii at zoom %s" % zoom)
+
+
+func _test_screen_covering_sight() -> void:
+	var clear: Array[Rect2] = []
+	for size: Vector2 in [Vector2(960, 540), Vector2(1280, 720), Vector2(3440, 1440), Vector2(720, 1280), Vector2(3840, 2160)]:
+		for zoom: float in [0.5, 0.75, 1.0]:
+			var camera_origin := Vector2(777.371, 413.918)
+			var world_view := PlayerCameraRig.visible_world_rect(Rect2(Vector2(13, -7), size), camera_origin, zoom)
+			for fraction: Vector2 in [Vector2(0.5, 0.5), Vector2(0.1, 0.9), Vector2.ZERO, Vector2.ONE]:
+				var observer := world_view.position + world_view.size * fraction
+				var radius := SightOcclusion.viewport_sight_range(observer, world_view)
+				check(radius >= 720.0 and is_finite(radius), "screen-covering range preserves minimum reach with a finite viewport-derived extension")
+				for corner: Vector2 in SightOcclusion.rectangle_polygon(world_view):
+					check(SightOcclusion.point_visible(observer, corner, Vector2.RIGHT, 360.0, radius, clear), "all screen corners stay visible despite zoom, HUD offset, ultrawide/portrait size or world-edge camera clamp")
+					check(SightOcclusion.inverse_project_ground(corner - observer).length() < radius * cos(PI / SightOcclusion.MASK_SEGMENTS), "mask edges as well as actor predicate cover every rendered corner")
+	# Extending range cannot bypass a real opaque object, including a target
+	# beyond the previous 720-pixel cutoff and chemical-reveal callers.
+	var screen := Rect2(0, 0, 2560, 1440)
+	var origin := Vector2(100, 720)
+	var far_target := Vector2(2200, 720)
+	var screen_range := SightOcclusion.viewport_sight_range(origin, screen)
+	check(SightOcclusion.point_visible(origin, far_target, Vector2.RIGHT, 360.0, screen_range, clear), "clear on-screen target beyond old720range is revealed")
+	check(not SightOcclusion.point_visible(origin, far_target, Vector2.RIGHT, 360.0, screen_range, [Rect2(1200, 680, 40, 80)]), "screen-wide awareness still stops at opaque walls")
+	equal(SightOcclusion.viewport_sight_range(Vector2.ZERO, Rect2()), 720.0, "uninitialized view retains finite minimum range")
+	equal(SightOcclusion.viewport_sight_range(Vector2(NAN, 0), screen), 720.0, "invalid observer cannot produce nonfinite range")
+	equal(SightOcclusion.viewport_sight_range(Vector2.ZERO, Rect2(), INF), 0.0, "nonfinite fallback fails closed")
 
 
 func _test_projected_ground_geometry() -> void:

@@ -13,6 +13,7 @@ func run() -> int:
 	check(catalog.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "audio tests load the production ability catalog")
 	_test_pcm_contract()
 	_test_catalog_admission()
+	_test_variant_rotation_and_contact_reservation()
 	_test_rate_pool_and_reset()
 	_test_playback_clock_occupancy()
 	_test_owned_voice_cleanup()
@@ -26,59 +27,63 @@ func _test_pcm_contract() -> void:
 	var audio := Audio.new()
 	audio.prepare(false)
 	equal(audio.players.size(), 0, "silent preparation creates no playback nodes")
-	equal(audio.clips.size(), 16, "eight retained audio styles each cache a cast and contact clip; only six admit live spells")
+	equal(audio.clips.size(), 8 * 2 * Audio.VARIANTS, "every retained style caches three cast and contact variations before gameplay")
 	equal(audio.volume_percent, 30, "elemental sound starts at conservative 30 percent gain")
 	check(Audio.PEAK * Audio.VOICES <= 0.88, "four worst-case coherent voices retain full-volume headroom")
 	check(Audio.PEAK * Audio.VOICES * 0.30 <= 0.264, "default four-voice mix stays below 26.4 percent full scale")
 	var signatures := {}
+	var pcm_bytes := 0
 	for element: String in Audio.ELEMENTS:
 		for contact: bool in [false, true]:
-			var key := Audio._key(element, contact)
-			var clip: AudioStreamWAV = audio.clips[key]
-			equal(clip.format, AudioStreamWAV.FORMAT_16_BITS, key + " is signed 16-bit PCM")
-			equal(clip.mix_rate, 22050, key + " uses the bounded fixed sample rate")
-			check(not clip.stereo and clip.loop_mode == AudioStreamWAV.LOOP_DISABLED, key + " is a non-looping mono cue")
-			check(clip.data.size() > 2 and clip.data.size() % 2 == 0, key + " has complete nonempty PCM samples")
-			check(is_finite(clip.get_length()) and clip.get_length() > 0.08 and clip.get_length() <= 0.221, key + " duration is short and finite")
-			@warning_ignore("integer_division")
-			var samples := clip.data.size() / 2
-			equal(clip.data.decode_s16(0), 0, key + " starts exactly at silence")
-			equal(clip.data.decode_s16((samples - 1) * 2), 0, key + " ends exactly at silence")
-			var peak := 0.0
-			var sum := 0.0
-			var energy := 0.0
-			var max_step := 0.0
-			var first_ms_peak := 0.0
-			var tail_ms_peak := 0.0
-			var previous := 0.0
-			for index: int in range(samples):
-				var sample := float(clip.data.decode_s16(index * 2)) / 32767.0
-				peak = maxf(peak, absf(sample))
-				sum += sample
-				energy += sample * sample
-				max_step = maxf(max_step, absf(sample - previous))
-				previous = sample
-				if index < 22:
-					first_ms_peak = maxf(first_ms_peak, absf(sample))
-				if index >= samples - 22:
-					tail_ms_peak = maxf(tail_ms_peak, absf(sample))
-			var mean := sum / samples
-			var rms := sqrt(energy / samples)
-			check(is_finite(peak) and is_finite(mean) and is_finite(rms), key + " decoded signal metrics are finite")
-			check(peak > 0.005 and peak <= Audio.PEAK + 1.0 / 32767.0, key + " has audible content without full-scale clipping")
-			check(absf(mean) < 0.004 and absf(mean) < rms * 0.12, key + " has negligible DC offset, not a sustained bias")
-			# Ice's authored 2.7x harmonic has a smooth high-frequency slope;
-			# distinguish that from an abrupt full-height onset/cutoff above.
-			check(max_step < 0.16, key + " has bounded adjacent-sample change including its high harmonic")
-			check(first_ms_peak < 0.045 and tail_ms_peak < 0.002, key + " ramps at both ends rather than hard-starting or cutting off")
-			var signature := clip.data.hex_encode().sha256_text()
-			check(not signatures.has(signature), key + " is distinct from every other element and event clip")
-			signatures[signature] = true
-			equal(Audio.make_clip(element, contact).data, clip.data, key + " synthesis is repeatable independent of process randomness")
-			print("PCM %s peak=%.5f rms=%.5f mean=%.6f max_step=%.5f" % [key, peak, rms, mean, max_step])
+			for variant: int in Audio.VARIANTS:
+				var key := Audio._key(element, contact, variant)
+				var clip: AudioStreamWAV = audio.clips[key]
+				pcm_bytes += clip.data.size()
+				equal(clip.format, AudioStreamWAV.FORMAT_16_BITS, key + " is signed 16-bit PCM")
+				equal(clip.mix_rate, 22050, key + " uses the bounded fixed sample rate")
+				check(not clip.stereo and clip.loop_mode == AudioStreamWAV.LOOP_DISABLED, key + " is a non-looping mono cue")
+				check(clip.data.size() > 2 and clip.data.size() % 2 == 0, key + " has complete nonempty PCM samples")
+				check(is_finite(clip.get_length()) and clip.get_length() > 0.08 and clip.get_length() <= 0.311, key + " duration is short and finite")
+				@warning_ignore("integer_division")
+				var samples := clip.data.size() / 2
+				equal(clip.data.decode_s16(0), 0, key + " starts exactly at silence")
+				equal(clip.data.decode_s16((samples - 1) * 2), 0, key + " ends exactly at silence")
+				var peak := 0.0
+				var sum := 0.0
+				var energy := 0.0
+				var max_step := 0.0
+				var first_ms_peak := 0.0
+				var tail_ms_peak := 0.0
+				var previous := 0.0
+				for index: int in range(samples):
+					var sample := float(clip.data.decode_s16(index * 2)) / 32767.0
+					peak = maxf(peak, absf(sample))
+					sum += sample
+					energy += sample * sample
+					max_step = maxf(max_step, absf(sample - previous))
+					previous = sample
+					if index < 22:
+						first_ms_peak = maxf(first_ms_peak, absf(sample))
+					if index >= samples - 22:
+						tail_ms_peak = maxf(tail_ms_peak, absf(sample))
+				var mean := sum / samples
+				var rms := sqrt(energy / samples)
+				check(is_finite(peak) and is_finite(mean) and is_finite(rms), key + " decoded signal metrics are finite")
+				check(peak > 0.005 and peak <= Audio.PEAK + 1.0 / 32767.0, key + " has audible content without full-scale clipping")
+				check(absf(mean) < 0.004 and absf(mean) < rms * 0.12, key + " has negligible DC offset, not a sustained bias")
+				# Ice's authored 2.7x harmonic has a smooth high-frequency slope;
+				# distinguish that from an abrupt full-height onset/cutoff above.
+				check(max_step < 0.16, key + " has bounded adjacent-sample change including its high harmonic")
+				check(first_ms_peak < 0.045 and tail_ms_peak < 0.002, key + " ramps at both ends rather than hard-starting or cutting off")
+				var signature := clip.data.hex_encode().sha256_text()
+				check(not signatures.has(signature), key + " is distinct from every other element and event clip")
+				signatures[signature] = true
+				equal(Audio.make_clip(element, contact, variant).data, clip.data, key + " synthesis is repeatable independent of process randomness")
+				print("PCM %s peak=%.5f rms=%.5f mean=%.6f max_step=%.5f" % [key, peak, rms, mean, max_step])
 		var cast: AudioStreamWAV = audio.clips[Audio._key(element, false)]
 		var hit: AudioStreamWAV = audio.clips[Audio._key(element, true)]
 		check(cast.get_length() < hit.get_length(), element + " startup is shorter than confirmed contact")
+	check(pcm_bytes <= Audio.MAX_PCM_BYTES, "entire deterministic variation bank stays below one MiB")
 	cached_clips = audio.clips.duplicate()
 	audio.prepare(false)
 	for key: String in cached_clips:
@@ -143,6 +148,31 @@ func _test_catalog_admission() -> void:
 	check(Audio.describe(_cast(wire), 1, AbilityCatalog.new()).is_empty(), "unvalidated catalog is silent")
 
 
+func _test_variant_rotation_and_contact_reservation() -> void:
+	var audio := _silent_audio()
+	var cast := _cast(_wire("light"))
+	var contact := _contact(_wire("light"), "projectile_hit")
+	for variant: int in range(Audio.VARIANTS * 2):
+		check(audio.ingest(cast, variant * 120, 1, catalog, true), "well-spaced repeated casts are admitted")
+		equal(audio.last_clip_key, Audio._key("light", false, variant % Audio.VARIANTS), "adjacent repeats rotate cached PCM deterministically")
+	var cursor := audio.variant_cursor.duplicate()
+	check(not audio.ingest(cast, (Audio.VARIANTS * 2 - 1) * 120, 1, catalog, true), "same-tick duplicate is refused")
+	equal(audio.variant_cursor, cursor, "refusal cannot silently consume an audio variation")
+	audio.silence()
+	for tick: int in [0, 8, 16]:
+		check(audio.ingest(cast, tick, 1, catalog, true), "three cast tails may share the non-reserved voices")
+	check(not audio.ingest(cast, 24, 1, catalog, true), "startup chatter cannot take the contact reservation")
+	equal(audio.occupied_until[Audio.CONTACT_VOICE], 0, "reserved voice remains free before confirmed contact")
+	check(audio.ingest(contact, 24, 1, catalog, true), "confirmed contact remains audible under sustained startup chatter")
+	check(audio.occupied_until[Audio.CONTACT_VOICE] > 24, "confirmed contact uses its reserved voice")
+	equal(audio.last_clip_key, Audio._key("light", true, 0), "reset and contact use an independent variation sequence")
+	check(Audio.make_clip("light", true, -1) == null and Audio.make_clip("light", true, Audio.VARIANTS) == null, "out-of-budget variation cannot allocate PCM")
+	audio.silence()
+	check(audio.variant_cursor.is_empty(), "silence resets the variation sequence for the next session")
+	equal(audio.clips, cached_clips, "sound priority and variation never regenerate resources")
+	audio.free()
+
+
 func _test_rate_pool_and_reset() -> void:
 	var audio := _silent_audio()
 	var cast := _cast(_wire("light"))
@@ -164,7 +194,7 @@ func _test_rate_pool_and_reset() -> void:
 	var before := audio.admitted_count
 	check(not audio.ingest(contact, 12, 1, catalog, true), "full pool drops an otherwise eligible contact")
 	equal(audio.admitted_count, before, "a dropped contact does not count as playback")
-	check(audio.ingest(cast, 18, 1, catalog, true), "a finished short cue releases its voice without allocating")
+	check(audio.ingest(cast, audio.occupied_until[0], 1, catalog, true), "a finished short cue releases its voice without allocating")
 	check(audio.ingest(cast, 0, 1, catalog, true), "backward world tick starts a fresh session gate")
 	equal(audio.last_tick, 0, "reset retains no future tick")
 	equal(audio.last_kind_tick.size(), 1, "backward time removes previous contact gate")
@@ -214,19 +244,23 @@ func _test_playback_clock_occupancy() -> void:
 	bytes.fill(0)
 	silent_clip.data = bytes
 	var cast := _cast(_wire("light"))
-	audio.clips[Audio._key("light", false)] = silent_clip
+	for variant: int in Audio.VARIANTS:
+		audio.clips[Audio._key("light", false, variant)] = silent_clip
+		audio.clips[Audio._key("light", true, variant)] = silent_clip
 	audio.prepare(true)
 	var tree := Engine.get_main_loop() as SceneTree
 	tree.root.add_child(audio)
-	for index: int in range(Audio.VOICES):
+	for index: int in range(Audio.CONTACT_VOICE):
 		check(audio.ingest(cast, index * 120, 1, catalog, true), "tick jumps use a free real voice without restarting an active one")
 		check(audio.players[index].playing, "each tick jump occupies a distinct actual playback voice")
+	check(audio.ingest(_contact(_wire("light"), "projectile_hit"), 360, 1, catalog, true), "confirmed contact occupies its reserved real voice")
+	check(audio.players[Audio.CONTACT_VOICE].playing, "reserved contact voice plays in the bounded pool")
 	var before := audio.admitted_count
 	var reservations := audio.occupied_until.duplicate()
 	check(not audio.ingest(cast, 480, 1, catalog, true), "expired logical reservations cannot reclaim four still-playing voices")
 	equal(audio.admitted_count, before, "real playback saturation drops without counting an admission")
 	equal(audio.occupied_until, reservations, "real playback saturation preserves every existing reservation")
-	equal(audio.last_kind_tick.cast, 360, "dropped playback leaves the successful cast gate unchanged")
+	equal(audio.last_kind_tick.cast, 240, "dropped playback leaves the successful cast gate unchanged")
 	audio.players[2].stop()
 	check(audio.ingest(cast, 480, 1, catalog, true), "an actually stopped voice is reusable after its logical reservation")
 	equal(audio.occupied_until[2], 600, "reuse reserves only the stopped voice for the new clip")

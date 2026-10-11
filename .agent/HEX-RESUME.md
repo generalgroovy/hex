@@ -1,5 +1,26 @@
 # H.E.X. resume handoff
 
+Status: **PAUSED at the user's request, October 11, 2026.** Do not continue the
+improvement task until asked. The user requested “pause and push at next best
+state”; this branch is the resulting source checkpoint.
+
+- Checkout: `/home/otp/Projects/hex-improvements-20261011`.
+- Branch: `codex/hex-screen-smoothness-20261011`, remote `generalgroovy/hex`.
+- Base: `95ca630e20d11eb140405d45aed7c93636dfbdcb`.
+- Current runtime: **p60-33606f016138**, 3,392 production records, protocol 60 /
+  snapshot 24. The generated manifest contains the full source hash.
+- Current implementation, executed checks, cross-reviews, retained evidence and
+  next actions: [presentation checkpoint](../docs/presentation-checkpoint-20261011/README.md).
+- No newer portable is promoted. Preserve the older builds and both other
+  checkouts, especially dirty user work in `/home/otp/Projects/hex`.
+- All specialists are frozen. Root serialized engine runs. Resume with the
+  recorded unfinished qualification, not another implementation expansion.
+
+## Historical October 10 / early October 11 handoff
+
+The following records qualify **p60-be3efd332e1a only**. Their completed status
+and old Windows checkout path do not describe the newer paused branch above.
+
 Status: **current source checkpoint, October 11, 2026.** Gameplay and local performance qualification completed on October 10; the October 11 request authorizes source cleanup, documentation, commit and push.
 Current source identity: **p60-be3efd332e1a**, 3,390 canonical production records,
 protocol 60 / snapshot 24. Runtime SHA-256:

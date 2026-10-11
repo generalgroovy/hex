@@ -33,6 +33,7 @@ const EXPOSURE_CAP := 240
 const COVERAGE := {"rapid": 1, "bolt": 3, "spray": 5, "heavy": 7, "mantle": 3, "fuse": 7, "split": 3, "rebound": 3}
 const WATER := 3
 const FIRE := 2
+const RENDER_POLYGON_CACHE_LIMIT := 512
 
 # Pure canonical text for bounded, integer-only blank rows. Shared by detached
 # restores, but never contains authority dictionaries or a cached whole hash.
@@ -65,7 +66,13 @@ var current_tick := 0 # Last processed authority tick, not wall-clock time.
 var render_revision := 0 # Geometry/layout only; layer changes never rebuild topology.
 var value_revision := 0
 var _render_polygon_revision := -1 # Presentation cache, excluded from authority hash.
+var _render_polygon_origin := Vector2i.ZERO
 var _render_polygons: Dictionary = {}
+var _render_polygon_order: Array[Vector2i] = []
+var _render_polygon_cursor := 0
+var _render_polygon_builds := 0
+var _render_polygon_hits := 0
+var _render_polygon_evictions := 0
 var _hash_cell_order: Array = [] # Verified key membership only; values are never cached.
 var _occupied_sources: Array = [] # Detached coverage-only cache; not authoritative.
 var _occupied_membership: Dictionary = {}
@@ -94,7 +101,13 @@ func configure_geometry(requested_origin: Vector2i, eligible_cells: Array[Vector
 	_sparse_cells = {}
 	_legacy_cells = {}
 	_render_polygon_revision = -1
+	_render_polygon_origin = origin
 	_render_polygons.clear()
+	_render_polygon_order.clear()
+	_render_polygon_cursor = 0
+	_render_polygon_builds = 0
+	_render_polygon_hits = 0
+	_render_polygon_evictions = 0
 	_hash_cell_order.clear()
 	return true
 
@@ -469,9 +482,37 @@ func render_regions(cell: Vector2i, material: String, tick: float) -> Array[Dict
 
 
 func whole_cell_polygon(cell: Vector2i) -> PackedVector2Array:
+	# Pure fixed geometry only: overlapping paid records retain independent
+	# phase, quantity, ownership and lifetime. Origin is checked directly because
+	# tooling/restore can change it without advancing the topology revision.
+	if _render_polygon_revision != render_revision or _render_polygon_origin != origin:
+		_render_polygons.clear()
+		_render_polygon_order.clear()
+		_render_polygon_cursor = 0
+		_render_polygon_revision = render_revision
+		_render_polygon_origin = origin
+	if _render_polygons.has(cell):
+		_render_polygon_hits += 1
+		return (_render_polygons[cell] as PackedVector2Array).duplicate()
 	var result := PackedVector2Array()
 	for vertex: Vector2i in Grid.vertices(cell): result.append(Vector2(vertex + origin))
+	# Detached CPU arrays have no render-server lifetime. A fixed FIFO ring
+	# keeps later districts warm without shifting entries or growing memory.
+	if _render_polygon_order.size() < RENDER_POLYGON_CACHE_LIMIT:
+		_render_polygon_order.append(cell)
+	else:
+		_render_polygons.erase(_render_polygon_order[_render_polygon_cursor])
+		_render_polygon_order[_render_polygon_cursor] = cell
+		_render_polygon_cursor = (_render_polygon_cursor + 1) % RENDER_POLYGON_CACHE_LIMIT
+		_render_polygon_evictions += 1
+	_render_polygons[cell] = result.duplicate()
+	_render_polygon_builds += 1
 	return result
+
+
+func render_polygon_cache_stats() -> Dictionary:
+	return {"entries": _render_polygons.size(), "builds": _render_polygon_builds,
+		"hits": _render_polygon_hits, "evictions": _render_polygon_evictions}
 
 
 func preview_regions(event: Dictionary, record: Dictionary) -> Array[Dictionary]:

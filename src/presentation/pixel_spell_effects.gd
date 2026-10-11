@@ -14,6 +14,12 @@ const MAX_IMPACT_SCALE := 3.0
 const IMPACT_READABILITY_SCALE := 1.50
 const IMPACT_IMPRINT_TICKS := 18 # Retained as a historical capture checkpoint; no borrowed looped stamp.
 const TERMINAL_CONTACT_TICKS := 36
+const CORE_SEGMENTS := 32
+const SECTOR_SEGMENTS := 12
+const CORE_LIGHT_DIRECTION := Vector2(-0.70710678, -0.70710678)
+# Six normalized templates cover all 63 mixtures. No position, paid state or
+# changing strength is retained, and shrinking cannot change the tessellation.
+static var _sector_templates: Dictionary = {}
 var library: RefCounted
 var geometry := Geometry.new()
 var collision: CollisionWorld
@@ -32,18 +38,95 @@ static func mixture_sectors(mask: int, center: Vector2, radius: float) -> Array[
 	var result: Array[Dictionary] = []
 	var elements := mixture_elements(mask)
 	if elements.is_empty() or not center.is_finite() or not is_finite(radius) or radius <= 0.0: return result
+	var templates := _templates_for(elements.size())
 	for index: int in elements.size():
-		var start := -PI * 0.5 + TAU * float(index) / float(elements.size())
-		var end := -PI * 0.5 + TAU * float(index + 1) / float(elements.size())
+		var template: Dictionary = templates[index]
 		var points := PackedVector2Array()
-		if elements.size() == 1:
-			points = Geometry.circle_polygon(center, radius)
-		else:
-			points.append(center)
-			for step: int in 13: points.append(center + Vector2.from_angle(lerpf(start, end, float(step) / 12.0)) * radius)
-		result.append({"element": elements[index], "points": points, "start": start, "end": end,
-			"glyph_anchor": center + Vector2.from_angle((start + end) * 0.5) * radius * (0.58 if elements.size() > 1 else 0.0)})
+		for point: Vector2 in template.points: points.append(center + point * radius)
+		var surface_points := points.duplicate()
+		if elements.size() == 1: surface_points.append(center)
+		result.append({"element": elements[index], "points": points, "start": template.start, "end": template.end,
+			"glyph_anchor": center + (template.glyph_unit as Vector2) * radius,
+			"surface_points": surface_points, "indices": (template.indices as PackedInt32Array).duplicate(),
+			"material_offsets": (template.material_offsets as PackedVector2Array).duplicate(),
+			"lighting": (template.lighting as PackedFloat32Array).duplicate(),
+			"material_colors": (template.material_colors as PackedColorArray).duplicate()})
 	return result
+
+
+static func mixture_layout(mask: int, center: Vector2, radius: float) -> Array[Dictionary]:
+	# Hand arcs and Mantle glyphs do not submit a filled material body. Share the
+	# identity/layout without allocating detached triangle, UV or color arrays.
+	var result: Array[Dictionary] = []
+	var elements := mixture_elements(mask)
+	if elements.is_empty() or not center.is_finite() or not is_finite(radius) or radius <= 0.0: return result
+	var templates := _templates_for(elements.size())
+	for index: int in elements.size():
+		var template: Dictionary = templates[index]
+		result.append({"element": elements[index], "start": template.start, "end": template.end,
+			"glyph_anchor": center + (template.glyph_unit as Vector2) * radius})
+	return result
+
+
+static func _templates_for(count: int) -> Array[Dictionary]:
+	if count < 1 or count > 6: return []
+	if _sector_templates.has(count): return _sector_templates[count]
+	var templates: Array[Dictionary] = []
+	for index: int in count:
+		var start := -PI * 0.5 + TAU * float(index) / float(count)
+		var end := -PI * 0.5 + TAU * float(index + 1) / float(count)
+		var points := PackedVector2Array()
+		if count == 1:
+			for step: int in CORE_SEGMENTS: points.append(Vector2.from_angle(TAU * float(step) / float(CORE_SEGMENTS)))
+		else:
+			points.append(Vector2.ZERO)
+			for step: int in SECTOR_SEGMENTS + 1: points.append(Vector2.from_angle(lerpf(start, end, float(step) / float(SECTOR_SEGMENTS))))
+		var surface := points.duplicate()
+		var indices := PackedInt32Array()
+		if count == 1:
+			surface.append(Vector2.ZERO)
+			for step: int in CORE_SEGMENTS: indices.append_array(PackedInt32Array([CORE_SEGMENTS, step, (step + 1) % CORE_SEGMENTS]))
+		else:
+			for step: int in SECTOR_SEGMENTS: indices.append_array(PackedInt32Array([0, step + 1, step + 2]))
+		var lighting := PackedFloat32Array()
+		var material_offsets := PackedVector2Array()
+		var material_colors := PackedColorArray()
+		for point: Vector2 in surface:
+			var light := clampf(0.96 - point.length_squared() * 0.54 + point.dot(CORE_LIGHT_DIRECTION) * 0.24, 0.0, 1.0)
+			lighting.append(light)
+			material_offsets.append(point * 8.0)
+			var value := 0.64 + light * 0.36
+			material_colors.append(Color(value, value, value, 0.72))
+		var template := {"points": points, "indices": indices, "start": start, "end": end,
+			"glyph_unit": Vector2.from_angle((start + end) * 0.5) * (0.58 if count > 1 else 0.0),
+			"lighting": lighting, "material_offsets": material_offsets, "material_colors": material_colors}
+		template.make_read_only()
+		templates.append(template)
+	templates.make_read_only()
+	_sector_templates[count] = templates
+	return templates
+
+
+static func projectile_depth_model(model: Dictionary) -> Dictionary:
+	if not model.get("center") is Vector2 or bool(model.get("mantle", false)): return {}
+	var center: Vector2 = model.center
+	var radius := float(model.get("core_radius", 0.0))
+	if not center.is_finite() or not is_finite(radius) or radius <= 0.0: return {}
+	# Lift an inset painted body, never the projectile or its contact marks.
+	# The body plus offset and every shadow vertex remain inside the old core.
+	var lift := minf(3.0, radius * 0.18)
+	var shadow := PackedVector2Array()
+	var template: Dictionary = _templates_for(1)[0]
+	for point: Vector2 in template.points:
+		shadow.append(center + Vector2(point.x * 0.82, 0.45 + point.y * 0.25) * radius)
+	shadow.append(center + Vector2(0, radius * 0.45))
+	return {"center": center - Vector2(0, lift), "radius": radius - lift, "lift": lift, "shadow": shadow,
+		"shadow_indices": (template.indices as PackedInt32Array).duplicate()}
+
+
+static func material_geometry_stats() -> Dictionary:
+	return {"template_sets": _sector_templates.size(), "maximum_template_sets": 6,
+		"core_segments": CORE_SEGMENTS, "sector_segments": SECTOR_SEGMENTS}
 
 
 static func expanded_projectile_model(shot: ProjectileState, definition: Dictionary, position: Vector2, config: SimConfig, owner: PlayerState = null, reduced: bool = false) -> Dictionary:
@@ -144,22 +227,32 @@ func draw_expanded_projectile(canvas: CanvasItem, model: Dictionary, language: V
 			for point: Vector2 in boundary: elevated.append(point + lift)
 			canvas.draw_polyline(elevated, Color(0.035, 0.045, 0.045, 0.85), 3.0)
 			canvas.draw_polyline(elevated, Color(bright, 0.62), 1.0)
-		for sector: Dictionary in mixture_sectors(int(model.mask), center, radius * 0.75):
+		for sector: Dictionary in mixture_layout(int(model.mask), center, radius * 0.75):
 			Glyph.draw(canvas, language, sector.glyph_anchor, sector.element, 4.0, language.element_color(sector.element, "bright"))
 		for index: int in 4:
 			var at := center + Vector2(float(index) * 5.0 - 9.0, radius * 0.60)
 			canvas.draw_rect(Rect2(at, Vector2(4, 2)), Color(bright, 0.95 if float(index) < float(model.pool_ratio) * 4.0 else 0.16))
 		return true
-	canvas.draw_circle(center + Vector2(1, 2), core_radius, Color(0.018, 0.025, 0.025, 0.33))
-	for sector: Dictionary in mixture_sectors(int(model.mask), center, core_radius):
+	var depth := projectile_depth_model(model)
+	if depth.is_empty(): return false
+	var body_center: Vector2 = depth.center
+	var body_radius := float(depth.radius)
+	RenderingServer.canvas_item_add_triangle_array(canvas.get_canvas_item(), depth.shadow_indices, depth.shadow,
+		PackedColorArray([Color(0.018, 0.025, 0.025, 0.38)]), PackedVector2Array(), PackedInt32Array(), PackedFloat32Array())
+	for sector: Dictionary in mixture_sectors(int(model.mask), body_center, body_radius):
 		var color := language.element_color(sector.element, "base")
-		canvas.draw_colored_polygon(sector.points, Color(color, 0.84))
-		_draw_mixture_material(canvas, sector, center, core_radius, int(model.age), bool(model.reduced))
+		var shade := color.darkened(0.56)
+		var light := color.lightened(0.18)
+		var colors := PackedColorArray()
+		for weight: float in sector.lighting: colors.append(Color(shade.lerp(light, weight), 0.92))
+		RenderingServer.canvas_item_add_triangle_array(canvas.get_canvas_item(), sector.indices, sector.surface_points,
+			colors, PackedVector2Array(), PackedInt32Array(), PackedFloat32Array())
+		_draw_mixture_material(canvas, sector, int(model.age), bool(model.reduced))
 		if core_radius >= 9.0:
 			Glyph.draw(canvas, language, sector.glyph_anchor, sector.element, minf(3.5, core_radius * 0.16), language.element_color(sector.element, "bright"))
-	canvas.draw_arc(center, core_radius * 0.85, -2.75, -0.65, 14, Color(0.93, 0.94, 0.86, 0.78), 1.0)
-	canvas.draw_arc(center, core_radius * 0.85, 0.20, 1.80, 12, Color(0.025, 0.03, 0.04, 0.68), 2.0)
-	_draw_delivery_mark(canvas, model, bright)
+	canvas.draw_arc(body_center, body_radius * 0.85, -2.75, -0.65, 14, Color(0.93, 0.94, 0.86, 0.78), 1.0)
+	canvas.draw_arc(body_center, body_radius * 0.85, 0.20, 1.80, 12, Color(0.025, 0.03, 0.04, 0.68), minf(2.0, body_radius * 0.15))
+	_draw_delivery_mark(canvas, model, bright, body_center, body_radius)
 	if bool(model.armed):
 		# A separate monochrome clock stays legible beneath mixed ingredient glyphs.
 		# This small UI meter is not coverage: only the unchanged clipped outer
@@ -182,24 +275,23 @@ func draw_expanded_projectile(canvas: CanvasItem, model: Dictionary, language: V
 	return true
 
 
-func _draw_mixture_material(canvas: CanvasItem, sector: Dictionary, center: Vector2, radius: float, age: int, reduced: bool) -> void:
+func _draw_mixture_material(canvas: CanvasItem, sector: Dictionary, age: int, reduced: bool) -> void:
 	if not ready(): return
 	var frame: Dictionary = library.sample(asset_id(String(sector.element), "flight", reduced), age)
 	var texture := frame.get("texture") as Texture2D
 	if texture == null or not frame.get("region") is Rect2: return
 	var source: Rect2 = frame.region
 	var pivot: Vector2 = frame.get("pivot", frame.get("pivot_px", Vector2.ZERO))
-	var scale := radius / 8.0
-	var points: PackedVector2Array = sector.points
 	var uvs := PackedVector2Array()
-	for point: Vector2 in points: uvs.append((source.position + pivot + (point - center) / scale) / texture.get_size())
-	var part := {"points": points, "uvs": uvs, "indices": Geometry.local_triangle_indices(points)}
-	Geometry.draw_frame_part(canvas, part, texture, 0.72)
+	# Unit offsets are independent of world position and changing paid strength.
+	# Avoid both distant-coordinate UV jitter and a triangulation for every draw.
+	for offset: Vector2 in sector.material_offsets: uvs.append((source.position + pivot + offset) / texture.get_size())
+	RenderingServer.canvas_item_add_triangle_array(canvas.get_canvas_item(), sector.indices, sector.surface_points,
+		sector.material_colors, uvs, PackedInt32Array(), PackedFloat32Array(), texture.get_rid())
 
 
-static func _draw_delivery_mark(canvas: CanvasItem, model: Dictionary, bright: Color) -> void:
-	var center: Vector2 = model.center
-	var radius := float(model.core_radius) * 0.60
+static func _draw_delivery_mark(canvas: CanvasItem, model: Dictionary, bright: Color, center: Vector2, body_radius: float) -> void:
+	var radius := body_radius * 0.60
 	var direction: Vector2 = model.direction
 	if direction.length_squared() <= 0.0: direction = Vector2.UP
 	var side := direction.orthogonal()

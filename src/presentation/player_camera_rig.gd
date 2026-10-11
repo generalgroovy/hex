@@ -110,6 +110,15 @@ static func screen_to_world(screen_pixels: Vector2, frame_origin: Vector2) -> Ve
 	return (screen_pixels - (-frame_origin * ZOOM).round()) / ZOOM
 
 
+# The drawn view starts at the inverse of the snapped canvas translation, not
+# at the unsnapped camera origin. Sight/streaming must include the same edge
+# pixels that drawing and mouse input use, including translated viewports.
+static func visible_world_rect(viewport_pixels: Rect2, frame_origin: Vector2, zoom: float = ZOOM) -> Rect2:
+	if not viewport_pixels.has_area() or not viewport_pixels.position.is_finite() or not viewport_pixels.end.is_finite() or not frame_origin.is_finite() or not is_finite(zoom) or zoom <= 0.0:
+		return Rect2()
+	return Rect2((viewport_pixels.position - (-frame_origin * zoom).round()) / zoom, viewport_pixels.size / zoom)
+
+
 # Reuses one three-vertex buffer. Draw at ground height, never at jump height.
 # actual_aim is the current unquantized accepted/predicted aim, NOT velocity or
 # slide-facing. A two-tone, unanimated chevron is legible without adding a ring.

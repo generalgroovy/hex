@@ -307,7 +307,7 @@ func draw_release(canvas: CanvasItem, wire_id: int, hand_anchor: Vector2, age_ti
 
 func _draw_mixture_hand(canvas: CanvasItem, mask: int, position: Vector2) -> void:
 	if PixelEffects.mixture_elements(mask).size() <= 1: return
-	for sector: Dictionary in PixelEffects.mixture_sectors(mask, position, 12.0):
+	for sector: Dictionary in PixelEffects.mixture_layout(mask, position, 12.0):
 		var bright := language.element_color(sector.element, "bright")
 		canvas.draw_arc(position, 11.0, float(sector.start) + 0.06, float(sector.end) - 0.06, 8, bright, 2.0)
 		ElementGlyphRendererScript.draw(canvas, language, sector.glyph_anchor, sector.element, 2.5, bright)

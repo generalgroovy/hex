@@ -442,7 +442,7 @@ func apply_dictionary(data: Dictionary) -> bool:
 	if requested_pov_mode != POV_RELATIVE or requested_angle != DEFAULT_POV_ANGLE_DEGREES or requested_range != DEFAULT_POV_RANGE:
 		requested_migration_notices.append(_migration_notice(
 			"relative_vision_unified", "info", "vision", StringName(), 0, StringName(),
-			"Vision now uses 360-degree character-centered sight at a shared range of 720. Legacy full/cone and custom sight values were migrated; controls and camera settings were preserved.",
+			"Vision now uses 360-degree character-centered sight covering the full screen. Legacy full/cone and custom sight values were migrated; controls and camera settings were preserved.",
 		))
 	if requested_camera_zoom < MIN_CAMERA_ZOOM_PERCENT or requested_camera_zoom > MAX_CAMERA_ZOOM_PERCENT:
 		last_error = "camera_zoom_percent must be between %d and %d" % [MIN_CAMERA_ZOOM_PERCENT, MAX_CAMERA_ZOOM_PERCENT]

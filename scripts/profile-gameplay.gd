@@ -355,6 +355,8 @@ func _run() -> void:
 	light_observer = OS.get_cmdline_user_args().has("--profile-light-observer")
 	if DirAccess.make_dir_recursive_absolute(output_path.get_base_dir()) != OK: _fail("Could not create report directory."); return
 	root.size = Vector2i(clampi(int(_option("--profile-width", "1280")), 960, 2560), clampi(int(_option("--profile-height", "720")), 540, 1440))
+	root.unresizable = true
+	root.title = "H.E.X. performance check"
 	root.mode = Window.MODE_WINDOWED
 	root.visible = true
 	# Independent disk provenance is collected outside every game timer. The
@@ -401,7 +403,7 @@ func _run() -> void:
 		"screen_id": DisplayServer.window_get_current_screen(root.get_window_id()),
 		"window_vsync_mode": DisplayServer.window_get_vsync_mode(root.get_window_id()),
 		"screen_size": _v(DisplayServer.screen_get_size(DisplayServer.window_get_current_screen(root.get_window_id()))), "screen_refresh_hz": DisplayServer.screen_get_refresh_rate(DisplayServer.window_get_current_screen(root.get_window_id())), "window_size": _v(root.size),
-		"user_data": actual_data, "profile_script_sha256": FileAccess.get_sha256("res://scripts/profile-gameplay.gd"),
+		"user_data": actual_data, "profile_script_sha256": FileAccess.get_sha256(get_script().resource_path),
 		"manifest": JSON.parse_string(FileAccess.get_file_as_string(RuntimeBuildIdentity.MANIFEST_PATH)), "manifest_note": "Generated runtime identity is recorded here; exact source-to-manifest binding is checked by the separate packaging gate.",
 		"observed_source_before": observed_source,
 		"observed_source_scope": "Independent raw-byte filesystem hashes of project.godot, this benchmark, src/*.gd, scenes/*.tscn and *.tres, content/*.json except the generated identity, and assets/shaders/*.gdshader (recursive). Sorted path<TAB>SHA256<LF> records are SHA256 hashed. Start/end snapshots detect source drift; they do not hash imported textures, certify a pack, or prove code was not edited and restored between snapshots. Source reading occurs outside measured intervals and may warm OS file cache.",
@@ -541,7 +543,10 @@ func _wait_ready() -> bool:
 	while float(Time.get_ticks_usec() - start) / 1000000.0 < READY_TIMEOUT:
 		await process_frame
 		var origin: Vector2 = game._camera_origin(game._camera_focus_position(game.current_position))
-		var visible := Rect2(origin, Vector2(root.size) / game._camera_zoom_scale())
+		# canvas_items stretching can make the native window larger than the
+		# gameplay viewport (notably in tiling compositors). Match the renderer's
+		# world view instead of waiting for terrain it never requested.
+		var visible := Rect2(origin, game.get_viewport_rect().size / game._camera_zoom_scale())
 		var terrain_ready: bool = game._is_hex_practice() or game.campus_renderer.terrain_ready_for(SanctumCampusRenderer.terrain_preparation_rect(visible))
 		var backdrop_ready: bool = game._is_hex_practice() or game.pov_terrain_backdrop.ready_for(visible)
 		if not game.terrain_loading and terrain_ready and backdrop_ready and game._character_pages_ready:

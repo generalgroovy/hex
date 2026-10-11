@@ -12,6 +12,7 @@ func run() -> int:
 	_test_gentle_framing()
 	_test_lifecycle()
 	_test_input_transform()
+	_test_visible_world_rect()
 	_test_arrow()
 	return finish("player-camera-rig")
 
@@ -113,6 +114,22 @@ func _test_input_transform() -> void:
 		var target := Rig.screen_to_world(pointer, frame_origin + pan)
 		check(target.is_finite(), "actual aim remains a finite world endpoint")
 		equal(Rig.mouse_look_intent(pointer, VIEW), intent, "camera pan cannot amplify raw screen-space look intent")
+
+
+func _test_visible_world_rect() -> void:
+	for size: Vector2 in [Vector2(960, 540), Vector2(1280, 720), Vector2(3440, 1440), Vector2(720, 1280), Vector2(3840, 2160)]:
+		for zoom: float in [0.5, 0.75, 1.0]:
+			for origin: Vector2 in [Vector2.ZERO, Vector2(777.371, 413.918), Vector2(-81.7, -62.6)]:
+				var viewport := Rect2(Vector2(13, -7), size)
+				var world_view := Rig.visible_world_rect(viewport, origin, zoom)
+				var translation := (-origin * zoom).round()
+				check((world_view.position * zoom + translation).is_equal_approx(viewport.position), "visible world origin exactly matches drawn viewport after pixel snapping")
+				check((world_view.end * zoom + translation).is_equal_approx(viewport.end), "visible world end includes every rendered edge at wide/portrait/4K sizes and all zooms")
+				check(world_view.size.is_equal_approx(size / zoom), "visible bounds retain exact rendered world extent")
+	for bad: Rect2 in [Rect2(), Rect2(0, 0, -1, 10), Rect2(Vector2(INF, 0), Vector2.ONE)]:
+		equal(Rig.visible_world_rect(bad, Vector2.ZERO), Rect2(), "invalid viewport cannot poison sight or terrain demand")
+	equal(Rig.visible_world_rect(Rect2(Vector2.ZERO, VIEW), Vector2(NAN, 0)), Rect2(), "invalid camera origin cannot poison view bounds")
+	equal(Rig.visible_world_rect(Rect2(Vector2.ZERO, VIEW), Vector2.ZERO, 0.0), Rect2(), "zero zoom cannot divide into an invalid view")
 
 
 func _test_arrow() -> void:

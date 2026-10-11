@@ -57,7 +57,6 @@ const PARCHMENT_COLOR := Color("e2d8b2")
 const PANEL_COLOR := Color("11130ee6")
 const PLAYER_COLOR := ATTUNEMENT_COLOR
 const POV_TERRAIN_SHADE := Color(0.66, 0.66, 0.66, 1.0)
-const POV_RANGE_FEATHER := 28.0
 const PovTerrainBackdrop = preload("res://src/presentation/pov_terrain_backdrop.gd")
 const PovTerrainBatch = preload("res://src/presentation/pov_terrain_batch.gd")
 const RenderQuality = preload("res://src/presentation/render_quality.gd")
@@ -69,6 +68,7 @@ var diagnostic_draw_stages_us: Dictionary = {}
 var _visibility_frame_active := false
 var _visibility_frame_bounds_ready := false
 var _visibility_frame_bounds: Array[Rect2] = []
+var _visibility_frame_sight_range := -1.0
 var _visibility_bounds_builds := 0
 
 var world: SimWorld
@@ -961,7 +961,6 @@ func _process(delta: float) -> void:
 	_update_station_focus()
 	_update_service_directory(delta)
 	controls_blocking = controls_blocking or _gameplay_input_blocked()
-	_advance_player_camera(delta, controls_blocking)
 	_update_service_details(delta)
 	if session_steward != null and world != null:
 		session_steward.expire(world.tick)
@@ -996,6 +995,7 @@ func _process(delta: float) -> void:
 	if _solo_trial_frozen():
 		accumulator_seconds = 0.0
 		_prepare_active_character_pages()
+		_advance_player_camera(delta, controls_blocking)
 		queue_redraw()
 		return
 	var fixed_delta: float = 1.0 / float(tick_rate)
@@ -1011,6 +1011,7 @@ func _process(delta: float) -> void:
 			session_transport.poll()
 			_sync_session_transport()
 			if world != catch_up_world or not session_transport.is_host():
+				_advance_player_camera(delta, controls_blocking)
 				queue_redraw()
 				return
 		previous_position = current_position
@@ -1186,6 +1187,10 @@ func _process(delta: float) -> void:
 		_reset_motion_history()
 	_prepare_active_character_pages()
 	_update_character_gaits(delta)
+	# Follow the same interpolated sample that _draw will present. Advancing the
+	# camera before the fixed steps made it follow the previous frame's feet,
+	# introducing a changing screen-space offset during catch-up and acceleration.
+	_advance_player_camera(delta, controls_blocking)
 	queue_redraw()
 
 
@@ -3857,7 +3862,7 @@ func _draw_pov_mask(origin: Vector2, _aim: Vector2, camera_origin: Vector2) -> v
 	var texture: Texture2D = null
 	var backdrop_rect := Rect2()
 	if not _is_hex_practice() and pov_terrain_backdrop != null and pov_terrain_backdrop.ready_for(visible):
-		texture = pov_terrain_backdrop.get_texture()
+		texture = pov_terrain_backdrop.backdrop_texture()
 		backdrop_rect = pov_terrain_backdrop.world_rect
 	pov_terrain_batch.begin(self, texture, backdrop_rect, PixelPresentation.snapped_canvas_origin(camera_origin, PlayerCameraRig.ZOOM_PERCENT), _camera_zoom_scale())
 	if _pov_observer() == null:
@@ -3865,7 +3870,6 @@ func _draw_pov_mask(origin: Vector2, _aim: Vector2, camera_origin: Vector2) -> v
 		pov_terrain_batch.finish()
 		return
 	var zoom := _camera_zoom_scale()
-	var sight_range := float(PlayerPreferences.RELATIVE_SIGHT_RANGE) * zoom
 	var outer_radius := SightOcclusion.projected_viewport_cover_radius(origin, get_viewport_rect())
 	var shadow_reach := maxf(outer_radius, get_viewport_rect().size.length() * 2.25)
 	var buildings := _pov_building_surface_polygons(camera_origin)
@@ -3892,19 +3896,10 @@ func _draw_pov_mask(origin: Vector2, _aim: Vector2, camera_origin: Vector2) -> v
 	# Static wall surfaces replace any overdrawn live effects inside the solid.
 	for polygon: PackedVector2Array in buildings:
 		_draw_pov_terrain(polygon, camera_origin, Color.WHITE)
-	# Opaque static terrain throughout the feather: alpha blending here would
-	# reveal hidden live content. Only the terrain's brightness interpolates.
-	if sight_range < outer_radius:
-		var feather_end := minf(outer_radius, sight_range + POV_RANGE_FEATHER * zoom)
-		for segment: int in range(SightOcclusion.MASK_SEGMENTS):
-			var a := TAU * float(segment) / SightOcclusion.MASK_SEGMENTS
-			var b := TAU * float(segment + 1) / SightOcclusion.MASK_SEGMENTS
-			_draw_pov_terrain(SightOcclusion.projected_mask_quad(origin, sight_range, feather_end, a, b), camera_origin, Color.WHITE, true)
-			if feather_end < outer_radius:
-				_draw_pov_terrain(SightOcclusion.projected_mask_quad(origin, feather_end, outer_radius, a, b), camera_origin)
-
-	# Apply blocker shadows last, so a range feather cannot brighten darkness
-	# behind a different obstacle. Replacement does not accumulate darkness.
+	# Sight covers every viewport corner, so there is no radial fog boundary
+	# inside the screen. Only real occluders require terrain replacement. Avoid
+	# rebuilding a ring of up to 192 offscreen/degenerate polygons every frame.
+	# Apply blocker shadows last. Replacement does not accumulate darkness.
 	for polygon: PackedVector2Array in buildings + covers:
 		for region: PackedVector2Array in SightOcclusion.shadow_outside_surface(origin, polygon, shadow_reach):
 			_draw_pov_terrain(region, camera_origin)
@@ -3945,7 +3940,7 @@ func _draw_pov_terrain(points: PackedVector2Array, camera_origin: Vector2, shade
 	var translation := PixelPresentation.snapped_canvas_origin(camera_origin, PlayerCameraRig.ZOOM_PERCENT)
 	for point: Vector2 in points:
 		uv.append(((point - translation) / _camera_zoom_scale() - pov_terrain_backdrop.world_rect.position) / pov_terrain_backdrop.world_rect.size)
-	draw_polygon(points, colors, uv, pov_terrain_backdrop.get_texture())
+	draw_polygon(points, colors, uv, pov_terrain_backdrop.backdrop_texture())
 
 
 func _pov_observer_ground_position(observer: PlayerState, spectating: bool, rendered_local: Vector2) -> Vector2:
@@ -4022,12 +4017,14 @@ func _pov_opaque_bounds() -> Array[Rect2]:
 
 func _begin_visibility_frame() -> void:
 	_visibility_frame_active = true
+	_visibility_frame_sight_range = -1.0
 	_visibility_frame_bounds_ready = false
 	_visibility_frame_bounds = []
 
 
 func _end_visibility_frame() -> void:
 	_visibility_frame_active = false
+	_visibility_frame_sight_range = -1.0
 	_visibility_frame_bounds_ready = false
 	_visibility_frame_bounds = []
 
@@ -4546,12 +4543,26 @@ func _pov_actor_ground_position(actor: PlayerState) -> Vector2:
 # Shared presentation authority: character feet, contact marks and the fog mask
 # use the same viewed actor, ground metric and authored opaque geometry.
 # Network snapshots still contain complete state; this is not packet redaction.
+func _pov_sight_range(observer: PlayerState) -> float:
+	if observer == null: return 0.0
+	# Detached simulation fixtures have no rendered viewport to cover.
+	if not is_inside_tree(): return float(PlayerPreferences.RELATIVE_SIGHT_RANGE)
+	if _visibility_frame_active and _visibility_frame_sight_range >= 0.0:
+		return _visibility_frame_sight_range
+	var origin := _pov_actor_ground_position(observer)
+	var camera_origin := _camera_origin(_camera_focus_position(origin))
+	var visible := PlayerCameraRig.visible_world_rect(get_viewport_rect(), camera_origin, _camera_zoom_scale())
+	var radius := SightOcclusion.viewport_sight_range(origin, visible, float(PlayerPreferences.RELATIVE_SIGHT_RANGE))
+	if _visibility_frame_active: _visibility_frame_sight_range = radius
+	return radius
+
+
 func _pov_point_visible(point: Vector2, chemical_reveal: bool = false) -> bool:
 	var observer := _pov_observer()
 	if observer == null or not point.is_finite():
 		return false
 	var origin := _pov_actor_ground_position(observer)
-	if not SightOcclusion.point_visible(origin, point, Vector2.RIGHT, 360.0, float(PlayerPreferences.RELATIVE_SIGHT_RANGE), _pov_opaque_bounds()):
+	if not SightOcclusion.point_visible(origin, point, Vector2.RIGHT, 360.0, _pov_sight_range(observer), _pov_opaque_bounds()):
 		return false
 	var start := Vector2i(roundi(origin.x * SimConfig.FIXED_SCALE), roundi(origin.y * SimConfig.FIXED_SCALE))
 	var finish := Vector2i(roundi(point.x * SimConfig.FIXED_SCALE), roundi(point.y * SimConfig.FIXED_SCALE))
@@ -5441,7 +5452,7 @@ func _spectator_name(entity_id: int) -> String:
 
 func _camera_focus_position(local_position: Vector2) -> Vector2:
 	var state := _spectator_state() if _is_spectating() else null
-	return Vector2(float(state.position_x) / SimConfig.FIXED_SCALE, float(state.position_y) / SimConfig.FIXED_SCALE) if state != null else local_position
+	return _pov_actor_ground_position(state) if state != null else local_position
 
 
 func _local_player_state() -> PlayerState:

@@ -14,9 +14,19 @@ class SpectatorHarness:
 		return world.player(follow_id) if follow_id > 0 else null
 
 
+class MaskHarness:
+	extends "res://tests/support/chemistry_coach_harness.gd"
+	var replacement_polygons: Array[PackedVector2Array] = []
+	func _draw_pov_terrain(points: PackedVector2Array, _camera_origin: Vector2, _shade: Color = Color.WHITE, _feather: bool = false) -> void:
+		replacement_polygons.append(points.duplicate())
+	func _pov_hex_occluder_polygons(_camera_origin: Vector2) -> Array[PackedVector2Array]:
+		return []
+
+
 func run() -> int:
 	_test_single_mode_and_owned_body()
 	_test_fixed_range_and_rotation_invariance()
+	_test_full_viewport_and_frame_cache()
 	_test_remote_actor_and_chemistry_visibility()
 	_test_hex_pillar_visibility()
 	_test_interpolated_actor_uses_rendered_side_of_wall()
@@ -78,6 +88,49 @@ func _test_fixed_range_and_rotation_invariance() -> void:
 		check(node._pov_point_visible(OBSERVER_POINT + Vector2(600.0, 0.0)), "all eight aim rotations preserve visible points")
 		check(not node._pov_point_visible(OBSERVER_POINT + Vector2(721.0, 0.0)), "all eight aim rotations preserve hidden points")
 	node.free()
+
+
+func _test_full_viewport_and_frame_cache() -> void:
+	var viewport := SubViewport.new()
+	(Engine.get_main_loop() as SceneTree).root.add_child(viewport)
+	var node := MaskHarness.new()
+	check(node.configure_fixture(), "viewport visibility loads real gameplay authority")
+	viewport.add_child(node)
+	var observer: PlayerState = node.world.player()
+	_set_actor_point(observer, OBSERVER_POINT)
+	node.current_position = OBSERVER_POINT
+	node.previous_position = OBSERVER_POINT
+	node.campus_layout.data["buildings"] = []
+	node.player_camera.initialized = true
+	var authority_before := observer.canonical_values()
+	for size: Vector2i in [Vector2i(960,540), Vector2i(1280,720), Vector2i(1920,1080), Vector2i(2560,1080)]:
+		viewport.size = size
+		for offset: Vector2 in [Vector2(320.25,480.75), Vector2(-32.25,16.75)]:
+			node.player_camera.origin = offset
+			var translation := (-offset * 0.75).round()
+			for pixel: Vector2 in [Vector2.ZERO, Vector2(size.x,0), Vector2(size), Vector2(0,size.y)]:
+				var corner := (pixel - translation) / 0.75
+				check(node._pov_point_visible(corner), "every actual viewport corner is visible despite aspect ratio, camera offset and projection")
+			var radius: float = node._pov_sight_range(observer)
+			check(not node._pov_point_visible(OBSERVER_POINT + Vector2(radius + 1.0, 0)), "screen coverage retains a finite shared range beyond the viewport")
+			node.replacement_polygons.clear()
+			node._draw_pov_mask(OBSERVER_POINT * 0.75 + translation, Vector2.RIGHT, offset)
+			check(node.replacement_polygons.is_empty(), "clear full-screen sight submits no radial mask strips despite world/screen padding differences")
+	viewport.size = Vector2i(1280,720)
+	node.player_camera.origin = Vector2(300,400)
+	node._begin_visibility_frame()
+	var cached: float = node._pov_sight_range(observer)
+	check(cached > 720.0, "screen coverage expands the legacy radius")
+	equal(node._visibility_frame_sight_range, cached, "one draw shares a prepared range for all body and cue queries")
+	node._end_visibility_frame()
+	viewport.size = Vector2i(2560,1440)
+	check(node._pov_sight_range(observer) > cached, "resize outside a draw immediately refreshes screen coverage")
+	node.campus_layout.data["buildings"] = [{"bounds": [1050,990,20,20], "occlusion_policy": "los_cutaway"}]
+	check(not node._pov_point_visible(Vector2(1300,1000)), "wider screen coverage preserves opaque wall shadows")
+	node._draw_pov_mask(OBSERVER_POINT * 0.75 + (-node.player_camera.origin * 0.75).round(), Vector2.RIGHT, node.player_camera.origin)
+	check(not node.replacement_polygons.is_empty(), "positive opaque-wall control still submits terrain replacement and shadow polygons")
+	equal(observer.canonical_values(), authority_before, "viewport changes never alter simulation state")
+	viewport.free()
 
 
 func _test_remote_actor_and_chemistry_visibility() -> void:

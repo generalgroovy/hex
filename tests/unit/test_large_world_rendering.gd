@@ -256,17 +256,18 @@ func _test_view_relative_backdrop() -> void:
 	check(not backdrop.ready_for(first), "unrendered pixels cannot enter the POV compositor")
 	# Explicitly simulate the completion token; native frame rendering remains a
 	# separate root-owned capture gate, not an assertion made by this unit test.
-	backdrop._rendered_revision = backdrop._revision
+	backdrop._complete_capture(backdrop._revision)
 	check(backdrop.ready_for(first), "matching completed token admits the exact prepared view")
 	var revision: int = backdrop._revision
 	check(backdrop.prepare_view(first.grow(-10)), "contained camera movement reuses matching pixels")
 	equal(backdrop._revision, revision, "contained movement schedules no terrain recapture")
 	var destination := Rect2(4600, 4000, 1280, 720)
 	check(not backdrop.prepare_view(destination) and not backdrop.ready_for(destination), "teleport refuses old terrain until its replacement revision renders")
-	check(not backdrop.ready_for(first), "old origin cannot be mistaken for newly prepared camera pixels")
-	backdrop._rendered_revision = revision
+	check(backdrop.ready_for(first), "old completed pixels remain available while a separate destination capture is pending")
+	backdrop._complete_capture(revision)
 	check(not backdrop.ready_for(destination), "late completion of old revision cannot authorize new origin")
-	backdrop._rendered_revision = backdrop._revision
+	backdrop._complete_capture(backdrop._revision)
+	check(backdrop.ready_for(destination) and not backdrop.ready_for(first), "completion atomically replaces coordinates and the captured texture")
 	check(backdrop.set_court_context(SanctumCampusRenderer.SIGNATURE_CHALLENGE_CONTEXT), "court-label change schedules fresh static pixels")
 	check(not backdrop.ready_for(destination), "court context invalidates otherwise matching camera texture")
 	check(not backdrop.prepare_view(Rect2(0, 0, 0, 10)), "empty camera view refuses")
