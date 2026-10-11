@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "completed_at_utc": "2026-09-29T21:58:40.9588024Z",
+  "tier": "focused",
+  "result": "failed",
+  "failure": "Godot emitted a script/import/runtime error.",
+  "source": {
+    "current_state_path": ".godot/windows-tests/fca4d2bba7a94474ad6a9fec1cf17197/current-state.json",
+    "asset_inventory_path": null,
+    "head": "1559a566e33255c59337c5963f1c3c685d757f1f",
+    "branch": "main",
+    "dirty": true,
+    "current_state_sha256": "e360952554b6c8b4e7efc4827bc06459da47cd9a4bffe027a3d25bce927e5352",
+    "asset_inventory_sha256": null
+  },
+  "requested_suite_ids": [
+    "hex-court-presenter",
+    "hex-render-frame",
+    "compact-combat-hud"
+  ],
+  "supervision": {
+    "default_engine_timeout_seconds": 180,
+    "suite_timeout_seconds": 180
+  },
+  "isolation": {
+    "appdata_path": ".godot/windows-tests/fca4d2bba7a94474ad6a9fec1cf17197/isolated-roaming",
+    "scope": "Godot import, suite and boot user data; packaging retains its own isolation policy",
+    "caller_appdata_restored": true
+  },
+  "executed": {
+    "current_state_check": true,
+    "asset_inventory": false,
+    "doctor": true,
+    "import": false,
+    "post_import_identity_check": false,
+    "deterministic_suite_runner": true,
+    "suite_count": 3,
+    "assertion_count": 62516,
+    "suites": [
+      {
+        "id": "hex-render-frame",
+        "assertions": 99,
+        "failures": 0
+      },
+      {
+        "id": "hex-court-presenter",
+        "assertions": 61893,
+        "failures": 108
+      },
+      {
+        "id": "compact-combat-hud",
+        "assertions": 524,
+        "failures": 0
+      }
+    ],
+    "boot_120_hz": false,
+    "package_and_installer": false
+  },
+  "duration_ms": 83186,
+  "stderr_bytes": 0,
+  "logs": [
+    {
+      "path": ".godot/windows-tests/fca4d2bba7a94474ad6a9fec1cf17197/suite.log",
+      "sha256": "b3b091237593671bcf6d73e203b1c56f83c2ac36b3d41b91069d28ecaa60629c",
+      "stderr_bytes": 0
+    }
+  ]
+}

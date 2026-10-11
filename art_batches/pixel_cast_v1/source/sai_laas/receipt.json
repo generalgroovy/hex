@@ -1,0 +1,66 @@
+{
+  "id": "sai_laas",
+  "display_name": "Sai Laas",
+  "race": "nymph",
+  "status": "source_ready_for_lead_review",
+  "generation_tool": "built-in image_gen",
+  "attempts": 2,
+  "generated_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-3caf-7f02-8030-e4d35e2365b4\\exec-057f55c4-88b9-451e-97e3-ced82d5da6f8.png",
+  "prior_generated_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-3caf-7f02-8030-e4d35e2365b4\\exec-e43250af-9fbb-4f88-95a9-799cc9a34681.png",
+  "reference_paths": [
+    "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/sai_laas-detail.png",
+    "C:/Users/sende/Pictures/styleref1.png",
+    "C:/Users/sende/Projects/hex/art_batches/pixel_body_pilot_v1/source/s-wayne.png"
+  ],
+  "observed_columns": 8,
+  "observed_rows": 4,
+  "source_row_mapping": {
+    "idle": 0,
+    "walk_left_contact": 1,
+    "walk_right_contact": 2,
+    "cast": 3
+  },
+  "observed_directions": [
+    "S",
+    "SE",
+    "E",
+    "NW",
+    "N",
+    "NE",
+    "W",
+    "SW"
+  ],
+  "suggested_source_columns_for_runtime_order": [
+    0,
+    1,
+    2,
+    5,
+    4,
+    3,
+    6,
+    7
+  ],
+  "dimensions": [
+    1536,
+    1024
+  ],
+  "inspection": {
+    "directions": "Rear-quarter source columns3/5 are swapped:3 looks back-left and5 back-right; correct rear head/armor views with no frontal eyes. All other directions intact.",
+    "contacts": "Correction produces clear opposite front boot with broader stride. E/W exact near/far reversal remains difficult to verify; north contact may still repeat same forward side.",
+    "whole_bodies": "32 complete bodies with leaf-hair, little flowers, green/rust costume and intact boots.",
+    "cast": "Two empty hands held forward at chest height along facing; no spells."
+  },
+  "alpha_check": {
+    "format": "RGBA",
+    "background_samples_alpha": [1, 1, 2, 0],
+    "note": "Brown preview surround has very low but nonzero alpha in some gutters; authorized alpha cleanup is required. Measured samples at 0,0 / 200,200 / 760,500 / 1500,1000."
+  },
+  "visual_issues": [
+    "Low-alpha background residue (sample alpha1-2) needs authorized deterministic cleanup.",
+    "Swap source columns3 and5 if lead agrees with visual direction interpretation.",
+    "North and profile exact anatomical foot alternation still requires animated review."
+  ],
+  "prompt": "Use case: stylized-concept. Asset: fixed-pixel game sprite atlas on genuinely transparent RGBA.\nReferences: image 1 is exact character identity and clothing; image 2 is retro pixel style only (ignore its old names); image 3 is compact common-head/body proportions and readable charming finish only, NOT its row count.\nMake exactly 32 whole-body sprites in exactly 8 equal columns by 4 equal rows. Generous empty transparent gutters, identical size and baseline, feet/hair/appendages fully intact in each cell. Coarse clean pixel clusters, crisp limited-palette outlines, compact modest charming proportions matching image 3; no painterly smoothing.\nEVERY row column order: S front, SE front/right45, E right profile, NE back/right45, N straight back, NW back/left45, W left profile, SW front/left45. NE/N/NW show the back of the head with NO frontal eyes. Torso and feet rotate with head. Eight unmistakably distinct directions.\nRows only: 0 idle standing; 1 walk contact with LEFT foot forward and RIGHT arm forward; 2 opposite walk contact RIGHT foot forward and LEFT arm forward, genuinely alternating feet not duplicated poses; 3 planted stance, BOTH EMPTY hands forward casting, no magic. Never add a fifth row.\nMaintain exact face, costume, anatomy and palette in all32 frames. No staves, weapons, held objects, ground shadows, scenery, text, labels, grid lines, sparkles or baked spells. Wide transparent canvas.\nSubject: Sai Laas, small nymph: light warm skin, green eyes, short thick spiky rust-orange and green leaf hair with small flowers, long pointed ears, olive-green leaf panel tunic with leather brown straps and gold edging, brown boots. Use exact image1 identity.\nImportant: back-right column3 shows back hair, screen-right ear only and BACK of tunic (not face); back-left column5 shows back hair, screen-left ear and BACK of tunic. Cast row: BOTH hands side-by-side FORWARD at chest height along facing (E both right of torso,W both left), not arms spread. Walk row1 front has SCREEN-RIGHT boot lower; walk row2 front has SCREEN-LEFT boot lower, opposing knees/arms switch. Exact two different contact poses, with bright near limb/dark far limb visibly swapping in profiles.",
+  "correction_prompt": "Use case: identity-preserve. In this exact 8x4 Sai Laas sprite atlas, change ONLY the walk contact in the THIRD ROW from top. Preserve all other rows, identity, foliage, leaf outfit, scale, positions and directions.\nThe FRONT sprite (first column of THIRD row) must stand with SCREEN-LEFT boot visibly lowest and forward, SCREEN-RIGHT boot lifted high and backward, screen-right fist forward and screen-left fist back. It currently has the opposite boot lower; reverse it.\nCarry that opposite anatomical contact to the remaining7 views of the third row. The near bright boot and far dark boot exchange front/back positions; arms counter-swing. Use a broad readable stride, not a translated identical pose.\nExactly8 columns4 rows. Keep intact full bodies and clean transparent RGBA; no new effects, props, grid, labels or shadows.",
+  "runtime_imports_or_tests": "NOT_RUN; source art only"
+}

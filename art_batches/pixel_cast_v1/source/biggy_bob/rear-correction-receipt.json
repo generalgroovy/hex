@@ -1,0 +1,53 @@
+{
+  "id": "biggy_bob",
+  "asset": "rear-only correction",
+  "generator": "built-in image_gen",
+  "generator_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-ece9-7650-9c46-262da7c2d18d\\exec-d8cc39da-6bad-4bdb-9b42-c4637cf0b8fe.png",
+  "source_file": "rear-correction.png",
+  "authorization": "One additional narrow 2-column x4-row correction explicitly requested by lead after full-sheet retry cap",
+  "references": [
+    "C:\\Users\\sende\\Projects\\hex\\art_batches\\pixel_cast_v1\\source\\biggy_bob\\source.png"
+  ],
+  "observed": {
+    "width": 1024,
+    "height": 1536,
+    "pixel_format": "Format32bppArgb",
+    "sampled_zero_alpha": 16784,
+    "sampled_partial_alpha": 7792,
+    "sampled_total": 24576,
+    "sha256": "EF9123E9C92684F41D47B0B76209B36B6DF8023A9DF57BAF6174CC6657A623DC",
+    "columns": 2,
+    "rows": 4,
+    "row_mapping": [
+      "idle",
+      "walk_contact_a_candidate",
+      "walk_contact_b_candidate",
+      "cast"
+    ],
+    "headings": [
+      "NE",
+      "NW"
+    ],
+    "target_columns_in_full_atlas": [
+      3,
+      5
+    ]
+  },
+  "visual_assessment": {
+    "status": "accepted_rear_direction_candidate_gait_not_fully_verified",
+    "strengths": [
+      "All8 intact rear bodies",
+      "left column faces back-right, right column back-left",
+      "No frontal eyes, exact current dwarf costume and hair",
+      "cast projects empty glove toward correct facing side"
+    ],
+    "quality_flags": [
+      "Walk contactA/B poses differ but both show a similar nearer boot placement; opposite anatomical foot contact not convincingly proven",
+      "Far casting hand partly occluded by torso",
+      "Source scale differs from full sheet; normalize body height using original geometry only",
+      "Soft alpha requires deterministic cleanup",
+      "Does not resolve E/W front-diagonal similarity in full source"
+    ]
+  },
+  "exact_prompt": "Use case: stylized-concept\nAsset type: narrowly scoped missing-view correction sprite sheet for H.E.X.\nInput Image1 is Biggy Bob's current full sheet, IDENTITY/PIXEL-STYLE REFERENCE ONLY. Do not copy its layout or erroneous rear direction views.\nGenerate a NEW PORTRAIT sheet of EXACTLY TWO COLUMNS x FOUR ROWS = EIGHT FULL-BODY DWARF SPRITES, all on genuinely transparent RGBA. Only rear diagonal views. NOT an eight-column sheet.\nSame Biggy Bob: compact stout dwarf, brown swept-back hair tied into a small low knot, thick long brown beard visible only if naturally peeking around jaw, dark charcoal rounded shoulder armour, gold trim/rivets, dark gauntlets, gold belt details, dark stout boots. Match source head size/body volume and pixel cluster style. No helmet.\nLEFT COLUMN (all four sprites): BACK-RIGHT 135degree view. Body faces diagonally AWAY from viewer toward IMAGE RIGHT. Back of head and armour are dominant; near ear is on the RIGHT silhouette. Absolutely no eyes or frontal face. Arms and feet point toward image RIGHT.\nRIGHT COLUMN (all four sprites): BACK-LEFT 225degree view. Body faces diagonally AWAY toward IMAGE LEFT. Back of head/armour dominant; near ear on LEFT silhouette. Absolutely no eyes or frontal face. Arms/feet point toward image LEFT. This is the opposite diagonal to left column, never a duplicate.\nFOUR ROWS top to bottom: row0 idle both feet grounded relaxed arms; row1 walk-contact A anatomical LEFT foot ahead and RIGHT arm ahead; row2 clearly opposite walk-contact B anatomical RIGHT foot ahead and LEFT arm ahead; row3 empty-hand cast, BOTH gloved hands visibly extended toward the facing diagonal, so left-column hands project toward IMAGE RIGHT and right-column hands toward IMAGE LEFT. Rear view never reaches toward viewer.\nEight intact connected bodies of consistent scale, generous transparent gutter/margins around every head/hand/foot, separated rows, no clipping. Charming crisp oldschool pixel-art clusters, not stretched, no detached arms/hands.\nBackground alpha exactly zero between bodies. No ground, shadow, aura, spell, weapon, staff, text, labels, grid, border or extra poses. Exactly 2 columns and 4 rows."
+}

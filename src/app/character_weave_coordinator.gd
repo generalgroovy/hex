@@ -39,9 +39,19 @@ func preferred_weave(state: PlayerState, local: bool) -> PackedInt32Array:
 	var per_character: Dictionary = session_weaves.get(state.entity_id, {})
 	if per_character.has(champion_id): return (per_character[champion_id] as PackedInt32Array).duplicate()
 	if local and configured:
+		var migration := library.migration_preview(champion_id)
+		if bool(migration.get("required", false)):
+			last_error = String(migration.get("notice", "Review your saved weave in the Spell Loom."))
+			return PackedInt32Array()
 		var saved := library.saved_weave(champion_id)
 		if not saved.is_empty(): return (saved.wire_ids as PackedInt32Array).duplicate()
 	return PackedInt32Array()
+
+
+func migration_for_actor(state: PlayerState) -> Dictionary:
+	if not configured or state == null or champions == null:
+		return {}
+	return library.migration_preview(champions.champion_id_from_wire(state.champion_wire_id))
 
 
 func restore_actor(state: PlayerState, local: bool) -> bool:

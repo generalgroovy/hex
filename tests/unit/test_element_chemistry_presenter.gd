@@ -1,18 +1,35 @@
 extends FluxTestSuite
 
 const Presenter = preload("res://src/presentation/element_chemistry_presenter.gd")
-const Chemistry = preload("res://src/sim/chemistry/element_chemistry_system.gd")
+const Chemistry = preload("res://tests/support/archive_chemistry_visual_fixture.gd")
+const LivePolicy = preload("res://src/sim/hex/hex_recipe_policy.gd")
 const Reaction = preload("res://src/sim/chemistry/element_reaction_state.gd")
 const Deposit = preload("res://src/sim/chemistry/element_deposit_state.gd")
 const Reticle = preload("res://src/presentation/aim_reticle_presenter.gd")
 const Capacitor = preload("res://src/sim/chemistry/capacitor_field_policy.gd")
 
+# All existing 36-sequence mask/lifecycle/occlusion assertions below exercise
+# explicit historical art fixtures, not current combat authority.
 func run() -> int:
 	var language := VisualLanguage.new()
 	check(language.load_from_file(), "chemistry visual language loads")
 	var presenter := Presenter.new()
 	check(not presenter.configure(null), "chemistry rendering refuses missing visual tokens")
 	check(presenter.configure(language), "chemistry rendering uses canonical element palette")
+	var live_bindings := {}
+	for wire: int in LivePolicy.active_wire_ids():
+		var definition := LivePolicy.definition(wire)
+		var archived := int(definition.archive_recipe_wire)
+		for phase: String in ["formation","active","decay"]:
+			for reduced: bool in [false,true]:
+				var asset := presenter.library.live_reaction_asset_id(wire,phase,reduced)
+				equal(asset,presenter.library.reaction_asset_id(archived,phase,reduced),"live%d explicitly binds archive motif without borrowing its mechanics" % wire)
+				check(not presenter.library.sample(asset,0).is_empty(),"live%d every phase/variant has native frames" % wire)
+		live_bindings[wire]=true
+	equal(live_bindings.size(),63,"all current recipes have explicit live art bindings")
+	for wire: int in [305,306,312,313,318,319,323,327,328,329,330,331,332,333]:
+		check(presenter.library.live_reaction(wire).is_empty(),"retired recipe cannot enter live binding")
+		check(not presenter.library.reaction(wire).is_empty(),"retired recipe remains explicit archive art")
 	var identities := {}
 	for wire: int in range(301,337):
 		var recipe := Chemistry.recipe(wire)
@@ -47,13 +64,13 @@ func run() -> int:
 		check(not presenter.draw_reaction(null,state,recipe,30),"null canvas cannot accidentally mutate chemistry")
 		if wire == 303:
 			for reduced: bool in [false, true]:
-				var mud := presenter.reaction_model(state, recipe, 30, reduced)
+				var mud := presenter.archive_reaction_model(state, recipe, 30, reduced)
 				equal(String(mud.material_asset_id), PixelMagicLibrary.element_asset_id(1, "deposit_active", reduced), "Mud reuses native soil instead of Flood waves")
 				equal(String(mud.effect_label), "MUD · GROUND SLOW", "active Mud explains its actual effect")
-				check(presenter.reaction_model(state, recipe, 360, reduced).is_empty(), "Mud label expires with authority")
+				check(presenter.archive_reaction_model(state, recipe, 360, reduced).is_empty(), "Mud label expires with authority")
 		equal(state.canonical_values(),before,"presentation queries cannot change game state")
 		check(Presenter.geometry(state,Chemistry.recipe(301 if wire!=301 else 302)).is_empty(),"mismatched recipe fails closed")
-	equal(identities.size(),36,"all thirty-six reactions are represented")
+	equal(identities.size(),36,"all thirty-six archived art reactions remain represented")
 	check("front" in Presenter.LINE_SHAPES,"Magma uses the authority corridor, not a perpendicular invented ridge")
 	var ring := Reaction.new()
 	ring.recipe_wire_id = 309
@@ -79,6 +96,7 @@ func run() -> int:
 			for p: Vector2 in line:
 				check(p.distance_to(Vector2(640,360)) >= 4,"reticle leaves target centre unobscured")
 	check(Reticle.segments(Vector2(INF,0)).is_empty(),"reticle rejects invalid screen location")
+	_test_controller_reticle_viewport()
 	_test_pixel_phases_and_native_cells(presenter)
 	_test_deposit_material_readability(presenter)
 	_test_ingredient_roles(presenter)
@@ -96,6 +114,72 @@ func run() -> int:
 	return finish("element-chemistry-presenter")
 
 
+func _test_controller_reticle_viewport() -> void:
+	var directions: Array[Vector2] = [Vector2.LEFT, Vector2(-1, -1).normalized(), Vector2.UP, Vector2(1, -1).normalized(), Vector2.RIGHT, Vector2(1, 1).normalized(), Vector2.DOWN, Vector2(-1, 1).normalized()]
+	for viewport: Rect2 in [Rect2(0, 0, 1280, 720), Rect2(0, 0, 1600, 900), Rect2(100, 50, 640, 360)]:
+		var inset := Reticle.VIEWPORT_INSET
+		var origins: Array[Vector2] = [viewport.get_center()]
+		for x: float in [13.5, viewport.size.x - 13.5]:
+			for y: float in [13.5, viewport.size.y - 13.5]:
+				origins.append(viewport.position + Vector2(x, y))
+		# Asymmetric edge proximity exposes separate-axis clamping's direction bug.
+		origins.append(viewport.position + Vector2(25, 105))
+		for origin: Vector2 in origins:
+			for direction: Vector2 in directions:
+				var requested := origin + direction * 240.0
+				var placed := Reticle.controller_position(origin, requested, viewport)
+				check(placed.is_finite(), "controller cue remains placeable at every normal corner/direction")
+				if not placed.is_finite():
+					continue
+				var travelled := placed - origin
+				check(absf(travelled.cross(direction)) < 0.0001, "controller edge placement stays on the original aim ray")
+				check(travelled.dot(direction) >= -0.0001 and travelled.length() <= 240.0001, "controller edge placement only shortens forward display distance")
+				_assert_reticle_inside(placed, direction, viewport)
+				if requested.x >= viewport.position.x + inset and requested.x <= viewport.end.x - inset and requested.y >= viewport.position.y + inset and requested.y <= viewport.end.y - inset:
+					equal(placed, requested, "unclipped controller position preserves the exact previous endpoint")
+	var viewport := Rect2(0, 0, 1280, 720)
+	for origin: Vector2 in [Vector2(13.5, 30), Vector2(13.5, 630)]:
+		var placed := Reticle.controller_position(origin, origin + Vector2.LEFT * 240.0, viewport)
+		equal(placed, Vector2(10, origin.y), "HUD-adjacent left edge still shortens the original horizontal ray")
+		_assert_reticle_inside(placed, Vector2.LEFT, viewport)
+	equal(Reticle.controller_position(Vector2(25, 105), Vector2(-215, -15), viewport), Vector2(10, 97.5), "oblique edge ray is shortened rather than redirected to a corner")
+	for origin: Vector2 in [Vector2(0, 100), Vector2(5, 100), Vector2(-100, 100)]:
+		equal(Reticle.controller_position(origin, Vector2(100, 100), viewport), Vector2(100, 100), "border or camera-transition origin may aim forward into the visible rectangle")
+		equal(Reticle.controller_position(origin, Vector2(1500, 100), viewport), Vector2(1270, 100), "ray entering and leaving the viewport stops at its far safe edge")
+		check(not Reticle.controller_position(origin, origin + Vector2.LEFT * 240.0, viewport).is_finite(), "outward ray with no safe intersection fails closed")
+	check(not Reticle.controller_position(Vector2(5, 100), Vector2(5, 340), viewport).is_finite(), "parallel ray outside the inset cannot invent a visible aim direction")
+	equal(Reticle.controller_position(Vector2(10, 10), Vector2(10, 10), viewport), Vector2(10, 10), "valid zero-length display segment preserves prior position")
+	equal(Reticle.controller_position(Vector2.ZERO, Vector2(20, 20), Rect2(0, 0, 20, 20)), Vector2(10, 10), "smallest fully fitting viewport admits its single safe center")
+	for invalid_view: Rect2 in [Rect2(), Rect2(0, 0, 19, 720), Rect2(0, 0, 1280, 19), Rect2(0, 0, -1280, 720), Rect2(INF, 0, 1280, 720), Rect2(0, 0, NAN, 720)]:
+		var invalid := Reticle.controller_position(Vector2(100, 100), Vector2(200, 200), invalid_view)
+		check(not invalid.is_finite() and Reticle.segments(invalid).is_empty(), "invalid or undersized viewport produces no partial reticle")
+	for invalid_point: Vector2 in [Vector2(INF, 0), Vector2(0, NAN)]:
+		check(not Reticle.controller_position(invalid_point, Vector2(200, 200), viewport).is_finite(), "nonfinite screen origin fails closed")
+		check(not Reticle.controller_position(Vector2(100, 100), invalid_point, viewport).is_finite(), "nonfinite requested endpoint fails closed")
+	# The actual fixed-camera transform remains a pure presentation query.
+	var actor := PlayerState.new(1)
+	actor.position_x = 18_000
+	actor.position_y = 240_000
+	actor.aim_x = -1000
+	actor.aim_y = 0
+	var authority_before := actor.canonical_values()
+	var origin := Vector2(actor.position_x, actor.position_y) / 1000.0 * PlayerCameraRig.ZOOM
+	var requested := (Vector2(actor.position_x, actor.position_y) / 1000.0 + Vector2(actor.aim_x, actor.aim_y).normalized() * 320.0) * PlayerCameraRig.ZOOM
+	equal(requested.x, -226.5, "regression fixture reproduces the offscreen controller endpoint")
+	equal(Reticle.controller_position(origin, requested, viewport), Vector2(10, 180), "left camera clamp retains a fully visible controller cue")
+	equal(actor.canonical_values(), authority_before, "reticle placement cannot change accepted aim or actor authority")
+	var mouse := Vector2(3, 7)
+	equal(Reticle.segments(mouse)[0][0], mouse + Vector2.LEFT * Reticle.GAP, "ordinary mouse reticle geometry remains unmodified")
+
+
+func _assert_reticle_inside(position: Vector2, direction: Vector2, viewport: Rect2) -> void:
+	var half_stroke := Reticle.OUTLINE_WIDTH * 0.5
+	for line: PackedVector2Array in Reticle.segments(position, direction):
+		for point: Vector2 in line:
+			check(point.x - half_stroke >= viewport.position.x - 0.0001 and point.y - half_stroke >= viewport.position.y - 0.0001 \
+				and point.x + half_stroke <= viewport.end.x + 0.0001 and point.y + half_stroke <= viewport.end.y + 0.0001, "every controller arm and direction tail includes its complete outline inside the viewport")
+
+
 func _test_capacitor_cues(presenter: ElementChemistryPresenter) -> void:
 	var config := SimConfig.new(120)
 	var state := _state(Capacitor.RECIPE_WIRE)
@@ -109,7 +193,7 @@ func _test_capacitor_cues(presenter: ElementChemistryPresenter) -> void:
 		var mode_geometry: Dictionary = {}
 		presenter.begin_frame(config, null, Rect2(), [], reduced)
 		for index: int in range(ticks.size()):
-			var model := presenter.reaction_model(state, recipe, ticks[index], reduced)
+			var model := presenter.archive_reaction_model(state, recipe, ticks[index], reduced)
 			check(not model.is_empty() and model.has("capacitor_cue"), "Capacitor keeps a phase cue in every finite normal/reduced state")
 			if model.is_empty() or not model.has("capacitor_cue"):
 				continue
@@ -131,15 +215,15 @@ func _test_capacitor_cues(presenter: ElementChemistryPresenter) -> void:
 				mode_geometry[expected[index]] = str(cue.parts)
 			elif index not in [2, 3, 5]:
 				equal(str(cue.parts), mode_geometry[expected[index]], "stable phase samples retain their bounded silhouette")
-		var active_a: Dictionary = presenter.reaction_model(state, recipe, state.active_tick, reduced).capacitor_cue
-		var active_b: Dictionary = presenter.reaction_model(state, recipe, state.active_tick + 4, reduced).capacitor_cue
+		var active_a: Dictionary = presenter.archive_reaction_model(state, recipe, state.active_tick, reduced).capacitor_cue
+		var active_b: Dictionary = presenter.archive_reaction_model(state, recipe, state.active_tick + 4, reduced).capacitor_cue
 		check(str(active_a.parts) != str(active_b.parts) and active_a.motion_step != active_b.motion_step, "active chevrons visibly advance using absolute authority age")
-		var early_warning: Dictionary = presenter.reaction_model(state, recipe, warning_tick, reduced).capacitor_cue
-		var late_warning: Dictionary = presenter.reaction_model(state, recipe, state.decay_tick - 2, reduced).capacitor_cue
+		var early_warning: Dictionary = presenter.archive_reaction_model(state, recipe, warning_tick, reduced).capacitor_cue
+		var late_warning: Dictionary = presenter.archive_reaction_model(state, recipe, state.decay_tick - 2, reduced).capacitor_cue
 		check(early_warning.motion == "inward" and late_warning.buildup > early_warning.buildup and str(late_warning.parts) != str(early_warning.parts), "the full500ms warning visibly builds before the one-tick release")
-		var discharge := presenter.reaction_model(state, recipe, state.decay_tick - 1, reduced)
-		var active_material := presenter.reaction_model(state, recipe, state.active_tick, reduced)
-		var decay_material := presenter.reaction_model(state, recipe, state.decay_tick, reduced)
+		var discharge := presenter.archive_reaction_model(state, recipe, state.decay_tick - 1, reduced)
+		var active_material := presenter.archive_reaction_model(state, recipe, state.active_tick, reduced)
+		var decay_material := presenter.archive_reaction_model(state, recipe, state.decay_tick, reduced)
 		check(float(decay_material.material_opacity) < float(active_material.material_opacity) * 0.5, "harmless decay becomes visibly quiet on its first tick in both effects modes")
 		check(float(discharge.material_opacity) > float(active_material.material_opacity), "single discharge distinctly brightens the occupied material")
 		var canvas := Node2D.new()
@@ -151,7 +235,7 @@ func _test_capacitor_cues(presenter: ElementChemistryPresenter) -> void:
 		if not reduced:
 			stage_geometry = mode_geometry
 	check(stage_geometry.size() == 5, "shape and motion distinguish all five Capacitor phases without relying on color")
-	check(presenter.reaction_model(state, recipe, state.expiry_tick).is_empty(), "Capacitor cues stop exactly at authority expiry")
+	check(presenter.archive_reaction_model(state, recipe, state.expiry_tick).is_empty(), "Capacitor cues stop exactly at authority expiry")
 	equal(state.canonical_values(), before, "Capacitor model and draw queries never edit gameplay state")
 	check(presenter._capacitor_cues.size() <= Presenter.CAPACITOR_CUE_CACHE_LIMIT, "Capacitor geometry cache has a hard entry bound")
 
@@ -177,7 +261,7 @@ func _test_rampart_footprint(presenter: ElementChemistryPresenter) -> void:
 		state.direction_y = direction.y
 		var expected := Vector2(Chemistry.rampart_bounds(state).size) / 1000.0
 		for tick: int in [11, 40, 410]:
-			var model := presenter.reaction_model(state, recipe, tick)
+			var model := presenter.archive_reaction_model(state, recipe, tick)
 			check(not model.is_empty(), "Rampart has warning, active and harmless decay art in every cast direction")
 			if model.is_empty():
 				continue
@@ -190,7 +274,7 @@ func _test_rampart_footprint(presenter: ElementChemistryPresenter) -> void:
 	var earth_display_index := ChemistryGuideModel.DISPLAY_WIRES.find(int(AbilityCatalog.DISPLAY_ELEMENT_WIRES["earth"]))
 	check(earth_display_index >= 0, "Earth stable wire resolves inside the player-facing display order")
 	var detail := " ".join(ChemistryGuideModel.pair_lines(earth_display_index, earth_display_index))
-	check(detail.contains("wallrun/walljump") and detail.contains("80 x 45 px") and detail.contains("escape"), "F4 teaches live Rampart size, movement and escape rule")
+	check(detail.contains(String(ChemistryGuideModel.Policy.definition(301).purpose)) and detail.contains(String(ChemistryGuideModel.Policy.definition(301).counter)), "F4 teaches current hex Rampart purpose and response independently of archived rectangular visuals")
 	check(not detail.contains("not walking"), "Earth mirror no longer carries obsolete non-solid cover teaching")
 
 
@@ -211,8 +295,9 @@ func _test_large_coordinate_triangulation(presenter: ElementChemistryPresenter) 
 	equal(sliver, original, "triangulation never rounds or shifts actual world vertices")
 	check(PixelEffectGeometry.local_triangle_indices(PackedVector2Array([Vector2.ZERO, Vector2.ONE])).is_empty(), "fewer than three points have no drawable triangles")
 	check(PixelEffectGeometry.local_triangle_indices(PackedVector2Array([Vector2.ZERO, Vector2.ONE, Vector2(INF, 0)])).is_empty(), "nonfinite geometry fails closed")
-	var deposit := Deposit.from_values(PackedInt64Array([3002, 1000, 101, 1, 1, 6, 1568000, 1322560, 0, -1000, Deposit.TRAIL_RADIUS, 250, 24, 120, 5]))
-	check(deposit != null, "current Charge trail admits source-derived canonical dimensions")
+	var deposit := Chemistry.deposit_from_archive_values(PackedInt64Array([3002, 1000, 101, 1, 1, 6, 1568000, 1322560, 0, -1000, Deposit.TRAIL_RADIUS, 250, 24, 120, 5]))
+	check(deposit != null, "archived Charge trail admits its historical source dimensions")
+	if deposit != null: check(not deposit.validate(), "archive fixture cannot enter live deposit authority")
 	if deposit == null:
 		return
 	# Preserve the exact old pixel sliver as a synthetic geometry regression,
@@ -250,19 +335,19 @@ func _test_material_only_footprints(presenter: ElementChemistryPresenter) -> voi
 		state.length = int(Chemistry.recipe(wire).length)
 		var before := state.canonical_values()
 		presenter.begin_frame(config, null, Rect2(), [])
-		var normal := presenter.reaction_model(state, Chemistry.recipe(wire), state.active_tick)
+		var normal := presenter.archive_reaction_model(state, Chemistry.recipe(wire), state.active_tick)
 		var cells := presenter.footprint_cells(normal)
 		if normal.socket:
 			check(cells.is_empty(), "unlinked sources do not invent a material footprint")
 			continue
 		check(not cells.is_empty() and cells.size() <= Presenter.FOOTPRINT_CELL_LIMIT, "each occupied reaction has bounded native material coverage")
-		var reduced := presenter.reaction_model(state, Chemistry.recipe(wire), state.active_tick, true)
+		var reduced := presenter.archive_reaction_model(state, Chemistry.recipe(wire), state.active_tick, true)
 		equal(presenter.footprint_cells(reduced), cells, "reduced effects retain the same occupied cells rather than a ring")
 		for element: int in range(1, 9):
 			for attempt: int in range(100):
 				presenter.library.take_decoration(PixelMagicLibrary.element_asset_id(element, "deposit_active", false))
 		equal(presenter.footprint_cells(normal), cells, "zero decorative budget does not erase footprint material")
-		check(presenter.footprint_cells(presenter.reaction_model(state, Chemistry.recipe(wire), state.expiry_tick)).is_empty(), "authority expiry removes all footprint cells")
+		check(presenter.footprint_cells(presenter.archive_reaction_model(state, Chemistry.recipe(wire), state.expiry_tick)).is_empty(), "authority expiry removes all footprint cells")
 		equal(state.canonical_values(), before, "material footprints never edit reaction authority")
 		for cell: Dictionary in cells:
 			check(not cell.parts.is_empty(), "every footprint cell is clipped to occupied geometry")
@@ -276,7 +361,7 @@ func _test_material_only_footprints(presenter: ElementChemistryPresenter) -> voi
 	for index: int in range(5):
 		path.path_points.append(500000 + diagonal.x * index)
 		path.path_points.append(500000 + diagonal.y * index)
-	var mask := PixelEffectGeometry.new().reaction_mask(path, Chemistry.recipe(328), path.active_tick, config)
+	var mask := PixelEffectGeometry.new().archive_reaction_mask(path, Chemistry.recipe(328), path.active_tick, config)
 	var frame := presenter.library.sample("magic.reaction.superconduct.active.normal", 0)
 	var path_cells := presenter.footprint_cells({"mask": mask, "frame": frame})
 	check(not path_cells.is_empty() and path_cells.size() <= Presenter.FOOTPRINT_CELL_LIMIT, "maximum four-link occupied path retains a bounded full native-cell footprint")
@@ -293,7 +378,7 @@ func _test_material_only_footprints(presenter: ElementChemistryPresenter) -> voi
 			cursor += Chemistry.scaled(heading, int(Chemistry.recipe(328).length))
 			path.path_points.append(cursor.x)
 			path.path_points.append(cursor.y)
-		var shaped_mask := PixelEffectGeometry.new().reaction_mask(path, Chemistry.recipe(328), path.active_tick, config)
+		var shaped_mask := PixelEffectGeometry.new().archive_reaction_mask(path, Chemistry.recipe(328), path.active_tick, config)
 		var shaped_cells := presenter.footprint_cells({"mask": shaped_mask, "frame": frame})
 		check(not shaped_cells.is_empty() and shaped_cells.size() <= Presenter.FOOTPRINT_CELL_LIMIT, "scaled full-length square/zigzag paths keep bounded complete native coverage")
 
@@ -315,7 +400,7 @@ func _test_pixel_phases_and_native_cells(presenter: ElementChemistryPresenter) -
 		for reduced: bool in [false, true]:
 			for phase: String in ["formation", "active", "decay"]:
 				var tick := state.created_tick if phase == "formation" else state.active_tick if phase == "active" else state.decay_tick
-				var model := presenter.reaction_model(state, definition, tick, reduced)
+				var model := presenter.archive_reaction_model(state, definition, tick, reduced)
 				check(not model.is_empty(), "all36 reactions have visible authored phase models")
 				if model.is_empty():
 					continue
@@ -325,8 +410,8 @@ func _test_pixel_phases_and_native_cells(presenter: ElementChemistryPresenter) -
 				equal(model.frame.size, Vector2(32, 32), "material cells remain native32px instead of stretching across gameplay geometry")
 				if not model.socket:
 					check(PixelEffectGeometry.contains_point(model.mask.polygons, model.core_anchor), "essential identity core is anchored inside actual occupied geometry")
-		check(presenter.reaction_model(state, definition, state.created_tick - 1).is_empty(), "unborn effect has no pixel material")
-		check(presenter.reaction_model(state, definition, state.expiry_tick).is_empty(), "authority expiry immediately removes material and boundaries")
+		check(presenter.archive_reaction_model(state, definition, state.created_tick - 1).is_empty(), "unborn effect has no pixel material")
+		check(presenter.archive_reaction_model(state, definition, state.expiry_tick).is_empty(), "authority expiry immediately removes material and boundaries")
 		equal(state.canonical_values(), before, "phase sampling never mutates reaction state")
 	for element: int in range(1, 9):
 		var values: Array = []
@@ -347,11 +432,11 @@ func _test_pixel_phases_and_native_cells(presenter: ElementChemistryPresenter) -
 		equal(deposit.canonical_values(), before, "deposit artwork owns no gameplay fields")
 	var hail := _state(323)
 	hail.endpoint_y += 20000
-	var hail_model := presenter.reaction_model(hail, Chemistry.recipe(323), hail.active_tick + 27)
+	var hail_model := presenter.archive_reaction_model(hail, Chemistry.recipe(323), hail.active_tick + 27)
 	equal(hail_model.mask.hail_position, Presenter.hail_position(hail, hail.active_tick + 27), "display helper agrees with actual single-pulse geometry despite noncollinear endpoint")
 	check(not PixelEffectGeometry.contains_point(hail_model.mask.polygons, Vector2(510, 500)), "warning lane does not become a string of active hail projectiles")
 	var steam := _state(310)
-	var steam_model := presenter.reaction_model(steam, Chemistry.recipe(310), steam.active_tick)
+	var steam_model := presenter.archive_reaction_model(steam, Chemistry.recipe(310), steam.active_tick)
 	equal(steam_model.edge_color, Color(String(presenter.language.data.reaction_materials.steam.base)), "Steam uses its canonical neutral vapor color, never Fire orange")
 
 
@@ -386,7 +471,7 @@ func _test_deposit_material_readability(presenter: ElementChemistryPresenter) ->
 	presenter.begin_frame(config, null, Rect2(), [])
 	for wire: int in range(301, 337):
 		var state := _state(wire)
-		var model := presenter.reaction_model(state, Chemistry.recipe(wire), state.active_tick)
+		var model := presenter.archive_reaction_model(state, Chemistry.recipe(wire), state.active_tick)
 		check(not model.has("core_opacity"), "reaction material never inherits the stronger deposit-only opacity")
 
 
@@ -433,7 +518,7 @@ func _test_ingredient_roles(presenter: ElementChemistryPresenter) -> void:
 			# Representative active damaging recipe retains its stronger authored
 			# area cap. Forming/decaying and intentionally thinning veils differ.
 			var hazard := _state(309)
-			var hazard_model := presenter.reaction_model(hazard, Chemistry.recipe(309), hazard.active_tick, reduced)
+			var hazard_model := presenter.archive_reaction_model(hazard, Chemistry.recipe(309), hazard.active_tick, reduced)
 			check(hazard_model.material_opacity > normal_models[0].material_opacity, "active Conflagration area retains priority over harmless ingredient tiles")
 	screen_filter.free()
 
@@ -465,7 +550,7 @@ func _test_compact_native_material(presenter: ElementChemistryPresenter) -> void
 	equal(signatures.size(), 8, "all eight basic materials have distinct compact layouts")
 	var steam := _state(310)
 	presenter.begin_frame(config, null, Rect2(), [])
-	var steam_model := presenter.reaction_model(steam, Chemistry.recipe(310), steam.active_tick)
+	var steam_model := presenter.archive_reaction_model(steam, Chemistry.recipe(310), steam.active_tick)
 	var frames: Dictionary = {}
 	for index: int in range(8):
 		var sample := presenter.decoration_frame(steam_model, index)
@@ -474,13 +559,13 @@ func _test_compact_native_material(presenter: ElementChemistryPresenter) -> void
 	check(frames.size() > 1, "active vapor avoids synchronized wallpaper poses")
 	check(presenter.accent_anchors(steam_model).is_empty(), "Steam does not multiply its existing weak silhouette into false cover-like piles")
 	for tick: int in [steam.created_tick, steam.decay_tick, steam.expiry_tick - 1]:
-		var phased := presenter.reaction_model(steam, Chemistry.recipe(310), tick)
+		var phased := presenter.archive_reaction_model(steam, Chemistry.recipe(310), tick)
 		equal(presenter.decoration_frame(phased, 5), phased.frame, "Steam formation/decay are never dephased")
 	for wire: int in range(301, 337):
 		if wire == 310:
 			continue
 		var reaction := _state(wire)
-		var model := presenter.reaction_model(reaction, Chemistry.recipe(wire), reaction.active_tick)
+		var model := presenter.archive_reaction_model(reaction, Chemistry.recipe(wire), reaction.active_tick)
 		check(presenter.accent_anchors(model).is_empty(), "other reaction layouts remain unchanged")
 		equal(presenter.decoration_frame(model, 5), model.frame, "other reaction phase sampling remains unchanged")
 
@@ -498,9 +583,9 @@ func _test_concealment_windows(presenter: ElementChemistryPresenter) -> void:
 			var cutoff := state.decay_tick - config.milliseconds_to_ticks(350)
 			var ticks: Array = [cutoff-1, cutoff, cutoff+1] if wire == 310 else [state.active_tick+35, state.active_tick+36, state.active_tick+71, state.active_tick+72]
 			var expected: Array = [true, false, false] if wire == 310 else [true, false, false, true]
-			var reference := presenter.reaction_model(state, definition, state.active_tick, reduced)
+			var reference := presenter.archive_reaction_model(state, definition, state.active_tick, reduced)
 			for index: int in range(ticks.size()):
-				var model := presenter.reaction_model(state, definition, ticks[index], reduced)
+				var model := presenter.archive_reaction_model(state, definition, ticks[index], reduced)
 				equal(model.concealing, expected[index], "Steam cutoff / Shadowdraft band follows exact authority tick")
 				equal(model.concealing, state.active(ticks[index]) and Chemistry._concealing(state, ticks[index], config), "cue reuses current authority predicate")
 				check(is_equal_approx(float(model.material_opacity), cap * (1.0 if expected[index] else 0.25)), "nonconcealing active material is quarter-opacity in normal and reduced mode")
@@ -509,7 +594,7 @@ func _test_concealment_windows(presenter: ElementChemistryPresenter) -> void:
 				equal(model.edge_color, reference.edge_color, "veil gap does not recolor the exact boundary")
 				equal(model.mask.polygons, reference.mask.polygons, "veil gap never changes material clipping geometry")
 			for tick: int in [state.created_tick, state.active_tick-1, state.decay_tick, state.expiry_tick-1]:
-				var model := presenter.reaction_model(state, definition, tick, reduced)
+				var model := presenter.archive_reaction_model(state, definition, tick, reduced)
 				check(not model.concealing, "formation and decay never claim active concealment")
 				check(is_equal_approx(float(model.material_opacity), Presenter.phase_opacity(state, tick) * cap), "formation/decay preserve their authored opacity curve")
 				equal(model.opacity, Presenter.phase_opacity(state, tick), "phase boundary fade stays unchanged")
@@ -521,7 +606,7 @@ func _test_concealment_windows(presenter: ElementChemistryPresenter) -> void:
 			var composition: Dictionary = presenter.library.reaction(wire)["composition"]
 			var cap := float(composition["opacity_cap_reduced" if reduced else "opacity_cap_normal"])
 			for tick: int in [state.created_tick, state.active_tick, state.decay_tick]:
-				var model := presenter.reaction_model(state, Chemistry.recipe(wire), tick, reduced)
+				var model := presenter.archive_reaction_model(state, Chemistry.recipe(wire), tick, reduced)
 				var expected_cap := (0.18 if tick == state.created_tick else 0.32 if tick == state.active_tick else 0.10) if wire == 331 else cap
 				check(is_equal_approx(float(model.material_opacity), Presenter.phase_opacity(state, tick) * expected_cap), "Capacitor uses its reviewed stage values; all other reactions retain material strength")
 
@@ -538,23 +623,23 @@ func _test_live_links_and_worldbone(presenter: ElementChemistryPresenter) -> voi
 		deposit.expiry_tick = 500
 		var before := state.canonical_values()
 		presenter.begin_frame(config, null, Rect2(), [deposit])
-		var linked := presenter.reaction_model(state, Chemistry.recipe(wire), state.active_tick)
+		var linked := presenter.archive_reaction_model(state, Chemistry.recipe(wire), state.active_tick)
 		check(not linked.unlinked and PixelEffectGeometry.contains_point(linked.mask.polygons, Vector2(560, 500)), "live deposit sustains only the actual stored connection")
 		presenter.begin_frame(config, null, Rect2(), [])
-		var missing := presenter.reaction_model(state, Chemistry.recipe(wire), state.active_tick)
+		var missing := presenter.archive_reaction_model(state, Chemistry.recipe(wire), state.active_tick)
 		check(missing.unlinked and not PixelEffectGeometry.contains_point(missing.mask.polygons, Vector2(560, 500)), "missing source removes stale active connection immediately")
 		equal(missing.socket, wire != 319, "only unlinked Water retains local material; Frost/Plasma show an unconnected socket")
 		equal(PixelEffectGeometry.contains_point(missing.mask.polygons, Vector2(500, 500)), wire == 319, "Water local disk and inactive Frost/Plasma remain distinct")
 		presenter.begin_frame(config, null, Rect2(), [deposit])
 		deposit.expiry_tick = state.active_tick
-		check(presenter.reaction_model(state, Chemistry.recipe(wire), state.active_tick).unlinked, "exact source expiry is not kept alive by cached geometry")
+		check(presenter.archive_reaction_model(state, Chemistry.recipe(wire), state.active_tick).unlinked, "exact source expiry is not kept alive by cached geometry")
 		equal(state.canonical_values(), before, "clearing a stale render path never erases the authoritative path history")
 	var collision := CollisionWorld.new(1000000, 1000000)
 	collision.add_obstacle(CollisionWorld.Obstacle.new(1, 520000, 480000, 528000, 520000))
 	presenter.begin_frame(config, collision, Rect2(), [])
 	for wire: int in [309, 322, 303]:
 		var state := _state(wire)
-		var model := presenter.reaction_model(state, Chemistry.recipe(wire), state.active_tick)
+		var model := presenter.archive_reaction_model(state, Chemistry.recipe(wire), state.active_tick)
 		check(not PixelEffectGeometry.contains_point(model.mask.polygons, Vector2(550, 500)), "material and warning masks stop behind worldbone")
 		check(PixelEffectGeometry.contains_point(model.mask.polygons, Vector2(460, 500)), "unoccluded material survives worldbone clipping")
 		if wire in [309, 322]:
@@ -568,7 +653,7 @@ func _test_live_links_and_worldbone(presenter: ElementChemistryPresenter) -> voi
 				check(PixelEffectGeometry.contains_point(model.mask.polygons, center), "every clipped native-cell polygon stays in actual material coverage")
 	for wire: int in [307, 329]:
 		var state := _state(wire)
-		var model := presenter.reaction_model(state, Chemistry.recipe(wire), state.active_tick)
+		var model := presenter.archive_reaction_model(state, Chemistry.recipe(wire), state.active_tick)
 		check(not PixelEffectGeometry.contains_point(model.mask.polygons, Vector2(560, 500)), "optical facet art never invents a continuation ray")
 
 
@@ -585,7 +670,7 @@ func _test_budget_culling_and_information(presenter: ElementChemistryPresenter) 
 		equal(admitted, 96 if reduced else 192, "all chemistry shares the exact bounded optional-material budget")
 		equal(presenter.stats().optional_stamps, admitted, "decorative admission is measured independently of essential information")
 		var state := _state(309)
-		var model := presenter.reaction_model(state, Chemistry.recipe(309), state.active_tick, reduced)
+		var model := presenter.archive_reaction_model(state, Chemistry.recipe(309), state.active_tick, reduced)
 		check(not model.frame.is_empty() and (model.mask.boundaries as Array).size() == 2, "exhausted decoration never removes core art or either occupied ring boundary")
 		equal(presenter.tile_anchors(model.mask, model.core_anchor, reduced, 0).size(), 0, "zero remaining decorative budget allocates no optional anchors")
 		var normal := presenter.tile_anchors(model.mask, model.core_anchor, false, 192)
@@ -598,7 +683,7 @@ func _test_budget_culling_and_information(presenter: ElementChemistryPresenter) 
 	var state := _state(303)
 	presenter.begin_frame(config, null, Rect2(0, 0, 100, 100), [])
 	var builds := int(presenter.stats().geometry.builds)
-	check(presenter.reaction_model(state, Chemistry.recipe(303), state.active_tick).is_empty(), "off-camera reaction is culled")
+	check(presenter.archive_reaction_model(state, Chemistry.recipe(303), state.active_tick).is_empty(), "off-camera reaction is culled")
 	equal(int(presenter.stats().geometry.builds), builds, "off-camera effects are rejected before polygon construction")
 	equal(presenter.stats().culled, 1, "viewport culling is observable")
 
@@ -623,7 +708,7 @@ func _test_thin_material_paths(presenter: ElementChemistryPresenter) -> void:
 				state.linked_deposit_ids = PackedInt64Array([3010])
 				var before := state.canonical_values()
 				presenter.begin_frame(config, null, Rect2(), [deposit])
-				var model := presenter.reaction_model(state, Chemistry.recipe(wire), state.active_tick)
+				var model := presenter.archive_reaction_model(state, Chemistry.recipe(wire), state.active_tick)
 				equal(model.material_path, PackedVector2Array([start, end]), "thin material uses the real link, independently of grid translation")
 				var normal := presenter.tile_anchors(model.mask, model.core_anchor, false, 192, model.material_path)
 				for reduced: bool in [false, true]:
@@ -649,21 +734,21 @@ func _test_thin_material_paths(presenter: ElementChemistryPresenter) -> void:
 	var collision := CollisionWorld.new(1000000, 1000000)
 	collision.add_obstacle(CollisionWorld.Obstacle.new(1, 550000, 480000, 560000, 544000))
 	presenter.begin_frame(config, collision, Rect2(), [deposit])
-	var clipped := presenter.reaction_model(state, Chemistry.recipe(328), state.active_tick)
+	var clipped := presenter.archive_reaction_model(state, Chemistry.recipe(328), state.active_tick)
 	var anchors := presenter.tile_anchors(clipped.mask, clipped.core_anchor, false, 192, clipped.material_path)
 	check(not anchors.is_empty(), "unoccluded thin-link material survives")
 	for anchor: Vector2 in anchors:
 		check(anchor.x < 550.0, "path alignment never carries material through worldbone shadows")
 	presenter.begin_frame(config, null, Rect2(), [])
-	var unlinked := presenter.reaction_model(state, Chemistry.recipe(328), state.active_tick)
+	var unlinked := presenter.archive_reaction_model(state, Chemistry.recipe(328), state.active_tick)
 	check(unlinked.socket and unlinked.material_path.is_empty(), "dead links retain only the unconnected socket, not a material path")
 	for wire: int in [309, 322, 323]:
 		state = _state(wire)
-		var model := presenter.reaction_model(state, Chemistry.recipe(wire), state.active_tick)
+		var model := presenter.archive_reaction_model(state, Chemistry.recipe(wire), state.active_tick)
 		check(model.material_path.is_empty(), "safe rings and single Hail pulse never acquire an invented centreline")
 	for wire: int in [307, 332]:
 		state = _state(wire)
-		var model := presenter.reaction_model(state, Chemistry.recipe(wire), state.active_tick)
+		var model := presenter.archive_reaction_model(state, Chemistry.recipe(wire), state.active_tick)
 		equal(model.material_path.size(), 2, "thin optical facets and reveal lines reuse their real finite centreline")
 		for anchor: Vector2 in presenter.tile_anchors(model.mask, model.core_anchor, false, 192, model.material_path):
 			check(PixelEffectGeometry.contains_point(model.mask.polygons, anchor), "thin optical material never invents continuation rays")

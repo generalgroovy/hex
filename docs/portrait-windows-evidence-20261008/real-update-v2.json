@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "passed": true,
+  "scope": "Real offline payload update/rollback/forward and save-file preservation; no gameplay or save compatibility certification.",
+  "test_root": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008-v2",
+  "installed_root": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\real payload install",
+  "previous_installer": {
+    "Path": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-setup-teams-20261007\\HEX-Setup-p57-a41d15007f8c.exe",
+    "Sha256": "6550effbe1aca6cf594813095744a9c1de967b7917527eb0ffabb0bd3d442e5d",
+    "BuildId": "p57-a41d15007f8c",
+    "Version": "p57-a41d15007f8c-b711a9418f",
+    "ManifestHash": "18e2be30cdf5bf41814ce57f817027408e12370b40e9ff12a36b6b6cb4ae6777"
+  },
+  "installer": {
+    "Path": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-setup-portraits-20261008\\HEX-Setup-p57-30b90507f932.exe",
+    "Sha256": "526ded2ddbe167645ae2ca622bedd7844329ea38116ac8e99a4e750deb6b6a8b",
+    "BuildId": "p57-30b90507f932",
+    "Version": "p57-30b90507f932-4174801e8f",
+    "ManifestHash": "7db9754c5f148b17be98042c09e2e5029c9cd893867eca2dbc064d366d13f800"
+  },
+  "godot_run": false,
+  "user_profile_install": false,
+  "shortcuts_created": false,
+  "remote_updates_tested": false,
+  "saved_profile_sentinel": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\isolated-roaming\\Godot\\app_userdata\\FLUX 2\\installer-preservation-sentinel.txt",
+  "sentinel_sha256": "207747c2ad3095ab9ed95b71bc9cc758b6187990763da6423ecb83d1774d8863",
+  "checks": [
+    {
+      "stage": "01-resumed-old-state",
+      "current": "p57-a41d15007f8c-b711a9418f|18e2be30cdf5bf41814ce57f817027408e12370b40e9ff12a36b6b6cb4ae6777|--fullbody-art,--pixel-cast",
+      "previous": "",
+      "selected_directory": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\real payload install\\versions\\p57-a41d15007f8c-b711a9418f",
+      "all_payload_hashes_verified": true,
+      "saved_profile_sentinel_preserved": true
+    },
+    {
+      "stage": "02-new-update",
+      "current": "p57-30b90507f932-4174801e8f|7db9754c5f148b17be98042c09e2e5029c9cd893867eca2dbc064d366d13f800|--fullbody-art,--pixel-cast",
+      "previous": "p57-a41d15007f8c-b711a9418f|18e2be30cdf5bf41814ce57f817027408e12370b40e9ff12a36b6b6cb4ae6777|--fullbody-art,--pixel-cast",
+      "selected_directory": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\real payload install\\versions\\p57-30b90507f932-4174801e8f",
+      "all_payload_hashes_verified": true,
+      "saved_profile_sentinel_preserved": true
+    },
+    {
+      "stage": "03-rollback",
+      "current": "p57-a41d15007f8c-b711a9418f|18e2be30cdf5bf41814ce57f817027408e12370b40e9ff12a36b6b6cb4ae6777|--fullbody-art,--pixel-cast",
+      "previous": "p57-30b90507f932-4174801e8f|7db9754c5f148b17be98042c09e2e5029c9cd893867eca2dbc064d366d13f800|--fullbody-art,--pixel-cast",
+      "selected_directory": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\real payload install\\versions\\p57-a41d15007f8c-b711a9418f",
+      "all_payload_hashes_verified": true,
+      "saved_profile_sentinel_preserved": true
+    },
+    {
+      "stage": "04-forward",
+      "current": "p57-30b90507f932-4174801e8f|7db9754c5f148b17be98042c09e2e5029c9cd893867eca2dbc064d366d13f800|--fullbody-art,--pixel-cast",
+      "previous": "p57-a41d15007f8c-b711a9418f|18e2be30cdf5bf41814ce57f817027408e12370b40e9ff12a36b6b6cb4ae6777|--fullbody-art,--pixel-cast",
+      "selected_directory": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\real payload install\\versions\\p57-30b90507f932-4174801e8f",
+      "all_payload_hashes_verified": true,
+      "saved_profile_sentinel_preserved": true
+    }
+  ],
+  "processes": [
+    {
+      "stage": "02-new-update",
+      "executable": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-setup-portraits-20261008\\HEX-Setup-p57-30b90507f932.exe",
+      "executable_sha256": "526ded2ddbe167645ae2ca622bedd7844329ea38116ac8e99a4e750deb6b6a8b",
+      "arguments": [
+        "--quiet",
+        "--install-only",
+        "--no-shortcuts",
+        "--install-root=C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\real payload install"
+      ],
+      "pid": 21008,
+      "exit_code": 0,
+      "forced_stop_requested": false,
+      "forced_stop": false,
+      "error": ""
+    },
+    {
+      "stage": "03-rollback",
+      "executable": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\real payload install\\HEX.exe",
+      "executable_sha256": "526ded2ddbe167645ae2ca622bedd7844329ea38116ac8e99a4e750deb6b6a8b",
+      "arguments": [
+        "--quiet",
+        "--install-only",
+        "--no-shortcuts",
+        "--install-root=C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\real payload install",
+        "--previous"
+      ],
+      "pid": 6784,
+      "exit_code": 0,
+      "forced_stop_requested": false,
+      "forced_stop": false,
+      "error": ""
+    },
+    {
+      "stage": "04-forward",
+      "executable": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\real payload install\\HEX.exe",
+      "executable_sha256": "526ded2ddbe167645ae2ca622bedd7844329ea38116ac8e99a4e750deb6b6a8b",
+      "arguments": [
+        "--quiet",
+        "--install-only",
+        "--no-shortcuts",
+        "--install-root=C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\real payload install",
+        "--previous"
+      ],
+      "pid": 8112,
+      "exit_code": 0,
+      "forced_stop_requested": false,
+      "forced_stop": false,
+      "error": ""
+    }
+  ],
+  "failure": "",
+  "resume": {
+    "original_test_root": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008",
+    "original_receipt": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\receipt.json",
+    "original_evidence": [
+      {
+        "path": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\receipt.json",
+        "sha256": "ba38d7e6f6c48e739a93858556a5f8ee93e87423bf5e230305776360889ee744"
+      },
+      {
+        "path": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\01-old-install.stdout.log",
+        "sha256": "47339d670303557054ca4ded4cfbdae9be2b5b53b33059783ab8588cf89ff1ec"
+      },
+      {
+        "path": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\01-old-install.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\02-new-update.stdout.log",
+        "sha256": "ae9cf8ed16adce00db2a82a862da2d11c245b18aa5560da81ace3d10472ff4e4"
+      },
+      {
+        "path": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\02-new-update.stderr.log",
+        "sha256": "94ca78fa8c8e1fbccc4457aacd370f449502dcbf059cb680bf60281b120c11c1"
+      }
+    ],
+    "original_evidence_unchanged": true,
+    "old_setup_rerun": false,
+    "installed_bootstrap_log": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\real payload install\\bootstrap.log",
+    "bootstrap_before_sha256": "93a4f307d3e668c1bb8fcdd1224059748e6139e80554e29e1253e251759a64bc",
+    "bootstrap_before_snapshot": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008-v2\\00-pre-resume-bootstrap.log",
+    "bootstrap_after_sha256": "f21c211a93891f1e381de3d91fb28bb391665070ae7b105675525f5ba2df4977",
+    "note": "Original receipt and stage logs stay immutable. Installed bootstrap.log may append normally; its prior bytes are preserved."
+  }
+}

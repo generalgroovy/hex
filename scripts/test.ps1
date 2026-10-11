@@ -30,11 +30,13 @@ $runImport = $Tier -in @('Fast', 'Full', 'Release')
 $runSuites = $Tier -in @('Focused', 'Full', 'Release')
 $runBoot = $Tier -in @('Fast', 'Full', 'Release')
 $runAssetAudit = $Tier -in @('Full', 'Release')
-# The growing unfiltered suite needs more supervision time than an individual
-# import/capture/Focused run. The unified paid/geometry suite exceeded300s in
-# u5-full-prefinal-v1; preserve its full workload with900s supervision.
-# This is a watchdog, not the simulation budget.
-$suiteTimeoutSeconds = if ($Tier -eq 'Full') { 900 } else { 180 }
+# The Garden-inclusive Full-v5 completed216 suites/6.26M assertions before its
+# 1200s watchdog, with ongoing progress and zero stderr. Preserve the complete
+# registry and per-suite timing; allow a bounded1800s Full-only workload budget.
+# The remaining21 suites and corrected menu fixture are separately diagnosed
+# before the full rerun. Import/capture/Focused defaults remain180s. This test
+# supervision budget is not a simulation frame-time or performance allowance.
+$suiteTimeoutSeconds = if ($Tier -eq 'Full') { 1800 } else { 180 }
 if ($ListSuites) {
     $runImport = $false
     $runSuites = $false
@@ -63,6 +65,7 @@ $freshCurrentState = $false
 $freshAssetAudit = $false
 $didDoctor = $false
 $didImport = $false
+$didPostImportIdentityCheck = $false
 $didSuites = $false
 $didBoot = $false
 $didPackageAndInstaller = $false
@@ -94,6 +97,10 @@ try {
     if ($runImport) {
         $didImport = $true
         Invoke-FluxGodotChecked $godotBin @('--headless', '--editor', '--path', $repoRoot, '--quit') $importLog -RejectWarnings
+        # Import may create .gd.uid source sidecars. Do not validate a stale
+        # identity for minutes and discover the drift only when exporting.
+        & (Join-Path $PSScriptRoot 'runtime-build-identity.ps1') -Mode Check
+        $didPostImportIdentityCheck = $true
     }
     & (Join-Path $PSScriptRoot 'check-script-class-cache.ps1') -Json | Set-Content -LiteralPath (Join-Path $logRoot 'script-class-cache.json')
     if ($runSuites) {
@@ -195,6 +202,7 @@ $receipt = [ordered]@{
         asset_inventory = $didAssetAudit
         doctor = $didDoctor
         import = $didImport
+        post_import_identity_check = $didPostImportIdentityCheck
         deterministic_suite_runner = $didSuites
         suite_count = $suiteResults.Count
         assertion_count = $assertionCount

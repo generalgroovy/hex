@@ -112,6 +112,10 @@ func frame(body_type: String, animation_state: String, aim: Vector2i, travel: Ve
 	if not ready() or not base_textures.has(body_type):
 		return {}
 	var aim_index := EightDirectionResolver.classify_index(aim.x, aim.y)
+	# Low-profile travel has a committed body lane; spell hands still use aim.
+	# The caller supplies the retained slide direction when velocity is tiny.
+	if animation_state == "slide" and travel != Vector2i.ZERO:
+		aim_index = EightDirectionResolver.classify_index(travel.x, travel.y)
 	var region := base_region(animation_state, aim_index)
 	if not region.has_area():
 		return {}

@@ -5,15 +5,16 @@ extends RefCounted
 
 
 # Pointy-top axial geometry in fixed world units (1000 units per pixel).
-# HALF_HEIGHT is the even integer approximation of 24000 / sin(60 deg),
+# HALF_HEIGHT is the even integer approximation of 12000 / sin(60 deg),
 # and ROW_PITCH is exactly 3 * HALF_HEIGHT / 2. These authored integers make
-# shared faces coincide exactly. The 48px face-to-face width is 25% smaller
-# than the previous 64px grid; actor sizes and world-space spell radii stay fixed.
-const HALF_WIDTH: int = 24_000
-const HALF_HEIGHT: int = 27_712
+# shared faces coincide exactly. Symbol-sized24px cells halve the previous
+#48px width; actor sizes and world-space spell radii stay fixed.
+const HALF_WIDTH: int = 12_000
+const HALF_HEIGHT: int = 13_856
 const ROW_PITCH: int = HALF_HEIGHT * 3 / 2
 const COLUMN_PITCH: int = HALF_WIDTH * 2
 const MAX_ABS_QUERY_COORDINATE: int = 8_000_000
+const MAX_ABS_CELL_COORDINATE: int = 384 # Axial rows across the expanded world; world points remain bounded above.
 const MAX_SWEEP_RADIUS: int = 512_000
 const NAT_BASE: int = 1_000_000
 
@@ -52,22 +53,22 @@ static func vertices(cell: Vector2i) -> Array[Vector2i]:
 
 
 static func world_to_cell(point: Vector2i) -> Vector2i:
-	# The inverse lattice transform supplies only a local seed. Membership is
-	# decided against every nearby closed polygon so face/vertex ownership can
-	# select the lexicographically smallest (q,r), including at negative values.
+	# ROW_PITCH > HALF_HEIGHT: only the two rows bracketing y can contain it.
+	# Within each row only the two centers bracketing x can contain it. Test
+	# all four exact closed half-plane owners and retain the lexicographic one.
 	var seed_r := _floor_div(point.y, ROW_PITCH)
-	var q_numerator := 2 * ROW_PITCH * point.x - COLUMN_PITCH * point.y
-	var seed_q := _floor_div(q_numerator, 2 * COLUMN_PITCH * ROW_PITCH)
-	var owners: Array[Vector2i] = []
-	for q: int in range(seed_q - 2, seed_q + 3):
-		for r: int in range(seed_r - 2, seed_r + 3):
+	var best := Vector2i.ZERO
+	var found := false
+	for r: int in range(seed_r, seed_r + 2):
+		var seed_q := _floor_div(point.x - HALF_WIDTH * r, COLUMN_PITCH)
+		for q: int in range(seed_q, seed_q + 2):
 			var candidate := Vector2i(q, r)
-			if _point_in_cell(point, candidate):
-				owners.append(candidate)
-	owners.sort_custom(_cell_less)
+			if _point_in_cell(point, candidate) and (not found or _cell_less(candidate, best)):
+				best = candidate
+				found = true
 	# The authored polygons tile the plane. This fallback is defensive against
 	# malformed future constants and remains deterministic without a world scan.
-	return owners[0] if not owners.is_empty() else Vector2i(seed_q, seed_r)
+	return best if found else Vector2i(_floor_div(point.x - HALF_WIDTH * seed_r, COLUMN_PITCH), seed_r)
 
 
 static func neighbors(cell: Vector2i) -> Array[Vector2i]:
@@ -126,6 +127,21 @@ static func swept_cells(start: Vector2i, end: Vector2i, radius_world_units: int)
 			# the general path, so this proof deliberately rejects zero half-planes.
 			var interior_result: Array[Vector2i] = [interior_cell]
 			return interior_result
+	if start == end:
+		# A stationary radial query has no swept path/halo to build. Enumerate
+		# the exact expanded center bounds once, then retain the same closed
+		# circle/hex predicate (including zero-radius shared faces and vertices).
+		var radial_result: Array[Vector2i] = []
+		var first_r := -_floor_div(HALF_HEIGHT+radius_world_units-start.y,ROW_PITCH)
+		var last_r := _floor_div(start.y+radius_world_units+HALF_HEIGHT,ROW_PITCH)
+		for r: int in range(first_r,last_r+1):
+			var first_q := -_floor_div(HALF_WIDTH+radius_world_units+HALF_WIDTH*r-start.x,COLUMN_PITCH)
+			var last_q := _floor_div(start.x+radius_world_units+HALF_WIDTH-HALF_WIDTH*r,COLUMN_PITCH)
+			for q: int in range(first_q,last_q+1):
+				var cell := Vector2i(q,r)
+				if _capsule_intersects_cell(start,end,radius_world_units,cell): radial_result.append(cell)
+		radial_result.sort_custom(_cell_less)
+		return radial_result
 
 	# Axial space is an affine transform of world space. Twice the endpoint
 	# cube distance plus a two-cell endpoint allowance gives sub-cell sampling
@@ -159,22 +175,29 @@ static func _query_point_valid(point: Vector2i) -> bool:
 
 
 static func _point_in_cell(point: Vector2i, cell: Vector2i) -> bool:
-	var polygon := vertices(cell)
-	for index: int in range(polygon.size()):
-		if _orientation(polygon[index], polygon[(index + 1) % polygon.size()], point) < 0:
-			return false
-	return true
+	# Exact reduction of the six authored half-planes, not a circle/AABB
+	# approximation. Avoid constructing six vertices for every membership query.
+	var offset := point - center(cell)
+	var x := absi(offset.x)
+	var y := absi(offset.y)
+	return x <= HALF_WIDTH and HALF_HEIGHT * x + COLUMN_PITCH * y <= COLUMN_PITCH * HALF_HEIGHT
 
 
 static func _point_strictly_in_cell(point: Vector2i, cell: Vector2i) -> bool:
-	var polygon := vertices(cell)
-	for index: int in range(polygon.size()):
-		if _orientation(polygon[index], polygon[(index + 1) % polygon.size()], point) <= 0:
-			return false
-	return true
+	var offset := point - center(cell)
+	var x := absi(offset.x)
+	var y := absi(offset.y)
+	return x < HALF_WIDTH and HALF_HEIGHT * x + COLUMN_PITCH * y < COLUMN_PITCH * HALF_HEIGHT
 
 
 static func _capsule_intersects_cell(start: Vector2i, end: Vector2i, radius: int, cell: Vector2i) -> bool:
+	if start == end:
+		if _point_in_cell(start, cell): return true
+		# Reflection symmetry reduces nearest-boundary distance to the two
+		# first-quadrant edges. This is an exact circle/hex test, including ties.
+		var offset := start - center(cell)
+		var point := Vector2i(absi(offset.x), absi(offset.y))
+		return _point_segment_within_radius(point, Vector2i(HALF_WIDTH, 0), Vector2i(HALF_WIDTH, HALF_HEIGHT / 2), radius) or _point_segment_within_radius(point, Vector2i(HALF_WIDTH, HALF_HEIGHT / 2), Vector2i(0, HALF_HEIGHT), radius)
 	var polygon := vertices(cell)
 	if _point_in_cell(start, cell) or _point_in_cell(end, cell):
 		return true
@@ -213,12 +236,22 @@ static func _point_segment_within_radius(point: Vector2i, start: Vector2i, end: 
 		var from_end := point - end
 		return from_end.x * from_end.x + from_end.y * from_end.y <= radius_squared
 	var cross := absi(offset.x * delta.y - offset.y * delta.x)
+	return _compare_squared_distance(cross, radius_squared, length_squared) <= 0
+
+
+static func _compare_squared_distance(cross: int, radius_squared: int, length_squared: int) -> int:
+	# Most gameplay contacts fit signed int64. Prove that BEFORE multiplication;
+	# large/edge cases retain the exact natural-number path, never float rounding.
+	if cross <= 3_037_000_499 and (length_squared == 0 or radius_squared <= 9_223_372_036_854_775_807 / length_squared):
+		var squared := cross * cross
+		var bound := radius_squared * length_squared
+		return -1 if squared < bound else 1 if squared > bound else 0
 	# Within the explicit 8M/512k query envelope, cross/dot/sign terms fit
 	# signed int64. Their squared comparison can exceed int64, so compare exact
 	# base-1M natural-number products instead of converting to float.
 	var cross_squared := _nat_multiply(_nat(cross), _nat(cross))
 	var limit := _nat_multiply(_nat(radius_squared), _nat(length_squared))
-	return _nat_compare(cross_squared, limit) <= 0
+	return _nat_compare(cross_squared, limit)
 
 
 static func _segments_intersect(a: Vector2i, b: Vector2i, c: Vector2i, d: Vector2i) -> bool:

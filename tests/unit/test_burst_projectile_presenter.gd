@@ -1,5 +1,6 @@
 extends FluxTestSuite
 
+const ORIGINAL_TRAVELLING_WIRES: Array[int] = [140, 181, 182, 145, 179, 180, 163, 185, 186, 159, 183, 184, 173, 191, 192, 142, 193, 194]
 
 class RecordingLibrary:
 	extends PixelMagicLibrary
@@ -15,7 +16,43 @@ func run() -> int:
 	_test_fail_closed(presenter)
 	_test_impact_profiles()
 	_test_authored_contact(presenter)
+	_test_weighted_contact_envelope()
 	return finish("burst-projectile-presenter")
+
+
+func _test_weighted_contact_envelope() -> void:
+	var duration := 36
+	for weight: int in 3:
+		var opening := PixelSpellEffects.impact_envelope(0, duration, weight, false)
+		var peak := PixelSpellEffects.impact_envelope(2 + weight * 2, duration, weight, false)
+		var late := PixelSpellEffects.impact_envelope(duration - 1, duration, weight, false)
+		check(peak.x > opening.x and peak.x > late.x, "each contact weight has a bounded burst then settle, never a loop")
+		for age: int in duration:
+			var normal := PixelSpellEffects.impact_envelope(age, duration, weight, false)
+			var reduced := PixelSpellEffects.impact_envelope(age, duration, weight, true)
+			check(normal.x >= 0.8399 and normal.x <= 1.081, "normal contact scale pulse stays inside its small cosmetic envelope including Vector2 float32 rounding")
+			equal(reduced.x, 1.0, "Reduced Effects keeps strength-readable size still at every age")
+			equal(reduced.y, normal.y, "reduced contact retains the same finite fade and meaningful lifetime")
+			check(normal.y > 0.0 and normal.y <= 1.0, "contact alpha cannot flash above the material opacity")
+			if age > 0:
+				check(normal.y <= PixelSpellEffects.impact_envelope(age - 1, duration, weight, false).y, "contact emphasis never flashes back after settling")
+		for age: int in [-1, duration, duration + 1, 0x7fffffffffffffff]:
+			equal(PixelSpellEffects.impact_envelope(age, duration, weight, false), Vector2.ZERO, "invalid/expired envelope is finite and cannot resurrect a contact")
+	check(PixelSpellEffects.impact_envelope(2, duration, 0, false) != PixelSpellEffects.impact_envelope(2, duration, 2, false), "rapid tap and heavy bloom have distinct emphasis timing")
+	equal(PixelSpellEffects.impact_envelope(0, 0, 0, false), Vector2.ZERO, "missing duration cannot own a contact")
+	for weight: int in [-1, 3]:
+		equal(PixelSpellEffects.impact_envelope(0, duration, weight, false), Vector2.ZERO, "unknown weight cannot expand the bounded effect")
+	var pixels := PixelSpellEffects.new()
+	for element: String in pixels.ELEMENTS:
+		for radius: float in [4.0, 12.0, 18.0, 30.0, 1000000.0]:
+			for reduced: bool in [false, true]:
+				for age: int in [0, 2, 6, 12, 20]:
+					var model := pixels.impact_model(element, Vector2(12.25, 18.75), age, reduced, radius)
+					if model.is_empty(): continue
+					check(model.render_scale > 0.0 and model.render_scale <= pixels.MAX_IMPACT_SCALE, "all element/family combinations respect the existing hard contact scale cap")
+					equal(model.breakup.asset_id, pixels.asset_id(element, "impact", reduced), "weight never substitutes generic art for real element identity")
+					equal(model.anchor, Vector2(12.25, 18.75), "punch and settle never move the exact event anchor")
+		check(pixels.impact_model(element, Vector2.ZERO, 0x7fffffffffffffff, false).is_empty(), "ancient point contact exits before age multiplication")
 
 
 func _test_authored_contact(presenter: BurstProjectilePresenter) -> void:
@@ -116,11 +153,27 @@ func _test_live_pixel_contract(presenter: BurstProjectilePresenter) -> void:
 	check(not source.contains("ResourceLoader.load(") and not source.contains("assets/effects/projectiles/") and not source.contains("textures_by_element"), "live adapter has no legacy atlas loading dependency")
 	var config := SimConfig.new(120)
 	var count := 0
+	var original_seen := {}
+	var family_counts := {"bolt": 0, "heavy": 0, "rapid": 0, "mantle": 0, "fuse": 0, "split": 0, "rebound": 0}
+	var spray_count := 0
+	# This tests the shared native material adapter, including its representative
+	# ingredient. Actual expanded drawing adds all mask sectors and real delivery
+	# states; element-delivery-presentation covers that separate live route.
 	for wire: int in presenter.catalog.runtime_wire_ids:
 		var ability := presenter.catalog.ability_from_wire(wire)
 		if String(ability.get("shape", "")) != "projectile":
+			spray_count += 1
+			equal(AbilityCatalog._spell_family(ability), "spray", "the only admitted nonprojectile delivery is Spray")
+			var spray := ProjectileState.new(3010, 1, 1, wire, 1, Vector2i.ZERO, Vector2i.ZERO, 10000, 1000, 120)
+			check(presenter.projectile_model(spray).is_empty(), "every instantaneous Spray refuses a fabricated native projectile descriptor")
 			continue
 		count += 1
+		var family := AbilityCatalog._spell_family(ability)
+		check(family_counts.has(family), "every projectile belongs to one of the seven independent delivery families")
+		if family_counts.has(family): family_counts[family] += 1
+		if wire in ORIGINAL_TRAVELLING_WIRES:
+			check(not original_seen.has(wire), "original singleton descriptor appears exactly once")
+			original_seen[wire] = true
 		var projectile := ProjectileState.new(3010, 1, 1, wire, 1, Vector2i.ZERO, Vector2i.ZERO, 10000, 1000, 120)
 		projectile.source_wire_id = wire
 		projectile.lifetime_ticks = config.milliseconds_to_ticks(int(ability.lifetime_ms)) - 5
@@ -133,10 +186,10 @@ func _test_live_pixel_contract(presenter: BurstProjectilePresenter) -> void:
 		projectile.velocity_y = -19234
 		var before := projectile.canonical_values()
 		var model := presenter.projectile_model(projectile, 0.5)
-		check(not model.is_empty(), "every live projectile family uses the same active material contract")
+		check(not model.is_empty(), "every admitted projectile retains a shared native material descriptor")
 		if model.is_empty():
 			continue
-		equal(model.element, ability.element, "exact admitted element is retained")
+		equal(model.element, ability.element, "adapter preserves the authored representative ingredient; expanded rendering owns the complete mask")
 		equal(model.position, Vector2(102, 201), "continuous position interpolation is retained")
 		check(model.direction.is_equal_approx(Vector2(83111, -19234).normalized()), "aim remains continuous rather than snapped to archived eight rows")
 		equal(model.radius, float(projectile.radius) / 1000.0, "real radius is not taken from artwork")
@@ -148,7 +201,13 @@ func _test_live_pixel_contract(presenter: BurstProjectilePresenter) -> void:
 		equal(projectile.canonical_values(), before, "presentation sampling cannot alter simulation")
 		projectile.lifetime_ticks = 0
 		check(presenter.projectile_model(projectile).is_empty(), "expired projectiles disappear exactly")
-	check(count > 0, "test covers actual runtime projectile families")
+	equal(count, 441, "all63 masks times seven projectile families retain the native material adapter")
+	equal(spray_count, 63, "all63 Spray masks remain outside the projectile adapter")
+	for family: String in family_counts:
+		equal(int(family_counts[family]), 63, "every ingredient mask is covered independently for " + family)
+	equal(original_seen.size(), 18, "all original six-element Bolt/Heavy/Rapid descriptors remain covered")
+	for wire: int in ORIGINAL_TRAVELLING_WIRES:
+		check(original_seen.has(wire), "stable original travelling wire cannot disappear behind the expanded total")
 
 
 func _test_fail_closed(source: BurstProjectilePresenter) -> void:
@@ -164,6 +223,23 @@ func _test_fail_closed(source: BurstProjectilePresenter) -> void:
 	projectile.lifetime_ticks = 12
 	check(source.projectile_model(projectile).is_empty(), "unknown spell cannot fabricate a material")
 	check(source.projectile_model(null).is_empty(), "missing owner cannot fabricate a projectile")
+	for retired: int in [170,101,187,189,188,190]:
+		projectile.source_wire_id=retired
+		check(source.projectile_model(projectile).is_empty(),"retained Ice/Charge style cannot admit a retired live projectile")
+	for element: String in ["water","fire","wind","earth","light","dark"]:
+		var candidate := AbilityCatalog.new()
+		check(candidate.load_from_file("res://content/abilities/foundation_abilities_v1.json"),"invalid active-element control begins with validated catalog")
+		candidate.elements_by_id[element].runtime_enabled=false
+		check(not invalid.configure(source.language,candidate),"each disabled active ingredient still refuses startup")
+		check(invalid.last_error.contains("active element"),"active catalog refusal remains actionable")
+	for derived: String in ["ice","charge"]:
+		check(not bool(source.catalog.elements_by_id[derived].runtime_enabled),"derived visual style remains disabled as a live ingredient")
+		check(not source.pixel_effects.library.sample(PixelSpellEffects.asset_id(derived,"flight",false),0).is_empty(),"disabled ingredient retains its original pixel effect style")
+		var visual := VisualLanguage.new()
+		check(visual.load_from_file(),"missing archive-style control begins with canonical visual tokens")
+		visual.elements.erase(derived)
+		check(not invalid.configure(visual,source.catalog),"missing derived visual style still fails art admission")
+		check(invalid.last_error.contains("retained visual style"),"art failure is distinct from live ingredient admission")
 
 
 func _test_impact_profiles() -> void:

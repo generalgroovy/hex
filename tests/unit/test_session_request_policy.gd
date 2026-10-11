@@ -42,8 +42,70 @@ func run() -> int:
 	state.actor_kind = PlayerState.ActorKind.TRAINING_TARGET
 	equal(SessionRequestPolicy.validate(SessionTransport.REQUEST_EMOTE, state, layout.stations_by_id, 20, 0), SessionRequestPolicy.REFUSED_UNAVAILABLE, "non-champion cannot issue a social request")
 	_test_exact_attunement_policy(layout)
+	_test_colocated_action_permissions(layout)
 	_test_attunement_application()
 	return finish("session-request-policy")
+
+
+func _test_colocated_action_permissions(layout: SanctumCampusLayout) -> void:
+	var actions := {
+		SessionTransport.REQUEST_TRAINING_RESET: "training-reset",
+		SessionTransport.REQUEST_IMPACT_PRACTICE: "momentum-chime",
+		SessionTransport.REQUEST_CHAMPION_NEXT: "champion-loom",
+		SessionTransport.REQUEST_CHAMPION_SELECT: "champion-loom",
+		SessionTransport.REQUEST_SPELL_EQUIP: "spell-loom",
+		SessionTransport.REQUEST_WEAVE_APPLY: "spell-loom",
+		SessionTransport.REQUEST_READY_TOGGLE: "session-hearth",
+		SessionTransport.REQUEST_PRACTICE_START: "session-hearth",
+	}
+	var layout_before := CanonicalContent.sha256(layout.data)
+	for action: int in actions:
+		var station_id := String(actions[action])
+		var station: Dictionary = layout.stations_by_id[station_id]
+		var anchor := SanctumCampusLayout._parse_point(station["position"]) * SimConfig.FIXED_SCALE
+		var state := PlayerState.new(2)
+		for offset: Vector2i in [Vector2i.ZERO, Vector2i(0, 32000), Vector2i(-36000, 0), Vector2i(36000, 0)]:
+			state.position_x = anchor.x + offset.x
+			state.position_y = anchor.y + offset.y
+			var state_before := state.canonical_values()
+			equal(SessionRequestPolicy.validate(action, state, layout.stations_by_id, 20, 0), SessionRequestPolicy.ACCEPTED, "requested colocated action is admitted independently of the lexical focus winner")
+			equal(state.canonical_values(), state_before, "range admission is intent validation, not a resource/round/action mutation")
+		_place_at(state, layout, station_id)
+		state.position_y -= 17000
+		equal(SessionRequestPolicy.validate(action, state, layout.stations_by_id, 20, 0), SessionRequestPolicy.REFUSED_DISTANCE, "rear-door intent is refused despite being within the circular radius")
+		_place_at(state, layout, station_id)
+		state.position_y += int(station["interaction_radius"]) * SimConfig.FIXED_SCALE + 1
+		equal(SessionRequestPolicy.validate(action, state, layout.stations_by_id, 20, 0), SessionRequestPolicy.REFUSED_DISTANCE, "requested action uses its own radius, not another nearby action's range")
+		for other_id: String in ["movement-guide", "momentum-chime", "champion-loom", "farflow-host"]:
+			if String(layout.stations_by_id[other_id]["service_group"]) == String(station["service_group"]):
+				continue
+			_place_at(state, layout, other_id)
+			equal(SessionRequestPolicy.validate(action, state, layout.stations_by_id, 20, 0), SessionRequestPolicy.REFUSED_DISTANCE, "a different building group cannot authorize the requested service")
+		_place_at(state, layout, station_id)
+		for phase: int in [SessionRound.Phase.ACTIVE, SessionRound.Phase.RESULT]:
+			equal(SessionRequestPolicy.validate(action, state, layout.stations_by_id, 20, 0, phase), SessionRequestPolicy.REFUSED_UNAVAILABLE, "colocation cannot bypass the existing round-phase gate")
+		state.actor_kind = PlayerState.ActorKind.TRAINING_TARGET
+		equal(SessionRequestPolicy.validate(action, state, layout.stations_by_id, 20, 0), SessionRequestPolicy.REFUSED_UNAVAILABLE, "colocation cannot grant service authority to a training target")
+		state.actor_kind = PlayerState.ActorKind.CHAMPION
+		equal(SessionRequestPolicy.validate(action, state, layout.stations_by_id, -1, 0), SessionRequestPolicy.REFUSED_UNAVAILABLE, "invalid host tick cannot admit grouped service intent")
+	var practice_state := PlayerState.new(2)
+	_place_at(practice_state, layout, "momentum-chime")
+	practice_state.position_y += 80000
+	equal(SessionRequestPolicy.validate(SessionTransport.REQUEST_TRAINING_RESET, practice_state, layout.stations_by_id, 20, 0), SessionRequestPolicy.ACCEPTED, "Restore's 96 px range remains reachable at 80 px from the shared door")
+	equal(SessionRequestPolicy.validate(SessionTransport.REQUEST_IMPACT_PRACTICE, practice_state, layout.stations_by_id, 20, 0), SessionRequestPolicy.REFUSED_DISTANCE, "Momentum cannot borrow Restore's longer range")
+	var narrowed: Dictionary[String, Dictionary] = layout.stations_by_id.duplicate(true)
+	narrowed["spell-loom"]["interaction_radius"] = 24
+	var academy_state := PlayerState.new(2)
+	_place_at(academy_state, layout, "champion-loom")
+	academy_state.position_y += 40000
+	equal(SessionRequestPolicy.validate(SessionTransport.REQUEST_CHAMPION_SELECT, academy_state, narrowed, 20, 0), SessionRequestPolicy.ACCEPTED, "requested champion selection keeps its own 96 px range")
+	equal(SessionRequestPolicy.validate(SessionTransport.REQUEST_SPELL_EQUIP, academy_state, narrowed, 20, 0), SessionRequestPolicy.REFUSED_DISTANCE, "alphabetical Champion focus cannot grant an out-of-range spell equip")
+	for action: int in [SessionTransport.REQUEST_CHAMPION_SELECT, SessionTransport.REQUEST_WEAVE_APPLY, SessionTransport.REQUEST_IMPACT_PRACTICE]:
+		var state := PlayerState.new(2)
+		_place_at(state, layout, String(actions[action]))
+		state.control_state = PlayerState.ControlState.STUNNED
+		equal(SessionRequestPolicy.validate(action, state, layout.stations_by_id, 20, 0), SessionRequestPolicy.REFUSED_UNAVAILABLE, "grouped action selection cannot erase a live control state")
+	equal(CanonicalContent.sha256(layout.data), layout_before, "grouped policy checks do not rewrite authority or action definitions")
 
 
 func _test_exact_attunement_policy(layout: SanctumCampusLayout) -> void:

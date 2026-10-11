@@ -1,0 +1,1248 @@
+{
+  "schema": "hex-native-profile-wrapper-v1",
+  "status": "measured",
+  "scope": "Instrumented native source runtime, not portable-release FPS acceptance or physical presentation/input latency. Cold rows mean this process cache, not a flushed OS cache; warm and travel rows stay separate. No source/package/promotion edits; engine preferences live only in the isolated profile. The shared checked-engine runner validates process results, but does not expose a numeric exit code when Windows leaves it unavailable.",
+  "numeric_process_exit_code": null,
+  "exit_code_scope": "Not exposed by the shared checked-engine runner; clean launcher return, exact completion marker, complete receipt and empty stderr are required.",
+  "appdata_restored": true,
+  "requested": {
+    "profiles": [
+      "low"
+    ],
+    "cases": [
+      "hearth_idle"
+    ],
+    "seconds_per_case": 3.0,
+    "soak_seconds": 0.0,
+    "frame_limit": 60,
+    "width": 1280,
+    "height": 720,
+    "observer_mode": "full",
+    "screenshots": true,
+    "timeout_seconds": 180
+  },
+  "output_directory": "C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-profile-wrapper-final-v1",
+  "engine": "C:\\Users\\sende\\AppData\\Local\\FLUX-dev\\godot-4.7.1\\Godot_v4.7.1-stable_win64.exe",
+  "arguments": [
+    "--path",
+    "C:\\Users\\sende\\Projects\\hex",
+    "--script",
+    "res://scripts/profile-gameplay.gd",
+    "--windowed",
+    "--resolution",
+    "1280x720",
+    "--",
+    "--no-lan-discovery",
+    "--fullbody-art",
+    "--pixel-cast",
+    "--profile-output=C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-profile-wrapper-final-v1\\metrics.json",
+    "--profile-user-data=C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-profile-wrapper-final-v1\\isolated-roaming\\Godot\\app_userdata\\FLUX 2",
+    "--profile-seconds=3",
+    "--profile-soak-seconds=0",
+    "--profile-profiles=low",
+    "--profile-cases=hearth_idle",
+    "--profile-frame-limit=60",
+    "--profile-width=1280",
+    "--profile-height=720",
+    "--profile-screenshots"
+  ],
+  "wall_seconds": 97.4372519,
+  "available_memory_before": {
+    "observed_utc": "2026-10-10T02:19:38.5520457Z",
+    "os": "Microsoft Windows 11 Home",
+    "os_version": "10.0.26300",
+    "available_mb": 784.55,
+    "total_visible_mb": 7455.62,
+    "error": null
+  },
+  "available_memory_after": {
+    "observed_utc": "2026-10-10T02:21:16.1197414Z",
+    "os": "Microsoft Windows 11 Home",
+    "os_version": "10.0.26300",
+    "available_mb": 1057.06,
+    "total_visible_mb": 7455.62,
+    "error": null
+  },
+  "runtime_identity_before": {
+    "schema_version": 1,
+    "status": "candidate_generated_not_promoted",
+    "scope_id": "production-runtime-source-v1",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "protocol_version": 60,
+    "snapshot_schema": 24,
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "record_count": 3388,
+    "runtime_source_sha256": "d649c4d1d99c43bf422deb52c7dc18302fc4b3a048b3ce23a1208975fe78e7c9",
+    "build_id": "p60-d649c4d1d99c",
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate."
+  },
+  "runtime_identity_after": {
+    "schema_version": 1,
+    "status": "candidate_generated_not_promoted",
+    "scope_id": "production-runtime-source-v1",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "protocol_version": 60,
+    "snapshot_schema": 24,
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "record_count": 3388,
+    "runtime_source_sha256": "d649c4d1d99c43bf422deb52c7dc18302fc4b3a048b3ce23a1208975fe78e7c9",
+    "build_id": "p60-d649c4d1d99c",
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate."
+  },
+  "input_hashes_before": {
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\profile-gameplay.gd": "713937938d5a49746b1018ef60dc1c3ec5890d044eb0c1b656f37d9cfa8ff4ed",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\profile-gameplay.ps1": "8465fa77b0b03a2a468385c6665b1db8f8e412cc6e4564449036ad52e62dda86",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\runtime-build-identity.ps1": "ee1b11776ae2219f8374d80eaf7bbbe3d44364626e9ed8c60ce8b9290de014fa",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\flux2-common.ps1": "30e3f67ef460a195fd6d15fe62d79797c89a25978c94e7162843827f1c31b4a6",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\engine-guard.ps1": "9de3d4ae5d09dc59abc56e40bb78f626875db92ceee63136bfa99f62d4b38cd1",
+    "C:\\Users\\sende\\Projects\\hex\\content\\runtime\\runtime_build_identity_v1.json": "14ac2fd4711f8a3851806acf305e84f33939afc7c529d7954d3c2753198f5896"
+  },
+  "input_hashes_after": {
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\profile-gameplay.gd": "713937938d5a49746b1018ef60dc1c3ec5890d044eb0c1b656f37d9cfa8ff4ed",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\profile-gameplay.ps1": "8465fa77b0b03a2a468385c6665b1db8f8e412cc6e4564449036ad52e62dda86",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\runtime-build-identity.ps1": "ee1b11776ae2219f8374d80eaf7bbbe3d44364626e9ed8c60ce8b9290de014fa",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\flux2-common.ps1": "30e3f67ef460a195fd6d15fe62d79797c89a25978c94e7162843827f1c31b4a6",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\engine-guard.ps1": "9de3d4ae5d09dc59abc56e40bb78f626875db92ceee63136bfa99f62d4b38cd1",
+    "C:\\Users\\sende\\Projects\\hex\\content\\runtime\\runtime_build_identity_v1.json": "14ac2fd4711f8a3851806acf305e84f33939afc7c529d7954d3c2753198f5896"
+  },
+  "raw_metrics_path": "C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-profile-wrapper-final-v1\\metrics.json",
+  "native_log_path": "C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-profile-wrapper-final-v1\\engine.log",
+  "metrics_sha256": "648ffd29efd3abc9244c2f13e63a09e24e85a873235af8ad4e789d2efc7aae3b",
+  "validation_errors": [],
+  "benchmark": {
+    "adapter": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001506) Direct3D11 vs_5_0 ps_5_0, D3D11-32.0.21045.5002)",
+    "case_seconds": 3.0,
+    "complete": true,
+    "debug_build": true,
+    "display_server": "Windows",
+    "draw_stage_scope": "Full mode clears stage storage immediately before each actual Bootstrap._draw call. main_draw_stages_us and main_draw_contexts align by index with draw_submission_elapsed_ms. Each context records a monotonic callback serial, process frame and entry phase. Loading/no-world callbacks have current empty stages, counted as zero for any stage observed elsewhere in that case; full draw elapsed time remains measured. No categories are invented if the entire case has no gameplay stages. Earlier receipts could repeat stale gameplay stage dictionaries during loading; their cold stage statistics are not valid.",
+    "engine": {
+      "build": "official",
+      "hash": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+      "hex": 263937,
+      "major": 4,
+      "minor": 7,
+      "patch": 1,
+      "status": "stable",
+      "string": "4.7.1-stable (official)",
+      "timestamp": 0
+    },
+    "executable": "C:/Users/sende/AppData/Local/FLUX-dev/godot-4.7.1/Godot_v4.7.1-stable_win64.exe",
+    "fixtures": "Fresh120Hz world per independent case, ordinary paid SimCommand casts, no measured-period refill. Direct placement/equip happens before warm measurement. Cold travel uses actual authored menu travel. Focus loss is observed, while deterministic commands continue.",
+    "frame_limit": 60,
+    "manifest": {
+      "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate.",
+      "build_id": "p60-d649c4d1d99c",
+      "canonical_encoding": "utf8-lf-tagged-length-v1",
+      "engine_identity": "4.7.1.stable.official.a13da4feb",
+      "protocol_version": 60.0,
+      "record_count": 3388.0,
+      "runtime_source_sha256": "d649c4d1d99c43bf422deb52c7dc18302fc4b3a048b3ce23a1208975fe78e7c9",
+      "schema_version": 1.0,
+      "scope_id": "production-runtime-source-v1",
+      "snapshot_schema": 24.0,
+      "status": "candidate_generated_not_promoted"
+    },
+    "manifest_note": "Generated runtime identity is recorded here; exact source-to-manifest binding is checked by the separate packaging gate.",
+    "observed_source_after": {
+      "count": 297,
+      "observed_utc": "2026-10-10T02:20:39",
+      "ok": true,
+      "sha256": "7cd4ec54cf02c8616f85c49851619fbce417c9058eb7dcf291165679de01d8fd",
+      "unreadable_paths": []
+    },
+    "observed_source_before": {
+      "count": 297,
+      "observed_utc": "2026-10-10T02:20:27",
+      "ok": true,
+      "sha256": "7cd4ec54cf02c8616f85c49851619fbce417c9058eb7dcf291165679de01d8fd",
+      "unreadable_paths": []
+    },
+    "observed_source_scope": "Independent raw-byte filesystem hashes of project.godot, this benchmark, src/*.gd, scenes/*.tscn and *.tres, content/*.json except the generated identity, and assets/shaders/*.gdshader (recursive). Sorted path<TAB>SHA256<LF> records are SHA256 hashed. Start/end snapshots detect source drift; they do not hash imported textures, certify a pack, or prove code was not edited and restored between snapshots. Source reading occurs outside measured intervals and may warm OS file cache.",
+    "observed_source_unchanged": true,
+    "observer_mode": "full",
+    "observer_overhead_scope": "Benchmark _process head and tail, excluding elapsed Bootstrap._process: interval recording, synthetic focus bookkeeping, focus/counters, final-step copies, paid-cell membership and memory monitors when enabled. Excludes draw/render-setup observation and the overhead of timers embedded inside Bootstrap/SimWorld. Includes scheduling waits, not pure CPU cost.",
+    "observer_policy": "Light mode retains frame/process/draw intervals, tick/endpoints and inexpensive counters; disables per-frame occupied-membership queries, memory monitors, stage dictionaries and nested component timers. Unavailable metrics are null, never inferred maxima. Both modes remain instrumented, not physical-presentation measurements.",
+    "process_timer_scope": "Elapsed Bootstrap._process call only; excludes benchmark head/tail observation. Earlier receipts included head bookkeeping. Embedded simulation and nested component timer overhead remains inside this value in full mode.",
+    "profile_script_sha256": "713937938d5a49746b1018ef60dc1c3ec5890d044eb0c1b656f37d9cfa8ff4ed",
+    "profiles": [
+      "low"
+    ],
+    "protocol": 60,
+    "renderer": "gl_compatibility",
+    "results": [
+      {
+        "cast_attempts": 0,
+        "champion_wire": 1,
+        "clamped_delta_seconds": 0.0,
+        "distance_pixels": 0.0,
+        "draw_submission_elapsed_ms": {
+          "count": 14,
+          "max": 48.14,
+          "mean": 5.03135714285714,
+          "p50": 0.052,
+          "p95": 48.14,
+          "p99": 48.14,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 1,
+            "over_33_3ms": 1,
+            "over_50ms": 0
+          }
+        },
+        "dropped_accumulator_seconds": 0.00833333333333333,
+        "engine_render_setup_cpu_ms": {
+          "count": 13,
+          "max": 2.222,
+          "mean": 0.179384615384615,
+          "p50": 0.009,
+          "p95": 2.222,
+          "p99": 2.222,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "fixture": {
+          "initial_startup": true
+        },
+        "flux_after": 114400,
+        "flux_before": 114400,
+        "frame_interval_ms": {
+          "count": 12,
+          "max": 119.361,
+          "mean": 29.87025,
+          "p50": 16.587,
+          "p95": 119.361,
+          "p99": 119.361,
+          "threshold_counts": {
+            "over_100ms": 1,
+            "over_20ms": 3,
+            "over_33_3ms": 2,
+            "over_50ms": 2
+          }
+        },
+        "garden_draw_elapsed_ms": {
+          "count": 4,
+          "max": 0.019,
+          "mean": 0.015,
+          "p50": 0.013,
+          "p95": 0.019,
+          "p99": 0.019,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "garden_stage_stats_ms": {},
+        "garden_step_elapsed_ms": {
+          "count": 14,
+          "max": 0.078,
+          "mean": 0.0441428571428572,
+          "p50": 0.039,
+          "p95": 0.078,
+          "p99": 0.078,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "label": "startup_arrival",
+        "last_fixed_step_stage_stats_ms": {
+          "actor_product_effects": {
+            "count": 3,
+            "max": 0.011,
+            "mean": 0.00866666666666666,
+            "p50": 0.009,
+            "p95": 0.011,
+            "p99": 0.011,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "chemistry_exposure": {
+            "count": 3,
+            "max": 0.009,
+            "mean": 0.00766666666666667,
+            "p50": 0.009,
+            "p95": 0.009,
+            "p99": 0.009,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "command_order": {
+            "count": 3,
+            "max": 0.01,
+            "mean": 0.00866666666666667,
+            "p50": 0.008,
+            "p95": 0.01,
+            "p99": 0.01,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "finalize": {
+            "count": 3,
+            "max": 0.009,
+            "mean": 0.00833333333333333,
+            "p50": 0.009,
+            "p95": 0.009,
+            "p99": 0.009,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "movement_cast_admission": {
+            "count": 3,
+            "max": 0.467,
+            "mean": 0.446,
+            "p50": 0.442,
+            "p95": 0.467,
+            "p99": 0.467,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "projectile_contacts": {
+            "count": 3,
+            "max": 0.033,
+            "mean": 0.0276666666666667,
+            "p50": 0.028,
+            "p95": 0.033,
+            "p99": 0.033,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "spray_contacts": {
+            "count": 3,
+            "max": 0.03,
+            "mean": 0.0253333333333333,
+            "p50": 0.025,
+            "p95": 0.03,
+            "p99": 0.03,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "surfaces_expiry": {
+            "count": 3,
+            "max": 0.02,
+            "mean": 0.0183333333333333,
+            "p50": 0.019,
+            "p95": 0.02,
+            "p99": 0.02,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "terminal_deposits": {
+            "count": 3,
+            "max": 0.003,
+            "mean": 0.00266666666666667,
+            "p50": 0.003,
+            "p95": 0.003,
+            "p99": 0.003,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          }
+        },
+        "main_campus_draw_elapsed_ms": {
+          "count": 4,
+          "max": 38.632,
+          "mean": 11.179,
+          "p50": 1.651,
+          "p95": 38.632,
+          "p99": 38.632,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 1,
+            "over_33_3ms": 1,
+            "over_50ms": 0
+          }
+        },
+        "main_court_components_total_us": {
+          "bundle": 0,
+          "draw_count": 4,
+          "geometry": 409,
+          "surface": 0
+        },
+        "main_court_draw_elapsed_ms": {
+          "count": 4,
+          "max": 0.336,
+          "mean": 0.11325,
+          "p50": 0.038,
+          "p95": 0.336,
+          "p99": 0.336,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "main_draw_stage_stats_ms": {
+          "actors": {
+            "count": 14,
+            "max": 0.654,
+            "mean": 0.171142857142857,
+            "p50": 0.0,
+            "p95": 0.654,
+            "p99": 0.654,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "campus_and_setup": {
+            "count": 14,
+            "max": 39.111,
+            "mean": 3.33592857142857,
+            "p50": 0.0,
+            "p95": 39.111,
+            "p99": 39.111,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 1,
+              "over_33_3ms": 1,
+              "over_50ms": 0
+            }
+          },
+          "combat_hud": {
+            "count": 14,
+            "max": 3.913,
+            "mean": 0.5985,
+            "p50": 0.0,
+            "p95": 3.913,
+            "p99": 3.913,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "garden": {
+            "count": 14,
+            "max": 0.128,
+            "mean": 0.0293571428571429,
+            "p50": 0.0,
+            "p95": 0.128,
+            "p99": 0.128,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "garden_inspection": {
+            "count": 14,
+            "max": 0.035,
+            "mean": 0.00864285714285714,
+            "p50": 0.0,
+            "p95": 0.035,
+            "p99": 0.035,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "local_labels_reticle": {
+            "count": 14,
+            "max": 0.256,
+            "mean": 0.0405,
+            "p50": 0.0,
+            "p95": 0.256,
+            "p99": 0.256,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "paid_ground": {
+            "count": 14,
+            "max": 0.353,
+            "mean": 0.0365714285714286,
+            "p50": 0.0,
+            "p95": 0.353,
+            "p99": 0.353,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "panels": {
+            "count": 14,
+            "max": 0.502,
+            "mean": 0.0455714285714286,
+            "p50": 0.0,
+            "p95": 0.502,
+            "p99": 0.502,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "practice_coach": {
+            "count": 14,
+            "max": 0.115,
+            "mean": 0.0245714285714286,
+            "p50": 0.0,
+            "p95": 0.115,
+            "p99": 0.115,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "projectiles_targets_cues": {
+            "count": 14,
+            "max": 1.138,
+            "mean": 0.155214285714286,
+            "p50": 0.0,
+            "p95": 1.138,
+            "p99": 1.138,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "visibility": {
+            "count": 14,
+            "max": 2.629,
+            "mean": 0.497428571428571,
+            "p50": 0.0,
+            "p95": 2.629,
+            "p99": 2.629,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          }
+        },
+        "matter_paid_delta": 0,
+        "max_paid_cells": 0,
+        "max_projectiles": 0,
+        "max_resident_plots": 0,
+        "memory_endpoint_bytes": {
+          "after": {
+            "static": 241987774,
+            "textures": 94722919,
+            "video": 103367927
+          },
+          "before": {
+            "static": 236876266,
+            "textures": 52753995,
+            "video": 59167019
+          }
+        },
+        "memory_max_bytes": {
+          "static": 241925669,
+          "textures": 94722919,
+          "video": 103366967
+        },
+        "observer_mode": "full",
+        "observer_overhead_elapsed_ms": {
+          "count": 13,
+          "max": 0.044,
+          "mean": 0.0356923076923077,
+          "p50": 0.036,
+          "p95": 0.044,
+          "p99": 0.044,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "paid_cells_endpoints": {
+          "after": 0,
+          "before": 0
+        },
+        "position_after": [
+          1536.0,
+          880.0
+        ],
+        "position_before": [
+          1536.0,
+          880.0
+        ],
+        "pov_elapsed_ms": {
+          "count": 4,
+          "max": 2.405,
+          "mean": 1.55625,
+          "p50": 1.231,
+          "p95": 2.405,
+          "p99": 2.405,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "process_elapsed_ms": {
+          "count": 13,
+          "max": 17.111,
+          "mean": 8.00207692307692,
+          "p50": 10.597,
+          "p95": 17.111,
+          "p99": 17.111,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "quality": "low",
+        "ready": true,
+        "render_last": {
+          "draw_calls": 203.0,
+          "primitives": 4602.0
+        },
+        "temperature": "cold_process_cache",
+        "terrain_after": {
+          "bytes": 16777216,
+          "closed": false,
+          "error": "",
+          "pending": 2,
+          "queued": 6,
+          "ready": 12,
+          "requests": 18,
+          "required": 12,
+          "resident": 16,
+          "suspended": false,
+          "uploads": 16
+        },
+        "terrain_before": {
+          "bytes": 0,
+          "closed": false,
+          "error": "",
+          "pending": 0,
+          "queued": 0,
+          "ready": 0,
+          "requests": 0,
+          "required": 0,
+          "resident": 0,
+          "suspended": false,
+          "uploads": 0
+        },
+        "terrain_loading_frames": 10,
+        "terrain_tile_crossings": 0,
+        "ticks_advanced": 14,
+        "ticks_per_wall_second": 30.6201677547762,
+        "unavailable_metrics": [],
+        "unfocused_frames": 0,
+        "wall_seconds": 0.457215,
+        "window_focus_end": true,
+        "window_size": [
+          1280,
+          720
+        ],
+        "world_map": "wellspring-campus-loop-v2",
+        "world_stage_sample_scope": "One final completed fixed step per rendered process frame; not every step or a sum across catch-up steps. Includes the stage timing overhead and may undersample rare earlier steps."
+      },
+      {
+        "cast_attempts": 0,
+        "champion_wire": 1,
+        "clamped_delta_seconds": 0.0,
+        "distance_pixels": 0.0,
+        "draw_submission_elapsed_ms": {
+          "count": 158,
+          "max": 11.721,
+          "mean": 7.30425316455696,
+          "p50": 7.058,
+          "p95": 9.15,
+          "p99": 11.704,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "dropped_accumulator_seconds": 0.0,
+        "engine_render_setup_cpu_ms": {
+          "count": 158,
+          "max": 0.026,
+          "mean": 0.0102658227848101,
+          "p50": 0.01,
+          "p95": 0.013,
+          "p99": 0.025,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "fixture": {
+          "fixture_prepare_ms": 0.003,
+          "fresh_world": true,
+          "source_case": "hearth_idle"
+        },
+        "flux_after": 114400,
+        "flux_before": 114400,
+        "frame_interval_ms": {
+          "count": 157,
+          "max": 31.535,
+          "mean": 19.1572292993631,
+          "p50": 18.141,
+          "p95": 24.401,
+          "p99": 31.039,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 51,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "garden_draw_elapsed_ms": {
+          "count": 158,
+          "max": 0.026,
+          "mean": 0.0155443037974683,
+          "p50": 0.015,
+          "p95": 0.024,
+          "p99": 0.026,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "garden_stage_stats_ms": {},
+        "garden_step_elapsed_ms": {
+          "count": 363,
+          "max": 0.127,
+          "mean": 0.0480192837465565,
+          "p50": 0.043,
+          "p95": 0.089,
+          "p99": 0.112,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "label": "hearth_idle",
+        "last_fixed_step_stage_stats_ms": {
+          "actor_product_effects": {
+            "count": 158,
+            "max": 0.037,
+            "mean": 0.0104746835443038,
+            "p50": 0.009,
+            "p95": 0.022,
+            "p99": 0.032,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "chemistry_exposure": {
+            "count": 158,
+            "max": 0.058,
+            "mean": 0.00965189873417721,
+            "p50": 0.008,
+            "p95": 0.02,
+            "p99": 0.036,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "command_order": {
+            "count": 158,
+            "max": 0.03,
+            "mean": 0.0106962025316456,
+            "p50": 0.01,
+            "p95": 0.019,
+            "p99": 0.027,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "finalize": {
+            "count": 158,
+            "max": 0.034,
+            "mean": 0.00975316455696201,
+            "p50": 0.009,
+            "p95": 0.017,
+            "p99": 0.022,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "movement_cast_admission": {
+            "count": 158,
+            "max": 1.429,
+            "mean": 0.51232911392405,
+            "p50": 0.462,
+            "p95": 0.836,
+            "p99": 1.083,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "projectile_contacts": {
+            "count": 158,
+            "max": 0.094,
+            "mean": 0.0344556962025316,
+            "p50": 0.03,
+            "p95": 0.07,
+            "p99": 0.087,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "spray_contacts": {
+            "count": 158,
+            "max": 0.09,
+            "mean": 0.0320506329113924,
+            "p50": 0.026,
+            "p95": 0.07,
+            "p99": 0.084,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "surfaces_expiry": {
+            "count": 158,
+            "max": 0.109,
+            "mean": 0.0229303797468354,
+            "p50": 0.019,
+            "p95": 0.05,
+            "p99": 0.082,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "terminal_deposits": {
+            "count": 158,
+            "max": 0.024,
+            "mean": 0.00255696202531646,
+            "p50": 0.002,
+            "p95": 0.005,
+            "p99": 0.014,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          }
+        },
+        "main_campus_draw_elapsed_ms": {
+          "count": 158,
+          "max": 3.548,
+          "mean": 2.11104430379747,
+          "p50": 2.026,
+          "p95": 2.834,
+          "p99": 3.405,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "main_court_components_total_us": {
+          "bundle": 0,
+          "draw_count": 158,
+          "geometry": 5615,
+          "surface": 0
+        },
+        "main_court_draw_elapsed_ms": {
+          "count": 158,
+          "max": 0.157,
+          "mean": 0.0482215189873417,
+          "p50": 0.045,
+          "p95": 0.069,
+          "p99": 0.132,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "main_draw_stage_stats_ms": {
+          "actors": {
+            "count": 158,
+            "max": 1.686,
+            "mean": 0.70706329113924,
+            "p50": 0.645,
+            "p95": 1.099,
+            "p99": 1.336,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "campus_and_setup": {
+            "count": 158,
+            "max": 3.611,
+            "mean": 2.17729746835443,
+            "p50": 2.087,
+            "p95": 2.94,
+            "p99": 3.517,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "combat_hud": {
+            "count": 158,
+            "max": 4.987,
+            "mean": 1.56753797468354,
+            "p50": 1.411,
+            "p95": 2.254,
+            "p99": 3.079,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "garden": {
+            "count": 158,
+            "max": 0.277,
+            "mean": 0.110481012658228,
+            "p50": 0.104,
+            "p95": 0.146,
+            "p99": 0.187,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "garden_inspection": {
+            "count": 158,
+            "max": 0.106,
+            "mean": 0.0395632911392405,
+            "p50": 0.037,
+            "p95": 0.054,
+            "p99": 0.082,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "local_labels_reticle": {
+            "count": 158,
+            "max": 0.933,
+            "mean": 0.352905063291139,
+            "p50": 0.306,
+            "p95": 0.643,
+            "p99": 0.891,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "paid_ground": {
+            "count": 158,
+            "max": 0.174,
+            "mean": 0.0642341772151898,
+            "p50": 0.061,
+            "p95": 0.093,
+            "p99": 0.152,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "panels": {
+            "count": 158,
+            "max": 0.09,
+            "mean": 0.0473164556962025,
+            "p50": 0.045,
+            "p95": 0.069,
+            "p99": 0.085,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "practice_coach": {
+            "count": 158,
+            "max": 0.609,
+            "mean": 0.138854430379747,
+            "p50": 0.136,
+            "p95": 0.192,
+            "p99": 0.25,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "projectiles_targets_cues": {
+            "count": 158,
+            "max": 0.875,
+            "mean": 0.432341772151899,
+            "p50": 0.397,
+            "p95": 0.689,
+            "p99": 0.832,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "visibility": {
+            "count": 158,
+            "max": 2.76,
+            "mean": 1.64808227848101,
+            "p50": 1.592,
+            "p95": 2.289,
+            "p99": 2.67,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          }
+        },
+        "matter_paid_delta": 0,
+        "max_paid_cells": 0,
+        "max_projectiles": 0,
+        "max_resident_plots": 0,
+        "memory_endpoint_bytes": {
+          "after": {
+            "static": 240583850,
+            "textures": 111500119,
+            "video": 120145127
+          },
+          "before": {
+            "static": 239910094,
+            "textures": 111500119,
+            "video": 120145127
+          }
+        },
+        "memory_max_bytes": {
+          "static": 240530206,
+          "textures": 111500119,
+          "video": 120145127
+        },
+        "observer_mode": "full",
+        "observer_overhead_elapsed_ms": {
+          "count": 158,
+          "max": 0.117,
+          "mean": 0.0371202531645569,
+          "p50": 0.034,
+          "p95": 0.061,
+          "p99": 0.11,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "paid_cells_endpoints": {
+          "after": 0,
+          "before": 0
+        },
+        "position_after": [
+          1536.0,
+          880.0
+        ],
+        "position_before": [
+          1536.0,
+          880.0
+        ],
+        "pov_elapsed_ms": {
+          "count": 158,
+          "max": 2.233,
+          "mean": 1.38004430379747,
+          "p50": 1.333,
+          "p95": 1.847,
+          "p99": 2.172,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "process_elapsed_ms": {
+          "count": 158,
+          "max": 5.123,
+          "mean": 2.75977848101266,
+          "p50": 2.482,
+          "p95": 4.385,
+          "p99": 4.814,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "quality": "low",
+        "ready": true,
+        "render_last": {
+          "draw_calls": 203.0,
+          "primitives": 4602.0
+        },
+        "screenshot": "C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-profile-wrapper-final-v1\\metrics-low-hearth_idle.png",
+        "temperature": "warm",
+        "terrain_after": {
+          "bytes": 29360128,
+          "closed": false,
+          "error": "",
+          "pending": 0,
+          "queued": 0,
+          "ready": 15,
+          "requests": 28,
+          "required": 15,
+          "resident": 28,
+          "suspended": false,
+          "uploads": 28
+        },
+        "terrain_before": {
+          "bytes": 29360128,
+          "closed": false,
+          "error": "",
+          "pending": 0,
+          "queued": 0,
+          "ready": 15,
+          "requests": 28,
+          "required": 15,
+          "resident": 28,
+          "suspended": false,
+          "uploads": 28
+        },
+        "terrain_loading_frames": 0,
+        "terrain_tile_crossings": 0,
+        "ticks_advanced": 363,
+        "ticks_per_wall_second": 119.909621838746,
+        "unavailable_metrics": [],
+        "unfocused_frames": 0,
+        "wall_seconds": 3.02728,
+        "window_focus_end": true,
+        "window_size": [
+          1280,
+          720
+        ],
+        "world_map": "wellspring-campus-loop-v2",
+        "world_stage_sample_scope": "One final completed fixed step per rendered process frame; not every step or a sum across catch-up steps. Includes the stage timing overhead and may undersample rare earlier steps."
+      }
+    ],
+    "schema": "hex-gameplay-profile-v1",
+    "scope": "Instrumented native source runtime. Main-thread elapsed timers can include scheduling/driver waits. Frame-start intervals are not GPU time, physical presentation or input-to-photon latency. Nested timers are not additive. No 60FPS acceptance is inferred.",
+    "screen_id": 0,
+    "screen_refresh_hz": 60.0,
+    "screen_size": [
+      1920,
+      1080
+    ],
+    "soak_seconds": 0.0,
+    "started_utc": "2026-10-10T02:20:33",
+    "startup_synchronous_ms": 5553.24,
+    "statistics": "Nearest-rank quantiles of raw process-start intervals; short samples do not establish stable tails. Sequential profile order is recorded; repeat in reverse order for comparisons.",
+    "tick_rate": 120,
+    "user_data": "C:/Users/sende/Projects/hex/.godot/smooth-profile-wrapper-final-v1/isolated-roaming/Godot/app_userdata/FLUX 2",
+    "window_size": [
+      1280,
+      720
+    ],
+    "window_vsync_mode": 1
+  }
+}

@@ -5,11 +5,9 @@ const CATALOG_PATH: String = "res://content/abilities/foundation_abilities_v1.js
 const LOADOUT_PATH: String = "res://content/loadouts/foundation_practitioner_v1.json"
 const EXPECTED_RUNTIME_WIRE_IDS: Array[int] = [
 	140, 181, 182, 141,
-	159, 183, 184, 160,
 	145, 179, 180, 154,
 	163, 185, 186, 164,
-	170, 189, 190, 171,
-	101, 187, 188, 167,
+	159, 183, 184, 160,
 	173, 191, 192, 174,
 	142, 193, 194, 176,
 ]
@@ -18,6 +16,7 @@ const EXPECTED_REACTION_STRENGTH_BY_FAMILY: Dictionary = {
 	"spray": 3,
 	"bolt": 5,
 	"heavy": 15,
+	"mantle": 8, "fuse": 10, "split": 8, "rebound": 6,
 }
 
 
@@ -28,10 +27,16 @@ func run() -> int:
 	_test_loadout()
 	_test_invalid_content_fails_closed()
 	_test_single_element_gate()
+	_test_retired_element_archive()
 	return finish("ability-content")
 
 
 func _test_single_element_gate() -> void:
+	# Alternate ambiguous schemas remain refused; explicit element_mask is the sole composition authority.
+	for value: Variant in [0,64,4.5,"4",null]:
+		var bad:=_catalog()
+		_base_ability(bad,"rillshot").element_mask=value
+		check(not bad.validate(),"malformed authored masks fail closed before coercion")
 	for key: String in ["elements", "secondary_element", "dual_element", "element_combination", "hybrid_elements"]:
 		var catalog := _catalog()
 		(catalog.data["abilities"][1] as Dictionary)[key] = ["fire", "water"]
@@ -40,7 +45,7 @@ func _test_single_element_gate() -> void:
 	(array_element.data["abilities"][1] as Dictionary)["element"] = ["fire", "water"]
 	check(not array_element.validate(), "array cannot bypass one-element schema")
 	var empty_element := _catalog()
-	(empty_element.data["abilities"][1] as Dictionary)["element"] = ""
+	_base_ability(empty_element, "rillshot")["element"] = ""
 	check(not empty_element.validate(), "playable spell needs one named element")
 
 
@@ -50,30 +55,54 @@ func _catalog() -> AbilityCatalog:
 	return catalog
 
 
+func _test_retired_element_archive() -> void:
+	var catalog := _catalog()
+	equal(AbilityCatalog.RETIRED_ABILITY_WIRES.size(), 16, "all sixteen old Ice and Charge records remain recoverable")
+	for id: String in AbilityCatalog.RETIRED_ABILITY_WIRES:
+		var record := catalog.ability(id)
+		equal(int(record.get("wire_id", 0)), int(AbilityCatalog.RETIRED_ABILITY_WIRES[id]), "archive preserves exact historical spell identity: " + id)
+		equal(String(record.get("runtime_status", "")), "catalog_only", "retired element spell is inspectable only: " + id)
+		check(not catalog.runtime_wire_ids.has(int(record.wire_id)), "retired wire cannot enter the selectable runtime")
+		check(CombatTuning.cast_definition(int(record.wire_id)).is_empty(), "retired wire cannot cast through runtime lookup")
+	for element: String in ["ice", "charge"]:
+		check(catalog.spell_id_at(element, "bolt").is_empty(), "retired element has no selectable matrix row")
+		var promoted := _catalog()
+		for row: Dictionary in promoted.data.elements:
+			if String(row.id) == element: row.runtime_enabled = true
+		check(not promoted.validate(), "archive cannot re-enable an extra live ingredient")
+	var invented := _catalog()
+	var archive := _base_ability(invented, "arc-primary")
+	archive.id = "invented-archive"
+	check(not invented.validate(), "archive exception requires the exact historical ID and wire")
+	var retagged := _catalog()
+	_base_ability(retagged, "arc-primary").element = "ice"
+	check(not retagged.validate(), "archive exception cannot retag Charge as a different historical element")
+
+
 func _test_catalog() -> void:
 	var first: AbilityCatalog = _catalog()
 	var second: AbilityCatalog = _catalog()
 	equal(first.content_hash.length(), 64, "catalog has a SHA-256 content hash")
 	equal(first.content_hash, second.content_hash, "catalog hash is stable across reloads")
 	equal(first.elements_by_id.size(), 12, "all twelve thematic element families are declared")
-	equal(first.active_element_ids(), ["charge", "dark", "earth", "fire", "ice", "light", "water", "wind"], "only the first eight families are runtime-enabled")
-	equal(AbilityCatalog.DISPLAY_ELEMENT_IDS, ["water", "earth", "fire", "wind", "ice", "charge", "light", "dark"], "display and development order is explicit")
-	equal(AbilityCatalog.DISPLAY_ELEMENT_WIRE_IDS, [3, 1, 2, 4, 5, 6, 7, 8], "display order does not renumber stable element wires")
-	equal(AbilityCatalog.FIRST_EIGHT_ELEMENTS, AbilityCatalog.DISPLAY_ELEMENT_IDS, "legacy first-eight iteration follows the central display order")
+	equal(first.active_element_ids(), ["dark", "earth", "fire", "light", "water", "wind"], "only six canonical families are runtime-enabled")
+	equal(AbilityCatalog.DISPLAY_ELEMENT_IDS, ["water", "fire", "wind", "earth", "light", "dark"], "display and development order is explicit")
+	equal(AbilityCatalog.DISPLAY_ELEMENT_WIRE_IDS, [3, 2, 4, 1, 7, 8], "display order does not renumber stable element wires")
+	equal(AbilityCatalog.DISPLAY_ELEMENT_IDS, ["water", "fire", "wind", "earth", "light", "dark"], "live iteration has exactly the canonical six display elements")
 	equal(AbilityCatalog.element_display_name("wind"), "Air", "internal Wind is player-facing Air")
 	equal(AbilityCatalog.element_display_name("water"), "Water", "other element display names retain their identity")
-	equal(first.playable_spell_ids().size(), 32, "exactly four families across eight elements enter the playable selector")
-	equal(first.runtime_wire_ids, EXPECTED_RUNTIME_WIRE_IDS, "runtime wire order is the exact stable 8x4 row-major matrix")
+	equal(first.playable_spell_ids().size(), 504, "all63 named masks across8 families enter the playable selector")
+	equal(first.runtime_wire_ids.slice(0,24), EXPECTED_RUNTIME_WIRE_IDS, "original24 wires preserve their exact stable row-major prefix")
 	check(not first.playable_spell_ids().has("vector-lance"), "Vector Lance is retained outside the playable selector")
 	equal(String(first.ability("vector-lance").get("runtime_status", "")), "catalog_only", "Vector Lance keeps recoverable catalog metadata")
-	for gated_id: String in ["spirit", "chaos", "gravity", "time"]:
+	for gated_id: String in ["ice", "charge", "spirit", "chaos", "gravity", "time"]:
 		check(not bool((first.elements_by_id[gated_id] as Dictionary)["runtime_enabled"]), "%s remains explicitly gated" % gated_id)
 	equal(String(first.data.get("affinity_rule", "")), "aligned_active_cost_discount_capped_by_affinity_strength", "ability catalog declares weighted affinity discount rule")
 	equal(int(first.economy["recovery_delay_ms"]), PlayerTuning.FLUX_RECOVERY_DELAY_MS, "catalog owns the compiled Flux recovery delay")
 	equal((first.economy["cadence_tiers_ms"] as Dictionary).keys().size(), 4, "economy declares four bounded cadence tiers including Rapid")
-	equal(int(first.ability("arc-primary")["flux_cost"]) * 1000, int(CombatTuning.cast_definition(CombatTuning.PRIMARY_WIRE_ID)["flux_cost"]), "foundation primary has exact positive Flux cost")
-	equal(int(first.ability("arc-primary")["wire_id"]), CombatTuning.PRIMARY_WIRE_ID, "compiled primary wire matches catalog")
-	equal(int(first.ability("arc-primary")["cooldown_ms"]), int(CombatTuning.cast_definition(CombatTuning.PRIMARY_WIRE_ID)["cooldown_ms"]), "compiled primary cooldown matches catalog")
+	equal(int(first.ability("cinderbolt")["flux_cost"]) * 1000, int(CombatTuning.cast_definition(CombatTuning.PRIMARY_WIRE_ID)["flux_cost"]), "foundation primary has exact positive Flux cost")
+	equal(int(first.ability("cinderbolt")["wire_id"]), CombatTuning.PRIMARY_WIRE_ID, "compiled primary wire matches catalog")
+	equal(int(first.ability("cinderbolt")["cooldown_ms"]), int(CombatTuning.cast_definition(CombatTuning.PRIMARY_WIRE_ID)["cooldown_ms"]), "compiled primary cooldown matches catalog")
 	equal(int(first.ability("vector-lance")["wire_id"]), CombatTuning.VECTOR_LANCE_WIRE_ID, "historical Vector Lance wire remains stable")
 	check(CombatTuning.cast_definition(CombatTuning.VECTOR_LANCE_WIRE_ID).is_empty(), "disabled Vector Lance has no authoritative cast definition")
 	equal(CombatTuning.ACTIVE_1_WIRE_ID, CombatTuning.RILLSHOT_WIRE_ID, "new authored Active 1 defaults to retained Rillshot")
@@ -92,7 +121,7 @@ func _test_catalog() -> void:
 		"earth": "stone-burst", "fire": "cinder-fan", "water": "rill-burst", "wind": "gale-burst",
 		"ice": "rime-burst", "charge": "arc-burst", "light": "prism-burst", "dark": "eclipse-burst",
 	}
-	for element_id: String in AbilityCatalog.FIRST_EIGHT_ELEMENTS:
+	for element_id: String in AbilityCatalog.ARCHIVED_EIGHT_ELEMENTS:
 		var burst: Dictionary = first.ability(expected_bursts[element_id])
 		var burst_angles: Array[int] = []
 		for angle: Variant in burst.get("projectile_angles_degrees", []):
@@ -151,13 +180,13 @@ func _test_catalog() -> void:
 
 func _test_spell_matrix() -> void:
 	var catalog := _catalog()
-	equal(AbilityCatalog.KNOWN_SPELL_FAMILIES, ["bolt", "heavy", "rapid", "burst", "spray", "beam", "field"], "retained family vocabulary is independent of selectable columns")
-	equal(AbilityCatalog.SPELL_MATRIX_FAMILIES, ["bolt", "heavy", "rapid", "spray"], "selector exposes only the four baseline deliveries")
-	equal(catalog.spell_matrix_ids.size(), 32, "spell matrix has exactly eight rows by four columns")
-	equal(catalog.spell_matrix_wire_ids, EXPECTED_RUNTIME_WIRE_IDS, "matrix cells preserve all thirty-two stable spell wires")
-	equal(catalog.spell_matrix_wire_ids, catalog.runtime_wire_ids, "runtime order is exactly the row-major selector matrix")
+	equal(AbilityCatalog.KNOWN_SPELL_FAMILIES, ["bolt", "heavy", "rapid", "burst", "spray", "beam", "field", "mantle", "fuse", "split", "rebound"], "retained family vocabulary is independent of selectable columns")
+	equal(AbilityCatalog.SPELL_MATRIX_FAMILIES, ["bolt", "heavy", "rapid", "spray", "mantle", "fuse", "split", "rebound"], "selector exposes eight distinct deliveries")
+	equal(catalog.spell_matrix_ids.size(), 504, "spell matrix has exactly63 nonempty payloads by8 deliveries")
+	equal(catalog.spell_matrix_wire_ids.slice(0,24), EXPECTED_RUNTIME_WIRE_IDS, "matrix prefix preserves all twenty-four stable spell wires")
+	equal(catalog.spell_matrix_wire_ids, catalog.runtime_wire_ids, "runtime order is exactly the stable complete selector catalog")
 	var claimed: Dictionary = {}
-	for element_id: String in AbilityCatalog.FIRST_EIGHT_ELEMENTS:
+	for element_id: String in AbilityCatalog.DISPLAY_ELEMENT_IDS:
 		for family_id: String in AbilityCatalog.SPELL_MATRIX_FAMILIES:
 			var ability_id := catalog.spell_id_at(element_id, family_id)
 			check(not ability_id.is_empty(), "%s/%s matrix cell resolves" % [element_id, family_id])
@@ -195,19 +224,22 @@ func _test_spell_matrix() -> void:
 	elements[0] = elements[1]
 	elements[1] = first_element
 	check(not reordered_elements.validate(), "authored element order cannot drift from display/development order")
-	check(reordered_elements.last_error.contains("display/development order"), "element-order failure is diagnosable")
+	check(reordered_elements.last_error.contains("canonical display order"), "element-order failure is diagnosable")
 
 
 func _test_reaction_strength_contract() -> void:
 	var catalog := _catalog()
 	var checked := 0
-	for element_id: String in AbilityCatalog.FIRST_EIGHT_ELEMENTS:
+	for element_id: String in AbilityCatalog.DISPLAY_ELEMENT_IDS:
 		for family_id: String in AbilityCatalog.SPELL_MATRIX_FAMILIES:
 			var ability_id := catalog.spell_id_at(element_id, family_id)
 			var ability := catalog.ability(ability_id)
 			equal(int(ability.get("reaction_strength", 0)), int(EXPECTED_REACTION_STRENGTH_BY_FAMILY[family_id]), "%s authors the current %s reaction strength" % [ability_id, family_id])
 			checked += 1
-	equal(checked, 32, "all thirty-two current runtime spells declare an exact reaction strength")
+	equal(checked, 48, "all six singleton elements across eight families declare exact reaction strength")
+	for wire: int in catalog.runtime_wire_ids:
+		var ability:=catalog.ability_from_wire(wire)
+		equal(int(ability.reaction_strength),int(EXPECTED_REACTION_STRENGTH_BY_FAMILY[AbilityCatalog._spell_family(ability)]),"all504 mixtures retain one family strength without arity multiplication")
 
 	var missing := _catalog()
 	_base_ability(missing, "rillshot").erase("reaction_strength")
@@ -300,10 +332,10 @@ func _test_loadout() -> void:
 	check(first.load_from_file(LOADOUT_PATH, catalog), "foundation loadout validates: %s" % first.last_error)
 	check(second.load_from_file(LOADOUT_PATH, catalog), "foundation loadout reload validates")
 	equal(first.active_points, 9, "affinity-adjusted four-delivery actives use nine of thirteen available points")
-	equal(first.spell_slot_ids, ["arc-primary", "thunder-shell", "spark-stream", "spark-shower", "dawn-needle", "dawn-shell", "glint-stream", "radiant-veil", "", "", "", ""], "foundation loadout exposes only retained four-delivery IDs")
-	equal(first.spell_slot_wire_ids, PackedInt32Array([101, 187, 188, 167, 173, 191, 192, 174, 0, 0, 0, 0]), "foundation loadout projects the exact twelve authoritative wire positions")
+	equal(first.spell_slot_ids, ["cinderbolt", "cinder-shell", "ember-stream", "ember-sweep", "dawn-needle", "dawn-shell", "glint-stream", "radiant-veil", "", "", "", ""], "foundation loadout exposes only retained four-delivery IDs")
+	equal(first.spell_slot_wire_ids, PackedInt32Array([145, 179, 180, 154, 173, 191, 192, 174, 0, 0, 0, 0]), "foundation loadout projects the exact twelve authoritative wire positions")
 	check(first.disabled_spell_slots.is_empty(), "new authored foundation loadout contains no disabled saved slots")
-	equal(first.affinity_strength("charge"), 2, "foundation loadout exposes primary Charge strength 2")
+	equal(first.affinity_strength("fire"), 2, "foundation loadout folds primary Charge into Fire strength 2")
 	equal(first.affinity_strength("light"), 1, "foundation loadout exposes secondary Light strength 1")
 	equal(first.affinity_strength("earth"), 0, "unaligned Earth has affinity strength 0")
 	equal(first.content_hash.length(), 64, "loadout has a SHA-256 compatibility hash")
@@ -314,19 +346,19 @@ func _test_invalid_content_fails_closed() -> void:
 	var catalog: AbilityCatalog = _catalog()
 	var invalid_duplicate := LoadoutDefinition.new()
 	invalid_duplicate.data = JSON.parse_string(FileAccess.get_file_as_string(LOADOUT_PATH))
-	invalid_duplicate.data["slots"]["actives"] = ["thunder-shell", "thunder-shell", "radiant-veil"]
+	invalid_duplicate.data["slots"]["actives"] = ["cinder-shell", "cinder-shell", "radiant-veil"]
 	check(not invalid_duplicate.validate(catalog), "duplicate active fails closed")
 	check(invalid_duplicate.last_error.contains("unique"), "duplicate failure is diagnosable")
 
 	var invalid_affinity_total := LoadoutDefinition.new()
 	invalid_affinity_total.data = JSON.parse_string(FileAccess.get_file_as_string(LOADOUT_PATH))
-	invalid_affinity_total.data["affinity_points"] = {"charge": 1, "light": 1}
+	invalid_affinity_total.data["affinity_points"] = {"fire": 1, "light": 1}
 	check(not invalid_affinity_total.validate(catalog), "loadout must spend exactly three affinity points")
 	check(invalid_affinity_total.last_error.contains("must total"), "affinity-point failure is diagnosable")
 
 	var invalid_affinity_strength := LoadoutDefinition.new()
 	invalid_affinity_strength.data = JSON.parse_string(FileAccess.get_file_as_string(LOADOUT_PATH))
-	invalid_affinity_strength.data["affinity_points"] = {"charge": 3, "light": 0}
+	invalid_affinity_strength.data["affinity_points"] = {"fire": 3, "light": 0}
 	check(not invalid_affinity_strength.validate(catalog), "affinity strength outside 1..2 fails closed")
 	check(invalid_affinity_strength.last_error.contains("strength"), "affinity-strength failure is diagnosable")
 
@@ -338,13 +370,13 @@ func _test_invalid_content_fails_closed() -> void:
 
 	var invalid_spell_count := LoadoutDefinition.new()
 	invalid_spell_count.data = JSON.parse_string(FileAccess.get_file_as_string(LOADOUT_PATH))
-	invalid_spell_count.data["spell_slots"] = ["arc-primary"]
+	invalid_spell_count.data["spell_slots"] = ["cinderbolt"]
 	check(not invalid_spell_count.validate(catalog), "non-twelve-position spell loadout fails closed")
 	check(invalid_spell_count.last_error.contains("twelve"), "spell count failure is diagnosable")
 
 	var invalid_duplicate_spell := LoadoutDefinition.new()
 	invalid_duplicate_spell.data = JSON.parse_string(FileAccess.get_file_as_string(LOADOUT_PATH))
-	invalid_duplicate_spell.data["spell_slots"][4] = "arc-primary"
+	invalid_duplicate_spell.data["spell_slots"][4] = "cinderbolt"
 	check(not invalid_duplicate_spell.validate(catalog), "duplicate equipped spell fails closed")
 	check(invalid_duplicate_spell.last_error.contains("unique"), "duplicate spell failure is diagnosable")
 

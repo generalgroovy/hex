@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "character_id": "sai_laas",
+  "display_name": "Sai Laas",
+  "ancestry": "nymph",
+  "body_type": "small",
+  "date": "2026-10-03",
+  "scope": "Source art only; no engine, runtime, manifest, assembly, import, capture, export, commit or push changes.",
+  "repository": "C:/Users/sende/Projects/hex",
+  "repository_head_at_generation": "1559a566e33255c59337c5963f1c3c685d757f1f",
+  "identity_authority": "content/champions/foundation_champions_v1.json",
+  "generation": {
+    "tool": "built-in image_gen",
+    "initial_calls": 1,
+    "corrective_calls": 1,
+    "cli_fallback": false,
+    "correction_reason": "Initial column 2 repeated a left-front facing and heads were oversized against the one-third neutral-standing-height requirement."
+  },
+  "prompt_file": "art_batches/pixel_actions_v1/prompts/sai_laas.md",
+  "references": [
+    {
+      "path": "C:/Users/sende/Projects/hex/assets/sprites/pixel_cast_v1/sai_laas.png",
+      "role": "Primary runtime identity and proportions",
+      "sha256": "72285DC78B05FA6D15BB263D7DFD4651E635D6913FEC31BE625468AF63A8DC73",
+      "inspected": true
+    },
+    {
+      "path": "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/sai_laas-detail.png",
+      "role": "Supporting costume and anatomy detail",
+      "sha256": "73230A0B032FC9140CC55C327F64AE047B7C4BE9A1D39B0557A3232B8BB13142",
+      "inspected": true
+    },
+    {
+      "path": "C:/Users/sende/Pictures/styleref1.png",
+      "role": "Style only; names, identities and props ignored",
+      "sha256": "C0FB63C912718D64CA061CCD85817869FFC3348A3C81A910962DF57066279FD4",
+      "inspected": true
+    }
+  ],
+  "selected_original": {
+    "path": "C:/Users/sende/.codex/generated_images/01a100e4-5d74-7862-a3c7-88f0aeb806d7/exec-c8c653cc-cb84-44e3-b09f-42de86cf7f02.png",
+    "source_file": "art_batches/pixel_actions_v1/source/sai_laas/source.png",
+    "sha256": "F7D4AE72126CC5265A179096A2A9FB21EA975C76FEB7D4AFEC3D742B7CA72F7A",
+    "source_copy_sha256": "F7D4AE72126CC5265A179096A2A9FB21EA975C76FEB7D4AFEC3D742B7CA72F7A",
+    "copy_method": "Copy-Item; hash match confirms byte-identical unmodified copy",
+    "width": 1774,
+    "height": 887,
+    "pixel_format": "Format32bppArgb",
+    "edited_after_generation": false
+  },
+  "superseded_initial": {
+    "path": "C:/Users/sende/.codex/generated_images/01a100e4-5d74-7862-a3c7-88f0aeb806d7/exec-04b2130f-5c6b-4b45-88ec-030e845849c1.png",
+    "sha256": "DF5903CC13803C2E37FFF7D4D8D01EA1159D3E1C16F3DB2CCA7D64224F260F4C",
+    "retained_at_original_path": true,
+    "reason_not_selected": "Column 2 incorrectly looked front-left instead of front-right; oversized heads."
+  },
+  "transparency": {
+    "alpha_channel_present": true,
+    "transparent_pixels": 1106801,
+    "partial_alpha_pixels": 466062,
+    "opaque_pixels": 675,
+    "partial_alpha_preserved": true,
+    "observations": "True transparent space present. Most solid-looking art uses alpha 247-253, plus many low-alpha fringe pixels. No alpha cleanup or hidden-RGB changes were performed.",
+    "lead_owned_followup": "Threshold cleanup, hidden-RGB removal, registration and downsampling only in deterministic assembly; preserve this original."
+  },
+  "layout": {
+    "authored_columns": 8,
+    "authored_rows": 4,
+    "total_sprites": 32,
+    "column_order": [
+      "S",
+      "SE",
+      "E",
+      "NE",
+      "N",
+      "NW",
+      "W",
+      "SW"
+    ],
+    "rows": [
+      "jumpsquat",
+      "rising_tucked",
+      "descending_feet_ready",
+      "deep_landing"
+    ],
+    "occupied_row_bands_alpha128_inclusive": [
+      [
+        86,
+        237
+      ],
+      [
+        268,
+        429
+      ],
+      [
+        468,
+        647
+      ],
+      [
+        700,
+        834
+      ]
+    ],
+    "uniform_raw_cell_crop_safe": false,
+    "note": "The source has four separated visual rows but occupied first-row sprites cross the raw canvas quarter boundary at y=221. Do not use naive equal-height canvas quarters; lead-owned registration must use actual row bands."
+  },
+  "review": {
+    "status": "HOLD_FOR_LEAD_PROPORTION_AND_DIRECTION_REVIEW",
+    "original_viewed": true,
+    "review_scope": "Generated-original source-size visual review and read-only pixel/hash inspection only.",
+    "observations": [
+      "32 complete sprites; no gross cropping or missing limbs observed.",
+      "Copper/auburn short leaf hair, green leafy nape, pointed ears, green/copper leaf tunic, belt, trousers and boots retain Sai Laas identity distinct from Haara.",
+      "Fully clothed modest presentation; hands empty with no weapons, spells, floor or shadow.",
+      "Corrective version turns column 2 toward screen right; full back and back-quarter headings are present.",
+      "Rising row tucks boots and raises arms; falling row opens legs/boots downward with lowered arms; landing is visibly deeper than anticipation.",
+      "Source remains visually too large-headed relative to the requested one-third neutral-standing target; the corrective pass did not establish the required proportion.",
+      "SE and E silhouettes remain close, with SE strongly profile-biased; exact eight-heading clarity is not accepted.",
+      "Some rear-facing hands/limb portions are naturally occluded by torso and leaf hair."
+    ],
+    "limitations": [
+      "Head/body proportions and skull consistency require lead review before integration; this is a preserved candidate, not approved source acceptance.",
+      "No third image call was made; one initial and one permitted gross-defect correction exhausted this ticket's generation allowance.",
+      "Partial-alpha fringe cleanup and actual cell registration have not been performed.",
+      "These are four authored keys, not complete animation cycles or cast poses."
+    ]
+  },
+  "acceptance": {
+    "source_art": "HOLD",
+    "native_scale": "NOT_RUN",
+    "runtime": "NOT_RUN",
+    "human": "NOT_RUN"
+  },
+  "completion": {
+    "ticket_work_complete": true,
+    "completion_marker_written_last": true,
+    "accepted_for_runtime": false
+  }
+}

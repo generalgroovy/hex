@@ -6,6 +6,7 @@ func run() -> int:
 	_test_live_coverage()
 	_test_archive_geometry_helpers()
 	_test_fail_closed_contract()
+	_test_service_directory_contract()
 	return finish("wellspring-architecture-kit")
 
 
@@ -60,6 +61,55 @@ func _test_archive_geometry_helpers() -> void:
 	equal(kit.cutaway_amount(footprint, Vector2(140, 100)), 1.0, "archive cutaway exposes a near approach")
 	check(kit.cutaway_amount(footprint, Vector2(140, 58)) > 0.0, "archive cutaway eases at its outer boundary")
 	equal(kit.cutaway_amount(Rect2(), Vector2.ZERO), 0.0, "archive empty footprint cannot create a cutaway")
+
+
+func _test_service_directory_contract() -> void:
+	var language := VisualLanguage.new()
+	check(language.load_from_file(), "service directory uses existing shared palette")
+	var layout := SanctumCampusLayout.new()
+	check(layout.load_from_file("res://content/maps/sanctum_campus_g2_v1.json"), "service directories use actual existing campus buildings")
+	var before := CanonicalContent.sha256(layout.data)
+	var obstacles_before := _obstacle_contract(layout.build_collision_world())
+	var kit := WellspringArchitectureKit.new()
+	check(kit.configure(language, layout), "architecture binds the four existing-building directories")
+	equal(kit.service_directories.size(), 4, "twelve actions share four doors rather than twelve extra footprints")
+	check(not kit.building_profiles.has("service_facade"), "retired hut style is not accepted or rendered")
+	var expected := {"training": [101, 2], "academy": [104, 2], "farflow": [109, 6], "practice": [103, 2]}
+	var station_count := 0
+	for group: String in expected:
+		var directory: Dictionary = kit.service_directories[group]
+		equal(int(directory.building_id), expected[group][0], "directory reuses its canonical existing building")
+		equal(directory.station_ids.size(), expected[group][1], "each directory contains its expected action count")
+		var bounds := SanctumCampusLayout._parse_bounds(layout.buildings_by_id[int(directory.building_id)]["bounds"])
+		equal(directory.position, Vector2(bounds.get_center().x,bounds.end.y+24), "directory anchor aligns with the actual front door")
+		check(not directory.has("bounds") and not directory.has("footprint"), "directory metadata cannot add a duplicate building footprint")
+		station_count += directory.station_ids.size()
+	equal(station_count, 12, "every existing command remains represented exactly once")
+	equal(_obstacle_contract(layout.build_collision_world()), obstacles_before, "directory binding preserves every actual obstacle identity, footprint and traversal flag")
+	equal(CanonicalContent.sha256(layout.data), before, "architecture never writes station or collision authority")
+	var detached := SanctumCampusLayout.new()
+	detached.data = layout.data.duplicate(true)
+	check(detached.validate(), "independent association fixture validates before mutation")
+	detached.stations_by_id["spell-loom"]["building_id"] = 201
+	check(not kit.validate(detached), "architecture refuses a service attached to a retired hut")
+	var drifting := SanctumCampusLayout.new()
+	drifting.data = layout.data.duplicate(true)
+	check(drifting.validate(), "independent doorway fixture validates before mutation")
+	drifting.stations_by_id["spell-loom"]["position"][0] += 8
+	check(not kit.validate(drifting), "architecture refuses drift between directory anchor and building door")
+	var wrong_group := SanctumCampusLayout.new()
+	wrong_group.data = layout.data.duplicate(true)
+	check(wrong_group.validate(), "independent group fixture validates before mutation")
+	wrong_group.stations_by_id["spell-loom"]["service_group"] = "training"
+	check(not kit.validate(wrong_group), "architecture refuses inconsistent directory/building pairing")
+
+
+func _obstacle_contract(collision: CollisionWorld) -> Array:
+	var result: Array = []
+	for obstacle: CollisionWorld.Obstacle in collision.obstacle_view():
+		result.append([obstacle.obstacle_id, obstacle.minimum_x, obstacle.minimum_y,
+			obstacle.maximum_x, obstacle.maximum_y, obstacle.vaultable, obstacle.wall_runnable])
+	return result
 
 
 func _test_fail_closed_contract() -> void:

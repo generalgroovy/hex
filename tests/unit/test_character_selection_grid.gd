@@ -58,6 +58,10 @@ func run() -> int:
 	grid.open_panel(champions.default_champion_id)
 	check(grid.is_open, "configured grid opens")
 	var font := ThemeDB.fallback_font
+	_test_flat_grid(grid, font)
+	_test_native_inspection_geometry(grid)
+	_test_spatial_bindings(grid, font)
+	grid.open_panel(champions.default_champion_id)
 	var equipped := grid.model.equipped_id
 	var source := grid.portrait_source("oh_tipi")
 	check(source["texture"] == shared.texture, "portrait reuses existing texture reference without page loading")
@@ -70,16 +74,37 @@ func run() -> int:
 	_test_facing_preview(champions, roster, font)
 	var playable_cell := Vector2i(-1, -1)
 	for race: int in range(grid.model.races().size()):
-		var race_label := String(grid.model.races()[race]["race"])
-		check(font.get_string_size(race_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 15).x <= Grid.CARD_SIZE.x, "current race header fits its column")
 		for character: int in range(grid.model.characters(race).size()):
 			grid.model.select_cell(race, character)
 			var entry: Dictionary = grid.model.selected_entry()
+			var summary := Grid.summary_rows(entry)
+			var overview_notes := Grid.overview_notes(entry)
+			if bool(entry.get("stats_available", false)):
+				equal(summary.size(), 5, "all playable identities have the same five-row comparison layout")
+				equal(summary[0].value, String.num(float(entry.stats.health_maximum) / 1000.0, 2), "overview health follows character authority")
+				for stat: Dictionary in summary:
+					check(font.get_string_size(String(stat.value), HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x <= 98, "overview values fit numeric column")
+					check(font.get_string_size(String(stat.recovery), HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x <= 112, "overview recovery and size notes fit third column")
+				equal(overview_notes.size(), 4, "first-screen notes expose air action, both perks and restoration")
+				equal(overview_notes[0], grid.model.air_action_summary(entry), "prominent air action is shared with the source-derived model")
+				check(overview_notes[3].contains("saved weave") and overview_notes[3].contains("starter if uncustomized"), "first-screen Attune guidance no longer promises to erase customized spells")
+				for scope: String in ["race", "character"]:
+					var perk: Dictionary = entry.identity_perks[scope]
+					check(" ".join(overview_notes).contains(String(perk.name)) and " ".join(overview_notes).contains(String(perk.summary)), "first screen identifies each real perk and benefit for " + String(entry.id))
+				var note_lines := Grid.overview_note_lines(entry, font)
+				check(note_lines.size() <= Grid.OVERVIEW_NOTE_MAX_LINES, "both perks and air/restoration guidance fit the actual vertical overview budget for " + String(entry.id))
+				check(Grid.OVERVIEW_NOTE_TOP + (note_lines.size() - 1) * Grid.OVERVIEW_NOTE_HEIGHT < Grid.PREVIOUS_DETAIL.position.y, "perk notes cannot cover Details controls")
+				for note: String in note_lines:
+					check(font.get_string_size(note, HORIZONTAL_ALIGNMENT_LEFT, -1, Grid.OVERVIEW_NOTE_SIZE).x <= Grid.DETAIL_WIDTH + 0.01, "all thirty capability, perk and restore notes fit actual-font overview width")
+			else:
+				check(summary.is_empty(), "unimplemented characters never fabricate live stats")
 			var rectangle := grid.card_rect(race, character)
 			check(Grid.PANEL.encloses(rectangle), "every visible card stays inside720p panel")
 			equal(grid.cell_at(rectangle.get_center()), Vector2i(race, character), "mouse hit testing resolves exact displayed identity")
-			var names := Compendium.wrap_text(String(entry["display_name"]), font, 94, 13)
+			var names := Compendium.wrap_text(String(entry["display_name"]), font, Grid.CARD_NAME_WIDTH, Grid.CARD_FONT_SIZE)
 			check(names.size() <= 2, "current character name remains complete in two card lines")
+			for line: String in names:
+				check(font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, Grid.CARD_FONT_SIZE).x <= Grid.CARD_NAME_WIDTH, "readable sixteen-pixel card names fit without clipping")
 			var paragraphs: Array[String] = grid.model.detail_paragraphs()
 			var expected: Array[String] = []
 			for paragraph: String in paragraphs:
@@ -107,15 +132,43 @@ func run() -> int:
 	equal(grid.model.character_index, playable_cell.y, "hover focuses hovered card")
 	equal(grid.model.equipped_id, equipped, "hover does not attune")
 	var expected_wire := int(grid.model.selected_entry()["wire_id"])
-	equal(grid.handle_event(_mouse(MOUSE_BUTTON_LEFT), font, point), expected_wire, "click sends selected stable wire")
+	var unavailable: Dictionary = {"enabled": false, "reason": "Return to Wellspring free practice before attuning."}
+	grid.open_panel(equipped)
+	# Every card is already visible; the click alone focuses its exact identity.
+	grid.model.select_cell(playable_cell.x, 0)
+	var retained_status: String = "Previous host confirmation remains visible."
+	grid.model.status_message = retained_status
+	equal(grid.handle_event(_mouse(MOUSE_BUTTON_LEFT), font, point, unavailable), 0, "unavailable card click browses without emitting an authority intent")
+	equal(int(grid.model.selected_entry()["wire_id"]), expected_wire, "unavailable card click still focuses the inspected champion")
+	equal(grid.model.pending_wire, 0, "unavailable card click creates no synthetic pending request")
+	equal(grid.model.status_message, retained_status, "advisory card availability does not overwrite retained host feedback")
+	equal(grid.handle_event(_mouse(MOUSE_BUTTON_LEFT), font, Grid.SELECT_RECT.get_center(), unavailable), 0, "unavailable Attune button emits no request")
+	equal(grid.handle_event(_key(KEY_ENTER), font, Vector2(-1, -1), unavailable), 0, "unavailable Enter confirmation emits no request")
+	equal(grid.handle_event(_joy(JOY_BUTTON_A), font, Vector2(-1, -1), unavailable), 0, "unavailable controller A confirmation emits no request")
+	equal(grid.model.pending_wire, 0, "all unavailable confirmation controls leave pending state empty")
+	equal(grid.model.status_message, retained_status, "unavailable keyboard, controller and button controls preserve status feedback")
+	var direction_before: int = grid.preview_direction
+	equal(grid.handle_event(_key(KEY_BRACKETRIGHT), font, Vector2(-1, -1), unavailable), 0, "unavailable context keeps facing inspection request-free")
+	equal(grid.preview_direction, posmod(direction_before + 1, 8), "unavailable context keeps facing inspection available")
+	equal(grid.handle_event(_mouse(MOUSE_BUTTON_LEFT), font, point), 0, "card click is safe inspection, not an attunement request")
+	equal(grid.model.pending_wire, 0, "inspection never resets a weave or creates pending authority work")
+	check(grid.overview_visible, "newly inspected identity starts at the concise overview")
+	grid.handle_event(_key(KEY_END), font)
+	check(not grid.overview_visible, "Details preserves full paged information behind summary")
+	grid.handle_event(_key(KEY_TAB), font)
+	check(grid.overview_visible, "Tab returns to summary without attunement")
+	equal(grid.handle_event(_mouse(MOUSE_BUTTON_LEFT), font, Grid.SELECT_RECT.get_center()), expected_wire, "explicit Attune sends selected stable wire")
 	equal(grid.handle_event(_joy(JOY_BUTTON_A), font), 0, "controller confirmation cannot duplicate a pending request")
 	grid.refuse("Stay near the Gallery.")
 	equal(grid.handle_event(_joy(JOY_BUTTON_A), font), expected_wire, "refused request can be deliberately retried")
 	grid.confirm_equipped(String(grid.model.selected_entry()["id"]))
 	equal(grid.handle_event(_key(KEY_ENTER), font), 0, "repeated confirmation of current character cannot reset its kit")
-	var page_before := grid.model.race_page()
+	grid.model.select_display_index(20)
 	grid.handle_event(_joy(JOY_BUTTON_LEFT_SHOULDER), font)
-	equal(grid.model.race_page(), maxi(0, page_before - 1), "controller shoulder pages races")
+	equal(String(grid.model.selected_entry().id), "biggy_bob", "controller left shoulder jumps to Middle without paging")
+	grid.handle_event(_joy(JOY_BUTTON_RIGHT_SHOULDER), font)
+	equal(String(grid.model.selected_entry().id), "ba_djoh", "controller right shoulder jumps to Large without paging")
+	equal(grid.model.display_cells().size(), 30, "controller size shortcuts keep the complete roster visible")
 	equal(grid.handle_event(_mouse(MOUSE_BUTTON_WHEEL_DOWN), font, Vector2(400, 400)), 0, "mouse wheel navigates without selecting")
 	var release := _key(KEY_ENTER)
 	release.pressed = false
@@ -143,26 +196,110 @@ func run() -> int:
 	check(grid.configure(champions, roster, shared), "valid replacement can reconfigure open Gallery")
 	check(not grid.is_open, "valid replacement also closes stale panel state")
 	_test_compact_portrait_path(champions, roster)
+	var unknown_notes := Grid.overview_notes({})
+	equal(unknown_notes.size(), 2, "missing entry has a compact non-playable fallback")
+	check(not " ".join(unknown_notes).contains("Attune:") and not " ".join(unknown_notes).contains("paid flight"), "unknown entries cannot advertise attunement or flight")
 	return finish("character-selection-grid")
+
+
+func _test_flat_grid(grid: Grid, font: Font) -> void:
+	var cells := grid.model.display_cells()
+	equal(cells.size(), 30, "all thirty current characters are present immediately on opening")
+	var rectangles: Array[Rect2] = []
+	for index: int in range(cells.size()):
+		var cell := cells[index]
+		var rectangle := grid.card_rect(cell.x, cell.y)
+		var expected_position := Grid.GRID_ORIGIN + Vector2((index % 6) * Grid.COLUMN_STRIDE, (index / 6) * Grid.ROW_STRIDE)
+		equal(rectangle, Rect2(expected_position, Grid.CARD_SIZE), "sorted projection draws in exactly six columns and five rows")
+		equal(grid.cell_at(rectangle.get_center()), cell, "every card can be hit without first selecting or paging its ancestry")
+		check(rectangle.end.x <= 820 and rectangle.end.y <= 580, "all cards fit left of details and above persistent status without scrolling")
+		for size: Vector2 in [Vector2(1280, 720), Vector2(960, 540)]:
+			var scale := size.x / 1280.0
+			check(Rect2(Vector2.ZERO, size).encloses(Rect2(rectangle.position * scale, rectangle.size * scale)), "the existing logical-canvas scaling retains every card at supported window sizes")
+		for other: Rect2 in rectangles:
+			check(not rectangle.intersects(other), "no sorted roster card obscures another character")
+		for control: Rect2 in [Grid.HERO_PORTRAIT, Grid.SELECT_RECT, Grid.OVERVIEW_RECT, Grid.PREVIOUS_DETAIL, Grid.NEXT_DETAIL]:
+			check(not rectangle.intersects(control), "inspection cards cannot overlap detail or Attune targets")
+		rectangles.append(rectangle)
+	for size_label: String in ["Small", "Middle", "Large"]:
+		check(font.get_string_size(size_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x <= 65, "explicit size labels fit beside the compact portraits")
+	check(Grid.CARD_FONT_SIZE * 0.75 >= 12, "minimum supported window preserves twelve-pixel character-name text")
+	equal(grid.cell_at(Grid.GRID_ORIGIN + Vector2(Grid.CARD_SIZE.x + 2, 2)), Vector2i(-1, -1), "card gutters are not accidental selection targets")
+	equal(grid.card_rect(-1, -1), Rect2(), "invalid backing references cannot create an active card")
+	var before := grid.model.selected_entry().duplicate(true)
+	grid.handle_event(_mouse(MOUSE_BUTTON_LEFT), font, Vector2(128, 121))
+	equal(grid.model.selected_entry(), before, "retired race-page location is only a read-only heading")
+	for index: int in range(cells.size()):
+		grid.model.select_display_index(index)
+		for visible: int in range(cells.size()):
+			equal(grid.card_rect(cells[visible].x, cells[visible].y), rectangles[visible], "navigation never hides or moves any of the thirty cards")
+
+
+func _test_spatial_bindings(grid: Grid, font: Font) -> void:
+	var keyboard := {KEY_LEFT: 13, KEY_A: 13, KEY_RIGHT: 15, KEY_D: 15, KEY_UP: 8, KEY_W: 8, KEY_DOWN: 20, KEY_S: 20}
+	for code: Key in keyboard:
+		grid.model.select_display_index(14)
+		equal(grid.handle_event(_key(code), font), 0, "keyboard inspection never emits a character request")
+		equal(grid.model.display_index(grid.model.race_index, grid.model.character_index), keyboard[code], "arrow and WASD bindings track the displayed flat-grid direction")
+	var joypad := {JOY_BUTTON_DPAD_LEFT: 13, JOY_BUTTON_DPAD_RIGHT: 15, JOY_BUTTON_DPAD_UP: 8, JOY_BUTTON_DPAD_DOWN: 20}
+	for button: JoyButton in joypad:
+		grid.model.select_display_index(14)
+		equal(grid.handle_event(_joy(button), font), 0, "controller inspection never emits a character request")
+		equal(grid.model.display_index(grid.model.race_index, grid.model.character_index), joypad[button], "D-pad direction tracks the displayed flat-grid direction")
+	grid.model.select_display_index(14)
+	grid.handle_event(_key(KEY_PAGEUP), font)
+	equal(String(grid.model.selected_entry().id), "grace_reava", "Page Up focuses the preceding size group")
+	grid.handle_event(_key(KEY_PAGEDOWN), font)
+	equal(String(grid.model.selected_entry().id), "biggy_bob", "Page Down focuses the following size group")
+
+
+func _test_native_inspection_geometry(grid: Grid) -> void:
+	equal(Grid.FACING_PREVIEW.size, Vector2(128, 128), "full pixel body inspection retains its native 128px cell")
+	var floor_anchor := Grid.FACING_PREVIEW.position + Grid.FACING_PIVOT
+	for heading: int in 8:
+		for body: String in ["small", "middle", "large"]:
+			var preview := {"region": Rect2(heading * 128, 0, 128, 128), "fullbody_art": true,
+				"pixel_body_pilot": true, "body_type": body}
+			var target := Grid.facing_preview_draw_rect(preview)
+			equal(target.size, preview.region.size, "every size and heading draws source texels at exactly 1x")
+			equal(target.position + Vector2(64, 104), floor_anchor, "all full-pixel body tiers retain a shared visible foot anchor")
+			check(Grid.PANEL.encloses(target), "native full-body cell stays inside the Gallery panel")
+			for control: Rect2 in [Grid.HERO_PORTRAIT, Grid.PREVIOUS_FACING, Grid.NEXT_FACING, Grid.CLOSE_RECT]:
+				check(not target.intersects(control), "native body preview cannot cover portrait or facing/close targets")
+	var legacy := Grid.facing_preview_draw_rect({"region": Rect2(0, 0, 96, 96)})
+	equal(legacy.size, Vector2(96, 96), "legacy cells are not enlarged when the pixel-body allocation grows")
+	equal(legacy.position + Vector2(48, 84), floor_anchor, "separate legacy mode shares the fixed floor without changing its geometry")
+	for cell: Vector2i in grid.model.display_cells():
+		var card := grid.card_rect(cell.x, cell.y)
+		var portrait := Grid.card_portrait_rect(card)
+		equal(portrait.size, Vector2(32, 32), "all thirty card icons retain prepared native 32px dimensions")
+		equal(portrait.get_center(), card.position + Vector2(24, 24), "smaller native icon is centered in its preserved allocation")
+		check(card.encloses(portrait), "native portrait remains within its unchanged roster card")
+		check(portrait.end.x < card.position.x + 49 and portrait.end.y < card.position.y + 46, "native icons cannot cover size badges or readable champion names")
+		for scale: float in [1.0, 0.75]:
+			equal(portrait.size * scale, Vector2(32, 32) * scale, "logical canvas adds no second card-icon resampling factor")
+			equal(Grid.FACING_PREVIEW.size * scale, Vector2(128, 128) * scale, "logical canvas adds no second body-preview resampling factor")
 
 
 func _test_compact_portrait_path(champions: ChampionCatalog, roster: ChampionRosterPlan) -> void:
 	var grid := Grid.new()
 	var compact := CompactPortraits.new()
 	check(grid.configure(champions, roster, compact), "Gallery supports prepared compact override portraits")
-	var ids := champions.ordered_champion_ids().slice(0, 21)
+	var ids := champions.ordered_champion_ids()
+	equal(ids.size(), 30, "compact portrait fixture covers the complete live roster")
 	for champion_id: String in ids:
 		var frame := grid.portrait_source(champion_id)
-		equal((frame["texture"] as Texture2D).get_size(), Vector2(32, 32), "a full visible Gallery page borrows only compact portraits")
+		equal((frame["texture"] as Texture2D).get_size(), Vector2(32, 32), "the complete visible Gallery borrows only compact portraits")
+		equal(Grid.CARD_PORTRAIT_SIZE, frame.region.size, "prepared compact sprites are drawn without 1.25x enlargement")
 		check(not grid.uses_temporary_body(champion_id), "accepted portrait uses effective override art status, not fallback provenance")
-	equal(compact.queries, 21, "at most one portrait lookup per visible card")
-	equal(compact.full_page_queries, 0, "21 visible Gallery cards never request or retain full-page textures")
+	equal(compact.queries, 30, "at most one portrait lookup per visible card")
+	equal(compact.full_page_queries, 0, "thirty visible Gallery cards never request or retain full-page textures")
 	for champion_id: String in ids:
 		grid.portrait_source(champion_id)
-	equal(compact.queries, 21, "repeated Gallery draws reuse compact results")
+	equal(compact.queries, 30, "repeated Gallery draws reuse compact results")
 	compact.generation += 1
 	grid.portrait_source(ids[0])
-	equal(compact.queries, 22, "a validated art reload invalidates stale portrait metadata")
+	equal(compact.queries, 31, "a validated art reload invalidates stale portrait metadata")
 	equal(compact.full_page_queries, 0, "portrait refresh does not evict or reload any active actor page")
 	_test_direct_detail_reload(champions, roster)
 

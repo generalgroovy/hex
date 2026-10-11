@@ -10,6 +10,9 @@ func run() -> int:
 		if not section.begins_with("preset.") or section.ends_with(".options"):
 			continue
 		var excluded := String(export_config.get_value(section, "exclude_filter", ""))
+		for workbench: String in ["art_batches/character_motion_v1/*","art_batches/character_cast_v1/*","art_batches/character_volume_v1/*"]:
+			check(workbench in excluded.split(","), "character workbench stays outside portable: " + workbench)
+		check("assets/sprites/fullbody_cast_v1/*.json" in String(export_config.get_value(section,"include_filter","")).split(","), "compact art metadata is explicitly exported")
 		for draft: String in ["art_batches/character_style_v1/*", "content/champions/full_cast_candidate_v1.json", "scripts/build_character_style_pack.gd", "scripts/test_character_style_pack.gd", "scripts/capture_character_style_sources.gd"]:
 			check(draft in excluded.split(","), "character production drafts never become release assets: " + draft)
 	var result := Sources.collect_sources()

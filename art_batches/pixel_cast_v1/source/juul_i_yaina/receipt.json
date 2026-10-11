@@ -1,0 +1,55 @@
+{
+  "id": "juul_i_yaina",
+  "display_name": "Juul I Yaina",
+  "race": "demon",
+  "status": "source_ready_with_motion_gap",
+  "generation_tool": "built-in image_gen",
+  "attempts": 2,
+  "generated_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-3caf-7f02-8030-e4d35e2365b4\\exec-f4dcbd7c-997c-40d5-9494-a677662f5e5d.png",
+  "prior_generated_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-3caf-7f02-8030-e4d35e2365b4\\exec-1e5d22f8-215b-4e57-9a6d-44cae43978f6.png",
+  "reference_paths": [
+    "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/juul_i_yaina-detail.png",
+    "C:/Users/sende/Pictures/styleref1.png",
+    "C:/Users/sende/Projects/hex/art_batches/pixel_body_pilot_v1/source/s-wayne.png"
+  ],
+  "observed_columns": 8,
+  "observed_rows": 4,
+  "source_row_mapping": {
+    "idle": 0,
+    "walk_left_contact_candidate": 1,
+    "walk_right_contact_candidate": 2,
+    "cast": 3
+  },
+  "directions": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "dimensions": [
+    1774,
+    887
+  ],
+  "inspection": {
+    "directions": "Eight distinct angles, back-quarter and north show black curls/back coat with no frontal eyes.",
+    "contacts": "Different arms and foot spacing but front lower boot remains on same side after correction. Cannot confirm opposite anatomical contact in all views.",
+    "whole_bodies": "32 complete bodies; identity/horns/coat preserved.",
+    "cast": "Corrected bottom row now pushes both empty hands forward along facing, including proper side and rear occlusion."
+  },
+  "alpha_check": {
+    "format": "RGBA",
+    "corner_alpha": 0,
+    "gutter_alpha": 0
+  },
+  "visual_issues": [
+    "Opposite walk contacts unresolved after two attempts; explicit motion gap.",
+    "Fine edge fringe."
+  ],
+  "prompt": "Use case: stylized-concept. Asset: fixed-pixel game sprite atlas on genuinely transparent RGBA.\nReferences: image 1 is exact character identity and clothing; image 2 is retro pixel style only (ignore its old names); image 3 is compact common-head/body proportions and readable charming finish only, NOT its row count.\nMake exactly 32 whole-body sprites in exactly 8 equal columns by 4 equal rows. Generous empty transparent gutters, identical size and baseline, feet/hair/appendages fully intact in each cell. Coarse clean pixel clusters, crisp limited-palette outlines, compact modest charming proportions matching image 3; no painterly smoothing.\nEVERY row column order: S front, SE front/right45, E right profile, NE back/right45, N straight back, NW back/left45, W left profile, SW front/left45. NE/N/NW show the back of the head with NO frontal eyes. Torso and feet rotate with head. Eight unmistakably distinct directions.\nRows only: 0 idle standing; 1 walk contact with LEFT foot forward and RIGHT arm forward; 2 opposite walk contact RIGHT foot forward and LEFT arm forward, genuinely alternating feet not duplicated poses; 3 planted stance, BOTH EMPTY hands forward casting, no magic. Never add a fifth row.\nMaintain exact face, costume, anatomy and palette in all32 frames. No staves, weapons, held objects, ground shadows, scenery, text, labels, grid lines, sparkles or baked spells. Wide transparent canvas.\nSubject: Juul I Yaina, small demon: blue skin, short curly black hair, two small red swept horns, blue pointed ears, golden eyes, navy-black long split coat with ornate gold trim and belt, black boots. No wings or added tail. Use exact image1 design.\nCritical gait: Opposite front/back boot is LOWER in each walk row; opposite arm is FORWARD. E/W bright near boot and dark far boot exchange fore/aft positions, with visibly different sleeve overlap. Coat splits expose knees/boots. Back-quarter views reveal only black curls/red horns/blue ear and BACK OF COAT, never eyes or front gold lapels.",
+  "correction_prompt": "Use case: identity-preserve. Image1 is the exact character atlas. Keep identity, blue skin/red horns/black curls/navy gold coat, pixel style, grid8x4, scale, all view angles and transparent background. Correct only action poses in bottom2 rows.\nTHIRD row: opposite walk contact to second row. In front view the screen-LEFT boot must extend lower and forward (second row has screen-RIGHT forward). Reverse for the back view. Side views move the bright near knee and foot FORWARD and dark far knee and foot BACKWARD, counter-swing arms. Genuine opposite leg pose, not body translation.\nBOTTOM row: both empty hands are held side-by-side IN FRONT OF THE CHEST along the faced direction, like pushing an invisible wall. In E profile both hands are to screen-right of torso; in W profile both hands are to screen-left. Back45 poses send both hands away with natural occlusion; straight back hands mostly hidden in front of body. Do not spread arms sideways.\nKeep top2 rows untouched. No effects, props, shadows, grid lines, text or added rows.",
+  "runtime_imports_or_tests": "NOT_RUN; source art only"
+}

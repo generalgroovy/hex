@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "character": {
+    "id": "biggy_bob",
+    "display_name": "Biggy Bob",
+    "ancestry": "dwarf",
+    "body_type": "middle",
+    "roster_path": "content/champions/foundation_champions_v1.json",
+    "identity_authority": "assets/sprites/pixel_cast_v1/biggy_bob.png"
+  },
+  "date": "2026-10-03",
+  "generation": {
+    "tool": "built-in image_gen",
+    "mode": "reference-guided generation",
+    "calls": 1,
+    "corrective_calls": 0,
+    "transparent_background_requested": true,
+    "prompt_path": "art_batches/pixel_actions_v1/prompts/biggy_bob.md",
+    "generated_original_path": "C:/Users/sende/.codex/generated_images/01a100ca-3983-7e81-8a06-fd0ff3c5c231/exec-acdd3495-57aa-4956-a86a-ec0bf012ad1d.png"
+  },
+  "references": [
+    {
+      "path": "C:/Users/sende/Projects/hex/assets/sprites/pixel_cast_v1/biggy_bob.png",
+      "role": "Primary runtime costume, identity, proportions, palette and headings",
+      "sha256": "9FD649A77B67E211F4C55F610383D00C3243BB753C5635ED050C19A7F54E5D0E",
+      "inspected_before_generation": true
+    },
+    {
+      "path": "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/biggy_bob-detail.png",
+      "role": "Supporting costume and anatomy detail",
+      "sha256": "AB8133A44CC565D8F4E3B018C586129A1CD7167D5E61AA07CAF22D70E15F5E28",
+      "inspected_before_generation": true
+    },
+    {
+      "path": "C:/Users/sende/Pictures/styleref1.png",
+      "role": "Pixel-art style only; not identity, labels, props or effects",
+      "sha256": "C0FB63C912718D64CA061CCD85817869FFC3348A3C81A910962DF57066279FD4",
+      "inspected_before_generation": true
+    }
+  ],
+  "source": {
+    "path": "art_batches/pixel_actions_v1/source/biggy_bob/source.png",
+    "width": 1774,
+    "height": 887,
+    "pixel_format": "32-bit RGBA",
+    "sha256": "FBB8F3A175531BFDA621587A390E05778805F5C8A57163C05D825C2393BD3D30",
+    "original_sha256": "FBB8F3A175531BFDA621587A390E05778805F5C8A57163C05D825C2393BD3D30",
+    "copy_method": "PowerShell Copy-Item",
+    "byte_identical": true,
+    "altered": false,
+    "alpha": {
+      "transparent_pixels": 1098918,
+      "partial_alpha_pixels": 472698,
+      "opaque_pixels": 1922,
+      "pixels_alpha_at_least_128": 380448,
+      "transparent_background_present": true,
+      "cleanup_performed": false
+    }
+  },
+  "layout": {
+    "columns": 8,
+    "rows": 4,
+    "sprite_count": 32,
+    "headings": [
+      "S",
+      "SE",
+      "E",
+      "NE",
+      "N",
+      "NW",
+      "W",
+      "SW"
+    ],
+    "rows_top_to_bottom": [
+      "jump_anticipation",
+      "rising_tucked_jump",
+      "descending_feet_ready",
+      "compressed_landing"
+    ]
+  },
+  "review": {
+    "status": "SOURCE_CANDIDATE_REVIEWED_WITH_LIMITATIONS",
+    "generated_original_inspected": true,
+    "observations": [
+      "32 complete full-body sprites, no visible cropping or missing cell, with clear transparent gaps.",
+      "Brown swept-back hair and full beard, charcoal armour, gold edging, gauntlets, belt and boots retain runtime costume identity.",
+      "Rise has visibly folded legs and tucked boots; descending row opens legs and lowers feet.",
+      "Landing crown and hips are visibly lower than anticipation with wider/deeper bent legs, particularly front and front-quarter poses; rear armour partly hides knee articulation.",
+      "Back and rear-quarter headings are readable and empty hands are present without weapons or spell effects.",
+      "No captions, labels, grid borders, floor, shadows or environmental objects are present.",
+      "Skull envelope appears approximately stable across poses at source size; exact shared-scale match remains lead-owned."
+    ],
+    "ambiguities": [
+      "E/right-profile and SE/front-right are visually close, as in the supplied runtime reference; W/profile is somewhat clearer than E. Exact native directional readability requires lead review.",
+      "Heavy armour and beard partly occlude hips, neck and knees; landing depth is less immediately legible from the rear.",
+      "Some descending rear boots still show soles; fall-versus-rise distinction is primarily the extended lower-leg silhouette.",
+      "Generated original has extensive partial alpha; transparency cleanup and native registered output are not performed in this ticket."
+    ],
+    "limitations": [
+      "Four authored jump keys only; not complete animation cycles.",
+      "No independent exact skull/limb measurements or rendered transition/timing verification.",
+      "No deterministic registration, alpha cleanup, resampling or runtime integration performed.",
+      "Source-size visual review is not runtime or human acceptance."
+    ]
+  },
+  "acceptance": {
+    "native_scale": "NOT_RUN",
+    "runtime": "NOT_RUN",
+    "human": "NOT_RUN",
+    "import": "NOT_RUN",
+    "rendered_transition": "NOT_RUN"
+  },
+  "completion_marker": "SOURCE_TICKET_COMPLETE"
+}

@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "build_id": "p56-558bf72b754f",
+  "status": "passed",
+  "cases": [
+    {
+      "case": "sustained-distributed",
+      "mode": "normal",
+      "active_cells": 152,
+      "pixels_equal": true,
+      "rgba_sha256": "a5f6d473480d2f4189bb67534db6c38b2edf58cf80af6fc0484c928271fbea65",
+      "world_sha256": "91a3ca331be9a4a0e456f1c43a02763d18e6199fcb769ec283a0c73f5c9d82d2",
+      "ground_before_p50_us": 46905,
+      "ground_before_p95_us": 78843,
+      "ground_after_p50_us": 44668,
+      "ground_after_p95_us": 47411,
+      "total_before_p95_us": 104667,
+      "total_after_p95_us": 61999
+    },
+    {
+      "case": "sustained-distributed",
+      "mode": "reduced",
+      "active_cells": 152,
+      "pixels_equal": true,
+      "rgba_sha256": "f3093983e7231f639c1e87f76aa9b63b6b21293c8d5805a1135698107402a917",
+      "world_sha256": "91a3ca331be9a4a0e456f1c43a02763d18e6199fcb769ec283a0c73f5c9d82d2",
+      "ground_before_p50_us": 44619,
+      "ground_before_p95_us": 49268,
+      "ground_after_p50_us": 44616,
+      "ground_after_p95_us": 45805,
+      "total_before_p95_us": 63971,
+      "total_after_p95_us": 60574
+    },
+    {
+      "case": "dense-crucible",
+      "mode": "reduced",
+      "active_cells": 0,
+      "pixels_equal": true,
+      "rgba_sha256": "f937865c5b7506842fb252ded6fc9ccb9104459a9d5831b3ede29d16b4d8f51d",
+      "world_sha256": "c7da4a0f827400af419932caa0a6059811cbaf71291aabcfb8d294031f413832",
+      "ground_before_p50_us": 6382,
+      "ground_before_p95_us": 8798,
+      "ground_after_p50_us": 6169,
+      "ground_after_p95_us": 7584,
+      "total_before_p95_us": 37546,
+      "total_after_p95_us": 30988
+    },
+    {
+      "case": "dense-crucible",
+      "mode": "normal",
+      "active_cells": 0,
+      "pixels_equal": true,
+      "rgba_sha256": "e48139c04306162ccb71610fc47e19997acc66adfa8d08e29b2f8d2017fe4041",
+      "world_sha256": "c7da4a0f827400af419932caa0a6059811cbaf71291aabcfb8d294031f413832",
+      "ground_before_p50_us": 6158,
+      "ground_before_p95_us": 7009,
+      "ground_after_p50_us": 6031,
+      "ground_after_p95_us": 6506,
+      "total_before_p95_us": 25504,
+      "total_after_p95_us": 23731
+    }
+  ],
+  "rooms": [
+    {
+      "room": "chain-courtyard",
+      "png_sha256": "e2aa88c769f632e25823a8ba9b9f64f084dfe2364e24eae197eeb6be25facc5f",
+      "equal": true
+    },
+    {
+      "room": "cover-garden",
+      "png_sha256": "5abba5830bd6f7ca6b7c96bfa16554359c2c5270b94a6719d165b727fef39dcf",
+      "equal": true
+    },
+    {
+      "room": "open-laboratory",
+      "png_sha256": "7eda1e81a5dcc6e8573ad26ac04ff1e996b36db487776e6ca5ea4ba810ba1a8d",
+      "equal": true
+    }
+  ],
+  "scope": "Exact old/new native and authority comparison for the idle early-exit only; walls already updated in both arms. Frozen CPU attribution is not FPS. Zero active cells does not establish zero occupied membership; no speedup inference from these stress samples."
+}

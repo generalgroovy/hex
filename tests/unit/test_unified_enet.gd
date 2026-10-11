@@ -4,7 +4,7 @@ extends FluxTestSuite
 const ABILITY_PATH := "res://content/abilities/foundation_abilities_v1.json"
 const CHAMPION_PATH := "res://content/champions/foundation_champions_v1.json"
 const CAMPUS_PATH := "res://content/maps/sanctum_campus_g2_v1.json"
-const REACTION_PATH := "res://content/reactions/first_eight_element_reactions_v1.json"
+const REACTION_PATH := ReactionCatalog.DEFAULT_PATH
 const TEST_RUNTIME_SOURCE_HASH := "abababababababababababababababababababababababababababababababab"
 const HOST_NAME := "Unified Host"
 const TARGET := Vector2i(1_504_000, 1_344_000)
@@ -137,7 +137,7 @@ func _test_eight_player_epoch_transport() -> void:
 	var rich_envelope := session.capture_envelope()
 	check(WorldSnapshotEnvelope.validate(rich_envelope), "eight-player paid Hex state fits the exact envelope")
 	var rich_bytes := WorldSnapshotEnvelope.byte_size(rich_envelope)
-	check(rich_bytes > 0 and rich_bytes <= WorldSnapshotEnvelope.MAX_RAW_BYTES, "eight-player paid Hex envelope respects the unchanged raw32768 limit")
+	check(rich_bytes > 0 and rich_bytes <= WorldSnapshotEnvelope.MAX_RAW_BYTES, "eight-player paid Hex envelope respects the current enclosing raw-byte limit")
 	var rich_packets := SessionTransport._envelope_wire_packets(rich_envelope)
 	check(not rich_packets.is_empty(), "eight-player paid envelope has a bounded production packet sequence")
 	for packet: Dictionary in rich_packets:

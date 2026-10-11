@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "completed_at_utc": "2026-09-30T11:37:52.8268000Z",
+  "tier": "focused",
+  "result": "failed",
+  "failure": "Godot emitted a script/import/runtime error.",
+  "source": {
+    "current_state_path": ".godot/windows-tests/dafbf6e5eb224166a97ebf296b7a522a/current-state.json",
+    "asset_inventory_path": null,
+    "head": "1559a566e33255c59337c5963f1c3c685d757f1f",
+    "branch": "main",
+    "dirty": true,
+    "current_state_sha256": "d6fbc85e547f65a48dc56c7869f3557f45d1d57bc804b239234c9fd2399f6e8f",
+    "asset_inventory_sha256": null
+  },
+  "requested_suite_ids": [
+    "spell-delivery-expansion",
+    "spell-loom-editor",
+    "combat-definition-table",
+    "element-trails",
+    "hex-field-interception"
+  ],
+  "supervision": {
+    "default_engine_timeout_seconds": 180,
+    "suite_timeout_seconds": 180
+  },
+  "isolation": {
+    "appdata_path": ".godot/windows-tests/dafbf6e5eb224166a97ebf296b7a522a/isolated-roaming",
+    "scope": "Godot import, suite and boot user data; packaging retains its own isolation policy",
+    "caller_appdata_restored": true
+  },
+  "executed": {
+    "current_state_check": true,
+    "asset_inventory": false,
+    "doctor": true,
+    "import": false,
+    "post_import_identity_check": false,
+    "deterministic_suite_runner": true,
+    "suite_count": 5,
+    "assertion_count": 50065,
+    "suites": [
+      {
+        "id": "hex-field-interception",
+        "assertions": 260,
+        "failures": 0
+      },
+      {
+        "id": "combat-definition-table",
+        "assertions": 353,
+        "failures": 5
+      },
+      {
+        "id": "spell-loom-editor",
+        "assertions": 5497,
+        "failures": 8
+      },
+      {
+        "id": "spell-delivery-expansion",
+        "assertions": 27779,
+        "failures": 0
+      },
+      {
+        "id": "element-trails",
+        "assertions": 16176,
+        "failures": 4
+      }
+    ],
+    "boot_120_hz": false,
+    "package_and_installer": false
+  },
+  "duration_ms": 100267,
+  "stderr_bytes": 0,
+  "logs": [
+    {
+      "path": ".godot/windows-tests/dafbf6e5eb224166a97ebf296b7a522a/suite.log",
+      "sha256": "a88f50378fac0e261f91ac6bd918d208e48c66ae1a5c361283843eda651820b6",
+      "stderr_bytes": 0
+    }
+  ]
+}

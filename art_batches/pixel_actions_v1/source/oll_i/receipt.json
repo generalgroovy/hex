@@ -1,0 +1,85 @@
+{
+  "character_id": "oll_i",
+  "display_name": "Oll' I",
+  "ancestry": "werewolf",
+  "body_type": "large",
+  "created_at": "2026-10-03T09:45:07+02:00",
+  "identity_authority": "content/champions/foundation_champions_v1.json and current runtime pixel atlas; obsolete poster minotaur identity explicitly rejected",
+  "generation": {
+    "tool": "built-in image_gen",
+    "use_case": "identity-preserve",
+    "initial_calls": 1,
+    "corrective_calls": 0,
+    "transparent_background_requested": true,
+    "prompt_path": "art_batches/pixel_actions_v1/prompts/oll_i.md",
+    "original_generated_path": "C:/Users/sende/.codex/generated_images/01a100b5-ad34-7c12-ac13-503972db599b/exec-5e729ce4-a073-47af-bdc1-031934d80e3d.png",
+    "copy_method": "PowerShell Copy-Item; original preserved and destination byte-identical by SHA256"
+  },
+  "references": [
+    {
+      "path": "C:/Users/sende/Projects/hex/assets/sprites/pixel_cast_v1/oll_i.png",
+      "role": "primary current runtime identity, proportions, costume, palette and eight facings",
+      "sha256": "60CD518FC9F1B9CC8F02F3D12DBDCB759E83ACE17C3FE247FAEACCBC73000B3E",
+      "visually_inspected": true
+    },
+    {
+      "path": "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/oll_i-detail.png",
+      "role": "supporting costume and rear/profile anatomy",
+      "sha256": "AC605A1751534E8F5E2B5D190D0D1E5590AEF589EBDB28A072233AF43782E114",
+      "visually_inspected": true
+    },
+    {
+      "path": "C:/Users/sende/Pictures/styleref1.png",
+      "role": "retro pixel-art style only; obsolete labels, identities, props, weapons and effects ignored",
+      "sha256": "C0FB63C912718D64CA061CCD85817869FFC3348A3C81A910962DF57066279FD4",
+      "visually_inspected": true
+    }
+  ],
+  "source": {
+    "path": "art_batches/pixel_actions_v1/source/oll_i/source.png",
+    "sha256": "9F4FFC8F86226B6E2309299CB704AA55924923A79C1879B6879F21F6DAF1D6D2",
+    "original_sha256": "9F4FFC8F86226B6E2309299CB704AA55924923A79C1879B6879F21F6DAF1D6D2",
+    "width": 1774,
+    "height": 887,
+    "bytes": 1567567,
+    "decoded_pixel_format": "Format32bppArgb",
+    "genuine_transparency": true,
+    "alpha_zero_pixels": 974163,
+    "alpha_partial_pixels": 598500,
+    "alpha_255_pixels": 875,
+    "total_pixels": 1573538,
+    "modified_after_generation": false
+  },
+  "layout": {
+    "columns": 8,
+    "rows": 4,
+    "complete_pose_count": 32,
+    "directions": ["S", "SE", "E", "NE", "N", "NW", "W", "SW"],
+    "actions": ["jumpsquat", "rising_tucked", "descending_feet_ready", "compressed_landing"]
+  },
+  "review": {
+    "source_size_visual_review": "PASS_WITH_ASSEMBLY_LIMITATIONS",
+    "observations": [
+      "All 32 complete warm-brown werewolf poses are present in the specified 8x4 layout; no minotaur horns or hooves.",
+      "Full-body orientation matches front, front-right, right profile, back-right, back, back-left, left profile, front-left in all four rows.",
+      "Rising row uses raised arms, folded knees and tucked paws; descending row opens legs below the body with lower arms and visibly lower feet.",
+      "Landing row lowers the pelvis and crown through deeper joint bending than anticipation without obvious source-size squash scaling.",
+      "Brown mane, muzzle, pointed ears, golden eyes, leather/gold harness and bracers, burgundy loincloth and wolf tail remain identifiable.",
+      "Hands are empty; no props, weapons, ground shadows, VFX, text or cell borders were seen.",
+      "No cropped extremities or neighboring sprite overlap were seen at source size."
+    ],
+    "limitations": [
+      "Many partial-alpha pixels remain, including colored edge fringes; lead-owned deterministic alpha cleanup and hidden-RGB removal are still required.",
+      "Image dimensions are not evenly divisible by the 8x4 cell counts; exact crop bands and registration remain lead-owned.",
+      "Rear-view tail and natural body occlusion partially obscure some leg/hand anatomy.",
+      "Per-direction tail sweep and limb spacing vary naturally; exact common-scale head/body continuity has not been measured at native runtime size.",
+      "These are four authored key poses, not complete animation cycles or rendered transition acceptance."
+    ],
+    "native_scale_acceptance": "NOT_RUN",
+    "runtime_acceptance": "NOT_RUN",
+    "engine_import": "NOT_RUN",
+    "rendered_transition_acceptance": "NOT_RUN",
+    "human_acceptance": "NOT_RUN"
+  },
+  "completion_status": "COMPLETE_SOURCE_TICKET"
+}

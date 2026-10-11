@@ -1,76 +1,183 @@
-# FLUX current cast contract
+# H.E.X. current cast contract
 
-Status: September14,2026 local source candidate; **30 playable characters,30 identities,no placeholders**.
-There are ten Small,ten Middle and ten Large profiles. The unnamed Angel is
-retired from current catalogs; Faab I Yaina remains the named playable Angel.
-Historic artwork is preserved, not exposed as another selectable character.
+Status: current source roster, updated October 11, 2026; 30 playable identities with no placeholders.
+Both fixed-pixel manifests cover the exact live roster: each identity has its own
+ground/cast bank and whole-body jumpsquat, rise, fall and landing keys across
+eight stored directions. This is available artwork, not 30 complete animation
+sets or final human visual acceptance. [Current play and evidence](../README.md).
+
+In `--pixel-cast`, voluntary non-flying jumps and double jumps use compact
+native folded body fragments clipped to a round envelope. Slow held turns follow
+the actual rise and descent, rather than unrelated animation time; the second
+jump folds more deeply and reverses the turn. A charged rise holds its opening
+longer, and terminal descent holds its final pose. Landing restores the grounded
+pose immediately without waiting for a rotation. Reduced Motion holds an upright
+tuck. The four flying races use their own open airborne artwork only during an
+admitted second-press, held, finite flight. Their outer wing keys hold for 200 ms
+while the original central face and torso stay fixed. First jump remains ordinary;
+release, exhaustion, expiry or landing removes the flight pose immediately.
+
+Walking and sprinting retain distance-based footwork with slower visual caps of
+2.0 and 2.5 cycles per second, respectively. Stopped movement holds its pose;
+these presentation caps do not delay input or reduce gameplay speed. Spawn
+protection keeps an opaque body and shield markers. During the actual timed
+dodge protection, the body is translucent with split marks, slashes and remaining
+window pips; the first vulnerable recovery frame restores opacity and removes
+those cues. Ordinary jumps and flight do not imply immunity, and no cue means
+phasing through walls. Reduced profiles preserve the same protection meanings.
+
+These are assemblies of original pixels, not newly painted action cycles.
+Casting remains available, but airborne arms are not independently painted.
+Other unpainted actions retain registered source poses. Actual hurtboxes,
+movement, Stamina and protection windows remain independent of presentation.
+The [current aerial review](reference-refinement-evidence-20261009/animation-followup-native-review.md)
+records the scoped native pass and its small-scale, fixture and physical-play
+limits. The [earlier aerial record](reference-refinement-evidence-20261009/aerial-animation.md)
+preserves the rejected versions and preceding accepted checkpoint. Neither
+claims a new Full-suite result or package; the [central handoff](../.agent/HEX-RESUME.md)
+owns that qualification boundary.
+All-cast anatomical continuity, exact-heading quality and complete authored
+directional cycles remain open. Historical scope and review limits are recorded
+in the [all-cast movement checkpoint](HEX-CAST-MOTION.md) and
+[scale/performance checkpoint](HEX-SCALE-PERFORMANCE.md); neither certifies later source.
+
+Ten Small, ten Middle and ten Large profiles remain. The unnamed Angel is retired;
+Faab I Yaina is the named playable Angel. Source poster labels are not roster
+authority. [October 2 ground/cast checkpoint](HEX-PIXEL-CAST.md) and preserved
+[September27 sources](art/character-cast-20260927/HANDOFF.md) remain history and
+reference. Size stats and collision geometry are unchanged.
+
+The October 9 source adds one named situational passive to each of the 21
+ancestries and one distinct personal passive to each of the 30 characters.
+They activate through existing movement, posture and resource state. Gallery
+overview shows both; Details and the Compendium explain windows and counters.
+See the [implementation and acceptance record](REFERENCE-IDENTITY-REFINEMENT.md)
+for live effects, reference-game rationale and the separate balance gate.
 
 ## Style and runtime boundary
 
-![Current cast without names or effects](../reference/art/cast_proportions_v5/flux-current-cast-final.png)
+### Detailed Gallery portraits
 
-The [new reference](../reference/art/cast_proportions_v5/README.md) owns the compact,
-sturdy fantasy target: approximately4–4.5 heads tall, short necks, readable limbs,
-practical clothing, empty-hand casting. S. Wayne stays dark-skinned; Biggy Bob
+All 30 current identities have individual detailed close-ups in the
+[offline portrait browser](../reference/art/portraits_20261008/index.html).
+The current catalog, not old poster labels, owns race/name/affinity assignments.
+Portraits preserve current identity while interpreting tiny-sprite material and
+facial detail; they are not new body sheets or animation-completeness evidence.
+
+Joh Haynes and Grimm Bow now select reviewed v2 portraits: Joh has a calmer,
+steadier expression, while Grimm has a warmer, curious expression. Their current
+Orc/Troll identities and defining features are preserved. The original reference
+PNGs remain untouched beside the versioned refinements; actual prompts, hashes
+and review limits are recorded in the
+[refinement provenance](../reference/art/portraits_20261008/refinement-v2-prompts.json).
+This agent review is not human visual acceptance or animation evidence.
+
+The subsequent personality pass refines eleven more portraits: S. Wayne,
+Steezo, Wa Bidi, Grace Riva, Haara, H. Lenee, Sai Laas, Spai Si, Juul I Yaina,
+Treevor the Mason and Fluup. Nineteen current portraits are retained, including
+Joh/Grimm v2. The [all-cast expression matrix](CHARACTER-PERSONALITY.md) connects
+art direction to existing playstyles without inventing new abilities.
+[Integration and saved prompts](../reference/art/portraits_20261008/personality-integration.json)
+preserve original/source hashes. See the [identity checkpoint](CHARACTER-IDENTITY-CHECKPOINT.md)
+for exact fresh validation and the still-open anatomical work.
+
+The Gallery shows the selected illustration beside the eight-heading body
+preview. Click the illustration, press **P**, or controller **Start** to enlarge;
+**Esc / B / Back** returns to the roster before closing the Gallery. Inspection
+never equips a character: **Attune** remains explicit. Card/HUD portraits retain
+their existing sprite crops. Missing illustrated art falls back to those crops.
+
+Full-resolution originals, actual generation prompts and provenance are retained
+under `reference/art/portraits_20261008`; the game uses bounded 512px imports under
+`assets/portraits/champions_v1`. The selected-art cache holds at most two textures
+and is released on close. These limits are not a measured frame-time claim.
+
+![Current playable pixel roster](pixel-cast-evidence-20261002/roster.png)
+
+The [preserved full-cast illustration](../reference/art/cast_proportions_v5/flux-current-cast-final.png)
+remains a style reference, not a screenshot or proof of animation completeness.
+
+The latest user-selected `styleref1.png` owns the compact, charming fantasy-pixel
+target: similar cranial sizes, short necks, readable limbs, primarily volume-based
+Small/Middle/Large silhouettes, practical clothing and empty-hand casting.
+Neutral body heights remain58/63/68px; illustration proportions never change
+gameplay collision. S. Wayne stays dark-skinned; Biggy Bob
 brown-haired. Spell effects, auras, shadows and scenery never become body pixels.
 
-All characters currently use the matching **shared body**, including in the
-Gallery and front-model top-third portrait. The new group illustration does not
-constitute30 unique in-game skins. Named/race skins remain after shared-template
-playback and human acceptance. Five retained individual source sets and previous
-override pages are historical; they are not silently loaded in this mode.
+The selected portrait package launcher enables `--fullbody-art --pixel-cast`.
+The source refinements described here do not imply a new packaged build; the
+[current play and evidence](../README.md) identifies the verified package boundary.
+The pixel mode uses each identity's bank for Gallery cards/body previews, HUD
+head-and-shoulders crops and ground/cast rendering, plus the admitted held action
+keys above. The selected Gallery illustration is the separate resource described above.
+Direct source/EXE launches without these flags retain the shared skeleton mode;
+source play uses `scripts/run.cmd --pixel-cast`, which also enables full-body art.
+These are rendering modes, not duplicate playable identities. Both pixel banks
+use 128px cells and foot pivot `(64,104)`, fixed registration and nearest sampling.
+The Gallery now displays the pixel body cell at native 128px and card head crops
+at native 32px within the common logical viewport; the previous 128-to-96 and
+32-to-40 resampling is removed. It does not resize source heads or normalize
+anatomy across action sheets. All 30 identities have regression coverage for
+fixed native registration, with five-pose South/East native comparison sheets.
+Ground gait has two contact poses and reused neutral beats; backward/sidestep
+footwork, slide/roll/flight cycles and independently painted airborne casting
+remain incomplete. Unsupported actions use registered rigid low/air source poses,
+or the admitted identity's idle pose if an optional action bank is unavailable;
+full pixel cast does not fall back to a deforming mesh.
 
-The shared rig preserves fixed limb lengths,96px cells,pivot(48,84),eight facing
-directions and separate travel/aim with eight cyclic walk and sprint phases.
-Nine textures contain3312 cells for the entire cast. Source authoring heights
-58/68/76px remain separate from visible58/63/68px. Constant per-size baking,
-not per-frame fitting, preserves scale during actions. Hurtboxes depend only on
-size, not race, skin, aiming direction or animation. All sizes have18px wall clearance.
-
-The current slide_v1 review candidate changes only the24 shared slide cells with
-a fixed-bone seated/reclining pose. Standing proportions and all gait pixels stay
-unchanged. See the current checkpoint for before/after evidence and remaining
-North/NE, wallrun and transition limits. This is not full human template approval.
+The separately selectable legacy shared-rig mode retains 96px cells, pivot `(48,84)`, fixed limb
+lengths, eight headings and independent travel/aim. Its older 3312-cell bank and
+slide_v1 review describe that mode's artwork, not a runtime fallback from full
+pixel cast or current pixel-bank completeness.
+No pose uses per-frame fitting to change body size. Hurtboxes depend only on
+size, not race, skin, aim or animation; all sizes have18px wall clearance.
 
 ## Current roster
 
-Affinities spend three points across two or three first-eight elements; these
+Affinities spend three points across two or three of the six live elements; these
 levels do not automatically multiply damage or grant racial passives. Air keeps
-the internal ID `wind`. Alphabetically sorted race columns group the Gallery;
-hover/selection previews show source-derived details and eight facing steps.
+the internal ID `wind`. The Gallery shows all 30 champions together in a 6×5 grid,
+ordered Small, Middle, Large, then name; race is descriptive, not a column or page.
+This is a presentation-only ordering: canonical IDs and roster/wire order remain
+unchanged. Hover/selection previews show source-derived details and eight facing
+steps. Arrow/WASD/controller directional input navigates the grid; PgUp/PgDn or
+controller LB/RB focuses a size group without hiding any champions.
 
-| Champion | Race | Body | Affinity levels | Live art |
-| --- | --- | --- | --- | --- |
-| Oh Tipi | Seakin | Middle | Water 2 · Charge 1 | Shared middle body |
-| S. Wayne | Hobbit | Small | Dark 2 · Light 1 | Shared small body |
-| The Red Baron | Undead | Large | Fire 2 · Ice 1 | Shared large body |
-| Grace Riva | Sylph | Small | Air 1 · Water 1 · Light 1 | Shared small body |
-| Wa Bidi | Goblin | Small | Charge 1 · Air 1 · Fire 1 | Shared small body |
-| Steezo | Goblin | Small | Charge 1 · Fire 1 · Light 1 | Shared small body |
-| Treevor the Mason | Treefolk | Large | Earth 1 · Air 1 · Fire 1 | Shared large body |
-| Oll' I | Werewolf | Large | Earth 1 · Fire 1 · Light 1 | Shared large body |
-| Fluup | Orc | Large | Air 1 · Charge 1 · Ice 1 | Shared large body |
-| Waka Aren Si | Gnome | Small | Charge 2 · Light 1 | Shared small body |
-| Spai Si | Demon | Middle | Air 1 · Earth 1 · Light 1 | Shared middle body |
-| Leaf the Hidden | Treefolk | Middle | Water 1 · Earth 1 · Light 1 | Shared middle body |
-| Ha Rekt | Wyrmborn | Large | Ice 1 · Air 1 · Fire 1 | Shared large body |
-| Dr. Apex | Stoneborn | Large | Earth 1 · Light 1 · Water 1 | Shared large body |
-| Haara | Nymph | Small | Light 2 · Air 1 | Shared small body |
-| Hesus Christo | Elf | Middle | Earth 2 · Water 1 | Shared middle body |
-| Grimm Bow | Troll | Large | Earth 2 · Water 1 | Shared large body |
-| Biggy Bob | Dwarf | Middle | Earth 1 · Fire 1 · Light 1 | Shared middle body |
-| Jan Wicked | Human | Middle | Ice 1 · Dark 1 · Charge 1 | Shared middle body |
-| Ba Djoh | Minotaur | Large | Earth 1 · Fire 1 · Water 1 | Shared large body |
-| Urzh | Stoneborn | Large | Earth 1 · Fire 1 · Charge 1 | Shared large body |
-| Don Doko Don | Dwarf | Middle | Earth 1 · Fire 1 · Water 1 | Shared middle body |
-| Djonah Thaan | Vampire | Middle | Dark 1 · Charge 1 · Fire 1 | Shared middle body |
-| Luuh I Zeh | Spiderkin | Small | Dark 2 · Water 1 | Shared small body |
-| Juul I Yaina | Demon | Small | Ice 2 · Air 1 | Shared small body |
-| Faab I Yaina | Angel | Middle | Fire 2 · Light 1 | Shared middle body |
-| Joh Haynes | Orc | Large | Earth 2 · Charge 1 | Shared large body |
-| H. Lenee | Stoneborn | Middle | Earth 1 · Air 1 · Fire 1 | Shared middle body |
-| Mifu | Treefolk | Small | Water 1 · Air 1 · Light 1 | Shared small body |
-| Sai Laas | Nymph | Small | Air 2 · Fire 1 | Shared small body |
+Every listed identity has the same bounded pixel-bank coverage described above;
+the roster does not claim completed movement cycles.
+
+| Champion | Race | Body | Affinity levels |
+| --- | --- | --- | --- |
+| Oh Tipi | Seakin | Middle | Water 2 · Fire 1 |
+| S. Wayne | Hobbit | Small | Dark 2 · Light 1 |
+| The Red Baron | Undead | Large | Fire 2 · Water 1 |
+| Grace Riva | Sylph | Small | Air 1 · Water 1 · Light 1 |
+| Wa Bidi | Goblin | Small | Fire 2 · Air 1 |
+| Steezo | Goblin | Small | Fire 2 · Light 1 |
+| Treevor the Mason | Treefolk | Large | Earth 1 · Air 1 · Fire 1 |
+| Oll' I | Werewolf | Large | Earth 1 · Fire 1 · Light 1 |
+| Fluup | Orc | Large | Air 1 · Fire 1 · Water 1 |
+| Waka Aren Si | Gnome | Small | Fire 2 · Light 1 |
+| Spai Si | Demon | Middle | Air 1 · Earth 1 · Light 1 |
+| Leaf the Hidden | Treefolk | Middle | Water 1 · Earth 1 · Light 1 |
+| Ha Rekt | Wyrmborn | Large | Water 1 · Air 1 · Fire 1 |
+| Dr. Apex | Stoneborn | Large | Earth 1 · Light 1 · Water 1 |
+| Haara | Nymph | Small | Light 2 · Air 1 |
+| Hesus Christo | Elf | Middle | Earth 2 · Water 1 |
+| Grimm Bow | Troll | Large | Earth 2 · Water 1 |
+| Biggy Bob | Dwarf | Middle | Earth 1 · Fire 1 · Light 1 |
+| Jan Wicked | Human | Middle | Water 1 · Dark 1 · Fire 1 |
+| Ba Djoh | Minotaur | Large | Earth 1 · Fire 1 · Water 1 |
+| Urzh | Stoneborn | Large | Earth 1 · Fire 2 |
+| Don Doko Don | Dwarf | Middle | Earth 1 · Fire 1 · Water 1 |
+| Djonah Thaan | Vampire | Middle | Dark 1 · Fire 2 |
+| Luuh I Zeh | Spiderkin | Small | Dark 2 · Water 1 |
+| Juul I Yaina | Demon | Small | Water 2 · Air 1 |
+| Faab I Yaina | Angel | Middle | Fire 2 · Light 1 |
+| Joh Haynes | Orc | Large | Earth 2 · Fire 1 |
+| H. Lenee | Stoneborn | Middle | Earth 1 · Air 1 · Fire 1 |
+| Mifu | Treefolk | Small | Water 1 · Air 1 · Light 1 |
+| Sai Laas | Nymph | Small | Air 2 · Fire 1 |
 
 H. Lenee retains `h_le_ne`/wire28 (female Stoneborn,Middle), while Mifu retains
 `fimu_yashiha`/wire29 (female Treefolk,Small). Mifu's Fire is replaced by Air and
@@ -100,33 +207,46 @@ visual height by7.9%. These are candidate tuning values,not proof of competitive
 
 ## Spells and selection
 
-32 spells are available: eight elements × Bolt/Heavy/Rapid/Spray, freely configurable
-into12 positions at the Spell Loom, regardless of character. New starter kits use
-existing Bolt/Heavy plus another-affinity Spray; Sai uses Gale Needle/Pressure Shell/
-Ember Sweep. Disabled historical families are not available through new kits.
+The live catalog contains 504 spells: all 63 nonempty sets of the six ingredients
+across Bolt, Heavy, Rapid, Spray, Mantle, Fuse, Split and Rebound. Twelve positions
+are configured at the Spell Loom. Thirty signature combinations are earned from
+their corresponding rival; the other choices, including the original 24 spells,
+remain available. Valid previously saved/equipped choices are preserved, and the
+offline Range temporarily loans every definition. Character selection does not
+grant signature progress. See the [player guide](PLAYER-GUIDE.md) and
+[configuration boundary](ABILITY-CONFIGURATION.md).
 
-Host-confirmed character switching preserves resource percentages but replaces the
-starter loadout; the Gallery warns about this. Selecting the current character is
+Starter kits retain six Bolts, a dominant-affinity Heavy, and five distinct
+experiments across the other ingredients. Disabled historical families are
+unavailable in new kits. The [pre-publication roster document](archive/source-publication-20261011/CURRENT-CAST.md)
+preserves the former 24-spell description as history.
+
+Host-confirmed character switching preserves resource percentages and restores
+that character's saved weave, or its starter kit if uncustomized. Selecting the current character is
 a no-op preserving custom spells,cooldowns and accounting. Attunement requires the
 Gallery in Wellspring/HEARTH and a living grounded free actor without an active
 cast,movement commitment,protection or impact recovery.
 
-## Acceptance and next production step
+## Visual availability and acceptance
 
-Fresh results belong to [the proportion/roster checkpoint](PROPORTION-CAST-CHECKPOINT.md).
-Historical test totals and old portable builds are not verification of the new source.
+Source and manifest inspection establishes coverage, not visual quality or human
+acceptance. [Current evidence](../README.md) keeps source, native, package and
+human gates separate. Historical art receipts qualify only their named builds.
 
 | Layer | Boundary |
 | --- | --- |
-| Identity/affinity/size | 30 source-linked profiles; no new racial abilities |
-| Shared animation |3312 generated cells,8 directions,independent travel/aim; runtime and visual evidence reported separately |
-| Character-specific detail | Group reference supplied; individual30-skin production not completed |
-| Human acceptance | Proportions,motion readability and relative size feel awaiting playtest |
-| Next | Review Small,then Middle,then Large in gameplay; retain registered actions,then complete race/character layers one at a time |
+| Identity/affinity/size | 30 source-linked profiles; 21 ancestry and 30 personal situational passives; base size stats and affinity rules retained |
+| Identity-specific ground/cast art | 30 banks, eight headings, idle/two contacts/cast; neutral beats are reused, not extra painted poses |
+| Whole-body action keys | 30 banks, eight headings, jumpsquat/rise/fall/landing; shared keys are not complete cycles or independent airborne arm animation |
+| Fallbacks | Full pixel cast uses rigid registered low/air/idle source-pose substitutions, never a deforming mesh; working action coverage is not complete authored animation |
+| Open visual gates | Full-roster anatomical continuity, exact-heading quality, authored strafe/backpedal/slide/roll/flight/airborne-cast cycles and human motion/relative-size review |
+| Next work | Follow the [single queue](../.agent/OVERHAUL-IMPLEMENTATION.md); preserve working banks while reviewing bounded action corrections |
 
 Earlier construction and named-art history remain in
 [character template](CHARACTER-TEMPLATE-V2-CHECKPOINT.md),
 [character pages](CHARACTER-PAGES-CHECKPOINT.md) and
 [Gallery](CAST-GALLERY-CHECKPOINT.md) checkpoints. Do not promote a portrait or
 cutout as a complete animation set. Preserve original source artwork and require
-reviewed pose/contact coverage before replacing shared bodies.
+reviewed pose/contact coverage before replacing a working bank. The
+[exact pre-consolidation document](archive/CURRENT-CAST-before-doc-consolidation-20261007.md)
+preserves superseded visual-status wording without making it current authority.

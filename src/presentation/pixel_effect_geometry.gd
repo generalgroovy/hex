@@ -3,6 +3,7 @@ extends RefCounted
 
 # Render-only, world-pixel geometry. Convex, non-overlapping fill pieces prevent
 # holes (safe centres and wall shadows) becoming opaque textured polygons.
+const Archive = preload("res://src/presentation/archive_magic_contract.gd")
 const Chemistry = preload("res://src/sim/chemistry/element_chemistry_system.gd")
 const Occlusion = preload("res://src/presentation/sight_occlusion.gd")
 const CACHE_LIMIT: int = 128
@@ -79,9 +80,22 @@ func _clip_geometry(polygons: Array, origin: Vector2, extent: Rect2, collision: 
 
 
 func reaction_mask(state: RefCounted, definition: Dictionary, tick: int, config: SimConfig, collision: CollisionWorld = null) -> Dictionary:
+	return _reaction_mask(state, definition, tick, config, collision, false)
+
+
+# Archive-only visual regression tooling; live admission remains separate.
+func archive_reaction_mask(state: RefCounted, definition: Dictionary, tick: int, config: SimConfig, collision: CollisionWorld = null) -> Dictionary:
+	return _reaction_mask(state, definition, tick, config, collision, true)
+
+
+func _reaction_mask(state: RefCounted, definition: Dictionary, tick: int, config: SimConfig, collision: CollisionWorld, archive: bool) -> Dictionary:
 	if state == null or config == null or definition.is_empty() or int(definition.get("wire_id", 0)) != state.recipe_wire_id or tick < state.created_tick or tick >= state.expiry_tick:
 		return {}
 	var authoritative := Chemistry.recipe(state.recipe_wire_id)
+	if archive:
+		authoritative = {}
+		for entry: Dictionary in Archive.REACTIONS:
+			if int(entry.wire_id) == int(state.recipe_wire_id): authoritative = entry; break
 	if authoritative.is_empty() or String(definition.get("shape", "")) != String(authoritative.shape):
 		return {}
 	var shape := String(authoritative.shape)
@@ -91,7 +105,7 @@ func reaction_mask(state: RefCounted, definition: Dictionary, tick: int, config:
 		return {}
 	var extent := _extent(state, shape, origin, radius)
 	var obstacles: Array[Rect2] = []
-	var key_values: Array = [state.recipe_wire_id, state.position_x, state.position_y, state.direction_x, state.direction_y, state.radius, state.length, state.endpoint_x, state.endpoint_y, state.path_points, state.active(tick)]
+	var key_values: Array = [archive, shape, state.recipe_wire_id, state.position_x, state.position_y, state.direction_x, state.direction_y, state.radius, state.length, state.endpoint_x, state.endpoint_y, state.path_points, state.active(tick)]
 	var hail := Vector2.ZERO
 	if shape == "pulse_lane":
 		var period := maxi(1, config.milliseconds_to_ticks(450))

@@ -4,6 +4,7 @@ extends FluxTestSuite
 func run() -> int:
 	_test_knockout_respawn_result_and_packet()
 	_test_timeout_draw_and_bounds()
+	_test_same_tick_score_resolution()
 	_test_participant_departure()
 	_test_definition_and_packet_fail_closed()
 	return finish("session-round")
@@ -50,7 +51,7 @@ func _test_knockout_respawn_result_and_packet() -> void:
 		if expected_score == 3:
 			world.deposits.append(ElementDepositState.new())
 			world.reactions.append(ElementReactionState.new())
-			world.projectiles.append(ProjectileState.new(5000, 1, 1, CombatTuning.RILLSHOT_WIRE_ID, 2, Vector2i(700_000, 500_000), Vector2i(1, 0), 5_000, 1_000, 30))
+			world.projectiles.append(ProjectileState.new(5000, 1, 1, CombatTuning.RILLSHOT_WIRE_ID, 3, Vector2i(700_000, 500_000), Vector2i(1, 0), 5_000, 1_000, 30))
 			check(CombatTuning.cast_definition(CombatTuning.RIMEWAKE_WIRE_ID).is_empty(), "retired Field has no authority definition before round cleanup")
 			# Imported stale state must still be cleared when a result seals.
 			world.fields.append(FieldState.new(6000, 1, 1, CombatTuning.RIMEWAKE_WIRE_ID, 5, Vector2i(700_000, 500_000), 72_000, 30, PlayerState.ControlState.SLOWED, 700, 650))
@@ -94,6 +95,46 @@ func _test_timeout_draw_and_bounds() -> void:
 	equal(round.phase, SessionRound.Phase.RESULT, "clock expiry seals result")
 	equal(round.winner_entity_id, 0, "equal scores produce an explicit draw")
 	check(finish_events.any(func(event: Dictionary) -> bool: return String(event.get("type", "")) == "round_finished"), "clock expiry emits result event")
+
+
+func _test_same_tick_score_resolution() -> void:
+	for guest_start_score: int in [1, 2]:
+		for reverse_events: bool in [false, true]:
+			var world := _world()
+			var round := SessionRound.new()
+			check(round.begin(world, [1, 2], _definition()), "trade fixture begins")
+			round.scores_by_entity[1] = 2
+			round.scores_by_entity[2] = guest_start_score
+			world.player(1).health = 0
+			world.player(2).health = 0
+			var events: Array[Dictionary] = [
+				{"type": "champion_defeated", "owner_id": 1, "target_id": 2},
+				{"type": "champion_defeated", "owner_id": 2, "target_id": 1},
+			]
+			if reverse_events:
+				events.reverse()
+			# A repeated victim event in the same tick must not buy another point.
+			events.append(events[0].duplicate())
+			world.tick = round.round_end_tick
+			var emitted := round.advance(world, events)
+			equal(round.scores_by_entity, {1: 3, 2: guest_start_score + 1}, "every valid same-tick defeat scores exactly once")
+			equal(round.winner_entity_id, 0 if guest_start_score == 2 else 1, "whole-tick scores decide the winner independent of event order")
+			equal(emitted.filter(func(event: Dictionary) -> bool: return event.type == "round_knockout").size(), 2, "trade emits both knockout receipts")
+			equal(emitted.filter(func(event: Dictionary) -> bool: return event.type == "round_finished").size(), 1, "threshold and deadline emit only one result")
+			equal(String(emitted.back().type), "round_finished", "result follows all knockout feedback")
+			check(SessionRound.validate_packet(round.capture(world)), "trade result retains the existing packet schema")
+			equal(round.result_end_tick, world.tick + world.config.milliseconds_to_ticks(2000), "trade keeps the configured result interval")
+			check(round.advance(world, events).is_empty(), "sealed result cannot score repeated events")
+
+	for uncredited_owner: int in [0, 2, 8]:
+		var world := _world()
+		var round := SessionRound.new()
+		check(round.begin(world, [1, 2], _definition()), "uncredited defeat fixture begins")
+		world.player(2).health = 0
+		round.advance(world, [{"type": "champion_defeated", "owner_id": uncredited_owner, "target_id": 2}])
+		equal(round.scores_by_entity, {1: 0, 2: 0}, "environment, self and nonparticipant defeats do not award a point")
+		check(round.respawn_tick_by_entity.has(2), "uncredited defeat still schedules normal respawn")
+		equal(round.phase, SessionRound.Phase.ACTIVE, "uncredited defeat does not invent a result")
 
 
 func _test_participant_departure() -> void:

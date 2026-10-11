@@ -226,6 +226,9 @@ func apply_to_player(state: PlayerState, champion_id: String, preserve_resource_
 	var old_flux := state.flux
 	var old_stamina := state.stamina
 	state.champion_wire_id = int(champion_data["wire_id"])
+	state.flight_capable = String(champion_data["ancestry"]) in ["sylph", "wyrmborn", "angel", "demon"]
+	# Changing identity never replenishes spent air actions or releases a queued jump.
+	MovementSystem.cancel_jump_intent(state)
 	state.radius = body_type_profiles.hurt_radius(String(champion_data["body_type"]))
 	state.float_max_duration_ms = MovementTuning.float_duration_ms(String(champion_data["body_type"]))
 	# Attunement cannot refill or lengthen an already spent airborne allowance.

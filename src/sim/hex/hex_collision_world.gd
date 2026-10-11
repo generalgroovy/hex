@@ -1,6 +1,8 @@
 class_name HexCollisionWorld
 extends ReactionMovementWorld
 
+const ChemistryWorld = preload("res://src/sim/hex/hex_chemistry_world.gd")
+const CellTopology = preload("res://src/sim/hex/hex_cell_topology.gd")
 const FACE_ID_BASE := 200_000_000
 var grid_origin := Vector2i.ZERO
 # Actor movement and attachment retain the legacy Rampart-only contract.
@@ -12,6 +14,7 @@ var _components: Dictionary = {}
 var _actor_ignored: Dictionary = {}
 var _topology: Array[Vector2i] = []
 var _chemistry: HexChemistryWorld = null
+var _sealed_topology: HexCellTopology = null
 var _indices: Dictionary = {}
 var _solid_ordered: Array = []
 var _cover_ordered: Array = []
@@ -22,21 +25,31 @@ func _init(source: CollisionWorld = null) -> void:
 func configure_hexes(origin: Vector2i, topology: Array[Vector2i], occupied: Array[Vector2i]) -> bool:
 	return _configure_hex_sets(origin, topology, occupied, occupied)
 
-func _configure_hex_sets(origin: Vector2i, topology: Array[Vector2i], movement_solid: Array[Vector2i], cover_cells: Array[Vector2i]) -> bool:
+func _configure_hex_sets(origin: Vector2i, topology: Array[Vector2i], movement_solid: Array[Vector2i], cover_cells: Array[Vector2i], authority: HexChemistryWorld = null) -> bool:
 	if topology.is_empty() or topology.size() > HexChemistryWorld.MAX_CELLS: return false
 	if absi(origin.x) > HexGrid.MAX_ABS_QUERY_COORDINATE or absi(origin.y) > HexGrid.MAX_ABS_QUERY_COORDINATE: return false
 	var ordered := topology
-	if topology != _topology:
-		ordered = topology.duplicate()
-		ordered.sort_custom(HexGrid._cell_less)
+	var sealed := _owned_topology(authority)
+	var indices: Dictionary
+	if sealed != null and origin == authority.origin and topology == sealed.numeric_cells():
+		# This actual concrete authority owns geometry admitted at construction.
+		# A fresh collision can borrow immutable full-map order/indices without
+		# sorting/revalidating every blank cell. No caller-supplied trust flag or
+		# context is accepted; mismatching ordinary inputs retain full validation.
+		ordered = sealed.numeric_cells()
+		indices = sealed.cell_indices()
+	else:
+		if topology != _topology:
+			ordered = topology.duplicate()
+			ordered.sort_custom(HexGrid._cell_less)
+		indices = {} if _indices.is_empty() else _indices
+		for index: int in (ordered.size() if _indices.is_empty() else 0):
+			if indices.has(ordered[index]): return false
+			if absi(ordered[index].x) > HexGrid.MAX_ABS_CELL_COORDINATE or absi(ordered[index].y) > HexGrid.MAX_ABS_CELL_COORDINATE: return false
+			var center := origin + HexGrid.center(ordered[index])
+			if absi(center.x) > HexGrid.MAX_ABS_QUERY_COORDINATE or absi(center.y) > HexGrid.MAX_ABS_QUERY_COORDINATE: return false
+			indices[ordered[index]] = index
 	if not _topology.is_empty() and (ordered != _topology or origin != grid_origin): return false
-	var indices := {} if _indices.is_empty() else _indices
-	for index: int in (ordered.size() if _indices.is_empty() else 0):
-		if indices.has(ordered[index]): return false
-		if absi(ordered[index].x) > 256 or absi(ordered[index].y) > 256: return false
-		var center := origin + HexGrid.center(ordered[index])
-		if absi(center.x) > HexGrid.MAX_ABS_QUERY_COORDINATE or absi(center.y) > HexGrid.MAX_ABS_QUERY_COORDINATE: return false
-		indices[ordered[index]] = index
 	var solid := {}
 	for cell: Vector2i in movement_solid:
 		if not indices.has(cell) or solid.has(cell): return false
@@ -60,8 +73,9 @@ func _configure_hex_sets(origin: Vector2i, topology: Array[Vector2i], movement_s
 	_faces.clear()
 	_components.clear()
 	_actor_ignored.clear()
-	for cell: Vector2i in ordered:
-		if not solid.has(cell): continue
+	# Same numeric subset/order as the preceding full-topology loop. Stable
+	# face IDs still use full topology indices, never sparse positions.
+	for cell: Vector2i in _solid_ordered:
 		for face: int in 6:
 			# A later-four cover neighbor is transparent to actors, so the shared
 			# Rampart face remains a real movement and attachment boundary.
@@ -90,15 +104,26 @@ func set_hex_surfaces(authority: HexChemistryWorld, tick: int) -> bool:
 	var topology: Array[Vector2i] = []
 	var solid_cells: Array[Vector2i] = []
 	var cover_cells: Array[Vector2i] = []
-	if _chemistry == authority and not _topology.is_empty():
-		topology = _topology
+	var concrete: bool = authority.get_script() == ChemistryWorld
+	var sealed := _owned_topology(authority)
+	if sealed != null:
+		topology = sealed.numeric_cells()
 	else:
-		for cell: Vector2i in authority.cells: topology.append(cell)
+		var keys: Array = authority.cell_keys() if concrete else authority.cells.keys()
+		for cell: Vector2i in keys: topology.append(cell)
 	for cell: Vector2i in movement_solid: solid_cells.append(cell)
 	for cell: Vector2i in cover: cover_cells.append(cell)
-	if not _configure_hex_sets(authority.origin, topology, solid_cells, cover_cells): return false
+	if not _configure_hex_sets(authority.origin, topology, solid_cells, cover_cells, authority): return false
 	_chemistry = authority
+	_sealed_topology = sealed
 	return true
+
+func _owned_topology(authority: HexChemistryWorld) -> HexCellTopology:
+	# Read helpers are virtual; an extension cannot claim a different world's
+	# valid handle while concealing mutable, malformed coordinate membership.
+	if authority == null or authority.get_script() != ChemistryWorld: return null
+	var sealed := authority.immutable_topology()
+	return sealed if sealed != null and sealed.get_script() == CellTopology else null
 
 func refresh_surfaces(tick: int) -> bool:
 	return true if _chemistry == null else set_hex_surfaces(_chemistry, tick)
@@ -107,6 +132,7 @@ func begin_actor(position: Vector2i, radius: int) -> void:
 	_actor_ignored.clear()
 	var inside_components := {}
 	for cell: Vector2i in _solid:
+		if not _cell_in_query_bounds(cell, position, position, radius): continue
 		if HexConvexGeometry.box_overlaps(position, radius, cell, grid_origin): inside_components[_components[cell]] = true
 	# A structure formed beneath an actor allows exit through its connected
 	# component. Exemption ends on the first wholly clear tick; no teleport,
@@ -123,6 +149,7 @@ func _candidate_obstacles(minimum: Vector2i, maximum: Vector2i) -> Array[Obstacl
 func can_occupy(position: Vector2i, radius: int, ignored_obstacle_id: int = -1) -> bool:
 	if not base_world.can_occupy(position, radius, ignored_obstacle_id): return false
 	for cell: Vector2i in _solid:
+		if not _cell_in_query_bounds(cell, position, position, radius): continue
 		if HexConvexGeometry.box_overlaps(position, radius, cell, grid_origin): return false
 	return true
 
@@ -180,6 +207,7 @@ func hex_segment_clear(start: Vector2i, finish: Vector2i) -> bool:
 # query above cannot represent the authored POV policy by itself.
 func hex_pillar_segment_clear(start: Vector2i, finish: Vector2i) -> bool:
 	for cell: Vector2i in _cover:
+		if not _cell_in_query_bounds(cell, start, finish, 0): continue
 		if bool(HexFootprint._cell_segment_interval(cell, grid_origin, start, finish).get("hit", false)): return false
 	return true
 
@@ -189,6 +217,7 @@ func nearby_hex_face(position: Vector2i, radius: int, tolerance: int, surface_id
 		if surface_id > 0 and id != surface_id: continue
 		var face: Dictionary = _faces[id]
 		if _actor_ignored.has(face.cell): continue
+		if not _cell_in_query_bounds(face.cell, position, position, maxi(0, radius) + maxi(0, tolerance)): continue
 		var contact := HexConvexGeometry.nearby_face(position, radius, tolerance, face.cell, grid_origin, int(face.face))
 		if contact.is_empty(): continue
 		if best.is_empty() or float(contact.gap) < float(best.gap) or (float(contact.gap) == float(best.gap) and id < int(best.id)):
@@ -210,6 +239,7 @@ func _sweep(start: Vector2i, finish: Vector2i, radius: int, box: bool) -> Dictio
 	var occupied: Dictionary = _solid if box else _cover
 	for cell: Vector2i in (_solid_ordered if box else _cover_ordered):
 		if box and _actor_ignored.has(cell): continue
+		if not _cell_in_query_bounds(cell, start, finish, radius): continue
 		var hit := HexConvexGeometry.sweep_box(start, finish, radius, cell, grid_origin) if box else HexConvexGeometry.sweep_circle(start, finish, radius, cell, grid_origin)
 		if hit.is_empty(): continue
 		hit.cell = cell
@@ -223,3 +253,17 @@ func _sweep(start: Vector2i, finish: Vector2i, radius: int, box: bool) -> Dictio
 		hit.id = id if bool(hit.runnable) else 0
 		best = hit
 	return best
+
+
+## Conservative closed AABB rejection only. Keep one fixed unit of slack for
+## Float64 boundary tolerances; every surviving candidate uses the original
+## exact narrow phase and stable tie-break. No cache or quantized movement.
+func _cell_in_query_bounds(cell: Vector2i, start: Vector2i, finish: Vector2i, padding: int) -> bool:
+	if padding < 0: return true # Preserve defensive behavior for invalid callers.
+	var center := HexGrid.center(cell) + grid_origin
+	var x_margin := HexGrid.HALF_WIDTH + padding + 1
+	var y_margin := HexGrid.HALF_HEIGHT + padding + 1
+	return center.x + x_margin >= mini(start.x, finish.x) \
+		and center.x - x_margin <= maxi(start.x, finish.x) \
+		and center.y + y_margin >= mini(start.y, finish.y) \
+		and center.y - y_margin <= maxi(start.y, finish.y)

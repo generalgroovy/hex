@@ -1,0 +1,52 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+movement-checkpoint1: 8048 assertions, 0 failures
+FAIL: presentation snapshot accepts new fields
+FAIL: presentation snapshot restores
+FAIL: remote presentation field flight_capable (expected=true actual=false)
+FAIL: remote presentation field jumpsquat_active (expected=true actual=false)
+FAIL: remote presentation field jumpsquat_ticks (expected=25 actual=0)
+FAIL: remote presentation field double_jump_used (expected=true actual=false)
+FAIL: remote presentation field wallrun_armed (expected=false actual=true)
+movement-checkpoint1-integration: 151 assertions, 7 failures
+movement-checkpoint1-visuals: 823 assertions, 0 failures
+movement-checkpoint1-ground: 87 assertions, 0 failures
+hex-product-effects-unit-integration-pending: 36 assertions, 0 failures
+HEX WORLD PACKET: mode=ground bytes=10268 actors=12 flights=0 casts=32 products=0 reserved=32
+HEX WORLD PACKET: mode=flight bytes=15256 actors=12 flights=32 casts=32 products=0 reserved=32
+HEX WORLD PACKET: mode=products bytes=11696 actors=12 flights=1 casts=1 products=31 reserved=32
+hex-world-snapshot: 1466 assertions, 0 failures
+hex-chemistry: 1314 assertions, 0 failures
+conservatory-route: 3904 assertions, 0 failures
+movement-guide-model: 411 assertions, 0 failures
+FAIL: compact wall instruction retains full guide's execution and finite budget caveat
+movement-practice-coach: 249 assertions, 1 failures
+compact-combat-hud: 452 assertions, 0 failures
+jump-presentation: 1031 assertions, 0 failures
+FAIL: remote hex-clash feedback owns the explicit snapshot schema21 boundary (expected=21 actual=22)
+FAIL: cast provenance shares the current bounded snapshot schema (expected=21 actual=22)
+chemistry snapshot deposits=0 projectiles=128 reactions=32 raw_bytes=26612 fragments=8 largest_datagram=1324
+chemistry snapshot deposits=64 projectiles=64 reactions=32 raw_bytes=26356 fragments=7 largest_datagram=1324
+chemistry snapshot deposits=128 projectiles=0 reactions=32 raw_bytes=26100 fragments=6 largest_datagram=1324
+FAIL: trail role caps share the current snapshot schema (expected=21 actual=22)
+session-snapshot: 1717 assertions, 3 failures
+FAIL: 120 Hz jump grammar predicts immediately
+FAIL: physical airborne bounds reject air_vertical_velocity=520001
+FAIL: physical airborne bounds reject float_ticks=217
+FAIL: production inputs hold protected Float beyond one second
+FAIL: prediction respects the exact body-limited protected tick budget (expected=215 actual=0)
+FAIL: hard Float expiry while still held matches authority and returns to ground
+client-prediction: 11789 assertions, 6 failures
+movement-revision: 1590 assertions, 0 failures
+height direction (0, 1000) full=60011 tap=46933 full_ticks=86 tap_ticks=44 float=45600
+height direction (707, 707) full=60011 tap=46933 full_ticks=86 tap_ticks=44 float=45600
+height direction (1000, 0) full=60011 tap=46933 full_ticks=86 tap_ticks=44 float=45600
+height direction (707, -707) full=60011 tap=46933 full_ticks=86 tap_ticks=44 float=45600
+height direction (0, -1000) full=60011 tap=46933 full_ticks=86 tap_ticks=44 float=45600
+height direction (-707, -707) full=60011 tap=46933 full_ticks=86 tap_ticks=44 float=45600
+height direction (-1000, 0) full=60011 tap=46933 full_ticks=86 tap_ticks=44 float=45600
+height direction (-707, 707) full=60011 tap=46933 full_ticks=86 tap_ticks=44 float=45600
+movement-height: 12581 assertions, 0 failures
+FAIL: held jump maintenance resets accumulated recovery (expected=0 actual=360)
+movement-float: 18009 assertions, 1 failures
+FAIL: 18 assertion(s) failed

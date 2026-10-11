@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "character_id": "red_baron",
+  "character_name": "Red Baron",
+  "size_class": "Large",
+  "ancestry": "Undead",
+  "date": "2026-10-03",
+  "generation_mode": "built-in image_gen",
+  "generation_calls": 1,
+  "source_status": "SOURCE_CANDIDATE_NOT_HUMAN_ACCEPTED",
+  "source_file": "art_batches/pixel_actions_v1/source/red_baron/source.png",
+  "prompt_file": "art_batches/pixel_actions_v1/prompts/red_baron.md",
+  "generated_original": "C:/Users/sende/.codex/generated_images/01a100a5-21ee-75f0-8c4c-144db6aa8a89/exec-64983d22-f3cf-42a6-ac93-e4ab301a226f.png",
+  "source_sha256": "7a35a99337c304dd27bc653a009efae004440550ba15907e6c009d934db6fdb9",
+  "original_sha256": "7a35a99337c304dd27bc653a009efae004440550ba15907e6c009d934db6fdb9",
+  "original_preserved_unchanged": true,
+  "byte_length": 1298126,
+  "width": 1774,
+  "height": 887,
+  "pixel_format": "Format32bppArgb",
+  "alpha_pixels": {
+    "transparent": 1088430,
+    "partial": 483017,
+    "opaque": 2091
+  },
+  "requested_grid": {
+    "columns": 8,
+    "rows": 4,
+    "sprites": 32,
+    "directions": [
+      "S",
+      "SE",
+      "E",
+      "NE",
+      "N",
+      "NW",
+      "W",
+      "SW"
+    ],
+    "actions": [
+      "jumpsquat",
+      "rise",
+      "fall_feet_ready",
+      "compressed_landing"
+    ]
+  },
+  "reference_roles": [
+    {
+      "path": "assets/sprites/pixel_cast_v1/red_baron.png",
+      "role": "primary runtime identity proportions palette eight headings"
+    },
+    {
+      "path": "assets/sprites/fullbody_cast_v1/red_baron-detail.png",
+      "role": "costume profile rear support only"
+    },
+    {
+      "path": "C:/Users/sende/Pictures/styleref1.png",
+      "role": "pixel style only; not roster"
+    }
+  ],
+  "visual_review": {
+    "method": "source-size visual inspection of generated original; saved copy verified byte-identical",
+    "complete_grid": true,
+    "eight_facing_order": "visually matches requested sequence, including genuine rear quarters and back cape",
+    "identity": "bone crown and skull, broad charcoal/gold armor, crimson scarf/tabard/ragged cape preserved",
+    "row_actions": "bent planted anticipation, tucked airborne rise, extended feet-ready fall, visibly lower planted landing",
+    "visible_gross_defects": "none requiring targeted correction",
+    "extremities": "no obvious cropped crown spikes, hands, cape hems or boot toes; far-side limbs naturally overlap in profile/rear-quarter views",
+    "proportionality": "head remains relatively small versus substantial armored torso; exact native head/body continuity is not verified"
+  },
+  "known_issues": [
+    "Generated source contains extensive partial alpha; preserve original, with lead-owned deterministic alpha-threshold and hidden-RGB cleanup before assembly.",
+    "Natural armor/cape occlusion hides portions of far-side arms and rear-view legs; all limb attachment anatomy cannot be fully assessed from source-size review.",
+    "No exact pixel registration, native-scale skull/volume continuity, direction transitions or animation timing validation performed.",
+    "Four authored jump-chain keys only, not complete movement or casting cycles."
+  ],
+  "not_run": [
+    "runtime integration",
+    "Godot import",
+    "native-scale assembly",
+    "rendered-transition capture",
+    "full animation cycle testing",
+    "human acceptance"
+  ],
+  "human_accepted": false,
+  "ownership": "Only source/red_baron/source.png, source/red_baron/receipt.json and prompts/red_baron.md written."
+}

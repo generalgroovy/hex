@@ -1,0 +1,2097 @@
+{
+  "schema_version": 1,
+  "status": "measured",
+  "scope": "Actual named release EXE/PCK; engine one-second FPS observations include cold startup and output logging. Not a frame-present trace, input-latency measurement, GPU timer, or sustained casting certification. Twelve finite slot-1 attempts use ordinary cooldown/Flux rules; refusals and idle after sequence/expiry remain in the sample. No resource refill, app closure, or current-source engine is used. Requested --quit-after iterations are not seconds or verified displayed-frame counts; focus is not sampled.",
+  "pack_directory": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-smooth-20261010\\windows",
+  "output_directory": "C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-portable-final-v1",
+  "wrapper_sha256": "f289dd635f1d43d3476b85db4b677b1202daa27e0bfb68717ec5720aa5286c6b",
+  "expected_release_identity": {
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate.",
+    "build_id": "p60-d649c4d1d99c",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "protocol_version": 60,
+    "record_count": 3388,
+    "runtime_source_sha256": "d649c4d1d99c43bf422deb52c7dc18302fc4b3a048b3ce23a1208975fe78e7c9",
+    "schema_version": 1,
+    "scope_id": "production-runtime-source-v1",
+    "snapshot_schema": 24,
+    "status": "candidate_generated_not_promoted"
+  },
+  "payload_before": {
+    "exe_sha256": "04baf75cc1d69dd93eb709533ecab4fd7770bb8a530645717017a06a9d9809fc",
+    "pack_sha256": "605dbe49c6d47732ca6435f4c0ffaf8a3ac85f1a8d1f0c82415cc040b4461ca7",
+    "build_state_sha256": "a2db2ba19e58bf09d703fecbc60431775cd4f2786fc5fe912c2121bdf98a67dc"
+  },
+  "payload_after": {
+    "exe_sha256": "04baf75cc1d69dd93eb709533ecab4fd7770bb8a530645717017a06a9d9809fc",
+    "pack_sha256": "605dbe49c6d47732ca6435f4c0ffaf8a3ac85f1a8d1f0c82415cc040b4461ca7",
+    "build_state_sha256": "a2db2ba19e58bf09d703fecbc60431775cd4f2786fc5fe912c2121bdf98a67dc"
+  },
+  "payload_unchanged": true,
+  "available_memory_before": {
+    "observed_utc": "2026-10-10T02:27:41.6044540Z",
+    "available_mb": 977.96,
+    "error": null
+  },
+  "available_memory_after": {
+    "observed_utc": "2026-10-10T02:30:35.6947795Z",
+    "available_mb": 1152.04,
+    "error": null
+  },
+  "requested_cases": [
+    "hearth",
+    "garden-entry",
+    "paid-fire-bolt",
+    "paid-all-six-mantle"
+  ],
+  "cases": [
+    {
+      "case": "hearth",
+      "status": "measured",
+      "started_utc": "2026-10-10T02:27:41.6435861Z",
+      "process_wall_seconds": 42.4443485,
+      "engine_iterations_requested": 900,
+      "watchdog_seconds": 180,
+      "arguments": [
+        "--print-fps",
+        "--windowed",
+        "--resolution",
+        "1280x720",
+        "--quit-after",
+        "900",
+        "--",
+        "--fullbody-art",
+        "--pixel-cast",
+        "--no-lan-discovery",
+        "--capture-spawn=1536,880"
+      ],
+      "requested_spawn_px": [
+        1536,
+        880
+      ],
+      "requested_wire_id": 0,
+      "finite_sequence_attempts_requested": 0,
+      "admitted_cast_events": 0,
+      "refused_cast_events": 0,
+      "memory_before": {
+        "observed_utc": "2026-10-10T02:27:41.6432726Z",
+        "available_mb": 977.64,
+        "error": null
+      },
+      "memory_after": {
+        "observed_utc": "2026-10-10T02:28:24.1237645Z",
+        "available_mb": 1142.25,
+        "error": null
+      },
+      "stderr_bytes": 0,
+      "validation_errors": [],
+      "observations": {
+        "fps_summary": {
+          "sample_count": 25,
+          "mean_reported_fps": 33.12,
+          "minimum_reported_fps": 30.0,
+          "maximum_reported_fps": 44.0
+        },
+        "fps_samples": [
+          {
+            "line_number": 12,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 13,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 14,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 15,
+            "fps": 43.0,
+            "reported_mspf": 23.25,
+            "raw": "Project FPS: 43 (23.25 mspf)"
+          },
+          {
+            "line_number": 16,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 17,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 18,
+            "fps": 32.0,
+            "reported_mspf": 31.25,
+            "raw": "Project FPS: 32 (31.25 mspf)"
+          },
+          {
+            "line_number": 19,
+            "fps": 42.0,
+            "reported_mspf": 23.8,
+            "raw": "Project FPS: 42 (23.80 mspf)"
+          },
+          {
+            "line_number": 20,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 21,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 22,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 23,
+            "fps": 35.0,
+            "reported_mspf": 28.57,
+            "raw": "Project FPS: 35 (28.57 mspf)"
+          },
+          {
+            "line_number": 24,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 25,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 26,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 27,
+            "fps": 42.0,
+            "reported_mspf": 23.8,
+            "raw": "Project FPS: 42 (23.80 mspf)"
+          },
+          {
+            "line_number": 28,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 29,
+            "fps": 32.0,
+            "reported_mspf": 31.25,
+            "raw": "Project FPS: 32 (31.25 mspf)"
+          },
+          {
+            "line_number": 30,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 31,
+            "fps": 40.0,
+            "reported_mspf": 25.0,
+            "raw": "Project FPS: 40 (25.00 mspf)"
+          },
+          {
+            "line_number": 32,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 33,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 34,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 35,
+            "fps": 44.0,
+            "reported_mspf": 22.72,
+            "raw": "Project FPS: 44 (22.72 mspf)"
+          },
+          {
+            "line_number": 36,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          }
+        ],
+        "chemistry_observations": [],
+        "combat_observations": [],
+        "runtime_identities": [
+          {
+            "line_number": 8,
+            "build_id": "p60-d649c4d1d99c",
+            "runtime_source_sha256": "d649c4d1d99c43bf422deb52c7dc18302fc4b3a048b3ce23a1208975fe78e7c9"
+          }
+        ],
+        "parse_errors": []
+      },
+      "scope": "Actual named release EXE/PCK; engine one-second FPS observations include cold startup and output logging. Not a frame-present trace, input-latency measurement, GPU timer, or sustained casting certification. Twelve finite slot-1 attempts use ordinary cooldown/Flux rules; refusals and idle after sequence/expiry remain in the sample. No resource refill, app closure, or current-source engine is used. Requested --quit-after iterations are not seconds or verified displayed-frame counts; focus is not sampled."
+    },
+    {
+      "case": "garden-entry",
+      "status": "measured",
+      "started_utc": "2026-10-10T02:28:24.6950451Z",
+      "process_wall_seconds": 40.7730131,
+      "engine_iterations_requested": 900,
+      "watchdog_seconds": 180,
+      "arguments": [
+        "--print-fps",
+        "--windowed",
+        "--resolution",
+        "1280x720",
+        "--quit-after",
+        "900",
+        "--",
+        "--fullbody-art",
+        "--pixel-cast",
+        "--no-lan-discovery",
+        "--capture-spawn=4880,720"
+      ],
+      "requested_spawn_px": [
+        4880,
+        720
+      ],
+      "requested_wire_id": 0,
+      "finite_sequence_attempts_requested": 0,
+      "admitted_cast_events": 0,
+      "refused_cast_events": 0,
+      "memory_before": {
+        "observed_utc": "2026-10-10T02:28:24.6948063Z",
+        "available_mb": 1147.37,
+        "error": null
+      },
+      "memory_after": {
+        "observed_utc": "2026-10-10T02:29:05.5059308Z",
+        "available_mb": 1135.15,
+        "error": null
+      },
+      "stderr_bytes": 0,
+      "validation_errors": [],
+      "observations": {
+        "fps_summary": {
+          "sample_count": 26,
+          "mean_reported_fps": 32.92307692307692,
+          "minimum_reported_fps": 29.0,
+          "maximum_reported_fps": 47.0
+        },
+        "fps_samples": [
+          {
+            "line_number": 12,
+            "fps": 29.0,
+            "reported_mspf": 34.48,
+            "raw": "Project FPS: 29 (34.48 mspf)"
+          },
+          {
+            "line_number": 13,
+            "fps": 29.0,
+            "reported_mspf": 34.48,
+            "raw": "Project FPS: 29 (34.48 mspf)"
+          },
+          {
+            "line_number": 14,
+            "fps": 40.0,
+            "reported_mspf": 25.0,
+            "raw": "Project FPS: 40 (25.00 mspf)"
+          },
+          {
+            "line_number": 15,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 16,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 17,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 18,
+            "fps": 39.0,
+            "reported_mspf": 25.64,
+            "raw": "Project FPS: 39 (25.64 mspf)"
+          },
+          {
+            "line_number": 19,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 20,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 21,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 22,
+            "fps": 46.0,
+            "reported_mspf": 21.73,
+            "raw": "Project FPS: 46 (21.73 mspf)"
+          },
+          {
+            "line_number": 23,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 24,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 25,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 26,
+            "fps": 36.0,
+            "reported_mspf": 27.77,
+            "raw": "Project FPS: 36 (27.77 mspf)"
+          },
+          {
+            "line_number": 27,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 28,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 29,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 30,
+            "fps": 42.0,
+            "reported_mspf": 23.8,
+            "raw": "Project FPS: 42 (23.80 mspf)"
+          },
+          {
+            "line_number": 31,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 32,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 33,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 34,
+            "fps": 47.0,
+            "reported_mspf": 21.27,
+            "raw": "Project FPS: 47 (21.27 mspf)"
+          },
+          {
+            "line_number": 35,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 36,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 37,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          }
+        ],
+        "chemistry_observations": [],
+        "combat_observations": [],
+        "runtime_identities": [
+          {
+            "line_number": 8,
+            "build_id": "p60-d649c4d1d99c",
+            "runtime_source_sha256": "d649c4d1d99c43bf422deb52c7dc18302fc4b3a048b3ce23a1208975fe78e7c9"
+          }
+        ],
+        "parse_errors": []
+      },
+      "scope": "Actual named release EXE/PCK; engine one-second FPS observations include cold startup and output logging. Not a frame-present trace, input-latency measurement, GPU timer, or sustained casting certification. Twelve finite slot-1 attempts use ordinary cooldown/Flux rules; refusals and idle after sequence/expiry remain in the sample. No resource refill, app closure, or current-source engine is used. Requested --quit-after iterations are not seconds or verified displayed-frame counts; focus is not sampled."
+    },
+    {
+      "case": "paid-fire-bolt",
+      "status": "measured",
+      "started_utc": "2026-10-10T02:29:05.9291298Z",
+      "process_wall_seconds": 42.7981543,
+      "engine_iterations_requested": 900,
+      "watchdog_seconds": 180,
+      "arguments": [
+        "--print-fps",
+        "--windowed",
+        "--resolution",
+        "1280x720",
+        "--quit-after",
+        "900",
+        "--",
+        "--fullbody-art",
+        "--pixel-cast",
+        "--no-lan-discovery",
+        "--capture-spawn=1536,880",
+        "--capture-pointer=1736,880",
+        "--capture-spell-wires=145",
+        "--capture-cast-slot=1",
+        "--capture-spell-sequence=1,1,1,1,1,1,1,1,1,1,1,1"
+      ],
+      "requested_spawn_px": [
+        1536,
+        880
+      ],
+      "requested_wire_id": 145,
+      "finite_sequence_attempts_requested": 12,
+      "admitted_cast_events": 12,
+      "refused_cast_events": 0,
+      "memory_before": {
+        "observed_utc": "2026-10-10T02:29:05.9290124Z",
+        "available_mb": 1123.0,
+        "error": null
+      },
+      "memory_after": {
+        "observed_utc": "2026-10-10T02:29:48.7939137Z",
+        "available_mb": 952.35,
+        "error": null
+      },
+      "stderr_bytes": 0,
+      "validation_errors": [],
+      "observations": {
+        "fps_summary": {
+          "sample_count": 28,
+          "mean_reported_fps": 30.285714285714285,
+          "minimum_reported_fps": 14.0,
+          "maximum_reported_fps": 50.0
+        },
+        "fps_samples": [
+          {
+            "line_number": 38,
+            "fps": 19.0,
+            "reported_mspf": 52.63,
+            "raw": "Project FPS: 19 (52.63 mspf)"
+          },
+          {
+            "line_number": 49,
+            "fps": 15.0,
+            "reported_mspf": 66.66,
+            "raw": "Project FPS: 15 (66.66 mspf)"
+          },
+          {
+            "line_number": 51,
+            "fps": 14.0,
+            "reported_mspf": 71.42,
+            "raw": "Project FPS: 14 (71.42 mspf)"
+          },
+          {
+            "line_number": 52,
+            "fps": 14.0,
+            "reported_mspf": 71.42,
+            "raw": "Project FPS: 14 (71.42 mspf)"
+          },
+          {
+            "line_number": 53,
+            "fps": 14.0,
+            "reported_mspf": 71.42,
+            "raw": "Project FPS: 14 (71.42 mspf)"
+          },
+          {
+            "line_number": 54,
+            "fps": 26.0,
+            "reported_mspf": 38.46,
+            "raw": "Project FPS: 26 (38.46 mspf)"
+          },
+          {
+            "line_number": 55,
+            "fps": 29.0,
+            "reported_mspf": 34.48,
+            "raw": "Project FPS: 29 (34.48 mspf)"
+          },
+          {
+            "line_number": 56,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 57,
+            "fps": 29.0,
+            "reported_mspf": 34.48,
+            "raw": "Project FPS: 29 (34.48 mspf)"
+          },
+          {
+            "line_number": 58,
+            "fps": 24.0,
+            "reported_mspf": 41.66,
+            "raw": "Project FPS: 24 (41.66 mspf)"
+          },
+          {
+            "line_number": 59,
+            "fps": 37.0,
+            "reported_mspf": 27.02,
+            "raw": "Project FPS: 37 (27.02 mspf)"
+          },
+          {
+            "line_number": 60,
+            "fps": 33.0,
+            "reported_mspf": 30.3,
+            "raw": "Project FPS: 33 (30.30 mspf)"
+          },
+          {
+            "line_number": 61,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 62,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 63,
+            "fps": 50.0,
+            "reported_mspf": 20.0,
+            "raw": "Project FPS: 50 (20.00 mspf)"
+          },
+          {
+            "line_number": 64,
+            "fps": 32.0,
+            "reported_mspf": 31.25,
+            "raw": "Project FPS: 32 (31.25 mspf)"
+          },
+          {
+            "line_number": 65,
+            "fps": 32.0,
+            "reported_mspf": 31.25,
+            "raw": "Project FPS: 32 (31.25 mspf)"
+          },
+          {
+            "line_number": 66,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 67,
+            "fps": 45.0,
+            "reported_mspf": 22.22,
+            "raw": "Project FPS: 45 (22.22 mspf)"
+          },
+          {
+            "line_number": 68,
+            "fps": 33.0,
+            "reported_mspf": 30.3,
+            "raw": "Project FPS: 33 (30.30 mspf)"
+          },
+          {
+            "line_number": 69,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 70,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 71,
+            "fps": 49.0,
+            "reported_mspf": 20.4,
+            "raw": "Project FPS: 49 (20.40 mspf)"
+          },
+          {
+            "line_number": 72,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 73,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 74,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 75,
+            "fps": 46.0,
+            "reported_mspf": 21.73,
+            "raw": "Project FPS: 46 (21.73 mspf)"
+          },
+          {
+            "line_number": 76,
+            "fps": 35.0,
+            "reported_mspf": 28.57,
+            "raw": "Project FPS: 35 (28.57 mspf)"
+          }
+        ],
+        "chemistry_observations": [],
+        "combat_observations": [
+          {
+            "line_number": 13,
+            "simulation_tick": 2,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 2 pending 145/8 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 14,
+            "simulation_tick": 10,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1000,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 10 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1000,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 15,
+            "simulation_tick": 34,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 34 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 16,
+            "simulation_tick": 42,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1001,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 42 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1001,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 17,
+            "simulation_tick": 63,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_position": "(1736000, 880000)",
+                "projectile_id": 1000,
+                "type": "projectile_expired",
+                "wall_id": 0
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 63 pending 0/0 projectiles 1 fields 0 events [{\"contact_position\":\"(1736000, 880000)\",\"projectile_id\":1000,\"type\":\"projectile_expired\",\"wall_id\":0}]"
+          },
+          {
+            "line_number": 18,
+            "simulation_tick": 66,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 66 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 19,
+            "simulation_tick": 74,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1002,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 74 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1002,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 20,
+            "simulation_tick": 81,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_kind": "field",
+                "contact_quantization_outside": false,
+                "field_source_id": 1000,
+                "first_remaining": 0,
+                "matched_strength": 5,
+                "other_wire_id": 145,
+                "owner_id": 1,
+                "projectile_id": 1001,
+                "reaction_id": 1,
+                "recipe_wire_id": 309,
+                "second_remaining": 0,
+                "source_wire_id": 145,
+                "type": "hex_clash",
+                "x": 1691751,
+                "y": 880000
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 81 pending 0/0 projectiles 1 fields 0 events [{\"contact_kind\":\"field\",\"contact_quantization_outside\":false,\"field_source_id\":1000,\"first_remaining\":0,\"matched_strength\":5,\"other_wire_id\":145,\"owner_id\":1,\"projectile_id\":1001,\"reaction_id\":1,\"recipe_wire_id\":309,\"second_remaining\":0,\"source_wire_id\":145,\"type\":\"hex_clash\",\"x\":1691751,\"y\":880000}]"
+          },
+          {
+            "line_number": 21,
+            "simulation_tick": 98,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 98 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 22,
+            "simulation_tick": 106,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1003,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 106 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1003,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 23,
+            "simulation_tick": 127,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_position": "(1736000, 880000)",
+                "projectile_id": 1002,
+                "type": "projectile_expired",
+                "wall_id": 0
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 127 pending 0/0 projectiles 1 fields 0 events [{\"contact_position\":\"(1736000, 880000)\",\"projectile_id\":1002,\"type\":\"projectile_expired\",\"wall_id\":0}]"
+          },
+          {
+            "line_number": 24,
+            "simulation_tick": 130,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 130 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 25,
+            "simulation_tick": 138,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1004,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 138 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1004,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 26,
+            "simulation_tick": 145,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_kind": "field",
+                "contact_quantization_outside": false,
+                "field_source_id": 1002,
+                "first_remaining": 0,
+                "matched_strength": 5,
+                "other_wire_id": 145,
+                "owner_id": 1,
+                "projectile_id": 1003,
+                "reaction_id": 2,
+                "recipe_wire_id": 309,
+                "second_remaining": 0,
+                "source_wire_id": 145,
+                "type": "hex_clash",
+                "x": 1691751,
+                "y": 880000
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 145 pending 0/0 projectiles 1 fields 0 events [{\"contact_kind\":\"field\",\"contact_quantization_outside\":false,\"field_source_id\":1002,\"first_remaining\":0,\"matched_strength\":5,\"other_wire_id\":145,\"owner_id\":1,\"projectile_id\":1003,\"reaction_id\":2,\"recipe_wire_id\":309,\"second_remaining\":0,\"source_wire_id\":145,\"type\":\"hex_clash\",\"x\":1691751,\"y\":880000}]"
+          },
+          {
+            "line_number": 27,
+            "simulation_tick": 162,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 162 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 28,
+            "simulation_tick": 170,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1005,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 170 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1005,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 29,
+            "simulation_tick": 191,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_position": "(1736000, 880000)",
+                "projectile_id": 1004,
+                "type": "projectile_expired",
+                "wall_id": 0
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 191 pending 0/0 projectiles 1 fields 0 events [{\"contact_position\":\"(1736000, 880000)\",\"projectile_id\":1004,\"type\":\"projectile_expired\",\"wall_id\":0}]"
+          },
+          {
+            "line_number": 30,
+            "simulation_tick": 194,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 194 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 31,
+            "simulation_tick": 202,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1006,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 202 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1006,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 32,
+            "simulation_tick": 209,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_kind": "field",
+                "contact_quantization_outside": false,
+                "field_source_id": 1004,
+                "first_remaining": 0,
+                "matched_strength": 5,
+                "other_wire_id": 145,
+                "owner_id": 1,
+                "projectile_id": 1005,
+                "reaction_id": 3,
+                "recipe_wire_id": 309,
+                "second_remaining": 0,
+                "source_wire_id": 145,
+                "type": "hex_clash",
+                "x": 1691751,
+                "y": 880000
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 209 pending 0/0 projectiles 1 fields 0 events [{\"contact_kind\":\"field\",\"contact_quantization_outside\":false,\"field_source_id\":1004,\"first_remaining\":0,\"matched_strength\":5,\"other_wire_id\":145,\"owner_id\":1,\"projectile_id\":1005,\"reaction_id\":3,\"recipe_wire_id\":309,\"second_remaining\":0,\"source_wire_id\":145,\"type\":\"hex_clash\",\"x\":1691751,\"y\":880000}]"
+          },
+          {
+            "line_number": 33,
+            "simulation_tick": 226,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 226 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 34,
+            "simulation_tick": 234,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1007,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 234 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1007,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 35,
+            "simulation_tick": 255,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_position": "(1736000, 880000)",
+                "projectile_id": 1006,
+                "type": "projectile_expired",
+                "wall_id": 0
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 255 pending 0/0 projectiles 1 fields 0 events [{\"contact_position\":\"(1736000, 880000)\",\"projectile_id\":1006,\"type\":\"projectile_expired\",\"wall_id\":0}]"
+          },
+          {
+            "line_number": 36,
+            "simulation_tick": 258,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 258 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 37,
+            "simulation_tick": 266,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1008,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 266 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1008,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 39,
+            "simulation_tick": 273,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_kind": "field",
+                "contact_quantization_outside": false,
+                "field_source_id": 1006,
+                "first_remaining": 0,
+                "matched_strength": 5,
+                "other_wire_id": 145,
+                "owner_id": 1,
+                "projectile_id": 1007,
+                "reaction_id": 4,
+                "recipe_wire_id": 309,
+                "second_remaining": 0,
+                "source_wire_id": 145,
+                "type": "hex_clash",
+                "x": 1691751,
+                "y": 880000
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 273 pending 0/0 projectiles 1 fields 0 events [{\"contact_kind\":\"field\",\"contact_quantization_outside\":false,\"field_source_id\":1006,\"first_remaining\":0,\"matched_strength\":5,\"other_wire_id\":145,\"owner_id\":1,\"projectile_id\":1007,\"reaction_id\":4,\"recipe_wire_id\":309,\"second_remaining\":0,\"source_wire_id\":145,\"type\":\"hex_clash\",\"x\":1691751,\"y\":880000}]"
+          },
+          {
+            "line_number": 40,
+            "simulation_tick": 290,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 290 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 41,
+            "simulation_tick": 298,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1009,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 298 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1009,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 42,
+            "simulation_tick": 319,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_position": "(1736000, 880000)",
+                "projectile_id": 1008,
+                "type": "projectile_expired",
+                "wall_id": 0
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 319 pending 0/0 projectiles 1 fields 0 events [{\"contact_position\":\"(1736000, 880000)\",\"projectile_id\":1008,\"type\":\"projectile_expired\",\"wall_id\":0}]"
+          },
+          {
+            "line_number": 43,
+            "simulation_tick": 322,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 322 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 44,
+            "simulation_tick": 330,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1010,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 330 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1010,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 45,
+            "simulation_tick": 337,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_kind": "field",
+                "contact_quantization_outside": false,
+                "field_source_id": 1008,
+                "first_remaining": 0,
+                "matched_strength": 5,
+                "other_wire_id": 145,
+                "owner_id": 1,
+                "projectile_id": 1009,
+                "reaction_id": 5,
+                "recipe_wire_id": 309,
+                "second_remaining": 0,
+                "source_wire_id": 145,
+                "type": "hex_clash",
+                "x": 1691751,
+                "y": 880000
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 337 pending 0/0 projectiles 1 fields 0 events [{\"contact_kind\":\"field\",\"contact_quantization_outside\":false,\"field_source_id\":1008,\"first_remaining\":0,\"matched_strength\":5,\"other_wire_id\":145,\"owner_id\":1,\"projectile_id\":1009,\"reaction_id\":5,\"recipe_wire_id\":309,\"second_remaining\":0,\"source_wire_id\":145,\"type\":\"hex_clash\",\"x\":1691751,\"y\":880000}]"
+          },
+          {
+            "line_number": 46,
+            "simulation_tick": 354,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 354 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 47,
+            "simulation_tick": 362,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1011,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 362 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1011,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 48,
+            "simulation_tick": 383,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_position": "(1736000, 880000)",
+                "projectile_id": 1010,
+                "type": "projectile_expired",
+                "wall_id": 0
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 383 pending 0/0 projectiles 1 fields 0 events [{\"contact_position\":\"(1736000, 880000)\",\"projectile_id\":1010,\"type\":\"projectile_expired\",\"wall_id\":0}]"
+          },
+          {
+            "line_number": 50,
+            "simulation_tick": 401,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_kind": "field",
+                "contact_quantization_outside": false,
+                "field_source_id": 1010,
+                "first_remaining": 0,
+                "matched_strength": 5,
+                "other_wire_id": 145,
+                "owner_id": 1,
+                "projectile_id": 1011,
+                "reaction_id": 6,
+                "recipe_wire_id": 309,
+                "second_remaining": 0,
+                "source_wire_id": 145,
+                "type": "hex_clash",
+                "x": 1691751,
+                "y": 880000
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 401 pending 0/0 projectiles 0 fields 0 events [{\"contact_kind\":\"field\",\"contact_quantization_outside\":false,\"field_source_id\":1010,\"first_remaining\":0,\"matched_strength\":5,\"other_wire_id\":145,\"owner_id\":1,\"projectile_id\":1011,\"reaction_id\":6,\"recipe_wire_id\":309,\"second_remaining\":0,\"source_wire_id\":145,\"type\":\"hex_clash\",\"x\":1691751,\"y\":880000}]"
+          }
+        ],
+        "runtime_identities": [
+          {
+            "line_number": 8,
+            "build_id": "p60-d649c4d1d99c",
+            "runtime_source_sha256": "d649c4d1d99c43bf422deb52c7dc18302fc4b3a048b3ce23a1208975fe78e7c9"
+          }
+        ],
+        "parse_errors": []
+      },
+      "scope": "Actual named release EXE/PCK; engine one-second FPS observations include cold startup and output logging. Not a frame-present trace, input-latency measurement, GPU timer, or sustained casting certification. Twelve finite slot-1 attempts use ordinary cooldown/Flux rules; refusals and idle after sequence/expiry remain in the sample. No resource refill, app closure, or current-source engine is used. Requested --quit-after iterations are not seconds or verified displayed-frame counts; focus is not sampled."
+    },
+    {
+      "case": "paid-all-six-mantle",
+      "status": "measured",
+      "started_utc": "2026-10-10T02:29:49.2525429Z",
+      "process_wall_seconds": 45.9376522,
+      "engine_iterations_requested": 900,
+      "watchdog_seconds": 180,
+      "arguments": [
+        "--print-fps",
+        "--windowed",
+        "--resolution",
+        "1280x720",
+        "--quit-after",
+        "900",
+        "--",
+        "--fullbody-art",
+        "--pixel-cast",
+        "--no-lan-discovery",
+        "--capture-spawn=1536,880",
+        "--capture-pointer=1736,880",
+        "--capture-spell-wires=1319",
+        "--capture-cast-slot=1",
+        "--capture-spell-sequence=1,1,1,1,1,1,1,1,1,1,1,1"
+      ],
+      "requested_spawn_px": [
+        1536,
+        880
+      ],
+      "requested_wire_id": 1319,
+      "finite_sequence_attempts_requested": 12,
+      "admitted_cast_events": 12,
+      "refused_cast_events": 0,
+      "memory_before": {
+        "observed_utc": "2026-10-10T02:29:49.2524609Z",
+        "available_mb": 970.99,
+        "error": null
+      },
+      "memory_after": {
+        "observed_utc": "2026-10-10T02:30:35.2211280Z",
+        "available_mb": 1175.68,
+        "error": null
+      },
+      "stderr_bytes": 0,
+      "validation_errors": [],
+      "observations": {
+        "fps_summary": {
+          "sample_count": 30,
+          "mean_reported_fps": 28.1,
+          "minimum_reported_fps": 19.0,
+          "maximum_reported_fps": 49.0
+        },
+        "fps_samples": [
+          {
+            "line_number": 17,
+            "fps": 27.0,
+            "reported_mspf": 37.03,
+            "raw": "Project FPS: 27 (37.03 mspf)"
+          },
+          {
+            "line_number": 20,
+            "fps": 29.0,
+            "reported_mspf": 34.48,
+            "raw": "Project FPS: 29 (34.48 mspf)"
+          },
+          {
+            "line_number": 21,
+            "fps": 29.0,
+            "reported_mspf": 34.48,
+            "raw": "Project FPS: 29 (34.48 mspf)"
+          },
+          {
+            "line_number": 24,
+            "fps": 19.0,
+            "reported_mspf": 52.63,
+            "raw": "Project FPS: 19 (52.63 mspf)"
+          },
+          {
+            "line_number": 25,
+            "fps": 24.0,
+            "reported_mspf": 41.66,
+            "raw": "Project FPS: 24 (41.66 mspf)"
+          },
+          {
+            "line_number": 28,
+            "fps": 23.0,
+            "reported_mspf": 43.47,
+            "raw": "Project FPS: 23 (43.47 mspf)"
+          },
+          {
+            "line_number": 31,
+            "fps": 21.0,
+            "reported_mspf": 47.61,
+            "raw": "Project FPS: 21 (47.61 mspf)"
+          },
+          {
+            "line_number": 32,
+            "fps": 23.0,
+            "reported_mspf": 43.47,
+            "raw": "Project FPS: 23 (43.47 mspf)"
+          },
+          {
+            "line_number": 35,
+            "fps": 20.0,
+            "reported_mspf": 50.0,
+            "raw": "Project FPS: 20 (50.00 mspf)"
+          },
+          {
+            "line_number": 37,
+            "fps": 25.0,
+            "reported_mspf": 40.0,
+            "raw": "Project FPS: 25 (40.00 mspf)"
+          },
+          {
+            "line_number": 39,
+            "fps": 25.0,
+            "reported_mspf": 40.0,
+            "raw": "Project FPS: 25 (40.00 mspf)"
+          },
+          {
+            "line_number": 42,
+            "fps": 25.0,
+            "reported_mspf": 40.0,
+            "raw": "Project FPS: 25 (40.00 mspf)"
+          },
+          {
+            "line_number": 43,
+            "fps": 26.0,
+            "reported_mspf": 38.46,
+            "raw": "Project FPS: 26 (38.46 mspf)"
+          },
+          {
+            "line_number": 46,
+            "fps": 22.0,
+            "reported_mspf": 45.45,
+            "raw": "Project FPS: 22 (45.45 mspf)"
+          },
+          {
+            "line_number": 49,
+            "fps": 24.0,
+            "reported_mspf": 41.66,
+            "raw": "Project FPS: 24 (41.66 mspf)"
+          },
+          {
+            "line_number": 50,
+            "fps": 26.0,
+            "reported_mspf": 38.46,
+            "raw": "Project FPS: 26 (38.46 mspf)"
+          },
+          {
+            "line_number": 53,
+            "fps": 20.0,
+            "reported_mspf": 50.0,
+            "raw": "Project FPS: 20 (50.00 mspf)"
+          },
+          {
+            "line_number": 54,
+            "fps": 23.0,
+            "reported_mspf": 43.47,
+            "raw": "Project FPS: 23 (43.47 mspf)"
+          },
+          {
+            "line_number": 55,
+            "fps": 29.0,
+            "reported_mspf": 34.48,
+            "raw": "Project FPS: 29 (34.48 mspf)"
+          },
+          {
+            "line_number": 56,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 57,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 58,
+            "fps": 43.0,
+            "reported_mspf": 23.25,
+            "raw": "Project FPS: 43 (23.25 mspf)"
+          },
+          {
+            "line_number": 59,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 60,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 61,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 62,
+            "fps": 49.0,
+            "reported_mspf": 20.4,
+            "raw": "Project FPS: 49 (20.40 mspf)"
+          },
+          {
+            "line_number": 63,
+            "fps": 30.0,
+            "reported_mspf": 33.33,
+            "raw": "Project FPS: 30 (33.33 mspf)"
+          },
+          {
+            "line_number": 64,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 65,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 66,
+            "fps": 49.0,
+            "reported_mspf": 20.4,
+            "raw": "Project FPS: 49 (20.40 mspf)"
+          }
+        ],
+        "chemistry_observations": [],
+        "combat_observations": [
+          {
+            "line_number": 13,
+            "simulation_tick": 2,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 2 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 14,
+            "simulation_tick": 14,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1000,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 14 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1000,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 15,
+            "simulation_tick": 195,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 195 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 16,
+            "simulation_tick": 207,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1001,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 207 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1001,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 18,
+            "simulation_tick": 388,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 388 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 19,
+            "simulation_tick": 400,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1002,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 400 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1002,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 22,
+            "simulation_tick": 581,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 581 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 23,
+            "simulation_tick": 593,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1003,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 593 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1003,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 26,
+            "simulation_tick": 774,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 774 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 27,
+            "simulation_tick": 786,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1004,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 786 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1004,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 29,
+            "simulation_tick": 967,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 967 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 30,
+            "simulation_tick": 979,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1005,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 979 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1005,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 33,
+            "simulation_tick": 1160,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1160 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 34,
+            "simulation_tick": 1172,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1006,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1172 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1006,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 36,
+            "simulation_tick": 1353,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1353 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 38,
+            "simulation_tick": 1365,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1007,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1365 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1007,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 40,
+            "simulation_tick": 1546,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1546 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 41,
+            "simulation_tick": 1558,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1008,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1558 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1008,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 44,
+            "simulation_tick": 1739,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1739 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 45,
+            "simulation_tick": 1751,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1009,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1751 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1009,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 47,
+            "simulation_tick": 1932,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1932 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 48,
+            "simulation_tick": 1944,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1010,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1944 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1010,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 51,
+            "simulation_tick": 2125,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 2125 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 52,
+            "simulation_tick": 2137,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1011,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 2137 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1011,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          }
+        ],
+        "runtime_identities": [
+          {
+            "line_number": 8,
+            "build_id": "p60-d649c4d1d99c",
+            "runtime_source_sha256": "d649c4d1d99c43bf422deb52c7dc18302fc4b3a048b3ce23a1208975fe78e7c9"
+          }
+        ],
+        "parse_errors": []
+      },
+      "scope": "Actual named release EXE/PCK; engine one-second FPS observations include cold startup and output logging. Not a frame-present trace, input-latency measurement, GPU timer, or sustained casting certification. Twelve finite slot-1 attempts use ordinary cooldown/Flux rules; refusals and idle after sequence/expiry remain in the sample. No resource refill, app closure, or current-source engine is used. Requested --quit-after iterations are not seconds or verified displayed-frame counts; focus is not sampled."
+    }
+  ],
+  "error": null
+}

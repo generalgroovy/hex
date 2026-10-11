@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "handoff_id": "FLUX-VFX-v1",
+  "status": "STATIC_VERIFIED",
+  "scope": "Offline package and component checks only. No game or human acceptance.",
+  "environment": {
+    "python": "3.13.5",
+    "pillow": "12.3.0",
+    "playwright": "1.57.0",
+    "node": "v22.16.0",
+    "chromium": "144.0.7559.96"
+  },
+  "checks": [
+    {
+      "name": "Input integrity / preserved source",
+      "status": "STATIC_VERIFIED",
+      "result": "PASS",
+      "records": 63,
+      "source_files_changed": 0,
+      "evidence": "evidence/input-integrity.json"
+    },
+    {
+      "name": "Python pixel/asset/data tests",
+      "status": "STATIC_VERIFIED",
+      "result": "PASS",
+      "tests": 18,
+      "evidence": "evidence/asset-tests.txt"
+    },
+    {
+      "name": "Node geometry/semantic tests",
+      "status": "STATIC_VERIFIED",
+      "result": "PASS",
+      "tests": 26,
+      "evidence": "evidence/geometry-tests.txt"
+    },
+    {
+      "name": "Python and JavaScript syntax",
+      "status": "STATIC_VERIFIED",
+      "result": "PASS",
+      "method": "ast.parse all .py; node --check preview/*.js"
+    },
+    {
+      "name": "Chromium offline component rendering",
+      "status": "STATIC_VERIFIED",
+      "result": "PASS",
+      "state_combinations": 432,
+      "checks_passed": 13,
+      "console_errors": 0,
+      "remote_requests": 0,
+      "evidence": "evidence/browser-checks.json"
+    },
+    {
+      "name": "Normal/reduced raster support masks",
+      "status": "STATIC_VERIFIED",
+      "result": "PASS",
+      "comparisons": 27,
+      "evidence": "evidence/browser-checks.json"
+    },
+    {
+      "name": "Opaque actor pixels above mixed ground materials",
+      "status": "STATIC_VERIFIED",
+      "result": "PASS",
+      "comparisons": 48,
+      "scope": "Before own aim/projectile overlays; three source base-sheet sizes x eight facings x two modes",
+      "evidence": "evidence/browser-checks.json"
+    },
+    {
+      "name": "Package inventory / file hashes / local links",
+      "status": "STATIC_VERIFIED",
+      "result": "PASS",
+      "evidence": "evidence/package-check.json"
+    },
+    {
+      "name": "Direct file-URL browser navigation",
+      "status": "NOT_RUN",
+      "result": "BLOCKED_BY_ENVIRONMENT",
+      "alternative": "Self-contained HTML fed to Chromium using Playwright set_content",
+      "evidence": "evidence/file-url-blocked.txt"
+    },
+    {
+      "name": "Animated lifecycle reference export",
+      "status": "OFFLINE_PREVIEW",
+      "result": "GENERATED",
+      "files": 2,
+      "frames_per_file": 96,
+      "duration_ms": 6400,
+      "evidence": "evidence/motion-preview.json"
+    },
+    {
+      "name": "Godot import / integration / actual gameplay capture",
+      "status": "NOT_RUN"
+    },
+    {
+      "name": "Full gate / physics / protocol / network",
+      "status": "NOT_RUN"
+    },
+    {
+      "name": "Rendered performance / GPU allocation / human review",
+      "status": "NOT_RUN"
+    }
+  ],
+  "file_url_limitation": "preview-standalone.html fed via Playwright set_content; file URL blocked by sandbox policy",
+  "visual_review": {
+    "reviewer": "assistant, not a human acceptance",
+    "kind": "selected output images and source images inspected",
+    "files": [
+      "boards/normal-100.png",
+      "boards/reduced-50.png",
+      "boards/paintover-normal-1280x720.png",
+      "boards/lifecycle-normal.png",
+      "boards/stress-fixture.png"
+    ],
+    "limit": "Sampling and pixel checks do not prove all gameplay-camera/frame/motion combinations readable."
+  },
+  "historical_input_results": "Reported p53/Full results remain historical and were not rerun.",
+  "human_acceptance": "NOT_RUN",
+  "godot": "NOT_RUN",
+  "source_checkout_mutated": false
+}

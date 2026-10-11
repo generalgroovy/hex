@@ -1,0 +1,55 @@
+{
+  "id": "fimu_yashiha",
+  "display_name": "Mifu",
+  "race": "treefolk",
+  "status": "source_ready_for_lead_review",
+  "generation_tool": "built-in image_gen",
+  "attempts": 2,
+  "generated_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-3caf-7f02-8030-e4d35e2365b4\\exec-132a5f6f-af95-4264-9f04-33264ec46783.png",
+  "prior_generated_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-3caf-7f02-8030-e4d35e2365b4\\exec-1aa20c51-855f-48c6-a8d3-89e9ace454bf.png",
+  "reference_paths": [
+    "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/fimu_yashiha-detail.png",
+    "C:/Users/sende/Pictures/styleref1.png",
+    "C:/Users/sende/Projects/hex/art_batches/pixel_body_pilot_v1/source/s-wayne.png"
+  ],
+  "observed_columns": 8,
+  "observed_rows": 4,
+  "source_row_mapping": {
+    "idle": 0,
+    "walk_left_contact": 1,
+    "walk_right_contact": 2,
+    "cast": 3
+  },
+  "directions": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "dimensions": [
+    1774,
+    887
+  ],
+  "inspection": {
+    "directions": "Eight clear views; rear3 show foliage/back head with no frontal eyes. Side head edge can show brown ear/cheek, not frontal eye.",
+    "contacts": "Correction clearly reverses front root-foot and opposing arm. Other contacts differ in leg/arm pose; exact E/W near/far reversal and north under foliage need animated review.",
+    "whole_bodies": "32 complete bodies with coherent autumn foliage/daisies, bark skin, teal tabard and root feet.",
+    "cast": "Both hands together forward; side/rear orientation and foliage occlusion coherent."
+  },
+  "alpha_check": {
+    "format": "RGBA",
+    "corner_alpha": 0,
+    "gutter_alpha": 0
+  },
+  "visual_issues": [
+    "E/W/north foot identity partially occluded; final animation review required.",
+    "Fine red/gold/green outer fringe."
+  ],
+  "prompt": "Use case: stylized-concept. Asset: fixed-pixel game sprite atlas on genuinely transparent RGBA.\nReferences: image 1 is exact character identity and clothing; image 2 is retro pixel style only (ignore its old names); image 3 is compact common-head/body proportions and readable charming finish only, NOT its row count.\nMake exactly 32 whole-body sprites in exactly 8 equal columns by 4 equal rows. Generous empty transparent gutters, identical size and baseline, feet/hair/appendages fully intact in each cell. Coarse clean pixel clusters, crisp limited-palette outlines, compact modest charming proportions matching image 3; no painterly smoothing.\nEVERY row column order: S front, SE front/right45, E right profile, NE back/right45, N straight back, NW back/left45, W left profile, SW front/left45. NE/N/NW show the back of the head with NO frontal eyes. Torso and feet rotate with head. Eight unmistakably distinct directions.\nRows only: 0 idle standing; 1 walk contact with LEFT foot forward and RIGHT arm forward; 2 opposite walk contact RIGHT foot forward and LEFT arm forward, genuinely alternating feet not duplicated poses; 3 planted stance, BOTH EMPTY hands forward casting, no magic. Never add a fifth row.\nMaintain exact face, costume, anatomy and palette in all32 frames. No staves, weapons, held objects, ground shadows, scenery, text, labels, grid lines, sparkles or baked spells. Wide transparent canvas.\nSubject: Mifu (stable asset ID fimu_yashiha), small treefolk: warm brown living bark skin, rounded cheerful face, long full foliage hair green/ochre/rust-red leaves with small white daisies, tiny pointed woody ears, teal-blue gold-trimmed tabard and leafy clothing, bare root-like feet. Keep feet genuinely alternating in walk despite leaf coverage. Use exact image1 identity.\nPose precision: row1 front view LEFT ROOT-FOOT visibly lower/forward and right arm forward; row2 front view RIGHT ROOT-FOOT visibly lower/forward and left arm forward. In profiles the visible near ROOT-FOOT visibly exchanges front/back placement across row1/row2, with contrasting near/far shading. Feet must not be hidden by leaves. For cast put BOTH hands side-by-side forward at chest height along facing (E both right of torso, W both left), not arms spread apart.",
+  "correction_prompt": "Use case: identity-preserve. Only repair the THIRD ROW from top of image1 (zero-based row2); leave other three rows untouched. Mifu currently steps with the SAME root-foot forward in rows1 and2. Make row2 the exact OPPOSITE stride.\nFront sprite at row2 column1: extend the SCREEN-LEFT root foot down and forward; lift SCREEN-RIGHT knee and foot back up. Left-on-screen arm goes BACK; right-on-screen arm goes FORWARD. Do not retain the current lower screen-right foot.\nBack sprite row2 column5: extend SCREEN-RIGHT root foot down and forward; lift SCREEN-LEFT root foot. In other six columns rotate that SAME opposite-contact pose to each existing direction. A pronounced opposing knee lift should be unmistakable. Preserve exact costume/foliage/root anatomy, scale and entire body. No added row, effects, props, text or shadows. Keep8columns4rows and transparent RGBA.",
+  "runtime_imports_or_tests": "NOT_RUN; source art only"
+}

@@ -1,0 +1,865 @@
+{
+	"assertions": 289,
+	"candidate_sha256": "a591f723d853d19b57ef73affa16956f1e20d3db650664bd2c0ae56057ffef18",
+	"diagnostic_status": "PASS",
+	"engine": "4.7.1-stable (official)",
+	"failures": 0,
+	"input_sha256": "9d7be015fced48de1bb269f8de97803ad69e746efda10cd8bdb1714123bec19c",
+	"limits": "Bounded CPU microbenchmark, not complete publication, sustained percentiles, FPS, network, 120Hz or capacity acceptance. No performance threshold. Cold means empty policy cache, not cold operating-system file cache. Each sample still reads the actual file.",
+	"max_retained_source_bytes": 1530,
+	"original_sha256": "d19c37dc7c091a21b2b1c52dd0109648d2808bfaf3bd5d9fc52e2e5d9f9bf9ba",
+	"pairs_per_mode": 31,
+	"performance_acceptance": "NOT_ESTABLISHED",
+	"profile_version": "policy-load-v1",
+	"records": [
+		{
+			"candidate": {
+				"max_us": 1476,
+				"median_us": 943,
+				"min_us": 891,
+				"p95_us": 1134,
+				"samples_us": [
+					1476,
+					1071,
+					992,
+					943,
+					948,
+					1002,
+					933,
+					929,
+					977,
+					1001,
+					916,
+					924,
+					912,
+					950,
+					891,
+					947,
+					921,
+					909,
+					915,
+					929,
+					930,
+					922,
+					902,
+					895,
+					905,
+					1007,
+					1105,
+					1134,
+					1110,
+					1053,
+					1065
+				]
+			},
+			"mode": "cold",
+			"original": {
+				"max_us": 1806,
+				"median_us": 939,
+				"min_us": 879,
+				"p95_us": 1093,
+				"samples_us": [
+					1806,
+					945,
+					908,
+					908,
+					963,
+					939,
+					953,
+					942,
+					927,
+					928,
+					889,
+					940,
+					916,
+					953,
+					880,
+					930,
+					884,
+					881,
+					887,
+					974,
+					946,
+					900,
+					926,
+					879,
+					885,
+					1048,
+					1093,
+					1000,
+					994,
+					996,
+					1090
+				]
+			},
+			"pairs": [
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 0,
+					"samples_us": {
+						"candidate": 1476,
+						"original": 1806
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 1,
+					"samples_us": {
+						"candidate": 1071,
+						"original": 945
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 2,
+					"samples_us": {
+						"candidate": 992,
+						"original": 908
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 3,
+					"samples_us": {
+						"candidate": 943,
+						"original": 908
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 4,
+					"samples_us": {
+						"candidate": 948,
+						"original": 963
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 5,
+					"samples_us": {
+						"candidate": 1002,
+						"original": 939
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 6,
+					"samples_us": {
+						"candidate": 933,
+						"original": 953
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 7,
+					"samples_us": {
+						"candidate": 929,
+						"original": 942
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 8,
+					"samples_us": {
+						"candidate": 977,
+						"original": 927
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 9,
+					"samples_us": {
+						"candidate": 1001,
+						"original": 928
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 10,
+					"samples_us": {
+						"candidate": 916,
+						"original": 889
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 11,
+					"samples_us": {
+						"candidate": 924,
+						"original": 940
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 12,
+					"samples_us": {
+						"candidate": 912,
+						"original": 916
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 13,
+					"samples_us": {
+						"candidate": 950,
+						"original": 953
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 14,
+					"samples_us": {
+						"candidate": 891,
+						"original": 880
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 15,
+					"samples_us": {
+						"candidate": 947,
+						"original": 930
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 16,
+					"samples_us": {
+						"candidate": 921,
+						"original": 884
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 17,
+					"samples_us": {
+						"candidate": 909,
+						"original": 881
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 18,
+					"samples_us": {
+						"candidate": 915,
+						"original": 887
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 19,
+					"samples_us": {
+						"candidate": 929,
+						"original": 974
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 20,
+					"samples_us": {
+						"candidate": 930,
+						"original": 946
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 21,
+					"samples_us": {
+						"candidate": 922,
+						"original": 900
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 22,
+					"samples_us": {
+						"candidate": 902,
+						"original": 926
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 23,
+					"samples_us": {
+						"candidate": 895,
+						"original": 879
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 24,
+					"samples_us": {
+						"candidate": 905,
+						"original": 885
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 25,
+					"samples_us": {
+						"candidate": 1007,
+						"original": 1048
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 26,
+					"samples_us": {
+						"candidate": 1105,
+						"original": 1093
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 27,
+					"samples_us": {
+						"candidate": 1134,
+						"original": 1000
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 28,
+					"samples_us": {
+						"candidate": 1110,
+						"original": 994
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 29,
+					"samples_us": {
+						"candidate": 1053,
+						"original": 996
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 30,
+					"samples_us": {
+						"candidate": 1065,
+						"original": 1090
+					}
+				}
+			]
+		},
+		{
+			"candidate": {
+				"max_us": 764,
+				"median_us": 497,
+				"min_us": 380,
+				"p95_us": 620,
+				"samples_us": [
+					515,
+					553,
+					416,
+					490,
+					397,
+					494,
+					497,
+					568,
+					395,
+					578,
+					483,
+					620,
+					408,
+					500,
+					421,
+					544,
+					764,
+					523,
+					380,
+					544,
+					511,
+					505,
+					381,
+					569,
+					443,
+					519,
+					420,
+					497,
+					433,
+					533,
+					466
+				]
+			},
+			"mode": "warm",
+			"original": {
+				"max_us": 1100,
+				"median_us": 959,
+				"min_us": 915,
+				"p95_us": 1049,
+				"samples_us": [
+					1021,
+					969,
+					938,
+					937,
+					946,
+					920,
+					970,
+					951,
+					997,
+					1043,
+					982,
+					976,
+					942,
+					959,
+					958,
+					975,
+					1100,
+					1049,
+					952,
+					971,
+					931,
+					952,
+					918,
+					915,
+					983,
+					984,
+					949,
+					956,
+					967,
+					973,
+					932
+				]
+			},
+			"pairs": [
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 0,
+					"samples_us": {
+						"candidate": 515,
+						"original": 1021
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 1,
+					"samples_us": {
+						"candidate": 553,
+						"original": 969
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 2,
+					"samples_us": {
+						"candidate": 416,
+						"original": 938
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 3,
+					"samples_us": {
+						"candidate": 490,
+						"original": 937
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 4,
+					"samples_us": {
+						"candidate": 397,
+						"original": 946
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 5,
+					"samples_us": {
+						"candidate": 494,
+						"original": 920
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 6,
+					"samples_us": {
+						"candidate": 497,
+						"original": 970
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 7,
+					"samples_us": {
+						"candidate": 568,
+						"original": 951
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 8,
+					"samples_us": {
+						"candidate": 395,
+						"original": 997
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 9,
+					"samples_us": {
+						"candidate": 578,
+						"original": 1043
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 10,
+					"samples_us": {
+						"candidate": 483,
+						"original": 982
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 11,
+					"samples_us": {
+						"candidate": 620,
+						"original": 976
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 12,
+					"samples_us": {
+						"candidate": 408,
+						"original": 942
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 13,
+					"samples_us": {
+						"candidate": 500,
+						"original": 959
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 14,
+					"samples_us": {
+						"candidate": 421,
+						"original": 958
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 15,
+					"samples_us": {
+						"candidate": 544,
+						"original": 975
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 16,
+					"samples_us": {
+						"candidate": 764,
+						"original": 1100
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 17,
+					"samples_us": {
+						"candidate": 523,
+						"original": 1049
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 18,
+					"samples_us": {
+						"candidate": 380,
+						"original": 952
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 19,
+					"samples_us": {
+						"candidate": 544,
+						"original": 971
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 20,
+					"samples_us": {
+						"candidate": 511,
+						"original": 931
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 21,
+					"samples_us": {
+						"candidate": 505,
+						"original": 952
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 22,
+					"samples_us": {
+						"candidate": 381,
+						"original": 918
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 23,
+					"samples_us": {
+						"candidate": 569,
+						"original": 915
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 24,
+					"samples_us": {
+						"candidate": 443,
+						"original": 983
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 25,
+					"samples_us": {
+						"candidate": 519,
+						"original": 984
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 26,
+					"samples_us": {
+						"candidate": 420,
+						"original": 949
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 27,
+					"samples_us": {
+						"candidate": 497,
+						"original": 956
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 28,
+					"samples_us": {
+						"candidate": 433,
+						"original": 967
+					}
+				},
+				{
+					"order": [
+						"original",
+						"candidate"
+					],
+					"pair": 29,
+					"samples_us": {
+						"candidate": 533,
+						"original": 973
+					}
+				},
+				{
+					"order": [
+						"candidate",
+						"original"
+					],
+					"pair": 30,
+					"samples_us": {
+						"candidate": 466,
+						"original": 932
+					}
+				}
+			]
+		}
+	],
+	"scope": "Actual default policy file and fresh original/candidate policy instances. The saved original is compiled anonymously after removing only its exact class_name first line. Cold clears candidate cache before each pair; warm primes outside timers. Pair order alternates and is counterbalanced across modes. Only load_from_file is timed; construction, priming, checks and receipt work are excluded."
+}

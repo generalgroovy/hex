@@ -25,11 +25,11 @@ const TERMINAL_RESERVE := HexChemistryWorld.MATTER_PER_CAST - OPTIONAL_ALLOWANCE
 
 ## Returns the number of admitted trail parts. Refused candidates do not mutate
 ## their cast record, part ID, layers, metrics, or revision.
-static func emit(world: SimWorld) -> int:
+static func emit(world: SimWorld, only_family: String = "") -> int:
 	if world == null or world.config == null or not world.config.is_valid() or not (world.hex_court is HexChemistryWorld):
 		return 0
 	var authority: HexChemistryWorld = world.hex_court
-	if not authority.chemistry_enabled or authority.cells.is_empty() or world.projectiles.is_empty():
+	if not authority.chemistry_enabled or authority.cell_count() == 0 or world.projectiles.is_empty():
 		return 0
 	var counts := _live_trail_counts(authority, world.tick)
 	var global_count := int(counts.global)
@@ -41,6 +41,10 @@ static func emit(world: SimWorld) -> int:
 		return left.entity_id < right.entity_id)
 	var admitted := 0
 	for projectile: ProjectileState in ordered:
+		if not only_family.is_empty() and HexChemistryWorld.family(projectile.source_wire_id) != only_family: continue
+		if HexChemistryWorld.family(projectile.source_wire_id) == "mantle":
+			var owner: PlayerState = world.player(projectile.owner_id)
+			if owner == null or owner.air_height > 0: continue
 		if global_count >= MAX_TRAILS:
 			break
 		if not _delivery_eligible(projectile) or posmod(world.tick + projectile.entity_id, SAMPLE_TICKS) != 0:
@@ -77,6 +81,7 @@ static func emit(world: SimWorld) -> int:
 			continue
 		var prior_ground := int(record.ground)
 		var part_id := authority.next_ground_part_id
+		var previous_cells: Array = record.cells.keys()
 		var moved := Parts.deposit_flight(record, projectile.entity_id, part_id, selected, shape,
 			world.tick, world.tick + lifetime, true, installment)
 		if moved != installment:
@@ -91,7 +96,7 @@ static func emit(world: SimWorld) -> int:
 		record.footprint = shape
 		record.expires = maxi(int(record.expires), world.tick + lifetime)
 		authority._sync_cast_ledger(record)
-		authority._rebuild_cast_layers(record)
+		authority._rebuild_cast_layers(record, previous_cells)
 		authority.metrics.deposited += 1
 		authority.value_revision += 1
 		global_count += 1
@@ -117,7 +122,7 @@ static func contact_coverage(record: Dictionary, incoming_created: int) -> Dicti
 static func _delivery_eligible(projectile: ProjectileState) -> bool:
 	if projectile == null or projectile.entity_id <= 0:
 		return false
-	return HexChemistryWorld.family(projectile.source_wire_id) in ["bolt", "heavy"]
+	return HexChemistryWorld.family(projectile.source_wire_id) in ["bolt", "heavy", "mantle"]
 
 
 static func _provenance_valid(record: Dictionary, projectile: ProjectileState) -> bool:
@@ -152,7 +157,7 @@ static func _next_installment(spent: int) -> int:
 
 static func _trusted_point(authority: HexChemistryWorld, point: Vector2i) -> bool:
 	var local := point - authority.origin
-	return Grid._query_point_valid(local) and authority.cells.has(Grid.world_to_cell(local))
+	return Grid._query_point_valid(local) and authority.has_cell(Grid.world_to_cell(local))
 
 
 static func _too_close(record: Dictionary, point: Vector2i, tick: int) -> bool:

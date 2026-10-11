@@ -1,0 +1,105 @@
+{
+	"assertions": 7,
+	"diagnostic_version": "capacity-tiers-sim-only-v1",
+	"engine": "4.7.1-stable (official)",
+	"failures": 0,
+	"performance_acceptance": "NOT_ESTABLISHED; even a passing simulation budget is not full-frame, network, renderer, physical-client or release capacity acceptance.",
+	"production_limits": {
+		"charter": 8,
+		"default_charter": 8,
+		"hearth": 8,
+		"hex_snapshot": 8,
+		"legacy_snapshot": 8,
+		"paid_fixture": 8,
+		"round": 8,
+		"transport": 8
+	},
+	"sample_ticks": 720,
+	"schema_version": 1,
+	"scope": "Paid fixed eight-champion campus fixture and unchanged production SimWorld.step only. No sockets, snapshots, event-publication queue, rendering, player-cap overrides, resource refills, cooldown bypass or synthetic high-tier authority. Unsupported tiers are not simulated.",
+	"seed": 906190,
+	"source_sha256": {
+		"content/abilities/foundation_abilities_v1.json": "720c16ce73f11ae9e723f43e31f39d1d700bc7a583619cd418ec3408b16f52bc",
+		"content/champions/foundation_champions_v1.json": "23a1f624a9de6c2bf88dc76578a69b23613465707605528e2988e209abba458a",
+		"content/maps/sanctum_campus_g2_v1.json": "a1d17e155000ebbdf36cb033823a2b42b1c8e31f844444da347fbac400b3c817",
+		"src/net/authoritative_session.gd": "1b6511639f9660fe623803a6e3fdb0415b3927ed46a9e0ad63463e049ce83298",
+		"src/net/hex_chemistry_snapshot.gd": "dfaed467ac6e9d985ab844b1bb15be41601e8b7cc9ded874cb70fb2664dd59e1",
+		"src/net/hex_world_snapshot.gd": "2143b4748239ab315db4f676a84011cf45999ce7b29e306da5e7e48a1a986469",
+		"src/net/session_charter.gd": "e4ee475d8f5183390710a9bdb7bc8fb8879fee664395b71e12140ae61ddb085e",
+		"src/net/session_hearth.gd": "d8989b6482580300671734192f542895d4ff78996b64f41e2ab45788e8c71a4a",
+		"src/net/session_round.gd": "90342666044e23ebba8d45515a05a5fff6e4e8208acaf32bc8d6a7685fd501a8",
+		"src/net/session_snapshot.gd": "d325f4bf32bf2b7e0fd79fc641b74ed6a352347892f4e5572aeb01eb1e0f309f",
+		"src/net/session_transport.gd": "fb3c6e987936ab713655e65932763f9f69d6dce6eacf8f86d162c7c9beab4f05",
+		"src/net/world_snapshot_envelope.gd": "a66175221a6e23e3b03d2c37875fe35990878c74f9ccd792b5cad31f309ffdf0",
+		"src/presentation/hex_court_presenter.gd": "a39a674c708031eae39a8e624112d7701c7c43e38662d5daa3e1c9ca82e0f9e9",
+		"src/sim/combat/combat_definition_table.gd": "aa1332c283c28536079292e660fe5d2a998d127f390997651828a72662495d83",
+		"src/sim/combat/combat_system.gd": "9dd42a2a06218b7deaa6819877ee7c66e852d757f7a9c5985356d21c9fc8f8db",
+		"src/sim/combat/combat_tuning.gd": "1abd32b257fe274712f9f89f50cb3e248dca7abf946abe87606c9029f76ffb92",
+		"src/sim/core/sim_config.gd": "fda49c1066a34b299a27bab00cd0277acf0079e73f7e203f5d07018a524c1f47",
+		"src/sim/core/sim_world.gd": "502b5e0bbc84a4d13e2ba1fbc8f18e09acc9c6a07947073fffb97043c5445289",
+		"src/sim/hex/hex_chemistry_world.gd": "e7fd51257d23100a39db1deb578a7220005a51a3951a7ef3bdbc116376ff4e1f",
+		"src/sim/hex/hex_collision_world.gd": "1bcd71df727bad17d0751c3ae077a767206dbb0009b9abc99b9a3d43e7437358",
+		"src/sim/hex/hex_contact_workset.gd": "6b545be93a34064bf00bf0c8330533d90cedb7b6bfa39ef26c05dddea801465b",
+		"src/sim/hex/hex_convex_geometry.gd": "214c9a70c8421761dcba5f2edd984e69142834eb20e9c8223acc830519fd9168",
+		"src/sim/hex/hex_footprint.gd": "07e2fefe0b41ddc6d49708fe30023b6091f20384e5815d6383f839328f88351d",
+		"src/sim/hex/hex_product_effects.gd": "598933dd652e6b3961d506fab2ebcf4426f63b028ece9618f33e40c103ffbb57",
+		"src/sim/hex/hex_projectile_combat.gd": "ba0f80546663dd9c2db99d2996e65fc2b6572fc0179da2405d0c82a6e67b001b",
+		"src/sim/hex/hex_world_definition.gd": "e15d75d48ddedc6bc891400f508ae43d892742c151e54bb5b93aef68dfa23f18",
+		"tests/performance/profile_capacity_tiers.gd": "d64f8529b5bb50988acefad349af4d2b7bb157354236b0dc82c7a9c6310b077b",
+		"tests/performance/profile_unified_wellspring.gd": "1c9e4f4f00553e44e94a6485bba0c92f6f2f06ac52f91ff16562784b2069a90a"
+	},
+	"tick_rate": 120,
+	"tiers": [
+		{
+			"blockers": [
+				"transport supports at most 8 players",
+				"charter supports at most 8 players",
+				"default_charter supports at most 8 players",
+				"hearth supports at most 8 players",
+				"round supports at most 8 players",
+				"legacy_snapshot supports at most 8 players",
+				"hex_snapshot supports at most 8 players",
+				"paid_fixture supports at most 8 players"
+			],
+			"requested_players": 16,
+			"runs": [],
+			"simulated_players": 0,
+			"status": "UNSUPPORTED"
+		},
+		{
+			"blockers": [
+				"transport supports at most 8 players",
+				"charter supports at most 8 players",
+				"default_charter supports at most 8 players",
+				"hearth supports at most 8 players",
+				"round supports at most 8 players",
+				"legacy_snapshot supports at most 8 players",
+				"hex_snapshot supports at most 8 players",
+				"paid_fixture supports at most 8 players"
+			],
+			"requested_players": 32,
+			"runs": [],
+			"simulated_players": 0,
+			"status": "UNSUPPORTED"
+		},
+		{
+			"blockers": [
+				"transport supports at most 8 players",
+				"charter supports at most 8 players",
+				"default_charter supports at most 8 players",
+				"hearth supports at most 8 players",
+				"round supports at most 8 players",
+				"legacy_snapshot supports at most 8 players",
+				"hex_snapshot supports at most 8 players",
+				"paid_fixture supports at most 8 players"
+			],
+			"requested_players": 64,
+			"runs": [],
+			"simulated_players": 0,
+			"status": "UNSUPPORTED"
+		}
+	],
+	"timing_semantics": "Only SimWorld.step is timed. Command construction, event counters, per-tick canonical hash/trace, occupancy and invariants run outside each timer but may influence later allocation/cache behavior. No cleanup or lifetime-completion claim. Raw event counts are not published-event delivery counts.",
+	"warmup_ticks": 120,
+	"workload_version": "unified-wellspring-profile-v1"
+}

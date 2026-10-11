@@ -68,17 +68,12 @@ static func discovery_enabled(arguments: PackedStringArray) -> bool:
 
 
 func _process(_delta: float) -> void:
+	_refresh_context_visibility()
 	if bootstrap == null:
 		return
 	var transport := _transport()
 	if transport == null:
 		return
-	var focused_station_id := String(bootstrap.get("focused_station_id"))
-	var context_visible := context_panel_visible(focused_station_id, visual_capture_run)
-	panel.visible = context_visible
-	if not context_visible and browser_open:
-		browser_open = false
-		browser_box.visible = false
 
 	var now := Time.get_ticks_msec()
 	if not listener_ready and now - last_listener_retry_ms >= LISTENER_RETRY_MS:
@@ -167,8 +162,30 @@ func _build_ui() -> void:
 
 
 
-static func context_panel_visible(focused_station_id: String, capture_run: bool) -> bool:
-	return not capture_run and focused_station_id in ["farflow-host", "farflow-join", "farflow-charter"]
+static func context_panel_visible(focused_station_id: String, capture_run: bool, overlay_blocked: bool = false) -> bool:
+	return not capture_run and not overlay_blocked and focused_station_id in ["farflow-host", "farflow-join", "farflow-charter"]
+
+
+func _overlay_blocked() -> bool:
+	if bootstrap == null:
+		return false
+	if bootstrap.has_method("_gameplay_input_blocked") and bool(bootstrap.call("_gameplay_input_blocked")):
+		return true
+	# Query visibility only: never build a result card, advance a demo or inspect
+	# an ordinary cast as if it were a modal. Older callers may omit this hook.
+	return bootstrap.has_method("_has_visible_demo_result") and bool(bootstrap.call("_has_visible_demo_result"))
+
+
+func _refresh_context_visibility() -> bool:
+	var context_visible := bootstrap != null and _transport() != null \
+		and context_panel_visible(String(bootstrap.get("focused_station_id")), visual_capture_run, _overlay_blocked())
+	if panel != null:
+		panel.visible = context_visible
+	if not context_visible:
+		browser_open = false
+		if browser_box != null:
+			browser_box.visible = false
+	return context_visible
 
 
 func _transport() -> SessionTransport:
@@ -178,6 +195,8 @@ func _transport() -> SessionTransport:
 
 
 func _on_host_pressed() -> void:
+	if not _refresh_context_visibility():
+		return
 	var transport := _transport()
 	if transport == null:
 		return
@@ -189,6 +208,8 @@ func _on_host_pressed() -> void:
 
 
 func _on_join_pressed() -> void:
+	if not _refresh_context_visibility():
+		return
 	var transport := _transport()
 	if transport == null:
 		return
@@ -214,6 +235,8 @@ func _on_join_pressed() -> void:
 
 
 func _join_discovered_host(endpoint_key: String) -> void:
+	if not _refresh_context_visibility():
+		return
 	if not discovered_hosts.has(endpoint_key):
 		return
 	var host: Dictionary = discovered_hosts[endpoint_key]
@@ -586,7 +609,11 @@ static func _mismatch_recovery_message(host: Dictionary) -> String:
 
 
 func _is_visual_capture_run() -> bool:
-	for argument: String in OS.get_cmdline_user_args():
-		if argument.begins_with("--capture-") or argument == "--visual-specimen":
+	return is_visual_capture_run(OS.get_cmdline_user_args())
+
+
+static func is_visual_capture_run(arguments: PackedStringArray) -> bool:
+	for argument: String in arguments:
+		if argument.begins_with("--capture-") or argument in ["--visual-specimen", "--native-capture"]:
 			return true
 	return false

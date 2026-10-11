@@ -26,9 +26,11 @@ var animation_skeleton_hash := ""
 var last_error := ""
 var pixel_effects := PixelEffects.new()
 var ability_catalog: AbilityCatalog
+var frame_config: SimConfig
 
 
 func begin_frame(config: SimConfig, collision: CollisionWorld) -> void:
+	frame_config = config
 	pixel_effects.begin_frame(config,collision)
 
 
@@ -82,6 +84,10 @@ func _add_inferred_profiles(catalog: AbilityCatalog) -> void:
 			"spray": ["spray", "rising_fan", "elemental_spray", "elemental_lanes", "elemental_break"],
 			"beam": ["beam", "paired_focus", "elemental_beam", "elemental_boundary", "elemental_break"],
 			"field": ["field", "frost_sigil", "elemental_field", "none", "elemental_field_break"],
+			"mantle": ["projectile", "paired_focus", "elemental_bolt", "none", "elemental_break"],
+			"fuse": ["projectile", "paired_focus", "elemental_bolt", "none", "elemental_break"],
+			"split": ["projectile", "paired_focus", "elemental_bolt", "none", "elemental_break"],
+			"rebound": ["projectile", "paired_focus", "elemental_bolt", "none", "elemental_break"],
 		}
 		if not vocabulary.has(family):
 			continue
@@ -92,6 +98,7 @@ func _add_inferred_profiles(catalog: AbilityCatalog) -> void:
 			"shape": String(values[0]),
 			"skeleton_id": String(values[0]),
 			"element": String(ability.get("element", "")),
+			"element_mask": int(ability.get("element_mask", 0)),
 			"startup": String(values[1]),
 			"silhouette": String(values[2]),
 			"trail": String(values[3]),
@@ -193,6 +200,7 @@ func draw_startup(
 	var ability := ability_catalog.ability_from_wire(wire_id)
 	var preparation_age := floori(clampf(phase, 0.0, 1.0) * ceilf(float(ability.get("startup_ms", 0)) * 0.12))
 	if pixel_effects.hand(canvas, element, position, preparation_age, reduced_effects):
+		_draw_mixture_hand(canvas, int(ability.get("element_mask", 0)), position)
 		return true
 	var dark := language.element_color(element, "dark")
 	var base := language.element_color(element, "base")
@@ -293,10 +301,53 @@ func draw_release(canvas: CanvasItem, wire_id: int, hand_anchor: Vector2, age_ti
 	var profile: Dictionary = profiles_by_wire[wire_id]
 	var effect := "burst_release" if String(profile.get("id","")) in BURST_IDS else "hand_release"
 	pixel_effects.hand(canvas,String(profile.get("element","")),hand_anchor,age_ticks,reduced_effects,effect)
+	_draw_mixture_hand(canvas, int(ability_catalog.ability_from_wire(wire_id).get("element_mask", 0)), hand_anchor)
+	return true
+
+
+func _draw_mixture_hand(canvas: CanvasItem, mask: int, position: Vector2) -> void:
+	if PixelEffects.mixture_elements(mask).size() <= 1: return
+	for sector: Dictionary in PixelEffects.mixture_sectors(mask, position, 12.0):
+		var bright := language.element_color(sector.element, "bright")
+		canvas.draw_arc(position, 11.0, float(sector.start) + 0.06, float(sector.end) - 0.06, 8, bright, 2.0)
+		ElementGlyphRendererScript.draw(canvas, language, sector.glyph_anchor, sector.element, 2.5, bright)
+
+
+func draw_expanded_projectile(canvas: CanvasItem, projectile: ProjectileState, _tick: int, reduced_effects: bool, interpolation_alpha: float = 1.0, owner: PlayerState = null) -> bool:
+	if canvas == null or projectile == null or language == null or frame_config == null or not is_finite(interpolation_alpha): return false
+	var definition := CombatTuning.cast_definition_view(projectile.source_wire_id)
+	var mask := int(definition.get("element_mask", 0))
+	var family := String(definition.get("family", ""))
+	if PixelEffects.mixture_elements(mask).is_empty(): return false
+	if mask & (mask - 1) == 0 and family not in ["mantle", "fuse", "split", "rebound"]: return false
+	if projectile.lifetime_ticks <= 0: return true
+	var position := ProjectilePresentationMotion.interpolated_position(projectile, interpolation_alpha)
+	var model := PixelEffects.expanded_projectile_model(projectile, definition, position, frame_config, owner, reduced_effects)
+	if model.is_empty(): return true # Exhausted valid effects never revive fallback art.
+	return pixel_effects.draw_expanded_projectile(canvas, model, language)
+
+
+func draw_expanded_cue(canvas: CanvasItem, cue: Dictionary, reduced_effects: bool) -> bool:
+	if canvas == null or language == null: return false
+	var definition := CombatTuning.cast_definition_view(int(cue.get("source_wire_id", 0)))
+	var mask := int(definition.get("element_mask", 0))
+	if mask <= 0 or mask & (mask - 1) == 0 or String(definition.get("shape", "")) != "spray": return false
+	if String(cue.get("kind", "")) != "spray" and String(cue.get("event_type", "")) != "spray_fired": return false
+	var model := PixelEffects.mixed_spray_model(cue, definition, reduced_effects)
+	if model.is_empty(): return true # Invalid/expired cached view never recreates hidden spokes.
+	for segment: Dictionary in model.segments:
+		var color := language.element_color(segment.element, "bright" if int(segment.ray) == 2 else "base")
+		canvas.draw_line(segment.start, segment.end, Color(color, float(model.opacity) * (0.84 if int(segment.ray) == 2 else 0.60)), 2.0 if int(segment.ray) == 2 else 1.0)
+	if bool(model.origin_visible):
+		var elements := PixelEffects.mixture_elements(mask)
+		var brace: PackedVector2Array = model.brace
+		for index: int in elements.size():
+			canvas.draw_line(brace[0].lerp(brace[1], float(index) / float(elements.size())), brace[0].lerp(brace[1], float(index + 1) / float(elements.size())), Color(language.element_color(elements[index], "bright"), float(model.opacity)), 2.0)
 	return true
 
 
 func draw_projectile(canvas: CanvasItem, projectile: ProjectileState, tick: int, reduced_effects: bool, interpolation_alpha: float = 1.0) -> bool:
+	if draw_expanded_projectile(canvas, projectile, tick, reduced_effects, interpolation_alpha): return true
 	if canvas == null or projectile == null or not profiles_by_wire.has(projectile.source_wire_id):
 		return false
 	if projectile.lifetime_ticks <= 0:
@@ -322,9 +373,6 @@ func draw_projectile(canvas: CanvasItem, projectile: ProjectileState, tick: int,
 	canvas.draw_circle(position, visual_size * 0.44, Color(dark, 0.20))
 	match String(profile.get("silhouette", "")):
 		"droplet":
-			var wake_length := ProjectilePresentationMotion.trail_length(projectile, reduced_effects)
-			for side_value: float in [-1.0, 1.0]:
-				canvas.draw_line(position - direction * 3.0 + side * side_value * 3.0, position - direction * wake_length + side * side_value * 5.0, Color(base, 0.42), 2.0)
 			var drop := PackedVector2Array([
 				position + direction * (radius + 4.0),
 				position + side * radius,
@@ -340,12 +388,11 @@ func draw_projectile(canvas: CanvasItem, projectile: ProjectileState, tick: int,
 			canvas.draw_circle(position, radius + 1.0, dark)
 			canvas.draw_arc(position, radius + 1.0, -2.45, 0.70, 18, bright, 3.0)
 			canvas.draw_arc(position, radius - 3.0, 0.70, 3.84, 18, Color(bright, 0.72), 2.0)
-			canvas.draw_line(position - direction * 8.0 + side * 5.0, position - direction * 19.0 + side * 10.0, Color(base, 0.42), 2.0)
 			for bounce_index: int in range(projectile.remaining_bounces):
 				canvas.draw_circle(position + side * (radius + 7.0) + direction * float(bounce_index * 4 - 2), 1.5, bright)
 		"ember_spear":
 			var tip := position + direction * (radius + 6.0)
-			var tail := position - direction * (radius + ProjectilePresentationMotion.trail_length(projectile, reduced_effects))
+			var tail := position - direction * radius
 			var flame := PackedVector2Array([
 				tip,
 				position + side * (radius + 1.0),
@@ -354,20 +401,17 @@ func draw_projectile(canvas: CanvasItem, projectile: ProjectileState, tick: int,
 			])
 			canvas.draw_colored_polygon(flame, base)
 			canvas.draw_polyline(_closed(flame), bright, 2.0, false)
-			for side_value: float in [-1.0, 1.0]:
-				canvas.draw_line(position - direction * 5.0, position - direction * 14.0 + side * side_value * 7.0, Color(dark, 0.58), 2.0)
 			canvas.draw_circle(position + direction * 2.0, maxf(2.0, radius * 0.34), Color(bright, 0.92))
 		"burst_mote":
 			var tip := position + direction * (radius + 5.0)
-			var tail := position - direction * (radius + ProjectilePresentationMotion.trail_length(projectile, reduced_effects))
+			var tail := position - direction * radius
 			var mote := PackedVector2Array([tip, position + side * radius, tail, position - side * radius])
 			canvas.draw_colored_polygon(mote, base)
 			canvas.draw_polyline(_closed(mote), bright, 2.0, false)
 			canvas.draw_circle(position, maxf(2.0, radius * 0.34), Color(bright, 0.90))
 		"elemental_bolt":
-			var wake_length := ProjectilePresentationMotion.trail_length(projectile, reduced_effects)
 			var tip := position + direction * (radius + 5.0)
-			var tail := position - direction * (radius + wake_length)
+			var tail := position - direction * radius
 			var bolt := PackedVector2Array([tip, position + side * radius, tail, position - side * radius])
 			canvas.draw_colored_polygon(bolt, Color(base, 0.94))
 			canvas.draw_polyline(_closed(bolt), bright, 2.0, false)

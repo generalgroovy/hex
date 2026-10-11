@@ -156,7 +156,7 @@ func _validate_linked_catalogs() -> bool:
 		var seen: Dictionary = {}
 		var point_total := 0
 		for element: Variant in elements:
-			if element not in ["earth", "fire", "water", "wind", "ice", "charge", "light", "dark"] or seen.has(element):
+			if element not in AbilityCatalog.DISPLAY_ELEMENT_IDS or seen.has(element):
 				return _fail("affinity profile contains a duplicate or gated element: %s" % affinity_id)
 			var strength: Variant = points.get(element)
 			if not (strength is int or strength is float):

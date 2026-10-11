@@ -1,6 +1,9 @@
 # Projectile delivery foundations
 
-Status: focused visual/simulation contract for element-independent spell delivery shapes.
+Status: **historical neutral-geometry foundation**. Current eight-delivery
+admission, finite budgets and qualification are owned by
+[SPECIFICATION.md](../SPECIFICATION.md) and the [resume](../.agent/HEX-RESUME.md).
+The source below preserves earlier design detail; it does not enable an archived family.
 
 ## Architecture
 

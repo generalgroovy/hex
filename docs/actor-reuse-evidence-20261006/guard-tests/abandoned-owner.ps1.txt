@@ -1,0 +1,5 @@
+. 'C:\Users\sende\Projects\hex\scripts\flux2-common.ps1'
+$lease = Enter-FluxEngineRun 'abandoned-owner'
+$child = Start-FluxOwnedProcess @{FilePath='C:\Users\sende\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\pwsh.exe'; ArgumentList=@('-NoProfile','-EncodedCommand','UwB0AGEAcgB0AC0AUwBsAGUAZQBwACAALQBTAGUAYwBvAG4AZABzACAANgAwAA=='); WindowStyle='Hidden'}
+@{pid=$child.Id; started=$child.StartTime.ToUniversalTime().Ticks.ToString(); executable=$child.Path} | ConvertTo-Json | Set-Content -LiteralPath 'C:\Users\sende\Projects\hex\.godot\guard-tests\ec7b3bc220f64577b149ed774e7d07e8\child-ready.json'
+Start-Sleep -Seconds 60

@@ -22,7 +22,7 @@ func run() -> int:
 	var actor := PlayerState.new(91)
 	actor.spawn_protection_ticks = 0
 	actor.health_recovery_per_second = 0
-	actor.position_x = court.origin.x + 64_000
+	actor.position_x = court.origin.x + 56_000
 	actor.position_y = court.origin.y
 	var before := actor.health
 	var config := SimConfig.new(120)
@@ -35,17 +35,17 @@ func run() -> int:
 	court.advance([actor], {91: court.origin + Vector2i(-100_000, 0)}, 90, config, [])
 	check(actor.health < before, "fast full-field traversal cannot skip selected cells")
 	actor.position_x = court.origin.x + 64_000
-	actor.air_height = 1
+	actor.air_height = MovementTuning.GROUND_PROJECTILE_CLEARANCE_HEIGHT
 	before = actor.health
 	court.advance([actor], {}, 120, config, [])
-	equal(actor.health, before, "airborne foot remains above ground Fire")
+	equal(actor.health, before, "airborne foot at authored clearance remains above ground Fire")
 	actor.air_height = 0
 	actor.spawn_protection_ticks = 1
 	court.advance([actor], {}, 150, config, [])
 	equal(actor.health, before, "spawn protection remains authoritative")
 	actor.spawn_protection_ticks = 0
 	actor.position_x = court.origin.x + 100_000
-	court.advance([actor], {91: {"point": court.origin, "height": 1}}, 180, config, [])
+	court.advance([actor], {91: {"point": court.origin, "height": MovementTuning.GROUND_PROJECTILE_CLEARANCE_HEIGHT}}, 180, config, [])
 	equal(actor.health, before, "landing outside field cannot expose airborne swept segment")
 	actor.position_x = court.origin.x + 64_000
 	var events: Array[Dictionary] = []
@@ -67,9 +67,12 @@ func _test_selected_product_sweep() -> void:
 		var court := _court()
 		var wire := _wire(catalog, element, "bolt")
 		_deposit(court, 1, wire, 96101, Vector2i.ZERO, 0)
-		_deposit(court, 2, wire, 96102, Vector2i.ZERO, 0)
+		_deposit(court, 2, _wire(catalog, "wind", "bolt") if element == "water" else wire, 96102, Vector2i.ZERO, 0)
 		var product: Dictionary = court.products[court.products.keys()[0]]
 		var actor := PlayerState.new(92)
+		if element == "water":
+			equal(int(product.recipe_wire_id), 317, "swept current is the actual Water/Air Hailcurrent")
+			actor.team_id = int(product.team) # Isolate all-team current from hostile hail damage.
 		actor.position_x = court.origin.x + 200_000
 		actor.position_y = court.origin.y
 		var before := actor.health
@@ -77,7 +80,7 @@ func _test_selected_product_sweep() -> void:
 		var events: Array[Dictionary] = []
 		court.apply_product_effects([actor], int(product.active_tick), SimConfig.new(120), CollisionWorld.new(1_280_000, 960_000), events, {92: court.origin - Vector2i(200_000, 0)})
 		if element == "fire": check(actor.health < before, "Conflagration detects crossing-only pulse")
-		else: check(Vector2i(actor.position_x, actor.position_y) != position, "Flood detects crossing-only flow")
+		else: check(Vector2i(actor.position_x, actor.position_y) != position, "Hailcurrent detects crossing-only flow for an allied actor")
 		equal(events.size(), 1, "one product applies once across multiple cells")
 
 
@@ -85,7 +88,8 @@ func _test_authored_allocation_envelope(catalog: AbilityCatalog) -> void:
 	var court := _court()
 	# Conservative full-strength geometry bounds also cover every smaller
 	# weakened terminal. Minimum live stocks: Bolt120, Heavy40, Spray200,
-	# Rapid600; medium minimum80. No selected cell needs zero stock/truncation.
+	# Rapid600; medium minimum80. Fine cells may have zero allocated units;
+	# coverage still includes them and paid integer matter remains conserved.
 	for family_name: String in ["bolt", "heavy", "rapid", "spray"]:
 		var wire := _wire(catalog, "fire", family_name)
 		var definition := CombatTuning.cast_definition(wire)
@@ -94,7 +98,8 @@ func _test_authored_allocation_envelope(catalog: AbilityCatalog) -> void:
 			var point := court.origin + offset
 			var record := {"wire": wire, "origin": point - Vector2i(int(definition.get("range", 0)), 0)}
 			var selected := court.footprint({"position": point, "direction": Vector2i(1000, 0)}, record)
-			check(selected.size() <= minimum_stock, "authored %s minimum stock covers all selected cells" % family_name)
+			check(selected.size() <= HexCastParts.MAX_SELECTED_CELLS, "authored %s selected coverage stays inside the finite footprint budget" % family_name)
+			check(minimum_stock > 0, "each live weakened %s retains positive paid matter" % family_name)
 			for cell: Vector2i in selected:
 				check(court.cells.has(cell), "authored selection stays within eligible map")
 	for offset: Vector2i in [Vector2i.ZERO, Vector2i(24_000, 0), Vector2i(0, 27_712)]:

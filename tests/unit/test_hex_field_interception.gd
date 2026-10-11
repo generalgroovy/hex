@@ -17,7 +17,48 @@ func run() -> int:
 	_test_wall_tie_height_and_same_source(catalog)
 	_test_phase_zero_spray_fields_and_cover(catalog)
 	_test_phase_zero_equal_exhaustion_and_wall_cutoff(catalog)
+	_test_initial_field_preparation(catalog)
+	_test_spray_flank_field_interception(catalog)
+	_test_spray_break_preserves_phase_cover(catalog)
 	return finish("hex-field-interception")
+
+
+func _test_initial_field_preparation(catalog: AbilityCatalog) -> void:
+	var fixture := _world()
+	var world: SimWorld = fixture.world
+	var court: HexCourt = fixture.court
+	var center := court.origin
+	HexProjectileCombat.resolve_sprays(world)
+	HexProjectileCombat.advance(world)
+	check(world.last_error.is_empty() and world.combat_events.is_empty(),
+		"empty initial scheduling accepts a typed empty workset without errors")
+	var record := _field(court, catalog, 2, "water", "bolt", 8201, center)
+	# The live 120px Heavy and 34px Bolt fields need room for both whole-cell
+	# boundaries; 200px keeps these paid sources independent before querying.
+	var second_record := _field(court, catalog, 3, "earth", "heavy", 8202, center + Vector2i(200_000, 0))
+	check(court.products.is_empty(), "initial workset controls contain no accidental reaction product")
+	equal(int(record.ledger.remaining_strength), 5, "preparation starts with the entire paid Bolt source")
+	equal(int(second_record.ledger.remaining_strength), 15, "preparation starts with the entire paid Heavy source")
+	var prepared := HexProjectileCombat._ground_fields(world)
+	equal(prepared.size(), 2, "initial preparation includes two paid source fields")
+	for offset: int in [-240_000, -24_000, -1, 0, 1, 24_000, 240_000]:
+		for direction: Vector2i in [Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(-1, -1)]:
+			for source: int in [8201, 8999]:
+				var plan := {"source_id": source, "start": center + Vector2i(offset, -160_000),
+					"finish": center + Vector2i(offset, -160_000) + direction * 400_000,
+					"terminal_fraction": 1.0, "reason": "range"}
+				equal(var_to_bytes(HexProjectileCombat._field_contacts(plan, world, prepared)),
+					var_to_bytes(HexProjectileCombat._field_contacts(plan, world)),
+					"borrowed initial fields preserve exact ordered contacts, including self exclusion")
+	var crossing := {"source_id": 8999, "start": center - Vector2i(300_000, 0),
+		"finish": center + Vector2i(300_000, 0), "terminal_fraction": 1.0, "reason": "range"}
+	equal(HexProjectileCombat._field_contacts(crossing, world, []).size(), 0,
+		"an explicitly prepared empty set does not rebuild fields")
+	equal(HexProjectileCombat._field_contacts(crossing, world).size(), 2,
+		"an omitted prepared set queries live authority")
+	record.expires = world.tick
+	equal(HexProjectileCombat._field_contacts(crossing, world).size(), 1,
+		"post-mutation default queries see expiration rather than borrowing the old set")
 
 
 func _world() -> Dictionary:
@@ -227,10 +268,9 @@ func _test_closed_stored_geometry() -> void:
 		footprint, stored, Vector2i.ZERO,
 		Vector2i(23_796, 70_811), Vector2i(-487, -44_962))
 	check(bool(diagonal.get("hit", false)), "continuous diagonal crossing retains its true stored-cell entry")
-	# Independent lower-right plane: 866*x + 1500*y = 41_568_000.
-	# Continuous entry is (13162.26130379,20112.98780728); its nearest
-	# interior lattice witness is (13162,20113), not an outward rounded point.
-	equal(diagonal.get("point", Vector2i.ZERO), Vector2i(13_162, 20_113), "nearest constrained lattice witness stays inside instead of rounding across the sloped edge")
+	# Independent24px lower-right plane:866*x +1500*y =20_784_000.
+	# The nearest admitted integer witness lies on the interior side.
+	equal(diagonal.get("point", Vector2i.ZERO), Vector2i(10_570, 7_753), "nearest constrained lattice witness stays inside instead of rounding across the sloped edge")
 	check(HexGrid._point_in_cell(Vector2i(diagonal.point), Vector2i.ZERO), "quantized diagonal witness remains in the authoritative closed stored hex")
 	check(not bool(diagonal.get("quantization_outside", true)), "representable diagonal contact does not require a bounded outside witness")
 	# Two integer-centered disks can be exactly tangent at a non-lattice point.
@@ -249,7 +289,7 @@ func _test_stored_union_and_center_query(catalog: AbilityCatalog) -> void:
 	var world: SimWorld = fixture.world
 	var court: HexCourt = fixture.court
 	var y := court.origin.y
-	var boundary_point := court.origin + HexGrid.center(Vector2i(6, 0))
+	var boundary_point := court.origin + HexGrid.center(Vector2i(HexCourt.RADIUS, 0))
 	var boundary_field := _field(court, catalog, 2, "fire", "heavy", 5001, boundary_point)
 	var outside_start := Vector2i(boundary_point.x + 56_000, y)
 	var outside_end := Vector2i(boundary_point.x + 96_000, y)
@@ -288,7 +328,10 @@ func _test_wall_tie_height_and_same_source(catalog: AbilityCatalog) -> void:
 	court = fixture.court
 	field = _field(court, catalog, 2, "fire", "bolt", 6051, Vector2i(360_000, y))
 	shot = _shot(world, court, catalog, 6050, 1, "water", "bolt", 6050, Vector2i(200_000, y), Vector2i(24_000_000, 0))
-	shot.remaining_distance = 128_001 # First fixed point inside the selected cell after canonical boundary ownership.
+	var first_face := 2_000_000
+	for cell: Vector2i in field.coverage:
+		if cell.y == 0: first_face = mini(first_face,court.origin.x+HexGrid.center(cell).x-HexGrid.HALF_WIDTH)
+	shot.remaining_distance = first_face - shot.position_x + 1 # First fixed unit across the canonical shared face.
 	HexProjectileCombat.advance(world)
 	equal(_field_events(world).size(), 1, "field entry at the exact range endpoint remains eligible")
 	equal(_events(world, "projectile_terminal", shot.entity_id).size(), 0, "endpoint clash exhausts the projectile before range termination can duplicate it")
@@ -407,17 +450,20 @@ func _test_phase_zero_equal_exhaustion_and_wall_cutoff(catalog: AbilityCatalog) 
 	equal(_events(world, "spray_fired").size(), 0, "zero-strength Spray emits no fired event after field interception")
 	equal(_events(world, "projectile_terminal").size(), 0, "zero-strength Spray emits no terminal deposit after field interception")
 
-	# The compiled Water Spray radius is 5000 (its ability overrides the
-	# family default 9000), so this wall-clamped pulse ends at x=395000. A field exactly tangent there loses the wall tie,
+	# The compiled Water Spray radius is10000, so this contact ray meets
+	# the wall at x=390000. A field exactly tangent there loses the wall tie,
 	# while one fixed world unit of whole-cell overlap remains eligible.
+	var spray_radius := int(CombatTuning.cast_definition(water_spray_wire).radius)
+	equal(spray_radius, 10_000, "wall fixture uses the independently specified live Water Spray radius")
+	var wall_contact_x := 400_000 - spray_radius
 	for inward_overlap: int in [0, 1]:
 		fixture = _world()
 		world = fixture.world
 		court = fixture.court
 		y = court.origin.y
-		court.origin.x = 419_000 - inward_overlap
+		court.origin.x = wall_contact_x + HexGrid.HALF_WIDTH - inward_overlap
 		var near_side_cell: Dictionary = court.cells[Vector2i(-1, 0)].duplicate(true)
-		# A single eligible map cell isolates its x=395000 face from diagonal whole-cell coverage.
+		# A single eligible map cell isolates the contact face from diagonal whole-cell coverage.
 		for cell: Vector2i in court.cells.keys():
 			if cell != Vector2i.ZERO: court.cells.erase(cell)
 		var field_center := court.origin.x + 2000
@@ -433,7 +479,6 @@ func _test_phase_zero_equal_exhaustion_and_wall_cutoff(catalog: AbilityCatalog) 
 		owner.position_y = y
 		world.players.append(owner)
 		world.collision.add_obstacle(CollisionWorld.Obstacle.new(75, 400_000, y - 100_000, 420_000, y + 100_000, false))
-		equal(int(CombatTuning.cast_definition(water_spray_wire).radius), 5000, "wall fixture uses the compiled Water Spray radius override")
 		world.combat_events.append(_spray_request(7500 + inward_overlap, water_spray_wire, owner.entity_id, Vector2i(200_000, y)))
 		HexProjectileCombat.resolve_sprays(world)
 		equal(_field_events(world).size(), inward_overlap,
@@ -450,6 +495,95 @@ func _spray_request(source: int, wire: int, owner: int, origin: Vector2i) -> Dic
 	return {"type": "spray_requested", "source_cast_id": source, "owner_id": owner,
 		"source_wire_id": wire, "origin_x": origin.x, "origin_y": origin.y,
 		"aim_x": 1000, "aim_y": 0, "target_x": origin.x + 380_000, "target_y": origin.y}
+
+
+func _test_spray_flank_field_interception(catalog: AbilityCatalog) -> void:
+	for family: String in ["rapid", "bolt", "heavy", "spray"]:
+		for visible: bool in [false, true]:
+			var fixture := _world()
+			var world: SimWorld = fixture.world
+			var court: HexCourt = fixture.court
+			var origin := court.origin - Vector2i(140_000, 0)
+			var field_point := origin + Vector2i(220_000, 90_000 if visible else 0)
+			var field_origin := field_point - Vector2i(40_000, 0) if family == "spray" else field_point
+			var field := _field(court, catalog, 2, "fire", family, 8601, field_point, 0, field_origin)
+			var field_strength := int(field.ledger.remaining_strength)
+			var wire := _wire(catalog, "water", "spray")
+			_reserve(court, 1, wire, 8600, origin)
+			var owner := PlayerState.new(1)
+			owner.team_id = 1
+			owner.position_x = origin.x
+			owner.position_y = origin.y
+			world.players.append(owner)
+			# The negative fully shadows even Heavy's wide stored field; otherwise
+			# a later visible-cell ground reaction could legitimately consume it.
+			var wall_height := 10_000 if visible else 120_000
+			world.collision.add_obstacle(CollisionWorld.Obstacle.new(86, origin.x + 80_000, origin.y - wall_height, origin.x + 90_000, origin.y + wall_height))
+			world.combat_events.append(_spray_request(8600, wire, 1, origin))
+			HexProjectileCombat.resolve_sprays(world)
+			var label := "%s field/%s" % [family, "clear flank" if visible else "shadowed nearest witness"]
+			equal(_field_events(world).size(), 1 if visible else 0, label + " has one source-owned per-ray interception decision")
+			equal(int(field.ledger.remaining_strength), maxi(0, field_strength - 3) if visible else field_strength, label + " subtracts strength once, never once per selected cell")
+			equal(int(court.ledger_for_source(8600).remaining_strength), maxi(0, 3 - field_strength) if visible else 3, label + " preserves the weaker/stronger finite Spray budget")
+			equal(_events(world, "spray_fired").size(), 0 if visible and field_strength >= 3 else 1, label + " only a surviving source can release actor pressure")
+			check(court.conservation_valid(), label + " preserves every paid source and reaction quantity")
+	# Keep strict continuous ordering even when both witnesses quantize onto the
+	# same integer contact point. This is not a widened partially-shadowed search.
+	var collision := CollisionWorld.new(1_280_000, 960_000)
+	collision.add_obstacle(CollisionWorld.Obstacle.new(87, 400_000, 200_000, 420_000, 700_000))
+	var pulse := {"origin": Vector2i(200_000, 480_000), "definition": {"radius": 5000}}
+	for inset: float in [-0.25, 0.0, 0.25]:
+		var witness := {"point": Vector2i(395_000, 480_000), "continuous_x": 395_000.0 - inset, "continuous_y": 480_000.0}
+		equal(HexProjectileCombat._spray_contact_visible(pulse, witness, collision), inset > 0.0, "unrounded Spray witness is eligible only strictly before the physical wall")
+
+
+func _test_spray_break_preserves_phase_cover(catalog: AbilityCatalog) -> void:
+	var fixture := _world()
+	var world: SimWorld = fixture.world
+	var court: HexCourt = fixture.court
+	var center := court.origin
+	_field(court, catalog, 2, "earth", "bolt", 8701, center)
+	_field(court, catalog, 3, "earth", "bolt", 8702, center)
+	equal(court.products.size(), 1, "two finite paid Earth sources construct the phase-cover fixture")
+	if court.products.size() != 1: return
+	var cover: Dictionary = court.products.values()[0]
+	equal(int(cover.recipe_wire_id), 301, "paid Earth pair is actual Rampart cover")
+	world.tick = int(cover.active_tick)
+	cover.health = 1 # Isolate the breaking hit without inventing unpaid geometry.
+	var collision := HexCollisionWorld.new(world.collision)
+	check(collision.set_hex_surfaces(court, world.tick), "active paid cover enters the real collision adapter")
+	world.collision = collision
+	var origin := center - Vector2i(120_000, 0)
+	var owner := PlayerState.new(1)
+	owner.team_id = 1
+	owner.position_x = origin.x
+	owner.position_y = origin.y
+	world.players.append(owner)
+	var target := PlayerState.new(9)
+	target.team_id = 2
+	target.position_x = center.x + 120_000
+	target.position_y = center.y
+	target.spawn_protection_ticks = 0
+	world.players.append(target)
+	check(collision.can_occupy(origin, owner.radius) and collision.can_occupy(Vector2i(target.position_x, target.position_y), target.radius), "both actors stand legally outside the paid Rampart")
+	var wire := _wire(catalog, "water", "spray")
+	var cast_id := _reserve(court, 1, wire, 8700, origin)
+	var shape := HexFootprint.sector(origin, Vector2i(1000, 0), 280_000, 750_000)
+	var shadowed: Array[Vector2i] = []
+	for cell: Vector2i in HexFootprint.selected_cells(shape, court.origin, court.topology_cells_view()):
+		if not ContinuousContact.wall_contact(origin, court.origin + HexGrid.center(cell), 5000, collision).is_empty(): shadowed.append(cell)
+	check(not shadowed.is_empty(), "phase cover has genuinely hidden deposit candidates")
+	world.combat_events.append(_spray_request(8700, wire, 1, origin))
+	HexProjectileCombat.resolve_sprays(world)
+	equal(int(cover.health), 0, "real Spray direct pressure breaks the one-health paid Rampart")
+	equal(target.health, target.health_maximum, "breaking Spray cannot hit the actor through its phase-initial cover")
+	var record: Dictionary = court.casts[cast_id]
+	equal(int(record.ground), HexChemistryWorld.MATTER_PER_CAST, "surviving Spray deposits only its finite paid stock")
+	for cell: Vector2i in shadowed:
+		check(not HexChemistryWorld.coverage(record).has(cell), "broken-cover pulse still excludes initially hidden whole cells")
+	check(ContinuousContact.wall_contact(origin, Vector2i(target.position_x, target.position_y), 5000, collision).is_empty(), "cover refresh opens the ray only after the pulse's damage and deposit resolve")
+	check(court.collision == collision.base_world, "optional Spray collision context does not replace default worldbone selection")
+	check(court.conservation_valid(), "paid Earth product and breaking Spray conserve all material")
 
 
 func _proportional(before: Dictionary, old_total: int, new_total: int) -> Dictionary:

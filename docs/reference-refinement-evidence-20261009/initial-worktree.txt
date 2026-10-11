@@ -1,0 +1,810 @@
+ M .agent/CONTINUOUS-IMPLEMENTATION-PROMPT.md
+ M .agent/HEX-RESUME.md
+ M .agent/OVERHAUL-IMPLEMENTATION.md
+ M .agent/OVERHAUL-PROMPT.md
+ M README.md
+ M SPECIFICATION.md
+ M content/abilities/foundation_abilities_v1.json
+ M content/maps/sanctum_campus_g2_v1.json
+ M content/runtime/runtime_build_identity_v1.json
+ M docs/CORE-GAME-DESIGN.md
+ M docs/CURRENT-CAST.md
+ M docs/ELEMENT-REACTIONS-IMPLEMENTATION-PLAN.md
+ M docs/HEX-PLAYTEST.md
+ M docs/MIRROR-AND-WORKSHOP-PLAN.md
+ M docs/WINDOWS-DELIVERY-CHECKPOINT.md
+ M export_presets.cfg
+ M reference/art/CURRENT-CHARACTER-REFERENCE.md
+ M scripts/current-build-summary.ps1
+ M scripts/current-state.ps1
+ M scripts/engine-guard.ps1
+ M scripts/package-hex.ps1
+ M scripts/test-current-build-summary.ps1
+ M scripts/test-engine-guard.ps1
+ M scripts/test.ps1
+ M src/app/bootstrap.gd
+ M src/app/character_overview_model.gd
+ M src/app/character_selection_model.gd
+ M src/app/character_weave_policy.gd
+ M src/app/hex_playground_demo.gd
+ M src/app/input_router.gd
+ M src/app/player_preferences.gd
+ M src/app/sanctum_station_model.gd
+ M src/app/spectator_focus.gd
+ M src/app/spell_loom_editor.gd
+ M src/content/ability_catalog.gd
+ M src/content/champion_catalog.gd
+ M src/content/sanctum_campus_layout.gd
+ M src/net/authoritative_session.gd
+ M src/net/client_prediction.gd
+ M src/net/hex_chemistry_snapshot.gd
+ M src/net/hex_snapshot_wire_packing.gd
+ M src/net/hex_world_snapshot.gd
+ M src/net/lan_lobby.gd
+ M src/net/session_charter.gd
+ M src/net/session_hearth.gd
+ M src/net/session_request_policy.gd
+ M src/net/session_round.gd
+ M src/net/session_snapshot.gd
+ M src/net/session_transport.gd
+ M src/net/world_snapshot_envelope.gd
+ M src/presentation/actor_motion_history.gd
+ M src/presentation/aim_reticle_presenter.gd
+ M src/presentation/cartoon_champion_presenter.gd
+ M src/presentation/character_selection_grid.gd
+ M src/presentation/chemistry_guide_model.gd
+ M src/presentation/combat_feedback_model.gd
+ M src/presentation/compact_combat_hud.gd
+ M src/presentation/element_audio.gd
+ M src/presentation/foundation_spell_presenter.gd
+ M src/presentation/hex_court_presenter.gd
+ M src/presentation/jump_presentation.gd
+ M src/presentation/landing_presentation.gd
+ M src/presentation/minimal_champion_motion.gd
+ M src/presentation/movement_guide_model.gd
+ M src/presentation/movement_practice_coach.gd
+ M src/presentation/natural_map_kit.gd
+ M src/presentation/pixel_movement_effects.gd
+ M src/presentation/pixel_spell_effects.gd
+ M src/presentation/player_compendium.gd
+ M src/presentation/sanctum_campus_renderer.gd
+ M src/presentation/sight_occlusion.gd
+ M src/presentation/spell_loom_presenter.gd
+ M src/presentation/wellspring_architecture_kit.gd
+ M src/presentation/wellspring_illustrated_kit.gd
+ M src/presentation/wellspring_interaction_presenter.gd
+ M src/presentation/wireframe_body_presenter.gd
+ M src/sim/chemistry/capacitor_field_policy.gd
+ M src/sim/chemistry/element_chemistry_system.gd
+ M src/sim/combat/combat_definition_table.gd
+ M src/sim/combat/combat_system.gd
+ M src/sim/combat/combat_tuning.gd
+ M src/sim/combat/continuous_contact.gd
+ M src/sim/core/action_transition_policy.gd
+ M src/sim/core/sim_command.gd
+ M src/sim/core/sim_config.gd
+ M src/sim/core/sim_world.gd
+ M src/sim/entities/player_state.gd
+ M src/sim/hex/hex_cast_parts.gd
+ M src/sim/hex/hex_chemistry_world.gd
+ M src/sim/hex/hex_collision_world.gd
+ M src/sim/hex/hex_convex_geometry.gd
+ M src/sim/hex/hex_court.gd
+ M src/sim/hex/hex_footprint.gd
+ M src/sim/hex/hex_grid.gd
+ M src/sim/hex/hex_product_effects.gd
+ M src/sim/hex/hex_projectile_combat.gd
+ M src/sim/hex/hex_recipe_policy.gd
+ M src/sim/hex/hex_trail_emitter.gd
+ M src/sim/movement/movement_system.gd
+ M src/sim/movement/movement_tuning.gd
+ M tests/integration/test_conservatory_route.gd
+ M tests/performance/probe_unified_snapshot_cost.gd
+ M tests/performance/profile_unified_wellspring.gd
+ M tests/run_all.gd
+ M tests/support/chemistry_coach_harness.gd
+ M tests/unit/test_action_transition_policy.gd
+ M tests/unit/test_actor_motion_history.gd
+ M tests/unit/test_authoritative_session.gd
+ M tests/unit/test_burst_projectile_presenter.gd
+ M tests/unit/test_capacitor_movement.gd
+ M tests/unit/test_cartoon_champion_presenter.gd
+ M tests/unit/test_character_gallery_integration.gd
+ M tests/unit/test_character_overview_model.gd
+ M tests/unit/test_character_selection_grid.gd
+ M tests/unit/test_character_selection_model.gd
+ M tests/unit/test_character_weave_integration.gd
+ M tests/unit/test_character_weave_policy.gd
+ M tests/unit/test_chemistry_practice_coach.gd
+ M tests/unit/test_client_prediction.gd
+ M tests/unit/test_combat.gd
+ M tests/unit/test_combat_definition_table.gd
+ M tests/unit/test_compact_combat_hud.gd
+ M tests/unit/test_continuous_contact.gd
+ M tests/unit/test_controls_round_trip.gd
+ M tests/unit/test_core.gd
+ M tests/unit/test_element_audio.gd
+ M tests/unit/test_element_chemistry_presenter.gd
+ M tests/unit/test_element_trails.gd
+ M tests/unit/test_elemental_bursts.gd
+ M tests/unit/test_foundation_spell_presenter.gd
+ M tests/unit/test_frostway_movement.gd
+ M tests/unit/test_heavy_blast_presenter.gd
+ M tests/unit/test_hex_authored_shapes.gd
+ M tests/unit/test_hex_branding.gd
+ M tests/unit/test_hex_canonical_sort.gd
+ M tests/unit/test_hex_cast_parts.gd
+ M tests/unit/test_hex_chemistry.gd
+ M tests/unit/test_hex_chemistry_snapshot.gd
+ M tests/unit/test_hex_collision_world.gd
+ M tests/unit/test_hex_court.gd
+ M tests/unit/test_hex_court_presenter.gd
+ M tests/unit/test_hex_field_interception.gd
+ M tests/unit/test_hex_footprint.gd
+ M tests/unit/test_hex_grid.gd
+ M tests/unit/test_hex_handoff_presentation.gd
+ M tests/unit/test_hex_optics.gd
+ M tests/unit/test_hex_playground_demo.gd
+ M tests/unit/test_hex_playground_panel.gd
+ M tests/unit/test_hex_product_effects.gd
+ M tests/unit/test_hex_projectile_combat.gd
+ M tests/unit/test_hex_recipe_policy.gd
+ M tests/unit/test_hex_selection.gd
+ M tests/unit/test_hex_shared_authority.gd
+ M tests/unit/test_hex_shared_presenter.gd
+ M tests/unit/test_hex_snapshot_optimization.gd
+ M tests/unit/test_hex_steam_occupation.gd
+ M tests/unit/test_hex_strength.gd
+ M tests/unit/test_hex_trail_emitter.gd
+ M tests/unit/test_hex_whole_coverage.gd
+ M tests/unit/test_hex_world_definition.gd
+ M tests/unit/test_hex_world_snapshot.gd
+ M tests/unit/test_input_router.gd
+ M tests/unit/test_jump_presentation.gd
+ M tests/unit/test_lan_lobby.gd
+ M tests/unit/test_landing_presentation.gd
+ M tests/unit/test_minimal_champion_motion.gd
+ M tests/unit/test_movement.gd
+ M tests/unit/test_movement_float.gd
+ M tests/unit/test_movement_guide_model.gd
+ M tests/unit/test_movement_height.gd
+ M tests/unit/test_movement_overhaul.gd
+ M tests/unit/test_movement_practice_coach.gd
+ M tests/unit/test_movement_response.gd
+ M tests/unit/test_movement_revision.gd
+ M tests/unit/test_natural_map_kit.gd
+ M tests/unit/test_pixel_assets_export.gd
+ M tests/unit/test_pixel_magic_library.gd
+ M tests/unit/test_player_compendium.gd
+ M tests/unit/test_player_preferences.gd
+ M tests/unit/test_player_resources.gd
+ M tests/unit/test_pov_presentation.gd
+ M tests/unit/test_practice_coach_integration.gd
+ M tests/unit/test_reaction_strength_provenance.gd
+ M tests/unit/test_runtime_content_summary.gd
+ M tests/unit/test_sanctum_campus_layout.gd
+ M tests/unit/test_sanctum_station_model.gd
+ M tests/unit/test_session_charter.gd
+ M tests/unit/test_session_request_policy.gd
+ M tests/unit/test_session_round.gd
+ M tests/unit/test_session_snapshot.gd
+ M tests/unit/test_session_transport.gd
+ M tests/unit/test_sight_occlusion.gd
+ M tests/unit/test_spectator_focus.gd
+ M tests/unit/test_spell_delivery_expansion.gd
+ M tests/unit/test_spell_loom_editor.gd
+ M tests/unit/test_unified_hex_paid_matrix.gd
+ M tests/unit/test_weave_acknowledgement.gd
+ M tests/unit/test_wellspring_architecture_kit.gd
+ M tests/unit/test_wellspring_illustrated_kit.gd
+ M tests/unit/test_wellspring_interaction_presenter.gd
+ M tests/visual/capture_campus_startup.gd
+ M tests/visual/capture_global_hex.gd
+ M tests/visual/capture_unified_wellspring.gd
+?? .agent/ASPECT-DELEGATION.md
+?? .agent/RACE-SPRITE-PRODUCTION.md
+?? .agent/SIMPLIFY-WITHOUT-LOSS.md
+?? .agent/archive/OVERHAUL-PROMPT-before-pixel-20261001.md
+?? .agent/archive/hex-before-design-20260923.md
+?? .cursor/
+?? art_batches/character_cast_v1/
+?? art_batches/character_motion_v1/
+?? art_batches/character_volume_v1/
+?? art_batches/pixel_actions_v1/
+?? art_batches/pixel_actions_v2/
+?? art_batches/pixel_body_pilot_v1/
+?? art_batches/pixel_cast_v1/
+?? art_batches/race_sprite_factory_v1/
+?? assets/portraits/
+?? assets/sprites/fullbody_cast_v1/
+?? assets/sprites/hex_water_pilot_v1/
+?? assets/sprites/pixel_actions_v1/
+?? assets/sprites/pixel_body_pilot_v1/
+?? assets/sprites/pixel_cast_v1/
+?? docs/CHARACTER-IDENTITY-CHECKPOINT.md
+?? docs/CHARACTER-PERSONALITY.md
+?? docs/CLEANUP-PLAN-20261008.md
+?? docs/COMPACT-STATIONARY-REACTIONS.md
+?? docs/FLUIDITY-REFINEMENT.md
+?? docs/HEX-ASPECT-REFINEMENT.md
+?? docs/HEX-BALANCE-CONTRACT.md
+?? docs/HEX-BOUNDARY-REUSE.md
+?? docs/HEX-BUILDING-DIRECTORIES.md
+?? docs/HEX-CAPACITY-64.md
+?? docs/HEX-CAST-MOTION.md
+?? docs/HEX-COMBAT-OPTIONS.md
+?? docs/HEX-COMBAT-PHASE-CLARITY.md
+?? docs/HEX-COMPLETION-RUN.md
+?? docs/HEX-CONTACT-CLARITY.md
+?? docs/HEX-CRAFT-CHECKPOINT.md
+?? docs/HEX-DUEL-CHECKPOINT.md
+?? docs/HEX-ENGINEERING-RUN.md
+?? docs/HEX-LIVELY-MOTION.md
+?? docs/HEX-MATCH-REFINEMENT.md
+?? docs/HEX-OPTIMIZATION-CHECKPOINT.md
+?? docs/HEX-PERFORMANCE-EIGHT.md
+?? docs/HEX-PIXEL-BODY-PILOT.md
+?? docs/HEX-PIXEL-CAST.md
+?? docs/HEX-POLISH-CHECKPOINT.md
+?? docs/HEX-PRACTICE-MASONRY.md
+?? docs/HEX-PRESSURE-HEADROOM.md
+?? docs/HEX-QUALITY-FOUNDATION.md
+?? docs/HEX-READABLE-FREEDOM.md
+?? docs/HEX-RETRO-REFINEMENT.md
+?? docs/HEX-RIVAL-CHECKPOINT.md
+?? docs/HEX-SCALE-CALIBRATION.md
+?? docs/HEX-SCALE-PERFORMANCE.md
+?? docs/HEX-SEALED-TOPOLOGY.md
+?? docs/HEX-SIMPLIFICATION.md
+?? docs/HEX-SNAPSHOT-REUSE.md
+?? docs/HEX-TEAM-CHECKPOINT.md
+?? docs/HEX-UX-DECISION-CLARITY.md
+?? docs/HEX-VISUAL-HIERARCHY.md
+?? docs/MOMENTUM-ROSTER-CHECKPOINT.md
+?? docs/MOVEMENT-IMPACT-CHECKPOINT.md
+?? docs/PORTRAIT-WINDOWS-DELIVERY.md
+?? docs/WELLSPRING-PLAYGROUND.md
+?? docs/actor-reuse-evidence-20261006/
+?? docs/archive/CURRENT-CAST-before-doc-consolidation-20261007.md
+?? docs/archive/HEX-PLAYTEST-before-quality-20260929.md
+?? docs/archive/HEX-RESUME-before-duel-20261006.md
+?? docs/archive/HEX-RESUME-before-retro-20260928.md
+?? docs/archive/OVERHAUL-IMPLEMENTATION-before-retro-20260928.md
+?? docs/archive/README-before-doc-consolidation-20261007.md
+?? docs/archive/README-before-retro-20260928.md
+?? docs/archive/core-docs-20261007/
+?? docs/art-direction-20261006/
+?? docs/art/
+?? docs/aspect-m1-evidence-20261007/
+?? docs/aspect-refinement-evidence-20261006/
+?? docs/balance-evidence-20261007/
+?? docs/boundary-reuse-evidence-20260930/
+?? docs/build-retention/
+?? docs/canonical-evidence-20261004/
+?? docs/cast-identity-evidence-20261008/
+?? docs/cast-motion-evidence-20261003/
+?? docs/combat-choices-evidence-20261007/
+?? docs/combat-options-evidence-20260928/
+?? docs/combat-phase-evidence-20260928/
+?? docs/compact-stationary-evidence/
+?? docs/completion-evidence-20261004/
+?? docs/contact-clarity-evidence-20260928/
+?? docs/core-m2-evidence-20261007/
+?? docs/core-m3-evidence-20261007/
+?? docs/craft-evidence-20261003/
+?? docs/directory-evidence-20260928/
+?? docs/duel-evidence-20261006/
+?? docs/engagement-evidence-20261005/
+?? docs/engineering-evidence-20261003/
+?? docs/fluidity-evidence-20260928/
+?? docs/gamefeel-evidence-20261007/
+?? docs/glow-flow-evidence-20261007/
+?? docs/headroom-evidence-20260930/
+?? docs/lively-motion-evidence-20260929/
+?? docs/match-refinement-evidence-20261007/
+?? docs/material-polish-evidence-20261004/
+?? docs/material-polish-evidence-20261005/
+?? docs/momentum-roster-evidence-20261008/
+?? docs/optimization-evidence-20261006/
+?? docs/performance-eight-evidence-20260928/
+?? docs/pipeline-evidence-20261003/
+?? docs/pixel-body-evidence-20261001/
+?? docs/pixel-cast-evidence-20261002/
+?? docs/playground-evidence-20260928/
+?? docs/polish-evidence-20261004/
+?? docs/polish2-evidence-20261004/
+?? docs/polish3-evidence-20261004/
+?? docs/portrait-gallery-evidence-20261008/
+?? docs/portrait-windows-evidence-20261008/
+?? docs/practice-masonry-evidence-20260929/
+?? docs/publication-evidence-20261004/
+?? docs/quality-foundation-evidence-20260929/
+?? docs/readable-freedom-evidence-20260928/
+?? docs/refinement-evidence-20261005/
+?? docs/retro-evidence-20260928/
+?? docs/rival-evidence-20261006/
+?? docs/scale-performance-evidence-20261003/
+?? docs/sealed-topology-evidence-20261003/
+?? docs/simplification-evidence-20260930/
+?? docs/snapshot-reuse-evidence-20260929/
+?? docs/team-checkpoint-evidence-20261007/
+?? docs/throughput-evidence-20261005/
+?? docs/ux-decision-evidence-20260929/
+?? docs/verification/hex-acceptance-20260921/
+?? docs/verification/hex-cell-json-20260923/
+?? docs/verification/hex-design-20260923/
+?? docs/verification/hex-gallery-availability-20260923/
+?? docs/verification/hex-hash-20260923/
+?? docs/verification/hex-loom-availability-20260923/
+?? docs/verification/hex-movement-c1-20260926/
+?? docs/verification/hex-native-sort-20260923/
+?? docs/verification/hex-render-frame-20260923/
+?? docs/verification/hex-responsive-20260923/
+?? docs/verification/hex-viewport-20260923/
+?? docs/visual-hierarchy-evidence-20260929/
+?? docs/work-notes/
+?? packaging/hex-windows-tests/
+?? packaging/hex-windows/
+?? reference/acceptance-20260921/
+?? reference/art/portraits_20261008/
+?? scripts/balance-audit-model.gd
+?? scripts/balance-audit-model.gd.uid
+?? scripts/build-hex-installer.ps1
+?? scripts/capture-fullbody-game.ps1
+?? scripts/check-champion-portraits.ps1
+?? scripts/open-native-acceptance.ps1
+?? scripts/prune-local-builds.ps1
+?? scripts/review-lively-motion.ps1
+?? scripts/smoke-hex-installed.ps1
+?? scripts/smoke-hex-teams.ps1
+?? scripts/test-hex-installer.ps1
+?? scripts/test-hex-real-update.ps1
+?? scripts/test-loom-journey.ps1
+?? scripts/test-movement-cast-journey.ps1
+?? scripts/verify-hex-portable.ps1
+?? src/app/solo_duel_rival.gd
+?? src/app/solo_duel_rival.gd.uid
+?? src/app/solo_duel_trial.gd
+?? src/app/solo_duel_trial.gd.uid
+?? src/app/ui_grid_navigation.gd
+?? src/app/ui_grid_navigation.gd.uid
+?? src/app/wellspring_service_directory.gd
+?? src/app/wellspring_service_directory.gd.uid
+?? src/presentation/champion_portrait_library.gd
+?? src/presentation/champion_portrait_library.gd.uid
+?? src/presentation/character_movement_trail.gd
+?? src/presentation/character_movement_trail.gd.uid
+?? src/presentation/character_viewport_policy.gd
+?? src/presentation/character_viewport_policy.gd.uid
+?? src/presentation/fullbody_cast_presenter.gd
+?? src/presentation/fullbody_cast_presenter.gd.uid
+?? src/presentation/ground_skid_presentation.gd
+?? src/presentation/ground_skid_presentation.gd.uid
+?? src/presentation/hex_cast_release.gd
+?? src/presentation/hex_cast_release.gd.uid
+?? src/presentation/hex_combat_label.gd
+?? src/presentation/hex_combat_label.gd.uid
+?? src/presentation/hex_contact_punctuation.gd
+?? src/presentation/hex_contact_punctuation.gd.uid
+?? src/presentation/hex_demo_result_card.gd
+?? src/presentation/hex_demo_result_card.gd.uid
+?? src/presentation/hex_environment_layout.gd
+?? src/presentation/hex_environment_layout.gd.uid
+?? src/presentation/hex_magic_glow.gd
+?? src/presentation/hex_magic_glow.gd.uid
+?? src/presentation/hex_material_surface.gd
+?? src/presentation/hex_material_surface.gd.uid
+?? src/presentation/hex_projectile_facets.gd
+?? src/presentation/hex_projectile_facets.gd.uid
+?? src/presentation/hex_water_material_presenter.gd
+?? src/presentation/hex_water_material_presenter.gd.uid
+?? src/presentation/pixel_action_bank.gd
+?? src/presentation/pixel_action_bank.gd.uid
+?? src/presentation/pixel_flipbook_presenter.gd
+?? src/presentation/pixel_flipbook_presenter.gd.uid
+?? src/presentation/player_camera_rig.gd
+?? src/presentation/player_camera_rig.gd.uid
+?? src/presentation/pov_terrain_backdrop.gd
+?? src/presentation/pov_terrain_backdrop.gd.uid
+?? src/presentation/practice_wall_skin.gd
+?? src/presentation/practice_wall_skin.gd.uid
+?? src/presentation/retro_material_marks.gd
+?? src/presentation/retro_material_marks.gd.uid
+?? src/presentation/session_round_label.gd
+?? src/presentation/session_round_label.gd.uid
+?? src/presentation/solo_duel_trial_panel.gd
+?? src/presentation/solo_duel_trial_panel.gd.uid
+?? src/presentation/spell_binding_labels.gd
+?? src/presentation/spell_binding_labels.gd.uid
+?? src/presentation/team_match_presentation.gd
+?? src/presentation/team_match_presentation.gd.uid
+?? src/presentation/wellspring_service_buildings.gd
+?? src/presentation/wellspring_service_buildings.gd.uid
+?? src/sim/hex/hex_canonical_state.gd
+?? src/sim/hex/hex_canonical_state.gd.uid
+?? src/sim/hex/hex_cell_topology.gd
+?? src/sim/hex/hex_cell_topology.gd.uid
+?? src/sim/hex/hex_contact_workset.gd
+?? src/sim/hex/hex_contact_workset.gd.uid
+?? tests/art/
+?? tests/diagnostics/aim_reticle_edge_journey.gd
+?? tests/diagnostics/aim_reticle_edge_journey.gd.uid
+?? tests/diagnostics/gallery_availability_journey.gd
+?? tests/diagnostics/gallery_availability_journey.gd.uid
+?? tests/diagnostics/hex_geometry_comparison_20260923.gd
+?? tests/diagnostics/hex_geometry_comparison_20260923.gd.uid
+?? tests/diagnostics/jump_preparation_journey.gd
+?? tests/diagnostics/jump_preparation_journey.gd.uid
+?? tests/diagnostics/loom_availability_journey.gd
+?? tests/diagnostics/loom_availability_journey.gd.uid
+?? tests/diagnostics/loom_character_journey.gd
+?? tests/diagnostics/loom_character_journey.gd.uid
+?? tests/diagnostics/loom_feedback_journey.gd
+?? tests/diagnostics/loom_feedback_journey.gd.uid
+?? tests/diagnostics/loom_player_journey.gd
+?? tests/diagnostics/loom_player_journey.gd.uid
+?? tests/diagnostics/movement_advanced_journey.gd
+?? tests/diagnostics/movement_advanced_journey.gd.uid
+?? tests/diagnostics/movement_cast_journey.gd
+?? tests/diagnostics/movement_cast_journey.gd.uid
+?? tests/diagnostics/ux_player_journey.gd
+?? tests/diagnostics/ux_player_journey.gd.uid
+?? tests/diagnostics/validate_canonical_leaf_receipt.gd
+?? tests/diagnostics/validate_canonical_leaf_receipt.gd.uid
+?? tests/fixtures/
+?? tests/performance/profile_canonical_cell_rows.gd
+?? tests/performance/profile_canonical_cell_rows.gd.uid
+?? tests/performance/profile_canonical_dynamic_sort.gd
+?? tests/performance/profile_canonical_dynamic_sort.gd.uid
+?? tests/performance/profile_canonical_leaf_candidate.gd
+?? tests/performance/profile_canonical_leaf_candidate.gd.uid
+?? tests/performance/profile_capacity_tiers.gd
+?? tests/performance/profile_capacity_tiers.gd.uid
+?? tests/performance/profile_capture_pipeline.gd
+?? tests/performance/profile_capture_pipeline.gd.uid
+?? tests/performance/profile_capture_reconstruction.gd
+?? tests/performance/profile_capture_reconstruction.gd.uid
+?? tests/performance/profile_cast_parts_validation.gd
+?? tests/performance/profile_cast_parts_validation.gd.uid
+?? tests/performance/profile_character_stream.gd
+?? tests/performance/profile_character_stream.gd.uid
+?? tests/performance/profile_character_viewport.gd
+?? tests/performance/profile_character_viewport.gd.uid
+?? tests/performance/profile_collision_topology.gd
+?? tests/performance/profile_collision_topology.gd.uid
+?? tests/performance/profile_empty_hex_ground.gd
+?? tests/performance/profile_empty_hex_ground.gd.uid
+?? tests/performance/profile_fine_grid_stages.gd
+?? tests/performance/profile_fine_grid_stages.gd.uid
+?? tests/performance/profile_fine_grid_steps.gd
+?? tests/performance/profile_fine_grid_steps.gd.uid
+?? tests/performance/profile_hex_boundary_reuse.gd
+?? tests/performance/profile_hex_boundary_reuse.gd.uid
+?? tests/performance/profile_hex_cell_json_candidate.gd
+?? tests/performance/profile_hex_cell_json_candidate.gd.uid
+?? tests/performance/profile_hex_draw_components.gd
+?? tests/performance/profile_hex_draw_components.gd.uid
+?? tests/performance/profile_hex_hash_candidate.gd
+?? tests/performance/profile_hex_hash_candidate.gd.uid
+?? tests/performance/profile_hex_hash_integrated.gd
+?? tests/performance/profile_hex_hash_integrated.gd.uid
+?? tests/performance/profile_hex_hash_stages.gd
+?? tests/performance/profile_hex_hash_stages.gd.uid
+?? tests/performance/profile_hex_native_sort_candidate.gd
+?? tests/performance/profile_hex_native_sort_candidate.gd.uid
+?? tests/performance/profile_hex_native_sort_integrated.gd
+?? tests/performance/profile_hex_native_sort_integrated.gd.uid
+?? tests/performance/profile_hex_ordered_geometry_candidate.gd
+?? tests/performance/profile_hex_ordered_geometry_candidate.gd.uid
+?? tests/performance/profile_hex_render_frame_candidate.gd
+?? tests/performance/profile_hex_render_frame_candidate.gd.uid
+?? tests/performance/profile_hex_render_frame_native_candidate.gd
+?? tests/performance/profile_hex_render_frame_native_candidate.gd.uid
+?? tests/performance/profile_hex_snapshot_lifetime.gd
+?? tests/performance/profile_hex_snapshot_lifetime.gd.uid
+?? tests/performance/profile_hex_sparse_storage.gd
+?? tests/performance/profile_hex_sparse_storage.gd.uid
+?? tests/performance/profile_hex_style_reuse.gd
+?? tests/performance/profile_hex_style_reuse.gd.uid
+?? tests/performance/profile_hex_trusted_cells.gd
+?? tests/performance/profile_hex_trusted_cells.gd.uid
+?? tests/performance/profile_hex_viewport_candidate.gd
+?? tests/performance/profile_hex_viewport_candidate.gd.uid
+?? tests/performance/profile_hex_wire_decode_candidate.gd
+?? tests/performance/profile_hex_wire_decode_candidate.gd.uid
+?? tests/performance/profile_immutable_topology_candidate.gd
+?? tests/performance/profile_immutable_topology_candidate.gd.uid
+?? tests/performance/profile_new_ground_workset.gd
+?? tests/performance/profile_new_ground_workset.gd.uid
+?? tests/performance/profile_pixel_body_pilot.gd
+?? tests/performance/profile_pixel_body_pilot.gd.uid
+?? tests/performance/profile_pixel_descriptor_reuse.gd
+?? tests/performance/profile_pixel_descriptor_reuse.gd.uid
+?? tests/performance/profile_policy_load.gd
+?? tests/performance/profile_policy_load.gd.uid
+?? tests/performance/profile_pressure_queries.gd
+?? tests/performance/profile_pressure_queries.gd.uid
+?? tests/performance/profile_producer_topology_reuse.gd
+?? tests/performance/profile_producer_topology_reuse.gd.uid
+?? tests/performance/profile_publication_stages.gd
+?? tests/performance/profile_publication_stages.gd.uid
+?? tests/performance/profile_reactive_pressure.gd
+?? tests/performance/profile_reactive_pressure.gd.uid
+?? tests/performance/profile_sealed_topology.gd
+?? tests/performance/profile_sealed_topology.gd.uid
+?? tests/performance/profile_snapshot_canonical.gd
+?? tests/performance/profile_snapshot_canonical.gd.uid
+?? tests/support/frozen_hex_canonical_pre_leaf.gd
+?? tests/support/frozen_hex_canonical_pre_leaf.gd.uid
+?? tests/support/frozen_hex_canonical_state_e17.gd
+?? tests/support/frozen_hex_canonical_state_e17.gd.uid
+?? tests/support/frozen_hex_world_snapshot_e16.gd
+?? tests/support/frozen_hex_world_snapshot_e16.gd.uid
+?? tests/support/hex_boundary_oracle.gd
+?? tests/support/hex_boundary_oracle.gd.uid
+?? tests/support/hex_canonical_leaf_candidate.gd
+?? tests/support/hex_canonical_leaf_candidate.gd.uid
+?? tests/support/hex_canonical_pre_e9.gd
+?? tests/support/hex_canonical_pre_e9.gd.uid
+?? tests/support/hex_cast_parts_pre_validation_aggregate.gd
+?? tests/support/hex_cast_parts_pre_validation_aggregate.gd.uid
+?? tests/support/hex_cast_parts_validation_fixture.gd
+?? tests/support/hex_cast_parts_validation_fixture.gd.uid
+?? tests/support/hex_cell_json_candidate.gd
+?? tests/support/hex_cell_json_candidate.gd.uid
+?? tests/support/hex_chemistry_snapshot_pre_e9.gd
+?? tests/support/hex_chemistry_snapshot_pre_e9.gd.uid
+?? tests/support/hex_collision_pre_e7.gd
+?? tests/support/hex_collision_pre_e7.gd.uid
+?? tests/support/hex_draw_component_harness.gd
+?? tests/support/hex_draw_component_harness.gd.uid
+?? tests/support/hex_dynamic_leaf_candidate.gd
+?? tests/support/hex_dynamic_leaf_candidate.gd.uid
+?? tests/support/hex_dynamic_sort_pre_native.gd
+?? tests/support/hex_dynamic_sort_pre_native.gd.uid
+?? tests/support/hex_dynamic_sort_threshold_candidate.gd
+?? tests/support/hex_dynamic_sort_threshold_candidate.gd.uid
+?? tests/support/hex_immutable_topology_candidate.gd
+?? tests/support/hex_immutable_topology_candidate.gd.uid
+?? tests/support/hex_native_sort_candidate.gd
+?? tests/support/hex_native_sort_candidate.gd.uid
+?? tests/support/hex_ordered_geometry_candidate.gd
+?? tests/support/hex_ordered_geometry_candidate.gd.uid
+?? tests/support/hex_pressure_collision_oracle.gd
+?? tests/support/hex_pressure_collision_oracle.gd.uid
+?? tests/support/hex_pressure_footprint_oracle.gd
+?? tests/support/hex_pressure_footprint_oracle.gd.uid
+?? tests/support/hex_producer_topology_legacy_oracle.gd
+?? tests/support/hex_producer_topology_legacy_oracle.gd.uid
+?? tests/support/hex_render_frame_candidate.gd
+?? tests/support/hex_render_frame_candidate.gd.uid
+?? tests/support/hex_render_frame_native_presenter.gd
+?? tests/support/hex_render_frame_native_presenter.gd.uid
+?? tests/support/hex_stable_cells_candidate.gd
+?? tests/support/hex_stable_cells_candidate.gd.uid
+?? tests/support/hex_style_oracle.gd
+?? tests/support/hex_style_oracle.gd.uid
+?? tests/support/hex_trusted_cells_legacy_oracle.gd
+?? tests/support/hex_trusted_cells_legacy_oracle.gd.uid
+?? tests/support/hex_viewport_candidate.gd
+?? tests/support/hex_viewport_candidate.gd.uid
+?? tests/support/hex_viewport_harness.gd
+?? tests/support/hex_viewport_harness.gd.uid
+?? tests/support/hex_wire_decode_candidate.gd
+?? tests/support/hex_wire_decode_candidate.gd.uid
+?? tests/support/hex_world_snapshot_pre_e7e8.gd
+?? tests/support/hex_world_snapshot_pre_e7e8.gd.uid
+?? tests/support/hex_world_snapshot_pre_e9.gd
+?? tests/support/hex_world_snapshot_pre_e9.gd.uid
+?? tests/support/pixel_descriptor_reference.gd
+?? tests/support/pixel_descriptor_reference.gd.uid
+?? tests/support/pixel_movement_reference.gd
+?? tests/support/pixel_movement_reference.gd.uid
+?? tests/support/solo_trial_harness.gd
+?? tests/support/solo_trial_harness.gd.uid
+?? tests/unit/test_balance_audit.gd
+?? tests/unit/test_balance_audit.gd.uid
+?? tests/unit/test_building_directory_integration.gd
+?? tests/unit/test_building_directory_integration.gd.uid
+?? tests/unit/test_champion_portrait_library.gd
+?? tests/unit/test_champion_portrait_library.gd.uid
+?? tests/unit/test_character_attunement_recovery.gd
+?? tests/unit/test_character_attunement_recovery.gd.uid
+?? tests/unit/test_character_movement_trail.gd
+?? tests/unit/test_character_movement_trail.gd.uid
+?? tests/unit/test_character_viewport_policy.gd
+?? tests/unit/test_character_viewport_policy.gd.uid
+?? tests/unit/test_demo_result_integration.gd
+?? tests/unit/test_demo_result_integration.gd.uid
+?? tests/unit/test_fullbody_cast.gd
+?? tests/unit/test_fullbody_cast.gd.uid
+?? tests/unit/test_hex_canonical_cell_rows.gd
+?? tests/unit/test_hex_canonical_cell_rows.gd.uid
+?? tests/unit/test_hex_canonical_leaf_candidate.gd
+?? tests/unit/test_hex_canonical_leaf_candidate.gd.uid
+?? tests/unit/test_hex_canonical_topology_bytes.gd
+?? tests/unit/test_hex_canonical_topology_bytes.gd.uid
+?? tests/unit/test_hex_capture_callback_safety.gd
+?? tests/unit/test_hex_capture_callback_safety.gd.uid
+?? tests/unit/test_hex_cast_release.gd
+?? tests/unit/test_hex_cast_release.gd.uid
+?? tests/unit/test_hex_cell_storage.gd
+?? tests/unit/test_hex_cell_storage.gd.uid
+?? tests/unit/test_hex_chemistry_prepare.gd
+?? tests/unit/test_hex_chemistry_prepare.gd.uid
+?? tests/unit/test_hex_collision_topology.gd
+?? tests/unit/test_hex_collision_topology.gd.uid
+?? tests/unit/test_hex_combat_labels.gd
+?? tests/unit/test_hex_combat_labels.gd.uid
+?? tests/unit/test_hex_contact_punctuation.gd
+?? tests/unit/test_hex_contact_punctuation.gd.uid
+?? tests/unit/test_hex_contact_workset.gd
+?? tests/unit/test_hex_contact_workset.gd.uid
+?? tests/unit/test_hex_demo_result_card.gd
+?? tests/unit/test_hex_demo_result_card.gd.uid
+?? tests/unit/test_hex_environment_layout.gd
+?? tests/unit/test_hex_environment_layout.gd.uid
+?? tests/unit/test_hex_hash_specialization.gd
+?? tests/unit/test_hex_hash_specialization.gd.uid
+?? tests/unit/test_hex_immutable_topology_candidate.gd
+?? tests/unit/test_hex_immutable_topology_candidate.gd.uid
+?? tests/unit/test_hex_material_surface.gd
+?? tests/unit/test_hex_material_surface.gd.uid
+?? tests/unit/test_hex_new_ground_workset.gd
+?? tests/unit/test_hex_new_ground_workset.gd.uid
+?? tests/unit/test_hex_owned_capture.gd
+?? tests/unit/test_hex_owned_capture.gd.uid
+?? tests/unit/test_hex_pressure_headroom.gd
+?? tests/unit/test_hex_pressure_headroom.gd.uid
+?? tests/unit/test_hex_producer_topology_reuse.gd
+?? tests/unit/test_hex_producer_topology_reuse.gd.uid
+?? tests/unit/test_hex_projectile_facets.gd
+?? tests/unit/test_hex_projectile_facets.gd.uid
+?? tests/unit/test_hex_render_frame.gd
+?? tests/unit/test_hex_render_frame.gd.uid
+?? tests/unit/test_hex_round_result.gd
+?? tests/unit/test_hex_round_result.gd.uid
+?? tests/unit/test_hex_sealed_snapshot.gd
+?? tests/unit/test_hex_sealed_snapshot.gd.uid
+?? tests/unit/test_hex_sparse_storage.gd
+?? tests/unit/test_hex_sparse_storage.gd.uid
+?? tests/unit/test_hex_strict_wire_decode.gd
+?? tests/unit/test_hex_strict_wire_decode.gd.uid
+?? tests/unit/test_hex_water_pilot.gd
+?? tests/unit/test_hex_water_pilot.gd.uid
+?? tests/unit/test_landing_airborne_contact.gd
+?? tests/unit/test_landing_airborne_contact.gd.uid
+?? tests/unit/test_movement_checkpoint1.gd
+?? tests/unit/test_movement_checkpoint1.gd.uid
+?? tests/unit/test_movement_checkpoint1_ground.gd
+?? tests/unit/test_movement_checkpoint1_ground.gd.uid
+?? tests/unit/test_movement_checkpoint1_integration.gd
+?? tests/unit/test_movement_checkpoint1_integration.gd.uid
+?? tests/unit/test_movement_checkpoint1_visuals.gd
+?? tests/unit/test_movement_checkpoint1_visuals.gd.uid
+?? tests/unit/test_owned_publication.gd
+?? tests/unit/test_owned_publication.gd.uid
+?? tests/unit/test_pixel_action_bank.gd
+?? tests/unit/test_pixel_action_bank.gd.uid
+?? tests/unit/test_pixel_cast.gd
+?? tests/unit/test_pixel_cast.gd.uid
+?? tests/unit/test_pixel_cast_continuity.gd
+?? tests/unit/test_pixel_cast_continuity.gd.uid
+?? tests/unit/test_pixel_descriptor_reuse.gd
+?? tests/unit/test_pixel_descriptor_reuse.gd.uid
+?? tests/unit/test_pixel_flipbook_presenter.gd
+?? tests/unit/test_pixel_flipbook_presenter.gd.uid
+?? tests/unit/test_player_camera_rig.gd
+?? tests/unit/test_player_camera_rig.gd.uid
+?? tests/unit/test_pov_terrain_context.gd
+?? tests/unit/test_pov_terrain_context.gd.uid
+?? tests/unit/test_session_broadcast_bytes.gd
+?? tests/unit/test_session_broadcast_bytes.gd.uid
+?? tests/unit/test_session_receive_freshness.gd
+?? tests/unit/test_session_receive_freshness.gd.uid
+?? tests/unit/test_session_round_label.gd
+?? tests/unit/test_session_round_label.gd.uid
+?? tests/unit/test_solo_duel_rival.gd
+?? tests/unit/test_solo_duel_rival.gd.uid
+?? tests/unit/test_solo_duel_trial.gd
+?? tests/unit/test_solo_duel_trial.gd.uid
+?? tests/unit/test_solo_duel_trial_panel.gd
+?? tests/unit/test_solo_duel_trial_panel.gd.uid
+?? tests/unit/test_solo_duel_world_tell.gd
+?? tests/unit/test_solo_duel_world_tell.gd.uid
+?? tests/unit/test_solo_trial_process.gd
+?? tests/unit/test_solo_trial_process.gd.uid
+?? tests/unit/test_spell_binding_labels.gd
+?? tests/unit/test_spell_binding_labels.gd.uid
+?? tests/unit/test_spell_loom_input_handoff.gd
+?? tests/unit/test_spell_loom_input_handoff.gd.uid
+?? tests/unit/test_team_match_presentation.gd
+?? tests/unit/test_team_match_presentation.gd.uid
+?? tests/unit/test_team_replication.gd
+?? tests/unit/test_team_replication.gd.uid
+?? tests/unit/test_team_round.gd
+?? tests/unit/test_team_round.gd.uid
+?? tests/unit/test_wellspring_service_buildings.gd
+?? tests/unit/test_wellspring_service_buildings.gd.uid
+?? tests/unit/test_wellspring_service_directory.gd
+?? tests/unit/test_wellspring_service_directory.gd.uid
+?? tests/unit/test_world_envelope_metadata.gd
+?? tests/unit/test_world_envelope_metadata.gd.uid
+?? tests/unit/test_world_publication.gd
+?? tests/unit/test_world_publication.gd.uid
+?? tests/unit/test_world_publication_edges.gd
+?? tests/unit/test_world_publication_edges.gd.uid
+?? tests/visual/assemble_detail_review.py
+?? tests/visual/assemble_motion_preview.py
+?? tests/visual/capture_aspect_refinement.gd
+?? tests/visual/capture_aspect_refinement.gd.uid
+?? tests/visual/capture_balance_loom.gd
+?? tests/visual/capture_balance_loom.gd.uid
+?? tests/visual/capture_building_directories.gd
+?? tests/visual/capture_building_directories.gd.uid
+?? tests/visual/capture_cast_identity_checkpoint.gd
+?? tests/visual/capture_cast_identity_checkpoint.gd.uid
+?? tests/visual/capture_champion_portraits.gd
+?? tests/visual/capture_champion_portraits.gd.uid
+?? tests/visual/capture_character_viewport.gd
+?? tests/visual/capture_character_viewport.gd.uid
+?? tests/visual/capture_combat_options.gd
+?? tests/visual/capture_combat_options.gd.uid
+?? tests/visual/capture_directory_ingredients.gd
+?? tests/visual/capture_directory_ingredients.gd.uid
+?? tests/visual/capture_fluid_motion.gd
+?? tests/visual/capture_fluid_motion.gd.uid
+?? tests/visual/capture_fullbody_cast.gd
+?? tests/visual/capture_fullbody_cast.gd.uid
+?? tests/visual/capture_gamefeel_gallery.gd
+?? tests/visual/capture_gamefeel_gallery.gd.uid
+?? tests/visual/capture_glow_flow.gd
+?? tests/visual/capture_glow_flow.gd.uid
+?? tests/visual/capture_hex_cast_release.gd
+?? tests/visual/capture_hex_cast_release.gd.uid
+?? tests/visual/capture_hex_combat_labels.gd
+?? tests/visual/capture_hex_combat_labels.gd.uid
+?? tests/visual/capture_hex_ground.gd
+?? tests/visual/capture_hex_ground.gd.uid
+?? tests/visual/capture_hex_material_gallery.gd
+?? tests/visual/capture_hex_material_gallery.gd.uid
+?? tests/visual/capture_match_refinement.gd
+?? tests/visual/capture_match_refinement.gd.uid
+?? tests/visual/capture_momentum_roster_checkpoint.gd
+?? tests/visual/capture_momentum_roster_checkpoint.gd.uid
+?? tests/visual/capture_movement_checkpoint1.gd
+?? tests/visual/capture_movement_checkpoint1.gd.uid
+?? tests/visual/capture_movement_impact_checkpoint.gd
+?? tests/visual/capture_movement_impact_checkpoint.gd.uid
+?? tests/visual/capture_pixel_actions.gd
+?? tests/visual/capture_pixel_actions.gd.uid
+?? tests/visual/capture_pixel_body_pilot.gd
+?? tests/visual/capture_pixel_body_pilot.gd.uid
+?? tests/visual/capture_pixel_cast.gd
+?? tests/visual/capture_pixel_cast.gd.uid
+?? tests/visual/capture_pixel_pilot_motion.gd
+?? tests/visual/capture_pixel_pilot_motion.gd.uid
+?? tests/visual/capture_playground.gd
+?? tests/visual/capture_playground.gd.uid
+?? tests/visual/capture_readable_freedom.gd
+?? tests/visual/capture_readable_freedom.gd.uid
+?? tests/visual/capture_retro_materials.gd
+?? tests/visual/capture_retro_materials.gd.uid
+?? tests/visual/capture_retro_motion.gd
+?? tests/visual/capture_retro_motion.gd.uid
+?? tests/visual/capture_retro_refinement.gd
+?? tests/visual/capture_retro_refinement.gd.uid
+?? tests/visual/capture_solo_duel_trial.gd
+?? tests/visual/capture_solo_duel_trial.gd.uid
+?? tests/visual/capture_spray_cover.gd
+?? tests/visual/capture_spray_cover.gd.uid
+?? tests/visual/capture_station_fog_labels.gd
+?? tests/visual/capture_station_fog_labels.gd.uid
+?? tests/visual/capture_team_checkpoint.gd
+?? tests/visual/capture_team_checkpoint.gd.uid
+?? tests/visual/capture_terrain_visibility.gd
+?? tests/visual/capture_terrain_visibility.gd.uid
+?? tests/visual/capture_water_pilot.gd
+?? tests/visual/capture_water_pilot.gd.uid
+?? tests/visual/probe_packaged_portraits.gd
+?? tests/visual/probe_packaged_portraits.gd.uid

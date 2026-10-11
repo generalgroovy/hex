@@ -1,0 +1,43 @@
+{
+	"active_workload_ticks": 40,
+	"assertions": 505,
+	"blocks_per_cycle": 4,
+	"cases": [
+		{},
+		{},
+		{}
+	],
+	"cycles": 4,
+	"definition_hash": "6122177196f65528fd9291827319778a82faf4ee5dbc2cf7a629a59390f1e23e",
+	"engine": "4.7.1-stable (official)",
+	"failures": 0,
+	"map_hash": "9d481a582a0e84c1ecb74ee7637ba6cd7f9119deb0eeacdc509904f5d4810417",
+	"map_path": "res://content/maps/sanctum_campus_g2_v1.json",
+	"order": "ABBA on even cycles; BAAB on odd cycles",
+	"platform": {
+		"display_server": "headless",
+		"logical_processor_count": 8,
+		"os": "Windows",
+		"processor": "AMD Ryzen 3 7320U with Radeon Graphics"
+	},
+	"profile_version": "hex-hash-candidate-abba-v1",
+	"samples_per_block": 7,
+	"samples_per_implementation_per_case": 56,
+	"schema_version": 1,
+	"scope": "Headless read-only ABBA comparison of the actual current HexChemistryWorld.state_hash and a test-only byte-identical empty integral cell stable-value specialization. An independent frozen copy of the full current bytes/hash logic is an outside-timer oracle. Cases use the production empty topology, existing legal 29-active-cell paid workload, and synthetic all-nonempty fallback pressure. Fixtures, warmup, bytes/hash equivalence, malformed/reordered/mutation cases and source checks are outside timers.",
+	"source_sha256": {
+		"content/abilities/foundation_abilities_v1.json": "4505c483682a20b996b986f1ca2469b49baaefdc572b9f922c32dcbb03d310dc",
+		"content/champions/foundation_champions_v1.json": "23a1f624a9de6c2bf88dc76578a69b23613465707605528e2988e209abba458a",
+		"content/maps/sanctum_campus_g2_v1.json": "496c96c80168dd6e4053e03ece86b8a8f010a44c24c5fca7eaebe8cd13b51cea",
+		"src/sim/core/canonical_bytes.gd": "11de76f54bd1f420fe925d2683dcdaeca1ef59d253810cbbfc42f5ff12250d2a",
+		"src/sim/core/sim_world.gd": "2a6340d3d12d25c1c06b786c1e6ce8d96f8032ed427dbf431e1ec175b3191baa",
+		"src/sim/hex/hex_chemistry_world.gd": "b87e2cafa243646395db58a0ad7071806be129eca1eb12de647e16aed7fd27cd",
+		"src/sim/hex/hex_world_definition.gd": "e15d75d48ddedc6bc891400f508ae43d892742c151e54bb5b93aef68dfa23f18",
+		"tests/performance/profile_hex_hash_candidate.gd": "42e83a603a27d334c15cd53b76bb10174b6d926f0acf061b2ce8764ef35ac22f",
+		"tests/performance/profile_unified_wellspring.gd": "7f524c49f7104f7a549c964f759248c0b1d8abff8da1d12e19a0c7ae728ee6b9",
+		"tests/support/hex_stable_cells_candidate.gd": "6c8a5167760257a8a6387681422c460cf66a95b3452e840b1a6d3c7a205ae370"
+	},
+	"timing_limit": "Each implementation has 56 samples per case. p99 is the sample-limited nearest-rank maximum. The dense case is invalid chemistry authority used only to quantify fallback pressure. No allocation, frame, 120 Hz, networking, export or capacity claim is made.",
+	"topology_cells": 2766,
+	"warmup_ticks": 120
+}

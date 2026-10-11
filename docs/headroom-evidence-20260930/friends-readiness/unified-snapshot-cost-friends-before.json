@@ -1,0 +1,623 @@
+{
+	"assertions": 820,
+	"cases": [
+		{
+			"authority_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+			"case": "sustained-distributed",
+			"cold_world_capture_us": {
+				"max": 541907,
+				"p50": 532490,
+				"p95": 541907,
+				"p99": 541907,
+				"samples": 3
+			},
+			"components": {
+				"authoritative_session_capture_envelope": {
+					"after_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+					"before_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+					"encoded_bytes": 9556,
+					"us": {
+						"max": 385572,
+						"p50": 382456,
+						"p95": 385572,
+						"p99": 385572,
+						"samples": 3
+					}
+				},
+				"hex_chemistry_snapshot_capture": {
+					"after_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+					"before_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+					"encoded_bytes": 3540,
+					"us": {
+						"max": 459324,
+						"p50": 447501,
+						"p95": 459324,
+						"p99": 459324,
+						"samples": 3
+					}
+				},
+				"hex_world_snapshot_capture": {
+					"after_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+					"before_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+					"encoded_bytes": 8080,
+					"us": {
+						"max": 380764,
+						"p50": 380085,
+						"p95": 380764,
+						"p99": 380764,
+						"samples": 3
+					}
+				},
+				"session_transport_envelope_wire_packets": {
+					"after_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+					"before_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+					"packet_count": 4,
+					"us": {
+						"max": 4599,
+						"p50": 3396,
+						"p95": 4599,
+						"p99": 4599,
+						"samples": 3
+					},
+					"wire_bytes": 4708
+				},
+				"world_state_hash": {
+					"after_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+					"before_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+					"output_bytes": 64,
+					"us": {
+						"max": 70066,
+						"p50": 69668,
+						"p95": 70066,
+						"p99": 70066,
+						"samples": 3
+					}
+				}
+			},
+			"fixture_setup_us": 160859,
+			"hash_detail": {
+				"blank_trusted_hex": {
+					"max": 88752,
+					"p50": 81765,
+					"p95": 88752,
+					"p99": 88752,
+					"samples": 3
+				},
+				"cached_blank_copy": {
+					"max": 24188,
+					"p50": 23580,
+					"p95": 24188,
+					"p99": 24188,
+					"samples": 3
+				},
+				"canonical_cell_json": {
+					"max": 54828,
+					"p50": 53523,
+					"p95": 54828,
+					"p99": 54828,
+					"samples": 3
+				},
+				"cell_key_order": {
+					"max": 2864,
+					"p50": 2471,
+					"p95": 2864,
+					"p99": 2864,
+					"samples": 3
+				},
+				"cell_variant_bytes": {
+					"max": 22052,
+					"p50": 21345,
+					"p95": 22052,
+					"p99": 22052,
+					"samples": 3
+				},
+				"chemistry_hash": {
+					"max": 69764,
+					"p50": 68043,
+					"p95": 69764,
+					"p99": 69764,
+					"samples": 3
+				},
+				"stable_cell_json": {
+					"max": 59839,
+					"p50": 59674,
+					"p95": 59839,
+					"p99": 59839,
+					"samples": 3
+				},
+				"stable_cell_projection": {
+					"max": 73464,
+					"p50": 68002,
+					"p95": 73464,
+					"p99": 73464,
+					"samples": 3
+				},
+				"topology_hash": {
+					"max": 19927,
+					"p50": 19205,
+					"p95": 19927,
+					"p99": 19927,
+					"samples": 3
+				},
+				"trusted_cells": {
+					"max": 25545,
+					"p50": 25278,
+					"p95": 25545,
+					"p99": 25545,
+					"samples": 3
+				}
+			},
+			"hash_pressure": {
+				"changing-metadata": {
+					"candidate_samples_us": [
+						94619,
+						72652,
+						68396,
+						68036,
+						70623,
+						68524,
+						69965,
+						69002,
+						67988,
+						68462,
+						70844,
+						68443
+					],
+					"candidate_us": {
+						"max": 94619,
+						"p50": 68524,
+						"p95": 94619,
+						"p99": 94619,
+						"samples": 12
+					},
+					"generic_samples_us": [
+						140913,
+						141333,
+						141918,
+						139374,
+						139956,
+						140770,
+						142093,
+						139906,
+						140811,
+						139962,
+						139923,
+						139595
+					],
+					"generic_us": {
+						"max": 142093,
+						"p50": 139962,
+						"p95": 142093,
+						"p99": 142093,
+						"samples": 12
+					}
+				},
+				"synthetic-all-nonempty": {
+					"candidate_samples_us": [
+						365423,
+						362722,
+						360130,
+						356119,
+						355743,
+						362665,
+						359260,
+						356684,
+						356358,
+						358237,
+						358216,
+						356071
+					],
+					"candidate_us": {
+						"max": 365423,
+						"p50": 358216,
+						"p95": 365423,
+						"p99": 365423,
+						"samples": 12
+					},
+					"generic_samples_us": [
+						359775,
+						357449,
+						357564,
+						353983,
+						356411,
+						355775,
+						359018,
+						359201,
+						356030,
+						357389,
+						357807,
+						355311
+					],
+					"generic_us": {
+						"max": 359775,
+						"p50": 357389,
+						"p95": 359775,
+						"p99": 359775,
+						"samples": 12
+					}
+				}
+			},
+			"individual_step_us": {
+				"max": 24472,
+				"p50": 2195,
+				"p95": 2780,
+				"p99": 24472,
+				"samples": 40
+			},
+			"roundtrip": {
+				"chemistry_hash": "6a1ba516cb323f1bbbd2a9c4f8dee7985282c64388225d023e47e6f42c6e2b58",
+				"decoded_envelope_equal": true,
+				"world_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7"
+			},
+			"tick": 160,
+			"warmup_us": 182270,
+			"workload": {
+				"admitted_by_wire": {
+					"159": 1,
+					"160": 1,
+					"180": 1,
+					"181": 1,
+					"182": 3
+				},
+				"authority_metrics": {
+					"admitted": 7,
+					"deposited": 1,
+					"exposure_queries": 0,
+					"matter_consumed": 0,
+					"matter_expired": 600,
+					"matter_paid": 4200,
+					"modifiers": 0,
+					"reactions": 0,
+					"refused": 0,
+					"requested": 7
+				},
+				"event_counts": {
+					"cast_blocked": 1,
+					"cast_started": 7,
+					"projectile_spawned": 5,
+					"spray_fired": 1
+				},
+				"occupancy": {
+					"active_cells": 152,
+					"product_quantity": 0,
+					"source_quantity": 3600
+				},
+				"processed_clashes": 0,
+				"refusals_by_wire_and_reason": {},
+				"released_by_wire": {
+					"159": 1,
+					"160": 1,
+					"180": 1,
+					"182": 3
+				},
+				"requested_held_ticks_by_wire": {
+					"180": 4,
+					"182": 36
+				},
+				"requested_pressed_by_wire": {
+					"159": 1,
+					"160": 1,
+					"181": 1
+				}
+			}
+		},
+		{
+			"authority_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+			"case": "dense-crucible",
+			"cold_world_capture_us": {
+				"max": 493324,
+				"p50": 492787,
+				"p95": 493324,
+				"p99": 493324,
+				"samples": 3
+			},
+			"components": {
+				"authoritative_session_capture_envelope": {
+					"after_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+					"before_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+					"encoded_bytes": 9272,
+					"us": {
+						"max": 368774,
+						"p50": 358002,
+						"p95": 368774,
+						"p99": 368774,
+						"samples": 3
+					}
+				},
+				"hex_chemistry_snapshot_capture": {
+					"after_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+					"before_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+					"encoded_bytes": 1578,
+					"us": {
+						"max": 405448,
+						"p50": 405411,
+						"p95": 405448,
+						"p99": 405448,
+						"samples": 3
+					}
+				},
+				"hex_world_snapshot_capture": {
+					"after_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+					"before_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+					"encoded_bytes": 7788,
+					"us": {
+						"max": 353460,
+						"p50": 353259,
+						"p95": 353460,
+						"p99": 353460,
+						"samples": 3
+					}
+				},
+				"session_transport_envelope_wire_packets": {
+					"after_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+					"before_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+					"packet_count": 3,
+					"us": {
+						"max": 3430,
+						"p50": 2998,
+						"p95": 3430,
+						"p99": 3430,
+						"samples": 3
+					},
+					"wire_bytes": 3932
+				},
+				"world_state_hash": {
+					"after_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+					"before_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+					"output_bytes": 64,
+					"us": {
+						"max": 59399,
+						"p50": 59392,
+						"p95": 59399,
+						"p99": 59399,
+						"samples": 3
+					}
+				}
+			},
+			"fixture_setup_us": 136684,
+			"hash_detail": {
+				"blank_trusted_hex": {
+					"max": 85866,
+					"p50": 84855,
+					"p95": 85866,
+					"p99": 85866,
+					"samples": 3
+				},
+				"cached_blank_copy": {
+					"max": 23326,
+					"p50": 23149,
+					"p95": 23326,
+					"p99": 23326,
+					"samples": 3
+				},
+				"canonical_cell_json": {
+					"max": 48767,
+					"p50": 48694,
+					"p95": 48767,
+					"p99": 48767,
+					"samples": 3
+				},
+				"cell_key_order": {
+					"max": 3008,
+					"p50": 1759,
+					"p95": 3008,
+					"p99": 3008,
+					"samples": 3
+				},
+				"cell_variant_bytes": {
+					"max": 21006,
+					"p50": 20979,
+					"p95": 21006,
+					"p99": 21006,
+					"samples": 3
+				},
+				"chemistry_hash": {
+					"max": 60117,
+					"p50": 59309,
+					"p95": 60117,
+					"p99": 60117,
+					"samples": 3
+				},
+				"stable_cell_json": {
+					"max": 60382,
+					"p50": 59884,
+					"p95": 60382,
+					"p99": 60382,
+					"samples": 3
+				},
+				"stable_cell_projection": {
+					"max": 67261,
+					"p50": 59744,
+					"p95": 67261,
+					"p99": 67261,
+					"samples": 3
+				},
+				"topology_hash": {
+					"max": 19936,
+					"p50": 19925,
+					"p95": 19936,
+					"p99": 19936,
+					"samples": 3
+				},
+				"trusted_cells": {
+					"max": 24195,
+					"p50": 24141,
+					"p95": 24195,
+					"p99": 24195,
+					"samples": 3
+				}
+			},
+			"hash_pressure": {
+				"changing-metadata": {
+					"candidate_samples_us": [
+						84733,
+						59566,
+						58459,
+						57780,
+						57560,
+						57176,
+						58391,
+						58067,
+						57915,
+						58548,
+						59535,
+						58250
+					],
+					"candidate_us": {
+						"max": 84733,
+						"p50": 58250,
+						"p95": 84733,
+						"p99": 84733,
+						"samples": 12
+					},
+					"generic_samples_us": [
+						136003,
+						135126,
+						132685,
+						131621,
+						132967,
+						133468,
+						133778,
+						133341,
+						132816,
+						132044,
+						131853,
+						133829
+					],
+					"generic_us": {
+						"max": 136003,
+						"p50": 132967,
+						"p95": 136003,
+						"p99": 136003,
+						"samples": 12
+					}
+				},
+				"synthetic-all-nonempty": {
+					"candidate_samples_us": [
+						353822,
+						350143,
+						348112,
+						346696,
+						348780,
+						345161,
+						347421,
+						346960,
+						352745,
+						348272,
+						346832,
+						347705
+					],
+					"candidate_us": {
+						"max": 353822,
+						"p50": 347705,
+						"p95": 353822,
+						"p99": 353822,
+						"samples": 12
+					},
+					"generic_samples_us": [
+						346008,
+						347046,
+						347745,
+						345358,
+						347792,
+						345771,
+						350271,
+						346761,
+						348232,
+						347774,
+						346908,
+						346114
+					],
+					"generic_us": {
+						"max": 350271,
+						"p50": 346908,
+						"p95": 350271,
+						"p99": 350271,
+						"samples": 12
+					}
+				}
+			},
+			"individual_step_us": {
+				"max": 5174,
+				"p50": 2760,
+				"p95": 3168,
+				"p99": 5174,
+				"samples": 40
+			},
+			"roundtrip": {
+				"chemistry_hash": "fec61ed59e0645196276ba8c6d72049dce6900aec59fd51b5fbc9883a2d5a3e4",
+				"decoded_envelope_equal": true,
+				"world_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58"
+			},
+			"tick": 160,
+			"warmup_us": 180417,
+			"workload": {
+				"admitted_by_wire": {
+					"140": 2,
+					"145": 2,
+					"159": 2,
+					"163": 2
+				},
+				"authority_metrics": {
+					"admitted": 8,
+					"deposited": 1,
+					"exposure_queries": 0,
+					"matter_consumed": 0,
+					"matter_expired": 0,
+					"matter_paid": 4800,
+					"modifiers": 0,
+					"reactions": 0,
+					"refused": 0,
+					"requested": 8
+				},
+				"event_counts": {
+					"cast_started": 8,
+					"projectile_expired": 1,
+					"projectile_spawned": 8
+				},
+				"occupancy": {
+					"active_cells": 13,
+					"product_quantity": 0,
+					"source_quantity": 4800
+				},
+				"processed_clashes": 0,
+				"refusals_by_wire_and_reason": {},
+				"released_by_wire": {
+					"140": 2,
+					"145": 2,
+					"159": 2,
+					"163": 2
+				},
+				"requested_held_ticks_by_wire": {},
+				"requested_pressed_by_wire": {
+					"140": 2,
+					"145": 2,
+					"159": 2,
+					"163": 2
+				}
+			}
+		}
+	],
+	"component_repetitions": 3,
+	"engine": "4.7.1-stable (official)",
+	"failures": 0,
+	"global_setup_us": 1798725,
+	"performance_acceptance": "NOT_ESTABLISHED; these diagnostic component timings identify local snapshot work and do not establish capacity, release performance, or network delivery performance.",
+	"probe_steps": 40,
+	"probe_version": "unified-snapshot-cost-v1",
+	"schema_version": 1,
+	"scope": "Bounded headless diagnostic of the unchanged normal-campus eight-champion authority after 120 neutral ticks and the first 40 ordinary paid workload ticks. No capacity, state, resource, cooldown, lifetime, snapshot, or transport limit is overridden.",
+	"seed": 906190,
+	"source_sha256": {
+		"src/net/authoritative_session.gd": "1b6511639f9660fe623803a6e3fdb0415b3927ed46a9e0ad63463e049ce83298",
+		"src/net/hex_chemistry_snapshot.gd": "dfaed467ac6e9d985ab844b1bb15be41601e8b7cc9ded874cb70fb2664dd59e1",
+		"src/net/hex_world_snapshot.gd": "2143b4748239ab315db4f676a84011cf45999ce7b29e306da5e7e48a1a986469",
+		"src/net/session_transport.gd": "fb3c6e987936ab713655e65932763f9f69d6dce6eacf8f86d162c7c9beab4f05",
+		"src/sim/hex/hex_chemistry_world.gd": "e7fd51257d23100a39db1deb578a7220005a51a3951a7ef3bdbc116376ff4e1f",
+		"tests/performance/probe_unified_snapshot_cost.gd": "94cb6972b4de6a2c101a18011d39e3d88cad4c043222d22676b23eac39bcc6cc",
+		"tests/performance/profile_unified_wellspring.gd": "1c9e4f4f00553e44e94a6485bba0c92f6f2f06ac52f91ff16562784b2069a90a"
+	},
+	"timing_semantics": "Each component contains three direct inclusive calls against an identical authority state. Nested work remains visible in its production caller: world capture includes chemistry capture, and envelope capture includes world capture. Setup, command construction, event accounting, validation, equality checks, byte accounting, and round-trip reconstruction are outside component timers.",
+	"warmup_ticks": 120,
+	"workload_version": "unified-wellspring-profile-v1"
+}

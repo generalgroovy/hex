@@ -1,0 +1,1433 @@
+{
+  "schema_version": 6,
+  "id": "wellspring-campus-loop-v2",
+  "display_name": "Wellspring Academy - Commons and Practice Loop",
+  "canvas_size": [
+    3072,
+    2304
+  ],
+  "viewport_size": [
+    1280,
+    720
+  ],
+  "reserved_ui_top": 112,
+  "spawn": [
+    1536,
+    880
+  ],
+  "required_districts": [
+    "conservatory-gardens",
+    "nexus-commons",
+    "wayfarer-proving-quarter"
+  ],
+  "required_source_districts": [
+    "nexus-court",
+    "movement-conservatory",
+    "living-archive",
+    "wayfarer-concourse",
+    "alchemical-proving-grounds",
+    "verdant-recovery",
+    "crown-observatory"
+  ],
+  "districts": [
+    {
+      "id": "conservatory-gardens",
+      "label": "MOVEMENT & RECOVERY",
+      "combines": [
+        "movement-conservatory",
+        "verdant-recovery"
+      ],
+      "bounds": [
+        64,
+        128,
+        912,
+        2080
+      ],
+      "style": "garden",
+      "elevation": 1,
+      "label_anchor": [
+        96,
+        168
+      ]
+    },
+    {
+      "id": "nexus-commons",
+      "label": "WELLSPRING ACADEMY",
+      "combines": [
+        "nexus-court",
+        "living-archive",
+        "crown-observatory"
+      ],
+      "bounds": [
+        864,
+        128,
+        1344,
+        2080
+      ],
+      "style": "nexus",
+      "elevation": 2,
+      "label_anchor": [
+        896,
+        168
+      ]
+    },
+    {
+      "id": "wayfarer-proving-quarter",
+      "label": "PATTERNS & DUELS",
+      "combines": [
+        "wayfarer-concourse",
+        "alchemical-proving-grounds"
+      ],
+      "bounds": [
+        2096,
+        128,
+        912,
+        2080
+      ],
+      "style": "proving",
+      "elevation": 1,
+      "label_anchor": [
+        2128,
+        168
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "garden-commons-grand-walk",
+      "from": "conservatory-gardens",
+      "to": "nexus-commons",
+      "kind": "garden_bridge",
+      "width": 192,
+      "points": [
+        [
+          848,
+          832
+        ],
+        [
+          1104,
+          832
+        ]
+      ]
+    },
+    {
+      "id": "commons-wayfarer-processional",
+      "from": "nexus-commons",
+      "to": "wayfarer-proving-quarter",
+      "kind": "brass_bridge",
+      "width": 192,
+      "points": [
+        [
+          1968,
+          832
+        ],
+        [
+          2256,
+          832
+        ]
+      ]
+    },
+    {
+      "id": "north-garden-loop",
+      "from": "conservatory-gardens",
+      "to": "nexus-commons",
+      "kind": "garden_bridge",
+      "width": 160,
+      "points": [
+        [
+          864,
+          512
+        ],
+        [
+          1120,
+          512
+        ]
+      ]
+    },
+    {
+      "id": "north-range-loop",
+      "from": "nexus-commons",
+      "to": "wayfarer-proving-quarter",
+      "kind": "brass_bridge",
+      "width": 160,
+      "points": [
+        [
+          1920,
+          512
+        ],
+        [
+          2304,
+          512
+        ]
+      ]
+    },
+    {
+      "id": "south-garden-loop",
+      "from": "conservatory-gardens",
+      "to": "nexus-commons",
+      "kind": "garden_bridge",
+      "width": 160,
+      "points": [
+        [
+          800,
+          1408
+        ],
+        [
+          1120,
+          1408
+        ]
+      ]
+    },
+    {
+      "id": "south-duel-loop",
+      "from": "nexus-commons",
+      "to": "wayfarer-proving-quarter",
+      "kind": "brass_bridge",
+      "width": 160,
+      "points": [
+        [
+          1920,
+          1408
+        ],
+        [
+          2256,
+          1408
+        ]
+      ]
+    },
+    {
+      "id": "south-garden-return",
+      "from": "conservatory-gardens",
+      "to": "nexus-commons",
+      "kind": "garden_bridge",
+      "width": 160,
+      "points": [
+        [
+          848,
+          2080
+        ],
+        [
+          1120,
+          2080
+        ]
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "id": "conservatory-circuit",
+      "district": "conservatory-gardens",
+      "kind": "advanced",
+      "width": 96,
+      "points": [
+        [
+          256,
+          544
+        ],
+        [
+          640,
+          544
+        ],
+        [
+          640,
+          720
+        ],
+        [
+          384,
+          720
+        ]
+      ]
+    },
+    {
+      "id": "conservatory-ordinary",
+      "district": "conservatory-gardens",
+      "kind": "ordinary",
+      "accessible": true,
+      "width": 192,
+      "points": [
+        [
+          208,
+          832
+        ],
+        [
+          848,
+          832
+        ]
+      ]
+    },
+    {
+      "id": "verdant-canopy-walk",
+      "district": "conservatory-gardens",
+      "kind": "ordinary",
+      "accessible": true,
+      "width": 160,
+      "points": [
+        [
+          864,
+          512
+        ],
+        [
+          848,
+          832
+        ],
+        [
+          800,
+          1408
+        ],
+        [
+          560,
+          1408
+        ],
+        [
+          560,
+          1008
+        ],
+        [
+          208,
+          1008
+        ],
+        [
+          208,
+          832
+        ]
+      ]
+    },
+    {
+      "id": "nexus-processional",
+      "district": "nexus-commons",
+      "kind": "ordinary",
+      "accessible": true,
+      "width": 192,
+      "points": [
+        [
+          1008,
+          832
+        ],
+        [
+          1968,
+          832
+        ]
+      ]
+    },
+    {
+      "id": "nexus-fountain-loop",
+      "district": "nexus-commons",
+      "kind": "ordinary",
+      "accessible": true,
+      "width": 160,
+      "points": [
+        [
+          1120,
+          512
+        ],
+        [
+          1920,
+          512
+        ],
+        [
+          1968,
+          832
+        ],
+        [
+          1920,
+          1408
+        ],
+        [
+          1120,
+          1408
+        ],
+        [
+          1104,
+          832
+        ],
+        [
+          1120,
+          512
+        ]
+      ]
+    },
+    {
+      "id": "archive-crown-stair",
+      "district": "nexus-commons",
+      "kind": "advanced",
+      "width": 64,
+      "points": [
+        [
+          1344,
+          1408
+        ],
+        [
+          1344,
+          1184
+        ],
+        [
+          1728,
+          1184
+        ],
+        [
+          1728,
+          1408
+        ]
+      ]
+    },
+    {
+      "id": "wayfarer-ordinary",
+      "district": "wayfarer-proving-quarter",
+      "kind": "ordinary",
+      "accessible": true,
+      "width": 192,
+      "points": [
+        [
+          2256,
+          832
+        ],
+        [
+          2864,
+          832
+        ]
+      ]
+    },
+    {
+      "id": "proving-basin-run",
+      "district": "wayfarer-proving-quarter",
+      "kind": "advanced",
+      "width": 144,
+      "points": [
+        [
+          2256,
+          984
+        ],
+        [
+          2400,
+          984
+        ],
+        [
+          2544,
+          1216
+        ],
+        [
+          2752,
+          984
+        ],
+        [
+          2864,
+          1216
+        ],
+        [
+          2752,
+          1408
+        ],
+        [
+          2400,
+          1408
+        ],
+        [
+          2256,
+          1248
+        ],
+        [
+          2256,
+          984
+        ]
+      ]
+    },
+    {
+      "id": "eastern-outer-walk",
+      "district": "wayfarer-proving-quarter",
+      "kind": "ordinary",
+      "accessible": true,
+      "width": 160,
+      "points": [
+        [
+          2304,
+          512
+        ],
+        [
+          2304,
+          672
+        ],
+        [
+          2896,
+          672
+        ],
+        [
+          2896,
+          1536
+        ],
+        [
+          2256,
+          1536
+        ],
+        [
+          2256,
+          832
+        ]
+      ]
+    },
+    {
+      "id": "conservatory-south-loop",
+      "district": "conservatory-gardens",
+      "kind": "ordinary",
+      "accessible": true,
+      "width": 160,
+      "points": [
+        [
+          560,
+          1408
+        ],
+        [
+          560,
+          1536
+        ],
+        [
+          256,
+          1536
+        ],
+        [
+          256,
+          2080
+        ],
+        [
+          848,
+          2080
+        ],
+        [
+          848,
+          1536
+        ],
+        [
+          800,
+          1408
+        ]
+      ]
+    },
+    {
+      "id": "south-wall-turn-line",
+      "district": "conservatory-gardens",
+      "kind": "advanced",
+      "width": 64,
+      "points": [
+        [
+          320,
+          1800
+        ],
+        [
+          672,
+          1800
+        ],
+        [
+          704,
+          1856
+        ],
+        [
+          704,
+          1952
+        ],
+        [
+          640,
+          2016
+        ]
+      ]
+    },
+    {
+      "id": "crucible-south-return",
+      "district": "nexus-commons",
+      "kind": "ordinary",
+      "accessible": true,
+      "width": 160,
+      "points": [
+        [
+          1120,
+          2080
+        ],
+        [
+          1888,
+          2080
+        ],
+        [
+          1888,
+          1376
+        ]
+      ]
+    }
+  ],
+  "reset_zones": [
+    {
+      "id": "conservatory-route-reset",
+      "district": "conservatory-gardens",
+      "kind": "movement",
+      "reset_group": "g2-conservatory",
+      "bounds": [
+        352,
+        560,
+        288,
+        208
+      ]
+    },
+    {
+      "id": "proving-basin-reset",
+      "district": "wayfarer-proving-quarter",
+      "kind": "practice",
+      "reset_group": "g2-proving",
+      "bounds": [
+        2672,
+        1376,
+        208,
+        176
+      ]
+    }
+  ],
+  "arena": {
+    "id": "proving-court-v1",
+    "district": "wayfarer-proving-quarter",
+    "bounds": [
+      2184,
+      912,
+      720,
+      600
+    ],
+    "score_limit": 3,
+    "round_seconds": 90,
+    "result_seconds": 6,
+    "respawn_ms": 1800,
+    "spawn_protection_ms": 1200,
+    "spawns": [
+      [
+        2256,
+        984
+      ],
+      [
+        2832,
+        984
+      ],
+      [
+        2256,
+        1440
+      ],
+      [
+        2832,
+        1440
+      ],
+      [
+        2256,
+        1216
+      ],
+      [
+        2832,
+        1216
+      ],
+      [
+        2544,
+        984
+      ],
+      [
+        2544,
+        1440
+      ]
+    ]
+  },
+  "stations": [
+    {
+      "id": "movement-guide",
+      "district": "nexus-commons",
+      "kind": "guide",
+      "command": "movement_guide",
+      "authority": "local",
+      "position": [
+        1216,
+        640
+      ],
+      "interaction_radius": 96,
+      "title": "MOVEMENT GUIDE",
+      "prompt": "F  STUDY THE ROUTES",
+      "lines": [
+        "Jump lifts up; directions steer in the air",
+        "Slide again to brake; Evade rolls or air-dodges",
+        "Wall / Turn follows contact; away input detaches",
+        "Release direction to brake; tap Jump for a short hop",
+        "Change any binding at the Controls Lectern",
+        "Every ordinary path is open without techniques"
+      ]
+    },
+    {
+      "id": "training-reset",
+      "district": "nexus-commons",
+      "kind": "training",
+      "command": "training_reset",
+      "authority": "host",
+      "position": [
+        1888,
+        1376
+      ],
+      "interaction_radius": 96,
+      "title": "PRACTICE BELL",
+      "prompt": "F  RESTORE THE COURT",
+      "lines": [
+        "Restores Health, Flux and Stamina",
+        "Clears temporary spells, matter and reactions",
+        "Targets also return three seconds after defeat",
+        "Use the Crucible for isolated pair experiments"
+      ]
+    },
+    {
+      "id": "momentum-chime",
+      "district": "conservatory-gardens",
+      "kind": "training",
+      "command": "impact_practice",
+      "authority": "host",
+      "position": [
+        832,
+        928
+      ],
+      "interaction_radius": 72,
+      "title": "MOMENTUM CHIME",
+      "prompt": "F  PRACTICE IMPACT TECH",
+      "lines": [
+        "Hold a direction to bend the launch",
+        "Press V near landing to spend 18 Stamina",
+        "No V: read the full 220 ms brace"
+      ]
+    },
+    {
+      "id": "champion-loom",
+      "district": "nexus-commons",
+      "kind": "champion",
+      "command": "champion_switch",
+      "authority": "host",
+      "position": [
+        1568,
+        640
+      ],
+      "interaction_radius": 96,
+      "title": "CHAMPION GALLERY",
+      "prompt": "E  OPEN GALLERY",
+      "lines": [
+        "Race columns, hover details, host-confirmed choice",
+        "Temporary art is labeled; all movement stays"
+      ]
+    },
+    {
+      "id": "spell-loom",
+      "district": "nexus-commons",
+      "kind": "spell",
+      "command": "configure_spells",
+      "authority": "host",
+      "position": [
+        1744,
+        640
+      ],
+      "interaction_radius": 96,
+      "title": "SPELL LOOM",
+      "prompt": "F  CHOOSE SPELLS",
+      "lines": [
+        "Choose Bolt, Heavy, Rapid or Spray",
+        "Eight elements, including Air",
+        "12 slots on 1-4, Ctrl and Alt",
+        "Every character can use all 32 spells",
+        "Bolt, Heavy and Rapid leave chemistry matter",
+        "Spray does not; reaction areas still form from pairs"
+      ]
+    },
+    {
+      "id": "farflow-host",
+      "district": "nexus-commons",
+      "kind": "farflow",
+      "command": "host_session",
+      "authority": "local",
+      "position": [
+        1216,
+        1008
+      ],
+      "interaction_radius": 88,
+      "title": "HOST FARFLOW",
+      "prompt": "F  HOST A GAME",
+      "lines": [
+        "Hosts UDP 24872 for up to eight",
+        "Share your address with trusted friends",
+        "F closes the gate"
+      ]
+    },
+    {
+      "id": "farflow-join",
+      "district": "nexus-commons",
+      "kind": "farflow",
+      "command": "join_session",
+      "authority": "local",
+      "position": [
+        1392,
+        1008
+      ],
+      "interaction_radius": 88,
+      "title": "JOIN FARFLOW",
+      "prompt": "F  JOIN A FRIEND",
+      "lines": [
+        "Type or paste the host address",
+        "The last valid address is saved here",
+        "F leaves an open gate"
+      ]
+    },
+    {
+      "id": "farflow-charter",
+      "district": "nexus-commons",
+      "kind": "charter",
+      "command": "session_charter",
+      "authority": "local",
+      "position": [
+        1568,
+        1008
+      ],
+      "interaction_radius": 88,
+      "title": "FARFLOW CHARTER",
+      "prompt": "F  TURN THE CHARTER",
+      "lines": [
+        "Choose social, sparring, or duel rules",
+        "The host seals the charter when opening Farflow"
+      ]
+    },
+    {
+      "id": "session-hearth",
+      "district": "nexus-commons",
+      "kind": "hearth",
+      "command": "session_hearth",
+      "authority": "host",
+      "position": [
+        1744,
+        1008
+      ],
+      "interaction_radius": 92,
+      "gather_spawns": [
+        [
+          1808,
+          1008
+        ],
+        [
+          1789,
+          1053
+        ],
+        [
+          1744,
+          1072
+        ],
+        [
+          1699,
+          1053
+        ],
+        [
+          1680,
+          1008
+        ],
+        [
+          1699,
+          963
+        ],
+        [
+          1744,
+          944
+        ],
+        [
+          1789,
+          963
+        ]
+      ],
+      "title": "SESSION HEARTH",
+      "prompt": "F  READY FOR THE COURT",
+      "lines": [
+        "Gather connected travellers here",
+        "Everyone readies; the host begins the round"
+      ]
+    },
+    {
+      "id": "company-ledger",
+      "district": "nexus-commons",
+      "kind": "ledger",
+      "command": "session_ledger",
+      "authority": "host",
+      "position": [
+        2016,
+        896
+      ],
+      "interaction_radius": 72,
+      "title": "COMPANY LEDGER",
+      "prompt": "F  SELECT A TRAVELLER",
+      "lines": [
+        "Host-only connected traveller selection",
+        "Selection alone never dismisses anyone"
+      ]
+    },
+    {
+      "id": "parting-bell",
+      "district": "nexus-commons",
+      "kind": "parting",
+      "command": "session_parting",
+      "authority": "host",
+      "position": [
+        2016,
+        1056
+      ],
+      "interaction_radius": 72,
+      "title": "PARTING BELL",
+      "prompt": "F  ARM A PARTING",
+      "lines": [
+        "Uses the traveller named by the Ledger",
+        "A second press confirms within three seconds"
+      ]
+    },
+    {
+      "id": "controls-lectern",
+      "district": "nexus-commons",
+      "kind": "controls",
+      "command": "configure_controls",
+      "authority": "local",
+      "position": [
+        1392,
+        640
+      ],
+      "interaction_radius": 96,
+      "title": "CONTROLS LECTERN",
+      "prompt": "F  REBIND CONTROLS",
+      "lines": [
+        "Keyboard, mouse, wheel and controller",
+        "Conflicts swap safely; every change persists",
+        "Escape returns to the Wellspring"
+      ]
+    }
+  ],
+  "practice_targets": [
+    {
+      "id": "nexus-sparring-effigy",
+      "entity_id": 900,
+      "district": "wayfarer-proving-quarter",
+      "position": [
+        2440,
+        352
+      ],
+      "radius": 18,
+      "health": 80000,
+      "label": "GROUP A",
+      "reset_policy": "practice_bell"
+    },
+    {
+      "id": "range-effigy-center",
+      "entity_id": 901,
+      "district": "wayfarer-proving-quarter",
+      "position": [
+        2560,
+        352
+      ],
+      "radius": 18,
+      "health": 80000,
+      "label": "GROUP B",
+      "reset_policy": "practice_bell"
+    },
+    {
+      "id": "range-effigy-east",
+      "entity_id": 902,
+      "district": "wayfarer-proving-quarter",
+      "position": [
+        2680,
+        352
+      ],
+      "radius": 18,
+      "health": 80000,
+      "label": "GROUP C",
+      "reset_policy": "practice_bell"
+    },
+    {
+      "id": "crucible-effigy",
+      "entity_id": 903,
+      "district": "nexus-commons",
+      "position": [
+        1568,
+        1248
+      ],
+      "radius": 18,
+      "health": 80000,
+      "label": "CHEMISTRY TARGET",
+      "reset_policy": "practice_bell"
+    }
+  ],
+  "practice_groups": [
+    {
+      "id": "pattern-comparison",
+      "activity": "pattern-range",
+      "bounds": [
+        2400,
+        304,
+        320,
+        336
+      ],
+      "target_ids": [
+        "nexus-sparring-effigy",
+        "range-effigy-center",
+        "range-effigy-east"
+      ],
+      "firing_anchors": [
+        [
+          2440,
+          592
+        ],
+        [
+          2560,
+          592
+        ],
+        [
+          2680,
+          592
+        ]
+      ],
+      "lane_width": 48,
+      "label": "SINGLE HIT / GROUP HIT",
+      "purpose": "Hit one, then aim between targets",
+      "label_anchor": [
+        2240,
+        592
+      ]
+    },
+    {
+      "id": "crucible-experiment",
+      "activity": "crucible",
+      "bounds": [
+        1408,
+        1152,
+        320,
+        336
+      ],
+      "target_ids": [
+        "crucible-effigy"
+      ],
+      "firing_anchors": [
+        [
+          1568,
+          1440
+        ]
+      ],
+      "lane_width": 64,
+      "label": "TWO CASTS / TWO EXITS",
+      "purpose": "Pair at one point; leave by either side",
+      "label_anchor": [
+        1744,
+        1160
+      ]
+    }
+  ],
+  "buildings": [
+    {
+      "id": 101,
+      "district": "conservatory-gardens",
+      "name": "Routekeeper Lodge",
+      "bounds": [
+        192,
+        192,
+        272,
+        112
+      ],
+      "style": "timber_hall",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "los_cutaway"
+    },
+    {
+      "id": 102,
+      "district": "conservatory-gardens",
+      "name": "North Practice Wall",
+      "bounds": [
+        280,
+        368,
+        320,
+        28
+      ],
+      "style": "practice_wall",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "low_never_occludes"
+    },
+    {
+      "id": 103,
+      "district": "conservatory-gardens",
+      "name": "Verdant Rest Pavilion",
+      "bounds": [
+        240,
+        1136,
+        240,
+        128
+      ],
+      "style": "garden_gate",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "los_cutaway"
+    },
+    {
+      "id": 104,
+      "district": "nexus-commons",
+      "name": "Wellspring Academy",
+      "bounds": [
+        1248,
+        192,
+        576,
+        176
+      ],
+      "style": "archive_hall",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "los_cutaway"
+    },
+    {
+      "id": 105,
+      "district": "nexus-commons",
+      "name": "Archive Annex",
+      "bounds": [
+        960,
+        192,
+        192,
+        160
+      ],
+      "style": "spire",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "los_cutaway"
+    },
+    {
+      "id": 106,
+      "district": "nexus-commons",
+      "name": "Crucible Workshop",
+      "bounds": [
+        1264,
+        1504,
+        384,
+        112
+      ],
+      "style": "foundry_hall",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "los_cutaway"
+    },
+    {
+      "id": 107,
+      "district": "wayfarer-proving-quarter",
+      "name": "Range Gallery",
+      "bounds": [
+        2304,
+        176,
+        448,
+        112
+      ],
+      "style": "portal_rotunda",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "los_cutaway"
+    },
+    {
+      "id": 108,
+      "district": "wayfarer-proving-quarter",
+      "name": "Service Tower",
+      "bounds": [
+        2816,
+        192,
+        144,
+        144
+      ],
+      "style": "service_tower",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "los_cutaway"
+    },
+    {
+      "id": 109,
+      "district": "nexus-commons",
+      "name": "Workshop Store",
+      "bounds": [
+        1872,
+        192,
+        224,
+        128
+      ],
+      "style": "service_tower",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "los_cutaway"
+    },
+    {
+      "id": 110,
+      "district": "conservatory-gardens",
+      "name": "East Practice Wall",
+      "bounds": [
+        736,
+        352,
+        28,
+        320
+      ],
+      "style": "practice_wall",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "low_never_occludes"
+    },
+    {
+      "id": 111,
+      "district": "wayfarer-proving-quarter",
+      "name": "Duel Northwest Cover",
+      "bounds": [
+        2384,
+        1104,
+        72,
+        72
+      ],
+      "style": "practice_wall",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "low_never_occludes"
+    },
+    {
+      "id": 112,
+      "district": "wayfarer-proving-quarter",
+      "name": "Duel Northeast Cover",
+      "bounds": [
+        2632,
+        1104,
+        72,
+        72
+      ],
+      "style": "practice_wall",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "low_never_occludes"
+    },
+    {
+      "id": 113,
+      "district": "wayfarer-proving-quarter",
+      "name": "Duel Southwest Cover",
+      "bounds": [
+        2384,
+        1296,
+        72,
+        72
+      ],
+      "style": "practice_wall",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "low_never_occludes"
+    },
+    {
+      "id": 114,
+      "district": "wayfarer-proving-quarter",
+      "name": "Duel Southeast Cover",
+      "bounds": [
+        2632,
+        1296,
+        72,
+        72
+      ],
+      "style": "practice_wall",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "low_never_occludes"
+    },
+    {
+      "id": 115,
+      "district": "conservatory-gardens",
+      "name": "South Crossrun Wall",
+      "bounds": [
+        352,
+        1728,
+        288,
+        28
+      ],
+      "style": "practice_wall",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "low_never_occludes"
+    },
+    {
+      "id": 116,
+      "district": "conservatory-gardens",
+      "name": "South Turn Wall",
+      "bounds": [
+        736,
+        1760,
+        28,
+        224
+      ],
+      "style": "practice_wall",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "low_never_occludes"
+    },
+    {
+      "id": 117,
+      "district": "nexus-commons",
+      "name": "Courtyard West Shoulder",
+      "bounds": [
+        1216,
+        1216,
+        72,
+        72
+      ],
+      "style": "practice_wall",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "low_never_occludes"
+    },
+    {
+      "id": 118,
+      "district": "nexus-commons",
+      "name": "Courtyard East Shoulder",
+      "bounds": [
+        1768,
+        1216,
+        72,
+        72
+      ],
+      "style": "practice_wall",
+      "worldbone": true,
+      "vaultable": false,
+      "occlusion_policy": "low_never_occludes"
+    }
+  ],
+  "landmarks": [
+    {
+      "id": "conservatory-spire",
+      "district": "conservatory-gardens",
+      "kind": "attunement_spire",
+      "position": [
+        208,
+        672
+      ],
+      "fast_travel": true
+    },
+    {
+      "id": "verdant-well",
+      "district": "conservatory-gardens",
+      "kind": "grand_fountain",
+      "position": [
+        672,
+        1232
+      ],
+      "fast_travel": true
+    },
+    {
+      "id": "nexus-fountain",
+      "district": "nexus-commons",
+      "kind": "grand_fountain",
+      "position": [
+        1536,
+        800
+      ],
+      "fast_travel": true
+    },
+    {
+      "id": "archive-orrey",
+      "district": "nexus-commons",
+      "kind": "archive_orrey",
+      "position": [
+        1120,
+        416
+      ],
+      "fast_travel": true
+    },
+    {
+      "id": "wayfarer-gate",
+      "district": "nexus-commons",
+      "kind": "portal_ring",
+      "position": [
+        1920,
+        640
+      ],
+      "fast_travel": true
+    },
+    {
+      "id": "proving-crucible",
+      "district": "nexus-commons",
+      "kind": "attunement_crucible",
+      "position": [
+        1536,
+        1328
+      ],
+      "fast_travel": true
+    }
+  ],
+  "activity_areas": [
+    {
+      "id": "source-court",
+      "district": "nexus-commons",
+      "label": "SOURCE COURT",
+      "purpose": "Meet, attune, host and join",
+      "bounds": [
+        1056,
+        576,
+        960,
+        512
+      ]
+    },
+    {
+      "id": "movement-garden",
+      "district": "conservatory-gardens",
+      "label": "MOVEMENT GARDEN",
+      "purpose": "Wall routes, reversals and chains",
+      "bounds": [
+        192,
+        272,
+        688,
+        496
+      ]
+    },
+    {
+      "id": "pattern-range",
+      "district": "wayfarer-proving-quarter",
+      "label": "PATTERN RANGE",
+      "purpose": "Readable firing lanes and targets",
+      "bounds": [
+        2208,
+        224,
+        704,
+        416
+      ]
+    },
+    {
+      "id": "duel-court",
+      "district": "wayfarer-proving-quarter",
+      "label": "DUEL COURT",
+      "purpose": "Cover, flanks and shared rounds",
+      "bounds": [
+        2168,
+        896,
+        736,
+        656
+      ]
+    },
+    {
+      "id": "crucible",
+      "district": "nexus-commons",
+      "label": "CHEMISTRY COURTYARD",
+      "purpose": "Pair, observe, choose an exit",
+      "bounds": [
+        1056,
+        1152,
+        960,
+        448
+      ]
+    },
+    {
+      "id": "recovery-grove",
+      "district": "conservatory-gardens",
+      "label": "RECOVERY GROVE",
+      "purpose": "Quiet routes and regrouping",
+      "bounds": [
+        192,
+        1056,
+        688,
+        496
+      ]
+    },
+    {
+      "id": "south-movement-loop",
+      "district": "conservatory-gardens",
+      "label": "SOUTH MOVEMENT LOOP",
+      "purpose": "Sprint, brake, wallrun and turn",
+      "bounds": [
+        192,
+        1536,
+        688,
+        624
+      ]
+    }
+  ]
+}

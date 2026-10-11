@@ -8,6 +8,7 @@ const ARCHIVED_BURST_IDS: Array[String] = [
 	"rime-burst", "arc-burst", "prism-burst", "eclipse-burst",
 ]
 const ARCHIVED_BURST_WIRES: Array[int] = [148, 147, 146, 149, 150, 151, 152, 153]
+const ORIGINAL_TRAVELLING_WIRES: Array[int] = [140, 181, 182, 145, 179, 180, 163, 185, 186, 159, 183, 184, 173, 191, 192, 142, 193, 194]
 
 
 func run() -> int:
@@ -15,6 +16,7 @@ func run() -> int:
 	_test_retired_bursts_fail_live_weaving()
 	_test_archived_projectile_data_remains_well_formed()
 	_test_readable_runtime_projectile_travel_at_120_hz()
+	_test_inverse_launch_strength_and_family_tradeoffs()
 	return finish("elemental-bursts")
 
 
@@ -88,31 +90,82 @@ func _test_archived_projectile_data_remains_well_formed() -> void:
 
 func _test_readable_runtime_projectile_travel_at_120_hz() -> void:
 	var previous_tuning := {
-		"arc-primary": [768_000, 1500, 7000], "rillshot": [720_000, 1440, 8000],
-		"cinderbolt": [672_000, 1565, 9000], "eclipse-disc": [624_000, 2000, 11000],
+		"arc-primary": [460_800, 2500], "rillshot": [432_000, 2400],
+		"cinderbolt": [403_200, 2610], "eclipse-disc": [374_400, 3334],
 	}
-	var previous_families := {"heavy": [400_000, 1800, 16000], "rapid": [760_000, 850, 5000]}
+	var previous_families := {"heavy": [240_000, 3000], "rapid": [456_000, 1418], "bolt": [345_600, 3334]}
+	# Exact current values are independent of the implementation. The preceding
+	# checkpoint above supplies an A/B reach and reaction-time positive control.
+	var current_tuning := {
+		"arc-primary": [360_000, 3200, 12_000, 8000], "rillshot": [360_000, 2880, 14_000, 9000],
+		"cinderbolt": [360_000, 2924, 16_000, 10_000], "eclipse-disc": [360_000, 3468, 18_000, 11_000],
+	}
+	var current_families := {"heavy": [180_000, 4000, 30_000, 24_000], "rapid": [600_000, 1080, 4000, 3000], "bolt": [360_000, 3200, 16_000, 10_000]}
 	var catalog := _catalog()
 	var projectile_count := 0
-	for wire_id: int in catalog.runtime_wire_ids:
+	# This historical A/B oracle covers the original six singleton Bolt/Heavy/
+	# Rapid rows only. Expanded delivery travel, warning/branch state and finite
+	# retirement use actual paid Hex paths in elemental-spell-expansion and
+	# spell-delivery-expansion; they have no preceding legacy travel baseline.
+	for index: int in ORIGINAL_TRAVELLING_WIRES.size():
+		var wire_id := ORIGINAL_TRAVELLING_WIRES[index]
+		check(wire_id in catalog.runtime_wire_ids, "every original travelling wire remains admitted")
 		var definition := CombatTuning.projectile_definition(wire_id)
+		check(not definition.is_empty(), "the original travelling wire retains a projectile definition")
 		if definition.is_empty():
 			continue
-		projectile_count += 1
 		var ability := catalog.ability_from_wire(wire_id)
 		var ability_id := String(ability.get("id", ""))
-		var family := String(ability.get("family", definition.get("delivery_kernel", "")))
-		var before: Array = previous_tuning.get(ability_id, previous_families.get(family, [576_000, 2000, 9000]))
+		var family := String(definition.family)
+		equal(family, ["bolt", "heavy", "rapid"][index % 3], "independent original wire order preserves each of the three travelling families")
+		equal(int(definition.element_mask), [4, 2, 8, 1, 16, 32][index / 3], "historical travel comparison retains the exact singleton payload")
+		check(previous_families.has(family) and current_families.has(family), "historical comparison refuses an unrelated delivery instead of aborting the test")
+		if not previous_families.has(family) or not current_families.has(family): continue
+		projectile_count += 1
+		var before: Array = previous_tuning.get(ability_id, previous_families[family])
+		var expected: Array = current_tuning.get(ability_id, current_families[family])
 		var speed := int(definition.get("speed", 0))
 		var lifetime_ms := int(definition.get("lifetime_ms", 0))
-		equal(speed * 5, int(before[0]) * 4, ability_id + " slows travel by exactly 20 percent")
-		equal(int(definition.get("radius", 0)) * 5, int(before[2]) * 6, ability_id + " enlarges collision radius by exactly 20 percent")
+		equal([speed, lifetime_ms, int(definition.radius), int(definition.damage)], expected, ability_id + " compiles its exact authored speed, lifetime, collision radius and damage")
 		var baseline := _sample_projectile_travel(definition, int(before[0]), int(before[1]))
 		var candidate := _sample_projectile_travel(definition, speed, lifetime_ms)
 		check(bool(candidate["expired"]), ability_id + " expires on the authoritative projectile path")
-		check(int(candidate["reaction_ticks"]) > int(baseline["reaction_ticks"]), ability_id + " gives more ticks to react across 300 world units")
+		if family == "heavy":
+			check(int(candidate.reaction_ticks) > int(baseline.reaction_ticks), "the stronger Heavy gives strictly more time to react across300 world units")
+		elif family == "rapid":
+			check(int(candidate.reaction_ticks) < int(baseline.reaction_ticks), "the lighter precision Rapid visibly reaches300 world units sooner")
+		else:
+			equal(int(candidate.reaction_ticks), 100, "every Bolt has the same middle-speed300px travel time at120Hz")
 		check(absi(int(candidate["travel"]) - int(baseline["travel"])) <= 5000, ability_id + " preserves terminal reach within five world units")
-	equal(projectile_count, 24, "all eight Bolts, eight Heavies, and eight Rapids retain the readability pass")
+	equal(projectile_count, 18, "all six Bolts, six Heavies, and six Rapids are independently checked")
+
+
+func _test_inverse_launch_strength_and_family_tradeoffs() -> void:
+	var catalog := _catalog()
+	for element: String in AbilityCatalog.DISPLAY_ELEMENT_IDS:
+		var bolt := CombatTuning.cast_definition(int(catalog.ability(catalog.spell_id_at(element, "bolt")).wire_id))
+		var heavy := CombatTuning.cast_definition(int(catalog.ability(catalog.spell_id_at(element, "heavy")).wire_id))
+		var rapid := CombatTuning.cast_definition(int(catalog.ability(catalog.spell_id_at(element, "rapid")).wire_id))
+		var spray := CombatTuning.cast_definition(int(catalog.ability(catalog.spell_id_at(element, "spray")).wire_id))
+		for definition: Dictionary in [rapid, bolt, heavy]:
+			# This is authored launch tuning, not a per-tick 1/current-speed buff.
+			# Reaction strength is conserved chemistry stock, separate from HP damage.
+			equal(int(definition.speed) * (int(definition.reaction_strength) + 5), 3_600_000, "all18 effective travelling spells obey speed_px_s=3600/(strength+5)")
+		check(int(rapid.speed) > int(bolt.speed) and int(bolt.speed) > int(heavy.speed), "lighter families are strictly faster for every element")
+		check(int(rapid.radius) * 3 <= int(bolt.radius) and int(heavy.radius) >= int(bolt.radius) + 12_000, "all families have meaningful actual collider-size separation")
+		check(int(rapid.damage) < int(bolt.damage) and int(bolt.damage) < int(heavy.damage), "speed advantage trades away direct hit damage")
+		check(int(rapid.flux_cost) < int(bolt.flux_cost) and int(bolt.flux_cost) < int(heavy.flux_cost), "larger commitments pay strictly more Flux per cast")
+		check(int(rapid.damage) * (int(bolt.startup_ms) + int(bolt.cooldown_ms)) < int(bolt.damage) * (int(rapid.startup_ms) + int(rapid.cooldown_ms)), "fast low-risk Rapid cannot also dominate Bolt sustained single-target damage")
+		check(int(rapid.speed) * int(rapid.lifetime_ms) < int(bolt.speed) * int(bolt.lifetime_ms), "Rapid precision speed does not inherit Bolt reach")
+		check(bool(rapid.repeat_while_held) and bool(bolt.repeat_while_held), "only precision travelling families retain held repeat")
+		check(not bool(heavy.get("repeat_while_held", false)) and not bool(spray.get("repeat_while_held", false)), "area commitments still require deliberate fresh presses")
+		check(not rapid.has("blast_radius") and not bolt.has("blast_radius"), "faster families cannot gain free radial secondary damage")
+		equal(int(heavy.blast_radius), 120_000, "Heavy's useful terminal radius grows from84 to120px")
+		equal(int(heavy.blast_damage), 18_000, "larger splash retains18 damage below the rewarded24damage direct hit")
+		equal(int(spray.cone_cosine_squared_per_million), 500_000, "all six Sprays use a visible90degree close fan")
+		equal(int(spray.range), 300_000 if element == "water" else 320_000, "Spray remains a close-area choice instead of a long-range ray")
+		equal(int(spray.damage), 14_000 if element == "water" else 10_000, "water displacement and ordinary Spray retain explicit distinct paid impact")
+		equal(int(spray.radius), 10_000, "Spray ray-cover probe is independently bounded")
 
 
 func _sample_projectile_travel(definition: Dictionary, speed: int, lifetime_ms: int) -> Dictionary:
@@ -124,7 +177,7 @@ func _sample_projectile_travel(definition: Dictionary, speed: int, lifetime_ms: 
 	var events: Array[Dictionary] = []
 	var flight_ticks := 0
 	var reaction_ticks := 0
-	while not active.is_empty() and flight_ticks < 360:
+	while not active.is_empty() and flight_ticks < config.milliseconds_to_ticks(lifetime_ms) + 2:
 		active = CombatSystem.advance_projectiles(active, no_players, config, collision, events)
 		flight_ticks += 1
 		if reaction_ticks == 0 and projectile.position_x - 500_000 >= 300_000:

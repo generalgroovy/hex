@@ -1,0 +1,226 @@
+{
+	"checks": [
+		{
+			"message": "actual station Interact opens Spell Loom",
+			"passed": false
+		},
+		{
+			"message": "native Down follows element rows",
+			"passed": false
+		},
+		{
+			"message": "native PageDown filters library",
+			"passed": false
+		},
+		{
+			"message": "native Tab/Right selects adjacent target slot",
+			"passed": false
+		},
+		{
+			"message": "native PageUp restores all elements",
+			"passed": true
+		},
+		{
+			"message": "loom-swap saves native frame",
+			"passed": true
+		},
+		{
+			"message": "loom-swap rendering leaves authority unchanged",
+			"passed": true
+		},
+		{
+			"message": "native confirm applies exact previewed swap",
+			"passed": false
+		},
+		{
+			"message": "same-slot confirmation sends/saves nothing",
+			"passed": false
+		},
+		{
+			"message": "loom-no-op saves native frame",
+			"passed": true
+		},
+		{
+			"message": "loom-no-op rendering leaves authority unchanged",
+			"passed": true
+		},
+		{
+			"message": "loom-heavy saves native frame",
+			"passed": true
+		},
+		{
+			"message": "loom-heavy rendering leaves authority unchanged",
+			"passed": true
+		},
+		{
+			"message": "paid-test Heavy is deliberately equipped",
+			"passed": true
+		},
+		{
+			"message": "configured slot still starts real paid Heavy cast",
+			"passed": false
+		},
+		{
+			"message": "hud-rebound saves native frame",
+			"passed": true
+		},
+		{
+			"message": "hud-rebound rendering leaves authority unchanged",
+			"passed": true
+		},
+		{
+			"message": "Gallery opens through normal game route",
+			"passed": true
+		},
+		{
+			"message": "native card click cannot change identity or reset weave",
+			"passed": true
+		},
+		{
+			"message": "gallery-overview saves native frame",
+			"passed": true
+		},
+		{
+			"message": "gallery-overview rendering leaves authority unchanged",
+			"passed": true
+		},
+		{
+			"message": "gallery-details saves native frame",
+			"passed": true
+		},
+		{
+			"message": "gallery-details rendering leaves authority unchanged",
+			"passed": true
+		},
+		{
+			"message": "explicit native Attune commits selected character",
+			"passed": false
+		},
+		{
+			"message": "service-refusal saves native frame",
+			"passed": true
+		},
+		{
+			"message": "service-refusal rendering leaves authority unchanged",
+			"passed": true
+		},
+		{
+			"message": "loom-1600x900 saves native frame",
+			"passed": true
+		},
+		{
+			"message": "loom-1600x900 rendering leaves authority unchanged",
+			"passed": true
+		},
+		{
+			"message": "original weave remains a complete twelve-slot fixture",
+			"passed": true
+		}
+	],
+	"failures": [
+		"actual station Interact opens Spell Loom",
+		"native Down follows element rows",
+		"native PageDown filters library",
+		"native Tab/Right selects adjacent target slot",
+		"native confirm applies exact previewed swap",
+		"same-slot confirmation sends/saves nothing",
+		"configured slot still starts real paid Heavy cast",
+		"explicit native Attune commits selected character"
+	],
+	"fixture": "station positions and inspected selection are arranged; UI events, assignment, attunement and paid cast use production paths",
+	"frames": [
+		{
+			"authority_hash": "2a794525e1e2f1c2ba96bd206425bcfdfeb7b8dc8fcb3207034570acd97a1b85",
+			"image": "loom-swap.png",
+			"label": "loom-swap",
+			"size": [
+				1280,
+				720
+			]
+		},
+		{
+			"authority_hash": "34a6fe6ec7b16691817b91ae1f17be9bfabfd784955750eb0603fa40ba1f2acb",
+			"image": "loom-no-op.png",
+			"label": "loom-no-op",
+			"size": [
+				1280,
+				720
+			]
+		},
+		{
+			"authority_hash": "34a6fe6ec7b16691817b91ae1f17be9bfabfd784955750eb0603fa40ba1f2acb",
+			"image": "loom-heavy.png",
+			"label": "loom-heavy",
+			"size": [
+				1280,
+				720
+			]
+		},
+		{
+			"authority_hash": "4921fe3d5ef3f8a21dd8975ba9b72c96db26fd0825da38e42f5a76f3811cbdd7",
+			"image": "hud-rebound.png",
+			"label": "hud-rebound",
+			"size": [
+				1280,
+				720
+			]
+		},
+		{
+			"authority_hash": "4921fe3d5ef3f8a21dd8975ba9b72c96db26fd0825da38e42f5a76f3811cbdd7",
+			"image": "gallery-overview.png",
+			"label": "gallery-overview",
+			"size": [
+				1280,
+				720
+			]
+		},
+		{
+			"authority_hash": "4921fe3d5ef3f8a21dd8975ba9b72c96db26fd0825da38e42f5a76f3811cbdd7",
+			"image": "gallery-details.png",
+			"label": "gallery-details",
+			"size": [
+				1280,
+				720
+			]
+		},
+		{
+			"authority_hash": "4921fe3d5ef3f8a21dd8975ba9b72c96db26fd0825da38e42f5a76f3811cbdd7",
+			"image": "service-refusal.png",
+			"label": "service-refusal",
+			"size": [
+				1280,
+				720
+			]
+		},
+		{
+			"authority_hash": "4921fe3d5ef3f8a21dd8975ba9b72c96db26fd0825da38e42f5a76f3811cbdd7",
+			"image": "loom-1600x900.png",
+			"label": "loom-1600x900",
+			"size": [
+				1600,
+				900
+			]
+		}
+	],
+	"not_run": [
+		"physical controller",
+		"remote networking",
+		"human usability",
+		"rendered FPS"
+	],
+	"passed": false,
+	"runtime_identity": {
+		"authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate.",
+		"build_id": "p56-e800aee77703",
+		"canonical_encoding": "utf8-lf-tagged-length-v1",
+		"engine_identity": "4.7.1.stable.official.a13da4feb",
+		"protocol_version": 56.0,
+		"record_count": 2944.0,
+		"runtime_source_sha256": "e800aee777039dbe7d05895cedb7951589ed5f754783c140ee181e6369da246f",
+		"schema_version": 1.0,
+		"scope_id": "production-runtime-source-v1",
+		"snapshot_schema": 22.0,
+		"status": "candidate_generated_not_promoted"
+	},
+	"user_data": "C:/Users/sende/Projects/hex/.godot/hex-probe-ux-v1/Godot/app_userdata/FLUX 2"
+}

@@ -4,13 +4,22 @@ extends RefCounted
 
 # Authoritative values are fixed-point world units, resource milli-units,
 # milliseconds, or scale-1000 ratios. They preserve the proven FLUX grammar.
-const COMPATIBILITY_ID: String = "movement-tuning-v14-walk-sprint-contrast"
+const COMPATIBILITY_ID: String = "movement-tuning-v20-paid-slide-chains"
+const JUMPSQUAT_CHARGE_MS: int = 300
+# Grounded preparation carries earned travel; it cannot create acceleration.
+const JUMPSQUAT_DRAG_PER_SECOND: int = 600_000
+const CHARGED_JUMP_VERTICAL_SPEED: int = 590_000
+const CROUCH_SPEED_RATIO: int = 350
 const EVADE_INTENT_POLICY_ID: String = "evade-current-intent-directional-dodge-neutral-fast-fall-v1"
 const PLAYER_RADIUS: int = 18_000
-const BASE_SPEED: int = 372_600
-const ACCELERATION: int = 2_277_000
-const DECELERATION: int = 3_450_000
-const SPRINT_MULTIPLIER: int = 1600
+const BASE_SPEED: int = 270_000
+const ACCELERATION: int = 2_640_000
+const DECELERATION: int = 3_960_000
+# Deliberate walking, nearly unchanged sprint ceiling (594 vs 596.16 px/s).
+const SPRINT_MULTIPLIER: int = 2200
+# Excess earned speed returns to the ordinary target without a mode-exit snap.
+# Opposition still owns the stronger counter-strafe brake.
+const GROUND_CARRY_DRAG_PER_SECOND: int = 900_000
 const COUNTER_STRAFE_MULTIPLIER: int = 1900
 const COUNTER_STRAFE_DOT_THRESHOLD: int = -24_000_000
 const MOVING_MODE_MINIMUM_SPEED: int = 20_000
@@ -38,7 +47,7 @@ const HOP_SPEED: int = 650_000
 const HOP_DURATION_MS: int = 285
 const AIR_MAX_HEIGHT: int = 180_000
 const VERTICAL_GRAVITY: int = 2_880_000
-const JUMP_VERTICAL_SPEED: int = 408_000
+const JUMP_VERTICAL_SPEED: int = 520_000
 const SHORT_HOP_VERTICAL_SPEED: int = 330_000
 const GROUND_PROJECTILE_CLEARANCE_HEIGHT: int = 18_000
 const AIR_TERMINAL_FALL_SPEED: int = 1_200_000
@@ -62,9 +71,9 @@ const SLOW_MAXIMUM_RATIO: int = 1000
 const DOUBLE_JUMP_COST: int = 24_000
 const FLOAT_COST: int = DOUBLE_JUMP_COST
 const FLOAT_DRAIN_PER_SECOND: int = 100_000
-const FLOAT_SMALL_DURATION_MS: int = 1800
-const FLOAT_MIDDLE_DURATION_MS: int = 1500
-const FLOAT_LARGE_DURATION_MS: int = 1200
+const FLOAT_SMALL_DURATION_MS: int = 2400
+const FLOAT_MIDDLE_DURATION_MS: int = 2100
+const FLOAT_LARGE_DURATION_MS: int = 1800
 const DOUBLE_JUMP_SPEED: int = 700_000
 const DOUBLE_JUMP_DURATION_MS: int = 500
 const AIR_REDIRECT_COST: int = 10_000
@@ -108,7 +117,8 @@ const LANDING_INPUT_BUFFER_MS: int = 80
 const WALL_CONTACT_TOLERANCE: int = 3000
 const MATERIAL_MOTION_ENABLED: bool = false
 const SLIDE_COST: int = 22_000
-const SLIDE_ENTRY_SPEED: int = 250_000
+const SLIDE_ENTRY_SPEED: int = 225_000
+const SLIDE_ENTRY_BOOST: int = 90_000
 const SLIDE_SPEED: int = 720_000
 const SLIDE_DURATION_MS: int = 480
 const SLIDE_MINIMUM_MS: int = 150
@@ -116,6 +126,8 @@ const SLIDE_SUSTAIN_DRAIN_PER_SECOND: int = 45_000
 const SLIDE_COOLDOWN_MS: int = 780
 const SLIDE_STEERING: int = 320
 const SLIDE_DRAG_PER_SECOND: int = 120_000
+const SLIDE_CARVE_PER_SECOND: int = 900_000
+const SLIDE_BRAKE_PER_SECOND: int = 1_800_000
 const SLIDE_JUMP_COST: int = 20_000
 const SLIDE_JUMP_SPEED: int = 790_000
 const SLIDE_JUMP_DURATION_MS: int = 500
@@ -148,6 +160,7 @@ static func float_duration_ms(body_type: String) -> int:
 static func compatibility_hash() -> String:
 	return CanonicalContent.sha256({
 		"id": COMPATIBILITY_ID,
+		"release_jump": [JUMPSQUAT_CHARGE_MS, JUMPSQUAT_DRAG_PER_SECOND, CHARGED_JUMP_VERTICAL_SPEED, CROUCH_SPEED_RATIO],
 		"resource_recovery": [PlayerTuning.RESOURCE_RECOVERY_RAMP_MS, PlayerTuning.RESOURCE_RECOVERY_MAXIMUM_RATIO],
 		"vertical": [AIR_MAX_HEIGHT, VERTICAL_GRAVITY, JUMP_VERTICAL_SPEED,
 			SHORT_HOP_VERTICAL_SPEED, AIR_TERMINAL_FALL_SPEED, AIR_FAST_FALL_SPEED,
@@ -159,7 +172,7 @@ static func compatibility_hash() -> String:
 			WALL_RUN_COMMITMENT_MS, WALL_EXIT_AIR_MS, WAVE_DASH_COMMITMENT_MS,
 			AIR_REDIRECT_MINIMUM_TURN_DOT,
 			PLAYER_RADIUS, BASE_SPEED, ACCELERATION, DECELERATION,
-			SPRINT_MULTIPLIER, COUNTER_STRAFE_MULTIPLIER,
+			SPRINT_MULTIPLIER, GROUND_CARRY_DRAG_PER_SECOND, COUNTER_STRAFE_MULTIPLIER,
 			COUNTER_STRAFE_DOT_THRESHOLD, MOVING_MODE_MINIMUM_SPEED,
 			INPUT_BUFFER_MS, VARIABLE_JUMP_MINIMUM_MS, FAST_FALL_EXTRA_TICKS,
 			MOVEMENT_CHAIN_RESET_MS, MOVEMENT_CHAIN_COST_STEP_RATIO,
@@ -204,9 +217,10 @@ static func compatibility_hash() -> String:
 		"movement_revision": [SLIDE_INVULNERABILITY_MS, LANDING_INPUT_BUFFER_MS, WALL_CONTACT_TOLERANCE, MATERIAL_MOTION_ENABLED, SurfaceMotionPolicy.COMPATIBILITY_ID],
 		"evade_intent_policy": EVADE_INTENT_POLICY_ID,
 		"slide": [
-			SLIDE_COST, SLIDE_ENTRY_SPEED, SLIDE_SPEED, SLIDE_DURATION_MS,
+			SLIDE_COST, SLIDE_ENTRY_SPEED, SLIDE_ENTRY_BOOST, SLIDE_SPEED, SLIDE_DURATION_MS,
 			SLIDE_MINIMUM_MS, SLIDE_SUSTAIN_DRAIN_PER_SECOND,
-			SLIDE_COOLDOWN_MS, SLIDE_STEERING, SLIDE_DRAG_PER_SECOND, SLIDE_JUMP_COST,
+			SLIDE_COOLDOWN_MS, SLIDE_STEERING, SLIDE_DRAG_PER_SECOND,
+			SLIDE_CARVE_PER_SECOND, SLIDE_BRAKE_PER_SECOND, SLIDE_JUMP_COST,
 			SLIDE_JUMP_SPEED, SLIDE_JUMP_DURATION_MS,
 			SLIDE_JUMP_MINIMUM_COMMITMENT_MS, SLIDE_JUMP_WINDOW_MS,
 		],

@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "id": "flux-vfx-v1-palette",
+  "status": "PROPOSAL",
+  "basis": "Supplied visual_language_v1.json; no palette remapping",
+  "presentation_order": [
+    "Water",
+    "Earth",
+    "Fire",
+    "Air",
+    "Ice",
+    "Charge",
+    "Light",
+    "Dark"
+  ],
+  "element_count": 8,
+  "reaction_pilot": "steam",
+  "color_space": "sRGB; straight alpha for raster assets",
+  "environment_ramps": {
+    "warm_stone": [
+      "#403424",
+      "#6c5737",
+      "#98805a",
+      "#c2ac7b",
+      "#e2d4a7"
+    ],
+    "timber": [
+      "#17120f",
+      "#2c1d18",
+      "#4c3024",
+      "#755039",
+      "#ad7a4a"
+    ],
+    "aged_brass": [
+      "#2b1d0c",
+      "#634117",
+      "#a56d24",
+      "#d19a3f",
+      "#f1cf72"
+    ],
+    "worldbone": [
+      "#101315",
+      "#202428",
+      "#363a3d",
+      "#55554f",
+      "#88816e"
+    ],
+    "garden": [
+      "#102015",
+      "#223a20",
+      "#3d6130",
+      "#6e8d47",
+      "#a8b967"
+    ],
+    "parchment": [
+      "#443823",
+      "#8f7950",
+      "#c5ad79",
+      "#e4d3a5",
+      "#fff0c6"
+    ]
+  },
+  "environment_treatment": "Weathered warm stone with broad quiet planes; timber in seams; brass at fixtures, not hazard outlines. Upper-left light. No floor-layout changes.",
+  "elements": [
+    {
+      "id": "water",
+      "display_name": "Water",
+      "palette": {
+        "dark": "#15366e",
+        "base": "#1f70f2",
+        "bright": "#57baff"
+      },
+      "shape": "Hooked wave crest; broad rounded underside",
+      "motion": "Local rolling curls, not directional force arrows",
+      "phases": {
+        "formation": "Gathering ripple",
+        "active": "Coherent flowing reagent; no damage warning",
+        "harmless_expiry": "Flattened, desaturated wet trace"
+      },
+      "optional_audio_description": "Small ceramic splash; soft lap",
+      "audio_asset_status": "NOT_PRODUCED",
+      "icon": "assets/ui/water.png",
+      "authority": "visual identity only; authority.danger decides hazard. No new damage/force/visibility mechanics."
+    },
+    {
+      "id": "earth",
+      "display_name": "Earth",
+      "palette": {
+        "dark": "#4a2d1a",
+        "base": "#b47c36",
+        "bright": "#edc179"
+      },
+      "shape": "Three squat chipped blocks; no pillar for loose ingredient",
+      "motion": "Settle, hold, one short crumble",
+      "phases": {
+        "formation": "Gathering grains",
+        "active": "Stable mineral cluster",
+        "harmless_expiry": "Small falling chips"
+      },
+      "optional_audio_description": "Dry stone clack",
+      "audio_asset_status": "NOT_PRODUCED",
+      "icon": "assets/ui/earth.png",
+      "authority": "visual identity only; authority.danger decides hazard. No new damage/force/visibility mechanics."
+    },
+    {
+      "id": "fire",
+      "display_name": "Fire",
+      "palette": {
+        "dark": "#701d20",
+        "base": "#fa4b26",
+        "bright": "#ff943e"
+      },
+      "shape": "Uneven twin forks with a wide ember bed",
+      "motion": "Asymmetric upward snaps; tips anticipate, base holds",
+      "phases": {
+        "formation": "Low split ignition bud",
+        "active": "Tall fork + continuous hot edge when danger=true",
+        "harmless_expiry": "Flat dark ash; no hot tip or upward lick"
+      },
+      "optional_audio_description": "Tight crackle; single ignition pop",
+      "audio_asset_status": "NOT_PRODUCED",
+      "icon": "assets/ui/fire.png",
+      "authority": "visual identity only; authority.danger decides hazard. No new damage/force/visibility mechanics."
+    },
+    {
+      "id": "wind",
+      "display_name": "Air",
+      "palette": {
+        "dark": "#16513d",
+        "base": "#28d882",
+        "bright": "#88f3ad"
+      },
+      "shape": "Interrupted open spiral with visible negative space",
+      "motion": "Short sweeps separated by quiet holds",
+      "phases": {
+        "formation": "Converging open strokes",
+        "active": "Open passing arcs",
+        "harmless_expiry": "Separating short strokes"
+      },
+      "optional_audio_description": "Brief hollow breath",
+      "audio_asset_status": "NOT_PRODUCED",
+      "icon": "assets/ui/wind.png",
+      "authority": "visual identity only; authority.danger decides hazard. No new damage/force/visibility mechanics."
+    },
+    {
+      "id": "ice",
+      "display_name": "Ice",
+      "palette": {
+        "dark": "#246078",
+        "base": "#41d8ed",
+        "bright": "#b0f7ff"
+      },
+      "shape": "Six-point branched facet, crisp center",
+      "motion": "Sharp extension, held crystalline poses",
+      "phases": {
+        "formation": "Branching growth",
+        "active": "Stable bright facets",
+        "harmless_expiry": "Short faceted fragments"
+      },
+      "optional_audio_description": "Glass-like tick, not shattering screen-wide",
+      "audio_asset_status": "NOT_PRODUCED",
+      "icon": "assets/ui/ice.png",
+      "authority": "visual identity only; authority.danger decides hazard. No new damage/force/visibility mechanics."
+    },
+    {
+      "id": "charge",
+      "display_name": "Charge",
+      "palette": {
+        "dark": "#786011",
+        "base": "#eed42e",
+        "bright": "#ffef78"
+      },
+      "shape": "Broken angular bolt, unequal zig-zag teeth",
+      "motion": "Brief snap, quiet interval; no full-screen strobe",
+      "phases": {
+        "formation": "Disconnected segments approach",
+        "active": "Connected jolt",
+        "harmless_expiry": "Segments disconnect and extinguish"
+      },
+      "optional_audio_description": "Short dry snap",
+      "audio_asset_status": "NOT_PRODUCED",
+      "icon": "assets/ui/charge.png",
+      "authority": "visual identity only; authority.danger decides hazard. No new damage/force/visibility mechanics."
+    },
+    {
+      "id": "light",
+      "display_name": "Light",
+      "palette": {
+        "dark": "#8e8262",
+        "base": "#f9ebc0",
+        "bright": "#fff9e8"
+      },
+      "shape": "Radiant diamond; only short cardinal rays",
+      "motion": "Measured local expansion and return",
+      "phases": {
+        "formation": "Small gathering facet",
+        "active": "Restrained diamond pulse",
+        "harmless_expiry": "Contracting pale slivers"
+      },
+      "optional_audio_description": "One soft clear chime",
+      "audio_asset_status": "NOT_PRODUCED",
+      "icon": "assets/ui/light.png",
+      "authority": "visual identity only; authority.danger decides hazard. No new damage/force/visibility mechanics."
+    },
+    {
+      "id": "dark",
+      "display_name": "Dark",
+      "palette": {
+        "dark": "#301345",
+        "base": "#a246df",
+        "bright": "#d98aff"
+      },
+      "shape": "Inward-facing crescent; hollow center",
+      "motion": "Slow folding inward; never global dimming",
+      "phases": {
+        "formation": "Gathering crescents",
+        "active": "Contained inward fold",
+        "harmless_expiry": "Sparse receding fragments"
+      },
+      "optional_audio_description": "Low soft pluck, not a sustained drone",
+      "audio_asset_status": "NOT_PRODUCED",
+      "icon": "assets/ui/dark.png",
+      "authority": "visual identity only; authority.danger decides hazard. No new damage/force/visibility mechanics."
+    }
+  ]
+}

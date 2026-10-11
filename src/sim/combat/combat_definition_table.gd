@@ -3,7 +3,7 @@ extends RefCounted
 
 
 const CATALOG_PATH: String = "res://content/abilities/foundation_abilities_v1.json"
-const COMPILER_CONTRACT_VERSION: int = 2
+const COMPILER_CONTRACT_VERSION: int = 3
 const FIXED_ROTATIONS: Dictionary = {
 	-24: Vector2i(914, -407),
 	-12: Vector2i(978, -208),
@@ -44,6 +44,7 @@ func compile(catalog: AbilityCatalog) -> bool:
 		var definition := _compile_definition(ability, catalog)
 		if definition.is_empty():
 			return false
+		_freeze_definition(definition)
 		_definitions_by_wire[wire_id] = definition
 		_runtime_wire_ids.append(wire_id)
 	content_hash = CanonicalContent.sha256({
@@ -58,6 +59,21 @@ func compile(catalog: AbilityCatalog) -> bool:
 
 func definition(wire_id: int) -> Dictionary:
 	return (_definitions_by_wire.get(wire_id, {}) as Dictionary).duplicate(true)
+
+
+## Borrowed immutable compiled data. Call definition() when a caller needs to
+## scale damage/range or otherwise author a private per-cast copy.
+func definition_view(wire_id: int) -> Dictionary:
+	return _definitions_by_wire.get(wire_id, {})
+
+
+static func _freeze_definition(value: Variant) -> void:
+	if value is Dictionary:
+		for child: Variant in value.values(): _freeze_definition(child)
+		value.make_read_only()
+	elif value is Array:
+		for child: Variant in value: _freeze_definition(child)
+		value.make_read_only()
 
 
 func projectile_definition(wire_id: int) -> Dictionary:
@@ -82,13 +98,17 @@ func _compile_definition(ability: Dictionary, catalog: AbilityCatalog) -> Dictio
 		return {}
 	var definition := {
 		"shape": String(ability.get("shape", "")),
+		"family": AbilityCatalog._spell_family(ability),
 		"element_wire_id": int(element.get("wire_id", 0)),
+		"element_mask": int(ability.get("element_mask", 0)),
+		"on_hit_profile_id": int(ability.get("element_mask", 0)),
 		"reaction_strength": int(ability.get("reaction_strength", 0)),
 		"flux_cost": int(ability.get("flux_cost", 0)) * 1000,
 		"cooldown_ms": int(ability.get("cooldown_ms", 0)),
 		"startup_ms": int(ability.get("startup_ms", 0)),
 		"recovery_ms": int(ability.get("recovery_ms", 0)),
 	}
+	definition["status_duration_ms"] = int(MixtureCatalog.definition(int(definition.element_mask)).get("status_duration_ms", 600))
 	if bool(ability.get("repeat_while_held", false)):
 		definition["repeat_while_held"] = true
 	match String(definition["shape"]):

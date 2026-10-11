@@ -15,7 +15,7 @@ func run() -> int:
 
 
 func _test_supported_tick_rates() -> void:
-	equal(SimConfig.PROTOCOL_VERSION, 55, "smaller authoritative hex geometry has an explicit protocol boundary")
+	equal(SimConfig.PROTOCOL_VERSION, 60, "element payloads, finite statuses and deliveries have an explicit protocol boundary")
 	check(not SimConfig.new(60).is_valid(), "retired 60 Hz cadence fails closed")
 	check(SimConfig.new(120).is_valid(), "120 Hz is the sole supported cadence")
 	check(not SimConfig.new(90).is_valid(), "intermediate tick rates fail closed")

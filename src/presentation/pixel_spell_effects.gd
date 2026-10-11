@@ -5,6 +5,7 @@ extends RefCounted
 const Library = preload("res://src/presentation/pixel_magic_library.gd")
 const Geometry = preload("res://src/presentation/pixel_effect_geometry.gd")
 const FootprintPresenter = preload("res://src/presentation/element_chemistry_presenter.gd")
+const Glyph = preload("res://src/presentation/element_glyph_renderer.gd")
 const ELEMENTS := ["earth", "fire", "water", "wind", "ice", "charge", "light", "dark"]
 const MAX_FIELD_STAMPS := 64
 const MAX_SPRAY_STAMPS := 24
@@ -17,6 +18,213 @@ var library: RefCounted
 var geometry := Geometry.new()
 var collision: CollisionWorld
 var material_footprint := FootprintPresenter.new()
+
+
+static func mixture_elements(mask: int) -> Array[String]:
+	var result: Array[String] = []
+	if mask <= 0 or mask > 63: return result
+	for wire: int in ElementRules.WIRE_IDS:
+		if mask & int(ElementRules.MASK_BY_WIRE[wire]): result.append(ElementRules.id_from_wire(wire))
+	return result
+
+
+static func mixture_sectors(mask: int, center: Vector2, radius: float) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	var elements := mixture_elements(mask)
+	if elements.is_empty() or not center.is_finite() or not is_finite(radius) or radius <= 0.0: return result
+	for index: int in elements.size():
+		var start := -PI * 0.5 + TAU * float(index) / float(elements.size())
+		var end := -PI * 0.5 + TAU * float(index + 1) / float(elements.size())
+		var points := PackedVector2Array()
+		if elements.size() == 1:
+			points = Geometry.circle_polygon(center, radius)
+		else:
+			points.append(center)
+			for step: int in 13: points.append(center + Vector2.from_angle(lerpf(start, end, float(step) / 12.0)) * radius)
+		result.append({"element": elements[index], "points": points, "start": start, "end": end,
+			"glyph_anchor": center + Vector2.from_angle((start + end) * 0.5) * radius * (0.58 if elements.size() > 1 else 0.0)})
+	return result
+
+
+static func expanded_projectile_model(shot: ProjectileState, definition: Dictionary, position: Vector2, config: SimConfig, owner: PlayerState = null, reduced: bool = false) -> Dictionary:
+	if shot == null or config == null or not config.is_valid() or not position.is_finite() or shot.lifetime_ticks <= 0 or shot.radius <= 0: return {}
+	if String(definition.get("shape", "")) != "projectile": return {}
+	var mask := int(definition.get("element_mask", 0))
+	var family := String(definition.get("family", ""))
+	if mixture_elements(mask).is_empty() or family not in MixtureCatalog.FAMILIES: return {}
+	if shot.initial_strength > 0 and shot.remaining_strength <= 0: return {}
+	var radius := float(shot.radius) / SimConfig.FIXED_SCALE
+	var center := position
+	var armed := family == "fuse" and shot.delivery_phase == 1
+	var mantle := family == "mantle"
+	if armed:
+		position = Vector2(shot.position_x, shot.position_y) / SimConfig.FIXED_SCALE
+		center = position # A planted warning never interpolates back along its flight.
+	if (mantle or armed) and shot.delivery_damage_remaining <= 0: return {}
+	if mantle and owner != null:
+		if owner.entity_id != shot.owner_id or owner.health <= 0: return {}
+		center -= Vector2(0, float(JumpPresentation.sample(owner, config, 0.0, reduced).body_lift_pixels))
+	var strength_ratio := clampf(float(shot.remaining_strength) / maxi(1, shot.initial_strength), 0.0, 1.0) if shot.initial_strength > 0 else 1.0
+	var core_radius := radius if mantle else maxf(minf(3.0, radius), radius * sqrt(strength_ratio))
+	var direction := ProjectilePresentationMotion.travel_direction(shot)
+	var delay := config.milliseconds_to_ticks(600)
+	var lifetime := config.milliseconds_to_ticks(int(definition.get("lifetime_ms", 0)))
+	return {"family": family, "mask": mask, "elements": mixture_elements(mask), "center": center,
+		"ground_center": position, "radius": radius, "core_radius": core_radius, "direction": direction,
+		"armed": armed, "mantle": mantle, "split_parent": family == "split" and shot.delivery_phase == 0,
+		"split_child": family == "split" and shot.delivery_phase == 2, "bounces": clampi(shot.remaining_bounces, 0, 2),
+		"warning_radius": float(definition.get("blast_radius", 0)) / SimConfig.FIXED_SCALE if armed else 0.0,
+		"countdown_ratio": clampf(float(shot.delivery_ticks) / maxi(1, delay), 0.0, 1.0) if armed else 0.0,
+		"pool_ratio": clampf(float(shot.delivery_damage_remaining) / maxi(1, int(definition.get("damage", 0))), 0.0, 1.0) if mantle or armed else 0.0,
+		"remaining_ratio": clampf(float(shot.lifetime_ticks) / maxi(1, lifetime), 0.0, 1.0),
+		"age": maxi(0, lifetime - shot.lifetime_ticks), "protection": false, "reduced": reduced}
+
+
+static func mixed_spray_model(cue: Dictionary, definition: Dictionary, reduced: bool) -> Dictionary:
+	var elements := mixture_elements(int(definition.get("element_mask", 0)))
+	var raw: Variant = cue.get("spray_geometry")
+	if elements.is_empty() or String(definition.get("shape", "")) != "spray" or not raw is Dictionary: return {}
+	var source: Dictionary = raw
+	if not source.get("start") is Vector2 or not source.get("endpoints") is PackedVector2Array or not source.get("brace") is PackedVector2Array: return {}
+	var start: Vector2 = source.start
+	var endpoints: PackedVector2Array = source.endpoints
+	var brace: PackedVector2Array = source.brace
+	if not start.is_finite() or endpoints.size() != 5 or brace.size() != 2: return {}
+	var duration := float(cue.get("duration", 0.0))
+	var remaining := float(cue.get("remaining", 0.0))
+	if not is_finite(duration) or not is_finite(remaining) or duration <= 0.0 or remaining <= 0.0: return {}
+	var segments: Array[Dictionary] = []
+	for ray: int in ([0, 2, 4] if reduced else [0, 1, 2, 3, 4]):
+		var endpoint := endpoints[ray]
+		if not endpoint.is_finite() or start.distance_to(endpoint) > float(definition.get("range", 0)) / 1000.0 + 0.001: return {}
+		if endpoint == start: continue # Observer/cover sentinel remains invisible.
+		for index: int in elements.size():
+			segments.append({"start": start.lerp(endpoint, float(index) / float(elements.size())),
+				"end": start.lerp(endpoint, float(index + 1) / float(elements.size())), "element": elements[index], "ray": ray})
+	return {"segments": segments, "opacity": clampf(remaining / duration, 0.0, 1.0),
+		"brace": brace.duplicate(), "start": start, "mask": int(definition.element_mask),
+		"origin_visible": brace[0].is_finite() and brace[1].is_finite() and brace[0] != brace[1]}
+
+
+static func fuse_countdown_model(model: Dictionary) -> Dictionary:
+	if not bool(model.get("armed", false)) or not model.get("center") is Vector2: return {}
+	var center: Vector2 = model.center
+	var radius := float(model.get("radius", 0.0))
+	var remaining := float(model.get("countdown_ratio", 0.0))
+	if not center.is_finite() or not is_finite(radius) or radius <= 0.0 or not is_finite(remaining): return {}
+	var track := Rect2(center + Vector2(-16.0, radius + 7.0), Vector2(32.0, 6.0))
+	return {"track": track, "fill": Rect2(track.position, Vector2(track.size.x * clampf(remaining, 0.0, 1.0), track.size.y))}
+
+
+func draw_expanded_projectile(canvas: CanvasItem, model: Dictionary, language: VisualLanguage) -> bool:
+	if canvas == null or model.is_empty() or language == null: return false
+	var center: Vector2 = model.center
+	var floor_center: Vector2 = model.ground_center
+	var radius := float(model.radius)
+	var core_radius := float(model.core_radius)
+	var elements: Array = model.elements
+	var bright := language.element_color(String(elements[0]), "bright")
+	# The southeast inset shade and northwest light are shared with wall relief.
+	# No camera motion, synthetic trajectory, extra projectile or collision shift.
+	if bool(model.armed):
+		var warning := geometry.disk_mask(floor_center, float(model.warning_radius), collision)
+		for polygon: PackedVector2Array in warning.get("polygons", []): canvas.draw_colored_polygon(polygon, Color(bright, 0.055))
+		for boundary: PackedVector2Array in warning.get("boundaries", []):
+			canvas.draw_polyline(boundary, Color(0.025, 0.03, 0.03, 0.90), 3.0)
+			canvas.draw_polyline(boundary, Color(bright, 0.80), 1.0)
+	if bool(model.mantle):
+		var covered := geometry.disk_mask(floor_center, radius, collision)
+		var lift := center - floor_center
+		if lift.length_squared() > 0.0:
+			var shadow := PackedVector2Array()
+			for index: int in 24: shadow.append(floor_center + Vector2.from_angle(TAU * float(index) / 24.0) * Vector2(radius * 0.68, radius * 0.20))
+			canvas.draw_colored_polygon(shadow, Color(0.02, 0.03, 0.03, 0.20))
+		for boundary: PackedVector2Array in covered.get("boundaries", []):
+			var elevated := PackedVector2Array()
+			for point: Vector2 in boundary: elevated.append(point + lift)
+			canvas.draw_polyline(elevated, Color(0.035, 0.045, 0.045, 0.85), 3.0)
+			canvas.draw_polyline(elevated, Color(bright, 0.62), 1.0)
+		for sector: Dictionary in mixture_sectors(int(model.mask), center, radius * 0.75):
+			Glyph.draw(canvas, language, sector.glyph_anchor, sector.element, 4.0, language.element_color(sector.element, "bright"))
+		for index: int in 4:
+			var at := center + Vector2(float(index) * 5.0 - 9.0, radius * 0.60)
+			canvas.draw_rect(Rect2(at, Vector2(4, 2)), Color(bright, 0.95 if float(index) < float(model.pool_ratio) * 4.0 else 0.16))
+		return true
+	canvas.draw_circle(center + Vector2(1, 2), core_radius, Color(0.018, 0.025, 0.025, 0.33))
+	for sector: Dictionary in mixture_sectors(int(model.mask), center, core_radius):
+		var color := language.element_color(sector.element, "base")
+		canvas.draw_colored_polygon(sector.points, Color(color, 0.84))
+		_draw_mixture_material(canvas, sector, center, core_radius, int(model.age), bool(model.reduced))
+		if core_radius >= 9.0:
+			Glyph.draw(canvas, language, sector.glyph_anchor, sector.element, minf(3.5, core_radius * 0.16), language.element_color(sector.element, "bright"))
+	canvas.draw_arc(center, core_radius * 0.85, -2.75, -0.65, 14, Color(0.93, 0.94, 0.86, 0.78), 1.0)
+	canvas.draw_arc(center, core_radius * 0.85, 0.20, 1.80, 12, Color(0.025, 0.03, 0.04, 0.68), 2.0)
+	_draw_delivery_mark(canvas, model, bright)
+	if bool(model.armed):
+		# A separate monochrome clock stays legible beneath mixed ingredient glyphs.
+		# This small UI meter is not coverage: only the unchanged clipped outer
+		# warning describes blast reach. Reduced effects retains the same deadline.
+		var countdown := fuse_countdown_model(model)
+		if not countdown.is_empty():
+			var track: Rect2 = countdown.track
+			var ink := Color("10181d")
+			canvas.draw_rect(track.grow(2.0), ink)
+			canvas.draw_rect(track.grow(1.0), Color("cbd1cb"))
+			canvas.draw_rect(track, Color("38424a"))
+			var fill: Rect2 = countdown.fill
+			if fill.size.x > 0.0: canvas.draw_rect(fill, Color("fff0bd"))
+			for division: int in [1, 2, 3]:
+				canvas.draw_rect(Rect2(track.position + Vector2(float(division) * 8.0 - 0.5, 0.0), Vector2(1.0, track.size.y)), ink)
+	# Physical contacts remain visible at their immutable radius even when the
+	# material core shrinks with its remaining strength.
+	for axis: Vector2 in [Vector2.UP, Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT]:
+		canvas.draw_line(center + axis * (radius - 1.0), center + axis * radius, Color(bright, 0.90), 1.0)
+	return true
+
+
+func _draw_mixture_material(canvas: CanvasItem, sector: Dictionary, center: Vector2, radius: float, age: int, reduced: bool) -> void:
+	if not ready(): return
+	var frame: Dictionary = library.sample(asset_id(String(sector.element), "flight", reduced), age)
+	var texture := frame.get("texture") as Texture2D
+	if texture == null or not frame.get("region") is Rect2: return
+	var source: Rect2 = frame.region
+	var pivot: Vector2 = frame.get("pivot", frame.get("pivot_px", Vector2.ZERO))
+	var scale := radius / 8.0
+	var points: PackedVector2Array = sector.points
+	var uvs := PackedVector2Array()
+	for point: Vector2 in points: uvs.append((source.position + pivot + (point - center) / scale) / texture.get_size())
+	var part := {"points": points, "uvs": uvs, "indices": Geometry.local_triangle_indices(points)}
+	Geometry.draw_frame_part(canvas, part, texture, 0.72)
+
+
+static func _draw_delivery_mark(canvas: CanvasItem, model: Dictionary, bright: Color) -> void:
+	var center: Vector2 = model.center
+	var radius := float(model.core_radius) * 0.60
+	var direction: Vector2 = model.direction
+	if direction.length_squared() <= 0.0: direction = Vector2.UP
+	var side := direction.orthogonal()
+	var ink := Color(0.025, 0.035, 0.035, 0.95)
+	var strokes: Array[PackedVector2Array] = []
+	match String(model.family):
+		"split":
+			if bool(model.split_parent):
+				strokes.append(PackedVector2Array([center - direction * radius, center, center + (direction + side) * radius * 0.65]))
+				strokes.append(PackedVector2Array([center, center + (direction - side) * radius * 0.65]))
+			else: strokes.append(PackedVector2Array([center - side * radius, center + direction * radius, center + side * radius]))
+		"fuse":
+			strokes.append(PackedVector2Array([center + Vector2(-radius, -radius), center + Vector2(radius, -radius), center + Vector2(radius, radius), center + Vector2(-radius, radius), center + Vector2(-radius, -radius)]))
+		"rebound":
+			strokes.append(PackedVector2Array([center - direction * radius, center + side * radius * 0.6, center + direction * radius]))
+			for index: int in int(model.bounces): canvas.draw_circle(center - side * radius * 0.60 + direction * float(index * 4 - 2), 1.2, bright)
+		"heavy":
+			strokes.append(PackedVector2Array([center - direction * radius, center + side * radius, center + direction * radius, center - side * radius, center - direction * radius]))
+		"spray":
+			for angle: float in [-0.40, 0.0, 0.40]: strokes.append(PackedVector2Array([center - direction * radius * 0.5, center + direction.rotated(angle) * radius]))
+		_:
+			strokes.append(PackedVector2Array([center - side * radius * 0.45, center + direction * radius, center + side * radius * 0.45]))
+	for stroke: PackedVector2Array in strokes:
+		canvas.draw_polyline(stroke, ink, 3.0)
+		canvas.draw_polyline(stroke, bright, 1.0)
 
 
 func _init(shared_library: RefCounted = null) -> void:
@@ -60,13 +268,10 @@ func material_color(element: String, index: int = 3) -> Color:
 	return Color(String(palette[index])) if palette.size() > index else Color("cddbc9")
 
 
-func flight(canvas: CanvasItem, element: String, position: Vector2, direction: Vector2, radius: float, age: int, reduced: bool) -> bool:
+func flight(canvas: CanvasItem, element: String, position: Vector2, _direction: Vector2, radius: float, age: int, reduced: bool) -> bool:
 	if not ready() or element not in ELEMENTS or radius <= 0.0 or age < 0:
 		return false
 	var scale := radius / 8.0 # Authored core envelope is 16 px, not its 32 px gutter cell.
-	var tail := flight_tail_profile(element, position, direction, radius, reduced)
-	if not tail.is_empty() and library.take_decoration(tail.asset_id):
-		library.draw_stamp(canvas, tail.asset_id, tail.anchor, age, tail.angle, tail.opacity, tail.scale)
 	return library.draw_stamp(canvas, asset_id(element, "flight", reduced), position, age, 0.0, 1.0, scale)
 
 
@@ -97,7 +302,7 @@ func impact(canvas: CanvasItem, element: String, position: Vector2, age: int, re
 	# The authored contact now contains its own full material bloom. One guaranteed
 	# finite stamp keeps that identity at zero optional budget without borrowing
 	# a looping flight core or overdrawing a duplicate contact silhouette.
-	library.draw_stamp(canvas, profile.asset_id, position, sample_age, 0.0, profile.opacity, profile.scale)
+	library.draw_stamp(canvas, profile.asset_id, position, sample_age, 0.0, model.render_opacity, model.render_scale)
 	return true
 
 
@@ -106,10 +311,33 @@ func impact_model(element: String, position: Vector2, age: int, reduced: bool, r
 	if not ready() or profile.is_empty() or not position.is_finite() or age < 0:
 		return {}
 	# Only the nonlooping contact is sampled. No flight loop can revive expiry.
+	var duration := impact_duration_ticks(int(library.asset(profile.asset_id).get("total_ticks", 0)))
+	if age >= duration: return {}
 	var sample_age := impact_sample_age(age)
 	if library.sample(profile.asset_id, sample_age).is_empty():
 		return {}
-	return {"breakup": profile, "imprint": {}, "anchor": position, "age_ticks": age, "sample_age_ticks": sample_age}
+	var weight := 0 if radius <= 6.0 else (1 if radius <= 18.0 else 2)
+	var envelope := impact_envelope(age, duration, weight, reduced)
+	return {"breakup": profile, "imprint": {}, "anchor": position, "age_ticks": age, "sample_age_ticks": sample_age,
+		"weight": weight, "render_scale": minf(MAX_IMPACT_SCALE, float(profile.scale) * envelope.x),
+		"render_opacity": float(profile.opacity) * envelope.y}
+
+
+static func impact_envelope(age: int, duration: int, weight: int, reduced: bool) -> Vector2:
+	# One finite material stamp: brisk tap / firm burst / weighty bloom, then
+	# settle. This only animates VFX, never bodies, collision or attack coverage.
+	# Keep the existing authored sequence and expiry; no extra timer or particle.
+	if age < 0 or duration <= 0 or age >= duration or weight < 0 or weight > 2:
+		return Vector2.ZERO
+	var phase := float(age) / float(duration)
+	var opacity := 1.0 - 0.45 * phase * phase
+	if reduced:
+		return Vector2(1.0, opacity) # Same information/size, no scale pulse.
+	var peak_age := minf(float(duration) * 0.25, float(2 + weight * 2))
+	var attack := clampf(float(age) / maxf(1.0, peak_age), 0.0, 1.0)
+	var settle := clampf((float(age) - peak_age) / maxf(1.0, float(duration) - peak_age), 0.0, 1.0)
+	var scale := lerpf(0.84, 1.08, attack * (2.0 - attack))
+	return Vector2(lerpf(scale, 0.94, settle * settle), opacity)
 
 
 static func impact_sample_age(age: int) -> int:

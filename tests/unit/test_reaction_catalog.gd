@@ -1,7 +1,8 @@
 extends FluxTestSuite
 
 
-const REACTION_PATH: String = "res://content/reactions/first_eight_element_reactions_v1.json"
+const REACTION_PATH: String = ReactionCatalog.DEFAULT_PATH
+const Policy = preload("res://src/sim/hex/hex_recipe_policy.gd")
 const ABILITY_PATH: String = "res://content/abilities/foundation_abilities_v1.json"
 
 
@@ -15,7 +16,7 @@ func run() -> int:
 
 func _reactions() -> ReactionCatalog:
 	var catalog := ReactionCatalog.new()
-	check(catalog.load_from_file(REACTION_PATH), "first-eight reaction catalog validates: %s" % catalog.last_error)
+	check(catalog.load_from_file(REACTION_PATH), "six-element reaction catalog validates: %s" % catalog.last_error)
 	return catalog
 
 
@@ -28,8 +29,8 @@ func _abilities() -> AbilityCatalog:
 func _test_complete_symmetric_catalog() -> void:
 	var catalog := _reactions()
 	equal(catalog.content_hash.length(), 64, "reaction catalog has a compatibility hash")
-	equal(catalog.reactions_by_id.size(), 36, "all unordered first-eight pairs exist exactly once")
-	equal(catalog.ordered_wire_ids(), range(301, 337), "reaction wire range is stable and contiguous")
+	equal(catalog.reactions_by_id.size(), 63, "all57 distinct subsets plus6self recipes exist exactly once")
+	equal(catalog.ordered_wire_ids(), Policy.active_wire_ids(), "live wire IDs preserve the explicit sparse recipe contract")
 	equal(catalog.runtime_profiles.size(), ReactionCatalog.PRIMITIVES.size(), "one reusable profile owns every shared primitive")
 	var observed_primitives: Array[String] = []
 	for profile: Dictionary in catalog.runtime_profiles.values():
@@ -39,50 +40,69 @@ func _test_complete_symmetric_catalog() -> void:
 	expected_primitives.sort()
 	equal(observed_primitives, expected_primitives, "surface/flow/cover/field/conduction/visibility/hazard/refraction/fracture are all represented")
 	var pair_count := 0
-	for left_index: int in range(ReactionCatalog.FIRST_EIGHT_ELEMENTS.size()):
-		for right_index: int in range(left_index, ReactionCatalog.FIRST_EIGHT_ELEMENTS.size()):
-			var left := ReactionCatalog.FIRST_EIGHT_ELEMENTS[left_index]
-			var right := ReactionCatalog.FIRST_EIGHT_ELEMENTS[right_index]
+	for left_index: int in range(ReactionCatalog.FUNDAMENTAL_ELEMENTS.size()):
+		for right_index: int in range(left_index, ReactionCatalog.FUNDAMENTAL_ELEMENTS.size()):
+			var left := ReactionCatalog.FUNDAMENTAL_ELEMENTS[left_index]
+			var right := ReactionCatalog.FUNDAMENTAL_ELEMENTS[right_index]
 			var forward := catalog.reaction(left, right)
 			var reverse := catalog.reaction(right, left)
 			check(not forward.is_empty(), "%s + %s resolves" % [left, right])
 			equal(String(reverse.get("id", "")), String(forward.get("id", "")), "%s + %s lookup is symmetric" % [left, right])
 			check(not (forward.get("counters", []) as Array).is_empty(), "%s exposes counterplay" % String(forward.get("id", "")))
 			pair_count += 1
-	equal(pair_count, 36, "upper-triangle pair enumeration is complete")
-	check(catalog.reaction("spirit", "fire").is_empty(), "deferred element cannot enter first-eight lookup")
+	equal(pair_count, 21, "upper-triangle pair enumeration is complete")
+	check(catalog.reaction("spirit", "fire").is_empty(), "deferred element cannot enter six-element lookup")
+	var subset_count := 0
+	for mask: int in range(1, 64):
+		var elements: Array[String] = []
+		for element: int in Policy.elements_for_mask(mask): elements.append(Policy.ingredient_layer(element))
+		if elements.size() == 1: elements.append(elements[0])
+		var combination := catalog.combination(elements)
+		equal(int(combination.get("wire_id", 0)), Policy.wire_for_mask(mask), "each subset mask maps to its exact authored definition")
+		elements.reverse()
+		equal(catalog.combination(elements), combination, "multi-element lookup is independent of caller ordering")
+		subset_count += 1
+	equal(subset_count, 63, "all live subset and self identities were enumerated")
+	for retired: String in ["ice", "charge"]:
+		check(catalog.reaction(retired, "fire").is_empty(), "archived ingredient cannot enter current chemistry")
 
 
 func _test_bounded_definition_compiler() -> void:
 	var catalog := _reactions()
 	var table := ReactionDefinitionTable.new()
 	check(table.compile(catalog, _abilities()), "complete reaction catalog compiles: %s" % table.last_error)
-	equal(table.ordered_wire_ids(), range(301, 337), "compiler preserves stable reaction wire order")
+	equal(table.ordered_wire_ids(), Policy.active_wire_ids(), "compiler preserves stable reaction wire order")
 	equal(table.content_hash.length(), 64, "compiled reaction definitions have a compatibility hash")
-	check(table.mutation_enabled(), "all first-grade executable recipes are promoted together")
-	for left_index: int in range(ReactionCatalog.FIRST_EIGHT_ELEMENTS.size()):
-		for right_index: int in range(left_index, ReactionCatalog.FIRST_EIGHT_ELEMENTS.size()):
-			var left := ReactionCatalog.FIRST_EIGHT_ELEMENTS[left_index]
-			var right := ReactionCatalog.FIRST_EIGHT_ELEMENTS[right_index]
+	check(table.mutation_enabled(), "all bounded compositional executable recipes are promoted together")
+	for left_index: int in range(ReactionCatalog.FUNDAMENTAL_ELEMENTS.size()):
+		for right_index: int in range(left_index, ReactionCatalog.FUNDAMENTAL_ELEMENTS.size()):
+			var left := ReactionCatalog.FUNDAMENTAL_ELEMENTS[left_index]
+			var right := ReactionCatalog.FUNDAMENTAL_ELEMENTS[right_index]
 			var definition := table.definition(left, right)
 			check(not definition.is_empty(), "%s + %s compiles" % [left, right])
 			equal(table.definition(right, left), definition, "%s + %s compiled lookup is order-independent" % [left, right])
 			check(String(definition.get("primitive", "")) in ReactionCatalog.PRIMITIVES, "%s maps to a shared primitive" % String(definition.get("id", "")))
 			equal((definition.get("channel_vector", {}) as Dictionary).size(), ReactionCatalog.CHANNELS.size(), "%s has the exact integer channel vector" % String(definition.get("id", "")))
 			equal(String(definition.get("worldbone_policy", "")), "reject", "%s cannot mutate worldbone" % String(definition.get("id", "")))
-			check(bool(definition.get("runtime_enabled", false)), "%s has a bounded first-grade execution signature" % String(definition.get("id", "")))
-			equal(String(definition["level_one"]["id"]),String(definition["id"]),"runtime minimum signature preserves recipe identity")
+			check(bool(definition.get("runtime_enabled", false)), "%s has a bounded bounded compositional execution signature" % String(definition.get("id", "")))
+			equal(String(definition["runtime_contract"]["id"]),String(definition["id"]),"runtime minimum signature preserves recipe identity")
 			check(int(definition.get("maximum_area_cells", 0)) <= int(table.runtime_bounds["maximum_area_cells_per_reaction"]), "%s area is globally bounded" % String(definition.get("id", "")))
 			check(int(definition.get("work_units_per_tick", 0)) <= int(table.runtime_bounds["maximum_work_units_per_tick"]), "%s work is globally bounded" % String(definition.get("id", "")))
+	for wire: int in Policy.active_wire_ids():
+		var live := Policy.runtime_definition(wire)
+		var compiled := table.definition_from_wire(wire)
+		equal(compiled.input_element_wire_ids, live.elements, "all63 compiled definitions retain exact canonical source elements")
+		equal(compiled.runtime_contract.id, live.id, "all63 compiled runtime projections retain exact identity")
+		check(bool(compiled.runtime_enabled) and int(live.pulse_damage) > 0, "every compiled combination has an executable damaging contract")
 	var magma := table.definition("fire", "earth")
 	equal(String(magma.get("id", "")), "magma", "flagship pair resolves to Magma")
 	equal(String(magma.get("primitive", "")), "flow", "Magma starts from the shared flow primitive")
-	equal(magma.get("channel_vector", {}), {"structure": 700, "heat": 700, "saturation": 0, "pressure_momentum": 100, "charge": 0, "radiance_vitality": 0, "decay": 0}, "Magma compiles exact bounded physical channels")
+	equal(magma.get("channel_vector", {}), {"structure": 700, "heat": 700, "saturation": 0, "pressure_momentum": 100, "charge": 200, "radiance_vitality": 0, "decay": 0}, "Magma compiles exact bounded physical channels")
 	equal((table.definition("earth", "earth")["channel_vector"] as Dictionary)["structure"], SimConfig.FIXED_SCALE, "same-element channel sum clamps to fixed scale")
 	equal((table.definition("light", "dark")["channel_vector"] as Dictionary)["radiance_vitality"], 500, "opposed Light/Dark channel remains a contested boundary")
-	var mutable_copy := table.definition("ice", "dark")
+	var mutable_copy := table.definition("water", "water")
 	mutable_copy["primitive"] = "hazard"
-	equal(String(table.definition("ice", "dark")["primitive"]), "surface", "definition lookup returns a defensive copy")
+	equal(String(table.definition("water", "water")["primitive"]), "flow", "definition lookup returns a defensive copy")
 
 
 func _test_content_change_updates_compatibility_hash() -> void:
@@ -97,7 +117,7 @@ func _test_content_change_updates_compatibility_hash() -> void:
 	var changed_table := ReactionDefinitionTable.new()
 	check(changed_table.compile(changed, abilities), "changed reaction table compiles: %s" % changed_table.last_error)
 	equal(int(changed_table.definition("earth", "fire")["authored_profile"]["active_ms"]), 4001, "future authored profile remains explicit design data")
-	equal(int(changed_table.definition("earth", "fire")["active_ms"]), 2750, "first-grade lifecycle keeps the current explicit sustained duration, not an unrelated historical profile")
+	equal(int(changed_table.definition("earth", "fire")["active_ms"]), 2750, "bounded compositional lifecycle keeps the current explicit sustained duration, not an unrelated historical profile")
 	check(changed_table.content_hash != baseline.content_hash, "authored reaction change updates compatibility hash")
 
 
@@ -108,7 +128,7 @@ func _test_invalid_content_fails_closed() -> void:
 	missing_pair.data = source.data.duplicate(true)
 	missing_pair.data["reactions"].pop_back()
 	check(not missing_pair.validate(), "missing pair fails closed")
-	check(missing_pair.last_error.contains("36"), "missing pair failure is diagnosable")
+	check(missing_pair.last_error.contains("63"), "missing pair failure is diagnosable")
 
 	var duplicate_pair := ReactionCatalog.new()
 	duplicate_pair.data = source.data.duplicate(true)
@@ -156,4 +176,4 @@ func _test_invalid_content_fails_closed() -> void:
 	premature_runtime.data = source.data.duplicate(true)
 	premature_runtime.data["status"] = "unbounded_recursive_runtime"
 	check(not premature_runtime.validate(), "unsupported recursive mutation runtime fails closed")
-	check(premature_runtime.last_error.contains("first-grade"), "runtime gate requires the bounded first-grade contract")
+	check(premature_runtime.last_error.contains("bounded finite combination"), "runtime gate requires the bounded bounded compositional contract")

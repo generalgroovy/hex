@@ -1,0 +1,162 @@
+[
+  {
+    "id": "P01",
+    "slug": "forward-walk",
+    "title": "Forward walk · alternating support",
+    "travel_index": 0,
+    "aim_index": 0,
+    "bank": "locomotion",
+    "source_mode": "eight_exact_gait_cells",
+    "source_label": "SOURCE LOOKUP · walk T0 / A0 · exact phases 0–7",
+    "source_refs": [
+      "wireframe_body_presenter.gd:104-132",
+      "SPRITE-PIPELINE.md:49-70"
+    ],
+    "phase_labels": [
+      "L contact",
+      "L load",
+      "L support",
+      "L unload",
+      "R contact",
+      "R load",
+      "R support",
+      "R unload"
+    ],
+    "observed": "Eight distinct poses already exchange the apparent advancing leg. A still strip cannot establish world-space planting.",
+    "proposal": "Keep the eight-phase distance clock. Make the supporting sole flat, the passing toe visibly lifted, and the two anatomical feet distinguishable without debug color.",
+    "native_review": "Observe at 1x before enlarging. Do not call a moving foot planted just because it is the lowest pixel.",
+    "runtime_gate": "Measure realized ground displacement and sole samples over two cycles; repeat blocked, stopping, turning and walk-to-sprint.",
+    "status": "OFFLINE_PREVIEW",
+    "proposal_status": "PROPOSAL",
+    "human_acceptance": "PENDING"
+  },
+  {
+    "id": "P02",
+    "slug": "diagonal-slide",
+    "title": "True diagonal slide · travel NE / aim S",
+    "travel_index": 3,
+    "aim_index": 0,
+    "bank": "base",
+    "source_state": "slide",
+    "source_mode": "same_exact_slide_cell_repeated",
+    "source_label": "SOURCE LOOKUP · slide T3 / A0 · phase ignored by this presenter",
+    "source_refs": [
+      "wireframe_body_presenter.gd:97-132",
+      "PROPORTION-CAST-CHECKPOINT.md:69-75"
+    ],
+    "phase_labels": [
+      "Enter",
+      "Lower",
+      "Settle",
+      "Hold A",
+      "Hold B",
+      "Brake",
+      "Rise",
+      "Exit"
+    ],
+    "observed": "The source has a real NE slide drawing, but selection uses aim, not travel. This probe therefore repeats the S slide cell, even while travel is NE.",
+    "proposal": "Author contact and recline along actual NE travel with head/chest/pelvis yaw still S. Slide soles glide; they must not be labeled alternating walk plants.",
+    "native_review": "Look for a recognizable travel axis without relying on arrows, a skid particle trail or a rotated South bitmap.",
+    "runtime_gate": "Actual diagonal admission, momentum, brake, exit, wall contact and all 64 travel/aim pairs need the missing caller and live captures.",
+    "status": "OFFLINE_PREVIEW",
+    "proposal_status": "PROPOSAL",
+    "human_acceptance": "PENDING"
+  },
+  {
+    "id": "P03",
+    "slug": "backpedal",
+    "title": "Backpedal · travel N / aim S",
+    "travel_index": 4,
+    "aim_index": 0,
+    "bank": "locomotion",
+    "source_mode": "eight_exact_gait_cells",
+    "source_label": "SOURCE LOOKUP · walk T4 / A0 · distinct from forward bank",
+    "source_refs": [
+      "eight_direction_resolver.gd:71-88",
+      "wireframe_body_presenter.gd:119-132"
+    ],
+    "phase_labels": [
+      "L contact",
+      "L load",
+      "L support",
+      "L unload",
+      "R contact",
+      "R load",
+      "R support",
+      "R unload"
+    ],
+    "observed": "A separate backward travel/forward aim sequence already exists. It is not an absent feature or merely the forward strip played backward.",
+    "proposal": "Keep face and ready hands on S. Use a clear rearward placement, low passing toe and alternating support; no 180-degree waist twist.",
+    "native_review": "The viewer should identify travel as N with the direction arrows hidden, while identifying aim as S.",
+    "runtime_gate": "Repeat with rapid aim reversal, actual deceleration through zero, collision and the back-diagonal neighbors.",
+    "status": "OFFLINE_PREVIEW",
+    "proposal_status": "PROPOSAL",
+    "human_acceptance": "PENDING"
+  },
+  {
+    "id": "P04",
+    "slug": "strafe-cast",
+    "title": "Strafe while casting · travel N / aim E",
+    "travel_index": 4,
+    "aim_index": 2,
+    "bank": "locomotion",
+    "source_mode": "documented_lower_body_gait_only",
+    "source_label": "GAIT-ONLY PROBE · T4 / A2 · not a replay of live cast routing",
+    "source_refs": [
+      "PROPORTION-CAST-CHECKPOINT.md:73-75",
+      "wireframe_body_presenter.gd:111-132",
+      "SPECIFICATION.md:649-656"
+    ],
+    "phase_labels": [
+      "Ready",
+      "Startup*",
+      "Prepare*",
+      "Release*",
+      "Follow*",
+      "Recover*",
+      "Ready",
+      "Ready"
+    ],
+    "observed": "The checkpoint says moving casts retain gait legs without a new arm layer. Direct frame(\"cast\", ...) instead selects a static base cell. The caller resolving these choices is absent.",
+    "proposal": "Preserve gait phase while an admitted hand action reads startup, release and recovery. Current body aim turns immediately; a committed shot keeps its recorded start aim.",
+    "native_review": "The arm extension must be readable at 1x without glow. Release a hand pose on the release event, not merely when a locomotion phase number is reached.",
+    "runtime_gate": "Admitted/refused cast, release while turning, repeated Rapid casts, all four families, interruption and frame-rate changes; no restart of feet.",
+    "asterisk": "The eight displayed labels are a storyboard sample, not an action-to-gait phase coupling or measured cast timing.",
+    "status": "OFFLINE_PREVIEW",
+    "proposal_status": "PROPOSAL",
+    "human_acceptance": "PENDING"
+  },
+  {
+    "id": "P05",
+    "slug": "air-to-land",
+    "title": "Airborne → contact → recovery",
+    "travel_index": 0,
+    "aim_index": 0,
+    "bank": "base",
+    "source_mode": "authored_storyboard_using_jump_then_grounded",
+    "source_label": "STORYBOARD · jump ×2, grounded ×6 · no landing body exists in this manifest",
+    "source_refs": [
+      "wireframe_body_presenter.gd:15-19",
+      "PROPORTION-CAST-CHECKPOINT.md:69-75",
+      "PLAYER-CONTROLS-AND-POV.md:218-222"
+    ],
+    "phase_labels": [
+      "Descent*",
+      "Precontact*",
+      "Contact",
+      "Absorb",
+      "Low point",
+      "Recover",
+      "Unweight",
+      "Ready"
+    ],
+    "observed": "There is a jump cell and a grounded cell, but no land/compression row. Their source soles both register at the feet pivot; physical lift is separate.",
+    "proposal": "On confirmed landing, plant both feet, bend fixed-length knees and lower the rigid torso; recover without adding a control lock. Do not recycle a one-foot walk pose as landing.",
+    "native_review": "Distinguish airborne feet from ground contact at normal and reduced effects. Keep the receiving-surface shadow separate from the body.",
+    "runtime_gate": "Jump/Float/air-dodge/wall exit/fast fall into landing; immediate re-jump, moving cast, platform or height changes, prediction correction and death.",
+    "asterisk": "Precontact is an offline illustration only. Never predict a ground plant from a sprite, shadow or expected touchdown time.",
+    "status": "OFFLINE_PREVIEW",
+    "proposal_status": "PROPOSAL",
+    "human_acceptance": "PENDING"
+  }
+]

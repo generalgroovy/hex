@@ -89,6 +89,7 @@ func configure_fixture(render: bool = false) -> bool:
 		return false
 	if not cartoon_champion_presenter.configure(visual_language) or not compact_hud.configure(visual_language):
 		return false
+	_configure_pov_terrain_backdrop()
 	compact_hud.champion_art = cartoon_champion_presenter
 	return cartoon_champion_presenter.prepare_override_pages(["oh_tipi"])
 

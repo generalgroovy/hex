@@ -133,6 +133,14 @@ var air_vertical_velocity: int = 0
 var air_height_remainder: int = 0
 var air_dodge_used: bool = false
 var jump_held_last_tick: bool = false
+# Replicated movement intent and race capability. Capability is catalog-owned;
+# budgets reset only on an actual landing/spawn, never on a wall touch.
+var flight_capable: bool = false
+var jumpsquat_active: bool = false
+var jumpsquat_ticks: int = 0
+var double_jump_used: bool = false
+var wallrun_armed: bool = true
+var crouching: bool = false
 var air_floating: bool = false
 var float_used: bool = false
 var float_ticks: int = 0
@@ -142,6 +150,8 @@ var stamina_recovery_idle_ticks: int = 0
 var chemistry_reveal_ticks: int = 0
 var chemistry_conceal_ticks: int = 0
 var chemistry_regen_block_ticks: int = 0
+# Six fixed elemental channels; each owns its bounded timers and paid burn pool.
+var spell_status_values := PackedInt32Array()
 
 var jump_protection_ticks: int = 0
 var evade_buffer_ticks: int = 0
@@ -207,6 +217,8 @@ var last_event: String = "spawn"
 
 func _init(requested_entity_id: int = 1) -> void:
 	entity_id = requested_entity_id
+	spell_status_values.resize(48)
+	spell_status_values.fill(0)
 	reset_spell_slots_to_kit()
 
 
@@ -283,13 +295,34 @@ func advance_spell_cooldowns() -> void:
 		spell_cooldown_ticks = PackedInt32Array()
 		spell_cooldown_ticks.resize(SPELL_SLOT_COUNT)
 		spell_cooldown_ticks.fill(0)
-	_import_legacy_spell_cooldowns()
-	if spell_slot_index_for_wire(primary_wire_id) < 0: primary_cooldown_ticks = maxi(0, primary_cooldown_ticks - 1)
-	if spell_slot_index_for_wire(active_1_wire_id) < 0: active_1_cooldown_ticks = maxi(0, active_1_cooldown_ticks - 1)
-	if spell_slot_index_for_wire(active_2_wire_id) < 0: active_2_cooldown_ticks = maxi(0, active_2_cooldown_ticks - 1)
+	# Zero is already the exact result of import, decrement and alias sync.
+	# A native packed-array count avoids twelve scripted writes on idle actors;
+	# negative/imported clocks still take the complete normalization path below.
+	if primary_cooldown_ticks == 0 and active_1_cooldown_ticks == 0 and active_2_cooldown_ticks == 0 and spell_cooldown_ticks.count(0) == SPELL_SLOT_COUNT:
+		return
+	var primary_slot := spell_slot_index_for_wire(primary_wire_id)
+	var active_1_slot := spell_slot_index_for_wire(active_1_wire_id)
+	var active_2_slot := spell_slot_index_for_wire(active_2_wire_id)
+	# Preserve the original Vector2i import coercion, including malformed int64
+	# aliases. Ordinary IDs reuse their lookup; wrapped IDs keep their old lookup.
+	var primary_pair := Vector2i(primary_wire_id, primary_cooldown_ticks)
+	var active_1_pair := Vector2i(active_1_wire_id, active_1_cooldown_ticks)
+	var active_2_pair := Vector2i(active_2_wire_id, active_2_cooldown_ticks)
+	var primary_import := primary_slot if primary_pair.x == primary_wire_id else spell_slot_index_for_wire(primary_pair.x)
+	var active_1_import := active_1_slot if active_1_pair.x == active_1_wire_id else spell_slot_index_for_wire(active_1_pair.x)
+	var active_2_import := active_2_slot if active_2_pair.x == active_2_wire_id else spell_slot_index_for_wire(active_2_pair.x)
+	if primary_pair.x > 0 and primary_import >= 0: spell_cooldown_ticks[primary_import] = maxi(int(spell_cooldown_ticks[primary_import]), primary_pair.y)
+	if active_1_pair.x > 0 and active_1_import >= 0: spell_cooldown_ticks[active_1_import] = maxi(int(spell_cooldown_ticks[active_1_import]), active_1_pair.y)
+	if active_2_pair.x > 0 and active_2_import >= 0: spell_cooldown_ticks[active_2_import] = maxi(int(spell_cooldown_ticks[active_2_import]), active_2_pair.y)
+	if primary_slot < 0: primary_cooldown_ticks = maxi(0, primary_cooldown_ticks - 1)
+	if active_1_slot < 0: active_1_cooldown_ticks = maxi(0, active_1_cooldown_ticks - 1)
+	if active_2_slot < 0: active_2_cooldown_ticks = maxi(0, active_2_cooldown_ticks - 1)
 	for slot_index: int in range(SPELL_SLOT_COUNT):
 		spell_cooldown_ticks[slot_index] = maxi(0, int(spell_cooldown_ticks[slot_index]) - 1)
-	_sync_legacy_spell_cooldowns()
+	if primary_slot >= 0: primary_cooldown_ticks = int(spell_cooldown_ticks[primary_slot])
+	if active_1_slot >= 0: active_1_cooldown_ticks = int(spell_cooldown_ticks[active_1_slot])
+	if active_2_slot >= 0: active_2_cooldown_ticks = int(spell_cooldown_ticks[active_2_slot])
+	if active_2_wire_id <= 0: active_2_cooldown_ticks = 0
 
 
 static func spell_slot_label(slot_index: int) -> String:
@@ -377,6 +410,7 @@ func _stored_spell_cooldown(wire_id: int) -> int:
 
 
 func reset_for_spawn(spawn_position: Vector2i, protection_ticks: int = 0) -> void:
+	spell_status_values.fill(0)
 	position_x = spawn_position.x
 	position_y = spawn_position.y
 	position_remainder_x = 0
@@ -415,6 +449,11 @@ func reset_for_spawn(spawn_position: Vector2i, protection_ticks: int = 0) -> voi
 	air_height_remainder = 0
 	air_dodge_used = false
 	jump_held_last_tick = false
+	jumpsquat_active = false
+	jumpsquat_ticks = 0
+	double_jump_used = false
+	wallrun_armed = true
+	crouching = false
 	air_floating = false
 	float_used = false
 	float_ticks = 0
@@ -511,9 +550,12 @@ func canonical_values() -> PackedInt64Array:
 		landing_ticks, landing_intensity, impact_recovery_ticks, int(sprinting),
 		control_state, control_ticks, control_x, control_y, control_speed, slow_ratio,
 		training_respawn_ticks, training_spawn_x, training_spawn_y,
+		int(flight_capable), int(jumpsquat_active), jumpsquat_ticks,
+		int(double_jump_used), int(wallrun_armed), int(crouching),
 	])
 	for wire_id: int in spell_wire_ids:
 		values.append(wire_id)
 	for cooldown_ticks: int in spell_cooldown_ticks:
 		values.append(cooldown_ticks)
+	values.append_array(PackedInt64Array(Array(spell_status_values)))
 	return values

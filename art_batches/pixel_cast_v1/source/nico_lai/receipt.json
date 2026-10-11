@@ -1,0 +1,54 @@
+{
+  "id": "nico_lai",
+  "display_name": "Waka Aren Si",
+  "race": "gnome",
+  "status": "source_ready_for_lead_review",
+  "generation_tool": "built-in image_gen",
+  "attempts": 1,
+  "generated_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-3caf-7f02-8030-e4d35e2365b4\\exec-a6ba98c2-c08d-4441-a6c4-d89feedbd1da.png",
+  "reference_paths": [
+    "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/nico_lai-detail.png",
+    "C:/Users/sende/Pictures/styleref1.png",
+    "C:/Users/sende/Projects/hex/art_batches/pixel_body_pilot_v1/source/s-wayne.png"
+  ],
+  "observed_columns": 8,
+  "observed_rows": 4,
+  "source_row_mapping": {
+    "idle": 0,
+    "walk_left_contact": 1,
+    "walk_right_contact": 2,
+    "cast": 3
+  },
+  "directions": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "dimensions": [
+    1536,
+    1024
+  ],
+  "inspection": {
+    "directions": "Eight clear views; back-quarter heads show hair and edge of goggle strap/rim but no frontal eyes.",
+    "contacts": "Front/back rows clearly alternate forward boot and arm; profile/diagonal poses differ but exact near/far limb identity still needs animated review.",
+    "whole_bodies": "32 intact gnome bodies with white hair/beard, blue goggles, navy/gold coat and boots.",
+    "cast": "Empty hands project forward, with arms correctly rotated for each facing."
+  },
+  "alpha_check": {
+    "format": "Format32bppArgb",
+    "background_samples_alpha": 0,
+    "foreground_hair_sample_alpha": 252,
+    "note": "Preview shows brown hidden RGB at fully transparent pixels; nine tested background/gutter samples had alpha0. Do not mistake hidden RGB for opaque backdrop."
+  },
+  "visual_issues": [
+    "Hidden RGB background is brown despite alpha0; zero transparent RGB during authorized cleanup if needed.",
+    "Exact profile near/far foot reversal requires animated review."
+  ],
+  "prompt": "Use case: stylized-concept. Asset: fixed-pixel game sprite atlas on genuinely transparent RGBA.\nReferences: image 1 is exact character identity and clothing; image 2 is retro pixel style only (ignore its old names); image 3 is compact common-head/body proportions and readable charming finish only, NOT its row count.\nMake exactly 32 whole-body sprites in exactly 8 equal columns by 4 equal rows. Generous empty transparent gutters, identical size and baseline, feet/hair/appendages fully intact in each cell. Coarse clean pixel clusters, crisp limited-palette outlines, compact modest charming proportions matching image 3; no painterly smoothing.\nEVERY row column order: S front, SE front/right45, E right profile, NE back/right45, N straight back, NW back/left45, W left profile, SW front/left45. NE/N/NW show the back of the head with NO frontal eyes. Torso and feet rotate with head. Eight unmistakably distinct directions.\nRows only: 0 idle standing; 1 walk contact with LEFT foot forward and RIGHT arm forward; 2 opposite walk contact RIGHT foot forward and LEFT arm forward, genuinely alternating feet not duplicated poses; 3 planted stance, BOTH EMPTY hands forward casting, no magic. Never add a fifth row.\nMaintain exact face, costume, anatomy and palette in all32 frames. No staves, weapons, held objects, ground shadows, scenery, text, labels, grid lines, sparkles or baked spells. Wide transparent canvas.\nSubject: Waka Aren Si (stable asset ID nico_lai), small gnome: pale warm skin, enormous spiky white hair, bushy white eyebrows/moustache/short beard, cyan round goggles in gold rims, navy-blue coat with golden edging and belt, brown gloves and boots. Preserve distinctive white-haired gnome identity from image1. No staff.\nAnimation: make two separate clear walk contacts with opposite anatomical limbs. Keep the near-side sleeve/boot brighter and far-side sleeve/boot darker so their reversal is visible in E/W: row1 bright near boot behind body, row2 bright near boot ahead. Reverse opposing arm, visible foot separation and knee bend.",
+  "runtime_imports_or_tests": "NOT_RUN; source art only"
+}

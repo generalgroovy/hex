@@ -1,4 +1,29 @@
-# Current FLUX character-art reference
+# Current H.E.X. character-art reference
+
+## October2 fixed-pixel cast
+
+The latest supplied `C:/Users/sende/Pictures/styleref1.png` remains the style
+authority: charming compact pixel figures, similar heads, mass/volume-led size
+differences. Current catalog names, races and affinities override its old labels.
+All30 identities have a [new ground/cast bank candidate](../../docs/HEX-PIXEL-CAST.md)
+and [repeatable source/assembly workbench](../../art_batches/pixel_cast_v1/README.md).
+Eight stored headings and distinct contact pixels are not proof of perfected
+anatomy, alternating footwork or human motion acceptance. Low/air/control actions
+still use the documented fallback. Do not advertise the old mesh as removed
+from every action or claim completed strafe/backpedal art.
+
+## September 27 full-body direction
+
+The user-selected `styleref1.png` supplies compact, richly shaded fantasy pixel
+style. The latest request emphasizes **body volume rather than height** for the
+three sizes and complete authored bodies rather than head-only overlays.
+See the [full-body checkpoint](../../docs/art/character-cast-20260927/HANDOFF.md)
+and [generated whole-body sources](../../art_batches/character_cast_v1/reference/).
+The source sheets preserve current catalog identities, not historical labels on
+the user's style image. Eight static views per character do not establish motion
+animation, exact yaw certification or live replacement acceptance.
+
+## Preserved identity references
 
 Updated 2026-09-14: the [compact fantasy cast](cast_proportions_v5/README.md) is the
 current styling/proportion reference: 30 playable identities, no labels or magic.

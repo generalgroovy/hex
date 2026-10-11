@@ -2,13 +2,17 @@ class_name SanctumCampusLayout
 extends RefCounted
 
 
-const SUPPORTED_SCHEMA_VERSION: int = 6
-const REQUIRED_CANVAS := Vector2i(3072, 2304)
+const SUPPORTED_SCHEMA_VERSION: int = 8
+const REQUIRED_CANVAS := Vector2i(6144, 5376)
 const REQUIRED_VIEWPORT := Vector2i(1280, 720)
 const REQUIRED_DISTRICTS: Array[String] = [
 	"conservatory-gardens",
 	"nexus-commons",
 	"wayfarer-proving-quarter",
+	"tideglass-quays",
+	"verdant-reaches",
+	"basalt-foundry",
+	"starward-terraces",
 ]
 const REQUIRED_SOURCE_DISTRICTS: Array[String] = [
 	"nexus-court",
@@ -18,7 +22,18 @@ const REQUIRED_SOURCE_DISTRICTS: Array[String] = [
 	"alchemical-proving-grounds",
 	"verdant-recovery",
 	"crown-observatory",
+	"tideglass-waterworks",
+	"verdant-expedition",
+	"basalt-forge",
+	"starward-ascent",
 ]
+const EXPEDITION_ENVIRONMENTS := {"tideglass-quays": "coast", "verdant-reaches": "grove", "basalt-foundry": "foundry", "starward-terraces": "observatory"}
+const MAX_TRAVEL_DESTINATIONS := 13
+const TRAVEL_CLEARANCE_PIXELS := 40
+const ELEMENT_GARDEN_PLOTS := 63
+const ELEMENT_GARDEN_PITCH := 288
+const ELEMENT_GARDEN_CLEARANCE := 160
+const ELEMENT_GARDEN_ORIGIN := Vector2i(3296, 288)
 const ALLOWED_STYLES: Array[String] = ["garden", "nexus", "archive", "wayfarer", "proving"]
 const ALLOWED_OCCLUSION: Array[String] = ["los_cutaway", "low_never_occludes"]
 const ALLOWED_ROUTE_KINDS: Array[String] = ["ordinary", "advanced", "garden"]
@@ -37,6 +52,9 @@ var reset_zones_by_id: Dictionary[String, Dictionary] = {}
 var stations_by_id: Dictionary[String, Dictionary] = {}
 var practice_targets_by_id: Dictionary[String, Dictionary] = {}
 var practice_groups_by_id: Dictionary[String, Dictionary] = {}
+var _element_garden_plots: Array[Dictionary] = []
+var _travel_destinations: Array[Dictionary] = []
+var _travel_by_id: Dictionary[String, Dictionary] = {}
 # Prepared once at content validation; presentation reads these same target-linked lanes.
 var practice_lanes: Array[Dictionary] = []
 var arena_definition: Dictionary = {}
@@ -49,12 +67,20 @@ var spawn := Vector2i.ZERO
 func load_from_file(path: String) -> bool:
 	last_error = ""
 	data = {}
+	# Failed file/JSON admission must not retain a previously published map.
+	content_hash = ""
+	_element_garden_plots = []
+	_travel_destinations = []
+	_travel_by_id = {}
 	if not FileAccess.file_exists(path):
 		return _fail("Sanctum campus layout does not exist: %s" % path)
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		return _fail("Sanctum campus layout cannot be opened: %s" % path)
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	var parser := JSON.new()
+	if parser.parse(file.get_as_text()) != OK:
+		return _fail("Sanctum campus JSON parse error at line %d: %s" % [parser.get_error_line(), parser.get_error_message()])
+	var parsed: Variant = parser.data
 	if not parsed is Dictionary:
 		return _fail("Sanctum campus layout root must be an object")
 	data = parsed
@@ -71,6 +97,9 @@ func validate() -> bool:
 	stations_by_id = {}
 	practice_targets_by_id = {}
 	practice_groups_by_id = {}
+	_element_garden_plots = []
+	_travel_destinations = []
+	_travel_by_id = {}
 	practice_lanes = []
 	arena_definition = {}
 	if int(data.get("schema_version", 0)) != SUPPORTED_SCHEMA_VERSION:
@@ -125,8 +154,13 @@ func validate() -> bool:
 		if int(district.get("elevation", 0)) < 1 or int(district.get("elevation", 0)) > 4:
 			return _fail("Sanctum district elevation is outside supported bands: %s" % district_id)
 		var combined_areas: Array = district.get("combines", [])
-		if combined_areas.size() < 2:
+		if combined_areas.size() < (1 if EXPEDITION_ENVIRONMENTS.has(district_id) else 2):
 			return _fail("Sanctum district must combine related functional areas: %s" % district_id)
+		if EXPEDITION_ENVIRONMENTS.has(district_id):
+			if String(district.get("environment", "")) != String(EXPEDITION_ENVIRONMENTS[district_id]) or String(district.get("purpose", "")).is_empty():
+				return _fail("Expedition district requires its distinct environment and purpose: %s" % district_id)
+			if not bounds.has_point(_parse_point(district.get("landmark_anchor", []))):
+				return _fail("Expedition district landmark anchor must stay inside its bounds: %s" % district_id)
 		for source_value: Variant in combined_areas:
 			var source_id := String(source_value)
 			if not REQUIRED_SOURCE_DISTRICTS.has(source_id) or combined_source_districts.has(source_id):
@@ -323,6 +357,12 @@ func validate() -> bool:
 			if String(line_value).is_empty() or String(line_value).length() > 52:
 				return _fail("Sanctum station line is invalid: %s" % station_id)
 		var station_position := _parse_point(station.get("position", []))
+		if station.has("building_id") or station.has("service_group"):
+			var group_buildings := {"training":101, "academy":104, "farflow":109, "practice":103}
+			var group := String(station.get("service_group", ""))
+			var building_id := int(station.get("building_id", -1))
+			if not group_buildings.has(group) or int(group_buildings[group]) != building_id:
+				return _fail("Service directory requires its canonical existing building: %s" % station_id)
 		var station_district_bounds := _parse_bounds((districts_by_id[station_district_id] as Dictionary).get("bounds", []))
 		if not station_district_bounds.has_point(station_position):
 			return _fail("Sanctum station is outside its district: %s" % station_id)
@@ -411,6 +451,18 @@ func validate() -> bool:
 			return _fail("Vault surfaces are retired; use solid practice walls")
 		buildings_by_id[building_id] = building
 
+	# Cross-references can only be checked after the complete building registry.
+	for station: Dictionary in stations_by_id.values():
+		if not station.has("building_id") and not station.has("service_group"):
+			continue # Historical pre-directory layouts remain readable fixtures.
+		var building_id := int(station.get("building_id", -1))
+		if not buildings_by_id.has(building_id):
+			return _fail("Service directory requires an existing building: %s" % station.id)
+		var building: Dictionary = buildings_by_id[building_id]
+		var service_bounds := _parse_bounds(building["bounds"])
+		if String(station.district) != String(building.district) or _parse_point(station.position) != Vector2i(service_bounds.position.x + service_bounds.size.x / 2, service_bounds.end.y + 24):
+			return _fail("Service entry must align with the existing front door: %s" % station.id)
+
 	var fast_travel_count: int = 0
 	for value: Variant in data.get("landmarks", []):
 		if not value is Dictionary:
@@ -472,8 +524,149 @@ func validate() -> bool:
 		var arena_spawn := _parse_point(spawn_value) * SimConfig.FIXED_SCALE
 		if not collision.can_occupy(arena_spawn, MovementTuning.PLAYER_RADIUS):
 			return _fail("Sanctum arena spawn overlaps authored collision")
+	if not _validate_element_garden(collision): return false
+	if not _validate_expedition_navigation(collision): return false
 	content_hash = CanonicalContent.sha256(data)
 	return content_hash.length() == 64 or _fail("Sanctum campus hash failed")
+
+
+func element_garden_plots() -> Array[Dictionary]:
+	# Typed pixel centers are presentation metadata, never live-field authority.
+	if content_hash.is_empty(): return []
+	return _element_garden_plots.duplicate(true)
+
+
+func _validate_element_garden(collision: CollisionWorld) -> bool:
+	var value: Variant = data.get("element_garden")
+	if not value is Dictionary: return _fail("Campus requires an authored Element Garden")
+	var garden: Dictionary = value
+	var bounds := _parse_bounds(garden.get("bounds", []))
+	if String(garden.get("district", "")) != "tideglass-quays" or bounds != _parse_bounds(districts_by_id["tideglass-quays"].bounds):
+		return _fail("Element Garden must use the preserved Tideglass district")
+	if int(garden.get("pitch", 0)) != ELEMENT_GARDEN_PITCH or int(garden.get("clearance", 0)) != ELEMENT_GARDEN_CLEARANCE or int(garden.get("plot_radius", 0)) != 108:
+		return _fail("Element Garden must retain its bounded plot and aisle dimensions")
+	var plots: Variant = garden.get("plots")
+	if not plots is Array or plots.size() != ELEMENT_GARDEN_PLOTS: return _fail("Element Garden requires all sixty-three nonempty ingredient sets")
+	var masks := {}
+	var candidate: Array[Dictionary] = []
+	var previous_count := 0
+	var previous_mask := 0
+	for entry: Variant in plots:
+		if not entry is Dictionary: return _fail("Element Garden plot must be an object")
+		var raw_mask: Variant = entry.get("mask")
+		if not (raw_mask is int or raw_mask is float) or not is_finite(float(raw_mask)) or float(raw_mask) != floorf(float(raw_mask)):
+			return _fail("Element Garden mask must be a finite integer")
+		var mask := int(raw_mask)
+		if mask < 1 or mask > 63 or masks.has(mask): return _fail("Element Garden masks must uniquely cover the six live elements")
+		var count := 0
+		for bit: int in 6:
+			if (mask & (1 << bit)) != 0: count += 1
+		if count < previous_count or (count == previous_count and mask <= previous_mask): return _fail("Element Garden plots must progress by ingredient count and stable mask")
+		var raw_center: Variant = entry.get("center")
+		if not raw_center is Array or raw_center.size() != 2: return _fail("Element Garden center must contain two pixel coordinates")
+		for coordinate: Variant in raw_center:
+			if not (coordinate is int or coordinate is float) or not is_finite(float(coordinate)) or float(coordinate) != floorf(float(coordinate)):
+				return _fail("Element Garden center must use finite integer pixels")
+		var center := _parse_point(raw_center)
+		if posmod(center.x - ELEMENT_GARDEN_ORIGIN.x, ELEMENT_GARDEN_PITCH) != 0 or posmod(center.y - ELEMENT_GARDEN_ORIGIN.y, ELEMENT_GARDEN_PITCH) != 0:
+			return _fail("Element Garden centers must retain the bounded visibility lattice")
+		if not bounds.encloses(Rect2i(center - Vector2i.ONE * ELEMENT_GARDEN_CLEARANCE, Vector2i.ONE * ELEMENT_GARDEN_CLEARANCE * 2)) or not collision.can_occupy(center * SimConfig.FIXED_SCALE, ELEMENT_GARDEN_CLEARANCE * SimConfig.FIXED_SCALE):
+			return _fail("Element Garden plot must clear the preserved real walls")
+		for other: Dictionary in candidate:
+			if Vector2(center).distance_squared_to(other.center) < float(ELEMENT_GARDEN_PITCH * ELEMENT_GARDEN_PITCH): return _fail("Element Garden plots must retain readable wide aisles")
+		candidate.append({"mask": mask, "center": Vector2(center)})
+		masks[mask] = true
+		previous_count = count
+		previous_mask = mask
+	var entrance := _parse_point(garden.get("entrance", []))
+	if not bounds.has_point(entrance) or not collision.can_occupy(entrance * SimConfig.FIXED_SCALE, TRAVEL_CLEARANCE_PIXELS * SimConfig.FIXED_SCALE):
+		return _fail("Element Garden entrance must be reachable on real ground")
+	var raw_destinations: Variant = data.get("travel_destinations")
+	if not raw_destinations is Array: return _fail("Element Garden requires a valid travel directory")
+	var destination_found := false
+	for destination_value: Variant in raw_destinations:
+		if not destination_value is Dictionary: return _fail("Travel destination must be an object")
+		var destination: Dictionary = destination_value
+		if String(destination.get("id", "")) == "element-garden":
+			destination_found = String(destination.get("area_id", "")) == "element-garden" and _parse_point(destination.get("position", [])) == entrance
+	if not destination_found: return _fail("Element Garden needs its own matching map arrival")
+	var entry_path: Variant = garden.get("entry_path")
+	if not entry_path is Dictionary or int(entry_path.get("width", 0)) != 96 or not _validate_points(entry_path.get("points", []), 2):
+		return _fail("Element Garden needs its bounded ordinary entry path")
+	var path_points: Array = entry_path.points
+	if path_points.size() != 2 or _parse_point(path_points[0]) != Vector2i(4880, 832) or _parse_point(path_points[1]) != entrance:
+		return _fail("Element Garden entry path must join the preserved Tideglass approach")
+	var path_start := Vector2(_parse_point(path_points[0]))
+	var path_end := Vector2(entrance)
+	for step: int in range(29):
+		var point := Vector2i(path_start.lerp(path_end, float(step) / 28.0) * SimConfig.FIXED_SCALE)
+		if not collision.can_occupy(point, 48_000): return _fail("Element Garden entry path must retain its entire ordinary width")
+	var activity_found := false
+	for activity: Dictionary in data.get("activity_areas", []):
+		if String(activity.get("id", "")) == "element-garden":
+			activity_found = _parse_bounds(activity.get("bounds", [])) == Rect2i(entrance - Vector2i(144, 144), Vector2i(288, 288))
+	if not activity_found: return _fail("Element Garden requires its compact arrival forecourt activity")
+	_element_garden_plots = candidate
+	return true
+
+
+func travel_destinations() -> Array[Dictionary]:
+	return _travel_destinations.duplicate(true)
+
+
+func travel_destination(destination_id: String) -> Dictionary:
+	return (_travel_by_id.get(destination_id, {}) as Dictionary).duplicate(true)
+
+
+func _validate_expedition_navigation(collision: CollisionWorld) -> bool:
+	var areas := {}
+	for area: Dictionary in data.get("activity_areas", []): areas[String(area.id)] = area
+	var rows: Variant = data.get("travel_destinations")
+	if not rows is Array or rows.size() != MAX_TRAVEL_DESTINATIONS:
+		return _fail("Campus map requires thirteen bounded named travel destinations")
+	var candidate_rows: Array[Dictionary] = []
+	var candidate_by_id: Dictionary[String, Dictionary] = {}
+	for value: Variant in rows:
+		if not value is Dictionary: return _fail("Travel destination must be an object")
+		var row: Dictionary = value
+		var id := String(row.get("id", ""))
+		var label := String(row.get("label", ""))
+		var detail := String(row.get("detail", ""))
+		var area_id := String(row.get("area_id", ""))
+		if id.is_empty() or candidate_by_id.has(id) or label.is_empty() or label.length() > 28 or detail.is_empty() or detail.length() > 120 or not areas.has(area_id):
+			return _fail("Travel destination identity, copy or activity is invalid: %s" % id)
+		var position := _parse_point(row.get("position", []))
+		var bounds := _parse_bounds(areas[area_id].bounds)
+		if not bounds.has_point(position) or not collision.can_occupy(position * SimConfig.FIXED_SCALE, TRAVEL_CLEARANCE_PIXELS * SimConfig.FIXED_SCALE):
+			return _fail("Travel destination needs a clear arrival inside its named activity: %s" % id)
+		candidate_rows.append(row.duplicate(true))
+		candidate_by_id[id] = row.duplicate(true)
+	var courses: Variant = data.get("movement_courses")
+	if not courses is Array or courses.size() != EXPEDITION_ENVIRONMENTS.size():
+		return _fail("Every expedition requires one real wall-contact course")
+	var course_districts := {}
+	for value: Variant in courses:
+		if not value is Dictionary: return _fail("Movement course must be an object")
+		var row: Dictionary = value
+		var district := String(row.get("district", ""))
+		var wall_id := int(row.get("wall_id", 0))
+		if not EXPEDITION_ENVIRONMENTS.has(district) or course_districts.has(district) or not buildings_by_id.has(wall_id):
+			return _fail("Movement course requires its unique expedition and existing wall")
+		var wall: Dictionary = buildings_by_id[wall_id]
+		var bounds := _parse_bounds(wall.bounds)
+		var contact := _parse_point(row.get("contact", []))
+		if String(wall.style) != "practice_wall" or String(wall.district) != district or _parse_point(row.get("normal", [])) != Vector2i(0, 1) or _parse_point(row.get("direction", [])) != Vector2i(1000, 0):
+			return _fail("Movement course must name its actual wall face and tangent")
+		if contact.y != bounds.end.y + MovementTuning.PLAYER_RADIUS / SimConfig.FIXED_SCALE or contact.x <= bounds.position.x or contact.x >= bounds.end.x or not collision.can_occupy(contact * SimConfig.FIXED_SCALE, MovementTuning.PLAYER_RADIUS):
+			return _fail("Movement course contact must meet its real lower wall face")
+		course_districts[district] = true
+	for id: String in EXPEDITION_ENVIRONMENTS:
+		var district: Dictionary = districts_by_id[id]
+		if not collision.can_occupy(_parse_point(district.landmark_anchor) * SimConfig.FIXED_SCALE, TRAVEL_CLEARANCE_PIXELS * SimConfig.FIXED_SCALE):
+			return _fail("Expedition landmark anchor requires clear ground: %s" % id)
+	_travel_destinations = candidate_rows
+	_travel_by_id = candidate_by_id
+	return true
 
 
 func _validate_practice_groups(collision: CollisionWorld) -> bool:

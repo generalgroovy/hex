@@ -1,0 +1,122 @@
+# Six-element menus, teaching and preserved visual bindings
+
+Status: SOURCE AND SAMPLED NATIVE PRESENTATION QUALIFIED, October 9, 2026. Build p59-6336a7ba6067 passed the complete 227-suite gate, both actual input journeys and the stated native reviews. All 32 final UI frames and 14 aerial frames were individually inspected; 960-pixel supporting text remains compact. See [integration evidence](six-integration.md) and [native review](native-six-ui-review.md) for exact scope and delivery status. Earlier p58 evidence remains historical; human feel, balance and complete animation art are not certified.
+
+## Decision evidence and transfer limits
+
+The user explicitly selected six canonical elements and requested every nonempty combination to damage and provide another useful effect. That instruction supersedes earlier eight-element/pair-only scope. Established-game sources guide teaching and visual distinctions; they do not establish that H.E.X.'s exact count, damage, menu layout or balance is successful.
+
+- [Magicka 2, Paradox Interactive](https://www.paradoxinteractive.com/games/magicka-2/about) describes combining elements, experimentation and hybrid Ice/Steam. Transfer: show a small canonical ingredient vocabulary while preserving derived frozen/electrical effects, then expose larger combinations through an optional inspector. The source uses its own element count and input system; H.E.X. retains the existing combat controls and does not copy those numbers.
+- [Apex Legends Arsenal, Respawn/EA](https://www.ea.com/ea-play/news/arsenal-season-game-updates) describes a reorganized equipment core, agility course, duel pit and combat practice. Transfer: retain the existing Loom â†’ Crucible â†’ real paid demonstration flow, show the exact source-defined purpose and counter next to the selected recipe, and update the existing station copy. No map expansion or new practice mode is introduced in this phase.
+- [Noita, Nolla Games](https://www.noitagame.com/) establishes experimentation with simulated materials and magic that changes the environment. Transfer: explain actual overlap, finite paid matter, reaction windows and environmental counters. H.E.X. keeps discrete occupied hexes, bounded stock and immutable world geometry; it does not claim Noita's pixel simulation.
+
+These are documented shipped techniques and author statements, not causal evidence that the transferred H.E.X. implementation improves learning, retention, competitive balance or performance. Those require local execution and human playtests.
+
+## Implemented player-facing contract
+
+Canonical selection order is Water, Fire, Air (internal `wind`), Earth, Light, Dark with stable wires `[3,2,4,1,7,8]`. Loom exposes24 live spells in six rows and four families. Gallery starter text names the six Bolts, dominant Heavy and five experiments supplied by the content worker. HUD and Gallery element labels already project the catalog; Air remains the display name. Ice/Charge style data remain available only as derived art vocabulary.
+
+The existing6Ã—6 pair table exposes21 symmetric pair/self definitions. The Compendium's Combine control adds a read-only six-checkbox inspector for all63 nonempty masks. C/R3 toggles the inspector, arrows/D-pad/stick select an ingredient, Enter/A or pointer toggles it, and existing page controls read the exact policy purpose, warning, damage trigger and counter. One selected element explains its self-reaction; an empty mask has no invented outcome. The inspector emits no world action or free cast.
+
+Teaching distinguishes equal-strength pairs as an easy starting example, not a formation requirement: unequal contacts retain unmatched stock. New paid strength can add damage capacity while spent parent capacity never returns; fusion transfers surviving stock and keeps the earliest parent expiry. Steam separately states its12-Health ceiling and density/exposure dependence, rather than presenting1.5Ã— generic scaling as18 damage. Full purpose/counter descriptions come from the current combat policy, including all42 higher-order combinations.
+
+Saved-weave migration has a dedicated comparison view using the existing twelve-slot cards. `SpellLoomEditor.prepare_migration_preview(state,catalog,proposal)` validates typed packed arrays, length, canonical live outputs and uniqueness. Displayed Before values preserve the original saved slots. The optimistic Apply guard separately captures the current authoritative slots. Preview/Cancel never mutate player state or storage. Apply emits `apply_character_weave_migration` with exact reviewed slots, original provenance and migration ID; the root's coordinator/storage bridge remains unfinished. This does not claim end-to-end migration acceptance.
+
+## Live rules and archived art are separate
+
+No artwork, PNG, atlas or manifest was regenerated. The eight historical element columns retain their original indices. `archive_magic_contract.gd` freezes the unchanged36-recipe manifest authoring metadata and deposit lifetimes. `PixelMagicLibrary` validates that archive independently of the intentionally revised live chemistry kernel. Its existing archive APIs remain available; explicit live APIs map each current recipe through `archive_recipe_wire`.
+
+`HexMaterialSurface` retains the original264 sequences/660 native textures. All63 live products reuse declared archived motifs; no per-recipe texture expansion is claimed. Frostway316 uses glacier327, Hailcurrent317 uses hailstream323, Arcstorm311 uses plasma_arc313, and Black Ice321 uses black_ice330. Composite aliases come from their authored trigger. Actual footprint, phase, ownership and danger still come from current authority.
+
+The renderer no longer routes Frostway through retired Flood arrows or Arcstorm through a flame override. Palette and motif branches use the explicit visual alias. Backdraft's final72ticks (600ms at120Hz) replace the veil with a bright, transparent, stable warning mark in normal and reduced effects. Its real `decay_tick` controls the warning; clipped inherited lifetimes cannot restart a guessed visual timer. Adjacent Backdrafts with different fuse endpoints retain a semantic boundary. These cues require native inspection before readability is accepted.
+
+## Ownership and source files
+
+Owned production edits: `src/app/spell_loom_editor.gd`, `src/app/character_selection_model.gd`; `src/presentation/spell_loom_presenter.gd`, `visual_language.gd`, `chemistry_guide_model.gd`, `player_compendium.gd`, `hex_playground_panel.gd`, `archive_magic_contract.gd` (new), `pixel_magic_library.gd`, `element_chemistry_presenter.gd`, `hex_material_surface.gd`, `hex_court_presenter.gd`, `chemistry_practice_coach.gd`; `content/visual/visual_language_v1.json`; `content/maps/sanctum_campus_g2_v1.json` (station wording only this phase).
+
+Owned test edits: `test_spell_loom_editor.gd`, `test_player_compendium.gd`, `test_hex_playground_panel.gd`, `test_visual_language.gd`, `test_chemistry_practice_coach.gd`, `test_capacitor_integration.gd` (teaching only), `test_element_chemistry_presenter.gd` (teaching only), `test_pixel_magic_library.gd`, `test_hex_court_presenter.gd`, `test_hex_material_surface.gd`, `test_hex_shared_presenter.gd`, all under `tests/unit/`.
+
+Exact pre-phase files remain under `.godot/reference-refinement-baseline/pre-six-elements/`. `.godot/six-element-ui-freeze.json` records the final owned-file hashes and static-only status. Do not use the older Git baseline to distinguish this phase from inherited work.
+
+## Independent review and static checks
+
+Movement reviewed the migration preview and combination navigation. Two findings were fixed: malformed saved-slot variants are now type-checked before assignment; zero-cadence recipes are no longer universally called activation attacks. Review found the current-state optimistic guard, original-save provenance, mask bounds, cache key, controls and page geometry coherent. Native fonts/interaction remain unexecuted.
+
+Combat reviewed live63-to-archive36 bindings and the warning cache path. Later review corrected equal-strength wording and Steam's special cap. My reciprocal review found an inherited one-shot latch bypass for activation descendants and a strict world/presenter ingredient-order mismatch. Combat fixed both and added a real effect-step regression: a used ancestor's actor takes zero further activation damage while a fresh actor takes the exact4500 quote and spends exactly that amount of shared pool. Read-only reinspection confirmed both repairs; this is not an executed test result.
+
+Final combat re-review of the frozen renderer found no further concrete blocker: actual motif branches, palette exceptions, phase/native guards and frame lookup consistently use the explicit alias, while Backdraft copies cached styles before its real-tick warning override and retains different fuse boundaries. Three-pixel warning outlines use the existing uncached geometry path. This was read-only and does not qualify native readability.
+
+Additional scoped checks: all pre-phase public function names survive except the intentional replacement of the old guide table; malformed JSON checks passed for the two edited owned JSON files; all36 archived records and lifetime metadata match the unchanged manifest exactly; whitespace diff check passed for owned source/tests. The unchanged manifest SHA-256 is `6cdf1d12d08dc80ac6605bbffc1cc81b01c3d0931a0067057888b71f32259638`.
+
+Authored tests retain archive identity/asset guards and add live63 aliases, a660-texture ceiling, canonical six-element filtering, all63 inspector mask/paging checks, malformed migration controls, explicit authority/provenance copies and Backdraft warning boundaries. Broad legacy chemistry fixture expectations are not silently treated as passed.
+
+## Root integration gates still open
+
+1. Root connected `CharacterWeaveLibrary.migration_preview` to `prepare_migration_preview` when opening saved weaves and kept explicit ordinary custom-weave Apply/acknowledgement/save admission. Current actor wires remain the stale guard; archived saved wires are display provenance. Validate cancellation, persistence failure, client acknowledgement and exact backup bytes; source integration is not a passing persistence receipt.
+2. `HexPlaygroundDemo` now admits the canonical six through ElementRules. New controls reject retired Ice/Charge wires and exercise Light/Dark through the same two paid cast sequence and weave restoration. Root execution remains pending.
+3. Combat repaired `HexChemistryWorld.material_layers()` to match the presenter's strict6+63 order and added actual active/decay ticks to product render records. Verify the optimized bundle/snapshot path also retains them. Finish the root-owned protocol59/snapshot migration and regenerate source identity only after all writers freeze.
+4. The legacy no-hex `ElementReactionState` has a two-source model; its coach and historical Ice/Capacitor tests cannot establish63-recipe gameplay. Public coach sampling remains present, but several old36-recipe assertions and legacy runtime effects require an explicit archive-versus-live decision. Playable routing must use the unified court. Do not weaken genuine runtime validators merely to pass historical tests.
+5. Root must import new scripts and run the focused UI/visual suites plus all chemistry, identity, movement, persistence, protocol/snapshot and whole-game gates. Existing test capture tools that enumerate301..336 must be deliberately adapted for63 live products or labelled archive-only.
+6. Capture native normal/reduced six-element Loom, migration preview, both chemistry views and representative derived/composite effects at1280Ã—720 and960Ã—540. Inspect every image, especially long counters, shared composite motifs, six-way readable danger and Backdraft's transition. The Playground minimum layout is now820Ã—500 for6Ã—6; production currently requests900Ã—530, but scaled/undersized behavior remains unverified.
+7. Only after a complete unfiltered Full run and boot should root consider profiling, exports or candidate promotion. No frame-performance, remote multiplayer, controller-device, accessibility or human balance acceptance is established here.
+
+See [combat contract](six-element-combat.md), [earlier world/menu evidence](world-menu.md) and [executed history](README.md). Earlier source receipts and failed logs remain preserved.
+
+
+## Resumed path and animation checkpoint
+
+Combat restored `first_eight_element_reactions_v1.json` byte-for-byte as historical art evidence and moved live63 data to `six_element_reactions_v2.json`. PixelMagic now names the five immutable authoring inputs separately from live binding inputs; `live_binding_hash` covers live63 JSON plus ordered wire/archive/material bindings while `content_hash` continues to identify the unchanged art manifest. Material preparation intentionally retains all eight historical columns and36 original motifs. No Ice/Charge combat element is reinstated.
+
+The new animation implementation and native gates are recorded in [aerial-animation.md](aerial-animation.md). Root import and suite diagnostics repaired one Spell Loom test indentation and three explicitly typed Compendium test locals. These repairs do not imply the remaining suites passed.
+
+
+## Live practice context and explicit art archive checkpoint
+
+The active Bootstrap Crucible hook now calls stateless `ChemistryPracticeCoach.sample_hex`. It selects the newest local-owned current product whose occupied cells intersect the authored practice bounds; otherwise it selects current paid ground matter. Future, expired, outside, foreign, empty and disabled contexts cannot become an active lesson. Product phases come from the actual creation/active/decay/expiry clocks, and the exact finite shared damage remainder is projected without changing it. Current policy purpose and counter remain full source fields; the compact card uses explicit ellipsis at measured native-font width and the Compendium retains complete explanations. A spent damage pool does not falsely promise that every situational effect ends. This is a narrow transfer of Apex practice context and Noita-style observable material experimentation already cited above; the card layout and selection rule are H.E.X. candidate design choices, not published causal evidence of learning gains.
+
+The replaced coach suite is preserved verbatim under `.godot/reference-refinement-baseline/live-hex-coach/`. Its legacy two-source simulator cannot represent current product fusion or shared finite damage. The new suite constructs all 63 recipes through real paid reservations, terminal deposits and product fusion, then checks purpose/counter, exact phase boundaries, shared stock, current-source ownership, fonts, selection, practice scope and unchanged Hex hashes. These are funded Hex fixtures, not claims that an actor's Flux payment or physical input was exercised by this suite.
+
+The existing 36-reaction presenter tests retain their geometric, native-cell, occlusion, warning/decay, concealment, path, budget and cache checks through explicit `archive_reaction_model` / `archive_reaction_mask` entry points and a render-only historical fixture. Archive shape admission comes from the frozen art contract, not the live chemistry kernel. Default live entry points remain separate. All 63 current recipe bindings are also checked across formation/active/decay and normal/reduced variants; retired IDs refuse live binding while retaining their immutable archive records. No image assets were regenerated or overwritten.
+
+`tests/visual/capture_balance_loom.gd` now arranges the real Bootstrap at 1280×720 and 960×540, capturing six live Loom element examples (all four families), the pair matrix, and every detail page for 3/4/5/6-element combinations. It uses two process frames plus `RenderingServer.force_draw(false)` instead of waiting on a minimized-window post-draw signal. Before/after authority, source and persisted-file hashes are mandatory. It does not submit migration, save, simulate play or claim physical-input acceptance. **Source-ready; root engine and native review pending.**
+
+
+### Regression migration and real boot blockers
+
+The first broad selected regression exposed a real archive-loader defect: JSON-valued lifetime dictionaries compare differently from integer-valued constant dictionaries. PixelMagic now validates exactly the eight required keys and exact finite integer-valued lifetime values individually; missing/extra/string/fractional inputs still fail. Root's `.godot/six-pixel-magic-probe/probe.log` confirms all 474 sequences load. This is not a change to atlas bytes, lifetime values or gameplay.
+
+The first real Bootstrap UI capture failed at BurstProjectilePresenter startup because it required Ice and Charge to be active catalog elements in order to retain their eight-column art. The repaired adapter validates the six live ingredients separately from all eight retained styles. Current projectile descriptors require both an admitted runtime wire and a canonical active element; derived Ice/Charge pixels remain available for effect presentation. Added controls cover all 18 current projectile spells, six disabled live ingredients, retired-wire rejection and missing derived-art rejection. Native retry is pending; the failed capture remains preserved.
+
+Movement peer review caught a real coach-copy mistake before acceptance: plain Fire ground parts are damaging during their ignition-to-cooling interval. The coach now uses each selected part's actual `created + IGNITION_TICKS` and `expiry - COOLING_TICKS`, describes grounded pressure only in that interval, and names leaving occupied cells or clearing ground as counters. Four exact phase-boundary observations and unchanged-state tests cover this correction. The finite product stock label says SHARED DAMAGE.
+
+Other focused repairs preserve their intended checks: all30 starter tests now assert six Bolts, the dominant Heavy immediately after the authored affinity Bolts and a distinct final experimental Heavy, with two Rapid/two Spray; retired Charge no longer serves as a live cooldown fixture; Loom replacement uses its actual last canonical index; the complete Conflagration label occupies three lines in the six-column grid; cadence is projected in source-derived seconds, with Steam's actual pressure cadence retained explicitly. Eight-style audio PCM checks remain, while live spell events cover only six canonical elements and refuse retired wires. Heavy aftermath tests cover six live Heavy identities plus retired negatives with unchanged radius/lifetime/cover/cache controls. Historical ring/path geometry tests use the explicit art archive. The original fixtures are preserved in `six-ui-regression-fixtures/`.
+
+Current source receipt: `.godot/live-hex-coach-freeze.json`. A passing loader probe does not replace pending focused suites, complete integration, real native UI inspection, physical input or human acceptance.
+
+
+### Focused execution checkpoint (not complete-suite acceptance)
+
+Root's `.godot/six-repairs-v2/tests.log` reported: live chemistry coach **5810/0**, Compendium **6509/0**, Loom **5195/0**, Playground **1302/0**, Cartoon **48544/0**, Foundation spell presenter **2924/0**, compact HUD **6155/0**, element audio **1941/0**, and archive effect geometry **50994/0**. The run as a whole still failed; no aggregate pass is claimed.
+
+Follow-up fixture corrections retain their domain boundaries: the dominant starter Heavy follows the authored affinity Bolts (not a presumed seventh slot); actual live release/wire parity covers six elements while synthetic derived-style sequences retain separate art coverage; a preserved Charge sliver enters through explicit archive fixture deserialization and is asserted invalid for live admission. PixelMagic's native-palette audit now checks exactly **440** original elemental/reaction sequences, including all Ice/Charge styles, rather than accidentally filtering the archive down to active combat elements. These follow-ups require root rerun.
+
+
+The second native UI attempt reached real Bootstrap successfully but the capture guard rejected first-run creation of `player_preferences_v1.json` before any menu action. The capture now records pre-startup hashes separately, allows only creation of previously absent default preferences during isolated ordinary initialization, reasserts transient/no-persistence settings after `_ready`, and establishes the strict per-frame UI baseline after initialization. Pre-existing preference changes and any weave/backup changes still fail even during setup; every UI frame must preserve all post-initialization bytes exactly. The failed receipt/log remain preserved. This is a capture-boundary correction, not a relaxation of UI persistence or a claim of save-migration acceptance.
+
+
+### Native small-window defect and final bounded repair
+
+The third real-Bootstrap native run produced30 images with unchanged authority and post-initialization saved bytes. Visual inspection rejected all six960x540 Loom frames: the fixed1280x720 layout used the gameplay HUD's minimum1.0 scale, clipping rightmost spells and lower actions. Both root and the world/menu worker independently observed the defect. The other15 full-size pages fit; nine small Compendium pages fit with a small-text limitation. Individual verdicts and exact receipt hashes are in `native-six-ui-review.md`; passing capture execution did not override this visible failure.
+
+The repair uses one fitted Loom scale for painting and every pointer conversion: normal card/filter input, dragging, preview controls and pending-request close. It preserves existing large-window behavior with a1.5 ceiling. Real SubViewport fixtures at960x540,960x720,1280x720,1920x1080 and2560x1080 check all24 card positions, every filter, control bounds and actual drag/keyboard/pending authority behavior. No gameplay scale, costs, request acceptance or persistence policy changes.
+
+The combination reader now keeps each complete rule together when it fits the12-line page budget, while retaining exact source text across every mask. The first rejected reading pass had orphaned the end of the base-damage sentence on page2. Purpose and counter text now capitalize only the first character, preserving authored names and ordinary sentence case. Authored phase durations are labeled nominal. Every distinct pair and larger recipe can inherit an existing field: plain copy explains that active time can shorten and harmless fading time can change, while active damage never exceeds the displayed authored window. Single-element self recipes do not claim they can inherit another product. The live practice coach continues to display exact current instance phases and remaining ticks.
+
+Movement peer independently reviewed fitted draw/pointer consistency and paragraph text integrity with no concrete blocker, and caught the same two-element inherited-timing qualification that root/combat identified. Combat confirmed the final timing statement against full-warning admission and the bounded active window. Latest bounded repair source/test receipt: `.godot/native-loom-fit-freeze.json`; pre-edit files are preserved under `.godot/reference-refinement-baseline/native-loom-fit/` and the later pair-copy checkpoint `inherited-pair-timing/`. Root execution/native retry remains the acceptance gate.
+
+
+### Final UI native verification
+
+Root's final32-image `.godot/balance-loom-native-six-v6/receipt.json` includes the full24-spell grid and each canonical filter at1280x720 and960x540, the six-element pair table, and both pages for3/4/5/6-element combinations. The world/menu worker viewed every image. The six rows, all four families, cost/equipped-slot metadata, details and controls now fit; full rule paragraphs remain together.1280 receives scoped PASS;960 receives LIMITED for compact text while passing fit and complete-glyph inspection. Individual verdicts and exact hashes are in `native-six-ui-review.md`; previous failures remain recorded.
+
+Root's focused final UI reports are spell-loom-input-handoff1414/0, player-compendium7834/0 and spell-loom-editor5627/0. Native capture preserved authority and post-initialization saved bytes. Final build identity, complete unfiltered suite, export/boot and human physical-input/playtest acceptance are separate root-owned gates; the printed pre-generation build label in these captures is not used as their proof.

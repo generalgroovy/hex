@@ -37,3 +37,6 @@ func _test_focus_validation() -> void:
 	equal(focus.participant_entity_ids, [1], "unavailable, duplicate and malformed entries add no camera targets")
 	check(not focus.reconcile(active_round, 1, [1, 3]), "a participant never becomes a spectator")
 	equal(focus.cycle_next(), 0, "inactive spectator cycling fails closed")
+	active_round.entries = [{"entity_id": 1, "present": true}, {"entity_id": 3, "present": false}]
+	check(focus.reconcile(active_round, 3, [1, 3]), "reused departed ledger ID remains a late observer")
+	equal(focus.participant_entity_ids, [1], "frozen departed ledger is not a live camera target")

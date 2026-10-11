@@ -36,9 +36,15 @@ static func describe(event: Dictionary, catalog: AbilityCatalog) -> Dictionary:
 			# also make base damage incorrect. Use identical contact copy on peers.
 			label = identity + (" · HIT" if int(event.get("target_id", 0)) > 0 else "")
 		"spray_fired":
-			label = "%s ×%d" % [identity, maxi(0, int(event.get("hit_count", 0)))]
+			# The fan/release already identifies this cast. A global hit-count
+			# label crowds its individual contacts and can reveal a target that
+			# the observer cannot see. Each visible target owns its own hit cue.
+			label = ""
 		"spray_hit":
-			label = "%s · %s" % [identity, _reported_damage(event)]
+			# Use the same compact vocabulary as projectile contacts. Identity
+			# remains in the element color and cast art, not a repeated name over
+			# every victim; no damage or control effect is inferred.
+			label = _reported_damage(event)
 		"field_triggered":
 			# Contact does not guarantee Slow: forced movement can reject it.
 			label = identity + " · CONTACT"

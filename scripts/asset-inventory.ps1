@@ -31,7 +31,8 @@ if ($LASTEXITCODE -ne 0) { throw 'Cannot enumerate tracked source files for asse
 foreach ($sourcePath in $trackedTextFiles) {
     $fullSourcePath = Join-Path $repoRoot $sourcePath
     if (-not (Test-Path -LiteralPath $fullSourcePath -PathType Leaf)) { continue }
-    $text = Get-Content -Raw -LiteralPath $fullSourcePath
+    # Empty tracked witnesses have no references; Get-Content -Raw returns null.
+    [string]$text = Get-Content -Raw -LiteralPath $fullSourcePath
     foreach ($match in [regex]::Matches($text, $referencePattern)) {
         $candidate = $match.Value.Replace('\', '/')
         $assetIndex = $candidate.IndexOf('assets/', [System.StringComparison]::OrdinalIgnoreCase)

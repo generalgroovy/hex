@@ -4,12 +4,29 @@ extends FluxTestSuite
 const HexAuthority = preload("res://src/sim/hex/hex_chemistry_world.gd")
 const CanonicalBytes = preload("res://src/sim/core/canonical_bytes.gd")
 const TrailEmitter = preload("res://src/sim/hex/hex_trail_emitter.gd")
+const PreNative = preload("res://tests/support/hex_dynamic_sort_pre_native.gd")
+const ThresholdCandidate = preload("res://tests/support/hex_dynamic_sort_threshold_candidate.gd")
 const ABILITY_PATH := "res://content/abilities/foundation_abilities_v1.json"
+
+
+class RecordingKey:
+	extends RefCounted
+	var text: String
+	var calls: Array[String]
+	func _init(label: String, trace: Array[String]) -> void:
+		text = label
+		calls = trace
+	func _to_string() -> String:
+		calls.append(text)
+		return text
 
 
 func run() -> int:
 	_test_string_key_order()
 	_test_mixed_key_order()
+	_test_native_primitive_maps()
+	_test_opaque_fallback()
+	_test_nested_mutation()
 	_test_randomized_nested_maps()
 	var catalog := AbilityCatalog.new()
 	var loaded := catalog.load_from_file(ABILITY_PATH)
@@ -50,6 +67,82 @@ func _test_mixed_key_order() -> void:
 	}
 	_assert_matches_legacy(integers, "homogeneous integer keys")
 	_assert_matches_legacy(vectors, "homogeneous Vector2i keys")
+
+
+func _test_native_primitive_maps() -> void:
+	var boundary_ids: Array[int] = [-9_223_372_036_854_775_807, -2_147_483_648, -100, -20, -2, -1, 0, 1, 2, 10, 20, 100, 2_147_483_647, 9_223_372_036_854_775_807]
+	for reversed: bool in [false, true]:
+		var ids := boundary_ids.duplicate()
+		if reversed: ids.reverse()
+		var boundaries := {}
+		for id: int in ids: boundaries[id] = {Vector2i(int(id % 17), int(id % 23)): id}
+		_assert_matches_legacy(boundaries, "signed ID boundaries insertion reversed=%s" % reversed)
+	var vector_boundaries := {
+		Vector2i(-2_147_483_648, -2_147_483_648): -1,
+		Vector2i(2_147_483_647, 2_147_483_647): 1,
+		Vector2i(-2_147_483_648, 2_147_483_647): 0,
+	}
+	_assert_matches_legacy(vector_boundaries, "signed coordinate boundaries")
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 0x57AB1E
+	for count: int in [0, 1, 2, 32, 512]:
+		var indices: Array[int] = []
+		for index: int in count: indices.append(index)
+		for index: int in range(count - 1, 0, -1):
+			var chosen := rng.randi_range(0, index)
+			var previous := indices[index]
+			indices[index] = indices[chosen]
+			indices[chosen] = previous
+		var integers := {}
+		var vectors := {}
+		for index: int in indices:
+			integers[index - (count >> 1)] = {Vector2i(index - 256, index % 29): index}
+			vectors[Vector2i(index - 256, index % 29)] = {index: 0, index + 1000: index}
+		_assert_matches_legacy(integers, "shuffled integer map count=%d" % count)
+		_assert_matches_legacy(vectors, "shuffled coordinate map count=%d" % count)
+		var ascending := {}
+		for index: int in count: ascending[index - (count >> 1)] = {Vector2i(index - 256, index % 29): index}
+		equal(HexAuthority._stable(integers), HexAuthority._stable(ascending), "unique primitive key order is insertion independent count=%d" % count)
+
+
+func _test_opaque_fallback() -> void:
+	var trace: Array[String] = []
+	var first := RecordingKey.new("10", trace)
+	var second := RecordingKey.new("2", trace)
+	var third := RecordingKey.new("10", trace)
+	var value := {10: "integer", "10": "string", first: "first opaque", second: "second opaque", third: "equal formatted opaque", Vector2i(1, 2): "coordinate"}
+	var actual: Variant = HexAuthority._stable(value)
+	var actual_trace := trace.duplicate()
+	trace.clear()
+	var preceding: Variant = PreNative.stable(value)
+	equal(actual_trace, trace, "opaque fallback preserves immediately preceding formatting callback order and count")
+	equal(trace, ["10", "2", "10"], "opaque keys are formatted once, without speculative formatting")
+	equal(actual, preceding, "mixed equal-formatted opaque keys preserve preceding stable structure")
+	equal(JSON.stringify(actual).to_utf8_buffer(), JSON.stringify(preceding).to_utf8_buffer(), "opaque fallback keeps exact JSON bytes")
+	trace.clear()
+	HexAuthority._stable({first: "single"})
+	equal(trace, ["10"], "opaque singleton keeps its existing formatting callback")
+	for threshold: int in [4, 8, 16]:
+		trace.clear()
+		var adaptive: Variant = ThresholdCandidate.stable(value, threshold)
+		equal(trace, ["10", "2", "10"], "threshold %d preserves opaque callbacks without speculative formatting" % threshold)
+		equal(adaptive, preceding, "threshold %d preserves mixed equal-formatted opaque structure" % threshold)
+
+
+func _test_nested_mutation() -> void:
+	var cells := {Vector2i(10, -2): 7, Vector2i(2, -10): 0}
+	var owners := {10: {"cells": cells}, 2: {"cells": {Vector2i.ZERO: 1}}}
+	var authority := {"casts": owners, "history": [{3: 0, 11: 2}]}
+	var first: Variant = HexAuthority._stable(authority)
+	var first_bytes := JSON.stringify(first).to_utf8_buffer()
+	cells[Vector2i(10, -2)] = 9
+	owners[100] = {"cells": {Vector2i(-2, 10): 0}}
+	_assert_matches_legacy(authority, "direct nested value and membership changes")
+	check(JSON.stringify(HexAuthority._stable(authority)).to_utf8_buffer() != first_bytes, "nested aliases cannot reuse prior canonical state")
+	equal(JSON.stringify(first).to_utf8_buffer(), first_bytes, "previous stable result owns detached dictionary/array projection")
+	cells[Vector2i(10, -2)] = 7
+	owners.erase(100)
+	equal(JSON.stringify(HexAuthority._stable(authority)).to_utf8_buffer(), first_bytes, "restored nested values recover exact bytes without a cache")
 
 
 func _test_randomized_nested_maps() -> void:
@@ -117,7 +210,7 @@ func _test_real_paid_authority(catalog: AbilityCatalog) -> void:
 			authority.products[product_id]["intensity"] = int(authority.products[product_id].intensity) + 1
 		else:
 			var first_cell: Vector2i = authority.cells.keys()[0]
-			authority.cells[first_cell].water[999999] = 1
+			authority.set_cell_amount(first_cell,"water",999999,1)
 		var mutated_hash := authority.state_hash()
 		check(mutated_hash != previous_hash, "direct nested mutation %d cannot reuse a stale hash" % mutation_index)
 		_assert_world_matches_legacy(authority, "directly mutated paid authority %d" % mutation_index)
@@ -128,6 +221,9 @@ func _assert_matches_legacy(value: Variant, label: String) -> void:
 	var actual: Variant = HexAuthority._stable(value)
 	var expected: Variant = _original_stable(value)
 	equal(actual, expected, "%s preserves the original stable structure" % label)
+	equal(actual, PreNative.stable(value), "%s preserves the immediately preceding sorter" % label)
+	for threshold: int in [4, 8, 16]:
+		equal(ThresholdCandidate.stable(value, threshold), expected, "%s threshold %d preserves original stable structure" % [label, threshold])
 	var actual_json := JSON.stringify(actual)
 	var expected_json := JSON.stringify(expected)
 	equal(actual_json.to_utf8_buffer(), expected_json.to_utf8_buffer(), "%s preserves exact canonical JSON bytes" % label)

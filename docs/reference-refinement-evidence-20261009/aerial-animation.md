@@ -1,0 +1,71 @@
+# Aerial silhouette and protection checkpoint
+
+Status: LOCAL SOURCE CANDIDATE. Root owns imports, engine tests and native capture execution. This record does not certify appearance, full action coverage, sustained frame performance or human acceptance. Current v3 source hashes: `.godot/aerial-animation-v3-freeze.json`; the earlier `.godot/aerial-animation-freeze.json` preserves the rejected v1 source identity. Exact pre-edit copies: `.godot/reference-refinement-baseline/animation-readability/`; test parse repairs have a separate `ui-parse-repair` baseline. No original PNG or atlas manifest was changed.
+
+The user explicitly requested slower, distinct animation, tucked-ball first and second jumps for non-fliers, flight on a flier's second airborne Jump, and distinguishable invulnerability/intangibility frames. This presentation work consumes the movement worker's actual policy. It changes no movement parameter, input admission, cast payment, collision body or protection duration.
+
+## Decisions and established-game evidence
+
+| Decision | Primary precedent | Transfer and limit |
+| --- | --- | --- |
+| Replace upright jump blits with a compact tucked silhouette for non-fliers. Keep the character's original directional face and palette colors. | Nintendo's [Sonic page for Super Smash Bros. Brawl](https://www.smashbros.com/wii/en_us/characters/sonic.html) describes a Spin Dash/jump sequence and emphasizes Sonic's simple controls. The official [Super Metroid manual](https://www.nintendo.co.jp/clvs/manuals/common/pdf/CLV-P-SAAHE.pdf) describes midair Space Jump from a somersault jump. | These are established compact airborne action grammars, with different mechanics and cameras. The user requested the exact ball behavior. They do not establish that this game's code-native body is attractive or readable; native review is required. No Sonic attack damage or Metroid jump admission is copied. |
+| Distinguish a closed spawn shield from split brackets/two slash strokes during the actual dodge opening. | Nintendo's [Brawl shielding and dodging guide](https://www.smashbros.com/wii/en_us/howto/basic/basic06.html) separately teaches guarding and directional dodges with momentary invincibility. | Different protection actions need distinguishable visual grammar. H.E.X. keeps its own immediate policy windows. The split/slash design is an implementation inference, not Nintendo's icon or a proven measurement. Neither state advertises phasing through walls. Height and crouch clearance are not protection. |
+| Hold wing keys for 167 ms; reduce visual gait caps from3/5 to2.75/3.5 cycles per second while retaining actual travel-based phase and immediate aim. | The precedents establish clear action identity, not these numerical durations. Existing H.E.X. registered native contacts provide the measurable local basis: neutral passes are3/16 of a cycle. | The sprint pass minimum rises from37.5 ms to about53.6 ms; the walk cap gives about68.2 ms. These are candidate visual holds chosen to address the user's request, not a claim of externally proven optimal timing. Input and simulation timing are unchanged. Reduced motion holds the open wing key. Human cadence judgment remains open. |
+
+## Implemented source
+
+`pixel_aerial_pose.gd` currently assembles native gather-pose torso/head and folded leg/boot pixels, clips those textured fragments to a circular envelope and applies held quarter-turn somersault keys. It draws no opaque colored backing disc. Flight retains the original airborne body, split into five unscaled strips with slow one-pixel outer-wing shifts. It uses each of the30 admitted identities' own directional action atlas, without resizing a whole upright body or replacing race anatomy with generic wings. Original texture bytes remain unchanged. Face crop bounds and draw budgets are tested; anatomical quality is a native-review gate. The rejected v1 geometry is documented below.
+
+`PixelFlipbookPresenter` prepares the small profile after successful action-atlas admission and borrows the existing texture. `FullbodyCastPresenter` routes voluntary non-flying jumps/descent to the tuck. Control/hit/dodge/wall action priority remains in place. FLY requires airborne state, flight capability, the active flight flag, positive remaining flight ticks and positive Stamina. DOUBLE_JUMP alone cannot create a flight pose. Flight ends visually on the same query that observes release, exhaustion, timer expiry or landing.
+
+`CartoonChampionPresenter.protection_contract` exposes a kind and immediate geometry. Spawn protection keeps a closed shield. The roll/air-dodge opening uses four split strokes and two slash marks, with no closed shield. Its remaining ratio is still sampled directly from `MovementSystem.is_combat_intangible`. No interpolation, fading tail, afterimage, body phasing, flight immunity or jump immunity is introduced. Normal and reduced profiles share protection meaning and exact boundaries.
+
+`ActorMotionHistory` changes only its maximum presentation cycles. Actual distance, stopped/blocked holds, frame-rate parity, immediate independent aim, and correction/identity rebasing remain under existing tests.
+
+## Review and gates
+
+The movement worker independently reviewed the five animation files and found no concrete state-boundary blocker. Its review specifically checked active-flight predicates, DOUBLE_JUMP ambiguity, control priority, lack of authoritative writes, spawn-versus-dodge geometry, exact protection expiry and presentation-only cadence. It explicitly reserved native identity/cast-hand readability and candidate timing judgment.
+
+`test_pixel_aerial_pose.gd` covers all30 actual catalog identities, eight headings, normal/reduced modes, first versus repeated jump, no upright blit in a tuck, unscaled original face crops, independent aim/travel, bounded draw count, exact last flight tick and release/exhaustion/expiry/landing. Existing action-bank tests still validate the immutable archive keys directly; their Fullbody-routing matrix now also checks the explicit compact path. Existing protection tests distinguish the two shapes through the final protected tick and immediate vulnerable recovery. These are authored checks until root records their execution.
+
+`tests/visual/capture_aerial_readability.gd` prepares six native jump/status/roster boards and eight sequence frames at12 Hz, using real `CartoonChampionPresenter.draw`. It covers three body sizes, four flight-capable races, all30 identities, heading variety and normal/reduced profiles. It records source/atlas hashes and verifies each fixture's canonical authority hash remains unchanged. Two process frames plus `RenderingServer.force_draw(false)` avoid the previously diagnosed minimized-window `frame_post_draw` wait. It requires a fresh contained `res://.godot/aerial-native-*` directory and native rendering. Root alone executes it.
+
+The sequence varies the visual clock over fixed positive-flight fixtures. It is not a complete simulated movement replay, physical control trial or protection gameplay test. Inspect every native image, with particular attention to whether upper-third head extraction preserves eyes/face beneath tall hats, horns and wings, whether flat body shading matches the painted source, whether casting still reads from the correct body location, and whether the slower wing cadence looks intentional. If these fail, revise the presentation and capture again; passing metadata is insufficient.
+
+
+## Native v1 rejection and repair
+
+Root executed `.godot/aerial-native-six-v1/receipt.json` and produced14 images. Root and the movement reviewer rejected the body/flight visual quality. This worker independently inspected `jumps-reduced-0.png`, `roster-reduced-0.png` and `status-reduced-0.png` and agrees: dark rectangular panels made non-fliers look like heads on buckets, and generic angular wings/stick legs erased the four flying races' authored identities. The closed shield versus split/slash status geometry was visibly distinguishable and disappeared on the expired rows. This is a scoped protection PASS, not whole-art acceptance. The other v1 images were not used to override that concrete failure; all remain retained.
+
+The earlier v1 source identity and native failure are preserved as historical evidence. The v2 source repair removes generic flight bodies/wings. It draws the admitted native airborne action atlas in five unscaled strips; only the two outer upper strips shift by one pixel over167ms keys. Reduced motion holds those strips fixed. Original membranes, feathers, fairy wings, arms, clothing, face and body shading remain.
+
+For non-fliers, v2 assembles original gather/crouch pixels: native torso and head, and separate actual left/right shin/boot/bare-foot fragments quarter-turned upward. Three rounded, shaded contours support the compact silhouette; no opaque rectangular panel remains. Colors are selected from visible saturated native costume pixels rather than the most common dark outline. No full-body scale, blur or resampling is used. The tests now check this real native-piece route rather than v1's low-detail shapes.
+
+The repair source is frozen at `.godot/aerial-animation-v2-freeze.json`; exact v1 source copies are at `.godot/reference-refinement-baseline/aerial-native-v1-repair/`. Root's v2 native retry and appearance review remain pending. Passing structural tests cannot rescue a failed native appearance review.
+
+
+## Native v2 ball rejection and v3 repair
+
+Root executed `.godot/aerial-native-six-v2/receipt.json` and produced14 native images with unchanged authority. Root scoped the original flight anatomy and protection geometry as passing. Both root and this worker rejected the ball appearance. This worker inspected `jumps-reduced-0.png`, `roster-reduced-0.png` and `sequence-00.png`: native clothing and limbs returned, but opaque bright discs read as coins behind crouched bodies, and the Red Baron's cape/torso escaped the purported ball envelope. The fixed-velocity sequence also showed no real non-flier roll. Process success did not qualify the art.
+
+V3 removes every backing fill. Four native fragments are clipped to an actual circular envelope using source-preserving textured polygons. Cape, torso, head and folded limbs cannot protrude beyond that envelope. No complete upright body is scaled or merely translated. The folded assembly now has four held quarter-turn keys at167ms each, while reduced motion stays static. Native pixel spacing is retained; no image bytes are rewritten. V2's flight and protection code is retained.
+
+Clipped geometry has a64-key per-identity cache bound. The tests now reject backing shapes, verify every rendered vertex lies within the circle, and check distinct normal roll keys versus static reduced geometry. Exact v2 source remains in `.godot/reference-refinement-baseline/aerial-native-v2-repair/`; v3 hashes are in `.godot/aerial-animation-v3-freeze.json`. Root's v3 capture and native judgment are pending. The complete14-frame capture and physical play remain separate evidence levels.
+
+
+### Native v3 review — scoped PASS
+
+Root, the movement reviewer, and the presentation owner independently inspected the v3 native output. The presentation owner opened all 14 PNGs with the image viewer: `jumps-reduced-0/1`, `roster-reduced-0/1`, `status-reduced-0/1`, and `sequence-00` through `sequence-07`. Each receives **PASS for the sampled presentation contract**. Original costume, face/horn and wing identity remain visible; the small/middle/large non-flying poses are compact folded somersaults without the rejected dark buckets, flat coin backing or escaped upright cape. The seven displayed sequence identities hold a pose for two 12 Hz samples and turn in four readable quarter-turns. Reduced motion holds the tuck. Original flying anatomy remains recognizable. The closed spawn shield and split dodge marks are visibly distinct, and the immediate expired samples remove the applicable mark.
+
+This is a native folded/crouched anatomy approximation assembled from admitted pixels, not newly drawn anatomical frames. The fixtures arrange fixed authority states; the eight samples vary the presentation clock, not continuous physical input or a simulation replay. This does not establish physical-device feel, continuous locomotion quality, frame performance or human playtest acceptance. V1 and V2 failed ball-quality evidence is retained. V3 pose production remains frozen.
+
+Root's fresh `pixel-aerial-pose` gate reported **16,917 assertions, zero failures**; pixel-action-bank **882,332/0**, pixel-flipbook **148,430/0**. Adjacent historical fixture repairs are separate and do not turn a partial regression run into a full-suite pass.
+
+V3 receipt: `.godot/aerial-native-six-v3/receipt.json`; SHA256 `31ee513add97bb3de8fc7407ad51a7755f9b872d0bb25de2ec6754e98224c844`. Source hashes and unchanged authority/atlas evidence remain in that receipt and `.godot/aerial-animation-v3-freeze.json`.
+
+
+## Native v4 current shared-art binding review
+
+All14 `.godot/aerial-native-six-v4/` PNGs were independently viewed by the world/menu worker. Scoped presentation PASS: the compact native somersault and original flight anatomy remain, and current loaded magic art makes spawn protection a shield badge with squared corner markers while timed roll/air-dodge protection uses the slash badge with diagonal marks. Both remove their applicable cue in the immediate expired rows, in normal and reduced modes. Earlier descriptions of a closed shield refer to the fallback geometry; the current native loaded-pack appearance is this badge/marker combination. The source predicates and no-flight-immunity boundary remain unchanged.
+
+Root reports12 pose PNGs byte-identical to reviewedv3, with the two status PNGs changed by the now-working shared art binding; this worker nevertheless inspected all14. Individual verdicts and limitations are in `native-six-ui-review.md`. Receipt SHA256 `4368bb56e6d8b6fc5492016283b743294ca7bc8e42aa7a0ae37872c1302f966a`. Supplemental timestamped current loader/all-art manifest hashes are in `native-six-art-source-hashes.json`, separate from the original capture receipt. Continuous physical input and human playtest acceptance remain unverified.

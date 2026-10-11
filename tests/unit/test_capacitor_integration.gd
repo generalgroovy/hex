@@ -1,188 +1,218 @@
 extends FluxTestSuite
 
+const Policy = preload("res://src/sim/hex/hex_recipe_policy.gd")
 const ORIGIN := Vector2i(600000, 500000)
 var config := SimConfig.new(120)
 
+# Historical suite name retained for the runner. Charge/Capacitor331 is retired;
+# current electrical integration uses Arcstorm311 and Caldera407's one impulse.
 func run() -> int:
 	_test_prediction_discharge_and_replay()
-	_test_overlap_cover_and_packets()
-	_test_predicted_eligibility()
+	_test_cover_overlap_and_eligibility()
+	_test_complete_network_delivery()
 	_test_teaching()
 	return finish("capacitor-integration")
 
-func _reaction(id: int = 4000, direction: Vector2i = Vector2i(1000, 0), wire: int = 331) -> ElementReactionState:
-	var result := ElementReactionState.new()
-	result.entity_id = id
-	result.recipe_wire_id = wire
-	result.owner_id = 1
-	result.team_id = 1
-	result.position_x = ORIGIN.x
-	result.position_y = ORIGIN.y
-	result.origin_x = ORIGIN.x
-	result.origin_y = ORIGIN.y
-	result.direction_x = direction.x
-	result.direction_y = direction.y
-	result.created_tick = 0
-	result.active_tick = 78
-	result.decay_tick = 318
-	result.expiry_tick = 372
-	result.radius = 30000
-	result.length = 200000
-	result.source_a = 3000
-	result.source_b = 3001
-	var endpoint := ORIGIN + ElementChemistrySystem.scaled(direction, result.length)
-	result.endpoint_x = endpoint.x
-	result.endpoint_y = endpoint.y
+
+func _world(direction: Vector2i = Vector2i(1000, 0), radius: int = 18000, composite: bool = true) -> SimWorld:
+	var world := SimWorld.new(120, 817, CollisionWorld.new(2000000, 1500000))
+	world.hex_court = HexChemistryWorld.new()
+	check(world.hex_court.configure_geometry(ORIGIN, HexGrid.disk(Vector2i.ZERO, 12)), "electrical integration configures a trusted finite topology")
+	world.hex_court.chemistry_enabled = true
+	var owner := world.player()
+	owner.champion_wire_id = 0; owner.team_id = 1
+	owner.position_x = 200000; owner.position_y = 200000
+	owner.spawn_protection_ticks = 0
+	var actor := PlayerState.new(2)
+	actor.champion_wire_id = 0; actor.team_id = 2
+	actor.position_x = ORIGIN.x; actor.position_y = ORIGIN.y; actor.radius = radius
+	actor.health = 100000; actor.health_maximum = 100000
+	actor.health_recovery_per_second = 0; actor.spawn_protection_ticks = 0
+	world.players.append(actor)
+	_add_product(world, direction, composite)
+	world.collision = HexCollisionWorld.new(world.collision)
+	world.reaction_movement = world.collision
+	world.hex_court.collision = world.collision.base_world
+	return world
+
+
+func _add_product(world: SimWorld, direction: Vector2i, composite: bool = true) -> Dictionary:
+	var court: HexChemistryWorld = world.hex_court
+	var first_source := court.next_cast_id + 1000
+	var wires: Array[int] = [145, 163]
+	if composite: wires.assign([159, 140, 145])
+	for index: int in wires.size():
+		var source := first_source + index
+		check(court.reserve_cast(1, wires[index]), "electrical recipe reserves an actual live Bolt source")
+		court.commit_payment(1)
+		court.bind_release(1, source, ORIGIN, direction, 1)
+		if index == 1:
+			check(bool(court.resolve_contact(first_source, source, ORIGIN, 0).accepted), "two real source ledgers form the starter pair")
+		elif index == 2:
+			court.deposit_terminal({"source_cast_id": source, "source_wire_id": wires[index], "reaction_strength": 5, "position": ORIGIN, "direction": direction}, 1)
+	var product: Dictionary = court.products.values()[-1]
+	equal(int(product.recipe_wire_id), 407 if composite else 311, "fresh Fire extends Earth/Water into real Caldera or Fire/Air remains Arcstorm")
+	equal(int(product.funded_strength), 15 if composite else 10, "electrical effect retains exact paid source funding")
+	court.sync_flights(world.players, world.projectiles)
+	world.next_projectile_id = maxi(world.next_projectile_id, first_source + wires.size())
+	return product
+
+
+func _set_tick(world: SimWorld, tick: int) -> void:
+	world.tick = tick
+	# SimWorld stores the next input tick; the court stores the last executed
+	# authority tick. Complete snapshots validate that exact relationship.
+	world.hex_court.current_tick = maxi(0, tick - 1)
+	check(world.collision.set_hex_surfaces(world.hex_court, tick), "current product phase prepares exact dynamic collision")
+
+
+func _prediction(world: SimWorld) -> ClientPrediction:
+	var result := ClientPrediction.new()
+	check(result.configure(config, world.collision, 2), "electrical prediction configures")
+	check(result.bind_hex_world(world), "prediction owns detached finite product state")
+	check(result.reconcile(ClientPrediction.capture_packet(world.player(2), world.tick, -1)), "same-tick actor reconciles with complete Hex context")
 	return result
 
-func _actor(direction: Vector2i = Vector2i(1000, 0), radius: int = 18000) -> PlayerState:
-	var actor := PlayerState.new(2)
-	actor.team_id = 2
-	actor.radius = radius
-	var center := ORIGIN + ElementChemistrySystem.scaled(direction, 100000)
-	actor.position_x = center.x
-	actor.position_y = center.y
-	return actor
 
-func _world(actor: PlayerState, reactions: Array, tick: int) -> SimWorld:
-	var world := SimWorld.new(120, 817, CollisionWorld.new(2000000, 1500000))
-	world.players = [actor]
-	world.reactions.assign(reactions)
-	world.tick = tick
-	return world
+func _assert_prediction(prediction: ClientPrediction, actor: PlayerState) -> void:
+	for field: StringName in ClientPrediction.STATE_FIELDS:
+		equal(prediction.predicted_state.get(field), actor.get(field), "electrical authority/prediction field " + String(field))
+
 
 func _test_prediction_discharge_and_replay() -> void:
 	for radius: int in [17000, 18000, 19000]:
 		for direction: Vector2i in EightDirectionResolver.FIXED_VECTORS:
-			for shortened: bool in [false, true]:
-				var reaction := _reaction(4000, direction)
-				if shortened:
-					reaction.decay_tick = 222 # 60 percent trail-assisted sustain.
-					reaction.expiry_tick = 276
-				var start := reaction.decay_tick - 2
-				var actor := _actor(direction, radius)
-				var world := _world(actor, [reaction], start)
-				var prediction := ClientPrediction.new()
-				check(prediction.configure(config, world.collision, 2), "Capacitor prediction configures")
-				check(prediction.reconcile(ClientPrediction.capture_packet(actor, start, -1, world.reactions)), "final discharge context accepted")
-				var before := Vector2i(actor.position_x, actor.position_y)
-				for tick: int in range(start, start + 5):
-					var command := SimCommand.new(tick, 2, 0, 0)
-					check(world.step([command]), "production world advances discharge and decay")
-					check(prediction.queue_input(tick - start, command), "guest predicts same tick")
-					for field: StringName in [&"position_x", &"position_y", &"velocity_x", &"velocity_y", &"control_state", &"air_height", &"stamina", &"flux"]:
-						equal(prediction.predicted_state.get(field), actor.get(field), "host/prediction agree through final discharge %s" % field)
-					if tick == start:
-						equal(Vector2i(actor.position_x, actor.position_y), before, "no early activation discharge")
-				check((Vector2i(actor.position_x, actor.position_y) - before).length() > 13900, "single finite discharge actually moved the actor")
-				check((Vector2i(actor.position_x, actor.position_y) - before).length() <= 14001, "all sizes/directions receive at most14px across expiry")
-				check(prediction.reconcile(ClientPrediction.capture_packet(actor, world.tick, 4, world.reactions)), "authoritative confirmation retires predicted discharge")
-	var first := _world(_actor(), [_reaction()], 77)
-	var second := _world(_actor(), [_reaction()], 77)
-	for tick: int in range(77, 375):
-		var command := SimCommand.new(tick, 2, 1000 if tick < 100 else 0, 0)
-		check(first.step([command]) and second.step([command]), "repeat worlds advance")
-		equal(first.state_hash(), second.state_hash(), "canonical snapshot hash/replay remains deterministic through expiry")
-	equal(first.reactions.size(), 0, "Capacitor naturally expires without daughters")
+			var world := _world(direction, radius)
+			var actor := world.player(2)
+			var product: Dictionary = world.hex_court.products.values()[0]
+			_set_tick(world, int(product.active_tick) - 1)
+			var prediction := _prediction(world)
+			var before := Vector2i(actor.position_x, actor.position_y)
+			var discharge_count := 0
+			for index: int in range(5):
+				var command := SimCommand.new(world.tick, 2)
+				check(world.step([command]) and prediction.queue_input(index, command), "host and detached prediction advance actual electrical formation/activation")
+				_assert_prediction(prediction, actor)
+				for event: Dictionary in world.combat_events:
+					if String(event.type) == "hex_capacitor_discharge": discharge_count += 1
+				if index == 0:
+					equal(Vector2i(actor.position_x, actor.position_y), before, "full formation warning has no early impulse")
+					equal(actor.health, 100000, "full formation warning is harmless")
+			equal(discharge_count, 1, "electrical descendant discharges once, not once per active tick")
+			var displacement := Vector2i(actor.position_x, actor.position_y) - before
+			check(displacement.length() > 13900 and displacement.length() <= 14001, "each radius and direction receives at most the exact14px impulse")
+			equal(actor.health, 95500, "five-strength Caldera spends one exact4500Health attack")
+			equal(int(product.damage_budget_remaining), 55500, "actual damage debits the15-strength60000 shared pool exactly")
+			check(bool(product.contacts[2].effect_used), "one-use contact remains spent after the hit")
+	var world := _world()
+	var product: Dictionary = world.hex_court.products.values()[0]
+	_set_tick(world, int(product.active_tick) - 1)
+	var restored := HexWorldSnapshot.prepare(HexWorldSnapshot.capture(world), world)
+	check(restored != null, "complete electrical source/funding snapshot prepares")
+	if restored != null:
+		for unused: int in range(int(product.expiry_tick) - world.tick + 1):
+			var command := SimCommand.new(world.tick, 2)
+			check(world.step([command]) and restored.step([command.copy()]), "source and restored authority advance to ordinary expiry")
+			equal(world.state_hash(), restored.state_hash(), "electrical replay remains exact through formation, attack, harmless decay and expiry")
+		check(world.hex_court.products.is_empty(), "electrical descendant expires without daughters")
 
-func _test_overlap_cover_and_packets() -> void:
-	var charge := _reaction()
-	var ice := _reaction(4001, Vector2i(1000, 0), 327)
-	var actor := _actor()
-	var world := _world(actor, [charge, ice], 78)
-	var expected := _actor()
-	var command := SimCommand.new(78, 2, 1000, 0)
-	MovementSystem.step(expected, command, config, world.collision, 750)
-	check(world.step([command]), "overlap world advances")
-	equal(actor.velocity_x, expected.velocity_x, "Frostway takes priority over Capacitor rather than multiplication")
-	var wall := _reaction(4002, Vector2i(1000, 0), 301)
-	wall.position_x = 741000
-	wall.position_y = 500000
-	wall.origin_x = wall.position_x
-	wall.origin_y = wall.position_y
-	wall.radius = 22500
-	wall.length = 80000
-	wall.health = 32000
-	actor = _actor()
-	world = _world(actor, [charge, wall], 317)
-	check(world.step([SimCommand.new(317, 2, 0, 0)]), "discharge into active Rampart advances")
-	check(actor.position_x >= 700000 and actor.position_x <= 700500, "discharge respects18px clearance against temporary cover (x=%d)" % actor.position_x)
-	check(world.collision.obstacle_view().is_empty(), "temporary cover never mutates static world")
-	var reactions: Array = []
-	for index: int in range(32):
-		reactions.append(_reaction(5000 + index, EightDirectionResolver.FIXED_VECTORS[index % 8]))
-	var packet := ClientPrediction.capture_packet(_actor(), 78, -1, reactions)
-	check(not packet.is_empty(), "32Charge rows fit canonical reconciliation")
-	if packet.is_empty():
-		return
-	equal(packet.capacitors.size(), 32 * CapacitorFieldPolicy.ROW_WIDTH, "all bounded Charge context retained")
-	for wire: Dictionary in SessionTransport._snapshot_wire_packets(packet, true):
-		check(var_to_bytes(wire).size() <= SessionTransport.ENET_MTU_BYTES, "production compressed/fragmented packet respects MTU")
-	var host := SessionTransport.new()
-	var guest := SessionTransport.new()
-	var signature := SessionTransport.compatibility_signature(SimConfig.PROTOCOL_VERSION, 120, "capacitor-m2b", "a".repeat(64), "b".repeat(64), SessionCharter.catalog_hash(), CanonicalContent.sha256(CapacitorFieldPolicy.policy()))
-	check(host.start_host(0, signature, "Capacitor Host"), "ephemeral localhost host starts")
-	check(guest.start_join("127.0.0.1", host.bound_port, signature, "Capacitor Guest"), "same-policy guest starts")
-	check(_poll_until(host, guest, func() -> bool: return guest.is_connected_client()), "same-build compatibility handshake passes")
+
+func _test_cover_overlap_and_eligibility() -> void:
+	var wall_world := _world()
+	var wall_product: Dictionary = wall_world.hex_court.products.values()[0]
+	wall_world.collision.base_world.add_obstacle(CollisionWorld.Obstacle.new(91, ORIGIN.x + 25000, ORIGIN.y - 60000, ORIGIN.x + 45000, ORIGIN.y + 60000))
+	_set_tick(wall_world, int(wall_product.active_tick))
+	check(wall_world.step([SimCommand.new(wall_world.tick, 2)]), "electrical impulse against worldbone advances")
+	equal(wall_world.player(2).position_x, ORIGIN.x + 7000, "solid wall clips14px impulse at exact common18px clearance")
+	equal(wall_world.player(2).health, 95500, "wall-clipped displacement does not erase the real hostile damage")
+	var overlap := _world()
+	_add_product(overlap, Vector2i(1000, 0))
+	equal(overlap.hex_court.products.size(), 2, "same-subset products remain two independently paid fields")
+	var product: Dictionary = overlap.hex_court.products.values()[0]
+	_set_tick(overlap, int(product.active_tick))
+	check(overlap.step([SimCommand.new(overlap.tick, 2)]), "overlapping electrical products execute")
+	equal(overlap.player(2).position_x, ORIGIN.x + 14000, "two products cannot stack displacement beyond14px in one tick")
+	equal(overlap.player(2).health, 91000, "two distinct paid pools retain their two independently funded4500 attacks")
+	for scenario: String in ["ally", "protected", "air", "dead"]:
+		var world := _world()
+		var actor := world.player(2)
+		product = world.hex_court.products.values()[0]
+		if scenario == "ally": actor.team_id = 1
+		elif scenario == "protected": actor.spawn_protection_ticks = 2
+		elif scenario == "air":
+			actor.air_height = 30000; actor.hop_stage = 1; actor.hop_ticks = MovementSystem._remaining_air_ticks(actor, config)
+		else: actor.health = 0
+		_set_tick(world, int(product.active_tick))
+		var prediction := _prediction(world)
+		var health := actor.health
+		var command := SimCommand.new(world.tick, 2)
+		check(world.step([command]) and prediction.queue_input(0, command), "protected/airborne/allied/defeated counter advances")
+		_assert_prediction(prediction, actor)
+		equal(actor.position_x, ORIGIN.x, "ineligible actor avoids electrical impulse")
+		equal(actor.health, health, "ineligible actor avoids the grounded electrical attack")
+	var core := _world(Vector2i(1000, 0), 18000, false)
+	product = core.hex_court.products.values()[0]
+	_set_tick(core, int(product.active_tick))
+	check(core.step([SimCommand.new(core.tick, 2)]), "derived pair Arcstorm executes")
+	equal(core.player(2).health, 95500, "Arcstorm pair supplies its actual one4500Health activation")
+	equal(core.player(2).position_x, ORIGIN.x, "Arcstorm does not inherit removed Capacitor movement")
+	equal(int(HexProductEffects.pre_movement(core.hex_court, core.player(2), core.tick, null, config).ground_target_ratio), 1000, "pair has no invented125percent ground-speed bonus")
+
+
+func _test_complete_network_delivery() -> void:
+	var world := _world()
+	var product: Dictionary = world.hex_court.products.values()[0]
+	_set_tick(world, int(product.active_tick) - 1)
+	var authority := HexWorldSnapshot.capture(world)
+	check(not authority.is_empty(), "electrical packet contains full source funding and contact authority")
+	if authority.is_empty(): return
+	var hearth := SessionHearth.new(); hearth.bind_host(); check(hearth.connect_entity(2), "second named champion enters session metadata")
+	var round_state := SessionRound.new(); round_state.bind_hearth()
+	# Transport names have a15-character bound. Keep the real wire boundary
+	# visible here: an overlong guest label must fail before packet delivery.
+	equal("Electrical Peer".length(), 15, "electrical peer name exercises the exact admitted name boundary")
+	var invalid_names := WorldSnapshotEnvelope.make_hex_session([[1, "Electrical Host", "spawn"], [2, "Electrical Guest", "spawn"]], [], hearth.capture(world.tick, SessionSnapshot.MAX_PLAYERS), round_state.capture(world), PackedInt32Array([0, 0, 0, 0]))
+	check(invalid_names.is_empty(), "sixteen-character metadata name refuses instead of silently changing network identity")
+	var session := WorldSnapshotEnvelope.make_hex_session([[1, "Electrical Host", "spawn"], [2, "Electrical Peer", "spawn"]], [], hearth.capture(world.tick, SessionSnapshot.MAX_PLAYERS), round_state.capture(world), PackedInt32Array([0, 0, 0, 0]))
+	check(not session.is_empty(), "bounded electrical identities form complete session metadata")
+	var envelope := WorldSnapshotEnvelope.wrap_hex(authority, session, 0)
+	check(WorldSnapshotEnvelope.validate(envelope), "complete electrical Hex envelope validates")
+	if not WorldSnapshotEnvelope.validate(envelope): return
+	var packets := SessionTransport._snapshot_wire_packets(envelope)
+	check(not packets.is_empty(), "complete electrical authority reaches the production datagram codec")
+	for packet: Dictionary in packets:
+		check(var_to_bytes(packet).size() <= SessionTransport.ENET_MTU_BYTES, "every electrical datagram fits the actual ENet MTU")
+	var host := SessionTransport.new(); var guest := SessionTransport.new()
+	var signature := SessionTransport.compatibility_signature(SimConfig.PROTOCOL_VERSION, 120, "derived-electrical", "a".repeat(64), "b".repeat(64), SessionCharter.catalog_hash(), CanonicalContent.sha256(Policy.definition(407)))
+	check(host.start_host(0, signature, "Electrical Host"), "ephemeral localhost host starts")
+	check(guest.start_join("127.0.0.1", host.bound_port, signature, "Electrical Peer"), "matching guest joins")
+	check(_poll_until(host, guest, func() -> bool: return guest.is_connected_client()), "same-content localhost handshake passes")
 	if guest.is_connected_client():
-		# This transport-only fixture establishes the epoch normally accepted
-		# from a complete world envelope before field reconciliation.
-		check(guest.configure_world_epoch(host.world_epoch), "Charge fixture establishes the accepted host epoch")
-		equal(guest.world_epoch, 0, "Charge reconciliation uses the initial world epoch")
-		check(host.send_reconciliation(guest.local_peer_id, packet), "32Charge rows sent through production ENet codec")
-		check(_poll_until(host, guest, func() -> bool: return not guest.incoming_reconciliations.is_empty()), "guest receives exact field context")
-		var incoming := guest.take_reconciliations()
-		check(not incoming.is_empty() and incoming.back() == packet, "all geometry/timers/teams survive real localhost delivery")
-	guest.stop()
-	host.stop()
-	var missing := packet.duplicate(true)
-	missing.erase("capacitors")
-	check(not ClientPrediction.validate_packet(missing), "old packet missing required Charge context rejected")
-	var extra := ClientPrediction.capture_packet(_actor(), 78, -1, [ice])
-	packet.lanes = extra.lanes
-	check(not ClientPrediction.validate_packet(packet), "combined reaction budget cannot exceed32")
-	packet = ClientPrediction.capture_packet(_actor(), 78, -1, [charge, ice])
-	packet.lanes[0] = packet.capacitors[0]
-	check(not ClientPrediction.validate_packet(packet), "one ID cannot masquerade as Ice and Charge")
-	var policy := CapacitorFieldPolicy.policy()
-	var original := CanonicalContent.sha256(policy)
-	policy.walk_sprint_target_ratio = 1251
-	check(CanonicalContent.sha256(policy) != original, "numeric lane rules participate in compatibility identity")
+		check(host.configure_world_epoch(0), "host publishes initial epoch")
+		check(host.broadcast_envelope(envelope), "host sends complete electrical authority")
+		check(_poll_until(host, guest, func() -> bool: return not guest.incoming_envelopes.is_empty()), "guest receives complete electrical envelope")
+		var incoming := guest.poll_envelopes()
+		check(not incoming.is_empty(), "electrical receipt exists")
+		if not incoming.is_empty():
+			equal(incoming.back(), envelope, "geometry, funding, contacts and actor state survive real localhost delivery exactly")
+			var replica := HexWorldSnapshot.prepare(WorldSnapshotEnvelope.authority(incoming.back()), world)
+			check(replica != null, "received electrical authority prepares against caller-trusted topology")
+			if replica != null: equal(replica.state_hash(), world.state_hash(), "network receipt reconstructs the exact authority")
+	guest.stop(); host.stop()
+
 
 func _test_teaching() -> void:
-	var text := " ".join(ChemistryGuideModel.pair_lines(5, 5))
-	check(text.contains("125%") and text.contains("200 px") and text.contains("60 px"), "Charge teaching agrees with live footprint and speed")
-	check(text.contains("14 px") and text.contains("0.50 s") and text.contains("without damage"), "teaching gives final warning/displacement and honest consequence")
-	equal(ChemistryGuideModel.matrix_cell(5, 5).name, "Capacitor", "matrix uses current display name")
+	check(6 not in ChemistryGuideModel.DISPLAY_WIRES, "archived Charge lane does not return as a live ingredient choice")
+	var cell := ChemistryGuideModel.matrix_cell(1,2)
+	equal(cell.wire_id,311,"Fire and Air teach the live electrical reaction")
+	var definition := ChemistryGuideModel.Policy.definition(311)
+	var text := " ".join(ChemistryGuideModel.pair_lines(1,2))
+	check(text.contains(String(definition.purpose)) and text.contains(String(definition.counter)),"electrical derived effect uses its actual live offense and response")
 
-func _test_predicted_eligibility() -> void:
-	for team: int in [1, 2]:
-		for health: int in [0, 100000]:
-			for protection: int in [0, 1, 2]:
-				var actor := _actor()
-				actor.team_id = team
-				actor.health = health
-				actor.spawn_protection_ticks = protection
-				if health == 0:
-					actor.velocity_x = 350000
-					actor.sprinting = true
-					actor.movement_mode = PlayerState.MovementMode.SPRINT
-				var world := _world(actor, [_reaction()], 317)
-				var prediction := ClientPrediction.new()
-				prediction.configure(config, world.collision, 2)
-				check(prediction.reconcile(ClientPrediction.capture_packet(actor, 317, -1, world.reactions)), "eligibility captured for team/life/protection")
-				var command := SimCommand.new(317, 2, 0, 0)
-				check(world.step([command]) and prediction.queue_input(0, command), "eligibility boundary advances")
-				equal(prediction.predicted_state.position_x, actor.position_x, "protected/dead/allied enemy eligibility agrees with host")
-				equal(actor.position_x, 714000 if team == 2 and health > 0 and protection <= 1 else 700000, "protection expires before discharge; allied/dead guests never displaced")
-				for field: StringName in [&"velocity_x", &"velocity_y", &"sprinting", &"movement_mode"]:
-					equal(prediction.predicted_state.get(field), actor.get(field), "defeat clears stale predicted movement like authority")
 
 func _poll_until(host: SessionTransport, guest: SessionTransport, predicate: Callable) -> bool:
 	for unused: int in range(2000):
-		host.poll()
-		guest.poll()
-		if predicate.call():
-			return true
+		host.poll(); guest.poll()
+		if predicate.call(): return true
 		OS.delay_msec(1)
 	return false

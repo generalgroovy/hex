@@ -1,0 +1,18 @@
+{
+  "status": "not_promoted",
+  "reason": "The isolated validator improved, but the preselected complete owned-publication gate did not show consistent improvement. Only the owned production tail was restored; prior dirty work remains.",
+  "original_source_sha256": "3a1bb8f7fe8b3bb05e752caed48dafc2f65cb84b0076da47903817a508602047",
+  "candidate_source_sha256": "07e6e0cc2841b5672bd26aba9763f89fc871fe94f8fb48385988c96834dd7e40",
+  "archived_candidate": "validation-candidate.gd.txt",
+  "isolated_receipt": "cast-validation-v1.json",
+  "controlled_receipts": ["publication-abba-a1-v1.json", "publication-abba-b1-v1.json", "publication-abba-b2-v1.json", "publication-abba-a2-v1.json"],
+  "controlled_checks": {"assertions_per_run": 3230, "failures": 0, "source_dependencies": 189, "only_dependency_differing_between_arms": "src/sim/hex/hex_cast_parts.gd", "semantic_fields_compared_per_case": 23, "semantic_differences": 0},
+  "owned_publication_medians_us": {
+    "order": ["A1", "B1", "B2", "A2"],
+    "empty": [21200, 17494, 18891, 17525],
+    "distributed-paid40": [59381, 60863, 59405, 60087],
+    "dense-paid40": [30787, 31505, 32075, 31648],
+    "active-rampart": [28601, 28772, 29284, 29827]
+  },
+  "limits": "Two processes per arm, seven warm samples per case per process; not sustained percentiles, FPS or capacity. Empty-control variability is not subtracted. Earlier separate before/after receipts are retained. No full-path gain or sustained regression is established. No performance optimization from this candidate ships."
+}

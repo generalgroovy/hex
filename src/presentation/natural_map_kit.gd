@@ -215,7 +215,16 @@ func surface_style_at(layout: SanctumCampusLayout, point: Vector2) -> String:
 	return "nexus"
 
 
-func receiving_surface_id_at(layout: SanctumCampusLayout, point: Vector2) -> String:
+func receiving_surface_id_at(layout: SanctumCampusLayout, point: Vector2, ground_family: String = "") -> String:
+	# The live floor owns material registration at the canonical hex center.
+	# District rectangles overlap and include water, soil and paved routes, so
+	# their names alone cannot choose a truthful receiving shadow. Reuse the
+	# existing profiles; omitted or unknown families keep the legacy fallback.
+	match ground_family:
+		"water": return "water"
+		"grass": return "garden"
+		"earth": return "proving"
+		"paving", "worldbone": return "nexus"
 	if layout == null:
 		return "water"
 	var ordered: Array[String] = layout.districts_by_id.keys()
@@ -227,10 +236,10 @@ func receiving_surface_id_at(layout: SanctumCampusLayout, point: Vector2) -> Str
 	return "water"
 
 
-func receiving_shadow_sample(layout: SanctumCampusLayout, point: Vector2) -> Dictionary:
+func receiving_shadow_sample(layout: SanctumCampusLayout, point: Vector2, ground_family: String = "") -> Dictionary:
 	if language == null or receiving_shadow_profiles.is_empty():
 		return {}
-	var surface_id := receiving_surface_id_at(layout, point)
+	var surface_id := receiving_surface_id_at(layout, point, ground_family)
 	var profile: Dictionary = receiving_shadow_profiles.get(surface_id, {})
 	if profile.is_empty():
 		return {}

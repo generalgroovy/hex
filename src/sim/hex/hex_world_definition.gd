@@ -47,7 +47,12 @@ static func from_campus(layout: SanctumCampusLayout) -> HexWorldDefinition:
 				if point.x < bounds.position.x or point.y < bounds.position.y or point.x > bounds.end.x or point.y > bounds.end.y:
 					allowed = false
 			if not allowed: continue
+			var center := HexGrid.center(cell)
+			var envelope := Rect2i(center - Vector2i(HexGrid.HALF_WIDTH, HexGrid.HALF_HEIGHT), Vector2i(HexGrid.HALF_WIDTH * 2, HexGrid.HALF_HEIGHT * 2))
 			for rectangle: Rect2i in expanded_obstacles:
+				# Exact separating-axis work is only needed for nearby obstacles.
+				# Touching edges remain non-overlaps, matching the existing SAT rule.
+				if not envelope.intersects(rectangle): continue
 				if _overlaps_rectangle(polygon, rectangle):
 					allowed = false
 					break

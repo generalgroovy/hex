@@ -17,9 +17,9 @@ const MAX_PLAYERS: int = 8
 const MAX_REMOTE_CLIENTS: int = MAX_PLAYERS - 1
 const MAX_PACKET_BYTES: int = 8_192
 const ENET_MTU_BYTES: int = 1_392
-const MAX_SNAPSHOT_UNCOMPRESSED_BYTES: int = 32_768
+const MAX_SNAPSHOT_UNCOMPRESSED_BYTES: int = 65_536
 const SNAPSHOT_FRAGMENT_PAYLOAD_BYTES: int = 1_152
-const MAX_SNAPSHOT_FRAGMENTS: int = 32
+const MAX_SNAPSHOT_FRAGMENTS: int = 64
 const MAX_PENDING_SNAPSHOT_ASSEMBLIES: int = 3
 const SNAPSHOT_ASSEMBLY_TIMEOUT_MS: int = 350
 const MAX_PACKETS_PER_POLL: int = 64
@@ -122,7 +122,7 @@ const REQUEST_CHAMPION_SELECT: int = 8
 const REQUEST_WEAVE_APPLY: int = 9
 # Twelve weave positions x a bounded catalog lane. The request carries only a
 # library index; the host resolves it against the canonical runtime wire order.
-const MAX_SPELL_LIBRARY_SIZE: int = 64
+const MAX_SPELL_LIBRARY_SIZE: int = 512
 const MAX_SPELL_EQUIP_VALUE: int = PlayerState.SPELL_SLOT_COUNT * MAX_SPELL_LIBRARY_SIZE
 
 var peer: ENetMultiplayerPeer
@@ -646,12 +646,128 @@ func broadcast_envelope(envelope: Dictionary) -> bool:
 	var packets: Array[Dictionary] = _wire_packets(envelope, false, int(envelope.world_epoch), int(envelope.tick))
 	if packets.is_empty():
 		return false
+	if get_script() == load("res://src/net/session_transport.gd"):
+		return _broadcast_encoded_packets(packets)
+	# Extension scripts retain their existing _send_to override boundary.
 	var all_sent: bool = true
 	for peer_id: int in accepted_peer_ids:
 		for packet: Dictionary in packets:
+			all_sent = _send_to(peer_id, packet, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE, SNAPSHOT_CHANNEL) and all_sent
+	return all_sent
+
+
+# The source, not a caller-supplied envelope or validation token, crosses this
+# boundary. Extension transports retain the original virtual call sequence.
+func broadcast_session(source: AuthoritativeSession) -> bool:
+	if source == null:
+		return false
+	if get_script() != load("res://src/net/session_transport.gd") or not SessionTransport._owned_publication_eligible(source):
+		return broadcast_envelope(source.capture_envelope())
+	var publication := SessionTransport._capture_session_packets(source)
+	# Capture's opaque-data fallback may re-enter caller code. If that code
+	# installs an extension, preserve its original post-capture virtual dispatch,
+	# including an empty rejected capture, without capturing a second time.
+	if get_script() != load("res://src/net/session_transport.gd"):
+		return broadcast_envelope(publication.get("envelope", {}))
+	if publication.is_empty():
+		return false
+	var envelope: Dictionary = publication.envelope
+	# Capture historically precedes host/epoch/send checks and marks pending
+	# acknowledgement even when delivery fails. Only the caller acknowledges.
+	if not is_host() or int(envelope.world_epoch) != world_epoch:
+		return false
+	if (publication.packets as Array).is_empty():
+		return false
+	return _broadcast_encoded_packets(publication.packets)
+
+
+# A completed, detached diagnostic result, never an accepted trust input. Its
+# authority is created here and cannot escape before serialization and packing.
+# Public Dictionary capture/wrap/validate/pack methods retain all their checks.
+static func _capture_session_packets(source: AuthoritativeSession) -> Dictionary:
+	if source == null:
+		return {}
+	if not _owned_publication_eligible(source):
+		var fallback := source.capture_envelope()
+		var fallback_packets: Array[Dictionary] = []
+		if not fallback.is_empty():
+			fallback_packets = _envelope_wire_packets(fallback)
+		return {"envelope": fallback, "packets": fallback_packets} if not fallback_packets.is_empty() else {}
+	var authority := HexWorldSnapshotCodec.capture(source.world)
+	if authority.is_empty():
+		return {}
+	var metadata := AuthoritativeSession._capture_hex_session_metadata(source)
+	if not WorldSnapshotEnvelope._counter_valid(source.world_epoch) \
+		or not WorldSnapshotEnvelope._hex_authority_header_valid(authority) \
+		or not WorldSnapshotEnvelope._hex_session_valid(metadata, authority):
+		return {}
+	# Keep the public wrap_hex dictionary's exact insertion order and Variant
+	# types. These lanes are already detached and remain owned by this call.
+	var envelope := {
+		"schema": WorldSnapshotEnvelope.SCHEMA_VERSION,
+		"world_kind": WorldSnapshotEnvelope.WORLD_HEX,
+		"world_epoch": source.world_epoch,
+		"tick": int((authority.header as PackedInt64Array)[1]),
+		"authority": authority,
+		"session": metadata,
+	}
+	var raw := var_to_bytes(envelope)
+	if raw.is_empty() or raw.size() > WorldSnapshotEnvelope.MAX_RAW_BYTES:
+		return {}
+	source.snapshot_capture_pending_ack = true
+	var packets: Array[Dictionary] = _wire_packets_from_raw(raw, false, int(envelope.world_epoch), int(envelope.tick))
+	# Retain this valid captured envelope even if byte packing fails. A transport
+	# extension installed during capture must receive the same capture result as
+	# the old expression; ordinary delivery separately requires nonempty packets.
+	return {"envelope": envelope, "packets": packets}
+
+
+static func _owned_publication_eligible(source: AuthoritativeSession) -> bool:
+	if source == null or source.get_script() != load("res://src/net/authoritative_session.gd"):
+		return false
+	if source.hearth == null or source.hearth.get_script() != load("res://src/net/session_hearth.gd") \
+		or source.session_round == null or source.session_round.get_script() != load("res://src/net/session_round.gd"):
+		return false
+	var source_world: SimWorld = source.world
+	if source_world == null or source_world.get_script() != HexWorldSnapshotCodec.ConcreteWorld \
+		or source_world.hex_court == null or source_world.config == null or source_world.transition_policy == null:
+		return false
+	if source_world.hex_court.get_script() != HexWorldSnapshotCodec.HexWorld \
+		or source_world.config.get_script() != HexWorldSnapshotCodec.ConcreteConfig \
+		or source_world.transition_policy.get_script() != HexWorldSnapshotCodec.ConcreteTransitionPolicy:
+		return false
+	for actor: PlayerState in source_world.players:
+		if actor == null or actor.get_script() != HexWorldSnapshotCodec.ConcretePlayer: return false
+	for projectile: ProjectileState in source_world.projectiles:
+		if projectile == null or projectile.get_script() != HexWorldSnapshotCodec.ConcreteProjectile: return false
+	var base: CollisionWorld = source_world.collision
+	if base == null: return false
+	if base.get_script() == HexWorldSnapshotCodec.DynamicCollision:
+		base = (base as HexCollisionWorld).base_world
+	elif base.get_script() != HexWorldSnapshotCodec.ConcreteCollision:
+		return false
+	if base == null or base.get_script() != HexWorldSnapshotCodec.ConcreteCollision: return false
+	for obstacle: CollisionWorld.Obstacle in base.obstacle_view():
+		if obstacle == null or obstacle.get_script() != HexWorldSnapshotCodec.ConcreteCollision.Obstacle: return false
+	# Preserve extension dispatch without rescanning the potentially large live
+	# chemistry graph. HexSnapshot.capture alone owns its deep callback admission
+	# and complete reconstruction/final-source fallback. Either successful path
+	# returns freshly owned primitive-only authority, never an exposed live alias.
+	# Retain the small session-event guard for callbacks after authority capture.
+	return HexWorldSnapshotCodec._callback_free_authority(source.pending_combat_events)
+
+
+func _broadcast_encoded_packets(packets: Array[Dictionary]) -> bool:
+	var encoded_packets: Array[PackedByteArray] = []
+	if not accepted_peer_ids.is_empty():
+		for packet: Dictionary in packets:
+			encoded_packets.append(_encode_outgoing_packet(packet))
+	var all_sent: bool = true
+	for peer_id: int in accepted_peer_ids:
+		for encoded: PackedByteArray in encoded_packets:
 			# Ordering belongs to complete snapshot ticks, not individual fragments.
 			# Losing one fragment never blocks delivery of a newer complete frame.
-			all_sent = _send_to(peer_id, packet, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE, SNAPSHOT_CHANNEL) and all_sent
+			all_sent = _send_encoded_to(peer_id, encoded, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE, SNAPSHOT_CHANNEL) and all_sent
 	return all_sent
 
 
@@ -739,13 +855,38 @@ func _handle_packet(sender_id: int, packet_bytes: PackedByteArray) -> void:
 			_disconnect_with_error(administration_reason)
 			return
 		if kind == PACKET_SNAPSHOT:
-			_accept_envelope(_envelope_from_wire_packet(packet))
+			if _single_packet_is_fresh(packet, false):
+				_accept_envelope(_decode_received_single_packet(packet, false))
 		elif kind == PACKET_SNAPSHOT_FRAGMENT:
 			_accept_envelope(_envelope_from_fragment(packet))
 		elif kind == PACKET_RECONCILIATION:
-			_accept_reconciliation(_snapshot_from_wire_packet(packet, true), int(packet.get("world_epoch", -1)))
+			if _single_packet_is_fresh(packet, true):
+				_accept_reconciliation(_decode_received_single_packet(packet, true), int(packet.world_epoch))
 		elif kind == PACKET_RECONCILIATION_FRAGMENT:
 			_accept_reconciliation(_snapshot_from_fragment(packet, true), int(packet.get("world_epoch", -1)))
+
+
+func _single_packet_is_fresh(packet: Dictionary, reconciliation: bool) -> bool:
+	# These untrusted headers can only reject work. A fresh tuple still passes
+	# the complete decoder and acceptance checks before any cursor is changed.
+	for key: String in ["kind", "world_epoch", "tick"]:
+		if typeof(packet.get(key)) != TYPE_INT:
+			return false
+	var packet_epoch: int = int(packet.world_epoch)
+	var packet_tick: int = int(packet.tick)
+	if (
+		int(packet.kind) != (PACKET_RECONCILIATION if reconciliation else PACKET_SNAPSHOT)
+		or packet_epoch < 0 or packet_epoch > WorldSnapshotEnvelope.MAX_EPOCH
+		or packet_tick < 0 or packet_tick > WorldSnapshotEnvelope.MAX_TICK
+	):
+		return false
+	if reconciliation:
+		return packet_epoch == world_epoch and _pair_after(packet_epoch, packet_tick, _last_reconciliation_epoch, _last_reconciliation_tick)
+	return (world_epoch < 0 or packet_epoch >= world_epoch) and _pair_after(packet_epoch, packet_tick, _last_snapshot_epoch, _last_snapshot_tick)
+
+
+func _decode_received_single_packet(packet: Dictionary, reconciliation: bool) -> Dictionary:
+	return _snapshot_from_wire_packet(packet, true) if reconciliation else _envelope_from_wire_packet(packet)
 
 
 func _handle_hello(sender_id: int, packet: Dictionary) -> void:
@@ -922,7 +1063,30 @@ func _send_to(
 		return false
 	if mode == Mode.CLIENT and peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
 		return false
-	var encoded: PackedByteArray = var_to_bytes(packet)
+	var encoded: PackedByteArray = _encode_outgoing_packet(packet)
+	if encoded.is_empty() or encoded.size() > MAX_PACKET_BYTES:
+		return false
+	return _send_encoded_to(target_peer_id, encoded, transfer_mode, transfer_channel)
+
+
+func _encode_outgoing_packet(packet: Dictionary) -> PackedByteArray:
+	return var_to_bytes(packet)
+
+
+func _send_encoded_to(
+	target_peer_id: int,
+	encoded: PackedByteArray,
+	transfer_mode: int = MultiplayerPeer.TRANSFER_MODE_RELIABLE,
+	transfer_channel: int = 0,
+) -> bool:
+	# Check the actual send boundary, including after encoding. Reusing bytes
+	# does not reuse permission to send or assume the peer is still connected.
+	if peer == null:
+		return false
+	if mode in [Mode.CONNECTING, Mode.CLIENT] and _server_disconnect_pending:
+		return false
+	if mode == Mode.CLIENT and peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
+		return false
 	if encoded.is_empty() or encoded.size() > MAX_PACKET_BYTES:
 		return false
 	peer.set_target_peer(target_peer_id)
@@ -968,6 +1132,15 @@ static func _wire_packets(payload_value: Dictionary, reconciliation: bool, packe
 	if packet_epoch < 0 or packet_epoch > WorldSnapshotEnvelope.MAX_EPOCH or payload_tick < 0 or payload_tick > WorldSnapshotEnvelope.MAX_TICK:
 		return []
 	var raw: PackedByteArray = var_to_bytes(payload_value)
+	return _wire_packets_from_raw(raw, reconciliation, packet_epoch, payload_tick)
+
+
+# Shared bounded byte packing, not authority validation. The public callers
+# validate their mutable Dictionary first; owned publication serializes its
+# freshly captured, checked envelope immediately before calling this helper.
+static func _wire_packets_from_raw(raw: PackedByteArray, reconciliation: bool, packet_epoch: int, payload_tick: int) -> Array[Dictionary]:
+	if packet_epoch < 0 or packet_epoch > WorldSnapshotEnvelope.MAX_EPOCH or payload_tick < 0 or payload_tick > WorldSnapshotEnvelope.MAX_TICK:
+		return []
 	if raw.is_empty() or raw.size() > (MAX_PACKET_BYTES if reconciliation else MAX_SNAPSHOT_UNCOMPRESSED_BYTES):
 		return []
 	var compressed: PackedByteArray = raw.compress(FileAccess.COMPRESSION_FASTLZ)
@@ -1649,7 +1822,7 @@ static func _valid_input_packet(packet: Dictionary) -> bool:
 			return false
 	var held: int = int(packet["held"])
 	var pressed: int = int(packet["pressed"])
-	return held >= 0 and held <= 0xffff and pressed >= 0 and pressed <= 0x1ffff
+	return held >= 0 and held <= 0xffff and pressed >= 0 and pressed <= 0x3ffff
 
 
 static func _valid_request_packet(packet: Dictionary) -> bool:

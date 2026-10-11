@@ -1,0 +1,412 @@
+{
+  "utc": "2026-09-23T19:06:31.022898+00:00",
+  "root": "C:\\Users\\sende\\Projects\\hex",
+  "origin": "https://github.com/generalgroovy/hex.git",
+  "head": "1559a566e33255c59337c5963f1c3c685d757f1f",
+  "branch": "main",
+  "status": [
+    "M .agent/HEX-RESUME.md",
+    " M .agent/OVERHAUL-IMPLEMENTATION.md",
+    " M .agent/OVERHAUL-PROMPT.md",
+    " M README.md",
+    " M SPECIFICATION.md",
+    " M content/runtime/runtime_build_identity_v1.json",
+    " M docs/HEX-PLAYTEST.md",
+    " M scripts/package-hex.ps1",
+    " M src/app/bootstrap.gd",
+    " M src/app/character_weave_policy.gd",
+    " M src/app/spell_loom_editor.gd",
+    " M src/net/hex_chemistry_snapshot.gd",
+    " M src/presentation/hex_court_presenter.gd",
+    " M src/presentation/sanctum_campus_renderer.gd",
+    " M src/presentation/sight_occlusion.gd",
+    " M src/presentation/spell_loom_presenter.gd",
+    " M src/presentation/wellspring_illustrated_kit.gd",
+    " M src/sim/hex/hex_chemistry_world.gd",
+    " M tests/run_all.gd",
+    " M tests/support/chemistry_coach_harness.gd",
+    " M tests/unit/test_character_weave_integration.gd",
+    " M tests/unit/test_character_weave_policy.gd",
+    " M tests/unit/test_hex_snapshot_optimization.gd",
+    " M tests/unit/test_pov_presentation.gd",
+    " M tests/unit/test_sight_occlusion.gd",
+    " M tests/unit/test_spell_loom_editor.gd",
+    " M tests/unit/test_weave_acknowledgement.gd",
+    "?? .agent/archive/hex-before-design-20260923.md",
+    "?? assets/sprites/hex_water_pilot_v1/",
+    "?? docs/verification/hex-acceptance-20260921/",
+    "?? docs/verification/hex-design-20260923/",
+    "?? docs/verification/hex-gallery-availability-20260923/",
+    "?? docs/verification/hex-hash-20260923/",
+    "?? docs/verification/hex-loom-availability-20260923/",
+    "?? docs/verification/hex-render-frame-20260923/",
+    "?? docs/verification/hex-responsive-20260923/",
+    "?? docs/verification/hex-viewport-20260923/",
+    "?? reference/acceptance-20260921/",
+    "?? scripts/open-native-acceptance.ps1",
+    "?? scripts/test-loom-journey.ps1",
+    "?? scripts/test-movement-cast-journey.ps1",
+    "?? src/presentation/hex_water_material_presenter.gd",
+    "?? src/presentation/hex_water_material_presenter.gd.uid",
+    "?? src/presentation/pov_terrain_backdrop.gd",
+    "?? src/presentation/pov_terrain_backdrop.gd.uid",
+    "?? tests/diagnostics/hex_geometry_comparison_20260923.gd",
+    "?? tests/diagnostics/hex_geometry_comparison_20260923.gd.uid",
+    "?? tests/diagnostics/loom_availability_journey.gd",
+    "?? tests/diagnostics/loom_availability_journey.gd.uid",
+    "?? tests/diagnostics/loom_character_journey.gd",
+    "?? tests/diagnostics/loom_character_journey.gd.uid",
+    "?? tests/diagnostics/loom_player_journey.gd",
+    "?? tests/diagnostics/loom_player_journey.gd.uid",
+    "?? tests/diagnostics/movement_advanced_journey.gd",
+    "?? tests/diagnostics/movement_advanced_journey.gd.uid",
+    "?? tests/diagnostics/movement_cast_journey.gd",
+    "?? tests/diagnostics/movement_cast_journey.gd.uid",
+    "?? tests/performance/profile_hex_draw_components.gd",
+    "?? tests/performance/profile_hex_draw_components.gd.uid",
+    "?? tests/performance/profile_hex_hash_candidate.gd",
+    "?? tests/performance/profile_hex_hash_candidate.gd.uid",
+    "?? tests/performance/profile_hex_hash_integrated.gd",
+    "?? tests/performance/profile_hex_hash_integrated.gd.uid",
+    "?? tests/performance/profile_hex_hash_stages.gd",
+    "?? tests/performance/profile_hex_hash_stages.gd.uid",
+    "?? tests/performance/profile_hex_ordered_geometry_candidate.gd",
+    "?? tests/performance/profile_hex_ordered_geometry_candidate.gd.uid",
+    "?? tests/performance/profile_hex_render_frame_candidate.gd",
+    "?? tests/performance/profile_hex_render_frame_candidate.gd.uid",
+    "?? tests/performance/profile_hex_render_frame_native_candidate.gd",
+    "?? tests/performance/profile_hex_render_frame_native_candidate.gd.uid",
+    "?? tests/performance/profile_hex_snapshot_lifetime.gd",
+    "?? tests/performance/profile_hex_snapshot_lifetime.gd.uid",
+    "?? tests/performance/profile_hex_trusted_cells.gd",
+    "?? tests/performance/profile_hex_trusted_cells.gd.uid",
+    "?? tests/performance/profile_hex_viewport_candidate.gd",
+    "?? tests/performance/profile_hex_viewport_candidate.gd.uid",
+    "?? tests/performance/profile_hex_wire_decode_candidate.gd",
+    "?? tests/performance/profile_hex_wire_decode_candidate.gd.uid",
+    "?? tests/support/hex_draw_component_harness.gd",
+    "?? tests/support/hex_draw_component_harness.gd.uid",
+    "?? tests/support/hex_ordered_geometry_candidate.gd",
+    "?? tests/support/hex_ordered_geometry_candidate.gd.uid",
+    "?? tests/support/hex_render_frame_candidate.gd",
+    "?? tests/support/hex_render_frame_candidate.gd.uid",
+    "?? tests/support/hex_render_frame_native_presenter.gd",
+    "?? tests/support/hex_render_frame_native_presenter.gd.uid",
+    "?? tests/support/hex_stable_cells_candidate.gd",
+    "?? tests/support/hex_stable_cells_candidate.gd.uid",
+    "?? tests/support/hex_trusted_cells_legacy_oracle.gd",
+    "?? tests/support/hex_trusted_cells_legacy_oracle.gd.uid",
+    "?? tests/support/hex_viewport_candidate.gd",
+    "?? tests/support/hex_viewport_candidate.gd.uid",
+    "?? tests/support/hex_viewport_harness.gd",
+    "?? tests/support/hex_viewport_harness.gd.uid",
+    "?? tests/support/hex_wire_decode_candidate.gd",
+    "?? tests/support/hex_wire_decode_candidate.gd.uid",
+    "?? tests/unit/test_hex_hash_specialization.gd",
+    "?? tests/unit/test_hex_hash_specialization.gd.uid",
+    "?? tests/unit/test_hex_render_frame.gd",
+    "?? tests/unit/test_hex_render_frame.gd.uid",
+    "?? tests/unit/test_hex_water_pilot.gd",
+    "?? tests/unit/test_hex_water_pilot.gd.uid",
+    "?? tests/visual/capture_station_fog_labels.gd",
+    "?? tests/visual/capture_station_fog_labels.gd.uid",
+    "?? tests/visual/capture_terrain_visibility.gd",
+    "?? tests/visual/capture_terrain_visibility.gd.uid",
+    "?? tests/visual/capture_water_pilot.gd",
+    "?? tests/visual/capture_water_pilot.gd.uid"
+  ],
+  "staged": [],
+  "runtime_identity": {
+    "schema_version": 1,
+    "status": "candidate_generated_not_promoted",
+    "scope_id": "production-runtime-source-v1",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "protocol_version": 55,
+    "snapshot_schema": 21,
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "record_count": 2800,
+    "runtime_source_sha256": "c5d0f6accb97756c003bf3e72203b430883a178c745342c9b269864be5e91619",
+    "build_id": "p55-c5d0f6accb97",
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate."
+  },
+  "protected": [
+    {
+      "path": ".git/index",
+      "sha256": "0827e9a3eaaee34189d7855c250fb9c7ff36685ceb42aee9d09b8781af3c415e"
+    },
+    {
+      "path": "docs/current-checkpoint.json",
+      "sha256": "d1bfaae39dfcb415ce91587237056e6a21aa85b688cc0dbea187a8f5484c8e9f"
+    },
+    {
+      "path": "exports/hex-visibility-20260923/windows/hex.pck",
+      "sha256": "d7d0ce0c2fabb7aed377e2f08f72c407d5d5ce7becf31e6a3598b442870b56b8"
+    },
+    {
+      "path": "exports/hex-visibility-20260923/HEX-p55-ede24ea44158-Windows-x64.zip",
+      "sha256": "e314659eb20eee7d23093b62df50a19cd07e5b27eb63f11dad6d151efc0763a3"
+    },
+    {
+      "path": "exports/hex-loom-fix-20260921/windows/hex.pck",
+      "sha256": "9540681ef8a9bf7b62a6581cab7c608850f1c34dd101d13a3dc6a6009aa9bb2c"
+    },
+    {
+      "path": "assets/sprites/hex_water_pilot_v1/manifest.json",
+      "sha256": "33c59cb56cb4ad83db1e4fcdf18fb575c47797ee642d4d74f213c7e0c53408d2"
+    },
+    {
+      "path": "assets/sprites/hex_water_pilot_v1/water-normal.png",
+      "sha256": "e1fcfe9050503b01186ecc465e064eb11a30986666e41615f97e5e0061ecce76"
+    },
+    {
+      "path": "assets/sprites/hex_water_pilot_v1/water-normal.png.import",
+      "sha256": "ad90a267d1f057273337a41bf1a376e6b8603e09acfc485d40616e182fadf8ae"
+    },
+    {
+      "path": "assets/sprites/hex_water_pilot_v1/water-reduced.png",
+      "sha256": "0cbd1a1a207a282d6c8224e338313d458331c0cd11e60ee6fc78a57b3f0d0a8b"
+    },
+    {
+      "path": "assets/sprites/hex_water_pilot_v1/water-reduced.png.import",
+      "sha256": "8ba11afe13bf9ed553d38c7f06a638d7c0eaf694e597409e8e27ff0445cc4380"
+    },
+    {
+      "path": "src/net/hex_chemistry_snapshot.gd",
+      "sha256": "722cdc67a124645f1656b14fc602158fd50e72459f349f4780ef85625e7ed4f1"
+    },
+    {
+      "path": "src/presentation/hex_water_material_presenter.gd",
+      "sha256": "487e0b674476f6fb125ee97a2b7136d8236c3f58b8cabf85d0b62f49c9bbc8c2"
+    },
+    {
+      "path": "src/presentation/hex_water_material_presenter.gd.uid",
+      "sha256": "8c1e6b31b6e7778e1bcb19404e803cb50ce77401dce1bec097bf690710d95937"
+    },
+    {
+      "path": "src/presentation/pov_terrain_backdrop.gd",
+      "sha256": "85376d18da34018b0b4a56eec1fa5feb9f822659bbedd59d9ebd77ecdc6c9630"
+    },
+    {
+      "path": "src/presentation/pov_terrain_backdrop.gd.uid",
+      "sha256": "357adbf2f02e5d4b4e239f91164ae19b363cf7f6b4f43d545640e224daf720bd"
+    },
+    {
+      "path": "src/presentation/sanctum_campus_renderer.gd",
+      "sha256": "7403869f731e655091e4a685994ddca0dc471dc9db12b8605d578a70100f107b"
+    },
+    {
+      "path": "src/presentation/sight_occlusion.gd",
+      "sha256": "48d6a7c8f23aff0a22bf24ff11fafa99a966dc02efa97aa1a62b295d8f56c047"
+    },
+    {
+      "path": "src/presentation/wellspring_illustrated_kit.gd",
+      "sha256": "b6fdf5cb5810a67923b0feeca5cbc777ab286d6a420d662917810e5918a42ec3"
+    },
+    {
+      "path": "src/sim/hex/hex_chemistry_world.gd",
+      "sha256": "7582964d1c889f1ceaf5114ff6600eb3ead842318e4cf6db95aed1d82985cb7b"
+    },
+    {
+      "path": "tests/unit/test_hex_hash_specialization.gd",
+      "sha256": "4f0722274830d45739c83fdaa2db780759ed7ac08aef97833b2401250c72b187"
+    },
+    {
+      "path": "tests/support/hex_stable_cells_candidate.gd",
+      "sha256": "4dde73bf6ceb9354d740669a46253983c2e6166624cb4f27005c943d593f7ffa"
+    },
+    {
+      "path": "tests/performance/profile_hex_hash_candidate.gd",
+      "sha256": "723f91ecf74b2ea62fdf296cb124ad929dddd27b5ea000387c1413fa818885e1"
+    },
+    {
+      "path": "tests/performance/profile_hex_hash_integrated.gd",
+      "sha256": "3086e24816751180d8461f23b36ea94d9b9f415db16c2abacfe88e1abe011246"
+    },
+    {
+      "path": "exports/hex-hash-20260923/windows/hex.pck",
+      "sha256": "72a819c26adef5557bb416a96380ad4a4cd3327096d5f2424777e41d9272deb8"
+    },
+    {
+      "path": "exports/hex-hash-20260923/HEX-p55-a9837cac9e8c-Windows-x64.zip",
+      "sha256": "e67e92e1ebabc8b68183d741f0d972b220c0e35c8a77b48fd7f4c9422e69aaaa"
+    },
+    {
+      "path": "src/presentation/hex_court_presenter.gd",
+      "sha256": "57926b68365d872a71224a52d6560ae9a0c0119f8533cb5a99ee60291da5621a"
+    },
+    {
+      "path": "tests/unit/test_hex_render_frame.gd",
+      "sha256": "ff096a9ddc474d855585a253418c05eb09899fbaea8f016f5e82d95c4a8a3457"
+    },
+    {
+      "path": "tests/support/hex_render_frame_candidate.gd",
+      "sha256": "751390e94fc0a13a11bcab52bf2ceafb67ace5da1396953c1873ffc7175940a7"
+    },
+    {
+      "path": "tests/performance/profile_hex_render_frame_candidate.gd",
+      "sha256": "d2cbea1eb6acb1c8e6c1d69ea92509504e6b4c2d82f3e91dfca0d1e34e74156a"
+    },
+    {
+      "path": "tests/support/hex_render_frame_native_presenter.gd",
+      "sha256": "5a94292b0085cfa02637070a240a02f8556dbab2c827fd74a4ff29df0f3d01e7"
+    },
+    {
+      "path": "tests/performance/profile_hex_render_frame_native_candidate.gd",
+      "sha256": "ef3fea01688d85bb39442ba038a8569303a44b400129b8ed1e5de0b0bfef76b8"
+    },
+    {
+      "path": "tests/support/hex_draw_component_harness.gd",
+      "sha256": "7c4eb030383be541f4e6a5ee134dd94283587b3b33d2a926de92aec65ad31ca7"
+    },
+    {
+      "path": "tests/performance/profile_hex_draw_components.gd",
+      "sha256": "393cebb00b2dddef91997d13b13f9d1571b337bc98db53ba6a0dcb07e323576a"
+    },
+    {
+      "path": "tests/performance/profile_unified_wellspring_rendered.gd",
+      "sha256": "ba398dabdeccf38c4ffd9478534f8c2a3d4672da72289a87a60a5a779377f680"
+    },
+    {
+      "path": "tests/support/hex_wire_decode_candidate.gd",
+      "sha256": "a068d5386ca90ef21cf9589b2e1263ee0e9d84ad9f2f36feff319d80fc5ee880"
+    },
+    {
+      "path": "exports/hex-render-frame-20260923/windows/hex.pck",
+      "sha256": "affbbb58a4b490cdd2b465709bbe45a1225bf9652ae0d19cd717ea6ccec29211"
+    },
+    {
+      "path": "exports/hex-render-frame-20260923/HEX-p55-1b26a51136d1-Windows-x64.zip",
+      "sha256": "60c7668db7233c76dfd7349d473957aea712742a486a76e530f6f02bee2bfd85"
+    },
+    {
+      "path": "tests/support/hex_ordered_geometry_candidate.gd",
+      "sha256": "6811f3c4ac5ef7adc602ff0cdd75449670d4ac401031291437a40d70a25a503c"
+    },
+    {
+      "path": "tests/performance/profile_hex_ordered_geometry_candidate.gd",
+      "sha256": "1b3f6b5094a520ed44329a86ff9bfb35d82ea3e639362ad1df29eb384a305be3"
+    },
+    {
+      "path": "src/app/character_weave_policy.gd",
+      "sha256": "eb5a5aef9efb58aa42e42bbd2440aad3ac0cf5e8a873d7231df285e828b9b919",
+      "preserved": "final-freeze-v2/source/src/app/character_weave_policy.gd"
+    },
+    {
+      "path": "src/app/spell_loom_editor.gd",
+      "sha256": "e54ade871ab1d8c0a0b6b80ea8ae56150d1551ac580986fc69ba676c0f1098a8",
+      "preserved": "final-freeze-v2/source/src/app/spell_loom_editor.gd"
+    },
+    {
+      "path": "src/presentation/spell_loom_presenter.gd",
+      "sha256": "4ef42b7e66c0a11d1ba424f9f7e1a56e3c8eefb0221e0e425e3c90f5156509c9",
+      "preserved": "final-freeze-v2/source/src/presentation/spell_loom_presenter.gd"
+    },
+    {
+      "path": "tests/unit/test_character_weave_policy.gd",
+      "sha256": "368fd4f349464d5dbbad437ce608a02c707cc95b341b077dccebd8f68c8f8b58",
+      "preserved": "final-freeze-v2/source/tests/unit/test_character_weave_policy.gd"
+    },
+    {
+      "path": "tests/unit/test_spell_loom_editor.gd",
+      "sha256": "7ed71b62f569b14c34c90bac6b2781184f40f3b59af85d65e9a97e911079fa54",
+      "preserved": "final-freeze-v2/source/tests/unit/test_spell_loom_editor.gd"
+    },
+    {
+      "path": "tests/unit/test_weave_acknowledgement.gd",
+      "sha256": "f2a066b0f8cc5ce85d09a40af505ab0d363f3ee9e593dba34d090a5bb1e92582",
+      "preserved": "final-freeze-v2/source/tests/unit/test_weave_acknowledgement.gd"
+    },
+    {
+      "path": "tests/diagnostics/loom_availability_journey.gd",
+      "sha256": "7fcafe741e0377b2d814fd7714c91261c2d1089798e006082613fa0362a1416e",
+      "preserved": "final-freeze-v2/source/tests/diagnostics/loom_availability_journey.gd"
+    },
+    {
+      "path": "tests/run_all.gd",
+      "sha256": "6f6bdda69f3f3162efda4c05a3afae5c3ef695c40eb1e5b9f29c7d1e062457b3",
+      "preserved": "baseline-source/tests/run_all.gd"
+    },
+    {
+      "path": "tests/support/hex_viewport_candidate.gd",
+      "sha256": "042d4a57047241eafb14a054de43c6375a45f522e54d0cef35e5ec5da97e328f"
+    },
+    {
+      "path": "tests/support/hex_viewport_harness.gd",
+      "sha256": "0288de2e09227f855aa58c1ff145861e82cf262362175dd885febead6da38180"
+    },
+    {
+      "path": "tests/performance/profile_hex_viewport_candidate.gd",
+      "sha256": "67ed91ad1e896f73d21adfea9cbcc03a558657be9ee0639ad856bbcbc3cd6e2f"
+    },
+    {
+      "path": "src/app/character_selection_model.gd",
+      "sha256": "08aa3f3d78d6278a205124ded1a488895a5446eaee155ff84b07552386c617bc"
+    },
+    {
+      "path": "exports/hex-loom-availability-20260923-v2/windows/hex.pck",
+      "sha256": "8102d44fae3d79040bb54e111462e8bf3dbdc5ba1c465ea7f5a9861720014057"
+    },
+    {
+      "path": "exports/hex-loom-availability-20260923-v2/HEX-p55-c5d0f6accb97-Windows-x64.zip",
+      "sha256": "a380edd4dfa51a99293b77fb70042a6bd08ae3c64da6e68cc1b84322c20631d9"
+    }
+  ],
+  "baseline_sources": [
+    {
+      "path": "src/app/bootstrap.gd",
+      "sha256": "838c42d202e7fc04f5396d44f627c806849e9b9270427ae3b049a329fa6aeafc",
+      "preserved": "baseline-source/src/app/bootstrap.gd"
+    },
+    {
+      "path": "src/presentation/character_selection_grid.gd",
+      "sha256": "795edf419d9f8e2fbf933959d6125e13d1e795d9d53875af91be99b452d2ea64",
+      "preserved": "baseline-source/src/presentation/character_selection_grid.gd"
+    },
+    {
+      "path": "tests/unit/test_character_selection_grid.gd",
+      "sha256": "44efe2ca0b940d9f54ad388ed421e19d735e26bd0e2305b904783a36f60d4612",
+      "preserved": "baseline-source/tests/unit/test_character_selection_grid.gd"
+    },
+    {
+      "path": "tests/unit/test_character_gallery_integration.gd",
+      "sha256": "523843901e815c2202510f8834c5fb4cf03b75c4b1fae53f0d05c9dd147b727f",
+      "preserved": "baseline-source/tests/unit/test_character_gallery_integration.gd"
+    },
+    {
+      "path": "content/runtime/runtime_build_identity_v1.json",
+      "sha256": "055f62bbfdd4843078ad2313c3de854888f80c9239e67bcf637a93fc795eb67b",
+      "preserved": "baseline-source/content/runtime/runtime_build_identity_v1.json"
+    },
+    {
+      "path": "scripts/package-hex.ps1",
+      "sha256": "bb1c8d7a577b0f9634aac7804eac7d2d6c6e0320871f84fbb06beeab607a395b",
+      "preserved": "baseline-source/scripts/package-hex.ps1"
+    },
+    {
+      "path": "README.md",
+      "sha256": "679785b10efa10b48d4346d5f55e83bc239aee399ed5a5ea8dcc39b149994556",
+      "preserved": "baseline-source/README.md"
+    },
+    {
+      "path": "SPECIFICATION.md",
+      "sha256": "4ee6df0ad337ab7011eca74613402e8721b08454e0844ead7576a70c869d9ec9",
+      "preserved": "baseline-source/SPECIFICATION.md"
+    },
+    {
+      "path": "docs/HEX-PLAYTEST.md",
+      "sha256": "42b6044ac65af743d18ad8dff070a4906fb3c5368a162ddf8c0a5ee6a9fc7efe",
+      "preserved": "baseline-source/docs/HEX-PLAYTEST.md"
+    },
+    {
+      "path": ".agent/HEX-RESUME.md",
+      "sha256": "76e5a97c0913158bc9ab1325e6bd9806839c8b6939ae7ea3125ad6de4b72376b",
+      "preserved": "baseline-source/.agent/HEX-RESUME.md"
+    },
+    {
+      "path": ".agent/OVERHAUL-IMPLEMENTATION.md",
+      "sha256": "b160ad3a2786efaeb1e7048a554807a0e0bc16fd7d6c888c6f4ed87f2b3737ec",
+      "preserved": "baseline-source/.agent/OVERHAUL-IMPLEMENTATION.md"
+    }
+  ],
+  "scope": "E2 contextual Gallery availability using existing admission rules; root only engine owner; E1 preserved playable package."
+}

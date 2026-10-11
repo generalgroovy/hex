@@ -2,11 +2,16 @@ class_name HexChemistryWorld
 extends RefCounted
 @warning_ignore_start("integer_division")
 
+const Funding = preload("res://src/sim/hex/hex_reaction_funding.gd")
+const ReactionDamage = preload("res://src/sim/hex/hex_reaction_damage.gd")
+const Fusion = preload("res://src/sim/hex/hex_reaction_fusion.gd")
 const Grid = preload("res://src/sim/hex/hex_grid.gd")
 const StrengthLedger = preload("res://src/sim/combat/strength_budget.gd")
 const Policy = preload("res://src/sim/hex/hex_recipe_policy.gd")
 const Parts = preload("res://src/sim/hex/hex_cast_parts.gd")
-const MAX_CELLS := 4096 # Bounded map topology, not a per-effect/material allowance.
+const CellTopology = preload("res://src/sim/hex/hex_cell_topology.gd")
+const CanonicalState = preload("res://src/sim/hex/hex_canonical_state.gd")
+const MAX_CELLS := 65_536 # Sparse topology; u16 indices, unchanged paid cast/product budgets.
 const MAX_CASTS := 64
 const MAX_PRODUCTS := 32
 const MATTER_PER_CAST := 600
@@ -15,22 +20,39 @@ const FIRE_TICKS := 480
 const IGNITION_TICKS := 24
 const COOLING_TICKS := 60
 const STEAM_TICKS := 600
-const MEDIUM_RADIUS := 64_000
+const MEDIUM_RADIUS := Policy.MEDIUM_RADIUS
 const MEDIUM_FORMATION_TICKS := 24
 const MEDIUM_ACTIVE_TICKS := 360
 const MEDIUM_DECAY_TICKS := 60
 const CONFLAGRATION_WIRE := 309
 const STEAM_WIRE := 310
-const FLOOD_WIRE := 316
+const FROSTWAY_WIRE := 316
 const PULSE_TICKS := 30
 const STEAM_HEIGHT := 48_000
 const EXPOSURE_CAP := 240
-const COVERAGE := {"rapid": 1, "bolt": 3, "spray": 5, "heavy": 7}
+const COVERAGE := {"rapid": 1, "bolt": 3, "spray": 5, "heavy": 7, "mantle": 3, "fuse": 7, "split": 3, "rebound": 3}
 const WATER := 3
 const FIRE := 2
 
-var origin := Vector2i.ZERO
-var cells: Dictionary = {}
+# Pure canonical text for bounded, integer-only blank rows. Shared by detached
+# restores, but never contains authority dictionaries or a cached whole hash.
+static var _canonical_blank_rows: Dictionary = {}
+
+var origin := Vector2i.ZERO:
+	set(value):
+		if value != origin and _cell_topology != null: _materialize_cells()
+		origin = value
+# Compatibility/editor boundary. A writable full-map view permanently leaves
+# sealed mode, preserving old direct-mutation semantics without stale trust.
+var cells: Dictionary:
+	get: return _materialize_cells()
+	set(value):
+		_cell_topology = null
+		_sparse_cells = {}
+		_legacy_cells = value
+var _cell_topology: HexCellTopology = null
+var _sparse_cells: Dictionary = {}
+var _legacy_cells: Dictionary = {}
 var casts: Dictionary = {}
 var products: Dictionary = {}
 var pending: Dictionary = {}
@@ -44,6 +66,9 @@ var render_revision := 0 # Geometry/layout only; layer changes never rebuild top
 var value_revision := 0
 var _render_polygon_revision := -1 # Presentation cache, excluded from authority hash.
 var _render_polygons: Dictionary = {}
+var _hash_cell_order: Array = [] # Verified key membership only; values are never cached.
+var _occupied_sources: Array = [] # Detached coverage-only cache; not authoritative.
+var _occupied_membership: Dictionary = {}
 var chemistry_enabled := false
 var collision: CollisionWorld = null # Trusted worldbone, never remote geometry.
 var next_ground_part_id := 1
@@ -57,45 +82,122 @@ func configure_geometry(requested_origin: Vector2i, eligible_cells: Array[Vector
 		return false
 	var prepared := {}
 	var ordered := eligible_cells.duplicate()
-	ordered.sort_custom(Grid._cell_less)
-	# Every cell has the same empty material shape at construction. Build that
-	# shape once, then deep-duplicate it so the 44 mutable material dictionaries
-	# remain independently owned by each cell and each configured world.
-	var empty_cell := _new_empty_cell()
+	ordered.sort() # Native Vector2i order is the same x-then-y geometry order.
+	# Empty terrain carries only its three metadata values. Material dictionaries
+	# are allocated on first deposit and removed when the last owner leaves.
 	for cell: Vector2i in ordered:
-		if absi(cell.x) > 256 or absi(cell.y) > 256 or not Grid._query_point_valid(Grid.center(cell) + requested_origin) or prepared.has(cell):
+		if absi(cell.x) > Grid.MAX_ABS_CELL_COORDINATE or absi(cell.y) > Grid.MAX_ABS_CELL_COORDINATE or not Grid._query_point_valid(Grid.center(cell) + requested_origin) or prepared.has(cell):
 			return false
-		prepared[cell] = empty_cell.duplicate(true)
+		prepared[cell] = true
 	origin = requested_origin
-	cells = prepared
+	_cell_topology = CellTopology.build(origin, ordered)
+	_sparse_cells = {}
+	_legacy_cells = {}
 	_render_polygon_revision = -1
 	_render_polygons.clear()
+	_hash_cell_order.clear()
 	return true
 
 
+func immutable_topology() -> HexCellTopology:
+	# Extension scripts retain legacy full validation, even if they borrow a
+	# concrete world's methods. Read helpers are virtual in GDScript.
+	if get_script().resource_path != "res://src/sim/hex/hex_chemistry_world.gd": return null
+	if _cell_topology != null and (_cell_topology.get_script() != CellTopology or _cell_topology.origin_value() != origin): return null
+	return _cell_topology
+
+
+func cell_count() -> int:
+	return _legacy_cells.size() if _cell_topology == null else _cell_topology.metadata().size()
+
+
+func has_cell(cell: Vector2i) -> bool:
+	return _legacy_cells.has(cell) if _cell_topology == null else _cell_topology.metadata().has(cell)
+
+
+func cell_keys() -> Array:
+	return _legacy_cells.keys() if _cell_topology == null else _cell_topology.numeric_cells()
+
+
+func topology_cells_view() -> Dictionary:
+	return _legacy_cells if _cell_topology == null else _cell_topology.metadata()
+
+
+func dynamic_cell_keys() -> Array:
+	return _legacy_cells.keys() if _cell_topology == null else _sparse_cells.keys()
+
+
+func cell_record(cell: Vector2i) -> Dictionary:
+	if _cell_topology == null: return _legacy_cells[cell]
+	return _sparse_cells[cell] if _sparse_cells.has(cell) else _cell_topology.metadata()[cell]
+
+
+# Malformed legacy editor/test rows must remain observable by tolerant render
+# and validation callers instead of causing a typed-return error first.
+func cell_record_value(cell: Vector2i) -> Variant:
+	return _legacy_cells[cell] if _cell_topology == null else cell_record(cell)
+
+
+func _materialize_cells() -> Dictionary:
+	if _cell_topology != null:
+		var materialized := {}
+		for cell: Vector2i in _cell_topology.numeric_cells():
+			# Preserve this world's existing dynamic aliases; metadata consists of
+			# immutable integers. Sibling worlds already own distinct layer maps.
+			materialized[cell] = cell_record(cell).duplicate()
+		_legacy_cells = materialized
+		_cell_topology = null
+		_sparse_cells = {}
+	return _legacy_cells
+
+
+func blank_cell_storage_to(target: HexChemistryWorld) -> bool:
+	if immutable_topology() == null or target == self: return false
+	target.origin = origin
+	target._cell_topology = _cell_topology
+	target._sparse_cells = {}
+	target._legacy_cells = {}
+	target._hash_cell_order.clear()
+	return true
+
+
+func clone_cell_storage_to(target: HexChemistryWorld) -> void:
+	if target == self: return
+	if blank_cell_storage_to(target):
+		for cell: Vector2i in _sparse_cells:
+			var row: Dictionary = _sparse_cells[cell].duplicate(true)
+			row.make_read_only()
+			target._sparse_cells[cell] = row
+	else:
+		target.origin = origin
+		target.cells = _materialize_cells().duplicate(true)
+
+
 func occupied_cells() -> Dictionary:
-	var result := {}
+	var selected: Array = []
 	for record: Dictionary in casts.values():
-		for cell: Vector2i in record.get("coverage", {}): result[cell] = 1
+		selected.append(record.get("coverage", {}))
 	for record: Dictionary in products.values():
-		for cell: Vector2i in coverage(record): result[cell] = 1
-	return result
+		selected.append(coverage(record))
+	# Compare actual coverage, not a revision that test/restore/direct mutation
+	# could bypass. Native deep comparison avoids rebuilding the union on quiet
+	# ticks; quantity, pulse, contact and expiry metadata do not change geometry.
+	if selected != _occupied_sources:
+		_occupied_sources = selected.duplicate(true)
+		_occupied_membership.clear()
+		for cells_value: Dictionary in selected:
+			for cell: Vector2i in cells_value: _occupied_membership[cell] = 1
+	return _occupied_membership.duplicate() # Callers retain independently writable results.
 
 
 static func family(wire_id: int) -> String:
-	var definition := CombatTuning.cast_definition(wire_id)
-	if definition.get("shape", "") == "spray":
-		return "spray"
-	if definition.get("shape", "") != "projectile":
-		return ""
-	if bool(definition.get("repeat_while_held", false)):
-		return "rapid"
-	return "heavy" if int(definition.get("blast_radius", 0)) > 0 else "bolt"
+	# Delivery identity is authored; trigger behavior is an independent choice.
+	return String(CombatTuning.cast_definition_view(wire_id).get("family", ""))
 
 
 func view(cell: Vector2i, tick: float) -> Dictionary:
 	var result := {"fire_phase": "none", "steam_heat": 1000}
-	if not cells.has(cell): return result
+	if not has_cell(cell): return result
 	for material: String in material_layers():
 		var quantity := 0
 		var present := false
@@ -110,22 +212,50 @@ func view(cell: Vector2i, tick: float) -> Dictionary:
 
 static func material_layers() -> Array[String]:
 	var result: Array[String] = []
-	for element: int in range(1, 9): result.append(Policy.ingredient_layer(element))
-	for wire: int in range(301, 337): result.append(Policy.product_layer(wire))
+	for element: int in ElementRules.WIRE_IDS: result.append(Policy.ingredient_layer(element))
+	for wire: int in Policy.active_wire_ids(): result.append(Policy.product_layer(wire))
 	return result
 
 
 static func _new_empty_cell() -> Dictionary:
-	var result := {"terrain": 0, "elevation": 0, "structure": 0}
-	for layer: String in material_layers():
-		result[layer] = {}
-	return result
+	return {"terrain": 0, "elevation": 0, "structure": 0}
+
+
+func set_cell_amount(cell: Vector2i, layer: String, source: int, amount: int) -> void:
+	if _cell_topology == null:
+		if not _legacy_cells[cell].has(layer): _legacy_cells[cell][layer] = {}
+		_legacy_cells[cell][layer][source] = amount
+		return
+	var row := cell_record(cell)
+	if not row.has(layer):
+		row = row.duplicate()
+		row[layer] = {}
+		row.make_read_only()
+		_sparse_cells[cell] = row
+	row[layer][source] = amount
+
+
+func erase_cell_amount(cell: Vector2i, layer: String, source: int) -> void:
+	var row := cell_record(cell)
+	if not row.has(layer): return
+	row[layer].erase(source)
+	if not row[layer].is_empty(): return
+	if _cell_topology == null:
+		row.erase(layer)
+		return
+	row = row.duplicate()
+	row.erase(layer)
+	if row.size() == 3:
+		_sparse_cells.erase(cell)
+	else:
+		row.make_read_only()
+		_sparse_cells[cell] = row
 
 
 func admission_reason(wire_id: int) -> String:
-	if not chemistry_enabled or cells.is_empty():
+	if not chemistry_enabled or cell_count() == 0:
 		return "hex_court_preparation"
-	var definition := CombatTuning.cast_definition(wire_id)
+	var definition := CombatTuning.cast_definition_view(wire_id)
 	if Policy.ingredient_layer(int(definition.get("element_wire_id", 0))).is_empty() or not COVERAGE.has(family(wire_id)):
 		return "hex_unsupported_delivery"
 	if casts.size() >= MAX_CASTS or _product_capacity_after_cast() > MAX_PRODUCTS:
@@ -153,10 +283,11 @@ func _live_unspent_cast_count() -> int:
 func reserve_cast(owner_id: int, wire_id: int) -> bool:
 	if pending.has(owner_id) or not admission_reason(wire_id).is_empty():
 		return false
-	var definition := CombatTuning.cast_definition(wire_id)
+	var definition := CombatTuning.cast_definition_view(wire_id)
 	var id := next_cast_id
 	next_cast_id += 1
 	casts[id] = {"id": id, "owner": owner_id, "team": owner_id, "wire": wire_id, "element": int(definition.element_wire_id), "strength": int(definition.reaction_strength), "budget": MATTER_PER_CAST, "unallocated": MATTER_PER_CAST, "ground": 0, "consumed": 0, "expired": 0, "paid": false, "source": 0, "reacted": false, "ledger": {}, "cells": {}, "coverage": {}, "flight_parts": {}, "ground_parts": {}, "created": current_tick, "expires": 0, "origin": origin, "trail_spent": 0}
+	casts[id]["element_mask"] = int(definition.element_mask)
 	pending[owner_id] = id
 	return true
 
@@ -178,6 +309,61 @@ func cancel_pending(owner_id: int) -> void:
 		_expire_unallocated(record)
 	casts.erase(id)
 	pending.erase(owner_id)
+
+
+# Permanent departure retires only this champion's paid material. Products
+# attributed to another champion retain their consumed-source provenance; dead
+# linked sources already use the ordinary inactive-link effect semantics.
+func retire_owner_material(owner_id: int) -> void:
+	var changed := pending.has(owner_id) or exposure.has(owner_id)
+	cancel_pending(owner_id)
+	for cast_id: int in casts.keys():
+		var record: Dictionary = casts[cast_id]
+		if int(record.owner) != owner_id:
+			continue
+		_expire_live(record)
+		sources.erase(int(record.source))
+		casts.erase(cast_id)
+		changed = true
+	for product_id: int in products.keys():
+		var product: Dictionary = products[product_id]
+		if int(product.owner) == owner_id:
+			for cell: Vector2i in product.cells:
+				erase_cell_amount(cell, String(product.material), product_id)
+			_clear_product_flow_carry(product_id)
+			products.erase(product_id)
+			changed = true
+		elif product.contacts.erase(owner_id):
+			changed = true
+	exposure.erase(owner_id)
+	var actor_suffix := ":%d" % owner_id
+	for key: String in flow_carry.keys():
+		if key.ends_with(actor_suffix):
+			flow_carry.erase(key)
+			changed = true
+	if changed:
+		value_revision += 1
+
+
+# A sealed round retires combat, not the world or its clock. Reuse the ordinary
+# paid-budget expiry transitions so consumed matter stays consumed, all remaining
+# paid matter becomes expired, and terrain/topology/monotonic IDs stay intact.
+func retire_round_material() -> void:
+	var changed := not casts.is_empty() or not products.is_empty() or not exposure.is_empty() or not flow_carry.is_empty()
+	for owner_id: int in pending.keys():
+		cancel_pending(owner_id)
+	for record: Dictionary in casts.values():
+		_expire_live(record)
+	for product: Dictionary in products.values():
+		for cell: Vector2i in product.cells:
+			erase_cell_amount(cell, String(product.material), int(product.id))
+	casts.clear()
+	products.clear()
+	sources.clear()
+	exposure.clear()
+	flow_carry.clear()
+	if changed:
+		value_revision += 1
 
 
 func bind_release(owner_id: int, source_cast_id: int, release_origin: Variant = null, release_aim: Vector2i = Vector2i(0, -1000), team_id: int = -1) -> void:
@@ -242,7 +428,7 @@ func footprint(event: Dictionary, record: Dictionary) -> Array[Vector2i]:
 # Worldbone occlusion participates in eligibility once, during selection.
 # Whole-cell membership never performs another actor-distance or sight test.
 func select_cells(shape: Dictionary, eligible: Variant = null) -> Array[Vector2i]:
-	var membership: Dictionary = cells if eligible == null else eligible
+	var membership: Dictionary = topology_cells_view() if eligible == null else eligible
 	var selected := HexFootprint.selected_cells(shape, origin, membership)
 	if collision == null: return selected
 	var anchor: Vector2i = shape.get("center", shape.get("start", origin))
@@ -255,16 +441,18 @@ func select_cells(shape: Dictionary, eligible: Variant = null) -> Array[Vector2i
 # Presentation and previews consume the same stored whole-cell coverage as gameplay.
 func render_regions(cell: Vector2i, material: String, tick: float) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
-	if not cells.has(cell) or not cells[cell].has(material): return result
+	if not has_cell(cell): return result
+	var row: Variant = cell_record_value(cell)
+	if not row.has(material): return result
 	var is_product := material not in Policy.INGREDIENT_LAYERS.values()
-	for id: int in cells[cell][material]:
+	for id: int in row[material]:
 		if is_product:
 			var product: Dictionary = products.get(id, {})
 			if product.is_empty() or tick >= int(product.expiry_tick): continue
 			var phase := "forming" if tick < int(product.active_tick) else "decaying" if tick >= int(product.decay_tick) else "active"
 			result.append({"footprint_id": id, "polygon": whole_cell_polygon(cell), "phase": phase,
-				"danger": phase == "active", "intensity": int(product.intensity), "quantity": int(product.cells[cell]),
-				"owner": int(product.owner), "source_ids": product.source_ids.duplicate(), "expiry_tick": int(product.expiry_tick),
+				"danger": phase == "active" and int(product.get("damage_budget_remaining", 0)) > 0 and (int(product.recipe_wire_id) != STEAM_WIRE or int(product.intensity) > 0), "intensity": int(product.intensity), "quantity": int(product.cells[cell]),
+				"owner": int(product.owner), "source_ids": product.source_ids.duplicate(), "active_tick": int(product.active_tick), "decay_tick": int(product.decay_tick), "expiry_tick": int(product.expiry_tick),
 				"recipe_wire_id": int(product.recipe_wire_id), "direction": product.flow_aim, "material": material})
 		else:
 			var record: Dictionary = casts.get(id, {})
@@ -293,7 +481,7 @@ func preview_regions(event: Dictionary, record: Dictionary) -> Array[Dictionary]
 	return result
 
 
-func deposit_terminal(event: Dictionary, tick: int) -> void:
+func deposit_terminal(event: Dictionary, tick: int, spray_collision: CollisionWorld = null) -> void:
 	var source := int(event.get("source_cast_id", 0))
 	if not sources.has(source): return
 	var record: Dictionary = casts[int(sources[source])]
@@ -301,27 +489,64 @@ func deposit_terminal(event: Dictionary, tick: int) -> void:
 	if not bool(record.paid) or not Parts.validate(record) or not record.flight_parts.has(entity_id): return
 	assert(int(event.source_wire_id) == int(record.wire) and int(event.reaction_strength) == int(record.strength), "terminal cannot mutate immutable provenance")
 	var shape := terminal_footprint(event, record)
-	var selected := select_cells(shape)
+	var selected: Array[Vector2i]
+	if spray_collision != null and family(int(record.wire)) == "spray":
+		# Select whole cells from the authored fan, then clip each center ray at
+		# the Spray radius against the phase-initial shot-cover snapshot. Never
+		# replace the world's default worldbone-only selection policy/context.
+		selected = []
+		var radius := int(CombatTuning.cast_definition(int(record.wire)).radius)
+		for cell: Vector2i in HexFootprint.selected_cells(shape, origin, topology_cells_view()):
+			if ContinuousContact.wall_contact(record.origin, origin + HexGrid.center(cell), radius, spray_collision).is_empty(): selected.append(cell)
+	else:
+		selected = select_cells(shape)
 	if selected.is_empty():
 		var expired: int = Parts.expire_flight(record, entity_id)
 		metrics.matter_expired += maxi(0, expired)
 		_sync_cast_ledger(record)
+		return
+	if Fusion.try_ingredient(self, record, selected, event.position, tick): return
+	var mask := int(record.get("element_mask",Policy.element_bit(int(record.element))))
+	if mask & (mask-1) != 0:
+		_deposit_mixture(record,event.position,tick)
 		return
 	_try_modifier(record, selected, tick)
 	if not record.flight_parts.has(entity_id): return
 	record.aim = event.get("direction", record.aim)
 	var expiry := tick + ingredient_lifetime(int(record.element))
 	if int(record.ground) == 0: record.created = tick
+	var previous_cells: Array = record.cells.keys()
 	var moved: int = Parts.deposit_flight(record, entity_id, next_ground_part_id, selected, shape, tick, expiry)
 	if moved <= 0: return
 	next_ground_part_id += 1
 	record.footprint = shape
 	record.expires = maxi(int(record.expires), expiry)
 	_sync_cast_ledger(record)
-	_rebuild_cast_layers(record)
+	_rebuild_cast_layers(record, previous_cells)
 	metrics.deposited += 1
 	value_revision += 1
 	_try_ground_reactions(record, event.position, tick)
+
+func _deposit_mixture(record: Dictionary, point: Vector2i, tick: int) -> bool:
+	var mask := int(record.element_mask)
+	var wire := Policy.wire_for_mask(mask)
+	if wire <= 0 or products.size() >= MAX_PRODUCTS: return false
+	var selected := select_cells(Policy.selection_shape(wire,point,record.aim))
+	if selected.is_empty(): return false
+	var strength := int(record.ledger.remaining_strength)
+	if strength <= 0: return false
+	# One paid mixture is one source, not one full-strength source per element.
+	# A terminal owns the remaining cast, so sibling flights cannot duplicate it.
+	var quantity := StrengthLedger.consume_remaining(record.ledger)
+	if quantity <= 0: return false
+	_sync_consumed_cast(record)
+	record.reacted = true
+	var id := _create_product(wire,[int(record.source)],point,selected,strength,quantity,tick)
+	metrics.matter_consumed += quantity
+	metrics.reactions += 1
+	value_revision += 1
+	Fusion.try_products(self,id,tick)
+	return true
 
 static func trail_lifetime(element: int) -> int:
 	if element < 1 or element >= ElementChemistrySystem.TRAIL_LIFE_MS.size(): return 0
@@ -330,10 +555,15 @@ static func trail_lifetime(element: int) -> int:
 static func ingredient_lifetime(element: int) -> int:
 	return WATER_TICKS if element == WATER else FIRE_TICKS if element == FIRE else ElementChemistrySystem.ELEMENT_LIFE_MS[element] * 120 / 1000
 
-func _rebuild_cast_layers(record: Dictionary) -> void:
+func _rebuild_cast_layers(record: Dictionary, previous_cells: Variant = null) -> void:
 	var layer := _layer(record)
-	for cell: Vector2i in cells: cells[cell][layer].erase(int(record.id))
-	for cell: Vector2i in record.cells: cells[cell][layer][int(record.id)] = int(record.cells[cell])
+	# Mutation owners know the old footprint. Erase only that footprint rather
+	# than scanning the entire campus for every trail particle/contact/expiry.
+	# Keep the exhaustive repair entry point for imports and diagnostic callers.
+	var erased: Variant = dynamic_cell_keys() if previous_cells == null else previous_cells
+	for cell: Vector2i in erased:
+		if has_cell(cell): erase_cell_amount(cell,layer,int(record.id))
+	for cell: Vector2i in record.cells: set_cell_amount(cell,layer,int(record.id),int(record.cells[cell]))
 
 static func coverage(record: Dictionary) -> Dictionary:
 	if record.has("coverage"): return record.coverage
@@ -383,6 +613,7 @@ func _try_reaction(record: Dictionary, tick: int) -> void:
 
 
 func _try_modifier(record: Dictionary, selected: Array[Vector2i], tick: int) -> bool:
+	if int(record.get("element_mask",Policy.element_bit(int(record.element)))) != Policy.element_bit(int(record.element)): return false
 	# Steam modification is a bounded channel operation, not a fundamental
 	# element/product clash. Each channel is available once and consumes only the
 	# incoming real source's remaining stock.
@@ -397,7 +628,7 @@ func _try_modifier(record: Dictionary, selected: Array[Vector2i], tick: int) -> 
 			continue
 		if int(record.element) not in [WATER, FIRE]: continue
 		var heating := int(record.element) == FIRE
-		if int(product.expiry_tick) <= tick or int(record.source) in product.source_ids or bool(product.heated if heating else product.cooled):
+		if int(product.expiry_tick) <= tick or product.source_ids.size() >= 12 or int(record.source) in product.source_ids or bool(product.heated if heating else product.cooled):
 			continue
 		var touches := false
 		for cell: Vector2i in selected:
@@ -407,6 +638,8 @@ func _try_modifier(record: Dictionary, selected: Array[Vector2i], tick: int) -> 
 		if not touches:
 			continue
 		var consumed_strength: int = int(record.ledger.remaining_strength)
+		var funding := Funding.add(product.source_funding, int(record.source), int(record.wire), consumed_strength)
+		if funding.is_empty(): continue
 		var amount: int = StrengthLedger.consume_remaining(record.ledger)
 		if amount <= 0:
 			continue
@@ -415,9 +648,14 @@ func _try_modifier(record: Dictionary, selected: Array[Vector2i], tick: int) -> 
 		metrics.matter_consumed += amount
 		product.quantity += amount
 		product.source_ids.append(int(record.source))
+		product.source_ids.sort()
+		product.source_funding = funding
+		product.funded_strength += consumed_strength
+		product.damage_budget_remaining += consumed_strength * ReactionDamage.DAMAGE_PER_STRENGTH
 		var expanded: Array[Vector2i] = []
 		for cell: Vector2i in product.cells:
 			expanded.append(cell)
+		var previous_allocations: Dictionary = product.cells
 		if heating:
 			product.heated = true
 			product.intensity = mini(1500, int(product.intensity) + consumed_strength * 50)
@@ -426,23 +664,47 @@ func _try_modifier(record: Dictionary, selected: Array[Vector2i], tick: int) -> 
 			product.decay_tick = mini(int(product.decay_tick), maxi(int(product.active_tick), int(product.expiry_tick) - MEDIUM_DECAY_TICKS))
 		else:
 			product.cooled = true
-			# Literal policy: I' = I - min(floor(I/2), 50*S). Thus 750
-			# cooled by strength5 becomes500, while strength1 100 becomes50.
+			# First reduce thermal intensity. Its final value also compensates
+			# for the coolant's added density after the unchanged-footprint retile.
 			var cooling: int = mini(int(product.intensity) / 2, consumed_strength * 50)
 			product.intensity = maxi(0, int(product.intensity) - cooling)
-			# Cooling changes paid intensity; it cannot add whole neighboring hexes.
 		_retile_product(product, expanded)
+		if not heating:
+			product.intensity = _cooled_steam_intensity(int(product.intensity), previous_allocations, product.cells)
 		metrics.modifiers += 1
 		value_revision += 1
 		return true
 	return false
 
 
+static func _cooled_steam_intensity(thermal_intensity: int, previous_allocations: Dictionary, allocations: Dictionary) -> int:
+	# A once-only modifier calculation, never an actor/tick query. Equal retiles
+	# have at most four effective old/new density pairs, including zero-allocation
+	# selected cells whose exposure density is one. Do not use a quantity ratio:
+	# integer pressure rounding can otherwise make a cooled pulse one unit worse.
+	var result := maxi(0, thermal_intensity)
+	if result == 0: return 0
+	var pairs := {}
+	for cell: Vector2i in allocations:
+		pairs[Vector2i(maxi(1, int(previous_allocations.get(cell, 0))), maxi(1, int(allocations[cell])))] = true
+	for density: Vector2i in pairs:
+		if density.y <= density.x: continue
+		for occupied: int in range(1, EXPOSURE_CAP + 1):
+			var ramp := 2000 + 6000 * occupied / EXPOSURE_CAP
+			var previous_pressure := mini(8000, ramp * density.x / 400)
+			var pressure := mini(8000, ramp * density.y / 400)
+			# pressure*result <= previous_pressure*thermal_intensity, so the
+			# final /1000 rounding and 12000 cap cannot increase realized harm.
+			result = mini(result, thermal_intensity * previous_pressure / pressure)
+			if result == 0: return 0
+	return result
+
+
 func suppress_source(source: int, product_id: int) -> int:
 	if not sources.has(source) or not products.has(product_id): return 0
 	var product: Dictionary = products[product_id]
 	var record: Dictionary = casts[int(sources[source])]
-	if int(product.recipe_wire_id) != 317 or int(product.capacity) <= 0 or int(record.element) != FIRE or not Parts.validate(record): return 0
+	if int(product.recipe_wire_id) != 317 or int(product.capacity) <= 0 or (int(record.get("element_mask",Policy.element_bit(int(record.element)))) & Policy.element_bit(FIRE)) == 0 or not Parts.validate(record): return 0
 	var ledger: Dictionary = record.ledger
 	var strength := int(ledger.remaining_strength)
 	for loss: int in range(strength, 0, -1):
@@ -481,7 +743,8 @@ func resolve_contact(source_a: int, source_b: int, point: Vector2i, tick: int) -
 		return {"accepted": false, "reason": &"invalid_source"}
 	if not Parts.validate(first) or not Parts.validate(second):
 		return {"accepted": false, "reason": &"invalid_ownership"}
-	var recipe_wire_id: int = _recipe_wire(int(first.element), int(second.element))
+	var mask := int(first.get("element_mask",Policy.element_bit(int(first.element)))) | int(second.get("element_mask",Policy.element_bit(int(second.element))))
+	var recipe_wire_id: int = Policy.wire_for_mask(mask)
 	if recipe_wire_id == 0:
 		return {"accepted": false, "reason": &"unsupported_pair"}
 	var footprint := Policy.selection_shape(recipe_wire_id, point, _oldest_source_aim([source_a, source_b]))
@@ -512,24 +775,28 @@ func resolve_contact(source_a: int, source_b: int, point: Vector2i, tick: int) -
 	value_revision += 1
 	first.reacted = int(first.ledger.remaining_strength) == 0
 	second.reacted = int(second.ledger.remaining_strength) == 0
+	product_id = Fusion.try_products(self, product_id, tick)
 	outcome.product_id = product_id
 	outcome.reaction_id = product_id
-	outcome.recipe_wire_id = recipe_wire_id
+	outcome.recipe_wire_id = int(products[product_id].recipe_wire_id)
 	outcome.quantity = quantity
 	outcome.intensity = mini(1500, int(outcome.matched_strength) * 100)
 	return outcome
 
 
-func _create_product(recipe_wire_id: int, parent_sources: Array, point: Vector2i, selected: Array[Vector2i], matched_strength: int, quantity: int, tick: int) -> int:
+func _create_product(recipe_wire_id: int, parent_sources: Array, point: Vector2i, selected: Array[Vector2i], matched_strength: int, quantity: int, tick: int, inherited: Dictionary = {}) -> int:
 	assert(products.size() < MAX_PRODUCTS, "admission retains one product slot per live source")
 	var id := next_product_id
 	next_product_id += 1
 	parent_sources.sort()
 	var material := _product_material(recipe_wire_id)
 	var allocations := _equal_allocations(selected, quantity)
-	var oldest_aim := _oldest_source_aim(parent_sources)
+	var oldest_aim: Vector2i = inherited.get("flow_aim", _oldest_source_aim(parent_sources))
 	var policy := Policy.definition(recipe_wire_id)
-	var first: Dictionary = casts[int(sources[int(parent_sources[0])])]
+	var first: Dictionary = inherited if not inherited.is_empty() else casts[int(sources[int(parent_sources[0])])]
+	var funding: PackedInt64Array = inherited.source_funding.duplicate() if inherited.has("source_funding") else Funding.from_sources(self, parent_sources, matched_strength)
+	assert(funding.size() == parent_sources.size() * 3, "every product retains exact paid source contributions")
+	var funded := Funding.total(funding)
 	var active := tick + int(policy.formation_ticks)
 	var decay := active + int(policy.active_ticks)
 	var expiry := decay + int(policy.decay_ticks)
@@ -541,6 +808,7 @@ func _create_product(recipe_wire_id: int, parent_sources: Array, point: Vector2i
 		"material": material,
 		"strength": matched_strength,
 		"source_ids": parent_sources.duplicate(),
+		"source_funding": funding,
 		"footprint": Policy.selection_shape(recipe_wire_id, point, oldest_aim),
 		"cells": allocations,
 		"coverage": selected_membership,
@@ -561,24 +829,25 @@ func _create_product(recipe_wire_id: int, parent_sources: Array, point: Vector2i
 		"pulse_damage": int(policy.pulse_damage),
 		"geometry_override": "whole_hex",
 		"owner": int(first.owner), "team": int(first.team), "health": int(policy.health), "capacity": int(policy.capacity),
+		"element_mask": Policy.mask_for_wire(recipe_wire_id), "ancestry_created_tick": tick, "funded_strength": funded, "damage_budget_remaining": funded * ReactionDamage.DAMAGE_PER_STRENGTH,
 		"position": point, "origin": point, "contacts": {}, "linked_sources": [], "pulse_index": -1,
 		"last_motion_tick": tick, "motion_carry": Vector2i.ZERO,
 	}
 	for cell: Vector2i in allocations:
-		cells[cell][material][id] = int(allocations[cell])
+		set_cell_amount(cell,material,id,int(allocations[cell]))
 	_build_links(products[id])
 	return id
 
 
 func _build_links(product: Dictionary) -> void:
-	var element := int({313: 6, 319: 3, 328: 5}.get(int(product.recipe_wire_id), 0))
+	var element := int({311: 2}.get(int(product.recipe_wire_id), 0))
 	if element == 0: return
 	var policy := Policy.definition(int(product.recipe_wire_id))
 	var previous: Vector2i = product.position
 	var membership := coverage(product).duplicate()
 	var ids: Array = casts.keys()
 	ids.sort()
-	for unused: int in range(1 if element == 6 else 4):
+	for unused: int in range(1):
 		var best := 0
 		var best_distance: int = int(policy.length) * int(policy.length) + 1
 		for id: int in ids:
@@ -605,49 +874,12 @@ func _build_links(product: Dictionary) -> void:
 	_retile_product(product, selected)
 
 
-func move_products(tick: int, physics: CollisionWorld) -> void:
-	for product: Dictionary in products.values():
-		var wire := int(product.recipe_wire_id)
-		var policy := Policy.definition(wire)
-		var speed := int(policy.motion_speed)
-		if wire in [304, 317]: speed = 0 # Authored stationary steering corridors.
-		if wire in [318, 323] and tick >= int(product.active_tick) and tick < int(product.decay_tick):
-			var age := tick - int(product.active_tick)
-			var shape := Policy.selection_shape(wire, product.origin, product.flow_aim)
-			var selected: Array[Vector2i] = []
-			if wire == 318:
-				var length := mini(int(policy.length), 25_000 + age * 150_000 / 144)
-				shape.end = product.origin + ElementChemistrySystem.scaled(product.flow_aim, length)
-				selected = select_cells(shape)
-			else:
-				var lane := {}
-				for cell: Vector2i in select_cells(shape): lane[cell] = 1
-				var point: Vector2i = product.origin + ElementChemistrySystem.scaled(product.flow_aim, int(policy.length) * (age % 54) / 54)
-				shape = HexFootprint.disk(point, 31_250)
-				selected = select_cells(shape, lane)
-			if not selected.is_empty():
-				product.footprint = shape
-				_retile_product(product, selected)
-				value_revision += 1
-			continue
-		if speed <= 0 or tick < int(product.active_tick) or tick >= int(product.decay_tick): continue
-		var elapsed := tick - maxi(int(product.last_motion_tick), int(product.active_tick))
-		if elapsed <= 0: continue
-		product.last_motion_tick = tick
-		var numerator: Vector2i = product.motion_carry + product.flow_aim * speed * elapsed
-		var delta := Vector2i(numerator.x / 120_000, numerator.y / 120_000)
-		product.motion_carry = numerator - delta * 120_000
-		var current: Vector2i = product.position
-		var target := current + delta
-		if physics != null: target = physics.move_box(current, delta, 1000).position
-		if target == current: continue
-		var shape := Policy.selection_shape(wire, target, product.flow_aim)
-		var selected := select_cells(shape)
-		if selected.is_empty(): continue # Bounded district edge stops, never refreshes.
-		product.position = target
-		product.footprint = shape
-		_retile_product(product, selected)
-		value_revision += 1
+func move_products(_tick: int, _physics: CollisionWorld) -> void:
+	# All reaction coverage is fixed at formation in this acceptance slice.
+	# Retain this shared host/prediction hook and snapshot motion fields, but do
+	# no per-tick selection, occlusion or retiling. Pulses and actor forces live
+	# in apply_product_effects(); modifiers/expiry still consume finite matter.
+	pass
 
 
 func _oldest_source_aim(parent_sources: Array) -> Vector2i:
@@ -685,10 +917,11 @@ static func _equal_allocations(selected: Array[Vector2i], quantity: int) -> Dict
 
 
 func _sync_consumed_cast(record: Dictionary) -> void:
+	var previous_cells: Array = record.cells.keys()
 	var retiled: bool = Parts.retile_after_contact(record, int(record.unallocated), int(record.ground))
 	assert(retiled, "prevalidated source partitions must mirror the single ledger transition")
 	_sync_cast_ledger(record)
-	_rebuild_cast_layers(record)
+	_rebuild_cast_layers(record, previous_cells)
 
 
 func _sync_cast_ledger(record: Dictionary) -> void:
@@ -702,11 +935,12 @@ func _expire_live(record: Dictionary) -> int:
 	if not record.has("ledger") or record.ledger.is_empty():
 		_expire_unallocated(record)
 		return 0
+	var previous_cells: Array = record.cells.keys()
 	var moved: int = StrengthLedger.expire(record.ledger)
 	if moved < 0: return moved
 	Parts.retile_after_contact(record, int(record.unallocated), int(record.ground))
 	_sync_cast_ledger(record)
-	_rebuild_cast_layers(record)
+	_rebuild_cast_layers(record, previous_cells)
 	if bool(record.paid): metrics.matter_expired += moved
 	if moved > 0: value_revision += 1
 	return moved
@@ -716,7 +950,7 @@ func _retile_product(product: Dictionary, selected: Array[Vector2i]) -> void:
 	var id: int = product.id
 	var material: String = product.material
 	for cell: Vector2i in product.cells:
-		cells[cell][material].erase(id)
+		erase_cell_amount(cell,material,id)
 	selected.sort_custom(Grid._cell_less)
 	product.cells = {}
 	product.coverage = {}
@@ -725,7 +959,7 @@ func _retile_product(product: Dictionary, selected: Array[Vector2i]) -> void:
 		var amount := total / selected.size() + int(index < total % selected.size())
 		product.cells[selected[index]] = amount
 		product.coverage[selected[index]] = 1
-		cells[selected[index]][material][id] = amount
+		set_cell_amount(selected[index],material,id,amount)
 
 
 func _expire_unallocated(record: Dictionary) -> void:
@@ -748,6 +982,7 @@ func contains_stored(record: Dictionary, point: Vector2i) -> bool:
 func apply_product_effects(players: Array[PlayerState], tick: int, config: SimConfig, collision: CollisionWorld, events: Array[Dictionary], paths: Dictionary = {}) -> void:
 	if not config.is_valid() or collision == null:
 		return
+	if products.is_empty(): return
 	var sampled_paths := paths.duplicate(true)
 	for actor: PlayerState in players:
 		var previous: Variant = sampled_paths.get(actor.entity_id, Vector2i(actor.position_x, actor.position_y))
@@ -769,33 +1004,15 @@ func apply_product_effects(players: Array[PlayerState], tick: int, config: SimCo
 				continue
 			for actor: PlayerState in players:
 				if actor.spawn_protection_ticks > 0 or MovementSystem.is_combat_intangible(actor, config): continue
-				if actor.health <= 0 or actor.air_height > 0 or not _ground_path_touches(product, actor, paths, ground_paths):
+				if actor.health <= 0 or MovementSystem.avoids_ground_effects(actor) or not _ground_path_touches(product, actor, paths, ground_paths):
 					continue
 				var damage: int = int(product.pulse_damage) * int(product.intensity) / 1000
-				if damage > 0 and PlayerResourcesSystem.damage(actor, damage, config):
+				var actual_damage := ReactionDamage.apply(product, actor, damage, config)
+				if actual_damage > 0:
 					var owner_id := int(product.get("owner", product.get("owner_id", 0)))
-					events.append({"type": "hex_conflagration", "entity_id": actor.entity_id, "product_id": product_id, "owner_id": owner_id, "amount": damage})
+					events.append({"type": "hex_conflagration", "entity_id": actor.entity_id, "product_id": product_id, "owner_id": owner_id, "amount": actual_damage})
 					_append_champion_defeated(actor, owner_id, events)
-		elif recipe_wire_id == FLOOD_WIRE:
-			for actor: PlayerState in players:
-				if actor.spawn_protection_ticks > 0 or MovementSystem.is_combat_intangible(actor, config): continue
-				if actor.health <= 0 or actor.air_height > 0 or not _ground_path_touches(product, actor, paths, ground_paths):
-					continue
-				var key := "%d:%d" % [product_id, actor.entity_id]
-				var carry: Vector2i = flow_carry.get(key, Vector2i.ZERO)
-				var aim: Vector2i = product.flow_aim
-				var denominator: int = config.tick_rate * SimConfig.FIXED_SCALE
-				var speed: int = int(product.flow_units_per_second) * int(product.intensity) / 1000
-				var numerator_x: int = carry.x + speed * aim.x
-				var numerator_y: int = carry.y + speed * aim.y
-				var delta := Vector2i(numerator_x / denominator, numerator_y / denominator)
-				flow_carry[key] = Vector2i(numerator_x - delta.x * denominator, numerator_y - delta.y * denominator)
-				var old_position := Vector2i(actor.position_x, actor.position_y)
-				var moved := collision.move_box(old_position, delta, int(product.common_wall_clearance))
-				actor.position_x = moved.position.x
-				actor.position_y = moved.position.y
-				if moved.position != old_position:
-					events.append({"type": "hex_flood_flow", "entity_id": actor.entity_id, "product_id": product_id, "delta": moved.position - old_position})
+
 
 
 func _ground_path_touches(record: Dictionary, actor: PlayerState, paths: Dictionary, cache: Dictionary) -> bool:
@@ -806,12 +1023,14 @@ func _ground_path_touches(record: Dictionary, actor: PlayerState, paths: Diction
 		var previous: Variant = paths.get(actor.entity_id, finish)
 		if previous is Dictionary: finish = previous.get("finish", finish)
 		var start: Vector2i = previous if previous is Vector2i else previous.point
-		if previous is Dictionary and int(previous.height) > 0: start = finish
+		if previous is Dictionary and actor.wall_skim_ticks <= 0 and int(previous.height) >= MovementTuning.GROUND_PROJECTILE_CLEARANCE_HEIGHT: start = finish
 		if start == finish:
 			cache[actor.entity_id] = [Grid.world_to_cell(finish - origin)]
 		else:
-			var membership := occupied_cells()
-			cache[actor.entity_id] = HexFootprint.traversed_selected_cells(membership, origin, start, finish)
+			# One immutable membership view for this effects pass, not per actor.
+			# The cache is local to apply_product_effects; no stale cross-tick state.
+			if not cache.has("membership"): cache.membership = occupied_cells()
+			cache[actor.entity_id] = HexFootprint.traversed_selected_cells(cache.membership, origin, start, finish)
 	for cell: Vector2i in cache[actor.entity_id]:
 		if coverage(record).has(cell): return true
 	return false
@@ -830,15 +1049,16 @@ func expire_at(tick: int) -> void:
 		var record: Dictionary = casts[id]
 		for part_id: int in record.ground_parts.keys():
 			if tick >= int(record.ground_parts[part_id].expiry_tick):
+				var previous_cells: Array = record.cells.keys()
 				var expired: int = Parts.expire_ground(record, part_id)
 				metrics.matter_expired += maxi(0, expired)
 				_sync_cast_ledger(record)
-				_rebuild_cast_layers(record)
+				_rebuild_cast_layers(record, previous_cells)
 				value_revision += 1
 	for id: int in products.keys():
 		var product: Dictionary = products[id]
 		if tick >= int(product.expiry_tick):
-			for cell: Vector2i in product.cells: cells[cell][product.material].erase(id)
+			for cell: Vector2i in product.cells: erase_cell_amount(cell,product.material,id)
 			_clear_product_flow_carry(id)
 			products.erase(id)
 			value_revision += 1
@@ -852,9 +1072,10 @@ func advance(players: Array[PlayerState], paths: Dictionary, tick: int, config: 
 			if int(casts[id].element) == FIRE and int(casts[id].ground) > 0 and _fire_phase(casts[id], tick) == "active":
 				hazards = true
 				break
+	var membership := occupied_cells() if hazards and not players.is_empty() else {}
 	for actor: PlayerState in players:
 		if hazards:
-			_expose(actor, paths.get(actor.entity_id, Vector2i(actor.position_x, actor.position_y)), tick, config, events)
+			_expose(actor, paths.get(actor.entity_id, Vector2i(actor.position_x, actor.position_y)), tick, config, events, membership)
 		else:
 			exposure[actor.entity_id] = maxi(0, int(exposure.get(actor.entity_id, 0)) - 2)
 	for event: Dictionary in events:
@@ -866,7 +1087,7 @@ func advance(players: Array[PlayerState], paths: Dictionary, tick: int, config: 
 			metrics.refused += 1
 
 
-func _expose(actor: PlayerState, previous: Variant, tick: int, config: SimConfig, events: Array[Dictionary]) -> void:
+func _expose(actor: PlayerState, previous: Variant, tick: int, config: SimConfig, events: Array[Dictionary], membership: Variant = null) -> void:
 	var id := actor.entity_id
 	var old_exposure := int(exposure.get(id, 0))
 	if actor.health <= 0 or actor.spawn_protection_ticks > 0 or MovementSystem.is_combat_intangible(actor, config):
@@ -875,20 +1096,22 @@ func _expose(actor: PlayerState, previous: Variant, tick: int, config: SimConfig
 	var finish := Vector2i(actor.position_x, actor.position_y)
 	var start: Vector2i = previous if previous is Vector2i else previous.point
 	var previous_height := 0 if previous is Vector2i else int(previous.height)
-	# A landing tick uses only the grounded endpoint, never the airborne path.
-	if (previous_height > 0 and actor.air_height == 0) or (previous_height > STEAM_HEIGHT and actor.air_height <= STEAM_HEIGHT):
-		start = finish
-	var membership := occupied_cells()
-	var touched := HexFootprint.traversed_selected_cells(membership, origin, start, finish)
+	var selected: Dictionary = occupied_cells() if membership == null else membership
+	var touched := HexFootprint.traversed_selected_cells(selected, origin, start, finish)
+	# Each physical plane clips landing separately: crossing the ground clearance
+	# must not erase a path that was already exposed to tall Steam for this tick.
+	var endpoint_cell := Grid.world_to_cell(finish - origin)
+	var ground_landing := actor.wall_skim_ticks <= 0 and previous_height >= MovementTuning.GROUND_PROJECTILE_CLEARANCE_HEIGHT and not MovementSystem.avoids_ground_effects(actor)
+	var steam_landing := actor.wall_skim_ticks <= 0 and previous_height > STEAM_HEIGHT and actor.air_height <= STEAM_HEIGHT
 	metrics.exposure_queries += 1
 	var steam_density := {}
 	var pressure_winner := {}
 	for cell: Vector2i in touched:
-		if not cells.has(cell):
+		if not has_cell(cell):
 			continue
-		var record: Dictionary = cells[cell]
-		if actor.air_height == 0:
-			for cast_id: int in record.fire:
+		var record: Dictionary = cell_record(cell)
+		if not MovementSystem.avoids_ground_effects(actor) and (not ground_landing or cell == endpoint_cell):
+			for cast_id: int in record.get("fire", {}):
 				if not casts.has(cast_id): continue
 				var cast: Dictionary = casts[cast_id]
 				for part: Dictionary in cast.ground_parts.values():
@@ -906,8 +1129,8 @@ func _expose(actor: PlayerState, previous: Variant, tick: int, config: SimConfig
 						"cast_id": cast_id,
 						"product_id": 0,
 					})
-		if actor.air_height <= STEAM_HEIGHT:
-			for product_id: int in record.steam:
+		if (actor.wall_skim_ticks > 0 or actor.air_height <= STEAM_HEIGHT) and (not steam_landing or cell == endpoint_cell):
+			for product_id: int in record.get("steam", {}):
 				if tick < int(products[product_id].active_tick) or tick >= int(products[product_id].decay_tick): continue
 				steam_density[product_id] = maxi(int(steam_density.get(product_id, 0)), maxi(1, int(record.steam[product_id])))
 	exposure[id] = mini(EXPOSURE_CAP, old_exposure + 1) if not steam_density.is_empty() else maxi(0, old_exposure - 2)
@@ -918,6 +1141,7 @@ func _expose(actor: PlayerState, previous: Variant, tick: int, config: SimConfig
 		var ramp := 2000 + 6000 * int(exposure[id]) / EXPOSURE_CAP
 		var normal := mini(8000, ramp * density / 400)
 		var product: Dictionary = products[product_id]
+		if int(product.get("damage_budget_remaining", 0)) <= 0: continue
 		var steam_damage := mini(12000, normal * int(product.intensity) / 1000)
 		pressure_winner = _stronger_pressure_candidate(pressure_winner, {
 			"damage": steam_damage,
@@ -929,12 +1153,15 @@ func _expose(actor: PlayerState, previous: Variant, tick: int, config: SimConfig
 			"product_id": product_id,
 		})
 	var pressure := int(pressure_winner.get("damage", 0))
-	if pressure > 0 and PlayerResourcesSystem.damage(actor, pressure, config):
+	var health_before := actor.health
+	var pressure_product := int(pressure_winner.get("product_id", 0))
+	var damaged := ReactionDamage.apply(products[pressure_product], actor, pressure, config) > 0 if pressure_product > 0 and products.has(pressure_product) else (pressure > 0 and PlayerResourcesSystem.damage(actor, pressure, config))
+	if damaged:
 		var owner_id := int(pressure_winner.get("owner_id", 0))
 		events.append({
 			"type": "hex_pressure",
 			"entity_id": id,
-			"amount": pressure,
+			"amount": health_before - actor.health,
 			"exposure": int(exposure[id]),
 			"owner_id": owner_id,
 			"source_id": int(pressure_winner.get("source_id", 0)),
@@ -968,6 +1195,7 @@ static func _append_champion_defeated(actor: PlayerState, owner_id: int, events:
 
 
 func sync_flights(players: Array[PlayerState], projectiles: Array[ProjectileState]) -> void:
+	if casts.is_empty(): return
 	var live := {}
 	for projectile: ProjectileState in projectiles: live[projectile.entity_id] = true
 	var live_pending := {}
@@ -997,14 +1225,18 @@ func split_flight(source: int, parent_id: int, child_id: int) -> bool:
 
 
 func conservation_valid() -> bool:
-	if casts.size() > MAX_CASTS or products.size() > MAX_PRODUCTS or cells.size() > MAX_CELLS or reserved_products() > MAX_PRODUCTS: return false
+	if casts.size() > MAX_CASTS or products.size() > MAX_PRODUCTS or cell_count() > MAX_CELLS or reserved_products() > MAX_PRODUCTS: return false
 	var ingredient_wires := {}
 	var product_wires := {}
-	for element: int in range(1, 9): ingredient_wires[Policy.ingredient_layer(element)] = element
-	for wire: int in range(301, 337): product_wires[Policy.product_layer(wire)] = wire
-	for cell: Vector2i in cells:
-		for layer: String in cells[cell]:
-			var value: Variant = cells[cell][layer]
+	for element: int in Policy.INGREDIENT_LAYERS: ingredient_wires[Policy.ingredient_layer(element)] = element
+	for wire: int in Policy.ACTIVE_RECIPE_WIRES: product_wires[Policy.product_layer(wire)] = wire
+	for cell: Vector2i in dynamic_cell_keys():
+		var row: Variant = cell_record_value(cell)
+		if not row is Dictionary:
+			if row is Array and row.is_empty(): continue
+			return false
+		for layer: String in row:
+			var value: Variant = row[layer]
 			if not value is Dictionary: continue
 			for id: int in value:
 				if ingredient_wires.has(layer):
@@ -1021,7 +1253,7 @@ func conservation_valid() -> bool:
 			if not Parts.validate(record): return false
 			if int(record.ground) != int(record.ledger.deposited_quantity) or int(record.unallocated) != int(record.ledger.flight_quantity) or int(record.consumed) != int(record.ledger.consumed_quantity) or int(record.expired) != int(record.ledger.expired_quantity): return false
 			for cell: Vector2i in record.cells:
-				if not cells.has(cell) or not cells[cell][_layer(record)].has(id) or int(cells[cell][_layer(record)][id]) != int(record.cells[cell]): return false
+				if not has_cell(cell) or not cell_record(cell).get(_layer(record),{}).has(id) or int(cell_record(cell)[_layer(record)][id]) != int(record.cells[cell]): return false
 		if bool(record.paid): live += int(record.unallocated) + int(record.ground)
 	var product_total := 0
 	for id: int in products:
@@ -1029,7 +1261,7 @@ func conservation_valid() -> bool:
 		var total := 0
 		if int(product.quantity) <= 0 or product.cells.size() != product.coverage.size() or product.cells.is_empty(): return false
 		for cell: Vector2i in product.cells:
-			if not cells.has(cell) or int(product.cells[cell]) < 0 or int(product.coverage.get(cell, 0)) != 1 or not cells[cell][product.material].has(id) or int(cells[cell][product.material][id]) != int(product.cells[cell]): return false
+			if not has_cell(cell) or int(product.cells[cell]) < 0 or int(product.coverage.get(cell, 0)) != 1 or not cell_record(cell).get(product.material,{}).has(id) or int(cell_record(cell)[product.material][id]) != int(product.cells[cell]): return false
 			total += int(product.cells[cell])
 		if total != int(product.quantity): return false
 		product_total += total
@@ -1065,13 +1297,37 @@ static func _stable(value: Variant) -> Variant:
 			# str(a) < str(b) comparator, without repeated Variant formatting.
 			keys.sort()
 		else:
-			# Preserve every comparison made by the published comparator, including
-			# equal formatted mixed-type keys, while formatting each key only once.
-			# The independent canonical-sort oracle guards byte-for-byte ordering.
-			var formatted_keys := {}
-			for key: Variant in keys:
-				formatted_keys[key] = str(key)
-			keys.sort_custom(func(a: Variant, b: Variant) -> bool: return String(formatted_keys[a]) < String(formatted_keys[b]))
+			# Ordinary authority uses integer IDs and Vector2i allocations. Sort
+			# their unique formatted keys natively, preserving decimal/string order
+			# rather than numeric order. Check types before formatting: opaque keys
+			# retain exactly the preceding fallback's callback count and order.
+			var key_type := typeof(keys[0])
+			var native_keys := key_type in [TYPE_INT, TYPE_VECTOR2I]
+			if native_keys:
+				for key: Variant in keys:
+					if typeof(key) != key_type:
+						native_keys = false
+						break
+			if native_keys:
+				var texts: Array[String] = []
+				var keys_by_text := {}
+				for key: Variant in keys:
+					var formatted := str(key)
+					if keys_by_text.has(formatted):
+						native_keys = false
+						break
+					texts.append(formatted)
+					keys_by_text[formatted] = key
+				if native_keys:
+					texts.sort()
+					keys.clear()
+					for formatted: String in texts: keys.append(keys_by_text[formatted])
+			if not native_keys:
+				# Mixed/equal-formatted/opaque keys preserve the preceding comparator.
+				# Nothing dynamic, including this admission, survives the invocation.
+				var formatted_keys := {}
+				for key: Variant in keys: formatted_keys[key] = str(key)
+				keys.sort_custom(func(a: Variant, b: Variant) -> bool: return String(formatted_keys[a]) < String(formatted_keys[b]))
 		var result: Array = []
 		for key: Variant in keys:
 			result.append([_stable(key), _stable(value[key])])
@@ -1084,31 +1340,183 @@ static func _stable(value: Variant) -> Variant:
 	return value
 
 
-func state_hash() -> String:
-	var compact_cells := {}
-	# Most campus cells have no live material. A native structural comparison
-	# avoids 44 interpreted empty-layer iterations for those cells. The baseline
-	# is local and its metadata is refreshed for every record, so direct public
-	# metadata or orphan-layer mutations still change the exact canonical bytes.
-	var empty_cell := _new_empty_cell()
-	for cell: Vector2i in cells:
-		var record: Dictionary = cells[cell]
-		var empty_compact := {}
-		for metadata_key: String in ["terrain", "elevation", "structure"]:
-			var metadata_value: Variant = record.get(metadata_key)
-			empty_cell[metadata_key] = metadata_value
-			# Match the published sparse projection even for directly malformed
-			# metadata values such as an empty Dictionary.
-			if not metadata_value is Dictionary or not metadata_value.is_empty():
-				empty_compact[metadata_key] = metadata_value
-		if record == empty_cell:
-			compact_cells[cell] = empty_compact
-			continue
-		var compact := {}
-		for key: String in record:
-			var value: Variant = record[key]
-			if not value is Dictionary or not value.is_empty(): compact[key] = value
-		compact_cells[cell] = compact
+func _state_hash_bytes() -> PackedByteArray:
+	var cell_json := _canonical_cell_json()
+	if cell_json.is_empty():
+		return _generic_state_hash_bytes()
+	# Keep all other lanes at their original JSON recursion depth. The unique
+	# placeholder follows only scalar/vector headers, so its first occurrence is
+	# always this cells lane, even if an opaque later lane contains the same text.
+	const CELL_MARKER := "__hex_canonical_cells__"
+	var stable_value: Array = []
+	for value: Variant in [origin, current_tick, chemistry_enabled, next_cast_id, next_product_id, next_ground_part_id]:
+		stable_value.append(_stable(value))
+	stable_value.append(CELL_MARKER)
+	for value: Variant in [casts, products, pending, sources, exposure, flow_carry, metrics]:
+		stable_value.append(_stable(value))
+	var document := JSON.stringify(stable_value)
+	var marker := JSON.stringify(CELL_MARKER)
+	var offset := document.find(marker)
 	var bytes := PackedByteArray()
-	CanonicalBytes.append_string(bytes, JSON.stringify(_stable([origin, current_tick, chemistry_enabled, next_cast_id, next_product_id, next_ground_part_id, compact_cells, casts, products, pending, sources, exposure, flow_carry, metrics])))
-	return CanonicalBytes.sha256_hex(bytes)
+	CanonicalBytes.append_string(bytes, document.substr(0, offset) + cell_json + document.substr(offset + marker.length()))
+	return bytes
+
+
+func _canonical_cell_json() -> String:
+	if _cell_topology != null:
+		var overrides := {}
+		for cell: Vector2i in _sparse_cells:
+			var row: Dictionary = _sparse_cells[cell]
+			var compact := {}
+			for key: Variant in row:
+				if typeof(key) != TYPE_STRING: return ""
+				var value: Variant = row[key]
+				if key in ["terrain", "elevation", "structure"]:
+					compact[key] = value
+					continue
+				if not value is Dictionary: return ""
+				for id: Variant in value:
+					if typeof(id) != TYPE_INT or id < -2_147_483_648 or id > 2_147_483_647 \
+						or typeof(value[id]) != TYPE_INT or value[id] < -2_147_483_648 or value[id] > 2_147_483_647: return ""
+				if not value.is_empty(): compact[key] = value
+			overrides[cell] = JSON.stringify([_stable(cell), _stable(compact)])
+		return _cell_topology.canonical_cells_json(overrides)
+	# The old experiment regressed heavily populated maps. Decide before doing
+	# any serialization: dense/nonordinary data keeps the general implementation.
+	var nonblank := 0
+	for record: Dictionary in _legacy_cells.values():
+		if record.size() > 3:
+			nonblank += 1
+			if nonblank > maxi(8, cell_count() / 8): return ""
+	var rows := PackedStringArray()
+	for cell: Vector2i in _ordered_hash_cell_keys():
+		var record: Dictionary = cell_record(cell)
+		var terrain: Variant = record.get("terrain")
+		var elevation: Variant = record.get("elevation")
+		var structure: Variant = record.get("structure")
+		if typeof(terrain) != TYPE_INT or typeof(elevation) != TYPE_INT or typeof(structure) != TYPE_INT:
+			return ""
+		if terrain < -2_147_483_648 or terrain > 2_147_483_647 \
+			or elevation < -2_147_483_648 or elevation > 2_147_483_647 \
+			or structure < -2_147_483_648 or structure > 2_147_483_647:
+			return "" # Preserve wide/malformed/deep values in the whole-call fallback.
+		if record.size() == 3:
+			var cached: Array = _canonical_blank_rows.get(cell, [])
+			if cached.size() != 4 or cached[0] != terrain or cached[1] != elevation or cached[2] != structure:
+				var text := "[[%s,%s],[[\"elevation\",%s],[\"structure\",%s],[\"terrain\",%s]]]" % [
+					JSON.stringify(cell.x), JSON.stringify(cell.y), JSON.stringify(elevation),
+					JSON.stringify(structure), JSON.stringify(terrain)]
+				cached = [terrain, elevation, structure, text]
+				if _canonical_blank_rows.size() >= MAX_CELLS and not _canonical_blank_rows.has(cell):
+					_canonical_blank_rows.clear()
+				_canonical_blank_rows[cell] = cached
+			rows.append(cached[3])
+			continue
+		# Only shallow int32 material maps can be serialized separately without
+		# changing JSON's recursion/number behavior. Arbitrary extras use fallback.
+		var compact := {}
+		for key: Variant in record:
+			if typeof(key) != TYPE_STRING:
+				return ""
+			var value: Variant = record[key]
+			if key in ["terrain", "elevation", "structure"]:
+				compact[key] = value
+				continue
+			if not value is Dictionary:
+				return ""
+			for id: Variant in value:
+				if typeof(id) != TYPE_INT or id < -2_147_483_648 or id > 2_147_483_647 \
+					or typeof(value[id]) != TYPE_INT or value[id] < -2_147_483_648 or value[id] > 2_147_483_647:
+					return ""
+			if not value.is_empty(): compact[key] = value
+		rows.append(JSON.stringify([_stable(cell), _stable(compact)]))
+	return "[" + ",".join(rows) + "]"
+
+
+func _generic_state_hash_bytes() -> PackedByteArray:
+	var stable_value: Array = []
+	for value: Variant in [origin, current_tick, chemistry_enabled, next_cast_id, next_product_id, next_ground_part_id]:
+		stable_value.append(_stable(value))
+	stable_value.append(_stable_hash_cells())
+	for value: Variant in [casts, products, pending, sources, exposure, flow_carry, metrics]:
+		stable_value.append(_stable(value))
+	var bytes := PackedByteArray()
+	CanonicalBytes.append_string(bytes, JSON.stringify(stable_value))
+	return bytes
+
+
+func _ordered_hash_cell_keys() -> Array:
+	if _cell_topology != null: return _cell_topology.legacy_cells()
+	# Topology is normally fixed. Verify membership on every use so direct test,
+	# editor or restore mutations cannot hide behind a stale identity cache.
+	if _hash_cell_order.size() == _legacy_cells.size():
+		var unchanged := true
+		for key: Variant in _hash_cell_order:
+			if not _legacy_cells.has(key):
+				unchanged = false
+				break
+		if unchanged: return _hash_cell_order
+	var keys: Array = _legacy_cells.keys()
+	var native_formatted_keys: Array[String] = []
+	var keys_by_formatted_text: Dictionary = {}
+	var vector2i_keys := true
+	for key: Variant in keys:
+		if not key is Vector2i:
+			vector2i_keys = false
+			break
+		var formatted: String = str(key)
+		if keys_by_formatted_text.has(formatted):
+			vector2i_keys = false
+			break
+		native_formatted_keys.append(formatted)
+		keys_by_formatted_text[formatted] = key
+	if vector2i_keys:
+		native_formatted_keys.sort()
+		keys.clear()
+		for formatted: String in native_formatted_keys:
+			keys.append(keys_by_formatted_text[formatted])
+	else:
+		# Unsupported key shapes preserve the published generic comparator path.
+		keys = _legacy_cells.keys()
+		var formatted_keys := {}
+		for key: Variant in keys:
+			formatted_keys[key] = str(key)
+		keys.sort_custom(func(a: Variant, b: Variant) -> bool: return String(formatted_keys[a]) < String(formatted_keys[b]))
+	_hash_cell_order = keys
+	return keys
+
+
+func _stable_hash_cells() -> Array:
+	var keys := _ordered_hash_cell_keys()
+	var result: Array = []
+	var empty_cell := _new_empty_cell()
+	# The exact empty record is the dominant campus shape. Emit its canonical
+	# stable form directly while retaining the published projection and generic
+	# stable conversion for every extra, missing, malformed, or nonempty record.
+	for cell: Vector2i in keys:
+		var record: Dictionary = cell_record(cell)
+		var terrain: Variant = record.get("terrain")
+		var elevation: Variant = record.get("elevation")
+		var structure: Variant = record.get("structure")
+		empty_cell.terrain = terrain
+		empty_cell.elevation = elevation
+		empty_cell.structure = structure
+		if typeof(terrain) == TYPE_INT and typeof(elevation) == TYPE_INT and typeof(structure) == TYPE_INT and record == empty_cell:
+			result.append([
+				[cell.x, cell.y],
+				[["elevation", elevation], ["structure", structure], ["terrain", terrain]],
+			])
+		else:
+			var compact := {}
+			for key: String in record:
+				var value: Variant = record[key]
+				if not value is Dictionary or not value.is_empty():
+					compact[key] = value
+			result.append([_stable(cell), _stable(compact)])
+	return result
+
+
+func state_hash() -> String:
+	var streamed := CanonicalState.state_hash(self)
+	if not streamed.is_empty(): return streamed
+	return CanonicalBytes.sha256_hex(_state_hash_bytes())

@@ -1,0 +1,352 @@
+{
+	"baseline": true,
+	"checks": [
+		{
+			"message": "away fixture is outside both accepted stations",
+			"passed": true
+		},
+		{
+			"message": "ordinary Chemistry Matrix button opens its panel",
+			"passed": true
+		},
+		{
+			"message": "ordinary chemistry panel opens browseable Loom away from station",
+			"passed": true
+		},
+		{
+			"message": "away-assign saves native frame",
+			"passed": true
+		},
+		{
+			"message": "away-assign query and rendering preserve world authority",
+			"passed": true
+		},
+		{
+			"message": "away assignment leaves authority and pending unchanged",
+			"passed": true
+		},
+		{
+			"message": "away assignment reproduces legacy rejected request",
+			"passed": true
+		},
+		{
+			"message": "away assignment observes the matching authority refusal event",
+			"passed": true
+		},
+		{
+			"message": "away assignment does not create or rewrite the saved weave",
+			"passed": true
+		},
+		{
+			"message": "starter preview remains available while assignment is blocked",
+			"passed": true
+		},
+		{
+			"message": "away-starter saves native frame",
+			"passed": true
+		},
+		{
+			"message": "away-starter query and rendering preserve world authority",
+			"passed": true
+		},
+		{
+			"message": "away starter apply leaves authority and pending unchanged",
+			"passed": true
+		},
+		{
+			"message": "away starter apply reproduces legacy rejected request",
+			"passed": true
+		},
+		{
+			"message": "away starter apply observes the matching authority refusal event",
+			"passed": true
+		},
+		{
+			"message": "away starter apply does not create or rewrite the saved weave",
+			"passed": true
+		},
+		{
+			"message": "Escape cancels preview without closing inspection",
+			"passed": true
+		},
+		{
+			"message": "Escape closes unavailable Loom",
+			"passed": true
+		},
+		{
+			"message": "ordinary Interact opens Loom at actual station",
+			"passed": true
+		},
+		{
+			"message": "station-assign saves native frame",
+			"passed": true
+		},
+		{
+			"message": "station-assign query and rendering preserve world authority",
+			"passed": true
+		},
+		{
+			"message": "active-action saves native frame",
+			"passed": true
+		},
+		{
+			"message": "active-action query and rendering preserve world authority",
+			"passed": true
+		},
+		{
+			"message": "active action leaves authority and pending unchanged",
+			"passed": true
+		},
+		{
+			"message": "active action reproduces legacy rejected request",
+			"passed": true
+		},
+		{
+			"message": "active action observes the matching authority refusal event",
+			"passed": true
+		},
+		{
+			"message": "active action does not create or rewrite the saved weave",
+			"passed": true
+		},
+		{
+			"message": "two-participant round fixture reaches actual ACTIVE admission",
+			"passed": true
+		},
+		{
+			"message": "active-round saves native frame",
+			"passed": true
+		},
+		{
+			"message": "active-round query and rendering preserve world authority",
+			"passed": true
+		},
+		{
+			"message": "active round leaves authority and pending unchanged",
+			"passed": true
+		},
+		{
+			"message": "active round reproduces legacy rejected request",
+			"passed": true
+		},
+		{
+			"message": "active round observes the matching authority refusal event",
+			"passed": true
+		},
+		{
+			"message": "active round does not create or rewrite the saved weave",
+			"passed": true
+		},
+		{
+			"message": "cooldown fixture has a nonlegacy spell and outside replacement",
+			"passed": true
+		},
+		{
+			"message": "cooldown-removal saves native frame",
+			"passed": true
+		},
+		{
+			"message": "cooldown-removal query and rendering preserve world authority",
+			"passed": true
+		},
+		{
+			"message": "cooldown removal leaves authority and pending unchanged",
+			"passed": true
+		},
+		{
+			"message": "cooldown removal reproduces legacy rejected request",
+			"passed": true
+		},
+		{
+			"message": "cooldown removal observes the matching authority refusal event",
+			"passed": true
+		},
+		{
+			"message": "cooldown removal does not create or rewrite the saved weave",
+			"passed": true
+		},
+		{
+			"message": "cooldown-expired saves native frame",
+			"passed": true
+		},
+		{
+			"message": "cooldown-expired query and rendering preserve world authority",
+			"passed": true
+		},
+		{
+			"message": "pending saves native frame",
+			"passed": true
+		},
+		{
+			"message": "pending query and rendering preserve world authority",
+			"passed": true
+		},
+		{
+			"message": "pending assignment cannot be replaced",
+			"passed": true
+		},
+		{
+			"message": "pending Escape closes view without revoking request",
+			"passed": true
+		},
+		{
+			"message": "eligible selection receives authority confirmation in exact chosen slot",
+			"passed": true
+		},
+		{
+			"message": "assignment preserves Flux and saves confirmed weave",
+			"passed": true
+		},
+		{
+			"message": "confirmed saves native frame",
+			"passed": true
+		},
+		{
+			"message": "confirmed query and rendering preserve world authority",
+			"passed": true
+		},
+		{
+			"message": "movement resumes after closing Loom",
+			"passed": true
+		},
+		{
+			"message": "newly assigned Water Heavy begins real paid cast through slot input",
+			"passed": true
+		}
+	],
+	"failures": [],
+	"fixture": "initial positions, action lock, round phase and pending request are arranged; actual UI events, assignment, persistence, movement and paid casting are production paths",
+	"flux_spent": 18000,
+	"frames": [
+		{
+			"authority_hash": "e3f07abc4921105bfe509989053beda5c27b5e238ab9685d302742ed550a7d7f",
+			"availability": {
+				"enabled": true,
+				"reason": "Legacy UI always paints active assignment controls."
+			},
+			"expected_enabled": false,
+			"image": "away-assign.png",
+			"label": "away-assign",
+			"modal_query_us": [],
+			"status": "Inspect any spell here. Stand beside the Spell Loom to seal changes."
+		},
+		{
+			"authority_hash": "e3f07abc4921105bfe509989053beda5c27b5e238ab9685d302742ed550a7d7f",
+			"availability": {
+				"enabled": true,
+				"reason": "Legacy UI always paints active assignment controls."
+			},
+			"expected_enabled": false,
+			"image": "away-starter.png",
+			"label": "away-starter",
+			"modal_query_us": [],
+			"status": "Starter preview only. Review all twelve slots, then choose Apply or Cancel."
+		},
+		{
+			"authority_hash": "e1a6bb8395c149696d178136d0f57b67da9522bdea19faaef14af637543a6d81",
+			"availability": {
+				"enabled": true,
+				"reason": "Legacy UI always paints active assignment controls."
+			},
+			"expected_enabled": true,
+			"image": "station-assign.png",
+			"label": "station-assign",
+			"modal_query_us": [],
+			"status": "Drag a spell onto a slot, or select both and choose Assign."
+		},
+		{
+			"authority_hash": "519f2c44ee81ec4f1e4b14d52a150d6ff7f14891466fe86d49031707f3dc9e4b",
+			"availability": {
+				"enabled": true,
+				"reason": "Legacy UI always paints active assignment controls."
+			},
+			"expected_enabled": false,
+			"image": "active-action.png",
+			"label": "active-action",
+			"modal_query_us": [],
+			"status": "Drag a spell onto a slot, or select both and choose Assign."
+		},
+		{
+			"authority_hash": "e1a6bb8395c149696d178136d0f57b67da9522bdea19faaef14af637543a6d81",
+			"availability": {
+				"enabled": true,
+				"reason": "Legacy UI always paints active assignment controls."
+			},
+			"expected_enabled": false,
+			"image": "active-round.png",
+			"label": "active-round",
+			"modal_query_us": [],
+			"status": "That request is unavailable. Your previous weave remains usable; wait for active actions and cooldowns before replacing a spell."
+		},
+		{
+			"authority_hash": "303d1145db2835eea71d61524bfb07ac2cfffd5ed4be3638ffeec444857748d4",
+			"availability": {
+				"enabled": true,
+				"reason": "Legacy UI always paints active assignment controls."
+			},
+			"expected_enabled": false,
+			"image": "cooldown-removal.png",
+			"label": "cooldown-removal",
+			"modal_query_us": [],
+			"status": "That request is unavailable. Your previous weave remains usable; wait for active actions and cooldowns before replacing a spell."
+		},
+		{
+			"authority_hash": "e1a6bb8395c149696d178136d0f57b67da9522bdea19faaef14af637543a6d81",
+			"availability": {
+				"enabled": true,
+				"reason": "Legacy UI always paints active assignment controls."
+			},
+			"expected_enabled": true,
+			"image": "cooldown-expired.png",
+			"label": "cooldown-expired",
+			"modal_query_us": [],
+			"status": "That request is unavailable. Your previous weave remains usable; wait for active actions and cooldowns before replacing a spell."
+		},
+		{
+			"authority_hash": "e1a6bb8395c149696d178136d0f57b67da9522bdea19faaef14af637543a6d81",
+			"availability": {
+				"enabled": true,
+				"reason": "Legacy UI always paints active assignment controls."
+			},
+			"expected_enabled": false,
+			"image": "pending.png",
+			"label": "pending",
+			"modal_query_us": [],
+			"status": "That request is unavailable. Your previous weave remains usable; wait for active actions and cooldowns before replacing a spell."
+		},
+		{
+			"authority_hash": "c50d7c489a1d118a33f51ab03ab6c1f21c12f7ac1fbe52d96c986bd30973ef0d",
+			"availability": {
+				"enabled": true,
+				"reason": "Legacy UI always paints active assignment controls."
+			},
+			"expected_enabled": true,
+			"image": "confirmed.png",
+			"label": "confirmed",
+			"modal_query_us": [],
+			"status": "Twelve spell positions applied."
+		}
+	],
+	"not_run": [
+		"physical input",
+		"network transport/lifecycle",
+		"human feel",
+		"all 32 spells by 12 slots"
+	],
+	"paid_wire": 181,
+	"passed": true,
+	"runtime_identity": {
+		"authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate.",
+		"build_id": "p55-1b26a51136d1",
+		"canonical_encoding": "utf8-lf-tagged-length-v1",
+		"engine_identity": "4.7.1.stable.official.a13da4feb",
+		"protocol_version": 55.0,
+		"record_count": 2800.0,
+		"runtime_source_sha256": "1b26a51136d12142fe8c745e334d57af3f73a8ea4244d3ea2ac4bbb004f650b5",
+		"schema_version": 1.0,
+		"scope_id": "production-runtime-source-v1",
+		"snapshot_schema": 21.0,
+		"status": "candidate_generated_not_promoted"
+	},
+	"user_data": "C:/Users/sende/Projects/hex/.godot/hex-probe-loom-availability-before-v2/isolated-roaming/Godot/app_userdata/FLUX 2"
+}

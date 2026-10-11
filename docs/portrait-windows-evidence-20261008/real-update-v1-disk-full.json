@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "passed": false,
+  "scope": "Real offline payload update/rollback/forward and save-file preservation; no gameplay or save compatibility certification.",
+  "test_root": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008",
+  "installed_root": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\real payload install",
+  "previous_installer": {
+    "Path": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-setup-teams-20261007\\HEX-Setup-p57-a41d15007f8c.exe",
+    "Sha256": "6550effbe1aca6cf594813095744a9c1de967b7917527eb0ffabb0bd3d442e5d",
+    "BuildId": "p57-a41d15007f8c",
+    "Version": "p57-a41d15007f8c-b711a9418f",
+    "ManifestHash": "18e2be30cdf5bf41814ce57f817027408e12370b40e9ff12a36b6b6cb4ae6777"
+  },
+  "installer": {
+    "Path": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-setup-portraits-20261008\\HEX-Setup-p57-30b90507f932.exe",
+    "Sha256": "526ded2ddbe167645ae2ca622bedd7844329ea38116ac8e99a4e750deb6b6a8b",
+    "BuildId": "p57-30b90507f932",
+    "Version": "p57-30b90507f932-4174801e8f",
+    "ManifestHash": "7db9754c5f148b17be98042c09e2e5029c9cd893867eca2dbc064d366d13f800"
+  },
+  "godot_run": false,
+  "user_profile_install": false,
+  "shortcuts_created": false,
+  "remote_updates_tested": false,
+  "saved_profile_sentinel": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\isolated-roaming\\Godot\\app_userdata\\FLUX 2\\installer-preservation-sentinel.txt",
+  "sentinel_sha256": "207747c2ad3095ab9ed95b71bc9cc758b6187990763da6423ecb83d1774d8863",
+  "checks": [
+    {
+      "stage": "01-old-install",
+      "current": "p57-a41d15007f8c-b711a9418f|18e2be30cdf5bf41814ce57f817027408e12370b40e9ff12a36b6b6cb4ae6777|--fullbody-art,--pixel-cast",
+      "previous": "",
+      "selected_directory": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\real payload install\\versions\\p57-a41d15007f8c-b711a9418f",
+      "all_payload_hashes_verified": true,
+      "saved_profile_sentinel_preserved": true
+    }
+  ],
+  "processes": [
+    {
+      "stage": "01-old-install",
+      "executable": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-setup-teams-20261007\\HEX-Setup-p57-a41d15007f8c.exe",
+      "executable_sha256": "6550effbe1aca6cf594813095744a9c1de967b7917527eb0ffabb0bd3d442e5d",
+      "arguments": [
+        "--quiet",
+        "--install-only",
+        "--no-shortcuts",
+        "--install-root=C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\real payload install"
+      ],
+      "pid": 22804,
+      "exit_code": 0,
+      "forced_stop_requested": false,
+      "forced_stop": false,
+      "error": ""
+    },
+    {
+      "stage": "02-new-update",
+      "executable": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-setup-portraits-20261008\\HEX-Setup-p57-30b90507f932.exe",
+      "executable_sha256": "526ded2ddbe167645ae2ca622bedd7844329ea38116ac8e99a4e750deb6b6a8b",
+      "arguments": [
+        "--quiet",
+        "--install-only",
+        "--no-shortcuts",
+        "--install-root=C:\\Users\\sende\\Projects\\hex\\exports\\hex-installer-tests\\portrait-real-update-20261008\\real payload install"
+      ],
+      "pid": 23112,
+      "exit_code": 1,
+      "forced_stop_requested": false,
+      "forced_stop": false,
+      "error": "Installer failed: exit=1, stderr=No replacement build was selected. There is not enough space on the disk.\r\n\r\n"
+    }
+  ],
+  "failure": "System.Management.Automation.RuntimeException: Installer failed: exit=1, stderr=No replacement build was selected. There is not enough space on the disk.\r\n\r\n"
+}

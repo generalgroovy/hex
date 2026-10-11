@@ -1,0 +1,55 @@
+{
+  "id": "luuh_i_zeh",
+  "artifact": "narrow_rear_body_correction_v2",
+  "status": "rear_body_improved_not_fully_accepted",
+  "authorization": "Lead authorized one final surgical rear-body generation and required stopping afterward.",
+  "attempts_this_correction": 1,
+  "generation_stopped": true,
+  "generation_tool": "built-in image_gen",
+  "generated_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-3caf-7f02-8030-e4d35e2365b4\\exec-9a5d0f28-5984-43c9-9957-2b292e58cc5d.png",
+  "reference_paths": [
+    "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/luuh_i_zeh-detail.png"
+  ],
+  "observed_columns": 2,
+  "observed_rows": 4,
+  "source_column_mapping": {
+    "NE": 0,
+    "NW": 1
+  },
+  "source_row_mapping": {
+    "idle": 0,
+    "walk_left_contact_candidate": 1,
+    "walk_right_contact_candidate": 2,
+    "cast": 3
+  },
+  "dimensions": [
+    1024,
+    1536
+  ],
+  "alpha_check": {
+    "format": "Format32bppArgb",
+    "corner_alpha": 0,
+    "middle_gutter_alpha": 0,
+    "bottom_right_alpha": 0
+  },
+  "inspection": {
+    "rear_body": "PASS visually: actual back armor plates/central spine seam, four appendage roots at upper back, rear shoulder blades, plain belt band without front buckle/tabard, back of knees/heels. Torso and head face away together.",
+    "head": "IMPROVED but strict gate UNCERTAIN: no frontal face or round eye, but tiny yellow/orange slivers remain at far head edges in all frames and can read as residual side-eye marks. Cannot certify zero visible eyes.",
+    "contacts": "FAIL/UNRESOLVED: row1 and row2 change stride width and arm position, but same outer foot remains rear/lifted. They are not an unequivocal opposite-contact pair.",
+    "whole_bodies": "8 intact bodies; four spider appendages, two ordinary arms and two legs preserved. New bodies are noticeably slender/longer-legged than the compact full-sheet source.",
+    "cast": "Arms reach away toward the facing direction with hands mostly side-occluded; back torso remains correct."
+  },
+  "visual_issues": [
+    "Tiny yellow head-edge slivers still ambiguously read as eyes; strict eye-free requirement not confirmed.",
+    "Opposite walk-contact pair remains unresolved.",
+    "Proportions are more slender/long-legged than main full-sheet source; do not stretch individual frames to force match."
+  ],
+  "preserved_files": [
+    "source.png",
+    "receipt.json",
+    "rear-correction.png",
+    "rear-correction-receipt.json"
+  ],
+  "prompt": "Use case: stylized-concept. Asset: Luuh I Zeh TRUE REAR-BODY correction atlas. Use image1 ONLY for purple spiderkin identity, gold-edged dark-purple chitin armor, head silhouette, four articulated spider-back appendages, and pixel style. Reconstruct actual unseen BACK anatomy; DO NOT put a backwards head on a front torso.\nExactly2 columns x4 rows (8 whole-body sprites), transparent RGBA, generous gutters, consistent compact charming proportions.\nEvery sprite is seen FROM BEHIND. LEFT column body and head both face AWAY toward TOP-RIGHT (NE rear45). RIGHT column both face AWAY toward TOP-LEFT (NW rear45).\nMandatory visible rear anatomy: smooth BACK OF CRANIUM and nape beneath swept crown spikes, ZERO eyes or face; BACK armor plates around a visible central spine seam; all FOUR spider-appendage attachment ROOTS visible joining upper BACK, two roots each side; rear shoulder blades; back of waist with only a plain belt band, NO front buckle; armored buttocks; BACKS OF KNEES and HEELS, not front kneecaps/toe fronts. Absolutely NO front chest panel, NO abdominal front plates, NO front hanging tabard, NO face or eye sliver. Torso and feet turn with the head. Strong rear silhouette.\nFour back appendages plus two ordinary humanoid arms and two legs, fixed anatomy in all8 frames.\nRow0 idle; row1 walking left-foot-forward/right-arm-forward; row2 genuinely opposite contact right-foot-forward/left-arm-forward with visible heel/leg reversal; row3 both EMPTY hands pushed away ahead of chest, so mostly HIDDEN BEHIND TORSO from this rear camera. Keep all appendages/feet intact.\nCrisp modest retro pixel clusters and limited shading matching identity. No scenery, glow, shadow, spells, props, weapons, text, grid, extra columns or extra rows.",
+  "runtime_imports_or_tests": "NOT_RUN; source art only; no engine/runtime writes"
+}

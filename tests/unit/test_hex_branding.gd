@@ -14,9 +14,13 @@ func run() -> int:
  for device: int in [ControlBindingEditor.DEVICE_KEYBOARD, ControlBindingEditor.DEVICE_MOUSE, ControlBindingEditor.DEVICE_CONTROLLER]:
   bootstrap.station_activation_device = device
   equal(bootstrap._station_interact_label(), "UNBOUND", "actual station caller recognizes editor's unbound sentinel")
-  equal(bootstrap._station_interact_instruction("OPEN"), "Bind Interact at Controls Lectern.", "unbound station instruction gives actionable settings path")
+  equal(bootstrap._station_interact_instruction("OPEN"), "Bind Interact in the Lodge controls.", "unbound station instruction gives actionable settings path")
  bootstrap.station_activation_device = ControlBindingEditor.DEVICE_KEYBOARD
  bootstrap.player_preferences.keyboard_bindings[&"interact"] = KEY_G
  equal(bootstrap._station_interact_instruction("OPEN"), "G OPEN", "actual station caller displays custom interaction key")
+ bootstrap.service_directory.is_open = true
+ equal(bootstrap._station_interact_instruction("toggles ready"), "ENTER / A toggles ready", "open service menu advertises its actual confirm keys, not outside-world Interact")
+ bootstrap.service_directory.is_open = false
+ equal(bootstrap._station_interact_instruction("OPEN"), "G OPEN", "leaving the menu restores the configured world interaction key")
  bootstrap.free()
  return finish("hex-branding")

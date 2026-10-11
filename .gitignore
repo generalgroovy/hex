@@ -35,6 +35,15 @@ docs/verification/**/*.exe
 docs/verification/**/*.pck
 docs/verification/**/*.zip
 
+# Isolated test profiles and shader caches are local even when a curated
+# receipt is copied outside docs/verification. Keep the surrounding evidence.
+/docs/**/isolated-roaming/
+/docs/**/shader_cache/
+/docs/**/*.pid
+
+# This generated art archive duplicates the retained fullbody-v2 directory.
+/art_batches/character_cast_v1/output/HEX-30-character-fullbody-idle-v2.zip
+
 # Import recipes inside the declared runtime identity are source inputs, not caches.
 !src/**/*.import
 !content/**/*.import

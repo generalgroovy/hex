@@ -39,6 +39,11 @@ func _run() -> void:
 			return
 	viewport.size = Vector2i(1280,720)
 	sheet.position = Vector2(0,-1504)
+	sheet.visible_rect = Rect2(0, 1504, 1280, 720)
+	if not sheet.renderer.illustrated_kit.prepare_ground_view(sheet.visible_rect):
+		push_error("South annex native terrain could not be prepared before capture")
+		quit(1)
+		return
 	sheet.reduced = false
 	sheet.queue_redraw()
 	await process_frame
@@ -46,7 +51,7 @@ func _run() -> void:
 	if not _save_viewport(viewport, output.path_join("annex-native.png"), Vector2i(1280,720)):
 		quit(1)
 		return
-	print("PASS: actual3072x2304 campus normal/reduced and native southern wall view; map ", sheet.layout.content_hash)
+	print("PASS: actual%dx%d campus normal/reduced and native southern wall view; map %s" % [sheet.layout.canvas_size.x, sheet.layout.canvas_size.y, sheet.layout.content_hash])
 	quit(0)
 
 
@@ -69,9 +74,10 @@ class AnnexSheet:
 	var language := VisualLanguage.new()
 	var layout := SanctumCampusLayout.new()
 	var reduced := false
+	var visible_rect := Rect2()
 
 	func configure() -> bool:
-		return language.load_from_file() and layout.load_from_file("res://content/maps/sanctum_campus_g2_v1.json") and renderer.configure(language) and renderer.configure_campus(layout)
+		return language.load_from_file() and layout.load_from_file("res://content/maps/sanctum_campus_g2_v1.json") and renderer.configure(language) and renderer.configure_campus(layout) and renderer.prepare_overview()
 
 	func _draw() -> void:
-		renderer.draw(self, layout, 120, Vector2(560,1856), reduced)
+		renderer.draw(self, layout, 120, Vector2(560,1856), reduced, true, visible_rect)

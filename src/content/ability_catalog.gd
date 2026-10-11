@@ -2,7 +2,7 @@ class_name AbilityCatalog
 extends RefCounted
 
 
-const SUPPORTED_SCHEMA_VERSION: int = 5
+const SUPPORTED_SCHEMA_VERSION: int = 6
 const SLOT_KINDS: Array[String] = ["passive", "primary", "active", "mobility", "ultimate"]
 const SHAPES: Array[String] = ["passive", "projectile", "beam", "spray", "field", "defense", "movement", "ultimate"]
 const DELIVERIES: Array[String] = ["self", "aimed", "placed"]
@@ -12,21 +12,20 @@ const MATERIAL_OPERATIONS: Array[String] = ["none", "heat", "cool", "wet", "char
 const RUNTIME_STATUSES: Array[String] = ["playable", "catalog_only"]
 const CADENCE_TIER_IDS: Array[String] = ["rapid", "pressure", "tempo", "control"]
 const MAX_PROJECTILE_PATTERN_LANES: int = 9
-const DISPLAY_ELEMENT_IDS: Array[String] = ["water", "earth", "fire", "wind", "ice", "charge", "light", "dark"]
-const DISPLAY_ELEMENT_WIRE_IDS: Array[int] = [3, 1, 2, 4, 5, 6, 7, 8]
-const DISPLAY_ELEMENT_WIRES: Dictionary = {
-	"water": 3,
-	"earth": 1,
-	"fire": 2,
-	"wind": 4,
-	"ice": 5,
-	"charge": 6,
-	"light": 7,
-	"dark": 8,
+const ElementRulesScript = preload("res://src/content/element_rules.gd")
+const DISPLAY_ELEMENT_IDS: Array[String] = ElementRulesScript.IDS
+const DISPLAY_ELEMENT_WIRE_IDS: Array[int] = ElementRulesScript.WIRE_IDS
+const DISPLAY_ELEMENT_WIRES: Dictionary = ElementRulesScript.BY_ID
+const ARCHIVED_EIGHT_ELEMENTS: Array[String] = ["water", "earth", "fire", "wind", "ice", "charge", "light", "dark"]
+const RETIRED_ABILITY_WIRES: Dictionary = {
+	"arc-primary": 101, "vector-lance": 110, "convergence-engine": 130,
+	"rimewake": 144, "rime-burst": 150, "arc-burst": 151,
+	"spark-shower": 167, "voltline": 168, "static-snare": 169,
+	"rimeshard": 170, "sleet": 171, "frostline": 172,
+	"thunder-shell": 187, "spark-stream": 188, "frost-shell": 189, "sleet-stream": 190,
 }
-const FIRST_EIGHT_ELEMENTS: Array[String] = DISPLAY_ELEMENT_IDS
-const KNOWN_SPELL_FAMILIES: Array[String] = ["bolt", "heavy", "rapid", "burst", "spray", "beam", "field"]
-const SPELL_MATRIX_FAMILIES: Array[String] = ["bolt", "heavy", "rapid", "spray"]
+const KNOWN_SPELL_FAMILIES: Array[String] = ["bolt", "heavy", "rapid", "burst", "spray", "beam", "field", "mantle", "fuse", "split", "rebound"]
+const SPELL_MATRIX_FAMILIES: Array[String] = MixtureCatalog.FAMILIES
 const BURST_ANGLES: Array[int] = [-24, -12, 0, 12, 24]
 
 var data: Dictionary = {}
@@ -65,6 +64,7 @@ func validate() -> bool:
 	runtime_wire_ids = []
 	spell_matrix_ids = []
 	spell_matrix_wire_ids = []
+	if not MixtureCatalog.is_valid(): return _fail("the complete authored mixture catalog is required")
 	if int(data.get("schema_version", 0)) != SUPPORTED_SCHEMA_VERSION:
 		return _fail("unsupported ability catalog schema")
 	if String(data.get("id", "")).is_empty():
@@ -111,12 +111,14 @@ func validate() -> bool:
 		if wire_id <= 0 or element_wires.has(wire_id):
 			return _fail("element wire ids must be positive and unique: %d" % wire_id)
 		elements_by_id[element_id] = element
+		if bool(element.get("runtime_enabled", false)) != (element_id in DISPLAY_ELEMENT_IDS):
+			return _fail("only the six canonical elements may be runtime-enabled: %s" % element_id)
 		element_wires[wire_id] = element_id
 		element_ids_in_authored_order.append(element_id)
 	if elements_by_id.size() != 12:
 		return _fail("the thematic catalog must declare exactly twelve element families")
 	if element_ids_in_authored_order.slice(0, DISPLAY_ELEMENT_IDS.size()) != DISPLAY_ELEMENT_IDS:
-		return _fail("the first eight authored elements must use display/development order")
+		return _fail("the six live authored elements must use canonical display order")
 	for display_index: int in range(DISPLAY_ELEMENT_IDS.size()):
 		var display_element_id := DISPLAY_ELEMENT_IDS[display_index]
 		if not elements_by_id.has(display_element_id) \
@@ -134,9 +136,17 @@ func validate() -> bool:
 		var ability_id := String(ability.get("id", ""))
 		if not ability.get("element", "") is String:
 			return _fail("ability must declare one element string: %s" % ability_id)
-		for hybrid_key: String in ["elements", "secondary_element", "dual_element", "element_combination", "hybrid_elements"]:
-			if ability.has(hybrid_key):
-				return _fail("mixed-element attacks are gated until chemistry acceptance: %s" % ability_id)
+		for alias: String in ["elements", "secondary_element", "dual_element", "element_combination", "hybrid_elements"]:
+			if ability.has(alias): return _fail("use canonical element_mask rather than ambiguous payload aliases: %s" % ability_id)
+		# One mask is authoritative; legacy element remains a palette adapter.
+		if String(ability.get("runtime_status", "")) == "playable":
+			var mask_value: Variant = ability.get("element_mask", ElementRules.MASK_BY_WIRE.get(ElementRules.BY_ID.get(ability.get("element", ""), 0), 0))
+			if not _bounded_integer(mask_value,1,63): return _fail("spell element mask must be a whole nonempty subset: %s" % ability_id)
+			var mask := int(mask_value)
+			if int(ElementRules.BY_ID.get(ability.get("element", ""),0)) != MixtureCatalog.representative_wire(mask): return _fail("spell palette must match its canonical payload representative: %s" % ability_id)
+			if mask < 1 or mask > 63 or MixtureCatalog.wire_for(mask, _spell_family(ability)) != int(ability.get("wire_id", 0)):
+				return _fail("spell must own one canonical mixture/family identity: %s" % ability_id)
+			ability["element_mask"] = mask
 		var wire_id := int(ability.get("wire_id", 0))
 		var slot_kind := String(ability.get("slot_kind", ""))
 		var element_id := String(ability.get("element", ""))
@@ -170,7 +180,7 @@ func validate() -> bool:
 			return _fail("mobility ability requires movement shape: %s" % ability_id)
 		if not element_id.is_empty() and not elements_by_id.has(element_id):
 			return _fail("ability has unknown element: %s" % ability_id)
-		if not element_id.is_empty() and not bool((elements_by_id[element_id] as Dictionary).get("runtime_enabled", false)):
+		if not element_id.is_empty() and not bool((elements_by_id[element_id] as Dictionary).get("runtime_enabled", false)) and not _is_retired_ability(ability):
 			return _fail("ability uses a gated element family: %s" % ability_id)
 		if String(ability.get("authority", "")) != "simulation":
 			return _fail("ability must be simulation-authoritative: %s" % ability_id)
@@ -188,8 +198,10 @@ func validate() -> bool:
 		if slot_kind == "active" and (points <= 0 or flux_cost <= 0 or cooldown_ms <= 0 or startup_ms <= 0 or recovery_ms <= 0):
 			return _fail("catalog actives require positive points, Flux, cooldown, startup, and recovery: %s" % ability_id)
 		if runtime_status == "playable":
+			if String(ability.get("display_name", "")).strip_edges().is_empty():
+				return _fail("runtime spell requires an authored display name: %s" % ability_id)
 			if element_id.is_empty():
-				return _fail("every playable spell requires exactly one element: %s" % ability_id)
+				return _fail("every playable spell requires a canonical representative element: %s" % ability_id)
 			var cadence_tier_id := String(ability.get("cadence_tier", ""))
 			if not CADENCE_TIER_IDS.has(cadence_tier_id):
 				return _fail("runtime spell requires a cadence tier: %s" % ability_id)
@@ -216,7 +228,7 @@ func validate() -> bool:
 		return false
 	if not _validate_retained_first_eight_bursts():
 		return false
-	content_hash = CanonicalContent.sha256(data)
+	content_hash = CanonicalContent.sha256({"catalog": data, "mixtures": MixtureCatalog.all()})
 	if content_hash.length() != 64:
 		return _fail("ability catalog hash failed")
 	return true
@@ -251,7 +263,7 @@ func _expanded_abilities() -> Array:
 		if family not in KNOWN_SPELL_FAMILIES or not templates.has(family):
 			_fail("spell matrix extension has no valid family template")
 			return []
-		if element_id not in FIRST_EIGHT_ELEMENTS or not operations.has(element_id):
+		if (element_id not in DISPLAY_ELEMENT_IDS and not _is_retired_ability(extension)) or not operations.has(element_id):
 			_fail("spell matrix extension has no valid element operation")
 			return []
 		var template_value: Variant = templates[family]
@@ -287,8 +299,8 @@ func _validate_spell_matrix() -> bool:
 	if not matrix_value is Dictionary:
 		return _fail("spell matrix must be an object")
 	var matrix: Dictionary = matrix_value
-	if matrix.get("row_order", []) != FIRST_EIGHT_ELEMENTS:
-		return _fail("spell matrix rows must use the canonical first-eight element order")
+	if matrix.get("row_order", []) != DISPLAY_ELEMENT_IDS:
+		return _fail("spell matrix rows must use the canonical six-element order")
 	if matrix.get("column_order", []) != SPELL_MATRIX_FAMILIES:
 		return _fail("spell matrix columns must use the canonical attack-family order")
 	var cells_value: Variant = matrix.get("cells", {})
@@ -296,7 +308,7 @@ func _validate_spell_matrix() -> bool:
 		return _fail("spell matrix cells must be an object")
 	var cells: Dictionary = cells_value
 	var claimed: Dictionary = {}
-	for element_id: String in FIRST_EIGHT_ELEMENTS:
+	for element_id: String in DISPLAY_ELEMENT_IDS:
 		var row_value: Variant = cells.get(element_id, [])
 		if not row_value is Array or (row_value as Array).size() != SPELL_MATRIX_FAMILIES.size():
 			return _fail("spell matrix row must contain every attack family: %s" % element_id)
@@ -313,8 +325,21 @@ func _validate_spell_matrix() -> bool:
 			claimed[ability_id] = true
 			spell_matrix_ids.append(ability_id)
 			spell_matrix_wire_ids.append(int(ability.get("wire_id", 0)))
-	if claimed.size() != FIRST_EIGHT_ELEMENTS.size() * SPELL_MATRIX_FAMILIES.size():
+	if claimed.size() != DISPLAY_ELEMENT_IDS.size() * SPELL_MATRIX_FAMILIES.size():
 		return _fail("spell matrix must fill every element/family cell exactly once")
+	# Stable runtime order begins with the retained24 and then the new cells.
+	spell_matrix_ids.clear()
+	spell_matrix_wire_ids.clear()
+	for wire_value: Variant in data.get("runtime_wire_ids", []):
+		var wire := int(wire_value)
+		if not ability_ids_by_wire.has(wire): return _fail("unknown expanded matrix wire")
+		if String(ability_from_wire(wire).get("runtime_status","")) != "playable": return _fail("runtime wire order contains a gated ability")
+		spell_matrix_wire_ids.append(wire)
+		spell_matrix_ids.append(String(ability_ids_by_wire[wire]))
+	if spell_matrix_ids.size() != 504: return _fail("the complete63x8 matrix is required")
+	for mask: int in range(1,64):
+		for family: String in SPELL_MATRIX_FAMILIES:
+			if MixtureCatalog.wire_for(mask,family) not in spell_matrix_wire_ids: return _fail("missing mixture/family cell")
 	return true
 
 
@@ -354,12 +379,12 @@ func _validate_playable_simulation(ability: Dictionary) -> bool:
 	if not _bounded_integer(ability.get("reaction_strength"), 1, 15):
 		return _fail("runtime spell reaction_strength must be an integer from 1 through 15: %s/reaction_strength" % ability_id)
 	var required_positive: Array[String] = ["radius"]
+	if not ability.get("repeat_while_held", false) is bool or (bool(ability.get("repeat_while_held", false)) and _spell_family(ability) not in ["bolt", "rapid"]):
+		return _fail("only Bolt and Rapid may repeat held spell slots: %s" % ability_id)
 	match shape:
 		"projectile":
 			required_positive.append_array(["speed", "damage", "lifetime_ms"])
-			if not ability.get("repeat_while_held", false) is bool or (bool(ability.get("repeat_while_held", false)) and _spell_family(ability) != "rapid"):
-				return _fail("only Rapid may repeat held spell slots: %s" % ability_id)
-			if _spell_family(ability) == "heavy":
+			if _spell_family(ability) in ["heavy", "fuse"]:
 				if not _bounded_integer(ability.get("blast_radius"), 1000, 120000) or not _bounded_integer(ability.get("blast_damage"), 1, 100000):
 					return _fail("Heavy needs a bounded blast: %s" % ability_id)
 			elif ability.has("blast_radius") or ability.has("blast_damage"):
@@ -428,7 +453,7 @@ func _validate_runtime_wire_order() -> bool:
 	if runtime_wire_ids.size() != playable_spell_ids().size():
 		return _fail("runtime wire order must contain every playable spell exactly once")
 	if runtime_wire_ids != spell_matrix_wire_ids:
-		return _fail("runtime wire order must equal the exact row-major four-family spell matrix")
+		return _fail("runtime wire order must equal the complete stable mask/family catalog")
 	return true
 
 
@@ -438,10 +463,13 @@ func _validate_retained_first_eight_bursts() -> bool:
 		var ability: Dictionary = abilities_by_id[ability_id]
 		if not ability.has("delivery_kernel"):
 			continue
+		if String(ability.delivery_kernel) in ["mantle", "fuse", "split", "rebound"]:
+			if _spell_family(ability) != String(ability.delivery_kernel): return _fail("delivery kernel disagrees with family")
+			continue
 		if String(ability.get("delivery_kernel", "")) != "burst":
 			return _fail("ability declares an unsupported delivery kernel: %s" % ability_id)
 		var element_id := String(ability.get("element", ""))
-		if element_id not in FIRST_EIGHT_ELEMENTS or bursts_by_element.has(element_id):
+		if element_id not in ARCHIVED_EIGHT_ELEMENTS or bursts_by_element.has(element_id):
 			return _fail("first-eight Burst elements must be unique and complete: %s" % element_id)
 		if String(ability.get("shape", "")) != "projectile" \
 			or String(ability.get("delivery", "")) != "aimed" \
@@ -462,9 +490,9 @@ func _validate_retained_first_eight_bursts() -> bool:
 		if angles != BURST_ANGLES:
 			return _fail("first-eight Burst geometry must remain identical: %s" % ability_id)
 		bursts_by_element[element_id] = ability_id
-	if bursts_by_element.size() != FIRST_EIGHT_ELEMENTS.size():
+	if bursts_by_element.size() != ARCHIVED_EIGHT_ELEMENTS.size():
 		return _fail("ability catalog requires exactly one comparable Burst for every first-eight element")
-	for element_id: String in FIRST_EIGHT_ELEMENTS:
+	for element_id: String in ARCHIVED_EIGHT_ELEMENTS:
 		if not bursts_by_element.has(element_id):
 			return _fail("ability catalog is missing the %s Burst" % element_id)
 	return true
@@ -472,6 +500,14 @@ func _validate_retained_first_eight_bursts() -> bool:
 
 static func element_display_name(element_id: String) -> String:
 	return "Air" if element_id == "wind" else element_id.capitalize()
+
+
+static func _is_retired_ability(ability: Dictionary) -> bool:
+	var wire := int(ability.get("wire_id", 0))
+	var old_element := "ice" if wire in [144, 150, 170, 171, 172, 189, 190] else "charge"
+	return String(ability.get("runtime_status", "")) == "catalog_only" \
+		and String(ability.get("element", "")) == old_element \
+		and int(RETIRED_ABILITY_WIRES.get(String(ability.get("id", "")), -1)) == wire
 
 
 func ability(ability_id: String) -> Dictionary:
@@ -506,10 +542,12 @@ func playable_spell_ids() -> Array[String]:
 
 
 func spell_id_at(element_id: String, family_id: String) -> String:
-	var row := FIRST_EIGHT_ELEMENTS.find(element_id)
+	var row := DISPLAY_ELEMENT_IDS.find(element_id)
 	var column := SPELL_MATRIX_FAMILIES.find(family_id)
-	var index := row * SPELL_MATRIX_FAMILIES.size() + column
-	return spell_matrix_ids[index] if row >= 0 and column >= 0 and index < spell_matrix_ids.size() else ""
+	if row < 0 or column < 0: return ""
+	var element_wire := int(elements_by_id.get(element_id, {}).get("wire_id", 0))
+	var mask := int(ElementRules.MASK_BY_WIRE.get(element_wire, 0))
+	return ability_id_from_wire(MixtureCatalog.wire_for(mask, family_id))
 
 
 func _fail(message: String) -> bool:

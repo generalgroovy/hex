@@ -2,8 +2,10 @@ class_name ReactionCatalog
 extends RefCounted
 
 
-const SUPPORTED_SCHEMA_VERSION: int = 2
-const FIRST_EIGHT_ELEMENTS: Array[String] = ["earth", "fire", "water", "wind", "ice", "charge", "light", "dark"]
+const DEFAULT_PATH: String = "res://content/reactions/six_element_reactions_v2.json"
+const SUPPORTED_SCHEMA_VERSION: int = 3
+const FUNDAMENTAL_ELEMENTS: Array[String] = ["earth", "fire", "water", "wind", "light", "dark"]
+const Policy = preload("res://src/sim/hex/hex_recipe_policy.gd")
 const DEFERRED_ELEMENTS: Array[String] = ["spirit", "chaos", "gravity", "time"]
 const CHANNELS: Array[String] = ["structure", "heat", "saturation", "pressure_momentum", "charge", "radiance_vitality", "decay"]
 const PRIMITIVES: Array[String] = ["surface", "flow", "cover", "field", "conduction", "visibility", "hazard", "refraction", "fracture"]
@@ -28,7 +30,7 @@ var reaction_ids_by_wire: Dictionary = {}
 var reaction_ids_by_pair: Dictionary = {}
 
 
-func load_from_file(path: String) -> bool:
+func load_from_file(path: String = DEFAULT_PATH) -> bool:
 	last_error = ""
 	data = {}
 	if not FileAccess.file_exists(path):
@@ -54,12 +56,12 @@ func validate() -> bool:
 	reaction_ids_by_pair = {}
 	if int(data.get("schema_version", 0)) != SUPPORTED_SCHEMA_VERSION:
 		return _fail("unsupported reaction catalog schema")
-	if String(data.get("id", "")) != "first-eight-element-reactions-v1":
+	if String(data.get("id", "")) != "six-element-reactions-v2":
 		return _fail("reaction catalog identity is unsupported")
-	if String(data.get("status", "")) != "bounded_level_one" or not bool(data.get("runtime_enabled", false)):
-		return _fail("reaction runtime requires the bounded first-grade contract")
-	if _string_array(data.get("fundamental_elements", [])) != FIRST_EIGHT_ELEMENTS:
-		return _fail("reaction catalog requires the exact ordered first-eight elements")
+	if String(data.get("status", "")) != "bounded_combinations" or not bool(data.get("runtime_enabled", false)):
+		return _fail("reaction runtime requires the bounded finite combination contract")
+	if _string_array(data.get("fundamental_elements", [])) != FUNDAMENTAL_ELEMENTS:
+		return _fail("reaction catalog requires the exact ordered six fundamental elements")
 	if _string_array(data.get("deferred_elements", [])) != DEFERRED_ELEMENTS:
 		return _fail("reaction catalog must keep the four deferred elements explicit")
 	var policy_value: Variant = data.get("policy", {})
@@ -69,7 +71,7 @@ func validate() -> bool:
 	if not bool(policy.get("pair_order_is_symmetric", false)) \
 		or not bool(policy.get("worldbone_immutable", false)) \
 		or String(policy.get("worldbone_policy", "")) != "reject" \
-		or String(policy.get("mutation_gate", "")) != "bounded_level_one" \
+		or String(policy.get("mutation_gate", "")) != "bounded_combinations" \
 		or String(policy.get("priority", "")) != "map_interaction_before_damage_multiplier":
 		return _fail("reaction safety policy is incomplete")
 	for required_phase: String in ["formation", "active", "residue_or_decay"]:
@@ -108,8 +110,8 @@ func ordered_wire_ids() -> Array[int]:
 
 
 static func pair_key(element_a: String, element_b: String) -> String:
-	var index_a := FIRST_EIGHT_ELEMENTS.find(element_a)
-	var index_b := FIRST_EIGHT_ELEMENTS.find(element_b)
+	var index_a := FUNDAMENTAL_ELEMENTS.find(element_a)
+	var index_b := FUNDAMENTAL_ELEMENTS.find(element_b)
 	if index_a < 0 or index_b < 0:
 		return ""
 	return "%s+%s" % [element_a, element_b] if index_a <= index_b else "%s+%s" % [element_b, element_a]
@@ -119,9 +121,9 @@ func _validate_channels() -> bool:
 	if _string_array(data.get("channels", [])) != CHANNELS:
 		return _fail("reaction channels must use the exact bounded integer model")
 	var vectors_value: Variant = data.get("element_channel_vectors", {})
-	if not vectors_value is Dictionary or (vectors_value as Dictionary).size() != FIRST_EIGHT_ELEMENTS.size():
-		return _fail("every first-eight element requires one channel vector")
-	for element_id: String in FIRST_EIGHT_ELEMENTS:
+	if not vectors_value is Dictionary or (vectors_value as Dictionary).size() != FUNDAMENTAL_ELEMENTS.size():
+		return _fail("every six fundamental element requires one channel vector")
+	for element_id: String in FUNDAMENTAL_ELEMENTS:
 		var vector_value: Variant = (vectors_value as Dictionary).get(element_id, {})
 		if not vector_value is Dictionary or (vector_value as Dictionary).size() != CHANNELS.size():
 			return _fail("element channel vector is incomplete: %s" % element_id)
@@ -191,8 +193,8 @@ func _validate_profiles() -> bool:
 
 func _validate_reactions() -> bool:
 	var reaction_values: Variant = data.get("reactions", [])
-	if not reaction_values is Array or (reaction_values as Array).size() != 36:
-		return _fail("reaction catalog requires exactly 36 first-eight pairs")
+	if not reaction_values is Array or (reaction_values as Array).size() != 63:
+		return _fail("reaction catalog requires exactly 63 six-element combinations")
 	for value: Variant in reaction_values:
 		if not value is Dictionary:
 			return _fail("every reaction must be an object")
@@ -205,11 +207,14 @@ func _validate_reactions() -> bool:
 			return _fail("reaction ids must be non-empty and unique: %s" % reaction_id)
 		if not _bounded_integer(wire_id_value, 301, 4095) or reaction_ids_by_wire.has(int(wire_id_value)):
 			return _fail("reaction wire ids must be stable and unique: %s" % reaction_id)
-		if pair.size() != 2 or pair[0] not in FIRST_EIGHT_ELEMENTS or pair[1] not in FIRST_EIGHT_ELEMENTS:
-			return _fail("reaction pair must use two first-eight elements: %s" % reaction_id)
-		var canonical_key := pair_key(pair[0], pair[1])
-		if canonical_key != "%s+%s" % [pair[0], pair[1]] or reaction_ids_by_pair.has(canonical_key):
+		if pair.size() < 2 or pair.size() > 6 or combination_key(pair).is_empty():
+			return _fail("reaction pair must use two six fundamental elements: %s" % reaction_id)
+		var canonical_key := combination_key(pair)
+		if canonical_key != "+".join(pair) or reaction_ids_by_pair.has(canonical_key):
 			return _fail("reaction pairs must be canonical and unique: %s" % reaction_id)
+		var live := Policy.definition(int(wire_id_value))
+		if live.is_empty() or live.ingredient_layers != pair or String(live.id) != reaction_id:
+			return _fail("authored combination disagrees with executable recipe: %s" % reaction_id)
 		if not runtime_profiles.has(profile_id):
 			return _fail("reaction uses an unknown runtime profile: %s" % reaction_id)
 		if String(entry.get("name", "")).is_empty() \
@@ -222,11 +227,9 @@ func _validate_reactions() -> bool:
 		reactions_by_id[reaction_id] = entry.duplicate(true)
 		reaction_ids_by_wire[int(wire_id_value)] = reaction_id
 		reaction_ids_by_pair[canonical_key] = reaction_id
-	for left_index: int in range(FIRST_EIGHT_ELEMENTS.size()):
-		for right_index: int in range(left_index, FIRST_EIGHT_ELEMENTS.size()):
-			var expected_key := pair_key(FIRST_EIGHT_ELEMENTS[left_index], FIRST_EIGHT_ELEMENTS[right_index])
-			if not reaction_ids_by_pair.has(expected_key):
-				return _fail("reaction catalog is missing pair: %s" % expected_key)
+	for wire: int in Policy.active_wire_ids():
+		if not reaction_ids_by_wire.has(wire):
+			return _fail("reaction catalog is missing executable combination: %d" % wire)
 	return true
 
 
@@ -251,3 +254,18 @@ static func _bounded_integer(value: Variant, minimum: int, maximum: int) -> bool
 func _fail(message: String) -> bool:
 	last_error = message
 	return false
+
+
+static func combination_key(elements: Array[String]) -> String:
+	if elements.size() < 2 or elements.size() > 6: return ""
+	var ordered: Array[String] = []
+	for id: String in FUNDAMENTAL_ELEMENTS:
+		var count := elements.count(id)
+		if count > 1 and not (elements.size() == 2 and count == 2): return ""
+		for unused: int in count: ordered.append(id)
+	if ordered.size() != elements.size(): return ""
+	return "+".join(ordered)
+
+
+func combination(elements: Array[String]) -> Dictionary:
+	return (reactions_by_id.get(String(reaction_ids_by_pair.get(combination_key(elements), "")), {}) as Dictionary).duplicate(true)

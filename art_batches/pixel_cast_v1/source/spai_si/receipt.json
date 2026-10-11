@@ -1,0 +1,96 @@
+{
+  "id": "spai_si",
+  "display_name": "Spai Si",
+  "ancestry": "demon",
+  "body_type": "middle",
+  "generator": "built-in image_gen",
+  "generator_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-ece9-7650-9c46-262da7c2d18d\\exec-07a6b251-7eb2-4e2b-9cfa-f9ffe7f99285.png",
+  "source_file": "source.png",
+  "attempt": 1,
+  "references": [
+    "C:\\Users\\sende\\Projects\\hex\\assets\\sprites\\fullbody_cast_v1\\spai_si-detail.png",
+    "C:\\Users\\sende\\Pictures\\styleref1.png",
+    "C:\\Users\\sende\\Projects\\hex\\art_batches\\pixel_body_pilot_v1\\source\\s-wayne.png"
+  ],
+  "observed": {
+    "width": 1536,
+    "height": 1024,
+    "columns": 8,
+    "rows": 4,
+    "row_mapping": [
+      "idle",
+      "walk_contact_a",
+      "walk_contact_b",
+      "cast"
+    ],
+    "alpha": "RGBA confirmed; sampled 14115/24576 alpha-zero pixels, soft intermediate alpha also present",
+    "canonical_headings": [
+      "S",
+      "SE",
+      "E",
+      "NE",
+      "N",
+      "NW",
+      "W",
+      "SW"
+    ],
+    "source_column_mapping_by_row": [
+      [
+        0,
+        1,
+        2,
+        5,
+        4,
+        3,
+        6,
+        7
+      ],
+      [
+        0,
+        1,
+        2,
+        5,
+        4,
+        3,
+        6,
+        7
+      ],
+      [
+        0,
+        1,
+        2,
+        5,
+        4,
+        3,
+        6,
+        7
+      ],
+      [
+        0,
+        1,
+        2,
+        5,
+        4,
+        3,
+        6,
+        7
+      ]
+    ]
+  },
+  "visual_assessment": {
+    "status": "accepted_source_candidate_with_rear_column_mapping",
+    "strengths": [
+      "32 complete connected bodies with visible horns and tail",
+      "four requested rows and eight headings, needing rear-column remap",
+      "opposed walk contact poses and empty-hand cast",
+      "costume and demon identity retained"
+    ],
+    "quality_flags": [
+      "FINAL DIRECTION AUDIT: ALL ROWS source column3 is NW and column5 is NE; canonical output uses source [0,1,2,5,4,3,6,7]",
+      "Generated alpha edges are soft/nonbinary; deterministic alpha cleanup required by lead",
+      "N walk-contact change is subtler than profile stride",
+      "Source pixel clusters require nearest-neighbor production sizing; runtime not evaluated"
+    ]
+  },
+  "exact_prompt": "Use case: stylized-concept\nAsset type: production 2D game character pixel-art sprite source sheet for H.E.X.\nPrimary request: ONE coherent identity, exactly EIGHT columns and FOUR rows, total 32 separate full-body poses on genuinely transparent RGBA.\nInput images: Image 1 is CURRENT identity reference, preserving its face, ancestry, hair, clothing colors, costume and anatomy; Image 2 is old pixel STYLE ONLY, ignore its text, outdated names/races, props and spells; Image 3 is compact appealing proportion/style and eight-heading reference ONLY, do NOT copy its five-row layout or its identity.\nStyle/medium: charming endearing compact oldschool pixel art, expressive readable face, crisp deliberate chunky pixel clusters, restrained shading and dark colored outline; unified cranial head size and sturdy connected anatomy. Do not elongate limbs or torso. Middle body build, approx 2.7 heads high with volume rather than stretched height; the final assembler will make body 63 pixels high inside 128 pixel cells.\nComposition: exactly 8 equal columns x 4 equal rows, landscape sheet. Each sprite centered in its own invisible cell with generous fully transparent gutters and margin. Entire head, hands, feet, costume, tail/wings when present must fit intact. No sprites touching.\nEvery row has these precise eight distinct directions LEFT TO RIGHT: column0 S straight FRONT facing viewer; column1 SE FRONT-RIGHT 45 degrees; column2 E RIGHT PROFILE; column3 NE BACK-RIGHT 45 degrees with back of head and NO frontal eyes; column4 N straight BACK with NO face; column5 NW BACK-LEFT 45 degrees with back of head and NO frontal eyes; column6 W LEFT PROFILE; column7 SW FRONT-LEFT 45 degrees.\nFOUR ROWS ONLY top to bottom: row0 relaxed IDLE neutral standing; row1 WALK CONTACT A with LEFT foot forward and RIGHT arm forward; row2 WALK CONTACT B with RIGHT foot forward and LEFT arm forward, clearly opposite legs from row1; row3 CAST with both EMPTY hands extended forward in that heading. Four rows, never five. Keep body shape, head size, costume and scale consistent through all 32 poses; head, torso, arms, hands, legs, feet physically connected.\nNo weapons, staves, held tools, baked spells, magic particles, aura, ground shadow, ground plane, scene, labels, letters, watermarks, visible grid or checkerboard. Actual transparent background with alpha=0 between figures.\nSubject: Spai Si, current ancestry DEMON: friendly red skin, two upward-curving crimson horns, swept tousled black hair, long pointed red ears, narrow red arrow-tip tail, deep forest green fitted gold-trim tunic/coat, dark trousers and dark boots. Keep his tail and horns in every relevant view, no wings. Preserve CURRENT identity in Image 1; do not make an elf."
+}

@@ -2,19 +2,30 @@ class_name MovementSystem
 extends RefCounted
 
 const ResourceRecoveryScript = preload("res://src/sim/entities/resource_recovery.gd")
+const Perks = preload("res://src/sim/entities/identity_perk_policy.gd")
 
 
 static func step(state: PlayerState, command: SimCommand, config: SimConfig, world: CollisionWorld, ground_target_ratio: int = 1000, acceleration_ratio: int = 1000, braking_ratio: int = 1000) -> void:
 	_advance_timers(state, config)
+	var movement_cancelled := command.has_pressed(SimCommand.PRESSED_CANCEL_MOVEMENT)
+	if movement_cancelled:
+		cancel_jump_intent(state)
+		state.jump_held_last_tick = false
+		_clear_action_buffers(state)
+		if state.wall_skim_ticks > 0:
+			_end_wall_run(state, "wall_cancelled", config)
+		# The cancel edge owns all action admission, but keeps physical momentum.
+		command = command.copy()
+		command.pressed_actions = 0
+		command.held_actions = 0
 	state.stamina_recovery_idle_ticks = ResourceRecoveryScript.advance_idle(state.stamina_recovery_idle_ticks, state.stamina_recovery_delay_ticks, config.tick_rate)
 	var direction: Vector2i = _direction(command.move_x, command.move_y, Vector2i(state.facing_x, state.facing_y))
 	if command.move_x != 0 or command.move_y != 0:
 		state.facing_x = direction.x
 		state.facing_y = direction.y
 	_capture_action_buffers(state, command, config)
-	if state.wall_skim_ticks <= 0 and state.technique_buffer_ticks > 0:
+	if state.wall_skim_ticks <= 0 and (state.technique_buffer_ticks > 0 or command.has_held(SimCommand.HELD_JUMP)):
 		_refresh_wall_contact(state, world, config)
-	_update_wall_attachment(state, command, world, config)
 	if state.is_airborne() and (command.move_x != 0 or command.move_y != 0):
 		state.landing_input_x = direction.x
 		state.landing_input_y = direction.y
@@ -30,6 +41,15 @@ static func step(state: PlayerState, command: SimCommand, config: SimConfig, wor
 		PlayerState.ControlState.STUNNED,
 		PlayerState.ControlState.ROOTED,
 	]
+	if control_locked:
+		# Interruption entry cancels the old intent. A fresh press made during
+		# recovery still owns its ordinary bounded buffer, never an early action.
+		_cancel_jump_anticipation(state)
+		if state.wall_skim_ticks > 0:
+			_end_wall_run(state, "wall_interrupted", config)
+	else:
+		_handle_jump_hold(state, command, direction, config, world)
+	_update_wall_attachment(state, command, world, config)
 	if not control_locked and not impact_tech_started and state.movement_commitment_ticks == 0:
 		# Exactly one newest movement intent owns this tick, including free brakes.
 		if state.evade_buffer_ticks > 0:
@@ -40,6 +60,15 @@ static func step(state: PlayerState, command: SimCommand, config: SimConfig, wor
 			_consume_slide_buffer(state, direction, config)
 		elif state.technique_buffer_ticks > 0:
 			_consume_technique_buffer(state, command, direction, config, world)
+	# A grounded press/release received in one command is a complete tap. A
+	# released buffered press also launches instead of waiting for a future key.
+	if not control_locked and state.jumpsquat_active and not command.has_held(SimCommand.HELD_JUMP):
+		_release_ground_jump(state, direction, config)
+	state.crouching = (
+		not control_locked and not state.is_airborne() and not state.jumpsquat_active
+		and state.slide_ticks <= 0 and state.air_dodge_ticks <= 0
+		and command.has_held(SimCommand.HELD_SLIDE)
+	)
 	if not control_locked:
 		_apply_variable_air_time(state, command, config)
 		_apply_variable_slide_time(state, command, config)
@@ -69,23 +98,125 @@ static func step(state: PlayerState, command: SimCommand, config: SimConfig, wor
 	_update_mode(state, command)
 	state.slide_held_last_tick = command.has_held(SimCommand.HELD_FAST_FALL)
 	state.jump_held_last_tick = command.has_held(SimCommand.HELD_JUMP)
+	if not state.jump_held_last_tick and not movement_cancelled:
+		state.wallrun_armed = true
+
+
+static func cancel_jump_intent(state: PlayerState) -> void:
+	_cancel_jump_anticipation(state)
+	state.jump_buffer_ticks = 0
+
+
+static func _cancel_jump_anticipation(state: PlayerState) -> void:
+	state.jumpsquat_active = false
+	state.jumpsquat_ticks = 0
+	state.crouching = false
+	state.wallrun_armed = false
+	if state.air_floating:
+		_end_air_float(state, "flight_cancelled")
+
+
+static func _handle_jump_hold(state: PlayerState, command: SimCommand, direction: Vector2i, config: SimConfig, world: CollisionWorld) -> void:
+	var held := command.has_held(SimCommand.HELD_JUMP)
+	# Only the effective Slide owner may suppress held Jump admission/release.
+	# A discarded chord edge cannot replace wallrun with a paid aerial fallback.
+	if state.evade_buffer_ticks > 0 or state.technique_buffer_ticks > 0 or _fresh_slide_intent(state, command):
+		return
+	if state.wall_skim_ticks > 0 and state.jump_held_last_tick and not held:
+		# Test contact before release: a removed wall must not grant an impulse.
+		if _has_wall_contact(state, world, state.wall_skim_surface_id):
+			state.wall_contact_id = state.wall_skim_surface_id
+			state.wall_memory_ticks = config.milliseconds_to_ticks(MovementTuning.WALL_MEMORY_MS)
+			# Neutral release is pure outward normal, never the previous facing,
+			# cursor direction, or tangential run velocity. Directed releases keep
+			# their normalized current-input tangent before legal-away projection.
+			var release_direction := _direction(command.move_x, command.move_y, Vector2i(state.wall_x, state.wall_y))
+			if not _try_air_wall_kick(state, release_direction, config):
+				_end_wall_run(state, "wall_release_empty", config)
+		else:
+			_end_wall_run(state, "wall_end", config)
+		return
+	if state.jumpsquat_active:
+		if held:
+			state.jumpsquat_ticks = mini(state.jumpsquat_ticks + 1, config.milliseconds_to_ticks(MovementTuning.JUMPSQUAT_CHARGE_MS))
+		else:
+			_release_ground_jump(state, direction, config)
+	if not held or not state.is_airborne() or state.wall_skim_ticks > 0 or state.movement_commitment_ticks > 0:
+		return
+	# This existing replicated latch owns the held air gesture, not just walls.
+	# A discarded/consumed hold cannot buy a later action after recovery. A
+	# genuinely fresh buffered Jump can still claim ownership when control returns.
+	if state.jump_buffer_ticks > 0:
+		state.wallrun_armed = true
+	if not state.wallrun_armed:
+		return
+	if state.wallrun_armed and (command.move_x != 0 or command.move_y != 0) and _has_wall_contact(state, world, state.wall_contact_id):
+		if _try_wall_skim(state, direction, config):
+			state.wallrun_armed = false
+			return
+	if state.flight_capable and not state.air_floating and state.air_dodge_ticks <= 0 and not state.fast_fall_armed:
+		_try_air_float(state, command, direction, config)
+
+
+static func _release_ground_jump(state: PlayerState, direction: Vector2i, config: SimConfig) -> void:
+	var charge_ticks := state.jumpsquat_ticks
+	var prepared_slide_jump := state.jumpsquat_active and state.hop_mode == PlayerState.MovementMode.SLIDE_JUMP
+	state.jumpsquat_active = false
+	state.jumpsquat_ticks = 0
+	if state.is_airborne():
+		return
+	var started := _try_slide_jump(state, direction, config) if state.slide_ticks > 0 or prepared_slide_jump else _try_hop(state, direction, config)
+	if started:
+		var maximum_ticks := maxi(1, config.milliseconds_to_ticks(MovementTuning.JUMPSQUAT_CHARGE_MS))
+		state.air_vertical_velocity = MovementTuning.JUMP_VERTICAL_SPEED + (MovementTuning.CHARGED_JUMP_VERTICAL_SPEED - MovementTuning.JUMP_VERTICAL_SPEED) * mini(charge_ticks, maximum_ticks) / maximum_ticks
+		state.crouching = false
+
+
+static func _effective_movement_pressed(state: PlayerState, command: SimCommand) -> int:
+	var movement_pressed: int = command.pressed_actions & (SimCommand.PRESSED_EVADE | SimCommand.PRESSED_JUMP | SimCommand.PRESSED_SLIDE | SimCommand.PRESSED_TECHNIQUE)
+	if command.has_held(SimCommand.HELD_JUMP) and state.jump_held_last_tick:
+		movement_pressed &= ~SimCommand.PRESSED_JUMP
+	return movement_pressed
+
+
+static func _fresh_slide_intent(state: PlayerState, command: SimCommand) -> bool:
+	var movement_pressed := _effective_movement_pressed(state, command)
+	return (movement_pressed & (SimCommand.PRESSED_EVADE | SimCommand.PRESSED_JUMP)) == 0 and (
+		command.has_pressed(SimCommand.PRESSED_SLIDE)
+		or (state.is_airborne() and command.has_held(SimCommand.HELD_FAST_FALL) and not state.slide_held_last_tick)
+	)
 
 
 static func _capture_action_buffers(state: PlayerState, command: SimCommand, config: SimConfig) -> void:
 	var buffer_ticks: int = config.milliseconds_to_ticks(MovementTuning.INPUT_BUFFER_MS)
-	var movement_pressed: int = command.pressed_actions & (SimCommand.PRESSED_EVADE | SimCommand.PRESSED_JUMP | SimCommand.PRESSED_SLIDE | SimCommand.PRESSED_TECHNIQUE)
-	if command.has_held(SimCommand.HELD_JUMP) and state.jump_held_last_tick:
-		movement_pressed &= ~SimCommand.PRESSED_JUMP
+	var movement_pressed := _effective_movement_pressed(state, command)
+	# Held-only airborne Slide is the same fresh owner as its pressed edge.
+	# Promote it before buffer replacement, never over effective Evade/Jump.
+	if _fresh_slide_intent(state, command):
+		movement_pressed |= SimCommand.PRESSED_SLIDE
+	var jump_owns := (movement_pressed & SimCommand.PRESSED_JUMP) != 0 and (movement_pressed & SimCommand.PRESSED_EVADE) == 0
+	if not jump_owns and movement_pressed != 0:
+		# Including refusal: a newer intent consumes the old held Jump gesture.
+		# The release latch at the end of step(), or a new Jump buffer, rearms it.
+		state.wallrun_armed = false
 	if movement_pressed == 0:
 		return
 	_clear_action_buffers(state)
+	if (movement_pressed & SimCommand.PRESSED_EVADE) or not (movement_pressed & SimCommand.PRESSED_JUMP):
+		state.jumpsquat_active = false
+		state.jumpsquat_ticks = 0
 	if movement_pressed & SimCommand.PRESSED_EVADE:
 		state.evade_buffer_ticks = buffer_ticks
 		state.evade_buffer_airborne = state.is_airborne()
 	elif movement_pressed & SimCommand.PRESSED_JUMP:
 		state.jump_buffer_ticks = buffer_ticks
-	elif movement_pressed & SimCommand.PRESSED_SLIDE and not state.is_airborne():
-		state.slide_buffer_ticks = buffer_ticks
+	elif movement_pressed & SimCommand.PRESSED_SLIDE:
+		# A fresh air Slide can bridge one real landing within the ordinary
+		# bounded intent window. Its descent stays free; the grounded purchase
+		# rechecks speed, cooldown, commitment and Stamina. An active air dodge
+		# keeps the existing fast-fall/wavedash path without another purchase.
+		if not state.is_airborne() or state.air_dodge_ticks <= 0:
+			state.slide_buffer_ticks = buffer_ticks
 	elif movement_pressed & SimCommand.PRESSED_TECHNIQUE:
 		state.technique_buffer_ticks = buffer_ticks
 
@@ -113,26 +244,29 @@ static func _consume_slide_buffer(state: PlayerState, direction: Vector2i, confi
 static func _consume_jump_buffer(state: PlayerState, command: SimCommand, direction: Vector2i, config: SimConfig) -> void:
 	if state.jump_buffer_ticks <= 0:
 		return
-	var consumed := false
-	if state.slide_ticks > 0:
-		consumed = _try_slide_jump(state, direction, config)
-	elif state.wall_skim_ticks > 0:
-		if state.hop_stage < 2:
-			consumed = _try_air_wall_kick(state, direction, config)
-		else:
-			consumed = _try_air_float(state, command, direction, config)
-	elif state.hop_ticks > 0:
-		var outward := direction.x * state.wall_x + direction.y * state.wall_y > 0
-		if state.wall_memory_ticks > 0 and state.wall_contact_id > 0 and outward and state.hop_stage == 1:
-			consumed = _try_air_wall_kick(state, direction, config)
-		else:
-			consumed = _try_air_float(state, command, direction, config)
-	elif state.air_dodge_ticks > 0 and not state.is_rolling():
-		consumed = _try_air_float(state, command, direction, config)
-	elif state.air_dodge_ticks <= 0 or state.is_rolling():
-		consumed = _try_hop(state, direction, config)
-	if consumed:
+	if state.wall_skim_ticks > 0:
 		state.jump_buffer_ticks = 0
+		return # Wall jump belongs to release, not a repeated press.
+	if state.is_airborne():
+		var consumed := false
+		if state.flight_capable:
+			consumed = _try_air_float(state, command, direction, config)
+		else:
+			consumed = _try_double_jump(state, direction, config)
+		if consumed:
+			state.jump_buffer_ticks = 0
+		return
+	state.jump_buffer_ticks = 0
+	var prepared_mode := PlayerState.MovementMode.SLIDE_JUMP if state.slide_ticks > 0 else PlayerState.MovementMode.HOP
+	# Gathering ends the previous action, not its actual remaining travel.
+	# Keep its paid takeoff family/cooldown, but discard any resumable impulse.
+	# Complete same-command taps never occupy a held preparation tick and coast.
+	if command.has_held(SimCommand.HELD_JUMP):
+		_cancel_authored_movement(state)
+	state.hop_mode = prepared_mode
+	state.jumpsquat_active = true
+	state.jumpsquat_ticks = 0
+	state.last_event = "jumpsquat"
 
 
 static func _consume_evade_buffer(state: PlayerState, command: SimCommand, direction: Vector2i, config: SimConfig) -> void:
@@ -195,15 +329,16 @@ static func _consume_technique_buffer(state: PlayerState, command: SimCommand, d
 
 
 static func _apply_variable_air_time(state: PlayerState, command: SimCommand, config: SimConfig) -> void:
+	# The same filtered edge priority owns paid buffers and free fast-fall.
+	# A refused/buffered Jump still outranks Slide, while held Jump repeats do
+	# not. Recording held Slide below prevents a discarded edge from rearming.
+	var fresh_air_slide := _fresh_slide_intent(state, command)
+	if state.wall_skim_ticks > 0 and fresh_air_slide:
+		_end_wall_run(state, "wall_fast_fall", config)
+		state.fast_fall_armed = true
 	if not state.is_airborne() or state.wall_skim_ticks > 0:
 		state.fast_falling = false
 		return
-	# Evade owns a same-tick movement chord. Still record held Slide below so a
-	# suppressed C press cannot re-arm fast-fall on the following held tick.
-	var fresh_air_slide := not command.has_pressed(SimCommand.PRESSED_EVADE) and (
-		command.has_pressed(SimCommand.PRESSED_SLIDE)
-		or (command.has_held(SimCommand.HELD_FAST_FALL) and not state.slide_held_last_tick)
-	)
 	# A takeoff grace tick excludes the C edge used for the preceding slide.
 	if fresh_air_slide and state.variable_jump_grace_ticks == 0:
 		state.fast_fall_armed = true
@@ -220,23 +355,9 @@ static func _apply_variable_air_time(state: PlayerState, command: SimCommand, co
 		state.fast_falling = true
 		return
 	state.fast_falling = false
-	if state.variable_jump_grace_ticks > 0:
-		return
-	var jump_is_held: bool = command.has_held(SimCommand.HELD_JUMP) or command.has_pressed(SimCommand.PRESSED_JUMP)
-	if state.air_vertical_velocity <= 0 or state.air_dodge_ticks > 0:
-		return
-	if jump_is_held:
-		if state.stamina < config.per_tick(MovementTuning.JUMP_SUSTAIN_DRAIN_PER_SECOND):
-			state.air_vertical_velocity = mini(state.air_vertical_velocity, MovementTuning.SHORT_HOP_VERTICAL_SPEED)
-			state.last_event = "jump_sustain_empty"
-		else:
-			_apply_stamina_rate(state, -MovementTuning.JUMP_SUSTAIN_DRAIN_PER_SECOND, config)
-			state.jump_sustain_ticks += 1
-			state.stamina_recovery_delay_ticks = config.milliseconds_to_ticks(MovementTuning.STAMINA_RECOVERY_DELAY_MS)
-		return
-	if state.air_vertical_velocity > MovementTuning.SHORT_HOP_VERTICAL_SPEED:
-		state.air_vertical_velocity = MovementTuning.SHORT_HOP_VERTICAL_SPEED
-		state.last_event = "jump_cut"
+	# Jump height is selected during grounded anticipation. Release launches;
+	# it must not immediately shorten the arc. Air hold belongs only to flight
+	# and wallrun, never a second hidden sustain/charge cost.
 
 
 static func _apply_variable_slide_time(state: PlayerState, command: SimCommand, config: SimConfig) -> void:
@@ -276,6 +397,9 @@ static func apply_control_state(
 		return true
 	if duration_ms <= 0:
 		return false
+	# Sample the defensive posture before a hit cancels jump/flight intent.
+	if requested_state in [PlayerState.ControlState.LAUNCHED, PlayerState.ControlState.GRAPPLED]:
+		speed = Perks.scale(state, "knockback_ratio", speed)
 	# A surface/field slow cannot release forced movement or its casting gate.
 	# Do not queue it: a fresh contact after the hard-control deadline may apply.
 	if requested_state == PlayerState.ControlState.SLOWED and state.control_ticks > 0 and state.control_state in [
@@ -286,6 +410,8 @@ static func apply_control_state(
 		return false
 	if requested_state != PlayerState.ControlState.SLOWED and state.air_floating:
 		_end_air_float(state, "float_interrupted")
+	if requested_state != PlayerState.ControlState.SLOWED:
+		cancel_jump_intent(state)
 	if requested_state == PlayerState.ControlState.SLOWED:
 		var previous_ratio := state.slow_ratio if state.control_state == PlayerState.ControlState.SLOWED else 1000
 		var next_ratio := clampi(slow_ratio, MovementTuning.SLOW_MINIMUM_RATIO, MovementTuning.SLOW_MAXIMUM_RATIO)
@@ -314,19 +440,40 @@ static func _advance_timers(state: PlayerState, config: SimConfig) -> void:
 	var was_impact_recovering: bool = state.impact_recovery_ticks > 0
 	var had_movement_chain: bool = state.movement_chain_reset_ticks > 0
 	var previous_control_state: int = state.control_state
-	for property_name: StringName in [
-		&"stamina_recovery_delay_ticks", &"hop_cooldown_ticks",
-		&"air_dodge_ticks", &"air_dodge_cooldown_ticks", &"wave_dash_ticks",
-		&"slide_ticks", &"slide_cooldown_ticks", &"vault_ticks",
-		&"vault_cooldown_ticks", &"superglide_ticks", &"wall_memory_ticks",
-		&"wall_skim_ticks", &"wall_skim_cooldown_ticks", &"wall_skim_lockout_ticks",
-		&"landing_ticks", &"impact_recovery_ticks", &"wall_lockout_ticks", &"control_ticks",
-		&"jump_buffer_ticks", &"technique_buffer_ticks", &"slide_buffer_ticks",
-		&"variable_jump_grace_ticks", &"jump_protection_ticks", &"evade_buffer_ticks", &"landing_input_ticks",
-		&"movement_chain_reset_ticks", &"movement_commitment_ticks", &"wall_air_ticks",
-		&"chemistry_reveal_ticks", &"chemistry_conceal_ticks", &"chemistry_regen_block_ticks",
-	]:
-		state.set(property_name, maxi(0, int(state.get(property_name)) - 1))
+	# Direct typed fields preserve the exact countdown/order without per-actor
+	# property-name arrays or reflective get/set calls. Zero/negative values
+	# still clamp through the same integer expression.
+	state.stamina_recovery_delay_ticks = maxi(0, state.stamina_recovery_delay_ticks - 1)
+	state.hop_cooldown_ticks = maxi(0, state.hop_cooldown_ticks - 1)
+	state.air_dodge_ticks = maxi(0, state.air_dodge_ticks - 1)
+	state.air_dodge_cooldown_ticks = maxi(0, state.air_dodge_cooldown_ticks - 1)
+	state.wave_dash_ticks = maxi(0, state.wave_dash_ticks - 1)
+	state.slide_ticks = maxi(0, state.slide_ticks - 1)
+	state.slide_cooldown_ticks = maxi(0, state.slide_cooldown_ticks - 1)
+	state.vault_ticks = maxi(0, state.vault_ticks - 1)
+	state.vault_cooldown_ticks = maxi(0, state.vault_cooldown_ticks - 1)
+	state.superglide_ticks = maxi(0, state.superglide_ticks - 1)
+	state.wall_memory_ticks = maxi(0, state.wall_memory_ticks - 1)
+	state.wall_skim_ticks = maxi(0, state.wall_skim_ticks - 1)
+	state.wall_skim_cooldown_ticks = maxi(0, state.wall_skim_cooldown_ticks - 1)
+	state.wall_skim_lockout_ticks = maxi(0, state.wall_skim_lockout_ticks - 1)
+	state.landing_ticks = maxi(0, state.landing_ticks - 1)
+	state.impact_recovery_ticks = maxi(0, state.impact_recovery_ticks - 1)
+	state.wall_lockout_ticks = maxi(0, state.wall_lockout_ticks - 1)
+	state.control_ticks = maxi(0, state.control_ticks - 1)
+	state.jump_buffer_ticks = maxi(0, state.jump_buffer_ticks - 1)
+	state.technique_buffer_ticks = maxi(0, state.technique_buffer_ticks - 1)
+	state.slide_buffer_ticks = maxi(0, state.slide_buffer_ticks - 1)
+	state.variable_jump_grace_ticks = maxi(0, state.variable_jump_grace_ticks - 1)
+	state.jump_protection_ticks = maxi(0, state.jump_protection_ticks - 1)
+	state.evade_buffer_ticks = maxi(0, state.evade_buffer_ticks - 1)
+	state.landing_input_ticks = maxi(0, state.landing_input_ticks - 1)
+	state.movement_chain_reset_ticks = maxi(0, state.movement_chain_reset_ticks - 1)
+	state.movement_commitment_ticks = maxi(0, state.movement_commitment_ticks - 1)
+	state.wall_air_ticks = maxi(0, state.wall_air_ticks - 1)
+	state.chemistry_reveal_ticks = maxi(0, state.chemistry_reveal_ticks - 1)
+	state.chemistry_conceal_ticks = maxi(0, state.chemistry_conceal_ticks - 1)
+	state.chemistry_regen_block_ticks = maxi(0, state.chemistry_regen_block_ticks - 1)
 	if was_landing and state.landing_ticks == 0:
 		state.landing_intensity = 0
 	if was_impact_recovering and state.impact_recovery_ticks == 0:
@@ -404,6 +551,7 @@ static func _apply_impact_recovery_velocity(state: PlayerState, config: SimConfi
 
 
 static func _cancel_authored_movement(state: PlayerState) -> void:
+	cancel_jump_intent(state)
 	var retain_air_budget := state.is_airborne()
 	state.air_floating = false
 	state.float_ticks = 0
@@ -436,7 +584,7 @@ static func _try_hop(state: PlayerState, direction: Vector2i, config: SimConfig)
 	var cost := _movement_action_cost(state, MovementTuning.HOP_COST)
 	if state.hop_cooldown_ticks > 0 or state.stamina < cost:
 		return false
-	var wall_kick: bool = state.wall_memory_ticks > 0
+	var wall_kick: bool = state.wall_skim_ticks > 0 and state.wall_memory_ticks > 0
 	if wall_kick:
 		direction = _wall_kick_direction(direction, Vector2i(state.wall_x, state.wall_y))
 	var entry_speed := _planar_speed(state)
@@ -450,7 +598,7 @@ static func _try_hop(state: PlayerState, direction: Vector2i, config: SimConfig)
 	state.wave_dash_queued = false
 	state.wall_air_ticks = 0
 	state.fast_fall_armed = false
-	state.jump_protection_ticks = config.milliseconds_to_ticks(MovementTuning.JUMP_INVULNERABILITY_MS)
+	state.jump_protection_ticks = 0
 	state.wall_skim_ticks = 0
 	state.wall_skim_surface_id = 0
 	state.variable_jump_grace_ticks = 1
@@ -480,7 +628,7 @@ static func _try_hop(state: PlayerState, direction: Vector2i, config: SimConfig)
 
 static func _try_air_float(state: PlayerState, command: SimCommand, direction: Vector2i, config: SimConfig) -> bool:
 	var cost := _movement_action_cost(state, MovementTuning.FLOAT_COST)
-	if state.float_used or state.air_height <= 0 or state.stamina <= cost + config.per_tick(MovementTuning.FLOAT_DRAIN_PER_SECOND):
+	if not state.flight_capable or state.float_used or state.air_height < MovementTuning.GROUND_PROJECTILE_CLEARANCE_HEIGHT or state.stamina <= cost + config.per_tick(MovementTuning.FLOAT_DRAIN_PER_SECOND):
 		return false
 	if not command.has_held(SimCommand.HELD_JUMP) and not command.has_pressed(SimCommand.PRESSED_JUMP):
 		return false
@@ -509,7 +657,37 @@ static func _try_air_float(state: PlayerState, command: SimCommand, direction: V
 	return true
 
 
+static func _try_double_jump(state: PlayerState, direction: Vector2i, config: SimConfig) -> bool:
+	var cost := _movement_action_cost(state, MovementTuning.DOUBLE_JUMP_COST)
+	if state.flight_capable or state.double_jump_used or not state.is_airborne() or state.stamina < cost:
+		return false
+	_spend_movement_action(state, cost, config)
+	state.double_jump_used = true
+	state.air_floating = false
+	state.float_ticks = 0
+	state.air_dodge_ticks = 0
+	state.wave_dash_queued = false
+	state.fast_fall_armed = false
+	state.fast_falling = false
+	state.hop_stage = 2
+	state.hop_mode = PlayerState.MovementMode.DOUBLE_JUMP
+	state.air_vertical_velocity = MovementTuning.JUMP_VERTICAL_SPEED
+	state.air_height_remainder = 0
+	state.hop_ticks = _remaining_air_ticks(state, config)
+	state.jump_protection_ticks = 0
+	state.variable_jump_grace_ticks = 1
+	state.hop_x = direction.x
+	state.hop_y = direction.y
+	_capture_air_velocity(state)
+	_clear_landing_cue(state)
+	state.last_event = "double_jump"
+	return true
+
+
 static func _apply_air_float(state: PlayerState, command: SimCommand, config: SimConfig) -> void:
+	if not state.flight_capable:
+		_end_air_float(state, "flight_capability_lost")
+		return
 	state.float_ticks = maxi(0, state.float_ticks - 1)
 	if state.float_ticks == 0:
 		_end_air_float(state, "float_expired")
@@ -561,6 +739,12 @@ static func _try_air_redirect(state: PlayerState, direction: Vector2i, config: S
 	# below remains input-driven and adds no jump launch impulse.
 	state.hop_speed = mini(MovementTuning.MAX_AUTHORED_SPEED, _integer_sqrt(_speed_squared(state.air_velocity_x, state.air_velocity_y)))
 	_set_air_velocity(state, redirected, state.hop_speed)
+	if state.air_dodge_ticks > 0:
+		# Recovery still recreates its velocity from the dodge direction each
+		# tick. Carry the paid turn into that existing action, without renewing
+		# its speed, duration, protection, cooldown or spent aerial allowances.
+		state.air_dodge_x = redirected.x
+		state.air_dodge_y = redirected.y
 	state.air_redirects_remaining = 0
 	state.last_event = "air_redirect"
 	return true
@@ -625,17 +809,6 @@ static func _try_roll(state: PlayerState, direction: Vector2i, config: SimConfig
 static func is_combat_intangible(state: PlayerState, config: SimConfig) -> bool:
 	if state == null or config == null:
 		return false
-	if state.air_floating:
-		return state.air_height > 0 and state.stamina > 0 and state.float_ticks > 0
-	if state.hop_ticks > 0 and state.air_dodge_ticks <= 0:
-		return state.jump_protection_ticks > 0
-	if state.slide_ticks > 0:
-		# Slide duration can now be released or exhausted early. Cooldown age is
-		# the authoritative accepted-action clock, so sustain can never refresh
-		# or accidentally erase the separately purchased opening protection.
-		return _timer_is_in_opening_window(state.slide_cooldown_ticks,
-			config.milliseconds_to_ticks(MovementTuning.SLIDE_COOLDOWN_MS),
-			config.milliseconds_to_ticks(MovementTuning.SLIDE_INVULNERABILITY_MS))
 	if state.air_dodge_ticks > 0:
 		var action_duration_ms := MovementTuning.ROLL_DURATION_MS if state.is_rolling() else MovementTuning.AIR_DODGE_DURATION_MS
 		var invulnerability_ms := MovementTuning.ROLL_INVULNERABILITY_MS if state.is_rolling() else MovementTuning.AIR_DODGE_INVULNERABILITY_MS
@@ -645,6 +818,18 @@ static func is_combat_intangible(state: PlayerState, config: SimConfig) -> bool:
 			config.milliseconds_to_ticks(invulnerability_ms),
 		)
 	return false
+
+
+static func is_low_profile(state: PlayerState) -> bool:
+	return state != null and not state.is_airborne() and not state.jumpsquat_active and (state.slide_ticks > 0 or state.crouching)
+
+
+static func avoids_ground_effects(state: PlayerState) -> bool:
+	return state != null and state.wall_skim_ticks <= 0 and state.air_height >= MovementTuning.GROUND_PROJECTILE_CLEARANCE_HEIGHT
+
+
+static func avoids_ordinary_projectiles(state: PlayerState) -> bool:
+	return is_low_profile(state) or avoids_ground_effects(state)
 
 
 static func _timer_is_in_opening_window(remaining_ticks: int, total_ticks: int, window_ticks: int) -> bool:
@@ -661,7 +846,9 @@ static func _try_slide(state: PlayerState, direction: Vector2i, config: SimConfi
 		or _retained_speed(state, 0) < MovementTuning.SLIDE_ENTRY_SPEED
 	):
 		return false
-	state.movement_action_speed = _retained_speed(state, 0)
+	# One paid entry adds a bounded impulse to the actual incoming speed.
+	# The cooldown/chain cost gate every later boost; carving cannot renew it.
+	state.movement_action_speed = mini(MovementTuning.MAX_AUTHORED_SPEED, _retained_speed(state, 0) + MovementTuning.SLIDE_ENTRY_BOOST)
 	_spend_movement_action(state, cost, config)
 	state.air_dodge_ticks = 0
 	state.wave_dash_ticks = 0
@@ -669,8 +856,11 @@ static func _try_slide(state: PlayerState, direction: Vector2i, config: SimConfi
 	state.movement_commitment_ticks = config.milliseconds_to_ticks(MovementTuning.SLIDE_JUMP_MINIMUM_COMMITMENT_MS)
 	state.slide_ticks = config.milliseconds_to_ticks(MovementTuning.SLIDE_DURATION_MS)
 	state.slide_cooldown_ticks = config.milliseconds_to_ticks(MovementTuning.SLIDE_COOLDOWN_MS)
-	state.slide_x = direction.x
-	state.slide_y = direction.y
+	# Entry inherits actual travel; input may carve it below, never snap the
+	# earned momentum onto an unrelated current input or stale facing heading.
+	var travel := _normalized_fixed(state.velocity_x, state.velocity_y, direction)
+	state.slide_x = travel.x
+	state.slide_y = travel.y
 	state.sprinting = false
 	state.last_event = "slide"
 	return true
@@ -688,7 +878,7 @@ static func _try_slide_jump(state: PlayerState, direction: Vector2i, config: Sim
 	state.slide_ticks = 0
 	state.hop_ticks = config.milliseconds_to_ticks(MovementTuning.SLIDE_JUMP_DURATION_MS)
 	state.air_vertical_velocity = MovementTuning.JUMP_VERTICAL_SPEED
-	state.jump_protection_ticks = config.milliseconds_to_ticks(MovementTuning.JUMP_INVULNERABILITY_MS)
+	state.jump_protection_ticks = 0
 	state.variable_jump_grace_ticks = 1
 	state.jump_sustain_ticks = 0
 	state.hop_stage = 1
@@ -708,9 +898,10 @@ static func _try_slide_jump(state: PlayerState, direction: Vector2i, config: Sim
 static func _try_wall_skim(state: PlayerState, direction: Vector2i, config: SimConfig) -> bool:
 	var cost := _movement_action_cost(state, MovementTuning.WALL_SKIM_COST)
 	if (
-		state.wall_memory_ticks <= 0 or state.wall_contact_id <= 0
+		not state.is_airborne() or state.wall_memory_ticks <= 0 or state.wall_contact_id <= 0
 		or state.air_dodge_ticks > 0
-		or state.wall_skim_ticks > 0 or state.wall_skim_cooldown_ticks > 0
+		or state.wall_skim_ticks > 0
+		or (state.wall_skim_cooldown_ticks > 0 and state.wall_skim_lockout_id == state.wall_contact_id)
 		or (state.wall_skim_lockout_id == state.wall_contact_id and state.wall_skim_lockout_ticks > 0)
 		or state.slide_ticks > 0 or state.wave_dash_ticks > 0 or state.vault_ticks > 0
 		or state.stamina < cost
@@ -753,7 +944,10 @@ static func _try_wall_skim(state: PlayerState, direction: Vector2i, config: SimC
 
 
 static func _apply_velocity(state: PlayerState, command: SimCommand, direction: Vector2i, config: SimConfig, ground_target_ratio: int = 1000, acceleration_ratio: int = 1000, braking_ratio: int = 1000) -> void:
-	if state.superglide_ticks > 0:
+	if state.jumpsquat_active and not state.is_airborne():
+		_apply_jumpsquat_drag(state, config, braking_ratio)
+		return
+	elif state.superglide_ticks > 0:
 		_set_directional_velocity(state, Vector2i(state.superglide_x, state.superglide_y), MovementTuning.SUPERGLIDE_SPEED)
 	elif state.air_dodge_ticks > 0:
 		if state.is_rolling():
@@ -764,6 +958,11 @@ static func _apply_velocity(state: PlayerState, command: SimCommand, direction: 
 			_set_air_velocity(state, Vector2i(state.air_dodge_x, state.air_dodge_y), state.movement_action_speed)
 			if state.movement_commitment_ticks == 0:
 				_apply_air_velocity(state, command, direction, config)
+				if command.move_x != 0 or command.move_y != 0:
+					# Recovery steering can spend momentum. Carry that loss into the
+					# next dodge tick instead of rebuilding a hidden pre-brake impulse.
+					# Read the unslowed vector; input cannot enlarge the paid budget.
+					state.movement_action_speed = mini(state.movement_action_speed, _integer_sqrt(_speed_squared(state.air_velocity_x, state.air_velocity_y)))
 				var carved := _normalized_fixed(state.air_velocity_x, state.air_velocity_y, direction)
 				state.air_dodge_x = carved.x
 				state.air_dodge_y = carved.y
@@ -778,11 +977,7 @@ static func _apply_velocity(state: PlayerState, command: SimCommand, direction: 
 		state.velocity_x = 0
 		state.velocity_y = 0
 	elif state.slide_ticks > 0:
-		state.movement_action_speed = maxi(0, state.movement_action_speed - config.per_tick(MovementTuning.SLIDE_DRAG_PER_SECOND))
-		var slide_direction := _steer(Vector2i(state.slide_x, state.slide_y), direction, command, MovementTuning.SLIDE_STEERING)
-		state.slide_x = slide_direction.x
-		state.slide_y = slide_direction.y
-		_set_directional_velocity(state, slide_direction, state.movement_action_speed)
+		_apply_slide_velocity(state, command, direction, config)
 	elif state.hop_ticks > 0 and state.wall_skim_ticks <= 0:
 		_apply_air_velocity(state, command, direction, config)
 		return
@@ -793,7 +988,7 @@ static func _apply_velocity(state: PlayerState, command: SimCommand, direction: 
 		# jump/slide/roll admission. Air and authored actions retain their normal
 		# travel. This changes the target, never repeatedly damps momentum.
 		var grounded := not state.is_airborne() and state.air_height <= 0
-		_apply_ground_velocity(state, command, direction, config, true, 0, false, ground_target_ratio if grounded else 1000, acceleration_ratio if grounded else 1000, braking_ratio if grounded else 1000)
+		_apply_ground_velocity(state, command, direction, config, true, 0, state.jumpsquat_active, ground_target_ratio if grounded else 1000, acceleration_ratio if grounded else 1000, braking_ratio if grounded else 1000)
 		return
 	# Authored actions recreate velocity from their bounded impulse each tick,
 	# so they receive the ratio once. Input-driven movement applies it to its
@@ -803,6 +998,50 @@ static func _apply_velocity(state: PlayerState, command: SimCommand, direction: 
 		state.velocity_x = state.velocity_x * state.slow_ratio / 1000
 		@warning_ignore("integer_division")
 		state.velocity_y = state.velocity_y * state.slow_ratio / 1000
+
+
+static func _apply_slide_velocity(state: PlayerState, command: SimCommand, direction: Vector2i, config: SimConfig) -> void:
+	var speed := maxi(0, state.movement_action_speed - config.per_tick(MovementTuning.SLIDE_DRAG_PER_SECOND))
+	var travel := Vector2i(state.slide_x, state.slide_y)
+	var velocity := Vector2i(travel.x * speed / 1000, travel.y * speed / 1000)
+	if (command.move_x != 0 or command.move_y != 0) and direction != travel:
+		# Carve the earned vector at a bounded rate, not a per-frame heading
+		# blend with a hidden full-speed budget. Opposition brakes to rest;
+		# neither neutral nor forward input can regrow speed lost in the turn.
+		var opposing := travel.x * direction.x + travel.y * direction.y < 0
+		var target := Vector2i.ZERO if opposing else Vector2i(direction.x * speed / 1000, direction.y * speed / 1000)
+		var rate := MovementTuning.SLIDE_BRAKE_PER_SECOND if opposing else MovementTuning.SLIDE_CARVE_PER_SECOND
+		rate = rate * _input_magnitude(command.move_x, command.move_y) / 1000
+		velocity = _approach_vector(velocity, target, config.per_tick(rate))
+		speed = mini(speed, _integer_sqrt(_speed_squared(velocity.x, velocity.y)))
+		travel = _normalized_fixed(velocity.x, velocity.y, travel)
+	state.movement_action_speed = speed
+	state.slide_x = travel.x
+	state.slide_y = travel.y
+	state.velocity_x = velocity.x
+	state.velocity_y = velocity.y
+	state.sprinting = false
+
+
+static func _apply_jumpsquat_drag(state: PlayerState, config: SimConfig, braking_ratio: int) -> void:
+	# The live velocity is the only carried impulse. Input/aim cannot redirect
+	# or accelerate it while gathering; release uses ordinary air steering.
+	# Slow has already scaled that velocity once. Scale drag equally rather
+	# than compounding the penalty or restoring unslowed momentum each tick.
+	var slow_ratio := state.slow_ratio if state.control_state == PlayerState.ControlState.SLOWED else 1000
+	var drag := MovementTuning.JUMPSQUAT_DRAG_PER_SECOND * slow_ratio / 1000
+	drag = drag * clampi(braking_ratio, 1, 1000) / 1000
+	drag = Perks.scale(state, "ground_braking_ratio", drag)
+	var remaining := _approach_vector(Vector2i(state.velocity_x, state.velocity_y), Vector2i.ZERO, config.per_tick(drag))
+	state.velocity_x = remaining.x
+	state.velocity_y = remaining.y
+	# These inactive action stores must never resurrect pre-gather speed after
+	# cancellation, refusal or impact. Subpixel position carries forward normally.
+	state.air_velocity_x = 0
+	state.air_velocity_y = 0
+	state.hop_speed = 0
+	state.movement_action_speed = 0
+	state.sprinting = false
 
 
 static func _apply_control_velocity(state: PlayerState, config: SimConfig) -> void:
@@ -826,6 +1065,11 @@ static func _capture_air_velocity(state: PlayerState) -> void:
 	var ratio := state.slow_ratio if state.control_state == PlayerState.ControlState.SLOWED else 1000
 	state.air_velocity_x = clampi(state.velocity_x * 1000 / ratio, -MovementTuning.MAX_AUTHORED_SPEED, MovementTuning.MAX_AUTHORED_SPEED)
 	state.air_velocity_y = clampi(state.velocity_y * 1000 / ratio, -MovementTuning.MAX_AUTHORED_SPEED, MovementTuning.MAX_AUTHORED_SPEED)
+	# The authored ceiling is radial, not one full allowance on each axis.
+	# Ordinary legal carry is bit-exact; only an over-cap inherited vector clips.
+	if _speed_squared(state.air_velocity_x, state.air_velocity_y) > MovementTuning.MAX_AUTHORED_SPEED * MovementTuning.MAX_AUTHORED_SPEED:
+		var bounded := _normalized_fixed(state.velocity_x, state.velocity_y, Vector2i.ZERO)
+		_set_air_velocity(state, bounded, MovementTuning.MAX_AUTHORED_SPEED)
 	state.hop_speed = mini(MovementTuning.MAX_AUTHORED_SPEED, _integer_sqrt(_speed_squared(state.air_velocity_x, state.air_velocity_y)))
 
 
@@ -842,6 +1086,7 @@ static func _apply_air_velocity(state: PlayerState, command: SimCommand, directi
 		speed = speed * _input_magnitude(command.move_x, command.move_y) / 1000
 		var current := Vector2i(state.air_velocity_x, state.air_velocity_y)
 		var rate := MovementTuning.ACCELERATION
+		rate = Perks.scale(state, "air_steering_ratio", rate)
 		if current.x * direction.x + current.y * direction.y < MovementTuning.COUNTER_STRAFE_DOT_THRESHOLD:
 			rate = rate * MovementTuning.COUNTER_STRAFE_MULTIPLIER / 1000
 		var next := _approach_vector(current, Vector2i(direction.x * speed / 1000, direction.y * speed / 1000), config.per_tick(rate))
@@ -861,14 +1106,22 @@ static func _apply_ground_velocity(state: PlayerState, command: SimCommand, dire
 	if not moving and preserve_idle:
 		state.sprinting = false
 		return
-	var sprinting: bool = moving and command.has_held(SimCommand.HELD_SPRINT) and state.stamina > 0
+	# Admission must cover this exact fractional tick before granting its
+	# speed. A near-empty reserve cannot rely on the later drain's zero clamp.
 	@warning_ignore("integer_division")
-	var speed: int = MovementTuning.BASE_SPEED * state.movement_speed_ratio / 1000
+	var sprint_cost: int = -((state.stamina_remainder - MovementTuning.SPRINT_DRAIN_PER_SECOND) / config.tick_rate)
+	var sprinting: bool = moving and not state.crouching and command.has_held(SimCommand.HELD_SPRINT) and state.stamina > 0 and state.stamina >= sprint_cost
+	# Perk windows follow this tick's paid admission, including release/refusal.
+	state.sprinting = sprinting
+	@warning_ignore("integer_division")
+	var speed: int = Perks.scale(state, "ground_speed_ratio", MovementTuning.BASE_SPEED * state.movement_speed_ratio / 1000)
 	@warning_ignore("integer_division")
 	speed = speed * _input_magnitude(command.move_x, command.move_y) / 1000
 	if sprinting:
 		@warning_ignore("integer_division")
 		speed = speed * MovementTuning.SPRINT_MULTIPLIER / 1000
+	if state.crouching:
+		speed = speed * MovementTuning.CROUCH_SPEED_RATIO / 1000
 	if moving:
 		speed = maxi(speed, minimum_speed)
 	var slow_ratio := state.slow_ratio if state.control_state == PlayerState.ControlState.SLOWED else 1000
@@ -885,6 +1138,16 @@ static func _apply_ground_velocity(state: PlayerState, command: SimCommand, dire
 		< MovementTuning.COUNTER_STRAFE_DOT_THRESHOLD
 	)
 	var rate: int = MovementTuning.ACCELERATION if moving else MovementTuning.DECELERATION
+	# Paid-action exits and sprint release carry excess speed into ordinary
+	# motion. This only slows convergence: it never raises the input target,
+	# supplies an impulse, or restores an inactive action's velocity store.
+	# Below ordinary walk speed, the familiar release brake remains intact.
+	var ordinary_speed := Perks.scale(state, "ground_speed_ratio", MovementTuning.BASE_SPEED * state.movement_speed_ratio / 1000)
+	ordinary_speed = ordinary_speed * slow_ratio / 1000
+	ordinary_speed = ordinary_speed * clampi(ground_target_ratio, 1, 1250) / 1000
+	var carry_floor := maxi(speed, ordinary_speed)
+	if not opposing and _speed_squared(state.velocity_x, state.velocity_y) > carry_floor * carry_floor:
+		rate = MovementTuning.GROUND_CARRY_DRAG_PER_SECOND
 	if moving:
 		@warning_ignore("integer_division")
 		rate = rate * slow_ratio / 1000
@@ -901,6 +1164,7 @@ static func _apply_ground_velocity(state: PlayerState, command: SimCommand, dire
 			state.landing_ticks = 0
 			state.landing_intensity = 0
 			state.last_event = "landing_cut"
+	rate = Perks.scale(state, "ground_acceleration_ratio" if moving and not opposing else "ground_braking_ratio", rate)
 	var step_amount: int = config.per_tick(rate)
 	var approached := _approach_vector(
 		Vector2i(state.velocity_x, state.velocity_y),
@@ -956,7 +1220,14 @@ static func _integrate(state: PlayerState, config: SimConfig, world: CollisionWo
 			state.velocity_y = velocity.y
 			state.air_velocity_x = air_velocity.x
 			state.air_velocity_y = air_velocity.y
-		if state.air_dodge_ticks > 0 or state.wave_dash_ticks > 0 or state.slide_ticks > 0 or state.superglide_ticks > 0:
+		var prepared_slide := state.jumpsquat_active and state.hop_mode == PlayerState.MovementMode.SLIDE_JUMP
+		if prepared_slide:
+			# Collision owns momentum even after the finite slide timer expires.
+			# Keep the player's release-to-jump intent, but discard the old slide
+			# impulse so steering away cannot resurrect pre-impact speed.
+			state.hop_mode = PlayerState.MovementMode.HOP
+			state.movement_action_speed = _planar_speed(state)
+		if state.air_dodge_ticks > 0 or state.wave_dash_ticks > 0 or state.slide_ticks > 0 or state.superglide_ticks > 0 or prepared_slide:
 			state.air_dodge_ticks = 0
 			state.wave_dash_ticks = 0
 			state.wave_dash_queued = false
@@ -1011,7 +1282,7 @@ static func _movement_action_cost(state: PlayerState, base_cost: int) -> int:
 	var continuation_steps := mini(state.movement_chain_count, MovementTuning.MOVEMENT_CHAIN_MAXIMUM_STEPS) if state.movement_chain_reset_ticks > 0 else 0
 	var ratio := 1000 + continuation_steps * MovementTuning.MOVEMENT_CHAIN_COST_STEP_RATIO
 	@warning_ignore("integer_division")
-	return base_cost * ratio / 1000
+	return Perks.scale(state, "movement_cost_ratio", base_cost * ratio / 1000)
 
 
 static func _spend_movement_action(state: PlayerState, adjusted_cost: int, config: SimConfig) -> void:
@@ -1047,6 +1318,8 @@ static func _hop_landing_intensity(hop_mode: int, fast_falling: bool) -> int:
 
 
 static func _apply_stamina_rate(state: PlayerState, rate_per_second: int, config: SimConfig) -> void:
+	if rate_per_second > 0:
+		rate_per_second = Perks.scale(state, "stamina_recovery_ratio", rate_per_second)
 	if rate_per_second > 0 and state.chemistry_regen_block_ticks > 0:
 		return
 	if rate_per_second < 0:
@@ -1330,7 +1603,23 @@ static func _integrate_height(state: PlayerState, config: SimConfig) -> void:
 
 
 static func _land(state: PlayerState, config: SimConfig) -> void:
-	var wavedash := state.wave_dash_queued
+	# A fresh fast-fall can bring an initially high dodge to real ground contact
+	# inside the same short landing window. Judge that route on its paid dodge
+	# clock, not the natural-fall forecast captured before the player descended.
+	# The ordinary queued low dodge is unchanged; neither route renews immunity.
+	var fast_fall_wavedash := (
+		state.fast_falling and state.air_dodge_used
+		and state.hop_mode == PlayerState.MovementMode.AIR_DODGE
+		and state.impact_recovery_ticks == 0
+		and (state.control_state == PlayerState.ControlState.FREE or state.control_state == PlayerState.ControlState.SLOWED)
+		and _timer_is_in_opening_window(
+			state.air_dodge_ticks,
+			config.milliseconds_to_ticks(MovementTuning.AIR_DODGE_DURATION_MS),
+			config.milliseconds_to_ticks(MovementTuning.WAVE_DASH_INPUT_WINDOW_MS),
+		)
+	)
+	var wavedash := state.wave_dash_queued or fast_fall_wavedash
+	state.double_jump_used = false
 	state.air_floating = false
 	state.float_used = false
 	state.float_ticks = 0

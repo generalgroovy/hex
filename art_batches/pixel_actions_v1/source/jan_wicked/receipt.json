@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "character_id": "jan_wicked",
+  "display_name": "Jan Wicked",
+  "ancestry": "human",
+  "body_type": "middle",
+  "identity_authority": "content/champions/foundation_champions_v1.json",
+  "created_date": "2026-10-03",
+  "provenance": {
+    "tool": "built-in image_gen",
+    "mode": "reference-guided generation",
+    "generation_calls": 1,
+    "corrective_calls": 0,
+    "prompt_file": "art_batches/pixel_actions_v1/prompts/jan_wicked.md",
+    "generated_original": "C:/Users/sende/.codex/generated_images/01a100cb-afb1-72d1-b864-e1d86af84bae/exec-ceeafece-229d-4f77-8edf-2cf40e566c80.png",
+    "saved_source": "art_batches/pixel_actions_v1/source/jan_wicked/source.png",
+    "copy_method": "PowerShell Copy-Item; generated original retained",
+    "byte_identical_copy_sha256_verified": true,
+    "original_sha256": "DA6FC82FE49E406370F2D87B153DC2C2635EE6FA1122FFCDC2F6FD9241511967",
+    "saved_source_sha256": "DA6FC82FE49E406370F2D87B153DC2C2635EE6FA1122FFCDC2F6FD9241511967"
+  },
+  "references": [
+    {
+      "path": "C:/Users/sende/Projects/hex/assets/sprites/pixel_cast_v1/jan_wicked.png",
+      "role": "primary runtime identity, proportions, colors and costume",
+      "sha256": "268604382FFF4EBBB0F6861723FC35008B513BC010181E0DA1DE41C5A1E861C7",
+      "visually_inspected_before_generation": true
+    },
+    {
+      "path": "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/jan_wicked-detail.png",
+      "role": "supporting costume detail and profile/rear anatomy",
+      "sha256": "A44D2777B1DA4B0B35532842A254B6E47BBEAC0A7587A9F7CE0C062B328C2986",
+      "visually_inspected_before_generation": true
+    },
+    {
+      "path": "C:/Users/sende/Pictures/styleref1.png",
+      "role": "retro pixel-art style only; labels, identities and props excluded",
+      "sha256": "C0FB63C912718D64CA061CCD85817869FFC3348A3C81A910962DF57066279FD4",
+      "visually_inspected_before_generation": true
+    }
+  ],
+  "image": {
+    "width": 1774,
+    "height": 887,
+    "format": "PNG",
+    "pixel_format": "Format32bppArgb",
+    "alpha_channel": true,
+    "alpha_zero_pixels": 1121954,
+    "alpha_255_pixels": 1066,
+    "partial_alpha_pixels": 450518,
+    "nontransparent_outer_border_pixels": 2,
+    "outer_border_artifacts": [
+      {
+        "x": 350,
+        "y": 0,
+        "alpha": 1
+      },
+      {
+        "x": 351,
+        "y": 0,
+        "alpha": 1
+      }
+    ],
+    "transparency_note": "Real alpha transparency confirmed. Generated partial alpha is preserved untouched; two alpha=1 black pixels on top border are negligible generation artifacts, not cropped anatomy. Alpha cleanup and hidden-RGB removal are lead-owned.",
+    "columns": 8,
+    "rows": 4,
+    "complete_pose_count": 32,
+    "column_headings": [
+      "S",
+      "SE",
+      "E",
+      "NE",
+      "N",
+      "NW",
+      "W",
+      "SW"
+    ],
+    "row_actions": [
+      "jumpsquat_anticipation",
+      "rising_tucked_jump",
+      "descending_feet_ready_jump",
+      "compressed_landing"
+    ]
+  },
+  "review": {
+    "status": "SOURCE_CANDIDATE_REVIEWED",
+    "generated_original_visually_reviewed": true,
+    "source_size_review": "PASS_WITH_LIMITATIONS",
+    "observations": [
+      "32 full-body poses present in eight columns and four rows, with generous inter-sprite clearance and no visible cropped anatomy.",
+      "Current black-haired human identity, gray-white fur collar, charcoal long coat with silver trim, belt, dark trousers and black boots preserved.",
+      "Eight-heading sequence is present, including genuine rear quarters, full rear and side-oriented torso/boot views.",
+      "Rising row has tucked knees/boots and lifted arms; descending row has boots lower beneath hips and arms lowered/outward. Silhouettes are distinguishable at source size.",
+      "Landing visibly lowers pelvis and deepens knees relative to anticipation while retaining head size and coat identity.",
+      "No weapons, props, baked magic, floor, ground shadow, labels or cell marks were visible."
+    ],
+    "visual_ambiguities": [
+      "The stylized facial angle of front-quarter versus adjacent profile views is close, especially SE/E and W/SW; torso/coat-front width and boot orientation provide the stronger distinction. Exact small-scale directional readability is not established by this source-size review.",
+      "Long dark coat and fur collar naturally occlude some hip/knee detail and rear hands."
+    ],
+    "limitations": [
+      "Source-size inspection only; exact native-scale head-size and anatomical-length continuity have not been measured.",
+      "Generated rows are not guaranteed to be precisely registered; lead must perform deterministic registration and common-scale downsampling without per-pose fitting.",
+      "Four authored jump keys are not a full animation cycle.",
+      "No runtime assets, manifests, builders, gameplay files or shared documentation were changed."
+    ],
+    "native_scale_acceptance": "NOT_RUN",
+    "runtime_acceptance": "NOT_RUN",
+    "human_acceptance": "NOT_RUN",
+    "engine_import": "NOT_RUN",
+    "runtime_capture": "NOT_RUN"
+  },
+  "complete": true
+}

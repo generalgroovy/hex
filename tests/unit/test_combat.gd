@@ -4,6 +4,7 @@ extends FluxTestSuite
 func run() -> int:
 	for tick_rate: int in [120]:
 		_test_complete_matrix_executes(tick_rate)
+		_test_legacy_matrix_boundary(tick_rate)
 		_test_semantic_spell_slots(tick_rate)
 		_test_positive_flux_primary(tick_rate)
 		_test_default_active_flux_and_hit(tick_rate)
@@ -235,28 +236,94 @@ func _test_global_cast_capacity() -> void:
 func _test_complete_matrix_executes(tick_rate: int) -> void:
 	var catalog := AbilityCatalog.new()
 	check(catalog.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "matrix execution catalog validates")
-	var event_by_shape := {
-		"projectile": "projectile_spawned",
-		"spray": "spray_fired",
-	}
+	equal(catalog.spell_matrix_wire_ids.size(), 504, "live paid execution visits every mixture and delivery")
 	for wire_id: int in catalog.spell_matrix_wire_ids:
 		var ability := catalog.ability_from_wire(wire_id)
-		var shape := String(ability.get("shape", ""))
-		var world := SimWorld.new(tick_rate)
-		var caster: PlayerState = world.player()
-		check(caster.place_proven_spell(0, wire_id), "%s equips through the canonical weave" % ability.get("display_name", "spell"))
-		var initial_flux := caster.flux
-		check(_step(world, SimCommand.new(0, 1, 0, 0, 0, SimCommand.PRESSED_SPELL_1, 1000, 0)), "%s begins through semantic slot 1" % ability.get("display_name", "spell"))
-		equal(caster.flux, initial_flux - int(CombatTuning.cast_definition(wire_id).get("flux_cost", 0)), "%s pays its exact positive Flux cost" % ability.get("display_name", "spell"))
-		var expected_event := String(event_by_shape.get(shape, ""))
-		var released := false
-		for _release_tick: int in range(60):
-			check(_step(world, SimCommand.new(world.tick, 1, 0, 0, 0, 0, 1000, 0)), "%s release tick remains deterministic" % ability.get("display_name", "spell"))
-			if world.combat_events.any(func(event: Dictionary) -> bool: return String(event.get("type", "")) == expected_event and int(event.get("source_wire_id", event.get("wire_id", 0))) == wire_id):
-				released = true
-				break
-		check(released, "%s releases through its %s resolver" % [ability.get("display_name", "spell"), shape])
+		# Every current delivery uses the actual finite Hex admission and ledger.
+		# The non-Hex simulator has a separate explicit compatibility boundary.
+		var world := SimWorld.new(tick_rate, 61, CollisionWorld.new(2_000_000, 2_000_000))
+		var court := HexChemistryWorld.new()
+		check(court.configure_geometry(Vector2i(1_000_000, 1_000_000), HexGrid.disk(Vector2i.ZERO, 12)), "paid matrix finite court configures")
+		court.chemistry_enabled = true
+		world.hex_court = court
+		world.player().position_x = 900_000
+		world.player().position_y = 1_000_000
+		_assert_matrix_paid_release(world, wire_id, ability, "live Hex")
 
+
+func _test_legacy_matrix_boundary(tick_rate: int) -> void:
+	var catalog := AbilityCatalog.new()
+	check(catalog.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "legacy compatibility catalog validates")
+	# Literal historical identities are an independent compatibility oracle;
+	# neither the 504-entry enumeration nor new metadata expands this promise.
+	var original_wires: Array[int] = [140, 181, 182, 141, 145, 179, 180, 154, 163, 185, 186, 164, 159, 183, 184, 160, 173, 191, 192, 174, 142, 193, 194, 176]
+	for wire_id: int in original_wires:
+		var world := SimWorld.new(tick_rate)
+		check(world.hex_court == null, "original 24 positive control uses retained non-Hex authority")
+		_assert_matrix_paid_release(world, wire_id, catalog.ability_from_wire(wire_id), "original non-Hex")
+	for mask: int in range(1, 64):
+		for family: String in ["mantle", "fuse", "split", "rebound"]:
+			var wire_id := MixtureCatalog.wire_for(mask, family)
+			var world := SimWorld.new(tick_rate)
+			var caster: PlayerState = world.player()
+			var label := "%s mask %d legacy refusal" % [family, mask]
+			check(CombatTuning.is_runtime_wire_id(wire_id) and caster.place_proven_spell(0, wire_id), label + " begins with a valid equipped live definition")
+			caster.flux_recovery_per_second = 0
+			var initial_flux := caster.flux
+			var initial_cooldowns := caster.spell_cooldown_ticks.duplicate()
+			var initial_positions := caster.spell_wire_ids.duplicate()
+			check(_step(world, SimCommand.new(0, 1, 0, 0, 0, SimCommand.PRESSED_SPELL_1, 1000, 0)), label + " steps through ordinary command admission")
+			equal(world.combat_events.size(), 1, label + " emits only the explicit refusal")
+			check(world.combat_events.any(func(event: Dictionary) -> bool: return String(event.get("type", "")) == "cast_refused" and String(event.get("reason", "")) == "requires_hex_authority" and int(event.get("wire_id", 0)) == wire_id and int(event.get("slot", 0)) == 1), label + " explains its required authority")
+			equal(caster.flux, initial_flux, label + " refuses before positive Flux payment")
+			equal(caster.spell_cooldown_ticks, initial_cooldowns, label + " creates no cooldown")
+			equal(caster.spell_wire_ids, initial_positions, label + " preserves the valid equipped weave")
+			equal(caster.pending_cast_wire_id, 0, label + " creates no paid startup identity")
+			equal(caster.pending_cast_ticks, 0, label + " creates no delayed startup")
+			equal(caster.cast_recovery_ticks, 0, label + " creates no recovery commitment")
+			var delayed_events := 0
+			for unused: int in range(60):
+				check(_step(world, SimCommand.new(world.tick, 1, 0, 0, 0, 0, 1000, 0)), label + " neutral follow-up remains valid")
+				delayed_events += world.combat_events.size()
+			equal(delayed_events, 0, label + " cannot release effects on a later tick")
+			equal(caster.flux, initial_flux, label + " never charges later")
+			equal(caster.spell_cooldown_ticks, initial_cooldowns, label + " remains without a later cooldown")
+			equal(world.projectiles.size() + world.fields.size() + world.deposits.size() + world.reactions.size(), 0, label + " creates no shot, field, ingredient or reaction")
+
+
+func _assert_matrix_paid_release(world: SimWorld, wire_id: int, ability: Dictionary, scope: String) -> void:
+	var shape := String(ability.get("shape", ""))
+	var event_by_shape := {"projectile": "projectile_spawned", "spray": "spray_fired"}
+	var label := "%s %s" % [scope, String(ability.get("display_name", "spell"))]
+	var caster: PlayerState = world.player()
+	caster.flux_recovery_per_second = 0
+	check(caster.place_proven_spell(0, wire_id), label + " equips through the canonical weave")
+	var initial_flux := caster.flux
+	var cost := int(CombatTuning.cast_definition(wire_id).get("flux_cost", 0))
+	check(cost > 0, label + " has a positive authored cost")
+	check(_step(world, SimCommand.new(0, 1, 0, 0, 0, SimCommand.PRESSED_SPELL_1, 1000, 0)), label + " begins through semantic slot 1")
+	equal(caster.flux, initial_flux - cost, label + " pays its exact positive Flux cost")
+	equal(caster.pending_cast_wire_id, wire_id, label + " retains the requested paid startup")
+	check(world.combat_events.any(func(event: Dictionary) -> bool: return String(event.get("type", "")) == "cast_started" and int(event.get("wire_id", 0)) == wire_id), label + " emits the real paid admission")
+	if world.hex_court != null:
+		equal(int(world.hex_court.metrics.get("matter_paid", 0)), 600, label + " pays exactly one finite material stock")
+		check(world.hex_court.conservation_valid(), label + " admission preserves material conservation")
+	var expected_event := String(event_by_shape.get(shape, ""))
+	check(not expected_event.is_empty(), label + " has a supported current release resolver")
+	var released := false
+	for _release_tick: int in range(60):
+		check(_step(world, SimCommand.new(world.tick, 1, 0, 0, 0, 0, 1000, 0)), label + " release tick remains deterministic")
+		if world.hex_court != null:
+			check(world.hex_court.conservation_valid(), label + " release tick preserves material conservation")
+		if world.combat_events.any(func(event: Dictionary) -> bool: return String(event.get("type", "")) == expected_event and int(event.get("source_wire_id", event.get("wire_id", 0))) == wire_id):
+			released = true
+			break
+	check(released, "%s releases through its %s resolver" % [label, shape])
+	equal(caster.pending_cast_wire_id, 0, label + " release clears the paid startup")
+	equal(caster.flux, initial_flux - cost, label + " release does not charge or refund a second time")
+	if world.hex_court != null:
+		equal(int(world.hex_court.metrics.get("matter_paid", 0)), 600, label + " release never mints another source stock")
+		check(world.hex_court.conservation_valid(), label + " completed release preserves material conservation")
 
 func _test_evasive_intangibility(tick_rate: int) -> void:
 	var config := SimConfig.new(tick_rate)
@@ -288,12 +355,15 @@ func _test_evasive_intangibility(tick_rate: int) -> void:
 	target.hop_mode = PlayerState.MovementMode.HOP
 	target.hop_ticks = config.milliseconds_to_ticks(MovementTuning.HOP_DURATION_MS)
 	target.jump_protection_ticks = config.milliseconds_to_ticks(MovementTuning.JUMP_INVULNERABILITY_MS)
-	check(not PlayerResourcesSystem.damage(target, 10_000, config), "%d Hz opening jump frames reject direct combat damage" % tick_rate)
-	equal(target.health, target.health_maximum, "%d Hz opening jump frames preserve health" % tick_rate)
+	check(PlayerResourcesSystem.damage(target, 10_000, config), "%d Hz jump animation and obsolete protection do not grant blanket damage immunity" % tick_rate)
+	equal(target.health, target.health_maximum - 10_000, "%d Hz below-clearance jump takes exact direct damage" % tick_rate)
 	target.hop_ticks = 1
 	target.jump_protection_ticks = 0
 	check(PlayerResourcesSystem.damage(target, 10_000, config), "%d Hz jump recovery is vulnerable" % tick_rate)
-	equal(target.health, target.health_maximum - 10_000, "%d Hz vulnerable jump recovery takes exact damage" % tick_rate)
+	equal(target.health, target.health_maximum - 20_000, "%d Hz vulnerable jump recovery takes exact damage" % tick_rate)
+	target.air_dodge_ticks = config.milliseconds_to_ticks(MovementTuning.AIR_DODGE_DURATION_MS)
+	check(not PlayerResourcesSystem.damage(target, 10_000, config), "%d Hz separate timed air dodge rejects direct damage" % tick_rate)
+	equal(target.health, target.health_maximum - 20_000, "%d Hz timed air dodge preserves remaining health" % tick_rate)
 
 
 func _test_semantic_spell_slots(tick_rate: int) -> void:
@@ -624,10 +694,12 @@ func _test_movement_spell_chains(tick_rate: int) -> void:
 		0,
 	)
 	check(_step(world, jump_and_cast), "%d Hz simultaneous jump and Rillshot steps" % tick_rate)
-	check(caster.hop_ticks > 0, "%d Hz spell startup does not suppress a legal movement action" % tick_rate)
+	check(caster.jumpsquat_active, "%d Hz spell startup does not suppress held jumpsquat" % tick_rate)
 	equal(caster.pending_cast_wire_id, CombatTuning.RILLSHOT_WIRE_ID, "%d Hz movement does not suppress spell startup" % tick_rate)
+	check(_step(world, SimCommand.new(world.tick, caster.entity_id, 1000, 0)), "%d Hz releasing jump during cast startup steps" % tick_rate)
+	check(caster.hop_ticks > 0 and caster.air_height > 0, "%d Hz jump release launches without cast cancellation" % tick_rate)
 	while caster.pending_cast_wire_id != 0:
-		check(_step(world, SimCommand.new(world.tick, caster.entity_id, 1000, 0, SimCommand.HELD_JUMP)), "%d Hz moving Rillshot startup advances" % tick_rate)
+		check(_step(world, SimCommand.new(world.tick, caster.entity_id, 1000, 0)), "%d Hz moving Rillshot startup advances" % tick_rate)
 	check(caster.cast_recovery_ticks > 0, "%d Hz released Rillshot exposes its presentation recovery" % tick_rate)
 	var flux_before_chain := caster.flux
 	check(_step(world, SimCommand.new(world.tick, caster.entity_id, 1000, 0, 0, SimCommand.PRESSED_SPELL_2)), "%d Hz recovery-chain Tideline command steps" % tick_rate)

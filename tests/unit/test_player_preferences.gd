@@ -12,6 +12,7 @@ class FailedReplacementPreferences:
 
 
 func run() -> int:
+	_test_direction_indicator()
 	_test_defaults_and_presets()
 	_test_validation()
 	_test_unified_relative_vision()
@@ -19,6 +20,7 @@ func run() -> int:
 	_test_keyboard_bindings()
 	_test_persistence_round_trip()
 	_test_recoverable_profile_preservation()
+	_test_invalid_outgoing_profiles()
 	_test_movement_transforms()
 	_test_evade_default_swap_migration()
 	_test_keyboard_default_revision()
@@ -29,6 +31,20 @@ func run() -> int:
 	_test_controller_spell_default_candidate()
 	_test_controller_default_revision()
 	return finish("player-preferences")
+
+
+func _test_direction_indicator() -> void:
+	var prefs := PlayerPreferences.new()
+	check(prefs.direction_indicator, "ground arrow defaults on")
+	prefs.direction_indicator = false
+	var other := PlayerPreferences.new()
+	check(other.apply_dictionary(prefs.to_dictionary()), "arrow setting round-trips with profile")
+	check(not other.direction_indicator, "disabled arrow survives profile reload")
+	var legacy := prefs.to_dictionary()
+	legacy.erase("direction_indicator")
+	check(other.apply_dictionary(legacy) and other.direction_indicator, "old profiles default to visible arrow")
+	legacy.direction_indicator = 1
+	check(not other.apply_dictionary(legacy), "arrow rejects non-boolean without corrupting profile")
 
 
 func _test_recoverable_profile_preservation() -> void:
@@ -103,6 +119,52 @@ func _test_recoverable_profile_preservation() -> void:
 	var directory := DirAccess.open(folder)
 	equal(directory.get_files().size(), 0, "failed replacements leave no staged scratch")
 	check(DirAccess.remove_absolute(ProjectSettings.globalize_path(folder)) == OK, "only owned preservation fixture directory removed")
+
+
+func _test_invalid_outgoing_profiles() -> void:
+	var folder := "user://invalid-outgoing-profile-%d-%d" % [OS.get_process_id(), Time.get_ticks_usec()]
+	check(DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(folder)) == OK, "owned outgoing-validation fixture directory created")
+	var path := folder + "/preferences.json"
+	var fresh_path := folder + "/new-preferences.json"
+	var backup_path := path + PlayerPreferences.PRE_S4_CONTROLS_BACKUP_SUFFIX
+	var original := PlayerPreferences.new()
+	original.keyboard_bindings[&"jump"] = KEY_J
+	original.sound_volume_percent = 45
+	check(original.save_to_file(path), "custom valid outgoing profile saves before rejection fixtures")
+	var original_bytes := FileAccess.get_file_as_bytes(path)
+	for invalid_field: String in ["sound_volume_percent", "keyboard_bindings", "mouse_bindings", "controller_bindings"]:
+		var preferences := PlayerPreferences.new()
+		check(preferences.apply_dictionary(original.to_dictionary()), "outgoing rejection starts from valid custom preferences")
+		match invalid_field:
+			"sound_volume_percent": preferences.sound_volume_percent = 101
+			"keyboard_bindings": preferences.keyboard_bindings[&"jump"] = KEY_A
+			"mouse_bindings": preferences.mouse_bindings[&"jump"] = MOUSE_BUTTON_LEFT
+			"controller_bindings": preferences.controller_bindings[&"jump"] = {"kind": "axis", "index": 0, "direction": 0}
+		var requested := preferences.to_dictionary().duplicate(true)
+		check(not preferences.save_to_file(fresh_path), invalid_field + " cannot create an unreadable first profile")
+		check(not FileAccess.file_exists(fresh_path), "rejected first save creates no primary file")
+		check(not FileAccess.file_exists(fresh_path + PlayerPreferences.PRE_S4_CONTROLS_BACKUP_SUFFIX), "rejected first save creates no recovery file")
+		check(not preferences.save_to_file(path), invalid_field + " cannot replace a valid profile")
+		check(preferences.last_error.contains("current settings are invalid"), "outgoing rejection explains that live settings need repair")
+		equal(FileAccess.get_file_as_bytes(path), original_bytes, "rejected outgoing state preserves exact custom profile bytes")
+		check(not FileAccess.file_exists(backup_path), "outgoing validation happens before creating a migration backup")
+		equal(preferences.to_dictionary(), requested, "save rejection never resets the user's in-memory choices")
+	original.sound_volume_percent = 55
+	check(original.save_to_file(path), "a later valid outgoing save remains available")
+	var reloaded := PlayerPreferences.new()
+	check(reloaded.load_from_file(path), "valid recovery after rejection stays loadable")
+	equal(reloaded.to_dictionary(), original.to_dictionary(), "valid recovery retains custom bindings and requested settings")
+	equal(FileAccess.get_file_as_bytes(backup_path), original_bytes, "first valid replacement retains the exact original profile")
+	var updated_bytes := FileAccess.get_file_as_bytes(path)
+	reloaded.sound_volume_percent = -1
+	check(not reloaded.save_to_file(path), "invalid outgoing settings still fail when a recovery copy already exists")
+	equal(FileAccess.get_file_as_bytes(path), updated_bytes, "rejected save retains the latest valid primary")
+	equal(FileAccess.get_file_as_bytes(backup_path), original_bytes, "rejected save retains the older valid recovery copy")
+	check(DirAccess.remove_absolute(ProjectSettings.globalize_path(backup_path)) == OK, "owned outgoing recovery fixture removed")
+	check(DirAccess.remove_absolute(ProjectSettings.globalize_path(path)) == OK, "owned outgoing primary fixture removed")
+	var directory := DirAccess.open(folder)
+	equal(directory.get_files().size(), 0, "rejected outgoing saves leave no staging artifacts")
+	check(DirAccess.remove_absolute(ProjectSettings.globalize_path(folder)) == OK, "only owned outgoing-validation fixture directory removed")
 
 
 func _test_defaults_and_presets() -> void:

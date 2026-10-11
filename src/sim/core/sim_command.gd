@@ -10,6 +10,7 @@ const HELD_FAST_FALL: int = 1 << 3
 # an airborne fast fall. The alias preserves the established command bit.
 const HELD_SLIDE: int = HELD_FAST_FALL
 const PRESSED_EVADE: int = 1 << 16
+const PRESSED_CANCEL_MOVEMENT: int = 1 << 17 # Modal/focus/network timeout: not an intentional jump release.
 const PRESSED_JUMP: int = 1 << 0
 const PRESSED_TECHNIQUE: int = 1 << 1
 const PRESSED_ACTIVE_1: int = 1 << 2
@@ -43,6 +44,7 @@ const SPELL_PRESSED_BITS: Array[int] = [
 # Held spell slots reuse bit positions4-15 in the separate held mask. Only
 # authored repeat-while-held families consume them; ordinary spells stay edge-triggered.
 const SPELL_HELD_BITS: Array[int] = SPELL_PRESSED_BITS
+const SPELL_ACTION_MASK: int = 0xFFF0 # Spell positions4–15 in either independent mask.
 
 var tick: int
 var entity_id: int
@@ -91,6 +93,7 @@ func has_pressed(action: int) -> bool:
 
 
 func first_pressed_spell_slot() -> int:
+	if (pressed_actions & SPELL_ACTION_MASK) == 0: return 0
 	for index: int in range(SPELL_PRESSED_BITS.size()):
 		if has_pressed(SPELL_PRESSED_BITS[index]):
 			return index + 1
@@ -98,6 +101,7 @@ func first_pressed_spell_slot() -> int:
 
 
 func first_held_spell_slot() -> int:
+	if (held_actions & SPELL_ACTION_MASK) == 0: return 0
 	for index: int in range(SPELL_HELD_BITS.size()):
 		if has_held(SPELL_HELD_BITS[index]):
 			return index + 1

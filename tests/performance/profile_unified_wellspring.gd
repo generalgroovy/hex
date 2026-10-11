@@ -23,6 +23,7 @@ var abilities := AbilityCatalog.new()
 var champions := ChampionCatalog.new()
 var layout := SanctumCampusLayout.new()
 var definition: HexWorldDefinition
+var _last_publication_core_us: int = 0
 
 
 func _initialize() -> void:
@@ -46,6 +47,7 @@ func _run() -> void:
 		quit(1)
 		return
 
+	var sources_before := _source_hashes()
 	var runs: Array[Dictionary] = []
 	for case_name: String in CASES:
 		var reference: Dictionary = {}
@@ -60,6 +62,8 @@ func _run() -> void:
 			runs.append(result)
 			print("UNIFIED_WELLSPRING_PROFILE_RESULT ", JSON.stringify(result))
 
+	var sources_after := _source_hashes()
+	_check(sources_before == sources_after, "profile dependencies remain unchanged throughout the paid workload")
 	var identity_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(RuntimeBuildIdentity.MANIFEST_PATH))
 	var receipt := {
 		"schema_version": 1,
@@ -72,7 +76,9 @@ func _run() -> void:
 		"sample_ticks": sample_ticks,
 		"cases": CASES,
 		"repetitions_per_case": 2,
-		"source_sha256": _source_hashes(),
+		"source_sha256": sources_after,
+		"source_sha256_before": sources_before,
+		"sources_unchanged": sources_before == sources_after,
 		"runs": runs,
 		"assertions": assertions,
 		"failures": failures,
@@ -109,9 +115,11 @@ func _measure(case_name: String, reverse_order: bool) -> Dictionary:
 	var step_times := PackedInt64Array()
 	var host_times := PackedInt64Array()
 	var snapshot_times := PackedInt64Array()
+	var publication_core_times := PackedInt64Array()
 	step_times.resize(sample_ticks)
 	host_times.resize(sample_ticks)
 	snapshot_times.resize((sample_ticks + SNAPSHOT_PERIOD_TICKS - 1) / SNAPSHOT_PERIOD_TICKS)
+	publication_core_times.resize(snapshot_times.size())
 	var trace := HashingContext.new()
 	trace.start(HashingContext.HASH_SHA256)
 	var requested_pressed := {}
@@ -167,6 +175,7 @@ func _measure(case_name: String, reverse_order: bool) -> Dictionary:
 			var capture_started := Time.get_ticks_usec()
 			published_envelope = _capture_publication(session, publication, peaks, false)
 			snapshot_times[index / SNAPSHOT_PERIOD_TICKS] = Time.get_ticks_usec() - capture_started
+			publication_core_times[index / SNAPSHOT_PERIOD_TICKS] = _last_publication_core_us
 		host_times[index] = Time.get_ticks_usec() - host_started
 		# Additive diagnostic bookkeeping intentionally runs after both performance
 		# samples. It mirrors the bounded queue with exact assigned IDs and observes
@@ -228,12 +237,13 @@ func _measure(case_name: String, reverse_order: bool) -> Dictionary:
 		_check(int(peaks.active_cells) > 0, "distributed workload creates live whole-hex occupancy")
 
 	return {
-		"instrumentation_version": "event-accounting-v1",
+		"instrumentation_version": "event-accounting-v2-owned-publication",
 		"case": case_name,
 		"sample_ticks": sample_ticks,
 		"step_us": _percentiles(step_times),
 		"host_step_event_retention_and_60hz_envelope_us": _percentiles(host_times),
 		"envelope_capture_and_wire_pack_us": _percentiles(snapshot_times),
+		"owned_capture_and_packetization_core_us": _percentiles(publication_core_times),
 		"deadline_misses_over_8333us": deadlines,
 		"requested_pressed_by_wire": requested_pressed,
 		"requested_held_ticks_by_wire": requested_held_ticks,
@@ -282,7 +292,7 @@ func _measure(case_name: String, reverse_order: bool) -> Dictionary:
 		},
 		"input_semantics": "Pressed intents and held Rapid input-ticks are reported separately. Held cooldown, recovery, Flux, and capacity nonadmission may be silent and is exposed by the admitted count rather than fabricated as a refusal.",
 		"contact_semantics": "contact_queries is the authoritative hex exposure-query counter; processed_clashes counts emitted real hex_clash outcomes. It is not an invented narrowphase-call estimate.",
-		"measurement_scope": "Timing covers real SimWorld.step; host timing adds production event retention and every-other-tick envelope capture/packing. Additive by-type and exact-ID event accounting runs after those timing samples. Cleanup is excluded from quantiles but included in terminal counters and hashes.",
+		"measurement_scope": "Timing covers real SimWorld.step; host timing adds production event retention and every-other-tick owned envelope capture/packing. The owned core timer excludes diagnostic envelope/packet byte counting and acknowledgement. The older encompassing snapshot timer retains those operations; it is not a socket or render metric. Additive by-type and exact-ID event accounting runs after those timing samples. Cleanup is excluded from quantiles but included in terminal counters and hashes.",
 		"instrumentation_scope": "Event accounting duplicates encoder and bounded-queue classification only after timing samples. Its dictionaries and exact trim records remain allocated during the run, so static/process memory figures include this diagnostic overhead and are not directly comparable to receipts without event-accounting-v1.",
 	}
 
@@ -346,12 +356,31 @@ func _case_geometry(case_name: String) -> Dictionary:
 			targets[index + 1] = endpoint
 	else:
 		_check(cells.size() >= 16, "distributed case has enough trusted district cells")
+		var collision := layout.build_collision_world()
 		for index: int in range(8):
 			var position_index := index * cells.size() / 8
 			var target_index := posmod(position_index + cells.size() / 2 + index, cells.size())
-			positions.append(definition.origin + HexGrid.center(cells[position_index]))
-			targets[index + 1] = definition.origin + HexGrid.center(cells[target_index])
+			positions.append(_clear_profile_point(cells, definition.origin + HexGrid.center(cells[position_index]), MovementTuning.PLAYER_RADIUS, collision))
+			targets[index + 1] = _clear_profile_point(cells, definition.origin + HexGrid.center(cells[target_index]), 12000, collision)
 	return {"positions": positions, "targets": targets}
+
+
+func _clear_profile_point(cells: Array[Vector2i], preferred: Vector2i, radius: int, collision: CollisionWorld) -> Vector2i:
+	# Fine-grid cell-center eligibility does not prove full actor clearance.
+	# Preserve every valid old sample; relocate only invalid distributed samples
+	# to the nearest legal center, using the original lexicographic tie order.
+	# The paired dense baseline geometry is deliberately not changed.
+	if collision.can_occupy(preferred, radius): return preferred
+	var best := preferred
+	var distance := 0x7fffffffffffffff
+	for cell: Vector2i in cells:
+		var candidate := definition.origin + HexGrid.center(cell)
+		var square := (candidate - preferred).length_squared()
+		if square < distance and collision.can_occupy(candidate, radius):
+			best = candidate
+			distance = square
+	_check(distance != 0x7fffffffffffffff, "distributed diagnostic can relocate an invalid sample to a clear center")
+	return best
 
 
 func _commands(world: SimWorld, targets: Dictionary, case_name: String, active: bool, reverse_order: bool) -> Array[SimCommand]:
@@ -417,10 +446,20 @@ func _record_events(session: AuthoritativeSession, events: Array[Dictionary], co
 func _capture_publication(session: AuthoritativeSession, publication: Dictionary, peaks: Dictionary, cleanup: bool) -> Dictionary:
 	publication.capture_attempts += 1
 	publication.cleanup_capture_attempts += int(cleanup)
-	var envelope := session.capture_envelope()
-	# Production packet packing is the validation gate; do not add a third
-	# validation here that the real host does not perform.
-	var packets: Array[Dictionary] = SessionTransport._envelope_wire_packets(envelope) if not envelope.is_empty() else []
+	var core_started := Time.get_ticks_usec()
+	# Use the same owned source-to-packet factory as the concrete host. The
+	# returned envelope is observation only; no trusted mutable input is accepted.
+	var captured: Dictionary
+	# Match the concrete broadcast's outer source-admission gate as well as
+	# the factory. Omitting this scan would understate actual host preparation.
+	if SessionTransport._owned_publication_eligible(session):
+		captured = SessionTransport._capture_session_packets(session)
+	else:
+		var fallback := session.capture_envelope()
+		captured = {"envelope": fallback, "packets": SessionTransport._envelope_wire_packets(fallback)}
+	_last_publication_core_us = Time.get_ticks_usec() - core_started
+	var envelope: Dictionary = captured.get("envelope", {})
+	var packets: Array[Dictionary] = captured.get("packets", [] as Array[Dictionary])
 	if packets.is_empty():
 		publication.rejections += 1
 		return {}
@@ -671,10 +710,19 @@ func _source_hashes() -> Dictionary:
 		"src/sim/core/sim_world.gd",
 		"src/sim/hex/hex_chemistry_world.gd",
 		"src/sim/hex/hex_projectile_combat.gd",
+		"src/sim/hex/hex_contact_workset.gd",
+		"src/sim/hex/hex_footprint.gd",
+		"src/sim/hex/hex_collision_world.gd",
+		"src/sim/combat/combat_definition_table.gd",
+		"src/sim/combat/combat_system.gd",
+		"src/sim/combat/combat_tuning.gd",
+		"src/sim/hex/hex_convex_geometry.gd",
 		"src/sim/hex/hex_product_effects.gd",
 		"src/sim/hex/hex_world_definition.gd",
 		"src/net/authoritative_session.gd",
 		"src/net/hex_world_snapshot.gd",
+		"src/net/hex_chemistry_snapshot.gd",
+		"src/presentation/hex_court_presenter.gd",
 		"src/net/session_transport.gd",
 		"src/net/world_snapshot_envelope.gd",
 		"content/abilities/foundation_abilities_v1.json",

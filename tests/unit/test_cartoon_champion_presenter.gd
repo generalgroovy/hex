@@ -19,6 +19,7 @@ func run() -> int:
 	_test_distance_phase_frames()
 	_test_wall_contact_side()
 	_test_immediate_protection_contract()
+	_test_protection_body_and_budget_boundaries()
 	_test_float_time_budget()
 	_test_directional_movement_trails()
 	_test_pixel_movement_layers()
@@ -177,7 +178,7 @@ func _test_temporary_body_templates() -> void:
 
 func _test_pixel_movement_layers() -> void:
 	var pixels := preload("res://src/presentation/pixel_movement_effects.gd").new()
-	check(pixels.ready(), "movement reads the supplied immutable pixel registry")
+	check(pixels.ready(), "movement reads the supplied immutable pixel registry: " + pixels.library.last_error)
 	var state := PlayerState.new()
 	var config := SimConfig.new()
 	state.air_height = 22000
@@ -212,7 +213,8 @@ func _test_pixel_movement_layers() -> void:
 	check(pixels.cache_size() <= pixels.CACHE_LIMIT,"afterimage texture cache is bounded")
 	state.entity_id = 5
 	state.hop_mode = PlayerState.MovementMode.WALL_KICK
-	state.jump_protection_ticks = config.milliseconds_to_ticks(MovementTuning.JUMP_INVULNERABILITY_MS)
+	state.movement_commitment_ticks = config.milliseconds_to_ticks(MovementTuning.HOP_COMMITMENT_MS)
+	state.air_vertical_velocity = 520000
 	check(pixels.walljump_contact(state,config,10,Vector2(100,100)).is_empty(),"unobserved wall contact never manufactures sparks beside the moving body")
 	state.wall_x = 1000
 	state.wall_y = 0
@@ -259,18 +261,19 @@ func _test_extension_pages_and_motion_facing() -> void:
 		for direction: Vector2i in EightDirectionResolver.FIXED_VECTORS:
 			state.facing_x = direction.x
 			state.facing_y = direction.y
-			state.velocity_x = -direction.x
-			state.velocity_y = -direction.y
+			state.velocity_x = direction.x * 300
+			state.velocity_y = direction.y * 300
 			state.aim_x = -direction.x
 			state.aim_y = -direction.y
-			equal(CartoonChampionPresenter.presentation_facing_vector(state, pose), -direction, pose + " immediately follows cursor while travel remains independent")
+			var expected := direction * 300 if pose == "slide" else -direction
+			equal(CartoonChampionPresenter.presentation_facing_vector(state, pose), expected, pose + " uses travel for slide and independent aim for other poses")
 	state.velocity_x = 0
-	state.velocity_y = 1000
+	state.velocity_y = 300000
 	state.facing_x = 0
 	state.facing_y = -1000
 	state.aim_x = 0
 	state.aim_y = -1000
-	equal(presenter.source_region_for_animation_state("oh_tipi", state, "slide"), Rect2(384, 576, 96, 96), "slide body faces new north intent while south momentum remains visible through its wake")
+	equal(presenter.source_region_for_animation_state("oh_tipi", state, "slide"), Rect2(0, 576, 96, 96), "slide body follows south travel while spell aim stays north")
 	state.pending_cast_wire_id = 1
 	state.pending_cast_aim_x = -1000
 	state.pending_cast_aim_y = 0
@@ -536,6 +539,8 @@ func _test_complete_page_overrides() -> void:
 			var vector := EightDirectionResolver.fixed_vector(direction)
 			state.facing_x = vector.x
 			state.facing_y = vector.y
+			state.slide_x = vector.x
+			state.slide_y = vector.y
 			state.aim_x = vector.x
 			state.aim_y = vector.y
 			var region := presenter.source_region_for_animation_state("s_wayne", state, pose)
@@ -718,6 +723,8 @@ func _test_repository_recipes() -> void:
 		directional_state.facing_y = int((case["facing"] as Vector2i).y)
 		directional_state.aim_x = directional_state.facing_x
 		directional_state.aim_y = directional_state.facing_y
+		directional_state.slide_x = directional_state.facing_x
+		directional_state.slide_y = directional_state.facing_y
 		var expected_x := float(case["column"]) * 96.0
 		equal(presenter.source_region("oh_tipi", directional_state), Rect2(expected_x, 0, 96, 96), "grounded %s animation selects dedicated cardinal art" % case["state"])
 		directional_state.pending_cast_wire_id = 1
@@ -753,6 +760,8 @@ func _test_repository_recipes() -> void:
 		diagonal_state.facing_y = int((case["facing"] as Vector2i).y)
 		diagonal_state.aim_x = diagonal_state.facing_x
 		diagonal_state.aim_y = diagonal_state.facing_y
+		diagonal_state.slide_x = diagonal_state.facing_x
+		diagonal_state.slide_y = diagonal_state.facing_y
 		var expected_x := float(case["column"]) * 96.0
 		equal(presenter.source_region("oh_tipi", diagonal_state), Rect2(expected_x, 0, 96, 96), "grounded %s selects promoted diagonal art" % case["state"])
 		diagonal_state.pending_cast_wire_id = 1
@@ -1014,6 +1023,7 @@ func _test_movement_template_direction_matrix() -> void:
 	check(presenter.configure(language, CartoonChampionPresenter.DEFAULT_PATH, CartoonChampionPresenter.DEFAULT_OVERRIDE_PATH, false), "movement matrix uses the live champion presenter")
 	var config := SimConfig.new(120)
 	var actions := {"idle": PlayerState.MovementMode.IDLE, "walk": PlayerState.MovementMode.WALK, "sprint": PlayerState.MovementMode.SPRINT, "jump": PlayerState.MovementMode.HOP, "float": PlayerState.MovementMode.DOUBLE_JUMP, "slide": PlayerState.MovementMode.SLIDE, "roll": PlayerState.MovementMode.ROLL, "air_turn": PlayerState.MovementMode.HOP, "wallrun": PlayerState.MovementMode.WALL_SKIM, "landing": PlayerState.MovementMode.IDLE}
+	equal(presenter.champions.size(), 30, "movement matrix retains all thirty catalog identities")
 	for champion_id: String in presenter.champions:
 		var profile_id := String(presenter.recipe(champion_id)["motion_profile"])
 		for direction_index: int in range(8):
@@ -1043,6 +1053,7 @@ func _test_movement_template_direction_matrix() -> void:
 					state.air_dodge_ticks = 12
 					state.hop_mode = PlayerState.MovementMode.ROLL
 				if action == "wallrun":
+					state.air_height = 45_000
 					state.wall_skim_ticks = 18
 					state.wall_skim_surface_id = 7
 				if action == "landing":
@@ -1052,16 +1063,18 @@ func _test_movement_template_direction_matrix() -> void:
 				for reduced: bool in [false, true]:
 					var frame := presenter.movement_frame(champion_id, state, 19.0, config, reduced)
 					var region: Rect2 = frame["source_region"]
-					equal(region.position.x, float(((direction_index + 4) % 8) * 96), "%s/%s keeps cursor-facing opposite movement %d" % [champion_id, action, direction_index])
+					var facing_index := direction_index if action == "slide" else (direction_index + 4) % 8
+					equal(region.position.x, float(facing_index * 96), "%s/%s uses travel-aligned slide and independent aim %d" % [champion_id, action, direction_index])
 					equal(region.size, CartoonChampionPresenter.CELL_SIZE, "%s/%s uses the same source-cell dimensions" % [champion_id, action])
 					equal(frame["scale"], Vector2.ONE, "%s/%s never rescales its template" % [champion_id, action])
-					if action in ["walk", "sprint"]:
+					if action in ["walk", "sprint", "wallrun"]:
 						check((frame["offset"] as Vector2).length() <= 1.5, "%s/%s uses only a bounded micro-pivot" % [champion_id, action])
 					else:
 						equal(frame["offset"], Vector2.ZERO, "%s/%s keeps its feet pivot pinned" % [champion_id, action])
 					check(presenter.texture_for_champion(champion_id).get_image().get_region(Rect2i(region)).get_used_rect().has_area(), "%s/%s resolves actual body pixels" % [champion_id, action])
-				if action in ["walk", "sprint"]:
-					var duration := float((presenter.motion.profiles[profile_id][action] as Dictionary)["duration_ticks"])
+				if action in ["walk", "sprint", "wallrun"]:
+					var gait := "sprint" if action == "wallrun" else action
+					var duration := float((presenter.motion.profiles[profile_id][gait] as Dictionary)["duration_ticks"])
 					var first := presenter.movement_frame(champion_id, state, duration - 3.0, config)
 					var second := presenter.movement_frame(champion_id, state, duration * 1.5 - 3.0, config)
 					equal(int(first["contact_frame"]), 0, "all templates/directions visibly plant contact A")
@@ -1094,45 +1107,64 @@ func _test_immediate_protection_contract() -> void:
 				state.hop_ticks = 20
 				state.facing_x = direction.x
 				state.facing_y = direction.y
+				for rolling: bool in [false, true]:
+					state.hop_mode = PlayerState.MovementMode.ROLL if rolling else PlayerState.MovementMode.AIR_DODGE
+					var duration_ms := MovementTuning.ROLL_DURATION_MS if rolling else MovementTuning.AIR_DODGE_DURATION_MS
+					var protection_ms := MovementTuning.ROLL_INVULNERABILITY_MS if rolling else MovementTuning.AIR_DODGE_INVULNERABILITY_MS
+					state.air_dodge_ticks = config.milliseconds_to_ticks(duration_ms) - config.milliseconds_to_ticks(protection_ms) + 1
+					var protected := CartoonChampionPresenter.protection_contract(state, config, reduced, height)
+					check(bool(protected["active"]), "even the last roll/air-dodge protected tick is unmistakably marked")
+					equal(protected.get("body_tint"), Color(1, 1, 1, 0.62), "last protected tick changes the actual body without changing native RGB identity")
+					equal(int(protected.get("budget_pips", -1)), 1, "last protected tick keeps one visible avoidance-budget pip")
+					equal((protected["brackets"] as Array).size(), 4, "four quiet corners are colour-independent status")
+					equal(protected["kind"], "intangible", "roll and air-dodge use their actual timed damage-avoidance kind")
+					equal((protected["shield"] as PackedVector2Array).size(), 0, "dodge avoidance never borrows the spawn shield")
+					equal((protected["badge_lines"] as Array).size(), 2, "two stable slashes distinguish timed avoidance in normal and reduced effects")
+					state.air_dodge_ticks -= 1
+					var expired := CartoonChampionPresenter.protection_contract(state, config, reduced, height)
+					check(not bool(expired["active"]), "protection disappears on the exact authoritative off tick")
+					equal(expired.get("body_tint"), Color.WHITE, "first vulnerable recovery tick restores the opaque body immediately")
+					equal(int(expired.get("budget_pips", -1)), 0, "no avoidance-budget pip survives into vulnerable recovery")
+					check((expired["brackets"] as Array).is_empty() and (expired["shield"] as PackedVector2Array).is_empty(), "no shield geometry remains to suggest protection")
+				state.air_dodge_ticks = 0
 				state.jump_protection_ticks = 1
-				var protected := CartoonChampionPresenter.protection_contract(state, config, reduced, height)
-				check(bool(protected["active"]), "even the last protected tick is unmistakably marked")
-				equal((protected["brackets"] as Array).size(), 4, "four quiet corners are colour-independent status")
-				equal((protected["shield"] as PackedVector2Array).size(), 6, "protected state carries a small closed shield")
-				state.jump_protection_ticks = 0
-				var expired := CartoonChampionPresenter.protection_contract(state, config, reduced, height)
-				check(not bool(expired["active"]), "protection disappears on the exact authoritative off tick")
-				check((expired["brackets"] as Array).is_empty() and (expired["shield"] as PackedVector2Array).is_empty(), "no shield geometry remains to suggest protection")
+				check(not bool(CartoonChampionPresenter.protection_contract(state, config, reduced, height)["active"]), "legacy jump timer cannot create a universal shield")
 				state.air_height = 55_000
 				state.air_floating = true
+				state.flight_capable = true
 				state.float_used = true
 				state.float_ticks = 120
 				var floating := CartoonChampionPresenter.protection_contract(state, config, reduced, height)
-				equal((floating["float_wings"] as Array).size(), 2, "active Float has a distinct steady winged shield in all sizes and effect profiles")
-				equal(floating["remaining_ratio"], 1.0, "Float does not visually fade while held")
+				check(not bool(floating["active"]), "flight itself never creates a protection shield in any size or effect profile")
+				equal(floating["remaining_ratio"], 0.0, "held flight has no universal protection budget")
 				state.air_floating = false
 				var released := CartoonChampionPresenter.protection_contract(state, config, reduced, height)
-				check(not bool(released["active"]) and (released["float_wings"] as Array).is_empty(), "Float release removes shield and wings on this exact frame")
+				check(not bool(released["active"]) and not released.has("float_wings"), "flight release cannot leave obsolete shield wings")
 				state.air_floating = true
 				state.stamina = 0
 				check(not bool(CartoonChampionPresenter.protection_contract(state, config, reduced, height)["active"]), "exhausted Float cannot fabricate protection even with a stale flag")
 				state.stamina = state.stamina_maximum
 				state.float_ticks = 0
 				var timed_out := CartoonChampionPresenter.protection_contract(state, config, reduced, height)
-				check(not bool(timed_out["active"]) and (timed_out["float_wings"] as Array).is_empty(), "expired Float cannot retain a shield even with Stamina and a stale active flag")
+				check(not bool(timed_out["active"]) and not timed_out.has("float_wings"), "expired flight cannot retain a shield even with Stamina and a stale active flag")
 				state.air_floating = false
 				state.spawn_protection_ticks = 1
-				check(bool(CartoonChampionPresenter.protection_contract(state, config, reduced, height)["active"]), "spawn safety cannot look vulnerable")
+				var spawn := CartoonChampionPresenter.protection_contract(state, config, reduced, height)
+				check(bool(spawn["active"]), "spawn safety cannot look vulnerable")
+				equal(spawn["kind"], "invulnerable", "spawn damage guard owns the closed shield kind")
+				equal((spawn["shield"] as PackedVector2Array).size(), 6, "spawn shield remains visibly closed")
+				check((spawn["badge_lines"] as Array).is_empty(), "spawn does not advertise the dodge-only slash")
 	check(not bool(CartoonChampionPresenter.protection_contract(null, config)["active"]), "missing protection state fails closed")
 
 
 func _test_float_time_budget() -> void:
 	var config := SimConfig.new(120)
-	for body: Vector2i in [Vector2i(58, 1800), Vector2i(68, 1500), Vector2i(76, 1200)]:
+	for body: Vector2i in [Vector2i(58, MovementTuning.FLOAT_SMALL_DURATION_MS), Vector2i(68, MovementTuning.FLOAT_MIDDLE_DURATION_MS), Vector2i(76, MovementTuning.FLOAT_LARGE_DURATION_MS)]:
 		for direction: Vector2i in EightDirectionResolver.FIXED_VECTORS:
 			var state := PlayerState.new()
 			state.air_height = 20000
 			state.air_floating = true
+			state.flight_capable = true
 			state.float_used = true
 			state.float_max_duration_ms = body.y
 			state.facing_x = direction.x
@@ -1143,36 +1175,42 @@ func _test_float_time_budget() -> void:
 				var canonical := state.canonical_values()
 				var normal := CartoonChampionPresenter.protection_contract(state, config, false, body.x)
 				var reduced := CartoonChampionPresenter.protection_contract(state, config, true, body.x)
-				equal(normal, reduced, "Float time and protection information is identical in reduced effects")
-				equal(normal.get("float_budget_ratio", -1.0), float(remaining) / total, "Float budget reports the exact authoritative remaining time for each body")
-				var slots: Array = normal.get("float_budget_slots", [])
-				var fills: Array = normal.get("float_budget_fills", [])
-				equal(slots.size(), 3 if remaining > 0 else 0, "only active Float has three static budget slots")
+				equal(normal, reduced, "true protection information is identical in reduced effects")
+				check(not normal.active, "flight budget never creates a protection shield")
+				var cue := JumpPresentation.height_contract(state, config)
+				equal(cue["budget"], float(remaining) / total, "flight meter reports exact authoritative remaining time for every body")
+				equal(cue["flight"], remaining > 0, "only positive remaining flight time shows the flight meter")
+				check(cue["active"] and cue["above"], "height clearance stays independent of flight timeout")
+				check(not normal.has("float_wings") and not normal.has("float_budget_slots") and not normal.has("float_budget_fills") and not normal.has("float_budget_ratio"), "true shield contract contains no legacy Float embellishment")
 				if remaining > 0:
-					equal(normal.remaining_ratio, 1.0, "time budget never fades the still-active protection shield")
-					check(not fills.is_empty(), "even the final Float tick keeps one visible time-budget pixel")
-					for slot: Rect2 in slots:
-						equal(slot.position.y, (normal.shield as PackedVector2Array)[0].y - 10.0, "compact time meter stays directly above the existing shield without stacking a high icon")
-					for index: int in range(fills.size()):
-						check((slots[index] as Rect2).encloses(fills[index]), "budget fill never grows beyond its fixed slot")
+					var fill_width := ceilf(18.0 * float(cue["budget"]))
+					check(fill_width >= 1.0 and fill_width <= 18.0, "live height meter retains a visible pixel inside its fixed width")
 					if remaining == total:
-						equal(fills, slots, "full Float time fills all three fixed slots")
+						equal(fill_width, 18.0, "full flight time fills the complete height meter")
 					elif remaining == 1:
-						equal(fills.size(), 1, "final tick is a single partial slot, not a fresh full bar")
-						if not fills.is_empty():
-							equal((fills[0] as Rect2).size.x, 1.0, "final tick remains one crisp pixel without flashing")
+						equal(fill_width, 1.0, "final tick remains one crisp pixel without flashing")
 				else:
-					check(not normal.active and fills.is_empty(), "timeout removes time and protection on the exact same query")
+					check(not cue["flight"] and float(cue["budget"]) == 0.0, "timeout removes flight time on the exact query")
 				equal(state.canonical_values(), canonical, "budget sampling cannot consume Stamina/time or change direction")
 			state.spawn_protection_ticks = 1
 			state.float_ticks = total
-			for exit_kind: String in ["release", "exhaustion", "timeout"]:
+			var spawn_shield := CartoonChampionPresenter.protection_contract(state, config, false, body.x)
+			for exit_kind: String in ["active", "release", "exhaustion", "timeout", "incapable"]:
 				state.air_floating = exit_kind != "release"
+				state.flight_capable = exit_kind != "incapable"
 				state.stamina = 0 if exit_kind == "exhaustion" else state.stamina_maximum
 				state.float_ticks = 0 if exit_kind == "timeout" else total
+				var canonical := state.canonical_values()
 				var ended := CartoonChampionPresenter.protection_contract(state, config, false, body.x)
-				check(ended.active, "independent spawn protection remains visible after Float ends")
-				check((ended.get("float_budget_slots", []) as Array).is_empty() and (ended.float_wings as Array).is_empty(), "Float-specific information disappears despite overlapping spawn protection")
+				check(ended.active, "independent spawn protection remains visible during and after flight")
+				equal(ended, spawn_shield, "flight state cannot embellish or alter independent spawn protection")
+				equal(ended, CartoonChampionPresenter.protection_contract(state, config, true, body.x), "overlapping flight and spawn protection are identical in reduced effects")
+				check(not ended.has("float_budget_slots") and not ended.has("float_wings"), "overlapping spawn protection never acquires legacy Float decoration")
+				var cue := JumpPresentation.height_contract(state, config)
+				equal(cue["flight"], exit_kind == "active", "release, exhaustion, timeout and incapable flags remove only the flight meter")
+				equal(cue["budget"], 1.0 if exit_kind == "active" else 0.0, "inactive flight cannot retain a nonzero meter")
+				check(cue["active"] and cue["above"], "height cue remains when flight ends despite overlapping spawn protection")
+				equal(state.canonical_values(), canonical, "overlapping visual queries cannot mutate authority")
 
 
 func _test_directional_movement_trails() -> void:
@@ -1203,3 +1241,60 @@ func _test_directional_movement_trails() -> void:
 				state.air_dodge_ticks = 0
 				state.slide_ticks = 0
 				check(not bool(CartoonChampionPresenter.movement_trail_contract(state, config, reduced)["active"]), "trails stop immediately with their action")
+
+
+func _test_protection_body_and_budget_boundaries() -> void:
+	var config := SimConfig.new(120)
+	# Independent120Hz witnesses: air dodge22/15 ticks, roll29/16 ticks.
+	# Quantized3/2/1 pips describe the protected opening, not the whole action.
+	# These literals intentionally fail if runtime tuning changes without a
+	# corresponding review of the displayed protection budget.
+	for rolling: bool in [false, true]:
+		var witnesses: Array[Vector2i] = [Vector2i(22,3), Vector2i(18,3), Vector2i(17,2), Vector2i(13,2), Vector2i(12,1), Vector2i(8,1), Vector2i(7,0), Vector2i(1,0), Vector2i(0,0)]
+		if rolling: witnesses.assign([Vector2i(29,3), Vector2i(24,3), Vector2i(23,2), Vector2i(19,2), Vector2i(18,1), Vector2i(14,1), Vector2i(13,0), Vector2i(1,0), Vector2i(0,0)])
+		for height: float in [38.0, 44.0, 50.0, 58.0, 68.0, 76.0]:
+			var state := PlayerState.new()
+			state.hop_mode = PlayerState.MovementMode.ROLL if rolling else PlayerState.MovementMode.AIR_DODGE
+			state.air_height = 0 if rolling else 20_000
+			for witness: Vector2i in witnesses:
+				state.air_dodge_ticks = witness.x
+				var before := state.canonical_values()
+				var ordinary := CartoonChampionPresenter.protection_contract(state, config, false, height)
+				var reduced := CartoonChampionPresenter.protection_contract(state, config, true, height)
+				equal(ordinary, reduced, "reduced effects retain exact body treatment, budget and expiry information")
+				equal(int(ordinary.get("budget_pips", -1)), witness.y, "independent opening-budget boundary gives exact discrete pip count")
+				equal(bool(ordinary.active), witness.y > 0, "pips cannot contradict the actual protected interval")
+				equal(ordinary.get("body_tint"), Color(1,1,1,0.62) if witness.y > 0 else Color.WHITE, "body returns opaque while vulnerable dodge animation can still be running")
+				equal(state.canonical_values(), before, "repeated protection samples never spend or extend authoritative timers")
+			# Overlapping spawn protection is an opaque shield, not partial
+			# dodge transparency or a guessed normalized spawn countdown.
+			state.air_dodge_ticks = 14 if rolling else 8
+			state.spawn_protection_ticks = 1
+			var overlap := CartoonChampionPresenter.protection_contract(state, config, false, height)
+			equal(overlap.kind, "invulnerable", "last spawn tick takes precedence over a simultaneous protected dodge")
+			equal(overlap.get("body_tint"), Color.WHITE, "spawn shield keeps the original opaque body")
+			equal(int(overlap.get("budget_pips", -1)), 0, "spawn never borrows the shorter dodge-budget meter")
+			equal(overlap, CartoonChampionPresenter.protection_contract(state, config, true, height), "overlap has identical meaning under reduced effects")
+			state.spawn_protection_ticks = 0
+			var remaining_dodge := CartoonChampionPresenter.protection_contract(state, config, false, height)
+			equal(remaining_dodge.kind, "intangible", "spawn expiry reveals only the independently remaining dodge opening")
+			equal(remaining_dodge.get("body_tint"), Color(1,1,1,0.62), "overlap expiry cannot suppress still-authoritative dodge body treatment")
+			equal(int(remaining_dodge.get("budget_pips", -1)), 1, "overlap expiry reveals the exact last dodge-budget pip")
+			state.air_dodge_ticks -= 1
+			var recovery := CartoonChampionPresenter.protection_contract(state, config, false, height)
+			check(not recovery.active, "both protections end immediately while vulnerable recovery remains")
+			equal(recovery.get("body_tint"), Color.WHITE, "overlap recovery cannot retain a fading body")
+			equal(int(recovery.get("budget_pips", -1)), 0, "overlap recovery cannot retain a stale protection meter")
+	var state := PlayerState.new()
+	state.spawn_protection_ticks = 1
+	state.air_dodge_ticks = 22
+	state.hop_mode = PlayerState.MovementMode.AIR_DODGE
+	state.health = 0
+	var invalid: Array[Dictionary] = []
+	invalid.append(CartoonChampionPresenter.protection_contract(state, config))
+	invalid.append(CartoonChampionPresenter.protection_contract(null, config))
+	invalid.append(CartoonChampionPresenter.protection_contract(PlayerState.new(), null))
+	for result: Dictionary in invalid:
+		check(not result.active, "dead or missing authority fails closed despite stale protection fields")
+		equal(result.get("body_tint"), Color.WHITE, "invalid protection leaves no transparent protected body")
+		equal(int(result.get("budget_pips", -1)), 0, "invalid protection leaves no budget pips")

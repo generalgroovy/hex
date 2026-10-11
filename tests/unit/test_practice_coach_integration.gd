@@ -20,7 +20,108 @@ class InputHarness extends Harness:
 func run() -> int:
 	_test_actual_area_and_shared_gates()
 	_test_device_observation_and_inherited_input()
+	_test_current_hex_guidance()
 	return finish("practice-coach-integration")
+
+
+func _test_current_hex_guidance() -> void:
+	var node := Harness.new()
+	check(node.configure_fixture(false), "hex coach uses the inherited free-practice gates")
+	node.world = node._new_wellspring_world(120)
+	check(node.world != null and node.world.hex_court != null, "integration uses the actual campus Hex authority")
+	if node.world == null or node.world.hex_court == null:
+		node.free()
+		return
+	node.authoritative_session.world = node.world
+	node.session_round_values = node.authoritative_session.session_round.capture(node.world)
+	var actor: PlayerState = node.world.player()
+	check(node.champion_catalog.apply_to_player(actor, "oh_tipi"), "paid coach example owns a real current character")
+	_move(node, node.fixture_anchor)
+	actor.flux_recovery_per_second = 0
+	actor.health_recovery_per_second = 0
+	actor.spawn_protection_ticks = 0
+	actor.aim_x = 0
+	actor.aim_y = -1000
+	for index: int in 2:
+		var element := "fire" if index == 0 else "water"
+		var wire := int(node.ability_catalog.ability(node.ability_catalog.spell_id_at(element, "bolt")).wire_id)
+		check(actor.place_proven_spell(index, wire), "paid example equips a live canonical Bolt")
+	equal(node.world.hex_court.products.size(), 0, "fresh world has no reaction to describe")
+	var idle := _read_current_hex_view(node)
+	equal(idle.get("kind"), "invitation", "empty current court invites paid input instead of inventing a Steam field")
+	var idle_words := " ".join(PackedStringArray(idle.get("lines", [])))
+	check(idle_words.contains("separate paid casts") and idle_words.contains("distinct elements"), "idle invitation teaches funded formation and larger combinations")
+	check(idle_words.contains("Help:") and idle_words.contains("counters"), "idle invitation retains the current discoverable recipe next step")
+	check(not idle_words.contains("Steam scalds"), "empty court cannot claim a particular active effect")
+
+	var flux_before := actor.flux
+	check(node.paid_cast(1), "Fire enters through real command admission and Flux payment")
+	check(node.advance_until("matter"), "real Fire projectile reaches current paid ground matter")
+	var matter := _read_current_hex_view(node)
+	equal(matter.get("kind"), "matter", "the first paid terminal is matter, not an invented reaction")
+	check(node.paid_cast(2), "Water enters through a second real paid command")
+	check(node.advance_until("reaction"), "paid overlapping terminals form the actual local reaction")
+	equal(node.paid_casts, 2, "the teaching fixture uses exactly two paid admissions")
+	check(actor.flux < flux_before, "real formation spends the actor's Flux")
+	equal(int(node.world.hex_court.metrics.matter_paid), 1200, "two paid casts issue exactly two finite source stocks")
+	equal(node.world.hex_court.products.size(), 1, "two source terminals leave one actual product")
+	if node.world.hex_court.products.size() != 1:
+		node.free()
+		return
+	var product: Dictionary = node.world.hex_court.products.values()[0]
+	equal(int(product.recipe_wire_id), 310, "real Fire and Water route creates Steam")
+	equal(int(product.owner), actor.entity_id, "current card is tied to the local paid product owner")
+	check(node.world.hex_court.conservation_valid(), "actual paid matter accounting remains conserved")
+	var definition := HexRecipePolicy.definition(310)
+	var forming := _read_current_hex_view(node)
+	equal(forming.get("kind"), "reaction", "current authority teaches the product actually formed")
+	equal(int(forming.get("recipe_wire_id", 0)), 310, "coach resolves the exact live Steam identity")
+	check(String(forming.get("phase", "")).begins_with("FORMING"), "the forming field does not advertise early damage")
+	equal(forming.get("purpose"), definition.purpose, "full effect teaching comes from the current recipe")
+	equal(forming.get("counter"), definition.counter, "whole-field escape counter comes from current Steam policy")
+	equal(int(forming.get("remaining_ticks", -1)), int(product.active_tick) - node.world.tick, "forming countdown uses the actual product deadline")
+	check(node.advance_to(int(product.active_tick)), "actual simulation reaches the accepted active boundary")
+	var active := _read_current_hex_view(node)
+	check(String(active.get("phase", "")).begins_with("ACTIVE"), "active field changes its phase at the real boundary")
+	equal(int(active.get("remaining_ticks", -1)), int(product.decay_tick) - node.world.tick, "active countdown reads the actual instance")
+	equal(int(active.get("damage_budget_remaining", -1)), int(product.damage_budget_remaining), "coach reports the current shared damage pool without replenishing it")
+	var full_lines := PackedStringArray(active.get("full_lines", []))
+	check(" ".join(full_lines).contains(String(definition.counter)), "unabridged counter is retained behind the compact card")
+	check(not " ".join(full_lines).contains("Jump or leave to escape"), "the blanket jump-escape promise cannot return")
+	actor.air_height = 20_000
+	check(actor.air_height < int(definition.maximum_height), "ordinary ground clearance remains below Steam's effect ceiling")
+	var airborne := _read_current_hex_view(node)
+	equal(airborne.get("lines"), active.get("lines"), "low jump never replaces real Steam instructions with an immunity promise")
+	equal(airborne.get("counter"), definition.counter, "the exact current Steam escape counter survives low jump")
+	check(node.input_router == null and node.element_audio == null, "paid integration creates no global InputMap writer or playback")
+	node.free()
+
+
+func _read_current_hex_view(node: Node) -> Dictionary:
+	var before: String = node.world.state_hash()
+	var saved: Dictionary = node.player_preferences.to_dictionary().duplicate(true)
+	var view: Dictionary = node._chemistry_practice_view()
+	check(not view.is_empty(), "current campus practice returns a bounded contextual view")
+	var lines := PackedStringArray(view.get("lines", []))
+	equal(lines.size(), 3, "current context retains all three ingredient/effect/counter lines")
+	var compact := PracticeCoachCard.model(view, Vector2(1280,720), Vector2.ZERO)
+	var expanded := PracticeCoachCard.model(view, Vector2(1280,720), Vector2(850,100))
+	check(not compact.is_empty() and not expanded.is_empty(), "actual compact and hover card models both admit the current view")
+	if not expanded.is_empty():
+		var panel: Rect2 = expanded.panel
+		var text_width := panel.size.x - 28.0
+		equal(text_width, 412.0, "native card keeps its established horizontal content width")
+		# Bootstrap._draw_practice_coach draws these lines at12px with14px
+		# horizontal padding. Measure that real font contract, not the old13px hint.
+		for line: String in lines:
+			check(ThemeDB.fallback_font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x <= text_width, "every current hint fits the actual native card font and width")
+		equal(expanded.lines, lines, "hover exposes all three existing contextual lines")
+	if not compact.is_empty() and not lines.is_empty():
+		var effect_index := 1 if String(view.get("kind", "")) == "reaction" else 0
+		equal(compact.lines, PackedStringArray([lines[effect_index]]), "compact card prioritizes the actual current effect")
+	equal(node.world.state_hash(), before, "every contextual help sample leaves complete authority unchanged")
+	equal(node.player_preferences.to_dictionary(), saved, "contextual help and hover models cannot change settings")
+	return view
 
 
 func _bounds(node: Node) -> Rect2i:
@@ -77,7 +178,7 @@ func _test_actual_area_and_shared_gates() -> void:
 	_view(node, false, "dead local actor cannot receive a movement lesson")
 	node.world.player().health = node.world.player().health_maximum
 	for phase: int in [SessionRound.Phase.ACTIVE, SessionRound.Phase.RESULT]:
-		node.session_round_values = PackedInt32Array([1, phase, 1, 120, 0, 3, 2, 1, 0, 0, 2, 0, 0])
+		node.session_round_values = PackedInt32Array([SessionRound.SCHEMA_VERSION, phase, 1, 120, 0, 3, 2, 0, 0, 0, 0, SessionRound.ResultReason.TIMEOUT if phase == SessionRound.Phase.RESULT else 0, 1, 0, 0, 1, 1, 2, 0, 0, 2, 1])
 		check(SessionRound.validate_packet(node.session_round_values), "round gate uses an existing valid phase packet")
 		_view(node, false, "live and result round phases are not free practice")
 	node.session_round_values = node.authoritative_session.session_round.capture(node.world)
@@ -95,7 +196,12 @@ func _test_actual_area_and_shared_gates() -> void:
 	round_state.result_end_tick = 120
 	for phase: int in [SessionRound.Phase.ACTIVE, SessionRound.Phase.RESULT]:
 		round_state.phase = phase
+		# Schema v2 requires a terminal reason exactly when phase is RESULT.
+		# Keep a tied timeout fixture; the replica deliberately remains HEARTH.
+		round_state.result_reason = SessionRound.ResultReason.TIMEOUT if phase == SessionRound.Phase.RESULT else SessionRound.ResultReason.NONE
 		check(SessionRound.validate_packet(round_state.capture(node.world)), "host phase is a valid authoritative two-actor round")
+		equal(int(SessionRound.decoded(node.session_round_values).get("phase", -1)), SessionRound.Phase.HEARTH, "replica remains a valid stale HEARTH while host authority advances")
+		equal(int(node._current_round_state().get("phase", -1)), phase, "inherited round selection reads the valid host phase instead of the stale replica")
 		_view(node, false, "host authoritative phase wins over stale replica HEARTH values")
 	round_state.bind_hearth()
 	node.session_transport.mode = SessionTransport.Mode.CLIENT
@@ -188,7 +294,7 @@ func _test_device_observation_and_inherited_input() -> void:
 		equal(node.movement_practice_device, ControlBindingEditor.DEVICE_CONTROLLER, "release, key echo and mouse motion cannot steal controller labels")
 	node._unhandled_input(_key())
 	equal(node.movement_practice_device, ControlBindingEditor.DEVICE_KEYBOARD, "fresh keyboard press selects keyboard/mouse setup")
-	check(" ".join(node._movement_practice_view().lines).contains("hold K"), "keyboard remapping immediately reaches the real card")
+	check(" ".join(node._movement_practice_view().lines).contains("Fresh K: one paid double jump"), "keyboard remapping immediately reaches the real non-flying character card")
 	for noise: float in [0.0, InputRouter.AIM_DEADZONE - 0.001, -InputRouter.AIM_DEADZONE + 0.001]:
 		node._unhandled_input(_axis(noise))
 		equal(node.movement_practice_device, ControlBindingEditor.DEVICE_KEYBOARD, "idle and sub-threshold stick noise do not steal keyboard labels")

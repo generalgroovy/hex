@@ -6,7 +6,11 @@ extends RefCounted
 # Existing wire fields remain; old peers must not simulate different attacks.
 # The 48px hex lattice changes cell ownership, structures and map identity.
 # Older 64px peers/replays must not enter the same authoritative simulation.
-const PROTOCOL_VERSION: int = 55
+# Release jump, flight capabilities and movement cancellation change authority.
+# Frozen teams, retained score ledgers and explicit result reasons change the
+# replicated round contract. Old peers must not reinterpret these packets.
+# Identity perk prediction now carries identity, resource and cast clocks.
+const PROTOCOL_VERSION: int = 60
 const FIXED_SCALE: int = 1000
 const TICK_RATE: int = 120
 # Cast admission and replication share one finite authority envelope. Pending

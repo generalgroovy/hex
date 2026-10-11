@@ -36,6 +36,10 @@ var reaction_strength: int = 1
 var initial_strength: int = 0
 var remaining_strength: int = 0
 var grazed_entity_ids := PackedInt64Array()
+var delivery_phase: int = 0
+var delivery_ticks: int = 0
+var delivery_damage_remaining: int = 0
+var contact_entity_ids := PackedInt64Array()
 
 
 func _init(
@@ -92,6 +96,8 @@ func canonical_values() -> PackedInt64Array:
 	# Append-only: the variable graze count/history retain their published indices.
 	values.append(reaction_strength)
 	values.append(range_subunit)
+	values.append_array(PackedInt64Array([delivery_phase, delivery_ticks, delivery_damage_remaining, contact_entity_ids.size()]))
+	values.append_array(contact_entity_ids)
 	# Hex strength is a presentation projection of the already-hashed court
 	# ledger, not a second authority record or a legacy snapshot field.
 	return values

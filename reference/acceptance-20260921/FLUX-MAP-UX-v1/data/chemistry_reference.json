@@ -1,0 +1,202 @@
+{
+  "status": "STATIC_VERIFIED",
+  "scope": "Effective recipe policy plus inspected actor adapters; not human acceptance or full dependency audit.",
+  "phase_order": [
+    "formation",
+    "active",
+    "decay"
+  ],
+  "tick_rate": 120,
+  "rows": [
+    {
+      "a": "Water",
+      "b": "Water",
+      "name": "Flood",
+      "wire": 316,
+      "selection": "disk 64 px",
+      "phase_ticks": [
+        24,
+        360,
+        60
+      ],
+      "phase_seconds": [
+        0.2,
+        3.0,
+        0.5
+      ],
+      "player_rule": "Grounded directional flow; jump or leave the current.",
+      "eligibility_caution": "all eligible grounded actors; root adapter has no hostile filter"
+    },
+    {
+      "a": "Water",
+      "b": "Earth",
+      "name": "Mud",
+      "wire": 303,
+      "selection": "disk 77.5 px",
+      "phase_ticks": [
+        24,
+        390,
+        42
+      ],
+      "phase_seconds": [
+        0.2,
+        3.25,
+        0.35
+      ],
+      "player_rule": "Ordinary-ground acceleration and braking become 70%; target speed unchanged. Leave to restore.",
+      "eligibility_caution": "all unprotected movement"
+    },
+    {
+      "a": "Water",
+      "b": "Fire",
+      "name": "Steam",
+      "wire": 310,
+      "selection": "disk 64 px",
+      "phase_ticks": [
+        24,
+        360,
+        60
+      ],
+      "phase_seconds": [
+        0.2,
+        3.0,
+        0.5
+      ],
+      "player_rule": "Transparent escalating scald through height 48 px. Leave; a fresh Water cast can cool once. A low hop is not immunity.",
+      "eligibility_caution": "root pressure query includes self/allies; no hostile filter"
+    },
+    {
+      "a": "Water",
+      "b": "Air",
+      "name": "Mistcurrent",
+      "wire": 317,
+      "selection": "sector length 200 px",
+      "phase_ticks": [
+        27,
+        330,
+        48
+      ],
+      "phase_seconds": [
+        0.225,
+        2.75,
+        0.4
+      ],
+      "player_rule": "Wet directional steering with finite suppression; jump or exit laterally. Not concealment.",
+      "eligibility_caution": "all unprotected movement"
+    },
+    {
+      "a": "Earth",
+      "b": "Earth",
+      "name": "Rampart",
+      "wire": 301,
+      "selection": "disk 34 px selecting hex pillars",
+      "phase_ticks": [
+        22,
+        375,
+        48
+      ],
+      "phase_seconds": [
+        0.1833,
+        3.125,
+        0.4
+      ],
+      "player_rule": "Temporary breakable six-face cover; go around, break or wait. No assumed vaulting.",
+      "eligibility_caution": "structure rules need missing HexStructures dependency"
+    },
+    {
+      "a": "Earth",
+      "b": "Fire",
+      "name": "Magma",
+      "wire": 302,
+      "selection": "sector length 100 px",
+      "phase_ticks": [
+        42,
+        330,
+        60
+      ],
+      "phase_seconds": [
+        0.35,
+        2.75,
+        0.5
+      ],
+      "player_rule": "Grounded hostile damage; ordinary-ground target speed 75%, no after-exit slow. Jump or leave.",
+      "eligibility_caution": "movement all unprotected; damage hostile unprotected"
+    },
+    {
+      "a": "Earth",
+      "b": "Air",
+      "name": "Dustfront",
+      "wire": 304,
+      "selection": "sector length 150 px",
+      "phase_ticks": [
+        30,
+        270,
+        42
+      ],
+      "phase_seconds": [
+        0.25,
+        2.25,
+        0.35
+      ],
+      "player_rule": "Transparent lateral ground push; jump or exit sideways.",
+      "eligibility_caution": "all unprotected movement"
+    },
+    {
+      "a": "Fire",
+      "b": "Fire",
+      "name": "Conflagration",
+      "wire": 309,
+      "selection": "disk 64 px (not catalog ring)",
+      "phase_ticks": [
+        24,
+        360,
+        60
+      ],
+      "phase_seconds": [
+        0.2,
+        3.0,
+        0.5
+      ],
+      "player_rule": "Grounded burn pulses every 72 ticks. Leave/jump during warning.",
+      "eligibility_caution": "all eligible grounded actors; root adapter has no hostile filter"
+    },
+    {
+      "a": "Fire",
+      "b": "Air",
+      "name": "Firestorm",
+      "wire": 311,
+      "selection": "sector length 162.5 px",
+      "phase_ticks": [
+        42,
+        270,
+        42
+      ],
+      "phase_seconds": [
+        0.35,
+        2.25,
+        0.35
+      ],
+      "player_rule": "Moving damaging route cut; use lateral exit or solid cover. Do not promise a low-hop dodge.",
+      "eligibility_caution": "hostile unprotected damage"
+    },
+    {
+      "a": "Air",
+      "b": "Air",
+      "name": "Vortex",
+      "wire": 322,
+      "selection": "annulus inner 30 / outer 90 px",
+      "phase_ticks": [
+        48,
+        330,
+        48
+      ],
+      "phase_seconds": [
+        0.4,
+        2.75,
+        0.4
+      ],
+      "player_rule": "Grounded tangential push; use an actually unselected opening, jump or leave. Analytic center is not automatically safe after whole-cell selection.",
+      "eligibility_caution": "all unprotected movement"
+    }
+  ]
+}

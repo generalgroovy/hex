@@ -1,0 +1,71 @@
+{
+  "id": "hex-s-wayne-pixel-jump-keys-source-v1",
+  "date": "2026-10-03",
+  "status": "v3-proportion-repair-awaits-native-review-v1-v2-rejected-for-integration",
+  "generator": "built-in image_gen; transparent_background true; no CLI fallback",
+  "character": "s_wayne",
+  "body": "small",
+  "repository": "https://github.com/generalgroovy/hex.git",
+  "inspected_head": "1559a566e33255c59337c5963f1c3c685d757f1f",
+  "dirty_work_preserved": true,
+  "directions": ["S", "SE", "E", "NE", "N", "NW", "W", "SW"],
+  "intended_rows": ["jumpsquat", "jump_rise_apex", "fall", "land"],
+  "generated_files": [
+    {
+      "file": "source-v1.png",
+      "original": "C:/Users/sende/.codex/generated_images/01a0feff-bf56-7541-bb08-205a12892c30/exec-2da02038-0b7a-4a51-9808-edec7cdedb65.png",
+      "sha256": "e4d3fbc063b20831738cd09c1eaa40f819f29416aa00192367338d10cbd3d0d6",
+      "size": [1774, 887],
+      "alpha_threshold_128_y_bands_inclusive": [[99, 256], [277, 456], [474, 653], [665, 823]],
+      "selected_rows_zero_based": [],
+      "alpha_counts": {"zero": 1025297, "fully_opaque": 786, "partial": 547455},
+      "review": "Rejected for integration after lead native-proportion cross-review: oversized head and shortened body relative to current runtime. Initial landing also too similar to anticipation. Original remains preserved."
+    },
+    {
+      "file": "landing-correction-v2.png",
+      "original": "C:/Users/sende/.codex/generated_images/01a0feff-bf56-7541-bb08-205a12892c30/exec-9257850b-1bc9-462b-a298-c67046840c09.png",
+      "sha256": "ebbb19c2b4db1a1a33d730522d3749ec1f99d023c2e58042299dc572e0534a3f",
+      "size": [1774, 887],
+      "alpha_threshold_128_y_bands_inclusive": [[97, 257], [274, 459], [472, 656], [677, 829]],
+      "selected_rows_zero_based": [],
+      "alpha_counts": {"zero": 988547, "fully_opaque": 853, "partial": 584138},
+      "review": "Rejected for integration after lead native-proportion cross-review: still shares v1 oversized-head problem. Bottom-row knee bend improved, but upper rows also changed despite preservation request. Original remains preserved."
+    },
+    {
+      "file": "proportion-repair-v3.png",
+      "original": "C:/Users/sende/.codex/generated_images/01a0feff-bf56-7541-bb08-205a12892c30/exec-490608a5-6d36-45c2-a104-08218177655d.png",
+      "sha256": "9920c4d54cc33fac1455434809ac4d4dacac38e76d95e5c8845efa21ad720122",
+      "size": [1774, 887],
+      "alpha_threshold_128_y_bands_inclusive": [[55, 210], [251, 439], [470, 664], [695, 839]],
+      "selected_rows_zero_based": [0, 1, 2, 3],
+      "review": "Current candidate only. Visually smaller consistent head and longer torso/legs; all eight headings preserved. Source envelopes at a common illustrative 58/195 scale are approximately46.4,56.2,58,43.1px. Landing is deeper than the suggested47-50px envelope; do not independently enlarge it. Rough head visual estimate about19-20px at that scale requires native verification."
+    }
+  ],
+  "reference_roles": [
+    {"path": "art_batches/pixel_body_pilot_v1/source/s-wayne.png", "sha256": "4fdb4c514f476674d5368f1ac6663c54f661449d987c40d5044d89301f00c8c4", "role": "initial primary identity reference; later replaced by actual runtime proportion canon for v3"},
+    {"path": "C:/Users/sende/Pictures/styleref1.png", "sha256": "c0fb63c912718d64ca061ccd85817869ffc3348a3c81a910962df57066279fd4", "role": "initial style only; all labels, other characters, magic and weapons excluded"},
+    {"path": "assets/sprites/fullbody_cast_v1/s_wayne-detail.png", "sha256": "59523d5c431cff58b50efe119c41cffca208754190628a2ee572277674eff937", "role": "supporting costume and rear/profile anatomy; longer torso and limbs in v3"},
+    {"path": "assets/sprites/pixel_cast_v1/s_wayne.png", "role": "v3 primary CURRENT runtime head/body proportion and identity canon"}
+  ],
+  "assembly_guidance": {
+    "selection": "proportion-repair-v3 rows0,1,2,3 only, pending native review; v1 and v2 must not be integrated",
+    "columns": 8,
+    "source_rows": 4,
+    "column_padding_proposed": 32,
+    "crop_policy": "Use measured alpha-row bands and connected-character isolation with padded nominal width/8 columns; do not split the canvas into exact height/4 crops.",
+    "alpha_policy": "Original PNGs are immutable and genuinely transparent; authorized threshold128 cleanup with hidden RGB removal is still required.",
+    "scale_policy": "One identity-locked common scale across selected poses; calibrate against existing standing head/body reference, never scale each action to the same occupied height.",
+    "registration_policy": "No world lift is drawn; preserve a common model root. Ordinary existing bottom-foot registration requires native review for airborne pose so it cannot erase intended relative foot tuck.",
+    "runtime_cell_proposed": [128, 128],
+    "runtime_pivot_proposed": [64, 104]
+  },
+  "limitations": [
+    "Four authored held keys, not four complete action cycles or smooth inbetweens.",
+    "Rise/apex is one combined pose; anticipation and land need native-size timing and continuity review.",
+    "Pose and skull consistency was visually inspected at source size, not quantitatively certified at final native scale.",
+    "Empty hands are readable but no independently authored cast gesture or cast-animation cycle is included.",
+    "Low-body anatomy must not be cut at the standing bank waist seam or combined with another facing.",
+    "No slide, roll, fast-fall, double-jump, wall action, flight, hit, stun or defeated pose coverage is claimed.",
+    "No engines, import, unit tests, runtime captures, performance probes or exports were run by this worker."
+  ]
+}

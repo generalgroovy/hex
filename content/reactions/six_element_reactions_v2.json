@@ -1,0 +1,1951 @@
+{
+  "schema_version": 3,
+  "id": "six-element-reactions-v2",
+  "status": "bounded_combinations",
+  "runtime_enabled": true,
+  "fundamental_elements": [
+    "earth",
+    "fire",
+    "water",
+    "wind",
+    "light",
+    "dark"
+  ],
+  "deferred_elements": [
+    "spirit",
+    "chaos",
+    "gravity",
+    "time"
+  ],
+  "policy": {
+    "pair_order_is_symmetric": true,
+    "worldbone_immutable": true,
+    "strong_effects_require_thresholds": true,
+    "required_lifecycle": [
+      "formation",
+      "active",
+      "residue_or_decay"
+    ],
+    "required_runtime_bounds": [
+      "area",
+      "propagation_depth",
+      "lifetime",
+      "work",
+      "ownership"
+    ],
+    "priority": "map_interaction_before_damage_multiplier",
+    "worldbone_policy": "reject",
+    "mutation_gate": "bounded_combinations",
+    "maximum_inputs": 6,
+    "damage_pool_per_consumed_strength": 4000
+  },
+  "channels": [
+    "structure",
+    "heat",
+    "saturation",
+    "pressure_momentum",
+    "charge",
+    "radiance_vitality",
+    "decay"
+  ],
+  "element_channel_vectors": {
+    "earth": {
+      "structure": 700,
+      "heat": 0,
+      "saturation": 0,
+      "pressure_momentum": 0,
+      "charge": 0,
+      "radiance_vitality": 0,
+      "decay": 0
+    },
+    "fire": {
+      "structure": 0,
+      "heat": 700,
+      "saturation": 0,
+      "pressure_momentum": 100,
+      "charge": 200,
+      "radiance_vitality": 0,
+      "decay": 0
+    },
+    "water": {
+      "structure": 0,
+      "heat": -200,
+      "saturation": 700,
+      "pressure_momentum": 100,
+      "charge": 0,
+      "radiance_vitality": 0,
+      "decay": 0
+    },
+    "wind": {
+      "structure": 0,
+      "heat": 0,
+      "saturation": 0,
+      "pressure_momentum": 700,
+      "charge": 0,
+      "radiance_vitality": 0,
+      "decay": 0
+    },
+    "light": {
+      "structure": 0,
+      "heat": 0,
+      "saturation": 0,
+      "pressure_momentum": 0,
+      "charge": 0,
+      "radiance_vitality": 700,
+      "decay": 0
+    },
+    "dark": {
+      "structure": 0,
+      "heat": 0,
+      "saturation": 0,
+      "pressure_momentum": 0,
+      "charge": 0,
+      "radiance_vitality": -200,
+      "decay": 700
+    }
+  },
+  "runtime_bounds": {
+    "maximum_active_reactions": 128,
+    "maximum_active_cells": 512,
+    "maximum_area_cells_per_reaction": 32,
+    "maximum_propagation_depth": 8,
+    "maximum_work_units_per_tick": 256,
+    "maximum_events_per_tick": 64,
+    "maximum_owners_per_reaction": 8,
+    "maximum_phase_ms": 12000
+  },
+  "runtime_profiles": {
+    "surface_route": {
+      "primitive": "surface",
+      "formation_threshold": 1000,
+      "formation_ms": 240,
+      "active_ms": 5000,
+      "residue_ms": 2000,
+      "maximum_area_cells": 24,
+      "maximum_propagation_depth": 1,
+      "work_units_per_tick": 24
+    },
+    "moving_flow": {
+      "primitive": "flow",
+      "formation_threshold": 1200,
+      "formation_ms": 320,
+      "active_ms": 4000,
+      "residue_ms": 2500,
+      "maximum_area_cells": 32,
+      "maximum_propagation_depth": 8,
+      "work_units_per_tick": 32
+    },
+    "temporary_cover": {
+      "primitive": "cover",
+      "formation_threshold": 1400,
+      "formation_ms": 420,
+      "active_ms": 5000,
+      "residue_ms": 2000,
+      "maximum_area_cells": 12,
+      "maximum_propagation_depth": 2,
+      "work_units_per_tick": 16
+    },
+    "bounded_field": {
+      "primitive": "field",
+      "formation_threshold": 1000,
+      "formation_ms": 260,
+      "active_ms": 3500,
+      "residue_ms": 1200,
+      "maximum_area_cells": 24,
+      "maximum_propagation_depth": 4,
+      "work_units_per_tick": 24
+    },
+    "conductor_path": {
+      "primitive": "conduction",
+      "formation_threshold": 1200,
+      "formation_ms": 300,
+      "active_ms": 2500,
+      "residue_ms": 800,
+      "maximum_area_cells": 32,
+      "maximum_propagation_depth": 8,
+      "work_units_per_tick": 32
+    },
+    "visibility_volume": {
+      "primitive": "visibility",
+      "formation_threshold": 900,
+      "formation_ms": 220,
+      "active_ms": 3500,
+      "residue_ms": 1000,
+      "maximum_area_cells": 28,
+      "maximum_propagation_depth": 4,
+      "work_units_per_tick": 24
+    },
+    "damage_hazard": {
+      "primitive": "hazard",
+      "formation_threshold": 1400,
+      "formation_ms": 360,
+      "active_ms": 2600,
+      "residue_ms": 1500,
+      "maximum_area_cells": 20,
+      "maximum_propagation_depth": 4,
+      "work_units_per_tick": 24
+    },
+    "optical_path": {
+      "primitive": "refraction",
+      "formation_threshold": 1000,
+      "formation_ms": 260,
+      "active_ms": 4000,
+      "residue_ms": 800,
+      "maximum_area_cells": 16,
+      "maximum_propagation_depth": 3,
+      "work_units_per_tick": 16
+    },
+    "fracture_pulse": {
+      "primitive": "fracture",
+      "formation_threshold": 1500,
+      "formation_ms": 460,
+      "active_ms": 500,
+      "residue_ms": 2500,
+      "maximum_area_cells": 12,
+      "maximum_propagation_depth": 2,
+      "work_units_per_tick": 20
+    }
+  },
+  "reactions": [
+    {
+      "id": "fortify",
+      "wire_id": 301,
+      "runtime_profile": "temporary_cover",
+      "name": "Rampart",
+      "input_elements": [
+        "earth",
+        "earth"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "one eruption hit raises a breakable pillar that cuts a firing lane or creates a wallrun approach"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "break the 32-Health pillar, go around, or wait; trapped occupants can escape"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "magma",
+      "wire_id": 302,
+      "runtime_profile": "moving_flow",
+      "name": "Magma",
+      "input_elements": [
+        "earth",
+        "fire"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "grounded damage and route denial"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave or jump before the next pulse"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "mud",
+      "wire_id": 303,
+      "runtime_profile": "surface_route",
+      "name": "Quagmire",
+      "input_elements": [
+        "earth",
+        "water"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "70% ground acceleration and braking; staying for 350 ms starts grounded attrition"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "jump or leave before 350 ms; movement ratios end immediately outside"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "dustfront",
+      "wire_id": 304,
+      "runtime_profile": "visibility_volume",
+      "name": "Sandblast",
+      "input_elements": [
+        "earth",
+        "wind"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "one grounded hit and 14 px sideways displacement per hostile actor"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "jump across or leave during formation; solid cover stops the displacement"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "crystal_prism",
+      "wire_id": 307,
+      "runtime_profile": "optical_path",
+      "name": "Crystal Prism",
+      "input_elements": [
+        "earth",
+        "light"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "one hostile contact cut; bank existing paid projectiles off a breakable reflection plane"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "change approach or break the 18-Health plane with Spray; ownership never changes"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "blightsoil",
+      "wire_id": 308,
+      "runtime_profile": "surface_route",
+      "name": "Blightsoil",
+      "input_elements": [
+        "earth",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "grounded pulses deny Health, Flux and Stamina recovery while occupied"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "jump or leave the soil; ordinary recovery waits still apply afterwards"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "conflagration",
+      "wire_id": 309,
+      "runtime_profile": "damage_hazard",
+      "name": "Conflagration",
+      "input_elements": [
+        "fire",
+        "fire"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "committed concentrated ground burn"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave or jump during warning"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "steam",
+      "wire_id": 310,
+      "runtime_profile": "visibility_volume",
+      "name": "Steam",
+      "input_elements": [
+        "fire",
+        "water"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "visible capped scald pressure"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "exit or cool with a fresh Water cast"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "firestorm",
+      "wire_id": 311,
+      "runtime_profile": "damage_hazard",
+      "name": "Arcstorm",
+      "input_elements": [
+        "fire",
+        "wind"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "one warned electrical line burst; one separate paid Fire source can extend the arc"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave the previewed line before activation or consume its optional Fire link"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "solar_flare",
+      "wire_id": 314,
+      "runtime_profile": "visibility_volume",
+      "name": "Solar Flare",
+      "input_elements": [
+        "fire",
+        "light"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "one radial flash deals damage and reveals targets for 700 ms"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave the forming disk; this pulse cannot fire again"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "cinderveil",
+      "wire_id": 315,
+      "runtime_profile": "visibility_volume",
+      "name": "Backdraft",
+      "input_elements": [
+        "fire",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "concealing fuse becomes transparent for its last 600 ms, then bursts once"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave during the visible final warning; no damage before detonation"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "flood",
+      "wire_id": 316,
+      "runtime_profile": "moving_flow",
+      "name": "Frostway",
+      "input_elements": [
+        "water",
+        "water"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "one grounded freezing hit; ground travel is 75% and physical projectiles travel at 65%"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "slide, jump, or leave; air movement and slide speed remain unchanged"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "mistcurrent",
+      "wire_id": 317,
+      "runtime_profile": "visibility_volume",
+      "name": "Hailcurrent",
+      "input_elements": [
+        "water",
+        "wind"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "narrow hail pulses combine with a grounded current along the cast direction"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave laterally; jumping avoids current and ground-level hail"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "mirrorwater",
+      "wire_id": 320,
+      "runtime_profile": "optical_path",
+      "name": "Mirrorwater",
+      "input_elements": [
+        "water",
+        "light"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "disturbing the mirror surface reveals movement and triggers damage on each pulse"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "stand still between pulses after the entry reveal, or leave the disk"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "blackwater",
+      "wire_id": 321,
+      "runtime_profile": "visibility_volume",
+      "name": "Black Ice",
+      "input_elements": [
+        "water",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "entry briefly slows; the first grounded exit fractures the ice for one hit"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "jump out to avoid the exit fracture; each actor can be hit only once"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "vortex",
+      "wire_id": 322,
+      "runtime_profile": "bounded_field",
+      "name": "Vortex",
+      "input_elements": [
+        "wind",
+        "wind"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "rotating ground current and pulses guard an annulus around an open center"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "use the center opening, jump, or leave between pulses"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "lightbend",
+      "wire_id": 325,
+      "runtime_profile": "optical_path",
+      "name": "Lightbend",
+      "input_elements": [
+        "wind",
+        "light"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "one hostile contact flash; bend paid Light projectiles by 15 degrees for a different attack angle"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "change the Light approach angle or leave the redirected firing lane"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "shadowdraft",
+      "wire_id": 326,
+      "runtime_profile": "visibility_volume",
+      "name": "Shadowdraft",
+      "input_elements": [
+        "wind",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "a stationary corridor alternates 300 ms of concealing damage and 300 ms of clear safety"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "cross during the transparent interval or leave laterally"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "radiance",
+      "wire_id": 334,
+      "runtime_profile": "visibility_volume",
+      "name": "Radiance",
+      "input_elements": [
+        "light",
+        "light"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "continuous reveal and regular searing pulses also threaten airborne actors"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave between 600 ms pulses; jumping alone does not escape"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "penumbra",
+      "wire_id": 335,
+      "runtime_profile": "visibility_volume",
+      "name": "Penumbra",
+      "input_elements": [
+        "light",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "one damaging revealed boundary crossing per actor, with a safe interior"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "avoid the marked ring or shelter inside; repeated crossings cannot repeat the hit"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "umbral_field",
+      "wire_id": 336,
+      "runtime_profile": "visibility_volume",
+      "name": "Umbral Field",
+      "input_elements": [
+        "dark",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_shared_damage_pool"
+      ],
+      "actor_effects": [
+        "concealed dwell pressure grows from 2 to 6 Health per pulse after one second"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "move to reveal occupants or exit before one second; exit resets dwell pressure"
+      ],
+      "telegraph": "formation_warning_active_boundary_harmless_decay"
+    },
+    {
+      "id": "compound_07",
+      "wire_id": 407,
+      "runtime_profile": "bounded_field",
+      "name": "Caldera",
+      "input_elements": [
+        "earth",
+        "fire",
+        "water"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "fire",
+        "water"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_11",
+      "wire_id": 411,
+      "runtime_profile": "bounded_field",
+      "name": "Cinder Cyclone",
+      "input_elements": [
+        "earth",
+        "fire",
+        "wind"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "fire",
+        "wind"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_13",
+      "wire_id": 413,
+      "runtime_profile": "bounded_field",
+      "name": "Silt Surge",
+      "input_elements": [
+        "earth",
+        "water",
+        "wind"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "water",
+        "wind"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_14",
+      "wire_id": 414,
+      "runtime_profile": "bounded_field",
+      "name": "Thunderhead",
+      "input_elements": [
+        "fire",
+        "water",
+        "wind"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "fire",
+        "water",
+        "wind"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_15",
+      "wire_id": 415,
+      "runtime_profile": "bounded_field",
+      "name": "Tempest Forge",
+      "input_elements": [
+        "earth",
+        "fire",
+        "water",
+        "wind"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "fire",
+        "water",
+        "wind"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_19",
+      "wire_id": 419,
+      "runtime_profile": "bounded_field",
+      "name": "Sunforge",
+      "input_elements": [
+        "earth",
+        "fire",
+        "light"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "fire",
+        "light"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_21",
+      "wire_id": 421,
+      "runtime_profile": "bounded_field",
+      "name": "Geode Spring",
+      "input_elements": [
+        "earth",
+        "water",
+        "light"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "water",
+        "light"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_22",
+      "wire_id": 422,
+      "runtime_profile": "bounded_field",
+      "name": "Scalding Halo",
+      "input_elements": [
+        "fire",
+        "water",
+        "light"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "fire",
+        "water",
+        "light"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_23",
+      "wire_id": 423,
+      "runtime_profile": "bounded_field",
+      "name": "Opaline Furnace",
+      "input_elements": [
+        "earth",
+        "fire",
+        "water",
+        "light"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "fire",
+        "water",
+        "light"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_25",
+      "wire_id": 425,
+      "runtime_profile": "bounded_field",
+      "name": "Prism Gale",
+      "input_elements": [
+        "earth",
+        "wind",
+        "light"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "wind",
+        "light"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_26",
+      "wire_id": 426,
+      "runtime_profile": "bounded_field",
+      "name": "Corona Arc",
+      "input_elements": [
+        "fire",
+        "wind",
+        "light"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "fire",
+        "wind",
+        "light"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_27",
+      "wire_id": 427,
+      "runtime_profile": "bounded_field",
+      "name": "Daybreak Engine",
+      "input_elements": [
+        "earth",
+        "fire",
+        "wind",
+        "light"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "fire",
+        "wind",
+        "light"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_28",
+      "wire_id": 428,
+      "runtime_profile": "bounded_field",
+      "name": "Aurora Current",
+      "input_elements": [
+        "water",
+        "wind",
+        "light"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "water",
+        "wind",
+        "light"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_29",
+      "wire_id": 429,
+      "runtime_profile": "bounded_field",
+      "name": "Glacial Cathedral",
+      "input_elements": [
+        "earth",
+        "water",
+        "wind",
+        "light"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "water",
+        "wind",
+        "light"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_30",
+      "wire_id": 430,
+      "runtime_profile": "bounded_field",
+      "name": "Stormglass",
+      "input_elements": [
+        "fire",
+        "water",
+        "wind",
+        "light"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "fire",
+        "water",
+        "wind",
+        "light"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_31",
+      "wire_id": 431,
+      "runtime_profile": "bounded_field",
+      "name": "Prismatic Monsoon",
+      "input_elements": [
+        "earth",
+        "fire",
+        "water",
+        "wind",
+        "light"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "fire",
+        "water",
+        "wind",
+        "light"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_35",
+      "wire_id": 435,
+      "runtime_profile": "bounded_field",
+      "name": "Ashen Mire",
+      "input_elements": [
+        "earth",
+        "fire",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "fire",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_37",
+      "wire_id": 437,
+      "runtime_profile": "bounded_field",
+      "name": "Gravefrost",
+      "input_elements": [
+        "earth",
+        "water",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "water",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_38",
+      "wire_id": 438,
+      "runtime_profile": "bounded_field",
+      "name": "Night Boil",
+      "input_elements": [
+        "fire",
+        "water",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "fire",
+        "water",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_39",
+      "wire_id": 439,
+      "runtime_profile": "bounded_field",
+      "name": "Volcanic Undertow",
+      "input_elements": [
+        "earth",
+        "fire",
+        "water",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "fire",
+        "water",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_41",
+      "wire_id": 441,
+      "runtime_profile": "bounded_field",
+      "name": "Burial Gale",
+      "input_elements": [
+        "earth",
+        "wind",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "wind",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_42",
+      "wire_id": 442,
+      "runtime_profile": "bounded_field",
+      "name": "Black Thunder",
+      "input_elements": [
+        "fire",
+        "wind",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "fire",
+        "wind",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_43",
+      "wire_id": 443,
+      "runtime_profile": "bounded_field",
+      "name": "Funeral Storm",
+      "input_elements": [
+        "earth",
+        "fire",
+        "wind",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "fire",
+        "wind",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_44",
+      "wire_id": 444,
+      "runtime_profile": "bounded_field",
+      "name": "Sleet Veil",
+      "input_elements": [
+        "water",
+        "wind",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "water",
+        "wind",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_45",
+      "wire_id": 445,
+      "runtime_profile": "bounded_field",
+      "name": "Winter Sepulcher",
+      "input_elements": [
+        "earth",
+        "water",
+        "wind",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "water",
+        "wind",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_46",
+      "wire_id": 446,
+      "runtime_profile": "bounded_field",
+      "name": "Night Tempest",
+      "input_elements": [
+        "fire",
+        "water",
+        "wind",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "fire",
+        "water",
+        "wind",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_47",
+      "wire_id": 447,
+      "runtime_profile": "bounded_field",
+      "name": "Abyssal Tempest",
+      "input_elements": [
+        "earth",
+        "fire",
+        "water",
+        "wind",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "fire",
+        "water",
+        "wind",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_49",
+      "wire_id": 449,
+      "runtime_profile": "bounded_field",
+      "name": "Obsidian Crown",
+      "input_elements": [
+        "earth",
+        "light",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "light",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_50",
+      "wire_id": 450,
+      "runtime_profile": "bounded_field",
+      "name": "Eclipse Flare",
+      "input_elements": [
+        "fire",
+        "light",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "fire",
+        "light",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_51",
+      "wire_id": 451,
+      "runtime_profile": "bounded_field",
+      "name": "Eclipse Crucible",
+      "input_elements": [
+        "earth",
+        "fire",
+        "light",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "fire",
+        "light",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_52",
+      "wire_id": 452,
+      "runtime_profile": "bounded_field",
+      "name": "Dusk Mirror",
+      "input_elements": [
+        "water",
+        "light",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "water",
+        "light",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_53",
+      "wire_id": 453,
+      "runtime_profile": "bounded_field",
+      "name": "Onyx Tide",
+      "input_elements": [
+        "earth",
+        "water",
+        "light",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "water",
+        "light",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_54",
+      "wire_id": 454,
+      "runtime_profile": "bounded_field",
+      "name": "Eventide Cauldron",
+      "input_elements": [
+        "fire",
+        "water",
+        "light",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "fire",
+        "water",
+        "light",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_55",
+      "wire_id": 455,
+      "runtime_profile": "bounded_field",
+      "name": "Eventide Forge",
+      "input_elements": [
+        "earth",
+        "fire",
+        "water",
+        "light",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "fire",
+        "water",
+        "light",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_56",
+      "wire_id": 456,
+      "runtime_profile": "bounded_field",
+      "name": "Twilight Gyre",
+      "input_elements": [
+        "wind",
+        "light",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_57",
+      "wire_id": 457,
+      "runtime_profile": "bounded_field",
+      "name": "Twilight Bastion",
+      "input_elements": [
+        "earth",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_58",
+      "wire_id": 458,
+      "runtime_profile": "bounded_field",
+      "name": "Corona Eclipse",
+      "input_elements": [
+        "fire",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "fire",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_59",
+      "wire_id": 459,
+      "runtime_profile": "bounded_field",
+      "name": "Eclipse Engine",
+      "input_elements": [
+        "earth",
+        "fire",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "fire",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_60",
+      "wire_id": 460,
+      "runtime_profile": "bounded_field",
+      "name": "Moonless Aurora",
+      "input_elements": [
+        "water",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "water",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_61",
+      "wire_id": 461,
+      "runtime_profile": "bounded_field",
+      "name": "Obsidian Aurora",
+      "input_elements": [
+        "earth",
+        "water",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "water",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_62",
+      "wire_id": 462,
+      "runtime_profile": "bounded_field",
+      "name": "Celestial Tempest",
+      "input_elements": [
+        "fire",
+        "water",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "fire",
+        "water",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    },
+    {
+      "id": "compound_63",
+      "wire_id": 463,
+      "runtime_profile": "bounded_field",
+      "name": "Convergence",
+      "input_elements": [
+        "earth",
+        "fire",
+        "water",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "map_effects": [
+        "stationary_paid_whole_hex_coverage",
+        "finite_parent_material_transfer",
+        "earliest_parent_expiry"
+      ],
+      "actor_effects": [
+        "composed_damage_trigger",
+        "finite_shared_damage_pool",
+        "earth",
+        "fire",
+        "water",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "residue": "harmless_decay",
+      "counters": [
+        "leave_the_previewed_footprint",
+        "damage_pool_is_shared_and_cannot_refresh"
+      ],
+      "telegraph": "new_formation_warning_then_authored_trigger"
+    }
+  ]
+}

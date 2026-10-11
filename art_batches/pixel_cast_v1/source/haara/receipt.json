@@ -1,0 +1,66 @@
+{
+  "id": "haara",
+  "display_name": "Haara",
+  "race": "nymph",
+  "status": "source_ready_with_motion_gap",
+  "generation_tool": "built-in image_gen",
+  "attempts": 2,
+  "generated_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-3caf-7f02-8030-e4d35e2365b4\\exec-52335b16-ac12-40d4-90d0-af20cd75d52e.png",
+  "prior_generated_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-3caf-7f02-8030-e4d35e2365b4\\exec-d5ef50b7-79a9-411b-9437-fe0621856340.png",
+  "reference_paths": [
+    "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/haara-detail.png",
+    "C:/Users/sende/Pictures/styleref1.png",
+    "C:/Users/sende/Projects/hex/art_batches/pixel_body_pilot_v1/source/s-wayne.png"
+  ],
+  "observed_columns": 8,
+  "observed_rows": 4,
+  "source_row_mapping": {
+    "idle": 0,
+    "walk_left_contact": 1,
+    "walk_right_contact_candidate": 2,
+    "cast": 3
+  },
+  "observed_directions": [
+    "S",
+    "SE",
+    "E",
+    "NW",
+    "N",
+    "NE",
+    "W",
+    "SW"
+  ],
+  "suggested_source_columns_for_runtime_order": [
+    0,
+    1,
+    2,
+    5,
+    4,
+    3,
+    6,
+    7
+  ],
+  "dimensions": [
+    1536,
+    1024
+  ],
+  "inspection": {
+    "directions": "Back-quarter source columns3/5 appear swapped compared to requested order: ear/face edge points left in3 and right in5. All eight views present; no frontal eyes in back heads.",
+    "contacts": "First walk row clearly steps. Corrected third row still does not convincingly reverse feet in most views; source has an explicit unfinished opposite-contact gap.",
+    "whole_bodies": "32 intact bodies with coherent long flower/leaf hair and cream-sleeved green costume.",
+    "cast": "Correction brought hands forward to chest height; rear hands appropriately occluded by long hair."
+  },
+  "alpha_check": {
+    "format": "RGBA",
+    "background_samples_alpha": 0,
+    "note": "Green/brown preview surround is hidden RGB under alpha0; verify lead assembly uses alpha."
+  },
+  "visual_issues": [
+    "Opposite walk contact incomplete after two attempts; do not claim finished walk animation.",
+    "Back-quarter columns3 and5 need swapping during assembly if lead confirms.",
+    "Hidden green/brown RGB under transparency."
+  ],
+  "prompt": "Use case: stylized-concept. Asset: fixed-pixel game sprite atlas on genuinely transparent RGBA.\nReferences: image 1 is exact character identity and clothing; image 2 is retro pixel style only (ignore its old names); image 3 is compact common-head/body proportions and readable charming finish only, NOT its row count.\nMake exactly 32 whole-body sprites in exactly 8 equal columns by 4 equal rows. Generous empty transparent gutters, identical size and baseline, feet/hair/appendages fully intact in each cell. Coarse clean pixel clusters, crisp limited-palette outlines, compact modest charming proportions matching image 3; no painterly smoothing.\nEVERY row column order: S front, SE front/right45, E right profile, NE back/right45, N straight back, NW back/left45, W left profile, SW front/left45. NE/N/NW show the back of the head with NO frontal eyes. Torso and feet rotate with head. Eight unmistakably distinct directions.\nRows only: 0 idle standing; 1 walk contact with LEFT foot forward and RIGHT arm forward; 2 opposite walk contact RIGHT foot forward and LEFT arm forward, genuinely alternating feet not duplicated poses; 3 planted stance, BOTH EMPTY hands forward casting, no magic. Never add a fifth row.\nMaintain exact face, costume, anatomy and palette in all32 frames. No staves, weapons, held objects, ground shadows, scenery, text, labels, grid lines, sparkles or baked spells. Wide transparent canvas.\nSubject: Haara, small nymph: light warm skin, green eyes, long dark-green flowing leaf hair with small pale-pink flowers, pointed ears, leafy dark-green and gold outfit, cream sleeves, brown boots. Long floral leafy hair remains coherent from all angles. Use exact image1 design.\nCritical animation: bright near-side boot/sleeve and dark far-side boot/sleeve exchange front/back position between walk rows. For S/N the lower/forward boot visibly switches screen side. Leaf skirt must not hide alternating knees and boots; hair swings minimally, keeping identical length and flowers.",
+  "correction_prompt": "Use case: identity-preserve. Image1 is the source 8-column x4-row atlas to correct. Preserve its exact Haara identity, flowers, hair length, clothing, compact pixel style, all whole-body framing and positions, and transparent RGBA.\nCorrect the POSES only. Row2 (third row from top) must be the opposite anatomical walk contact to row1: left and right legs and arms exchange forward/back positions. Front lower boot must move to the opposite screen side. Show unmistakable foot reversal, not the same stance. Side-view near boot goes forward and far boot behind; reverse arms. Keep idle row0 and first walk row1 unchanged.\nRow3 (bottom row) must bring BOTH empty hands FORWARD in the direction faced, at chest height, not open arms sideways. No magic or props.\nExactly8 columns4 rows; column order stays as input. Full feet and hair, generous gutters, no background, no shadows, no labels.",
+  "runtime_imports_or_tests": "NOT_RUN; source art only"
+}

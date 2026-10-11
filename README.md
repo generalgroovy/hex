@@ -1,158 +1,244 @@
-# H.E.X.
+# H.E.X. — Help, Everything eXploded!
 
-A movement-led elemental sandbox in Godot for Windows. Learn paid, chainable
-movement, aim independently, configure twelve spell positions, and combine
-finite elemental effects throughout the shared Wellspring.
+Status: **current source p60-be3efd332e1a**, with the October 10, 2026 gameplay/performance qualification and October 11 source-publication cleanup. Dense overlapping fields still miss the 60 FPS budget. See the [implementation and measurements](docs/performance-implementation-20261010.md).
 
-H.E.X. continues FLUX. The game/repository name changes; **Flux remains the spell
-resource**. Existing Windows preferences and custom weaves retain the compatible
-`Godot/app_userdata/FLUX 2` profile directory. Original FLUX source, assets and
-fallback packages remain in `C:\Users\sende\Projects\flux`.
+A movement-led elemental combat sandbox in Godot. Move and aim independently,
+build a twelve-slot spell weave, combine finite elemental effects, and learn a
+rival's signature by defeating them. Start with a short optional introduction,
+then experiment in a Range that can lend every spell. Explore seven Wellspring
+districts and use the compact world map to travel between thirteen named places.
 
-**Current source: 30 playable profiles, 32 spells.** All identities currently use
-three shared size templates; these are not thirty finished individual skins.
-The roster has 30 playable entries; 30 identities. The preserved ability catalogue
-has 62 validated effective records; 32 have runtime wire IDs. Retired deliveries
-and passive/gated records remain metadata, not additional selectable spells.
+[Player guide](docs/PLAYER-GUIDE.md) · [Documentation map](docs/README.md) ·
+[Design contract](SPECIFICATION.md) · [Qualification and known limits](docs/performance-implementation-20261010.md)
 
-| System | Current contract |
-| --- | --- |
-| Engine | 120 Hz authoritative simulation; 60 Hz transport snapshots; Godot 4.7.1 |
-| Sessions | Same-build, host-authoritative, maximum eight players |
-| Spells | Eight elements; Bolt, Heavy, Rapid and Spray; twelve configurable positions |
-| Chemistry | 36 symmetric first-grade reactions with finite budgets; ten Water/Earth/Fire/Air pairs integrated into Wellspring |
-| Coverage | Exact impact geometry selects whole hexes; selected cells are fully affected |
-| Grid | 48 px face-to-face; 2,766 eligible Wellspring cells; unchanged world and character scale |
-| Movement | Continuous movement/projectiles, independent eight-direction aim, three body sizes |
-| Presentation | Readable whole-cell boundaries, transparent scalding Steam, reduced-effects mode |
+## Install or play on Windows
 
-Whole-hex behavior is user-approved. Chemistry works on eligible ground anywhere
-in Wellspring, without a dummy. Each cast has a finite paid material budget;
-connected visuals do not merge lifetimes or create material. Rapid remains
-trail-free. Spell strengths remain Rapid1 / Spray3 / Bolt5 / Heavy15.
+This Git repository contains the game source, required art, tests and qualification
+evidence. Exported EXE/PCK/ZIP files and local profiles are excluded from Git;
+cloning the repository does not download a prebuilt portable.
 
-## Current checkpoint
-
-Current smaller-grid build is **`p55-c7b7694f8d23`**: protocol55 /
-SessionSnapshot21 / HexWorldSnapshot3 / chemistry3 / envelope1. Hexes are
-25% narrower (64 to 48 px); the map, actors, wall clearance and world-space
-spell radii retain their scale. Old protocol54 clients cannot join this build.
-
-The completed sight correction is included: always-on, 360-degree
-character-centered sight at a common 720 ground-unit range, with opaque
-building and active solid-hex occlusion. Aim and zoom do not expand sight.
-Spectators follow the same rules. Legacy Full/cone settings migrate without
-resetting controls, camera, movement reference, audio or saved weaves; F8-F10
-no longer change sight. This is presentation filtering, not network redaction.
-
-Fresh Full: **157 suites / 803,865 assertions**, zero failures/stderr, import,
-asset audit and 120 Hz configured boot. Seven native gameplay frames cover
-paid Water/Fire casts, Steam, whole-cell contact and normal/reduced effects.
-Actual Windows EXE/PCK launch, identity, safe close and ZIP byte audit passed.
-See [the smaller-grid checkpoint](docs/HEX-SMALL-GRID-CHECKPOINT.md) for the
-exact networking result, evidence, remaining risks and playtest instructions.
-**Multiplayer lifecycle is not accepted:** the same-export localhost run timed
-out at its unchanged 300-second deadline before the second round completed.
-Connection, movement reconciliation, reconnect and late spectating were
-observed, but that does not pass the complete Host/Join gate.
-
-**Newest local portable:** `exports/hex-small-grid-20260921/windows/PLAY-HEX.cmd`.
-**Local ZIP:** `exports/hex-small-grid-20260921/HEX-p55-c7b7694f8d23-Windows-x64.zip`
-(98.3 MB; extract the entire archive). These payloads are local, not included
-in the Git source download or published as a GitHub release.
-
-Source repository: [generalgroovy/hex](https://github.com/generalgroovy/hex).
-The prior [sight checkpoint](docs/HEX-VISION-CHECKPOINT.md) and its protocol54
-portable remain available as a fallback. The historical selected delivery
-pointer is unchanged; no installer/updater is produced by this source slice.
-Dense performance, physical two-PC/Internet play and human acceptance remain
-open. A 120 Hz configured simulation is not a sustained 120 FPS claim.
-
-## Run the latest source
+To run a checkout, install **PowerShell 7.2 or later** and the pinned
+**Godot 4.7.1 stable Windows runtime**. Open PowerShell in the repository and point
+the helper at your downloaded executable:
 
 ```powershell
-Set-Location C:\Users\sende\Projects\hex
-.\scripts\run.cmd
+$env:FLUX2_GODOT_BIN = 'C:\path\to\Godot_v4.7.1-stable_win64.exe'
+.\hex.cmd doctor
+.\hex.cmd play --fullbody-art --pixel-cast
 ```
 
-Or open `hex.cmd` from the repository root. It defaults to `play` and invokes the
-same launcher. Existing FLUX EXEs contain older builds. For a portable package,
-use the exact `PLAY-HEX.cmd` and ZIP above, keep
-`hex.exe` with `hex.pck`, and extract the ZIP before launching.
+The helper checks the exact engine identity, `4.7.1.stable.official.a13da4feb`.
+For an independent portable, install matching Windows export templates and run
+`.\hex.cmd package -PixelCast`. Each run creates a fresh folder under `exports/`.
+See [development and verification](docs/DEVELOPMENT.md) for checks and packaging.
 
-The launcher uses pinned Godot4.7.1. `hex.cmd doctor` checks the local toolchain;
-first launch imports source resources. [The design contract](SPECIFICATION.md)
-and [single queue](.agent/OVERHAUL-IMPLEMENTATION.md) describe current work.
+The locally qualified October 10 portable is preserved at
+`exports/hex-smooth-fields-20261010/windows/PLAY-HEX.cmd`; its ZIP is
+`exports/hex-smooth-fields-20261010/HEX-p60-be3efd332e1a-Windows-x64.zip`
+(153.5 MiB). These are local artifact paths, not GitHub download links. Earlier
+d649 performance, October 9 expansion and p59 animation builds remain local
+fallbacks with their original evidence.
 
-## Play and configure
+The portable needs no Git, Godot installation or administrator permission.
+Keep `hex.exe` and `hex.pck` together. The launcher enables the reviewed pixel
+presentation; opening the EXE directly retains skeleton mode. Use **1280×720**
+for comfortable supporting text. Menus also fit **960×540**, where small text
+and fine glyphs remain compact.
 
-Move with WASD and aim with the mouse by default. Numbered spell bindings attack;
-LMB/RMB's staged Punch/Kick mechanics are still unavailable. Open the F4
-compendium for runtime-derived movement and chemistry rules. Controls Lectern
-provides bindings; Spell Loom configures the twelve positions and all32 spells.
-Saved custom controls take precedence over defaults. The Loom now displays the
-effective keyboard chord, and distinguishes Empty, Not bound and Unavailable.
+Extract each version into its own folder. Saved controls and personal weaves
+use the compatible `Godot/app_userdata/FLUX 2` location. Older elemental weaves
+receive a slot-by-slot migration preview; Apply preserves the original-file
+backup, while inspection or cancellation does not replace saved data.
 
-Steam builds scald exposure during occupation and decays after leaving. Its hot
-vents indicate the active whole hexes; terminal brackets signal expiry. Normal
-and reduced effects use identical coverage. Short repeated visits may intersect
-more pressure pulses than the same total contact in one visit; no coefficient
-was tuned from the external handoff's untested targets.
-The finer grid can spread the same finite budget across more cells, reducing
-per-cell Fire/Steam pressure. Coefficients are unchanged; density-normalized
-balance is a measured follow-up, not silently compensated in this slice.
+## Start with five minutes
 
-Follow [the five-minute playtest](docs/HEX-PLAYTEST.md). The added Source Court,
-Crucible and connecting-route labels use the existing campus; the supplied world
-maps remain composition references, not new playable continents.
+1. Choose **Introduction / F5**. Move, release a prepared jump, pay for a cast,
+   watch Flux recover, then try a mixture. **Skip guide / F5** ends it at any time.
+   Lessons observe your actions; they never move, cast or equip for you.
+2. Open **Spell Range / F6**. Start with a single element, then a pair. Read the
+   ingredients, cost, timing, on-hit status, field effect and counter. Equip a
+   temporary loaner in slot 1 and cast it yourself. Reset/refill tools are explicit.
+3. Use **Menu → World map** to reach the Academy, then open **Spell Loom** at its
+   door to build your own twelve-position weave.
+   Combine ingredient filters; **More Forms** reveals the four additional
+   deliveries. Read Swap/Replace before confirming, or drag a card onto a slot.
+4. Open **Signature Challenges / Shift+F6**. Read the rival's spell and counter,
+   then defeat them through normal combat to learn it. **Esc / controller Back**
+   returns; the challenge card keeps the other useful shortcuts visible.
+5. Visit **Menu → World map → Element Garden** to walk all 63 ground exhibits.
+   The six single-element plots alternate raw matter and matching-source reactions;
+   use the Range for full-footprint combat tests. Use **F4 / Compendium** for movement chains and all 63 chemistry outcomes.
+   The paid chemistry demos provide a retained result/counter card for a manual retry.
 
-## Host and join
+![Range explains an all-six Mantle before it is equipped](docs/element-expansion-evidence-20261009/native/03-range-six-element-mantle-1280x720.png)
 
-Both players need the exact same H.E.X. build. These source commands use port24892:
+## What is playable
+
+Current source: 30 playable profiles, 504 spells.
+
+| System | Current game |
+|---|---|
+| Movement | Sprint, carve/brake a slide, gather/release jumps, roll, air-dodge, wallrun and chain paid techniques while aiming independently |
+| Characters | 30 profiles, three body sizes, 21 ancestry passives and 30 personal passives through existing controls; flying ancestries use a deliberate second airborne Jump to start finite flight |
+| Ingredients | Water with Ice effects, Fire with Charge effects, Air, Earth, Light and Dark |
+| Spells | 63 nonempty ingredient sets × eight deliveries = **504 spells**; twelve equipped positions, four buttons across normal/Ctrl/Alt layers |
+| Deliveries | Bolt, Heavy, Rapid, Spray, **Mantle** contact/trail, **Fuse** delayed area blast, **Split** bounded branches and **Rebound** wall banks |
+| Statuses | Fractured Focus, Burning, Chilled, Gusted, Revealed and Withered; finite duration, explicit hit admission and bounded refresh |
+| Chemistry | 63 bounded reactions, each named and finite, covering self-pairs and every distinct combination from two through six elements; situational effects and counters |
+| Practice and progression | Optional introduction, all-spell Range, 30 earned rival signatures and clearly marked offline Developer tools |
+| World | Seven Wellspring districts with **59,466 eligible chemistry cells**; familiar services and practice courts plus Tideglass Quays, Verdant Reaches, Basalt Foundry and Starward Terraces |
+| Navigation | One compact Menu, a world overview, current location and thirteen named travel destinations; offline free-exploration travel preserves resources, cooldowns and weave |
+| Element Garden | 63 physical plots in Tideglass show six raw materials plus all 63 finite reaction identities; harmless bounded loops with nearby explanations, while player spells remain live |
+| Presentation | Slower held poses, tucked non-flying jumps, clearer wall contact and protection, elevated spell/character cues, terrain contact and shadows |
+| Engine | 120 Hz authoritative simulation; 60 Hz transport snapshots; configured cadence, not measured performance |
+
+All 30 sandbox characters are already available. Thirty particular signature
+spells require clean rival victories; the Range can borrow them first. The
+original 24 spell identities and saved twelve-slot positions remain stable.
+
+Extra ingredients increase Flux cost and shorten status duration. They do not
+multiply direct damage or material. Mixed terminals can form their named field;
+a singleton self-reaction needs another matching paid source. Mantle is an
+attack, not armor; Fuse's landed warning is harmless until its real detonation.
+The Range explains these differences at selection time.
+
+## Default controls
+
+Saved custom bindings take priority. **Controls** shows keyboard/controller
+equivalents and supports rebinding, sound, Reduced Effects/Motion and an aim arrow.
+**Menu → Performance** selects Low/Standard visual detail and
+a 60/120/unlimited frame limit. Low and 60 FPS are the defaults; movement and
+spell simulation remain at 120 Hz. Reduced-motion accessibility is separate.
+
+| Action | Keyboard / mouse |
+|---|---|
+| Move / aim | WASD / mouse |
+| Sprint / slide | Shift / C |
+| Jump | Space: press to gather, release to launch |
+| Evade / technique | B / V; the action depends on grounded/airborne state |
+| Spell positions | 1–4, Ctrl+1–4, Alt+1–4 |
+| Service interaction | F at the door |
+| Menu / world map | Esc / controller Back / click Menu; M opens the map |
+| Compendium | F4 or Menu → Compendium; its Map action uses M / L3 |
+| Introduction / skip | F5 or its visible menu action |
+| Spell Range / Signature Challenges | F6 / Shift+F6 |
+| Developer tools | Shift+F5; offline session only |
+
+Saved gameplay bindings retain priority over Esc/M and F5/F6 convenience keys.
+Menu shows the relevant activities; in the Range it includes Spell Loom,
+Characters, Reset practice court and Return to Wellspring. Selecting a map pin
+only highlights it; **Travel / Enter / A** confirms. Travel is unavailable during
+rounds, challenges, isolated practice or active combat actions; its reason stays
+inside the map. Controller Start keeps its existing emote action. During a
+challenge the Menu button hides and Esc retains its exit behavior. Menus consume
+navigation input without casting.
+
+Developer mode offers all-spell access, protection, infinite resources,
+cooldown resets and rival-input control. Overrides remain visibly marked and
+never grant earned progress. Entering Developer mode makes that challenge
+attempt ineligible for rewards even if the mode is switched off before victory.
+Temporary Range/Developer weaves do not overwrite the player's saved weave.
+
+## Evidence, design and limits
+
+The final build's [Full v5 gate](docs/performance-qualification-20261010/full-v5.json)
+passed **244 suites / 6,880,581 assertions**, with zero failures and zero
+stderr. The final field-rendering pass matched **614 exact RGBA comparisons**,
+including actual paid overlapping fields and retained glow. Earlier material/HUD
+and complete 469-cell Range comparisons retain their separate 541-case evidence.
+The compact Performance menu was inspected at 1280×720 and 960×540. The final
+portable passed native launch/safe close, exact ZIP membership and hashes, and
+all **132 terrain chunks plus the overview** decoded exactly from its PCK.
+
+Visible release measurements on this Ryzen 3 7320U/Radeon PC, at 1280×720 with
+Low detail and a 60 FPS limit, recorded the following engine-FPS observations:
+
+| Workload | October 9 portable mean | Final portable mean | Final observed range |
+|---|---:|---:|---:|
+| Hearth | 24.57 FPS | 57.64 FPS | 46–60 FPS |
+| Element Garden entry | 2.75 FPS | 59.00 FPS | 56–61 FPS |
+| Twelve nearby paid Fire Bolts | Not measured in this comparison | 49.13 FPS | 21–60 FPS |
+| Twelve paid all-six Mantles | Not measured in this comparison | 38.71 FPS | 36–50 FPS |
+
+These sequential runs include every one-second engine observation, finite casting
+and subsequent idle time. Durations and background load differ; the table is not
+a controlled speedup ratio, sustained-battle average or physical frame-present
+trace. The [performance report](docs/performance-implementation-20261010.md)
+records the raw evidence, native frame-time tails, package checks and limits.
+
+The preceding October 9 expansion has its own historical qualification:
+237 suites / 6,615,478 assertions, an integrated teaching journey with
+125 checkpoints, a map journey with 6,766 checkpoints and 96 reviewed native
+images. Those are retained as [expansion history](docs/element-expansion-evidence-20261009/integration.md),
+not presented as new captures of the performance build. Full tests use a
+bounded suite watchdog; test duration does not establish a gameplay frame budget.
+
+Three specialist agents and the integration owner reviewed one another's work.
+The [decision records](docs/element-expansion-evidence-20261009/integration.md#ownership-and-independent-review)
+connect the implementation to Magicka/Noita composition, Mega Man signature
+learning, Capcom practice modes, movement-shooter controls and readable action
+presentation. They distinguish established examples from H.E.X. tuning hypotheses.
+The [map design and review record](docs/large-wellspring-evidence-20261009/map-overview.md)
+connects named destinations and explicit travel to established map navigation,
+while preserving the limits of scripted native evidence.
+
+- **Balance and feel need human playtesting.** Coverage and finite budgets do not establish equal competitive viability across every combination or character.
+- **Wayfinding needs human playtesting.** Native maps, arrival checks and scripted walks do not establish that all seven districts are interesting or easy to learn.
+- **The simulation is 2D with depth presentation.** Thirty identities have held action keys, not complete authored animation cycles for every action.
+- **Heavy fields still miss 60 FPS.** In the final instrumented native test, all-six Mantle averaged 28.17 ms between process starts on Low, with a 36.25 ms p95. At 150 visible region records, nearby Fire still averaged about 38 ms. The report distinguishes these intervals from actual portable FPS and physical presentation; the 120 Hz simulation contract is unchanged.
+- **Startup and travel still prepare assets.** Final native startup took about 5.54 seconds and Garden travel contained 140–177 ms frame intervals. Terrain is baked and streamed within explicit budgets; warm-play measurements exclude cold preparation.
+- **Multiplayer is experimental.** Everyone must use the same exact build. Eight players is a configured cap, not dense-capacity certification; physical two-PC and different-home acceptance remain open. Internet relay is not deployed.
+- **Delivery is local and unsigned.** No public release, new installer or automatic updater was created.
+
+## Development and documentation
+
+The ability catalog retains **542 validated effective records; 504 have runtime wire IDs**.
+The other records preserve disabled historical definitions. The champion catalog
+has **30 playable entries; 30 identities**; presentation residency does not reduce
+the playable roster.
+
+Use the pinned **Godot 4.7.1** runtime from the actual repository root:
 
 ```powershell
-# Host
-.\scripts\run.cmd --farflow=host --session-port=24892
-# Join; replace HOST_IP with the host's address
-.\scripts\run.cmd --farflow=join --join-address=HOST_IP --session-port=24892
-```
-
-For the portable use `PLAY-HEX.cmd` followed by the same game arguments.
-The launcher supplies Godot's argument separator. If invoking the EXE directly,
-place `--` before game arguments. The in-world Farflow stations provide the same
-host/join workflow. See the checkpoint for the exact tested networking scope;
-localhost tests do not prove physical two-PC or Internet play.
-
-## Development and evidence
-
-```powershell
+.\hex.cmd doctor
+.\hex.cmd play --fullbody-art --pixel-cast
 .\hex.cmd check
 .\hex.cmd test -Tier Full
-pwsh -NoProfile -File scripts/test.ps1 -Tier Focused -Suite session-snapshot
 ```
 
-One integration owner serializes engine imports, tests, captures, profiles and
-exports through repository wrappers and isolated test profiles. Build identity
-hashes exact runtime source bytes; Git preserves those bytes and required import
-recipes. No generated `.godot` cache or private test profile is published.
+[Specification](SPECIFICATION.md) owns current rules, [the player guide](docs/PLAYER-GUIDE.md)
+owns teaching, [the resume](.agent/HEX-RESUME.md) owns exact source/package state,
+and [the implementation record](.agent/OVERHAUL-IMPLEMENTATION.md) records this
+completed batch and separate product-acceptance boundaries.
+[The playtest route](docs/HEX-PLAYTEST.md) covers physical input, movement,
+counterplay and experimental host/join use. [All 30 portraits](reference/art/portraits_20261008/index.html)
+remain available offline.
 
-[Handoff decisions](docs/HEX-HANDOFF-RECONCILIATION.md) distinguish adopted source
-work from proposal-only targets. [Current curated receipts](docs/verification/hex-small-grid-20260921/)
-preserve logs and evidence limits. The [historical README](docs/archive/README-FLUX-before-HEX.md)
-retains earlier instructions and receipts without presenting them as current proof.
+The [source-publication record](docs/source-publication-20261011/README.md)
+describes the retained source, removed redundant files, exact-byte evidence rules
+and checkout validation. Git history identifies the publication commit;
+the runtime identity above identifies the game independently of documentation edits.
 
-## Preserved fallback
+Superseded element contracts and continuation plans now point to the current
+documents and retain exact historical copies. Preserve dirty work, original art,
+profiles, failed receipts and working packages. The historical FLUX delivery
+pointer below is unchanged and does not select this H.E.X. playtest.
 
-The selected pointer has not been promoted. Its original payload remains in
-`C:\Users\sende\Projects\flux\exports\windows-overnight-p48-20260913`.
-The generated descriptor below is historical delivery metadata; its relative
-payload links resolve only where those old exports are present.
+<details>
+<summary>Historical delivery-pointer metadata — not the current playable build</summary>
 
+The old pointer is unchanged. Its FLUX p48 payloads are unavailable in this
+checkout; recorded paths below are archival text, not working launch links.
+
+```text
 <!-- BEGIN CURRENT BUILD SUMMARY: generated by scripts/current-build-summary.ps1 -->
-**Current local portable selected by [the exact pointer](docs/current-checkpoint.json):** `overnight-p48-20260913`.
-Open [flux2.exe](exports/windows-overnight-p48-20260913/windows/flux2.exe) with its adjacent [flux2.pck](exports/windows-overnight-p48-20260913/windows/flux2.pck), or extract the [complete current portable ZIP](exports/windows-overnight-p48-20260913/release/FLUX2-Windows-x86_64.zip). Keep the EXE and PCK together.
+**Pointer-selected delivery metadata ([descriptor](docs/current-checkpoint.json), not fresh availability):** `overnight-p48-20260913`.
+Recorded paths (not verified download links): game `exports/windows-overnight-p48-20260913/windows/flux2.exe`; pack `exports/windows-overnight-p48-20260913/windows/flux2.pck`; portable `exports/windows-overnight-p48-20260913/release/FLUX2-Windows-x86_64.zip`. Use the verified playtest link at the top of this README.
 Pinned PCK SHA-256: `ddce9451e871096ca02190deb9092cba71db96bd8d732cd2181fd7c5cd452083`
 Pinned ZIP SHA-256: `5e49c599f026453917e3eb8201456e86089e9fe0d794efe3b9bcebe1385c041f`
 Pointer boundaries: publication `not_published`; human acceptance `pending`; physical two-PC acceptance `pending`; sustained rendered 120 FPS `not_certified`; current installer `not_attempted_prior_policy_block`.
 This generated summary validates pointer metadata only; it does not read or hash local payloads or repeat runtime acceptance. For exact local byte and receipt checks, run `pwsh -NoProfile -File scripts/current-checkpoint.ps1 -ReportOnly`.
 <!-- END CURRENT BUILD SUMMARY -->
+```
+
+</details>

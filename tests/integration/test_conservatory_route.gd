@@ -7,6 +7,7 @@ func run() -> int:
 	for tick_rate: int in [120]:
 		_test_advanced_route(tick_rate)
 		_test_momentum_chime_route(tick_rate)
+		_test_momentum_chime_approaches(tick_rate)
 		_test_south_annex(tick_rate)
 	return finish("conservatory-route")
 
@@ -25,7 +26,8 @@ func _test_south_annex(tick_rate: int) -> void:
 			if String(route["id"]) == "conservatory-south-loop":
 				circuit = route["points"].duplicate(true)
 		# Existing canopy closes the loop; then the same ordinary path reaches
-		# the new bridge, the unchanged Practice Bell and the unchanged Crucible.
+		# the new bridge and the unchanged Crucible. Restore now shares the
+		# recovery pavilion door instead of introducing a route-side facade.
 		circuit.append_array([[560,1408],[800,1408],[848,1536],[848,2080],[1120,2080],[1888,2080],[1888,1376],[1568,1440]])
 		for waypoint: Array in circuit:
 			check(_walk_to(world, Vector2i(int(waypoint[0]), int(waypoint[1])) * SimConfig.FIXED_SCALE), "ordinary movement reaches connected southern waypoint %s" % str(waypoint))
@@ -73,14 +75,17 @@ func _test_annex_wall(layout: SanctumCampusLayout, wall_id: int, tick_rate: int)
 	state.velocity_y = approach.y * MovementTuning.BASE_SPEED / 1000
 	check(_step(world, approach.x, approach.y), "approach reaches authored southern wall")
 	equal(state.wall_contact_id, wall_id, "collision contact identifies the actual new wall")
+	check(_step(world, 0, 0, 0, SimCommand.PRESSED_JUMP), "wall drill begins with a real tap release jump")
+	for _index: int in range(world.config.milliseconds_to_ticks(MovementTuning.HOP_COMMITMENT_MS)):
+		_step(world)
 	var stamina_before := state.stamina
-	check(_step(world, tangent.x, tangent.y, 0, SimCommand.PRESSED_TECHNIQUE), "new wall accepts the existing wallrun request")
+	check(_step(world, tangent.x, tangent.y, SimCommand.HELD_JUMP), "new wall accepts held airborne wallrun request")
 	equal(state.last_event, "wall_skim", "new wall starts real wallrun rather than only a painted route")
 	check(state.stamina < stamina_before, "southern wallrun pays its existing movement cost")
 	for _index: int in range(world.config.milliseconds_to_ticks(MovementTuning.WALL_RUN_COMMITMENT_MS) + 1):
-		_step(world, tangent.x, tangent.y)
+		_step(world, tangent.x, tangent.y, SimCommand.HELD_JUMP)
 	check(state.wall_skim_ticks > 0, "new wall has enough length for a readable attached run")
-	check(_step(world, outward.x, outward.y, 0, SimCommand.PRESSED_JUMP), "attached jump uses existing wall-kick transition")
+	check(_step(world, outward.x, outward.y), "attached jump release uses wall-kick transition")
 	check(state.last_event in ["air_wall_kick", "wall_kick"], "actual southern wallrun can kick into its clear turning space")
 	check(state.wall_skim_ticks == 0 and state.is_airborne(), "wall kick leaves the wall airborne")
 	for _index: int in range(world.config.milliseconds_to_ticks(MovementTuning.HOP_COMMITMENT_MS) + 1):
@@ -134,9 +139,12 @@ func _test_advanced_route(tick_rate: int) -> void:
 	state.velocity_x = MovementTuning.BASE_SPEED
 	state.stamina = MovementTuning.STAMINA_MAXIMUM
 	all_steps_succeeded = _step(world, 1000, 0) and all_steps_succeeded
-	all_steps_succeeded = _step(world, 0, 1000, 0, SimCommand.PRESSED_TECHNIQUE) and all_steps_succeeded
+	all_steps_succeeded = _step(world, 0, 0, 0, SimCommand.PRESSED_JUMP) and all_steps_succeeded
+	for _index: int in range(world.config.milliseconds_to_ticks(MovementTuning.HOP_COMMITMENT_MS)):
+		all_steps_succeeded = _step(world) and all_steps_succeeded
+	all_steps_succeeded = _step(world, 0, 1000, SimCommand.HELD_JUMP) and all_steps_succeeded
 	route_events.append(state.last_event)
-	all_steps_succeeded = _step(world, -1000, 0) and all_steps_succeeded
+	all_steps_succeeded = _step(world, -1000, 0, SimCommand.HELD_JUMP) and all_steps_succeeded
 	route_events.append(state.last_event)
 
 	check(all_steps_succeeded, "%d Hz Conservatory route commands all step" % tick_rate)
@@ -156,14 +164,16 @@ func _test_momentum_chime_route(tick_rate: int) -> void:
 	state.velocity_x = 0
 	state.velocity_y = 0
 	var origin := Vector2i(state.position_x, state.position_y)
+	var launch := SanctumStationModel.impact_launch_direction(layout, origin)
+	equal(launch, Vector2i.DOWN, "front door launches into its open outward practice lane")
 	check(
-		MovementSystem.apply_control_state(state, PlayerState.ControlState.LAUNCHED, 320, Vector2i.UP, 540_000, world.config),
+		MovementSystem.apply_control_state(state, PlayerState.ControlState.LAUNCHED, 320, launch, 540_000, world.config),
 		"%d Hz Momentum Chime launch applies" % tick_rate,
 	)
 	while state.control_state == PlayerState.ControlState.LAUNCHED:
 		_step(world, 1000, 0)
 	check(state.impact_recovery_ticks > 0, "%d Hz Chime route reaches the recovery decision" % tick_rate)
-	check(state.position_y < origin.y - 100_000, "%d Hz Chime route grants a readable launch lane" % tick_rate)
+	check((state.position_x - origin.x) * launch.x + (state.position_y - origin.y) * launch.y > 100_000, "%d Hz Chime route grants a readable launch lane" % tick_rate)
 	check(state.position_x > origin.x, "%d Hz Chime route exposes bounded steering" % tick_rate)
 	check(world.collision.can_occupy(Vector2i(state.position_x, state.position_y), state.radius), "%d Hz Chime recovery remains in legal campus space" % tick_rate)
 	var stamina_before: int = state.stamina
@@ -171,3 +181,28 @@ func _test_momentum_chime_route(tick_rate: int) -> void:
 	equal(state.last_event, "impact_tech", "%d Hz Chime route accepts the taught impact tech" % tick_rate)
 	equal(state.stamina, stamina_before - MovementTuning.IMPACT_RECOVERY_TECH_COST, "%d Hz Chime route pays the advertised Stamina" % tick_rate)
 	check(world.collision.can_occupy(Vector2i(state.position_x, state.position_y), state.radius), "%d Hz Chime tech remains in legal campus space" % tick_rate)
+
+
+func _test_momentum_chime_approaches(tick_rate: int) -> void:
+	var layout := SanctumCampusLayout.new()
+	check(layout.load_from_file("res://content/maps/sanctum_campus_g2_v1.json"), "all Chime approaches use live solid service geometry")
+	var chime := SanctumCampusLayout._parse_point(layout.stations_by_id["momentum-chime"]["position"])
+	equal(chime, Vector2i(360, 1288), "Momentum shares the recovery pavilion's canonical front entrance")
+	equal(int(layout.stations_by_id["momentum-chime"]["building_id"]), 103, "Momentum launch normal derives from the existing recovery pavilion")
+	equal(layout.stations_by_id["training-reset"]["position"], layout.stations_by_id["momentum-chime"]["position"], "Restore and Momentum reuse one accessible practice entrance")
+	for offset: Vector2i in [Vector2i(0, 0), Vector2i(0, 32), Vector2i(-48, 16), Vector2i(48, 16)]:
+		var world := SimWorld.new(tick_rate, 424243, layout.build_collision_world(), String(layout.data["id"]), layout.content_hash)
+		var state := world.player()
+		var origin := (chime + offset) * SimConfig.FIXED_SCALE
+		state.reset_for_spawn(origin)
+		check(SanctumStationModel.station_in_reach(layout.stations_by_id, "momentum-chime", origin), "practice approach remains eligible for the specifically requested action")
+		check(world.collision.can_occupy(origin, state.radius), "practice start never overlaps its facade")
+		var launch := SanctumStationModel.impact_launch_direction(layout, origin)
+		equal(launch, Vector2i.DOWN, "all four legal front approaches launch outward from the pavilion")
+		check(MovementSystem.apply_control_state(state, PlayerState.ControlState.LAUNCHED, 320, launch, 540_000, world.config), "practice launch uses unchanged impulse and duration")
+		while state.control_state == PlayerState.ControlState.LAUNCHED:
+			_step(world, 0, 0)
+		check((state.position_x - origin.x) * launch.x + (state.position_y - origin.y) * launch.y > 100_000, "every eligible side has a readable launch, never into the service building")
+		check(state.impact_recovery_ticks > 0, "every approach preserves the recovery decision")
+		check(world.collision.can_occupy(Vector2i(state.position_x, state.position_y), state.radius), "every outward landing remains in legal campus space")
+	check(not SanctumStationModel.station_in_reach(layout.stations_by_id, "momentum-chime", (chime - Vector2i(0, 17)) * SimConfig.FIXED_SCALE), "rear approach cannot trigger the launch through pavilion geometry")

@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "id": "ha_rekt",
+  "display_name": "Ha Rekt",
+  "race": "wyrmborn",
+  "body_tier": "large",
+  "status": "source_candidate_with_facing_gap",
+  "generator": "built_in_imagegen",
+  "attempt": 2,
+  "original_output_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b8-7f02-7203-8a99-a2a2e2cf443d\\exec-7851a6a8-7336-47a8-a54a-7444678fcb06.png",
+  "reference_paths": [
+    "C:\\Users\\sende\\Projects\\hex\\assets\\sprites\\fullbody_cast_v1\\ha_rekt-detail.png",
+    "C:\\Users\\sende\\Pictures\\styleref1.png",
+    "C:\\Users\\sende\\Projects\\hex\\art_batches\\pixel_body_pilot_v1\\source\\red-baron.png"
+  ],
+  "source_dimensions": [
+    1536,
+    1024
+  ],
+  "columns": 8,
+  "rows": 4,
+  "column_mapping": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "row_mapping": [
+    "idle",
+    "walk_left_foot_forward_right_arm_forward",
+    "walk_right_foot_forward_left_arm_forward",
+    "empty_hand_cast"
+  ],
+  "quality_flags": {
+    "visually_inspected": true,
+    "full_bodies_inside_canvas": true,
+    "identity_preserved": true,
+    "eight_facing_layout": false,
+    "rear_views_have_no_frontal_eyes": false,
+    "empty_hands": true,
+    "no_baked_magic": true,
+    "rgba_confirmed": true,
+    "sampled_gutters_alpha_zero": true,
+    "native_pixel_calibration_pending": true,
+    "walk_contact_exactness_requires_integration_review": true,
+    "rear_diagonal_head_turn_gap": true,
+    "front_symmetry_not_uniform_across_actions": true,
+    "connected_wings_and_tail": true
+  },
+  "notes": [
+    "Second and final permitted attempt improves straight front idle. The rear-diagonal bodies show backs, but heads still turn too far sideways with eyes visible. Full-facing acceptance is NOT claimed.",
+    "All 32 figures remain winged bipedal wyrmborn with red-gold armor, two legs, two arms, two wings and a connected tail. Empty-hand cast pose, four rows; no held weapon or baked magic.",
+    "Corner and center gutter alpha sampled zero. Immutable source; no local raster/mesh/engine/runtime edits."
+  ],
+  "exact_prompt": "Use case: precise-object-edit. Repair only FACING DIRECTIONS in this Ha Rekt 8-by-4 sprite sheet; retain character identity, costume, pixel style, proportions, full-body size, connected wings/tail, four distinct action rows, and transparent RGBA.\nUse ONE-BASED column numbers, eight columns across:\nFIRST sprite of each row, center x96: exactly symmetrical straight FRONT. Face looks directly at viewer, TWO equal eyes, centered snout and pair of horns. No three-quarter head.\nSECOND sprite, center x288: keep front-right three-quarter.\nTHIRD sprite, center x480: keep right profile.\nFOURTH sprite, center x672: rotate entire head and upper torso to REAR-RIGHT 135 degrees. We see its BACK and back of dragon skull, NOT face, NOT eyes. Look toward upper-right away from viewer. Right horn/cheek silhouette may peek, but absolutely ZERO eyes or teeth. Use the fifth sprite's back design turned slightly toward right.\nFIFTH sprite, center x864: keep full back.\nSIXTH sprite, center x1056: rotate entire head and upper torso to REAR-LEFT 225 degrees. We see its BACK and back of dragon skull, absolutely ZERO eyes or teeth. Look upper-left away from viewer. Use fifth sprite's back design turned slightly left.\nSEVENTH sprite, center x1248: keep left profile.\nEIGHTH sprite, center x1440: keep front-left three-quarter.\nApply this same facing correction independently in ALL FOUR existing rows. Do not change the idle, opposing walk contact, and hands-forward cast poses. Do not remove wings or tail. NO extra rows, spells, props, text, scenery, shadows or background. Keep hands empty. Canvas1536x1024, generous gutters, all heads and feet in frame. Actual alpha-zero transparent background.",
+  "initial_generation": {
+    "original_output_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b8-7f02-7203-8a99-a2a2e2cf443d\\exec-b34d4cf0-c58c-4d06-a783-2c402b9827a9.png",
+    "exact_prompt": "Use case: style-transfer.\nAsset type: production pixel-art character animation source sheet for H.E.X.\nInput image 1 is the character identity/costume reference only. Input image 2 is the retro pixel-art style reference only; IGNORE its old labels, held objects and magic. Input image 3 is the approved sheet/proportion/style reference only; do NOT copy its character.\nPrimary request: redraw the identity in image 1 as one coherent compact 16-bit pixel-art sheet, exactly 32 full-body sprites in an invisible 8-column by 4-row grid, on a genuinely transparent RGBA background. Landscape canvas, preferably 1536 x 1024. One character in each equal cell with generous empty gutters; keep every head, hand, foot, cape, horn, tail and wing completely inside its cell. Do not render grid lines or labels.\nStyle: charming dense handmade retro pixel clusters, crisp stepped edges, restrained 3-4 shade material ramps and readable dark outlines, matching the references. NO smooth vector/Flash shapes, airbrush, glossy 3D, high-definition painting, blurry outlines or noise. Large tier means broad bulky chest, heavy arms and thick legs; a compact head comparable to other character sizes, not a thin stretched giant or oversized bobblehead. Complete connected anatomy in every pose.\nColumns in EVERY row, left to right: 0 S = precisely symmetrical direct front, both eyes; 1 SE = 45-degree front-right three-quarter; 2 E = strict 90-degree right-facing profile; 3 NE = 135-degree rear-right three-quarter, show BACK of head/torso, NO frontal eyes or front chest; 4 N = direct full back, NO face; 5 NW = 225-degree rear-left three-quarter, show BACK of head/torso, NO frontal eyes or front chest; 6 W = strict 270-degree left-facing profile; 7 SW = 315-degree front-left three-quarter. All eight directions must be clearly distinct, proper rotation of one design, not repeated front views.\nRows top to bottom: row 0 neutral idle standing; row 1 walking contact with anatomical LEFT FOOT forward and RIGHT ARM forward, opposite limbs behind; row 2 opposite walking contact with RIGHT FOOT forward and LEFT ARM forward, visibly different from row 1; row 3 active empty-hand casting stance, BOTH HANDS lifted and extended toward the character's facing direction, open palms/fingers. Exactly these FOUR rows, no additional rows.\nKeep the identity, clothing, colors, anatomy and head size stable across all 32 sprites. Hands are EMPTY, including the casting row; keep intrinsic armor gauntlets, but remove all weapons, staves, shields and held props. No baked spells, elemental effects, aura, sparkles, floating debris, smoke, shadows, floor, scenery, text or symbols outside clothing. All unused pixels must have alpha 0, not a checkerboard picture or colored matte.\nCharacter identity: HA REKT, a LARGE WYRMBORN HUMANOID, never a quadrupedal dragon. Exactly TWO strong legs, TWO arms, and TWO separate attached batlike wings. Compact dark indigo-blue dragon head with paired ivory backward horns, small amber eyes, short dragon snout; broad muscular blue scaled humanoid body. Deep burgundy-red plate-and-leather breastplate/shoulder armor trimmed with gold, red-gold front tabard, gold buckle, stout dark gauntlets, thick clawed feet, one thick dark-blue scaly tail connected to pelvis. Wings are purple-blue membrane with dark navy bones, lifted beside shoulders but not enormous; keep BOTH wings and full tail inside each cell, never cropped or fragmented. Match image 1 costume (red and gold), not the old poster black outfit. Heads in the fourth and sixth sprite of every row face away along the rear-facing torso: only back skull, horns, ear/cheek edge, NO visible eyes or open mouth. No staff, sword, shield, effects or fire."
+  }
+}

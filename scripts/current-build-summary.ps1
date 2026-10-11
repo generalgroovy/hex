@@ -136,8 +136,8 @@ function Format-FluxCurrentBuildMarkdown($Summary) {
     $end = '<!-- END CURRENT BUILD SUMMARY -->'
     return @(
         $begin
-        "**Current local portable selected by [the exact pointer](docs/current-checkpoint.json):** ``$($Summary.checkpoint_id)``."
-        "Open [flux2.exe]($($Summary.game.path)) with its adjacent [flux2.pck]($($Summary.pack.path)), or extract the [complete current portable ZIP]($($Summary.portable.path)). Keep the EXE and PCK together."
+        "**Pointer-selected delivery metadata ([descriptor](docs/current-checkpoint.json), not fresh availability):** ``$($Summary.checkpoint_id)``."
+        "Recorded paths (not verified download links): game ``$($Summary.game.path)``; pack ``$($Summary.pack.path)``; portable ``$($Summary.portable.path)``. Use the verified playtest link at the top of this README."
         "Pinned PCK SHA-256: ``$($Summary.pack.sha256)``"
         "Pinned ZIP SHA-256: ``$($Summary.portable.sha256)``"
         "Pointer boundaries: publication ``$($Summary.boundaries.publication)``; human acceptance ``$($Summary.boundaries.human_acceptance)``; physical two-PC acceptance ``$($Summary.boundaries.two_pc_acceptance)``; sustained rendered 120 FPS ``$($Summary.boundaries.sustained_rendered_120fps)``; current installer ``$($Summary.boundaries.current_installer)``."

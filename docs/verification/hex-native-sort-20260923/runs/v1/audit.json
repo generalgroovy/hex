@@ -1,0 +1,114 @@
+{
+  "utc": "2026-09-23T19:58:21.402478+00:00",
+  "protected_hashes": 62,
+  "frozen_files": 14,
+  "files": [
+    {
+      "source": ".godot/hex-native-sort-candidate-v1.json",
+      "preserved": "runs/v1/hex-native-sort-candidate-v1.json",
+      "sha256": "51b9bbf057048e2b75df71ecc4e376a34114b195e2b4cd10b54473423e5df5ab"
+    },
+    {
+      "source": ".godot/hex-probe-native-sort-candidate-v1/probe.log",
+      "preserved": "runs/v1/probe.log",
+      "sha256": "c45505923c34e5d70dbf0fc4ef55655cbab109b8ff398a807ded18f07acdcc0a"
+    },
+    {
+      "source": ".godot/hex-probe-native-sort-candidate-v1/probe.log.err",
+      "preserved": "runs/v1/probe.log.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "docs/verification/hex-native-sort-20260923/probe-v1.out",
+      "preserved": "runs/v1/probe-v1.out",
+      "sha256": "c45505923c34e5d70dbf0fc4ef55655cbab109b8ff398a807ded18f07acdcc0a"
+    },
+    {
+      "source": ".godot/run_native_sort.ps1",
+      "preserved": "runs/v1/run_native_sort.ps1",
+      "sha256": "f2292ad7543ebf96eedee2eae73e00db561b4b4051bd5dd4987063c4f31ba209"
+    },
+    {
+      "source": ".godot/curate_native_sort.py",
+      "preserved": "runs/v1/curate_native_sort.py",
+      "sha256": "8a948b7b2293997f7ec21557dacee796793d42a97fb43a2e2099dc5f3d2882b9"
+    }
+  ],
+  "status": "passed",
+  "scope": "Exact files and raw whole-hash timing audit; no capacity, frame or network claim.",
+  "assertions": 1261,
+  "source_hashes": 13,
+  "blocks": 48,
+  "samples": 336,
+  "rows": [
+    {
+      "case": "production-empty",
+      "production_us": {
+        "samples": 56,
+        "min": 58756,
+        "max": 139437,
+        "p50": 63908,
+        "p95": 96931,
+        "p99": 139437,
+        "over_8333_us": 56,
+        "over_16667_us": 56
+      },
+      "candidate_us": {
+        "samples": 56,
+        "min": 42351,
+        "max": 71150,
+        "p50": 47642,
+        "p95": 60870,
+        "p99": 71150,
+        "over_8333_us": 56,
+        "over_16667_us": 56
+      }
+    },
+    {
+      "case": "legal-paid-29-active",
+      "production_us": {
+        "samples": 56,
+        "min": 61751,
+        "max": 169150,
+        "p50": 68323,
+        "p95": 85814,
+        "p99": 169150,
+        "over_8333_us": 56,
+        "over_16667_us": 56
+      },
+      "candidate_us": {
+        "samples": 56,
+        "min": 47060,
+        "max": 74319,
+        "p50": 52151,
+        "p95": 63681,
+        "p99": 74319,
+        "over_8333_us": 56,
+        "over_16667_us": 56
+      }
+    },
+    {
+      "case": "synthetic-all-nonempty",
+      "production_us": {
+        "samples": 56,
+        "min": 134956,
+        "max": 155352,
+        "p50": 139778,
+        "p95": 146048,
+        "p99": 155352,
+        "over_8333_us": 56,
+        "over_16667_us": 56
+      },
+      "candidate_us": {
+        "samples": 56,
+        "min": 120360,
+        "max": 152909,
+        "p50": 126077,
+        "p95": 132289,
+        "p99": 152909,
+        "over_8333_us": 56,
+        "over_16667_us": 56
+      }
+    }
+  ]
+}

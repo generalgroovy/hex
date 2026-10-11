@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "ba_djoh",
+  "asset": "rear_diagonal_correction",
+  "attempt": 1,
+  "generator": "built_in_imagegen",
+  "status": "rear_direction_correction_with_motion_caveats",
+  "original_output_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b8-7f02-7203-8a99-a2a2e2cf443d\\exec-db1003c2-ed45-4e54-9599-31d8cc67af3a.png",
+  "reference_paths": [
+    "C:\\Users\\sende\\Projects\\hex\\art_batches\\pixel_cast_v1\\source\\ba_djoh\\source.png"
+  ],
+  "reviewed_native_board": "C:\\Users\\sende\\Projects\\hex\\.godot\\pixel-cast-native-20261002\\ba_djoh.png",
+  "source_dimensions": [
+    1024,
+    1536
+  ],
+  "columns": 2,
+  "rows": 4,
+  "column_mapping": [
+    "NE",
+    "NW"
+  ],
+  "row_mapping": [
+    "idle",
+    "contact_a_requested",
+    "contact_b_requested",
+    "empty_hand_cast"
+  ],
+  "quality_flags": {
+    "visually_inspected": true,
+    "distinct_opposite_rear_diagonal_silhouettes": true,
+    "left_column_hands_aim_upper_right": true,
+    "right_column_hands_aim_upper_left": true,
+    "rear_heads_no_face": true,
+    "identity_and_large_volume_preserved": true,
+    "full_bodies_inside_canvas": true,
+    "rgba_confirmed": true,
+    "sampled_gutters_alpha_zero": true,
+    "walk_contact_leg_opposition_weak_or_ambiguous": true,
+    "far_cast_hand_partly_hidden_by_torso": true,
+    "connected_tail_and_cloven_hooves": true
+  },
+  "notes": [
+    "Inspected original and native board before single authorized correction attempt. Core duplicated rear-left issue is improved: rear-right and rear-left columns have opposing near shoulders, tail silhouettes, and especially casting-hand directions.",
+    "Idle heads are close to full back but shoulder/foot/hand silhouette distinguishes the two directions. No face/eyes/nose exposed.",
+    "Walking rows still show similar leading-hoof arrangements rather than clean obvious opposition; exact contactA/B choreography is NOT claimed. Far casting hand partly torso-hidden.",
+    "Original source.png preserved. No assembly recipes/runtime/docs edits, no engines. Original generated file retained."
+  ],
+  "exact_prompt": "Use case: precise-object-edit.\nAsset: narrow 2-column x 4-row REAR-FACING CORRECTION STRIP.\nInput image: identity, costume and pixel-style reference for BA DJOH only. Its duplicated rear directions must NOT be copied.\nMake exactly EIGHT full-body sprites, TWO columns and FOUR rows, tall canvas preferably1024x1536, genuinely transparent RGBA. No text, grid or additional sprites.\nLEFT COLUMN is NE = BACK-RIGHT at135degrees. Whole head, torso, hips, feet and hands face diagonally AWAY toward UPPER-RIGHT of image. Casting BOTH EMPTY HANDS reach toward RIGHT side of character and away.\nRIGHT COLUMN is NW = BACK-LEFT at225degrees. Whole head, torso, hips, feet and hands face diagonally AWAY toward UPPER-LEFT of image. Casting BOTH EMPTY HANDS reach toward LEFT side of character and away.\nThe columns must be clearly OPPOSITE diagonal silhouettes, not two rear-left poses. Neither column is a straight-back symmetrical view. Rotate the whole body, do not turn only the head. In every cell show the BACK of bull skull, horn bases and mane; zero eyes, zero face, zero front muzzle, zero nose, zero chest front. Head never looks back at viewer.\nFOUR rows: (1) neutral planted idle; (2) walking contactA, anatomical LEFT FOOT stretched forward with RIGHT ARM forward, other leg clearly behind; (3) walking contactB, REVERSE THE LEGS and ARMS, RIGHT FOOT stretched forward with LEFT ARM forward, other leg clearly behind; (4) casting, BOTH empty open hands raised and reaching toward the column's diagonal direction. Rows2/3 MUST visibly switch the leading hoof, not repeat the same stance with only arm changes.\nPreserve BA DJOH exactly: LARGE MINOTAUR with warm dark-brown fur, a compact bull head with cream horns curving outward/upward, shaggy black-brown rear mane, very broad muscular bare-fur shoulders/chest and thick arms/legs, NOT long thin proportions. Brown leather crossed back harness with gold rings, gold-rimmed studded brown bracers, wide dark belt with round gold hardware, burgundy-red ragged loincloth panels edged gold. Large BLACK CLOVEN HOOVES, not human boots or wolf claws. One brown bull tail attached to pelvis with dark tuft, full and contained in cell. No wings, no purple skin, no wolf ears.\nMatch dense crisp retro pixel clusters and restrained material ramps of input; no smooth glossy vector painting. Same body volume and head size across all8. Keep horns, hands, hooves and tail entirely within each cell with at least30px clear transparent padding. No weapons, axe, shield, tool, spell, aura, fire, particles, detached anatomy, scenery, floor, shadow or colored matte. All unused pixels alpha0."
+}

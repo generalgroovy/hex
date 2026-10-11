@@ -6,6 +6,8 @@ extends RefCounted
 # Historical burst_v3 sheets are source archives, never a startup dependency.
 const PixelEffects = preload("res://src/presentation/pixel_spell_effects.gd")
 const Library = preload("res://src/presentation/pixel_magic_library.gd")
+const Elements = preload("res://src/content/element_rules.gd")
+# Eight retained effect styles, not eight admitted combat ingredients.
 const REQUIRED_ELEMENTS := ["earth", "fire", "water", "wind", "ice", "charge", "light", "dark"]
 var language: VisualLanguage
 var catalog: AbilityCatalog
@@ -31,9 +33,12 @@ func configure(visual_language: VisualLanguage, ability_catalog: AbilityCatalog,
 	var candidate := shared_library if shared_library != null else Library.default_library()
 	if candidate.asset_count() != 474 or candidate.page_count() != 3 or candidate.content_hash.is_empty():
 		return _fail("Projectile pixel pack is unavailable: %s" % candidate.last_error)
-	for element: String in REQUIRED_ELEMENTS:
-		if not visual_language.elements.has(element) or not ability_catalog.elements_by_id.has(element) or not bool(ability_catalog.elements_by_id[element].get("runtime_enabled", false)):
+	for element: String in Elements.IDS:
+		if not ability_catalog.elements_by_id.has(element) or not bool(ability_catalog.elements_by_id[element].get("runtime_enabled", false)):
 			return _fail("Projectile material has no active element: %s" % element)
+	for element: String in REQUIRED_ELEMENTS:
+		if not visual_language.elements.has(element):
+			return _fail("Projectile material has no retained visual style: %s" % element)
 		for reduced: bool in [false, true]:
 			for effect: String in ["flight", "flight_tail", "impact"]:
 				if candidate.sample(PixelEffects.asset_id(element, effect, reduced), 0).is_empty():
@@ -51,7 +56,7 @@ func projectile_model(projectile: ProjectileState, interpolation_alpha: float = 
 		return {}
 	var ability := catalog.ability_from_wire(projectile.source_wire_id)
 	var element := String(ability.get("element", ""))
-	if String(ability.get("shape", "")) != "projectile" or element not in REQUIRED_ELEMENTS:
+	if projectile.source_wire_id not in catalog.runtime_wire_ids or not Elements.is_active_id(element) or String(ability.get("shape", "")) != "projectile":
 		return {}
 	return {"element": element, "position": ProjectilePresentationMotion.interpolated_position(projectile, interpolation_alpha),
 		"direction": ProjectilePresentationMotion.travel_direction(projectile), "radius": float(projectile.radius) / SimConfig.FIXED_SCALE,

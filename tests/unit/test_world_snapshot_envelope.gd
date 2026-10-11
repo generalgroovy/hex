@@ -95,7 +95,9 @@ func _test_hex_envelope_and_exact_session() -> void:
 
 func _test_fragment_epoch_ordering_and_reset() -> void:
 	equal(Transport.SNAPSHOT_FRAGMENT_PAYLOAD_BYTES, 1152, "epoch headers retain the established fragment payload cap")
-	equal(Transport.MAX_SNAPSHOT_FRAGMENTS, 32, "epoch transport retains the established fragment-count cap")
+	equal(Transport.MAX_SNAPSHOT_FRAGMENTS, 64, "expanded snapshots retain an explicit64-fragment admission cap")
+	equal(Transport.ENET_MTU_BYTES, 1392, "expanded state does not enlarge the actual datagram MTU")
+	equal(Transport.MAX_SNAPSHOT_UNCOMPRESSED_BYTES, 65536, "expanded state retains the original raw snapshot allocation bound")
 	equal(Transport.MAX_PENDING_SNAPSHOT_ASSEMBLIES, 3, "epoch transport retains the established assembly cap")
 	equal(Transport.MAX_QUEUED_SNAPSHOTS, 2, "epoch transport retains the established complete-snapshot queue cap")
 	var current_snapshot: Dictionary = _legacy_snapshot(10, 80)
@@ -194,7 +196,7 @@ func _legacy_snapshot(tick: int, projectile_count: int) -> Dictionary:
 	world.tick = tick
 	for index: int in projectile_count:
 		world.projectiles.append(ProjectileState.new(
-			1000 + index, 1, 1, CombatTuning.RILLSHOT_WIRE_ID, 2,
+			1000 + index, 1, 1, CombatTuning.RILLSHOT_WIRE_ID, 3,
 			Vector2i(500_000 + index * 7919, 500_000 + index * 6151),
 			Vector2i(480_000 - index * 187, index * 157), 12_000, 9_000, 90 + index,
 		))

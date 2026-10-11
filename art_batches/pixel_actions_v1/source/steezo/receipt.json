@@ -1,0 +1,83 @@
+{
+  "id": "hex-steezo-pixel-jump-keys-source-v1",
+  "date": "2026-10-03",
+  "status": "source-reviewed-awaiting-lead-native-review",
+  "generator": "built-in image_gen; transparent_background true; no CLI fallback",
+  "generation_calls": 1,
+  "corrective_calls": 0,
+  "character": "steezo",
+  "display_name": "Steezo",
+  "ancestry": "goblin",
+  "body_type": "small",
+  "runtime_identity_source": "content/champions/foundation_champions_v1.json",
+  "repository": "https://github.com/generalgroovy/hex.git",
+  "inspected_head": "1559a566e33255c59337c5963f1c3c685d757f1f",
+  "dirty_work_preserved": true,
+  "directions": ["S", "SE", "E", "NE", "N", "NW", "W", "SW"],
+  "intended_rows": ["jumpsquat", "jump_rise", "fall_feet_ready", "land"],
+  "generated_files": [
+    {
+      "file": "source.png",
+      "original": "C:/Users/sende/.codex/generated_images/01a100b3-2e29-75a0-b413-da490abad07f/exec-907eb116-cd21-4fe0-9bb6-eed0a3de3f47.png",
+      "sha256": "6785b9a7032f02eafc0d4214d7b6d910d79e94acc2b2cd109f33f7fd9472f5a5",
+      "size": [1774, 887],
+      "bytes": 1321413,
+      "pixel_format": "RGBA PNG; System.Drawing Format32bppArgb",
+      "copied_byte_identically": true,
+      "copy_verification": "SHA256 of original and copied source matched",
+      "alpha_counts": {"zero": 1060349, "fully_opaque": 1157, "partial": 512032, "one_to_127": 128640, "128_to_254": 383392},
+      "alpha_threshold_128_y_bands_inclusive": [[59, 211], [242, 418], [457, 642], [693, 832]],
+      "selected_rows_zero_based": [0, 1, 2, 3],
+      "pixel_edits_performed": false
+    }
+  ],
+  "reference_roles": [
+    {
+      "path": "assets/sprites/pixel_cast_v1/steezo.png",
+      "sha256": "b73a98795552ad41d1b14942e5bb08ab3c5a600ab558fe173f8a7ae9840d9baf",
+      "role": "Primary current runtime identity, proportions, costume, palette and headings; viewed before generation"
+    },
+    {
+      "path": "assets/sprites/fullbody_cast_v1/steezo-detail.png",
+      "sha256": "16e38d3cc877f441be90b2a17d4468856867bbc99e41bf7ca08cf9bdd3626b5e",
+      "role": "Supporting costume and profile/rear anatomy; viewed before generation"
+    },
+    {
+      "path": "C:/Users/sende/Pictures/styleref1.png",
+      "sha256": "c0fb63c912718d64ca061ccd85817869ffc3348a3c81a910962df57066279fd4",
+      "role": "Retro pixel-art style only, no labels, identity substitutions, props or magic; viewed before generation"
+    }
+  ],
+  "prompt_file": "prompts/steezo.md",
+  "source_size_review": {
+    "status": "REVIEWED",
+    "complete_poses_observed": 32,
+    "layout_observed": "8 columns by 4 rows",
+    "observations": [
+      "Expected front, front-right, right profile, back-right, back, back-left, left profile and front-left sequence is present in all four rows.",
+      "Green skin, pointed ears, dark hair, blue brass-rim goggles, leather coat with gold edging, gloves and boots preserve runtime identity.",
+      "Empty hands and complete ears, limbs and feet are visible without gross cropping or overlap.",
+      "Rise tucks knees and lifts arms; descent opens legs beneath the pelvis and lowers arms, with a visibly taller envelope.",
+      "Landing has a lower pelvis and deeper knee bend than anticipation.",
+      "No caption, grid mark, environment, ground shadow, weapon or baked magic was observed."
+    ]
+  },
+  "assembly_guidance": {
+    "owner": "lead",
+    "selection": "source.png rows 0, 1, 2, 3, subject to native review",
+    "alpha_policy": "Preserve original; partial alpha remains unchanged. Any deterministic cleanup belongs to lead assembly.",
+    "crop_policy": "Use alpha row bands and padded character isolation, not naive exact height/4 cropping.",
+    "scale_policy": "One identity-locked common scale across all poses; calibrate against runtime standing proportions and never fit each pose to equal occupied height.",
+    "registration_policy": "Preserve anatomical foot tuck/opening while applying one coherent root convention; no trajectory was intentionally baked."
+  },
+  "limitations": [
+    "Source-size inspection is not native-scale or runtime acceptance.",
+    "Rear and rear-quarter descent knees remain softly flexed and foreshortened; small-scale distinction from rise needs native review.",
+    "Exact native skull-size continuity, one-third head proportion and anatomical length continuity are not quantitatively certified.",
+    "Some far-side hands and limbs are naturally partly occluded in profile and rear-quarter views.",
+    "Four authored key poses are not complete animation cycles or inbetweens.",
+    "No engine launch, imports, captures, exports, runtime edits, manifest edits, commits or pushes were performed."
+  ],
+  "acceptance": {"native_scale": "NOT_RUN", "runtime": "NOT_RUN", "human": "NOT_RUN"},
+  "completion_marker": "SOURCE_TICKET_COMPLETE"
+}

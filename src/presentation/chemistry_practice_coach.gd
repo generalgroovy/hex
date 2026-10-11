@@ -3,48 +3,126 @@ extends RefCounted
 
 const Chemistry = preload("res://src/sim/chemistry/element_chemistry_system.gd")
 const Guide = preload("res://src/presentation/chemistry_guide_model.gd")
+const Policy = preload("res://src/sim/hex/hex_recipe_policy.gd")
+const Elements = preload("res://src/content/element_rules.gd")
 
-# Compact effect/counter summaries of ChemistryGuideModel, not the historical
-# reaction catalog's aspirational lore. Simulation still owns every outcome.
-const CUES: Array = [
-	["Active stone blocks movement, shots and rays.", "Wallrun/kick from it; go around, break or wait."],
-	["The moving hot lane damages grounded enemies.", "Counter: jump across or leave the front."],
-	["Grounded enemies are slowed while inside.", "Counter: jump across or leave the patch."],
-	["Dust conceals at distance and shoves grounded enemies.", "Counter: close in to see; jump clear of the shove."],
-	["Brittle cover stops shots and rays, not walking.", "Counter: attack the ridge or wait for decay."],
-	["Shot cover absorbs Charge using a finite reserve.", "Counter: exhaust its Charge reserve or destroy it."],
-	["The plane reflects shots and rays of every element.", "Counter: change angle, go around or wait for decay."],
-	["Enemy resource recovery is blocked inside; no drain.", "Counter: leave the patch to resume recovery."],
-	["The fire ring pulses damage, including against jumps.", "Counter: use the centre hole or leave the ring."],
-	["Steam conceals distant silhouettes; no damage or wet.", "Counter: Light + Light makes revealing Radiance."],
-	["The travelling flame lane pulses damage, even in air.", "Counter: cross its narrow side between pulses."],
-	["One fracture damages active constructs, not actors.", "Use against reaction cover; worldbone stays intact."],
-	["A damaging arc requires a separate live Charge link.", "Counter: leave the line or let its source expire."],
-	["One pulse reveals actors, without damage or healing.", "Counter: leave during formation to avoid the mark."],
-	["Mist conceals; enemies dwelling 0.5s can take damage.", "Counter: leave before the dwell threshold."],
-	["The shallow current pushes grounded enemies only.", "Counter: jump over its push or leave sideways."],
-	["Travelling mist conceals; no damage or forced motion.", "Counter: close distance or step outside the lane."],
-	["The growing strip briefly slows grounded entrants.", "Counter: jump across; it does not freeze actors."],
-	["Damage pulses locally or along separate Water links.", "Counter: leave the area/path or let its links expire."],
-	["Entry and movement reveal actors; no healing/damage.", "Counter: stop moving or leave to stop refreshing it."],
-	["Mist conceals, but moving actors are revealed.", "Counter: stay still until reveal expires, or leave."],
-	["The ring pushes grounded enemies sideways; no damage.", "Counter: jump or cross toward its safe centre."],
-	["An icy damage pulse repeatedly travels down the lane.", "Counter: pass behind the moving pulse."],
-	["The drifting disk pulses damage; no stun or chaining.", "Counter: leave its radius before the next pulse."],
-	["Only Light shots and rays bend by 15 degrees.", "Counter: adjust aim or use a non-Light shot."],
-	["The drifting lane alternates concealment on and off.", "Counter: leave the lane or use its visible interval."],
-	["Both teams: walk 75%; physical shots travel 65%.", "Slide or jump across; leave or wait. No cover."],
-	["A damage path requires separate live Ice links.", "Counter: leave the path or let a link expire."],
-	["Light can split with shared damage; others hit cover.", "Shots need spare capacity and damage; break or bypass cover."],
-	["Entry reveals; grounded enemies slow after 0.35s.", "Counter: leave or jump before the dwell threshold."],
-	["Both teams accelerate; final discharge moves enemies.", "Leave sideways or jump before release; no stun."],
-	["One line pulse reveals actors; no damage or stun.", "Counter: leave the lane during formation."],
-	["Mist conceals, but entry/exit briefly reveals actors.", "Counter: do not rely on concealment while crossing."],
-	["Actors inside are revealed; no healing or damage.", "Counter: leave or put worldbone across its sightline."],
-	["Entering/leaving marks actors; no concealment/damage.", "Counter: avoid crossing if you want to stay unmarked."],
-	["Mist conceals; movement reveals; 1s dwell risks damage.", "Counter: leave before 1s; standing still is not safe."],
-]
+# Current play path. Only snapshot observations are returned; no authority field is
+# updated and no source is promoted to a reaction by this presenter.
+static func sample_hex(actor_id: int, position_fixed: Vector2i, tick: int, config: SimConfig, bounds_pixels: Array, court: HexChemistryWorld, allowed: bool = true) -> Dictionary:
+	if not allowed or actor_id <= 0 or tick < 0 or config == null or config.tick_rate <= 0 or court == null or not court.chemistry_enabled:
+		return {}
+	var bounds := _fixed_bounds(bounds_pixels)
+	if not bounds.has_area() or not bounds.has_point(position_fixed):
+		return {}
+	var selected: Dictionary = {}
+	for value: Variant in court.products.values():
+		if not value is Dictionary: continue
+		var product: Dictionary = value
+		if int(product.get("owner", 0)) != actor_id or int(product.get("quantity", 0)) <= 0 or tick < int(product.get("created", 0)) or tick >= int(product.get("expiry_tick", 0)):
+			continue
+		if Policy.definition(int(product.get("recipe_wire_id", 0))).is_empty() or not _inside_practice(product.get("coverage", {}), court.origin, bounds):
+			continue
+		if selected.is_empty() or _newer(int(product.created), int(product.id), int(selected.created), int(selected.id)):
+			selected = product
+	if not selected.is_empty():
+		return _hex_product_view(selected, tick, config)
+	var matter: Dictionary = {}
+	var part: Dictionary = {}
+	for value: Variant in court.casts.values():
+		if not value is Dictionary: continue
+		var cast: Dictionary = value
+		if int(cast.get("owner", 0)) != actor_id or not bool(cast.get("paid", false)) or not Elements.is_active_wire(int(cast.get("element", 0))): continue
+		for part_value: Variant in (cast.get("ground_parts", {}) as Dictionary).values():
+			if not part_value is Dictionary: continue
+			var candidate: Dictionary = part_value
+			if int(candidate.get("quantity", 0)) <= 0 or tick < int(candidate.get("created", 0)) or tick >= int(candidate.get("expiry_tick", 0)) or not _inside_practice(candidate.get("coverage", {}), court.origin, bounds): continue
+			if matter.is_empty() or _newer(int(candidate.created), int(cast.id), int(part.created), int(matter.id)):
+				matter = cast
+				part = candidate
+	if not matter.is_empty():
+		return _hex_matter_view(matter, part, tick, config)
+	return {"kind": "invitation", "title": "CRUCIBLE / COMBINE ELEMENTS", "phase": "SIX ELEMENTS / 63 RESULTS", "entity_id": 0, "recipe_wire_id": 0, "remaining_ticks": 0,
+		"lines": _card_lines(["Overlap separate paid casts to form a reaction.", "Add distinct elements to build larger combinations.", "Help: exact purpose, damage triggers and counters."])}
 
+
+static func _hex_matter_view(matter: Dictionary, part: Dictionary, tick: int, config: SimConfig) -> Dictionary:
+	var name: String = Elements.NAMES[Elements.id_from_wire(int(matter.element))]
+	var phase := "HARMLESS"
+	var end_tick := int(part.expiry_tick)
+	var effect := "Paid ground matter; no direct damage or status."
+	var counter := "Add distinct elements to products; Help lists counters."
+	if int(matter.element) == 2:
+		var ignition := int(part.created) + HexChemistryWorld.IGNITION_TICKS
+		var cooling := int(part.expiry_tick) - HexChemistryWorld.COOLING_TICKS
+		if tick < ignition:
+			phase = "IGNITING / HARMLESS"
+			end_tick = ignition
+			effect = "Fire will burn grounded actors after ignition."
+		elif tick < cooling:
+			phase = "ACTIVE FIRE"
+			end_tick = cooling
+			effect = "Fire burns grounded actors on pressure pulses."
+		else:
+			phase = "COOLING / HARMLESS"
+			effect = "Fire is cooling; its ground pressure has ended."
+		counter = "Counter: leave its occupied hexes or clear the ground."
+	return {"kind": "matter", "title": name.to_upper() + " MATTER", "phase": "%s / %.2fs LEFT" % [phase, _seconds(end_tick - tick, config)],
+		"entity_id": int(matter.id), "recipe_wire_id": 0, "remaining_ticks": end_tick - tick,
+		"quantity": int(part.quantity), "lines": _card_lines([effect, "Overlap a separate paid cast before expiry.", counter])}
+
+
+static func _hex_product_view(product: Dictionary, tick: int, config: SimConfig) -> Dictionary:
+	var definition := Policy.definition(int(product.recipe_wire_id))
+	var phase := "ACTIVE"
+	var end_tick := int(product.decay_tick)
+	var purpose := String(definition.purpose)
+	var visible_effect := purpose
+	var pool := maxi(0, int(product.get("damage_budget_remaining", 0)))
+	if tick < int(product.active_tick):
+		phase = "FORMING"
+		end_tick = int(product.active_tick)
+		visible_effect = "When active: " + purpose
+	elif tick >= int(product.decay_tick):
+		phase = "HARMLESS DECAY"
+		end_tick = int(product.expiry_tick)
+		visible_effect = "This product is fading; no new effects are applied."
+	elif pool == 0:
+		phase = "DAMAGE STOCK SPENT"
+		visible_effect = "Damage stock spent; situational effects may remain."
+	var ingredients := PackedStringArray()
+	for wire: int in definition.elements:
+		ingredients.append(String(Elements.NAMES[Elements.id_from_wire(wire)]))
+	var source_lines := [" + ".join(ingredients), visible_effect, "Counter: " + String(definition.counter)]
+	return {"kind": "reaction", "title": _fit(String(definition.name).to_upper(), 14, 337.0),
+		"phase": _fit("%s / %.2fs / %.1f SHARED DAMAGE" % [phase, _seconds(end_tick - tick, config), float(pool) / 1000.0], 12, 412.0),
+		"entity_id": int(product.id), "recipe_wire_id": int(product.recipe_wire_id), "remaining_ticks": end_tick - tick,
+		"damage_budget_remaining": pool, "purpose": purpose, "counter": String(definition.counter),
+		"full_lines": PackedStringArray(source_lines), "lines": _card_lines(source_lines)}
+
+
+static func _inside_practice(coverage: Dictionary, origin: Vector2i, bounds: Rect2i) -> bool:
+	for cell: Variant in coverage:
+		if cell is Vector2i and int(coverage[cell]) > 0 and bounds.has_point(origin + HexGrid.center(cell)):
+			return true
+	return false
+
+
+static func _card_lines(lines: Array) -> PackedStringArray:
+	var result := PackedStringArray()
+	for line: String in lines: result.append(_fit(line, 12, 412.0))
+	return result
+
+
+static func _fit(value: String, size: int, width: float) -> String:
+	var font := ThemeDB.fallback_font
+	if font.get_string_size(value, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= width: return value
+	var result := value
+	while not result.is_empty() and font.get_string_size(result + "…", HORIZONTAL_ALIGNMENT_LEFT, -1, size).x > width:
+		result = result.left(result.length() - 1)
+	return result + "…"
+
+
+# Legacy two-source compatibility view, not the current Hex play path.
 
 # Stateless snapshot observation: no command, timer, reward or progression state.
 # bounds_pixels is the live crucible-experiment practice group's bounds array.
@@ -85,18 +163,18 @@ static func sample(actor_id: int, position_fixed: Vector2i, tick: int, config: S
 			latest_deposit = deposit
 	if latest_deposit != null:
 		var trail := latest_deposit.is_trail()
-		var strength_copy := "Match reaction strength %d with %s." % [latest_deposit.reaction_strength, "separate terminal matter" if trail else "a separate cast"]
+		var strength_copy := "Paid reaction strength %d; combine with a separate cast." % latest_deposit.reaction_strength
 		return {
 			"kind": "matter", "title": "%s %s" % [Guide.ELEMENTS[latest_deposit.element_wire_id], "TRAIL" if trail else "MATTER"],
 			"phase": "HARMLESS / %.2fs LEFT" % _seconds(latest_deposit.expiry_tick - tick, config),
 			"entity_id": latest_deposit.entity_id, "recipe_wire_id": 0,
 			"remaining_ticks": latest_deposit.expiry_tick - tick,
-			"lines": PackedStringArray(["Narrow trail: no direct damage or status.", strength_copy, "Trail + trail never reacts; sustained results are shorter."]) if trail else PackedStringArray(["Plain terminal matter causes no damage or status.", strength_copy, "Overlap before expiry; unequal strength stays matter."]),
+			"lines": PackedStringArray(["Narrow trail: no direct damage or status.", strength_copy, "Trail + trail never reacts; sustained results are shorter."]) if trail else PackedStringArray(["Plain terminal matter causes no damage or status.", strength_copy, "Overlap before expiry; unmatched strength stays matter."]),
 		}
 	return {
 		"kind": "invitation", "title": "CRUCIBLE / TRY A PAIR", "phase": "FREE EXPERIMENT",
 		"entity_id": 0, "recipe_wire_id": 0, "remaining_ticks": 0,
-		"lines": PackedStringArray(["Use separate casts with matching reaction strength.", "Cross-element pairs use one family: Bolt, Heavy or Rapid.", "Spray leaves no chemistry matter; it cannot supply a pair."]),
+		"lines": PackedStringArray(["Try two paid casts, or choose a mixed payload in the Range.", "Eight deliveries share finite paid stock; read each role.", "Add distinct elements to products; inspect counters in Help."]),
 	}
 
 
@@ -150,9 +228,10 @@ static func _reaction_view(reaction: ElementReactionState, tick: int, config: Si
 		return {}
 	var phase := "ACTIVE"
 	var end_tick := reaction.decay_tick
-	var cue: Array = CUES[reaction.recipe_wire_id - 301]
-	var effect := String(cue[0])
-	var counter := String(cue[1])
+	var definition := Policy.definition(reaction.recipe_wire_id)
+	if definition.is_empty(): return {}
+	var effect := String(definition.purpose)
+	var counter := "Counter: " + String(definition.counter)
 	if tick < reaction.active_tick:
 		phase = "FORMING / HARMLESS WARNING"
 		end_tick = reaction.active_tick
@@ -161,9 +240,6 @@ static func _reaction_view(reaction: ElementReactionState, tick: int, config: Si
 		phase = "HARMLESS DECAY"
 		end_tick = reaction.expiry_tick
 		effect = "This reaction's decay does not apply effects."
-		counter = "Try another pair after it clears; Bell resets the court."
-	elif reaction.recipe_wire_id == 310 and not Chemistry._concealing(reaction, tick, config):
-		effect = "Steam has thinned; it no longer conceals silhouettes."
 		counter = "Try another pair after it clears; Bell resets the court."
 	elif reaction.recipe_wire_id in [313, 319, 328] and not _damage_links_ready(reaction, deposits, tick):
 		effect = "No live linked source: this reaction cannot deal damage."

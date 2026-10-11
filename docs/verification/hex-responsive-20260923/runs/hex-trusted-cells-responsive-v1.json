@@ -1,0 +1,39 @@
+{
+	"acceptance": "Exact output/source equivalence is mandatory. The empty case should improve; sparse and dense cases quantify fallback overhead and may not. A local timing reduction is diagnostic only and does not establish end-to-end snapshot, simulation, frame, 120 Hz, multiplayer or release capacity.",
+	"allocations": "not available from the Godot runtime; no allocation count is claimed",
+	"assertions": 35,
+	"blocks_per_cycle": 4,
+	"cases": [
+		{},
+		{},
+		{}
+	],
+	"cycles": 4,
+	"definition_hash": "6122177196f65528fd9291827319778a82faf4ee5dbc2cf7a629a59390f1e23e",
+	"engine": "4.7.1-stable (official)",
+	"failures": 0,
+	"map_hash": "9d481a582a0e84c1ecb74ee7637ba6cd7f9119deb0eeacdc509904f5d4810417",
+	"map_path": "res://content/maps/sanctum_campus_g2_v1.json",
+	"order": "ABBA on even cycles; BAAB on odd cycles",
+	"percentile_limit": "Each implementation has 56 samples per case. p99 is the sample-limited nearest-rank maximum and is reported for completeness, not as a tail-capacity estimate.",
+	"platform": {
+		"display_server": "headless",
+		"logical_processor_count": 8,
+		"os": "Windows",
+		"processor": "AMD Ryzen 3 7320U with Radeon Graphics"
+	},
+	"profile_version": "hex-trusted-cells-abba-v1",
+	"samples_per_block": 7,
+	"schema_version": 1,
+	"scope": "Headless isolated validation of the same production 2,766-cell topology with empty, representative 29-nonempty-record, and synthetic all-nonempty fallback pressure. Each timed sample includes only one validator call and its required returned-array allocation/sort. Fixture construction, warmup, equality, state hashing, topology hashing, assertions and receipt work are outside timers. Nonempty records contain one synthetic material entry only; they are validator pressure, not a legal paid simulation workload.",
+	"source_sha256": {
+		"content/maps/sanctum_campus_g2_v1.json": "496c96c80168dd6e4053e03ece86b8a8f010a44c24c5fca7eaebe8cd13b51cea",
+		"src/net/hex_chemistry_snapshot.gd": "722cdc67a124645f1656b14fc602158fd50e72459f349f4780ef85625e7ed4f1",
+		"src/sim/hex/hex_chemistry_world.gd": "b87e2cafa243646395db58a0ad7071806be129eca1eb12de647e16aed7fd27cd",
+		"src/sim/hex/hex_grid.gd": "2e99c993e5ab72cd084b445804f1f69230631a760f6de681fb4b03ab321d5505",
+		"src/sim/hex/hex_world_definition.gd": "e15d75d48ddedc6bc891400f508ae43d892742c151e54bb5b93aef68dfa23f18",
+		"tests/performance/profile_hex_trusted_cells.gd": "b680454b11e40cf6a4c0a8f1f09cdb6ffcc545364061dc7bef790c7303e7de1a",
+		"tests/support/hex_trusted_cells_legacy_oracle.gd": "19c22a811f91c576181d163a4ec457d328ac5a71fc41effceb624d897dd02ac0"
+	},
+	"topology_cells": 2766
+}

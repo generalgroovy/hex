@@ -1,0 +1,608 @@
+{
+  "schema_version": 1,
+  "task_id": "ANIMATION",
+  "status": "PROPOSAL",
+  "input_packet_id": "flux-delegation-20260920",
+  "input_packet_sha256": "844e314277b3df5d6eccb44ec37b1f6a705b55abfb6c2101fc1fbadb939fc45f",
+  "input_manifest_sha256": "b0a9d9a54f575d6e4f056cdf0b35988ba843779d30bb0deaed130744b44175d1",
+  "input_files_read": [
+    "01-SHARED-CONTRACT.md",
+    "07-CHAT-ANIMATION.md",
+    "11-AUDIT-SNAPSHOT.md",
+    "repository/SPECIFICATION.md",
+    "repository/.agent/OVERHAUL-IMPLEMENTATION.md",
+    "repository/src/presentation/wireframe_body_presenter.gd",
+    "repository/src/presentation/eight_direction_resolver.gd",
+    "repository/docs/SPRITE-PIPELINE.md",
+    "repository/docs/PROPORTION-CAST-CHECKPOINT.md",
+    "repository/docs/PLAYER-CONTROLS-AND-POV.md",
+    "repository/content/champions/body_type_profiles_v1.json",
+    "repository/src/sim/core/sim_config.gd",
+    "repository/docs/current-checkpoint.json",
+    "INPUT_MANIFEST.json",
+    "10-HANDOFF-SCHEMA.json",
+    "repository/assets/sprites/wireframe_motion_v2/manifest.json",
+    "repository/assets/sprites/wireframe_motion_v2/small-base.png",
+    "repository/assets/sprites/wireframe_motion_v2/small-locomotion.png",
+    "repository/assets/sprites/wireframe_motion_v2/small-sprint.png",
+    "repository/assets/sprites/wireframe_motion_v2/middle-base.png",
+    "repository/assets/sprites/wireframe_motion_v2/middle-locomotion.png",
+    "repository/assets/sprites/wireframe_motion_v2/middle-sprint.png",
+    "repository/assets/sprites/wireframe_motion_v2/large-base.png",
+    "repository/assets/sprites/wireframe_motion_v2/large-locomotion.png",
+    "repository/assets/sprites/wireframe_motion_v2/large-sprint.png",
+    "repository/docs/evidence/template-motion-20260915/native-before-after.png",
+    "repository/docs/evidence/global-hex-20260920/native/03-steam-normal-1280x720.png",
+    "repository/docs/evidence/global-hex-20260920/native/04-steam-reduced-1280x720.png"
+  ],
+  "input_read_details": "evidence/inputs-read.json",
+  "source_identity_as_reported": "p53-cb264f9358a4",
+  "source_identity_recomputed": false,
+  "source_git_head_as_reported": "a1aa02807626823d0fbc1e25e75441ca3b7f4d36",
+  "scope": "Review/design only. Small-first shared body foundation; five annotated source probes and proposed contact/action specifications; no live game edits.",
+  "outputs": [
+    {
+      "path": "ANIMATION_REVIEW.md",
+      "role": "source_findings_and_bounded_animation_proposals",
+      "status": "PROPOSAL",
+      "sha256": "50a8d82e8d7139e96ae5ec2617be6c59df72706441933647a53686cf42587e5d",
+      "bytes": 19595
+    },
+    {
+      "path": "COVERAGE_MATRIX.md",
+      "role": "measured_source_coverage_and_pending_runtime_acceptance_matrix",
+      "status": "PROPOSAL",
+      "sha256": "dbbd6c797388bf293e6a9ccba76d691fc9ac2979885dd571c1f4266cad6bc191",
+      "bytes": 12779
+    },
+    {
+      "path": "HANDOFF.md",
+      "role": "integration_boundaries_ordered_handoff_and_rollback",
+      "status": "PROPOSAL",
+      "sha256": "0e351702657e4740a193ee6d0fe43470e4b83f523b93e5c71e6a2a213fe30b5c",
+      "bytes": 7308
+    },
+    {
+      "path": "POSE_TIMING_SPEC.json",
+      "role": "machine_readable_pose_timing_and_transfer_proposal",
+      "status": "PROPOSAL",
+      "sha256": "26861e1eac0842074c4645200e80343d155984c69406954d22c9032cdcfde3c9",
+      "bytes": 21000
+    },
+    {
+      "path": "REVIEW.html",
+      "role": "self_contained_exact_source_atlas_explorer_not_gameplay",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "fd415b357cd6539a66183c15681eab900d988b116d9196cbb2e00a279966c621",
+      "bytes": 2926527
+    },
+    {
+      "path": "evidence/SOURCE_EXCERPTS.md",
+      "role": "source_provenance_measurement_or_executed_offline_check_receipt",
+      "status": "STATIC_VERIFIED",
+      "sha256": "ec28fb24799cca67ba6bd2c468638b6f1a2bccd1e1661ac7c975a8a901425bea",
+      "bytes": 60616
+    },
+    {
+      "path": "evidence/browser-file-navigation-attempt.json",
+      "role": "retained_failed_file_url_launch_receipt_not_a_pass",
+      "status": "STATIC_VERIFIED",
+      "sha256": "85896a89282e41072d773a174e5fd0325036bee7194d9f38d3610fa847b05da5",
+      "bytes": 538
+    },
+    {
+      "path": "evidence/browser-test.json",
+      "role": "source_provenance_measurement_or_executed_offline_check_receipt",
+      "status": "STATIC_VERIFIED",
+      "sha256": "cbf7f1486f9ed4a54c126e13534c2f7ce6acc1e9a8c2347994f4fbb275be4fa1",
+      "bytes": 7008
+    },
+    {
+      "path": "evidence/input-integrity.json",
+      "role": "source_provenance_measurement_or_executed_offline_check_receipt",
+      "status": "STATIC_VERIFIED",
+      "sha256": "835288e1c24919e927dc7d0b20efc3abff9fc4f503a8df32a2f53fe4fa88ad5a",
+      "bytes": 8600
+    },
+    {
+      "path": "evidence/inputs-read.json",
+      "role": "source_provenance_measurement_or_executed_offline_check_receipt",
+      "status": "STATIC_VERIFIED",
+      "sha256": "f49ec9441dc14d6e564584d442fd5f0396d4b1c463345ac7da8680b92135db2d",
+      "bytes": 7735
+    },
+    {
+      "path": "evidence/static-source-audit.json",
+      "role": "source_provenance_measurement_or_executed_offline_check_receipt",
+      "status": "STATIC_VERIFIED",
+      "sha256": "04a91b8bb0155380b05d8fc717bfdfda6e3ce47142e78f86703876afe9f55914",
+      "bytes": 1369638
+    },
+    {
+      "path": "evidence/verification.json",
+      "role": "source_provenance_measurement_or_executed_offline_check_receipt",
+      "status": "STATIC_VERIFIED",
+      "sha256": "c599ecb24d104993eaeb09a6ca40a5635e9c29b6ad7ea0bad1f541c0e350d149",
+      "bytes": 389829
+    },
+    {
+      "path": "evidence/viewer-diagonal-slide.png",
+      "role": "rendered_offline_viewer_screenshot_not_game_capture",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "8a21a591a5ea3d06c1e3a1d24ad44721f18eafcfd9c80546191221cc2dcf610b",
+      "bytes": 208942
+    },
+    {
+      "path": "evidence/viewer-landing-reduced.png",
+      "role": "rendered_offline_viewer_screenshot_not_game_capture",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "79ec65de7790844ffd983b317349747aa0ea9d2a81b33e95c2e149e3fa0fb794",
+      "bytes": 216086
+    },
+    {
+      "path": "images/00-small-foundation.png",
+      "role": "exact_source_crops_with_separate_proposed_review_annotations",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "21513340222aa3077a1dfba59bd9a5910aad62395e1d82fae537ab607c4ed9f8",
+      "bytes": 59195
+    },
+    {
+      "path": "images/06-size-transfer.png",
+      "role": "exact_source_crops_with_separate_proposed_review_annotations",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "28b6ff98f98ce28e342dc0c41549c2e8bbca0c97e472e687c32d4ae06611591a",
+      "bytes": 71534
+    },
+    {
+      "path": "images/P01-annotated.png",
+      "role": "exact_source_crops_with_separate_proposed_review_annotations",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "6cbe11051c86cd5dbe2afa220ba7c7ecd68d5274c56e42ff1632c45797c258e1",
+      "bytes": 93594
+    },
+    {
+      "path": "images/P02-annotated.png",
+      "role": "exact_source_crops_with_separate_proposed_review_annotations",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "44c8c4d3a116465111ad48a6892fca2308c4eb6ee05166b10fee114f98602343",
+      "bytes": 92520
+    },
+    {
+      "path": "images/P03-annotated.png",
+      "role": "exact_source_crops_with_separate_proposed_review_annotations",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "3d4348e046dfb437b94a45f1a30383e55794c9a5070561880bbf073f56221bff",
+      "bytes": 92835
+    },
+    {
+      "path": "images/P04-annotated.png",
+      "role": "exact_source_crops_with_separate_proposed_review_annotations",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "3d814a857017a99e163dd3959e6731fe87d2a90b8eab55e89c6fa969ac125bdf",
+      "bytes": 97447
+    },
+    {
+      "path": "images/P05-annotated.png",
+      "role": "exact_source_crops_with_separate_proposed_review_annotations",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "8b49f3090af3b3e056f7f8af5d71e4f8afe7a1e29f87e30a4e84e3831134eac6",
+      "bytes": 94489
+    },
+    {
+      "path": "originals/large-base.png",
+      "role": "byte_identical_supplied_active_atlas_or_atlas_manifest",
+      "status": "STATIC_VERIFIED",
+      "sha256": "ffe87ab9e595fec61ef0869df897bb6a966c2b03cbcf4ef532aee9b0fd8fb97a",
+      "bytes": 72837
+    },
+    {
+      "path": "originals/large-locomotion.png",
+      "role": "byte_identical_supplied_active_atlas_or_atlas_manifest",
+      "status": "STATIC_VERIFIED",
+      "sha256": "0a7ce051c421a5409b759c1cce16b7dd078c159e3c2e4635b5bb248ec4f9bcb1",
+      "bytes": 343351
+    },
+    {
+      "path": "originals/large-sprint.png",
+      "role": "byte_identical_supplied_active_atlas_or_atlas_manifest",
+      "status": "STATIC_VERIFIED",
+      "sha256": "522353deb589b5f9b0c172ca6a1ce8eb593cfde6649b2fc20fcf1beca901b93b",
+      "bytes": 361684
+    },
+    {
+      "path": "originals/manifest.json",
+      "role": "byte_identical_supplied_active_atlas_or_atlas_manifest",
+      "status": "STATIC_VERIFIED",
+      "sha256": "d4ed859f8405fc8f8053109b29579916845bc9c770cc216eafc8781184a68387",
+      "bytes": 4309
+    },
+    {
+      "path": "originals/middle-base.png",
+      "role": "byte_identical_supplied_active_atlas_or_atlas_manifest",
+      "status": "STATIC_VERIFIED",
+      "sha256": "c887c14bb65ff3a90f1ea92e79e92ff34f2139df89e6c124f56b0bd8ff5695ff",
+      "bytes": 67983
+    },
+    {
+      "path": "originals/middle-locomotion.png",
+      "role": "byte_identical_supplied_active_atlas_or_atlas_manifest",
+      "status": "STATIC_VERIFIED",
+      "sha256": "3345d3905a6749abeff7bae152c56eac69fe30d827edc257059221ec4c4d3861",
+      "bytes": 318936
+    },
+    {
+      "path": "originals/middle-sprint.png",
+      "role": "byte_identical_supplied_active_atlas_or_atlas_manifest",
+      "status": "STATIC_VERIFIED",
+      "sha256": "c5ed28e63a779b0fd9d13aa5dd39f2d124a1e3d27326adac990350b2b223284e",
+      "bytes": 339819
+    },
+    {
+      "path": "originals/small-base.png",
+      "role": "byte_identical_supplied_active_atlas_or_atlas_manifest",
+      "status": "STATIC_VERIFIED",
+      "sha256": "b3802e81da9cff00ae043f7265872e3f2087f1af1e881a55a172106dd07bad66",
+      "bytes": 63748
+    },
+    {
+      "path": "originals/small-locomotion.png",
+      "role": "byte_identical_supplied_active_atlas_or_atlas_manifest",
+      "status": "STATIC_VERIFIED",
+      "sha256": "c64eb888fe7a6364eac10ef96c328aded36af08d967fd429688705e0d927d3ae",
+      "bytes": 296430
+    },
+    {
+      "path": "originals/small-sprint.png",
+      "role": "byte_identical_supplied_active_atlas_or_atlas_manifest",
+      "status": "STATIC_VERIFIED",
+      "sha256": "55cbd8ddd0db106dc8d833b63b3fe8c4bcc7c872b4365b0afee5fb72ba192c7f",
+      "bytes": 312425
+    },
+    {
+      "path": "pilots/P01-large-source-strip.png",
+      "role": "exact_source_crop_strip_not_new_production_body_art",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "f72edca6c83fd13019d290595028a67db9a7aa32dc19f5fd5f01ed43d08de1f3",
+      "bytes": 6321
+    },
+    {
+      "path": "pilots/P01-middle-source-strip.png",
+      "role": "exact_source_crop_strip_not_new_production_body_art",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "cc3c895d3b6d64d1961cbdef8dcd9875797c554e6158305416766144a51fa4ad",
+      "bytes": 5772
+    },
+    {
+      "path": "pilots/P01-small-source-flipbook.gif",
+      "role": "eight_sample_offline_source_flipbook_not_runtime_sequence",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "569c23d5d2fd9aac67254c55dc325a2a1002222cd1a87adc265baf7b60a2c0c4",
+      "bytes": 124496
+    },
+    {
+      "path": "pilots/P01-small-source-strip.png",
+      "role": "exact_source_crop_strip_not_new_production_body_art",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "7682d350ea782bdddf475ef5b8626faedbcb6dcbc4cf9238e74516f1370fba2e",
+      "bytes": 5569
+    },
+    {
+      "path": "pilots/P02-large-source-strip.png",
+      "role": "exact_source_crop_strip_not_new_production_body_art",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "164744b4884c34bbc012204825770707ca7a533d89fa01f30de08c50f2717376",
+      "bytes": 3008
+    },
+    {
+      "path": "pilots/P02-middle-source-strip.png",
+      "role": "exact_source_crop_strip_not_new_production_body_art",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "add8f312a93f91d6bbaacc7fb8e9a9c353ee03baeb0c4d54c054ae85e565c548",
+      "bytes": 2763
+    },
+    {
+      "path": "pilots/P02-small-source-flipbook.gif",
+      "role": "eight_sample_offline_source_flipbook_not_runtime_sequence",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "83bfb837782ed8c375535bd4edf371f46a52361dd86b7f901c0ee2489eaf4192",
+      "bytes": 125368
+    },
+    {
+      "path": "pilots/P02-small-source-strip.png",
+      "role": "exact_source_crop_strip_not_new_production_body_art",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "0b009d8015ca450968bccc35744268d60d1bd2708fa9549bb531ea397853c0b7",
+      "bytes": 2640
+    },
+    {
+      "path": "pilots/P03-large-source-strip.png",
+      "role": "exact_source_crop_strip_not_new_production_body_art",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "4e0cbf7a80a7da7f0c196f67e5117ef6e0c71ed8de2d62b0a89e10e6b107908d",
+      "bytes": 6018
+    },
+    {
+      "path": "pilots/P03-middle-source-strip.png",
+      "role": "exact_source_crop_strip_not_new_production_body_art",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "a87ee843e1e32dbd4da559f37ea10225e9e0fe39efa70f54a9ca7326c649c6a7",
+      "bytes": 5584
+    },
+    {
+      "path": "pilots/P03-small-source-flipbook.gif",
+      "role": "eight_sample_offline_source_flipbook_not_runtime_sequence",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "019629965715f309ede4ff0b6c0f6aee70da988f170f7ff87924f9fa5b84e75a",
+      "bytes": 122712
+    },
+    {
+      "path": "pilots/P03-small-source-strip.png",
+      "role": "exact_source_crop_strip_not_new_production_body_art",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "24cf8985ce3280e43a064776158fda3158717e3ebfc7ed3eccf53248cc792424",
+      "bytes": 5397
+    },
+    {
+      "path": "pilots/P04-large-source-strip.png",
+      "role": "exact_source_crop_strip_not_new_production_body_art",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "46d458857be10c48e1cfc5db4e37e38f7acf09d3d296bdd038b902d8f393f080",
+      "bytes": 5439
+    },
+    {
+      "path": "pilots/P04-middle-source-strip.png",
+      "role": "exact_source_crop_strip_not_new_production_body_art",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "1c2cce10ebc0abdae217997cceaeb96cc3b45b776d6c9b374f18be620b6e25ba",
+      "bytes": 5051
+    },
+    {
+      "path": "pilots/P04-small-source-flipbook.gif",
+      "role": "eight_sample_offline_source_flipbook_not_runtime_sequence",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "c907a38d16c93f07fb0e35d20df6ecc4c04c82879c9f7805655db7dfe6b51c67",
+      "bytes": 122966
+    },
+    {
+      "path": "pilots/P04-small-source-strip.png",
+      "role": "exact_source_crop_strip_not_new_production_body_art",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "a12e662aeccf792810832fc04e1bb07e1fb37ba7fc19111acda710796054ea6c",
+      "bytes": 4870
+    },
+    {
+      "path": "pilots/P05-large-source-strip.png",
+      "role": "exact_source_crop_strip_not_new_production_body_art",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "67fed1d7ad197fda5e495cc1b7e6e3284d0dde587cfff5635db9c5bf4d572589",
+      "bytes": 4191
+    },
+    {
+      "path": "pilots/P05-middle-source-strip.png",
+      "role": "exact_source_crop_strip_not_new_production_body_art",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "c04907dd23305e1c3a4c0de01d052dabb461e8f9439c2b5a9fbfd78f5b20ed30",
+      "bytes": 3885
+    },
+    {
+      "path": "pilots/P05-small-source-flipbook.gif",
+      "role": "eight_sample_offline_source_flipbook_not_runtime_sequence",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "9a54e279a69445fa507b36f830fb30103f72bee26393b7d5b088aa94bb324399",
+      "bytes": 127542
+    },
+    {
+      "path": "pilots/P05-small-source-strip.png",
+      "role": "exact_source_crop_strip_not_new_production_body_art",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "4cd13c0187a3cf926e7a2262035c4ff8c4a7ffaab8f2dcc7ae79720499acd3b3",
+      "bytes": 3690
+    },
+    {
+      "path": "pilots/cases.json",
+      "role": "five_source_probes_and_proposed_contact_action_roles",
+      "status": "PROPOSAL",
+      "sha256": "701dada0d2a501c1e3a97d78978c8b4eab1e3ce1ac54c42fc00f449d631f2c9e",
+      "bytes": 7075
+    },
+    {
+      "path": "pilots/image-manifest.json",
+      "role": "crop_provenance_and_generated_preview_checksums",
+      "status": "STATIC_VERIFIED",
+      "sha256": "e1af677430588416f6db89e641fa14ce8a58ef06b3ff5efca77c36bab5d249ad",
+      "bytes": 57376
+    },
+    {
+      "path": "tools/build_annotations.py",
+      "role": "offline_reproduction_or_validation_utility_not_a_game_patch",
+      "status": "STATIC_VERIFIED",
+      "sha256": "22d16567803316b96a7394ea96a9ba061e4598500d23a9d313e9f1c92c30a4ee",
+      "bytes": 13218
+    },
+    {
+      "path": "tools/build_viewer.py",
+      "role": "offline_reproduction_or_validation_utility_not_a_game_patch",
+      "status": "STATIC_VERIFIED",
+      "sha256": "3531beb78f216d2347ecc5bfa23e9907294a75ca091944dfab428ed80626a0e8",
+      "bytes": 14057
+    },
+    {
+      "path": "tools/presenter_reference.py",
+      "role": "offline_reproduction_or_validation_utility_not_a_game_patch",
+      "status": "STATIC_VERIFIED",
+      "sha256": "58457744c5504c6c7be301632e12f205b12e25aa89a9b4a4e4e8a019b3917532",
+      "bytes": 1390
+    },
+    {
+      "path": "tools/test_viewer.py",
+      "role": "offline_reproduction_or_validation_utility_not_a_game_patch",
+      "status": "STATIC_VERIFIED",
+      "sha256": "a078cdeb86670e4f03d699155d93f809c5d5d7e7fbcbbc2ccd19577ffb946db7",
+      "bytes": 5238
+    },
+    {
+      "path": "tools/verify_package.py",
+      "role": "offline_reproduction_or_validation_utility_not_a_game_patch",
+      "status": "STATIC_VERIFIED",
+      "sha256": "cf7682afcd22021c5aa384203a87d8accee447afd920d491cc5abd244cd44d39",
+      "bytes": 6680
+    }
+  ],
+  "proposed_live_targets": [
+    {
+      "path": "src/presentation/wireframe_body_presenter.gd",
+      "status": "PROPOSAL",
+      "change": "Review bounded travel-aware slide and dedicated landing/upper-action selection after pilot acceptance. No patch supplied."
+    },
+    {
+      "path": "assets/sprites/wireframe_motion_v2/manifest.json",
+      "status": "PROPOSAL",
+      "change": "Coordinate only with accepted rig/baker/presenter changes; retain current layout/indexing until a separately reviewed extension. No replacement supplied."
+    },
+    {
+      "path": "art_batches/character_style_v1/template_v2/pose_guide_model.gd",
+      "status": "PROPOSAL",
+      "available_in_packet": false,
+      "change": "Inspect current authoritative fixed-bone rig before pose authoring; do not reconstruct rest lengths from raster bounds."
+    },
+    {
+      "path": null,
+      "status": "PROPOSAL",
+      "change": "Resolve actual exporter/baker, CartoonChampionPresenter, gait-phase producer and aerial/landing sampler from the live checkout; precise paths unavailable in this packet."
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D01",
+      "decision": "Retain the existing eight travel directions, eight aim directions and eight locomotion phases, with separate walk/sprint banks."
+    },
+    {
+      "id": "D02",
+      "decision": "Review Small first; transfer normalized contact/action semantics to each original Middle/Large rig, never resize Small bitmap poses into new skins."
+    },
+    {
+      "id": "D03",
+      "decision": "Freeze 96x96 cells, feet pivot [48,84], display heights [58,63,68], hurt radii [17,18,19], common wall clearance 18 and all gameplay/stat/cost/timing values."
+    },
+    {
+      "id": "D04",
+      "decision": "Distinguish existing aim-only held slide cells from proposed true travel-aware diagonal slide and action phases."
+    },
+    {
+      "id": "D05",
+      "decision": "Keep moving cast action phase independent of gait; use actual admitted cast/release timing, with unavailable family-specific durations left null."
+    },
+    {
+      "id": "D06",
+      "decision": "Propose a dedicated, interruptible cosmetic landing load pose; do not claim the source jump-to-grounded storyboard contains one."
+    },
+    {
+      "id": "D07",
+      "decision": "No new production sprites, whole roster, baked spell effects, game code patches, runtime import, commit, push or checkpoint promotion."
+    },
+    {
+      "id": "D08",
+      "decision": "Treat exact eight-frame world-foot locking as unproved and structurally limited by held sprites; sampled contact targets do not authorize actor/pivot correction."
+    }
+  ],
+  "tests": [
+    {
+      "name": "Input manifest byte and SHA integrity",
+      "status": "PASS",
+      "scope": "STATIC_VERIFIED integrity only",
+      "records_checked": 63,
+      "evidence": [
+        "evidence/input-integrity.json"
+      ]
+    },
+    {
+      "name": "Source PNG/RGBA, cell structure, source-math addressing and exact crop checks",
+      "status": "PASS",
+      "scope": "Offline Python/Pillow checks and a source-math reference; NOT Godot or runtime verification",
+      "checks": 3552,
+      "passed": 3552,
+      "source_cells": 3312,
+      "source_pngs": 9,
+      "evidence": [
+        "evidence/verification.json",
+        "evidence/static-source-audit.json"
+      ]
+    },
+    {
+      "name": "Offline Chromium viewer via in-memory document loading",
+      "status": "PASS",
+      "scope": "Headless Chromium rendered the exact offline HTML via in-memory set_content; direct file navigation was blocked separately. No Godot, game capture, live action timing or performance acceptance",
+      "checks": 69,
+      "passed": 69,
+      "evidence": [
+        "evidence/browser-test.json",
+        "evidence/viewer-diagonal-slide.png",
+        "evidence/viewer-landing-reduced.png"
+      ]
+    },
+    {
+      "name": "Direct file URL launch in sandbox Chromium",
+      "status": "FAILED",
+      "reason": "net::ERR_BLOCKED_BY_ADMINISTRATOR; security policy was not altered. Exact same HTML separately tested via set_content.",
+      "evidence": [
+        "evidence/browser-file-navigation-attempt.json"
+      ]
+    },
+    {
+      "name": "Godot import, integration and original game test suite",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "name": "Actual fixed-bone rig and continuous gait/contact sequence",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "name": "Continuous cast/slide/landing gameplay, walls, paid-state and normal/reduced aerial cues",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "name": "Network/prediction correction, hardware input, rendered frame time and GPU performance",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "name": "Human native-scale movement, direction and action-phase acceptance",
+      "status": "NOT_RUN",
+      "evidence": []
+    }
+  ],
+  "missing_inputs": [
+    "Buildable authoritative game checkout/project and its current test suite.",
+    "Actual CartoonChampionPresenter/caller, gait-phase producer and cast-priority integration.",
+    "Editable fixed-bone pose rig plus original exporter/baker.",
+    "Aerial/landing sampler and real cast action event/timing fields.",
+    "Continuous native game sequences, player input traces and human acceptance."
+  ],
+  "risks": [
+    "Static unique phase hashes and raster bounds do not prove planted world motion, bone-length compliance or valid runtime selection.",
+    "The existing slide uses aim-only source lookup, and wallrun is documented as sharing its silhouette.",
+    "The full moving-cast caller is missing; a direct frame(cast) call differs from the checkpoint-reported gait-leg route.",
+    "A dedicated landing body pose is absent; preview jump/grounded cuts intentionally demonstrate the gap.",
+    "Middle/Large reference-height versus display-height use in the documented distance clock is unresolved without its producer.",
+    "Held eight-phase sprites cannot guarantee continuous exact world-foot lock against arbitrary root displacement; no live IK or physics correction is proposed.",
+    "New full action banks can add substantial uncompressed RGBA memory; costs in the specification are estimates, not measured GPU residency.",
+    "Normal/reduced body previews do not reproduce the separately owned airborne sampler, shadows or spell layers.",
+    "Ordinary local-file browser navigation remains unverified in this environment because its administrative policy blocked the attempt.",
+    "No generated preview image is authorized as a replacement production body atlas."
+  ],
+  "human_acceptance": "PENDING",
+  "summary_counts": {
+    "annotated_boards": 7,
+    "source_strips": 15,
+    "source_flipbooks": 5,
+    "source_png_originals": 9,
+    "offline_viewer_screenshots": 2,
+    "new_production_sprites": 0,
+    "live_game_files_modified": 0,
+    "outputs_excluding_this_manifest": 58
+  },
+  "instructions": "Start with HANDOFF.md and REVIEW.html. Every supplied file except this root manifest is enumerated with SHA-256 and byte size, including originals/manifest.json. Verify a sealed delivery using python tools/verify_package.py without --report. All source and viewer checks are offline evidence, not a game or human acceptance. Do not auto-install preview files, alter gameplay or publish this proposal."
+}

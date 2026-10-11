@@ -1,0 +1,23 @@
+{
+  "result": "failed",
+  "stage": "exact EXE native launch",
+  "source_build_id": "p55-c5d0f6accb97",
+  "watchdog_seconds": 120,
+  "cause": "Export class cache referenced three evidence copies under excluded docs paths; parse errors prevented Bootstrap initialization.",
+  "files": [
+    {
+      "path": "exports/hex-loom-availability-20260923/windows/BUILD-STATE.json",
+      "sha256": "c8651e697c4fd0af6fe33e77d26909ec6f2c3d11f542ce3a526814dc8580cb1c"
+    },
+    {
+      "path": "exports/hex-loom-availability-20260923/windows/hex.exe",
+      "sha256": "04baf75cc1d69dd93eb709533ecab4fd7770bb8a530645717017a06a9d9809fc"
+    },
+    {
+      "path": "exports/hex-loom-availability-20260923/windows/hex.pck",
+      "sha256": "44834e076acbf7e6b2af5d88bab538c9bb02397cfc36cf797b83eb226559f57e"
+    }
+  ],
+  "class_cache": "class-cache-failed-v1.cfg",
+  "repair": "Evidence .gdignore plus canonical class-path guard immediately after export; production code unchanged."
+}

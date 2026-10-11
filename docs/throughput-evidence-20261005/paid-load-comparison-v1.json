@@ -1,0 +1,344 @@
+{
+  "status": "passed",
+  "historical_receipt": "docs/completion-evidence-20261004/paid-load-v1.json",
+  "historical_receipt_sha256": "c594a410be2e8dbbda64b00564a63ae0a8aba9bcee16b93b4af6052dc736ddc3",
+  "current_receipt": ".godot/unified-wellspring-profile-clarity-20261005-v1.json",
+  "current_receipt_sha256": "bc74c5d469406507707cd991976509165f4dffe171abd773cabb6019a93e9380",
+  "historical_build_id": "p56-308f3dc64c41",
+  "current_build_id": "p56-4c82db23d160",
+  "deterministic_fields": [
+    "instrumentation_version",
+    "case",
+    "sample_ticks",
+    "requested_pressed_by_wire",
+    "requested_held_ticks_by_wire",
+    "admitted_by_wire",
+    "refusals_by_wire_and_reason",
+    "released_by_wire",
+    "processed_clashes",
+    "processed_products",
+    "workload_totals",
+    "event_counts",
+    "event_accounting",
+    "authority_metrics",
+    "publication",
+    "inventory_totals",
+    "alive_work",
+    "final_occupancy_after_cleanup",
+    "contact_queries",
+    "cleanup_ticks",
+    "sample_end_hash",
+    "final_hash",
+    "trace_sha256",
+    "peaks"
+  ],
+  "excluded_peak": "static_memory_bytes",
+  "runs": [
+    {
+      "case": "sustained-distributed",
+      "repeat": 1,
+      "reverse_command_order": false,
+      "sample_ticks": 720,
+      "deterministic_match": true,
+      "different_fields": [],
+      "historical_observed": {
+        "step_us": {
+          "max": 26016,
+          "p50": 7395,
+          "p95": 11873,
+          "p99": 15547,
+          "samples": 720
+        },
+        "host_step_event_retention_and_60hz_envelope_us": {
+          "max": 292580,
+          "p50": 21826,
+          "p95": 187504,
+          "p99": 199125,
+          "samples": 720
+        },
+        "owned_capture_and_packetization_core_us": {
+          "max": 284868,
+          "p50": 131726,
+          "p95": 182732,
+          "p99": 210242,
+          "samples": 360
+        },
+        "envelope_capture_and_wire_pack_us": {
+          "max": 285002,
+          "p50": 131818,
+          "p95": 182820,
+          "p99": 210339,
+          "samples": 360
+        },
+        "deadline_misses_over_8333us": {
+          "host": 491,
+          "step": 242
+        }
+      },
+      "current_observed": {
+        "step_us": {
+          "max": 26609,
+          "p50": 6749,
+          "p95": 11010,
+          "p99": 14384,
+          "samples": 720
+        },
+        "host_step_event_retention_and_60hz_envelope_us": {
+          "max": 211831,
+          "p50": 21725,
+          "p95": 163678,
+          "p99": 170579,
+          "samples": 720
+        },
+        "owned_capture_and_packetization_core_us": {
+          "max": 200031,
+          "p50": 116005,
+          "p95": 158183,
+          "p99": 167335,
+          "samples": 360
+        },
+        "envelope_capture_and_wire_pack_us": {
+          "max": 200182,
+          "p50": 116096,
+          "p95": 158272,
+          "p99": 167418,
+          "samples": 360
+        },
+        "deadline_misses_over_8333us": {
+          "host": 460,
+          "step": 180
+        }
+      }
+    },
+    {
+      "case": "sustained-distributed",
+      "repeat": 2,
+      "reverse_command_order": true,
+      "sample_ticks": 720,
+      "deterministic_match": true,
+      "different_fields": [],
+      "historical_observed": {
+        "step_us": {
+          "max": 36153,
+          "p50": 7613,
+          "p95": 12110,
+          "p99": 15424,
+          "samples": 720
+        },
+        "host_step_event_retention_and_60hz_envelope_us": {
+          "max": 217972,
+          "p50": 21718,
+          "p95": 189925,
+          "p99": 202848,
+          "samples": 720
+        },
+        "owned_capture_and_packetization_core_us": {
+          "max": 210944,
+          "p50": 133425,
+          "p95": 187874,
+          "p99": 200064,
+          "samples": 360
+        },
+        "envelope_capture_and_wire_pack_us": {
+          "max": 211077,
+          "p50": 133518,
+          "p95": 187969,
+          "p99": 200191,
+          "samples": 360
+        },
+        "deadline_misses_over_8333us": {
+          "host": 505,
+          "step": 269
+        }
+      },
+      "current_observed": {
+        "step_us": {
+          "max": 25326,
+          "p50": 6714,
+          "p95": 10656,
+          "p99": 14107,
+          "samples": 720
+        },
+        "host_step_event_retention_and_60hz_envelope_us": {
+          "max": 178002,
+          "p50": 20898,
+          "p95": 162581,
+          "p99": 166069,
+          "samples": 720
+        },
+        "owned_capture_and_packetization_core_us": {
+          "max": 163013,
+          "p50": 116258,
+          "p95": 157673,
+          "p99": 160898,
+          "samples": 360
+        },
+        "envelope_capture_and_wire_pack_us": {
+          "max": 163109,
+          "p50": 116351,
+          "p95": 157763,
+          "p99": 161004,
+          "samples": 360
+        },
+        "deadline_misses_over_8333us": {
+          "host": 458,
+          "step": 176
+        }
+      }
+    },
+    {
+      "case": "dense-crucible",
+      "repeat": 1,
+      "reverse_command_order": false,
+      "sample_ticks": 720,
+      "deterministic_match": true,
+      "different_fields": [],
+      "historical_observed": {
+        "step_us": {
+          "max": 51862,
+          "p50": 5273,
+          "p95": 10767,
+          "p99": 15088,
+          "samples": 720
+        },
+        "host_step_event_retention_and_60hz_envelope_us": {
+          "max": 208413,
+          "p50": 24797,
+          "p95": 117709,
+          "p99": 123079,
+          "samples": 720
+        },
+        "owned_capture_and_packetization_core_us": {
+          "max": 192243,
+          "p50": 86723,
+          "p95": 111239,
+          "p99": 117798,
+          "samples": 360
+        },
+        "envelope_capture_and_wire_pack_us": {
+          "max": 192349,
+          "p50": 86803,
+          "p95": 111334,
+          "p99": 117885,
+          "samples": 360
+        },
+        "deadline_misses_over_8333us": {
+          "host": 425,
+          "step": 128
+        }
+      },
+      "current_observed": {
+        "step_us": {
+          "max": 46110,
+          "p50": 4892,
+          "p95": 9833,
+          "p99": 14522,
+          "samples": 720
+        },
+        "host_step_event_retention_and_60hz_envelope_us": {
+          "max": 121374,
+          "p50": 22018,
+          "p95": 104696,
+          "p99": 111874,
+          "samples": 720
+        },
+        "owned_capture_and_packetization_core_us": {
+          "max": 112378,
+          "p50": 77305,
+          "p95": 99448,
+          "p99": 104735,
+          "samples": 360
+        },
+        "envelope_capture_and_wire_pack_us": {
+          "max": 112491,
+          "p50": 77382,
+          "p95": 99530,
+          "p99": 104825,
+          "samples": 360
+        },
+        "deadline_misses_over_8333us": {
+          "host": 411,
+          "step": 104
+        }
+      }
+    },
+    {
+      "case": "dense-crucible",
+      "repeat": 2,
+      "reverse_command_order": true,
+      "sample_ticks": 720,
+      "deterministic_match": true,
+      "different_fields": [],
+      "historical_observed": {
+        "step_us": {
+          "max": 49699,
+          "p50": 5201,
+          "p95": 10195,
+          "p99": 15310,
+          "samples": 720
+        },
+        "host_step_event_retention_and_60hz_envelope_us": {
+          "max": 199901,
+          "p50": 23996,
+          "p95": 116810,
+          "p99": 129422,
+          "samples": 720
+        },
+        "owned_capture_and_packetization_core_us": {
+          "max": 194158,
+          "p50": 87364,
+          "p95": 111513,
+          "p99": 130609,
+          "samples": 360
+        },
+        "envelope_capture_and_wire_pack_us": {
+          "max": 194238,
+          "p50": 87487,
+          "p95": 111634,
+          "p99": 130731,
+          "samples": 360
+        },
+        "deadline_misses_over_8333us": {
+          "host": 418,
+          "step": 119
+        }
+      },
+      "current_observed": {
+        "step_us": {
+          "max": 46072,
+          "p50": 4869,
+          "p95": 9773,
+          "p99": 13005,
+          "samples": 720
+        },
+        "host_step_event_retention_and_60hz_envelope_us": {
+          "max": 218432,
+          "p50": 21495,
+          "p95": 105845,
+          "p99": 114388,
+          "samples": 720
+        },
+        "owned_capture_and_packetization_core_us": {
+          "max": 204336,
+          "p50": 77389,
+          "p95": 101101,
+          "p99": 117946,
+          "samples": 360
+        },
+        "envelope_capture_and_wire_pack_us": {
+          "max": 204426,
+          "p50": 77474,
+          "p95": 101189,
+          "p99": 118049,
+          "samples": 360
+        },
+        "deadline_misses_over_8333us": {
+          "host": 409,
+          "step": 97
+        }
+      }
+    }
+  ],
+  "scope": "Exact profiler deterministic counters, ordered events, publication inventory and hashes across four matching paid runs. Source identity, timings and memory are not equality targets.",
+  "timing_interpretation": "Historical versus current observations only, not a controlled speedup comparison. No rendered, physical-network, dense120Hz or capacity acceptance is established."
+}

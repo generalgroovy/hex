@@ -1,0 +1,1782 @@
+{
+  "schema": "hex-native-profile-wrapper-v1",
+  "status": "measured",
+  "scope": "Instrumented native source runtime, not portable-release FPS acceptance or physical presentation/input latency. Cold rows mean this process cache, not a flushed OS cache; warm and travel rows stay separate. No source/package/promotion edits; engine preferences live only in the isolated profile. The shared checked-engine runner validates process results, but does not expose a numeric exit code when Windows leaves it unavailable.",
+  "numeric_process_exit_code": null,
+  "exit_code_scope": "Not exposed by the shared checked-engine runner; clean launcher return, exact completion marker, complete receipt and empty stderr are required.",
+  "appdata_restored": true,
+  "requested": {
+    "profiles": [
+      "low",
+      "standard"
+    ],
+    "cases": [
+      "paid_all_six_mantle"
+    ],
+    "seconds_per_case": 10.0,
+    "soak_seconds": 0.0,
+    "frame_limit": 60,
+    "width": 1280,
+    "height": 720,
+    "observer_mode": "full",
+    "screenshots": true,
+    "timeout_seconds": 180
+  },
+  "output_directory": "C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-mantle-profile-v2",
+  "engine": "C:\\Users\\sende\\AppData\\Local\\FLUX-dev\\godot-4.7.1\\Godot_v4.7.1-stable_win64.exe",
+  "arguments": [
+    "--path",
+    "C:\\Users\\sende\\Projects\\hex",
+    "--script",
+    "res://scripts/profile-gameplay.gd",
+    "--windowed",
+    "--resolution",
+    "1280x720",
+    "--",
+    "--no-lan-discovery",
+    "--fullbody-art",
+    "--pixel-cast",
+    "--profile-output=C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-mantle-profile-v2\\metrics.json",
+    "--profile-user-data=C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-mantle-profile-v2\\isolated-roaming\\Godot\\app_userdata\\FLUX 2",
+    "--profile-seconds=10",
+    "--profile-soak-seconds=0",
+    "--profile-profiles=low,standard",
+    "--profile-cases=paid_all_six_mantle",
+    "--profile-frame-limit=60",
+    "--profile-width=1280",
+    "--profile-height=720",
+    "--profile-screenshots"
+  ],
+  "wall_seconds": 114.116493,
+  "available_memory_before": {
+    "observed_utc": "2026-10-10T03:09:55.1096438Z",
+    "os": "Microsoft Windows 11 Home",
+    "os_version": "10.0.26300",
+    "available_mb": 1063.41,
+    "total_visible_mb": 7455.62,
+    "error": null
+  },
+  "available_memory_after": {
+    "observed_utc": "2026-10-10T03:11:49.3485331Z",
+    "os": "Microsoft Windows 11 Home",
+    "os_version": "10.0.26300",
+    "available_mb": 1171.13,
+    "total_visible_mb": 7455.62,
+    "error": null
+  },
+  "runtime_identity_before": {
+    "schema_version": 1,
+    "status": "candidate_generated_not_promoted",
+    "scope_id": "production-runtime-source-v1",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "protocol_version": 60,
+    "snapshot_schema": 24,
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "record_count": 3388,
+    "runtime_source_sha256": "6980b3dcafecb85697889a3c7db9b6dda3f184f4f929c756759447f13efea3ec",
+    "build_id": "p60-6980b3dcafec",
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate."
+  },
+  "runtime_identity_after": {
+    "schema_version": 1,
+    "status": "candidate_generated_not_promoted",
+    "scope_id": "production-runtime-source-v1",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "protocol_version": 60,
+    "snapshot_schema": 24,
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "record_count": 3388,
+    "runtime_source_sha256": "6980b3dcafecb85697889a3c7db9b6dda3f184f4f929c756759447f13efea3ec",
+    "build_id": "p60-6980b3dcafec",
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate."
+  },
+  "input_hashes_before": {
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\profile-gameplay.gd": "d1675c3f4e6aa2f347ba30113c7fed00d7b54eefcaabdc4486bd47b76df424c6",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\profile-gameplay.ps1": "d57bcba9b8bedcbabc95270df03560b1d06345e7cb5f0ee6ddefa8e689853c4f",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\runtime-build-identity.ps1": "ee1b11776ae2219f8374d80eaf7bbbe3d44364626e9ed8c60ce8b9290de014fa",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\flux2-common.ps1": "f302086d9472dbd23abc45aede79321071156088fa553aea9c8b09c147b5702c",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\engine-guard.ps1": "9de3d4ae5d09dc59abc56e40bb78f626875db92ceee63136bfa99f62d4b38cd1",
+    "C:\\Users\\sende\\Projects\\hex\\content\\runtime\\runtime_build_identity_v1.json": "936bef1aa1a7ab3e2a953e3cf4dd65e533d6634c9379a5620e4c57f9c451c158"
+  },
+  "input_hashes_after": {
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\profile-gameplay.gd": "d1675c3f4e6aa2f347ba30113c7fed00d7b54eefcaabdc4486bd47b76df424c6",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\profile-gameplay.ps1": "d57bcba9b8bedcbabc95270df03560b1d06345e7cb5f0ee6ddefa8e689853c4f",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\runtime-build-identity.ps1": "ee1b11776ae2219f8374d80eaf7bbbe3d44364626e9ed8c60ce8b9290de014fa",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\flux2-common.ps1": "f302086d9472dbd23abc45aede79321071156088fa553aea9c8b09c147b5702c",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\engine-guard.ps1": "9de3d4ae5d09dc59abc56e40bb78f626875db92ceee63136bfa99f62d4b38cd1",
+    "C:\\Users\\sende\\Projects\\hex\\content\\runtime\\runtime_build_identity_v1.json": "936bef1aa1a7ab3e2a953e3cf4dd65e533d6634c9379a5620e4c57f9c451c158"
+  },
+  "raw_metrics_path": "C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-mantle-profile-v2\\metrics.json",
+  "native_log_path": "C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-mantle-profile-v2\\engine.log",
+  "metrics_sha256": "f0344a633d214e29a86e5f87ac66b4fc3dc3709a1d474be2ab13ddd40361f479",
+  "validation_errors": [],
+  "benchmark": {
+    "adapter": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001506) Direct3D11 vs_5_0 ps_5_0, D3D11-32.0.21045.5002)",
+    "case_seconds": 10.0,
+    "complete": true,
+    "debug_build": true,
+    "display_server": "Windows",
+    "draw_stage_scope": "Full mode clears stage storage immediately before each actual Bootstrap._draw call. main_draw_stages_us and main_draw_contexts align by index with draw_submission_elapsed_ms. Each context records a monotonic callback serial, process frame and entry phase. Loading/no-world callbacks have current empty stages, counted as zero for any stage observed elsewhere in that case; full draw elapsed time remains measured. No categories are invented if the entire case has no gameplay stages. Earlier receipts could repeat stale gameplay stage dictionaries during loading; their cold stage statistics are not valid.",
+    "engine": {
+      "build": "official",
+      "hash": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+      "hex": 263937,
+      "major": 4,
+      "minor": 7,
+      "patch": 1,
+      "status": "stable",
+      "string": "4.7.1-stable (official)",
+      "timestamp": 0
+    },
+    "executable": "C:/Users/sende/AppData/Local/FLUX-dev/godot-4.7.1/Godot_v4.7.1-stable_win64.exe",
+    "fixtures": "Fresh120Hz world per independent case, ordinary paid SimCommand casts, no measured-period refill. Direct placement/equip happens before warm measurement. Cold travel uses actual authored menu travel. Focus loss is observed, while deterministic commands continue.",
+    "frame_limit": 60,
+    "manifest": {
+      "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate.",
+      "build_id": "p60-6980b3dcafec",
+      "canonical_encoding": "utf8-lf-tagged-length-v1",
+      "engine_identity": "4.7.1.stable.official.a13da4feb",
+      "protocol_version": 60.0,
+      "record_count": 3388.0,
+      "runtime_source_sha256": "6980b3dcafecb85697889a3c7db9b6dda3f184f4f929c756759447f13efea3ec",
+      "schema_version": 1.0,
+      "scope_id": "production-runtime-source-v1",
+      "snapshot_schema": 24.0,
+      "status": "candidate_generated_not_promoted"
+    },
+    "manifest_note": "Generated runtime identity is recorded here; exact source-to-manifest binding is checked by the separate packaging gate.",
+    "observed_source_after": {
+      "count": 297,
+      "observed_utc": "2026-10-10T03:11:13",
+      "ok": true,
+      "sha256": "1d66213ab2cd023b97518912de9a338a106100b28caf8e04de8de8e787f5bd03",
+      "unreadable_paths": []
+    },
+    "observed_source_before": {
+      "count": 297,
+      "observed_utc": "2026-10-10T03:10:41",
+      "ok": true,
+      "sha256": "1d66213ab2cd023b97518912de9a338a106100b28caf8e04de8de8e787f5bd03",
+      "unreadable_paths": []
+    },
+    "observed_source_scope": "Independent raw-byte filesystem hashes of project.godot, this benchmark, src/*.gd, scenes/*.tscn and *.tres, content/*.json except the generated identity, and assets/shaders/*.gdshader (recursive). Sorted path<TAB>SHA256<LF> records are SHA256 hashed. Start/end snapshots detect source drift; they do not hash imported textures, certify a pack, or prove code was not edited and restored between snapshots. Source reading occurs outside measured intervals and may warm OS file cache.",
+    "observed_source_unchanged": true,
+    "observer_mode": "full",
+    "observer_overhead_scope": "Benchmark _process head and tail, excluding elapsed Bootstrap._process: interval recording, synthetic focus bookkeeping, focus/counters, final-step copies, paid-cell membership and memory monitors when enabled. Excludes draw/render-setup observation and the overhead of timers embedded inside Bootstrap/SimWorld. Includes scheduling waits, not pure CPU cost.",
+    "observer_policy": "Light mode retains frame/process/draw intervals, tick/endpoints and inexpensive counters; disables per-frame occupied-membership queries, memory monitors, stage dictionaries and nested component timers. Unavailable metrics are null, never inferred maxima. Both modes remain instrumented, not physical-presentation measurements.",
+    "process_timer_scope": "Elapsed Bootstrap._process call only; excludes benchmark head/tail observation. Earlier receipts included head bookkeeping. Embedded simulation and nested component timer overhead remains inside this value in full mode.",
+    "profile_script_sha256": "d1675c3f4e6aa2f347ba30113c7fed00d7b54eefcaabdc4486bd47b76df424c6",
+    "profiles": [
+      "low",
+      "standard"
+    ],
+    "protocol": 60,
+    "renderer": "gl_compatibility",
+    "results": [
+      {
+        "cast_attempts": 0,
+        "champion_wire": 1,
+        "clamped_delta_seconds": 0.0,
+        "distance_pixels": 0.0,
+        "draw_submission_elapsed_ms": {
+          "count": 15,
+          "max": 54.451,
+          "mean": 5.17446666666667,
+          "p50": 0.062,
+          "p95": 54.451,
+          "p99": 54.451,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 1,
+            "over_33_3ms": 1,
+            "over_50ms": 1
+          }
+        },
+        "dropped_accumulator_seconds": 0.0,
+        "engine_render_setup_cpu_ms": {
+          "count": 14,
+          "max": 2.313,
+          "mean": 0.175857142857143,
+          "p50": 0.009,
+          "p95": 2.313,
+          "p99": 2.313,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "fixture": {
+          "initial_startup": true
+        },
+        "flux_after": 114400,
+        "flux_before": 114400,
+        "frame_interval_ms": {
+          "count": 13,
+          "max": 126.618,
+          "mean": 28.8555384615385,
+          "p50": 16.644,
+          "p95": 126.618,
+          "p99": 126.618,
+          "threshold_counts": {
+            "over_100ms": 1,
+            "over_20ms": 3,
+            "over_33_3ms": 2,
+            "over_50ms": 2
+          }
+        },
+        "garden_draw_elapsed_ms": {
+          "count": 4,
+          "max": 0.016,
+          "mean": 0.01325,
+          "p50": 0.012,
+          "p95": 0.016,
+          "p99": 0.016,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "garden_stage_stats_ms": {},
+        "garden_step_elapsed_ms": {
+          "count": 13,
+          "max": 0.063,
+          "mean": 0.0342307692307692,
+          "p50": 0.027,
+          "p95": 0.063,
+          "p99": 0.063,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "label": "startup_arrival",
+        "last_fixed_step_stage_stats_ms": {
+          "actor_product_effects": {
+            "count": 3,
+            "max": 0.009,
+            "mean": 0.007,
+            "p50": 0.006,
+            "p95": 0.009,
+            "p99": 0.009,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "chemistry_exposure": {
+            "count": 3,
+            "max": 0.008,
+            "mean": 0.00633333333333333,
+            "p50": 0.006,
+            "p95": 0.008,
+            "p99": 0.008,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "command_order": {
+            "count": 3,
+            "max": 0.01,
+            "mean": 0.00866666666666667,
+            "p50": 0.009,
+            "p95": 0.01,
+            "p99": 0.01,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "finalize": {
+            "count": 3,
+            "max": 0.009,
+            "mean": 0.00766666666666667,
+            "p50": 0.007,
+            "p95": 0.009,
+            "p99": 0.009,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "movement_cast_admission": {
+            "count": 3,
+            "max": 0.527,
+            "mean": 0.474,
+            "p50": 0.458,
+            "p95": 0.527,
+            "p99": 0.527,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "projectile_contacts": {
+            "count": 3,
+            "max": 0.033,
+            "mean": 0.0253333333333333,
+            "p50": 0.022,
+            "p95": 0.033,
+            "p99": 0.033,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "spray_contacts": {
+            "count": 3,
+            "max": 0.029,
+            "mean": 0.0236666666666667,
+            "p50": 0.022,
+            "p95": 0.029,
+            "p99": 0.029,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "surfaces_expiry": {
+            "count": 3,
+            "max": 0.024,
+            "mean": 0.019,
+            "p50": 0.017,
+            "p95": 0.024,
+            "p99": 0.024,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "terminal_deposits": {
+            "count": 3,
+            "max": 0.003,
+            "mean": 0.00166666666666667,
+            "p50": 0.001,
+            "p95": 0.003,
+            "p99": 0.003,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          }
+        },
+        "main_campus_draw_elapsed_ms": {
+          "count": 4,
+          "max": 44.754,
+          "mean": 12.8015,
+          "p50": 1.775,
+          "p95": 44.754,
+          "p99": 44.754,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 1,
+            "over_33_3ms": 1,
+            "over_50ms": 0
+          }
+        },
+        "main_court_components_total_us": {
+          "bundle": 0,
+          "draw_count": 4,
+          "geometry": 429,
+          "surface": 0
+        },
+        "main_court_draw_elapsed_ms": {
+          "count": 4,
+          "max": 0.35,
+          "mean": 0.11875,
+          "p50": 0.04,
+          "p95": 0.35,
+          "p99": 0.35,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "main_draw_stage_stats_ms": {
+          "actors": {
+            "count": 15,
+            "max": 0.613,
+            "mean": 0.1532,
+            "p50": 0.0,
+            "p95": 0.613,
+            "p99": 0.613,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "campus_and_setup": {
+            "count": 15,
+            "max": 45.298,
+            "mean": 3.5648,
+            "p50": 0.0,
+            "p95": 45.298,
+            "p99": 45.298,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 1,
+              "over_33_3ms": 1,
+              "over_50ms": 0
+            }
+          },
+          "combat_hud": {
+            "count": 15,
+            "max": 3.943,
+            "mean": 0.571266666666667,
+            "p50": 0.0,
+            "p95": 3.943,
+            "p99": 3.943,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "garden": {
+            "count": 15,
+            "max": 0.125,
+            "mean": 0.0260666666666667,
+            "p50": 0.0,
+            "p95": 0.125,
+            "p99": 0.125,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "garden_inspection": {
+            "count": 15,
+            "max": 0.037,
+            "mean": 0.0086,
+            "p50": 0.0,
+            "p95": 0.037,
+            "p99": 0.037,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "local_labels_reticle": {
+            "count": 15,
+            "max": 0.265,
+            "mean": 0.0370666666666667,
+            "p50": 0.0,
+            "p95": 0.265,
+            "p99": 0.265,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "paid_ground": {
+            "count": 15,
+            "max": 0.366,
+            "mean": 0.0353333333333333,
+            "p50": 0.0,
+            "p95": 0.366,
+            "p99": 0.366,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "panels": {
+            "count": 15,
+            "max": 0.586,
+            "mean": 0.0473333333333333,
+            "p50": 0.0,
+            "p95": 0.586,
+            "p99": 0.586,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "practice_coach": {
+            "count": 15,
+            "max": 0.137,
+            "mean": 0.0256,
+            "p50": 0.0,
+            "p95": 0.137,
+            "p99": 0.137,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "projectiles_targets_cues": {
+            "count": 15,
+            "max": 1.118,
+            "mean": 0.145733333333333,
+            "p50": 0.0,
+            "p95": 1.118,
+            "p99": 1.118,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "visibility": {
+            "count": 15,
+            "max": 2.735,
+            "mean": 0.4646,
+            "p50": 0.0,
+            "p95": 2.735,
+            "p99": 2.735,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          }
+        },
+        "matter_paid_delta": 0,
+        "max_paid_cells": 0,
+        "max_projectiles": 0,
+        "max_resident_plots": 0,
+        "memory_endpoint_bytes": {
+          "after": {
+            "static": 242115309,
+            "textures": 96121019,
+            "video": 104766027
+          },
+          "before": {
+            "static": 236999285,
+            "textures": 52753995,
+            "video": 59167019
+          }
+        },
+        "memory_max_bytes": {
+          "static": 242068334,
+          "textures": 96121019,
+          "video": 104765067
+        },
+        "observer_mode": "full",
+        "observer_overhead_elapsed_ms": {
+          "count": 14,
+          "max": 0.062,
+          "mean": 0.0429285714285714,
+          "p50": 0.042,
+          "p95": 0.062,
+          "p99": 0.062,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "paid_cells_endpoints": {
+          "after": 0,
+          "before": 0
+        },
+        "position_after": [
+          1536.0,
+          880.0
+        ],
+        "position_before": [
+          1536.0,
+          880.0
+        ],
+        "pov_elapsed_ms": {
+          "count": 4,
+          "max": 2.505,
+          "mean": 1.567,
+          "p50": 1.246,
+          "p95": 2.505,
+          "p99": 2.505,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "process_elapsed_ms": {
+          "count": 14,
+          "max": 18.196,
+          "mean": 7.94078571428571,
+          "p50": 10.181,
+          "p95": 18.196,
+          "p99": 18.196,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "quality": "low",
+        "ready": true,
+        "render_last": {
+          "draw_calls": 203.0,
+          "primitives": 4602.0
+        },
+        "temperature": "cold_process_cache",
+        "terrain_after": {
+          "bytes": 17825792,
+          "closed": false,
+          "error": "",
+          "pending": 2,
+          "queued": 5,
+          "ready": 12,
+          "requests": 19,
+          "required": 12,
+          "resident": 17,
+          "suspended": false,
+          "uploads": 17
+        },
+        "terrain_before": {
+          "bytes": 0,
+          "closed": false,
+          "error": "",
+          "pending": 0,
+          "queued": 0,
+          "ready": 0,
+          "requests": 0,
+          "required": 0,
+          "resident": 0,
+          "suspended": false,
+          "uploads": 0
+        },
+        "terrain_loading_frames": 11,
+        "terrain_tile_crossings": 0,
+        "ticks_advanced": 13,
+        "ticks_per_wall_second": 26.9995223161436,
+        "unavailable_metrics": [],
+        "unfocused_frames": 0,
+        "wall_seconds": 0.48149,
+        "window_focus_end": true,
+        "window_size": [
+          1280,
+          720
+        ],
+        "world_map": "wellspring-campus-loop-v2",
+        "world_stage_sample_scope": "One final completed fixed step per rendered process frame; not every step or a sum across catch-up steps. Includes the stage timing overhead and may undersample rare earlier steps."
+      },
+      {
+        "cast_attempts": 11,
+        "champion_wire": 1,
+        "clamped_delta_seconds": 0.0,
+        "distance_pixels": 0.0,
+        "draw_submission_elapsed_ms": {
+          "count": 321,
+          "max": 17.857,
+          "mean": 13.3039408099688,
+          "p50": 13.579,
+          "p95": 16.603,
+          "p99": 16.908,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "dropped_accumulator_seconds": 0.0,
+        "engine_render_setup_cpu_ms": {
+          "count": 321,
+          "max": 0.054,
+          "mean": 0.00982866043613702,
+          "p50": 0.009,
+          "p95": 0.012,
+          "p99": 0.028,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "fixture": {
+          "cast_interval_ticks": 120,
+          "fixture_prepare_ms": 0.115,
+          "fresh_world": true,
+          "source_case": "paid_all_six_mantle",
+          "spell_wire": 1319
+        },
+        "flux_after": 86400,
+        "flux_before": 114400,
+        "frame_interval_ms": {
+          "count": 320,
+          "max": 42.135,
+          "mean": 31.2532375,
+          "p50": 32.206,
+          "p95": 38.34,
+          "p99": 40.38,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 314,
+            "over_33_3ms": 116,
+            "over_50ms": 0
+          }
+        },
+        "garden_draw_elapsed_ms": {
+          "count": 321,
+          "max": 0.074,
+          "mean": 0.0142523364485981,
+          "p50": 0.013,
+          "p95": 0.019,
+          "p99": 0.03,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "garden_stage_stats_ms": {},
+        "garden_step_elapsed_ms": {
+          "count": 1202,
+          "max": 0.257,
+          "mean": 0.0407454242928453,
+          "p50": 0.036,
+          "p95": 0.075,
+          "p99": 0.109,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "label": "paid_all_six_mantle",
+        "last_fixed_step_stage_stats_ms": {
+          "actor_product_effects": {
+            "count": 321,
+            "max": 0.432,
+            "mean": 0.175214953271028,
+            "p50": 0.187,
+            "p95": 0.321,
+            "p99": 0.377,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "chemistry_exposure": {
+            "count": 321,
+            "max": 0.211,
+            "mean": 0.088361370716511,
+            "p50": 0.1,
+            "p95": 0.142,
+            "p99": 0.162,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "command_order": {
+            "count": 321,
+            "max": 0.05,
+            "mean": 0.00950467289719624,
+            "p50": 0.009,
+            "p95": 0.014,
+            "p99": 0.023,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "finalize": {
+            "count": 321,
+            "max": 0.022,
+            "mean": 0.00849532710280373,
+            "p50": 0.008,
+            "p95": 0.013,
+            "p99": 0.019,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "movement_cast_admission": {
+            "count": 321,
+            "max": 1.158,
+            "mean": 0.549348909657321,
+            "p50": 0.532,
+            "p95": 0.709,
+            "p99": 0.816,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "projectile_contacts": {
+            "count": 321,
+            "max": 2.467,
+            "mean": 0.13398753894081,
+            "p50": 0.131,
+            "p95": 0.22,
+            "p99": 0.369,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "spray_contacts": {
+            "count": 321,
+            "max": 0.204,
+            "mean": 0.0569595015576324,
+            "p50": 0.056,
+            "p95": 0.109,
+            "p99": 0.156,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "surfaces_expiry": {
+            "count": 321,
+            "max": 0.096,
+            "mean": 0.0250685358255451,
+            "p50": 0.022,
+            "p95": 0.044,
+            "p99": 0.064,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "terminal_deposits": {
+            "count": 321,
+            "max": 0.012,
+            "mean": 0.00225233644859813,
+            "p50": 0.002,
+            "p95": 0.004,
+            "p99": 0.008,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          }
+        },
+        "main_campus_draw_elapsed_ms": {
+          "count": 321,
+          "max": 3.621,
+          "mean": 2.03368224299065,
+          "p50": 2.014,
+          "p95": 2.427,
+          "p99": 2.998,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "main_court_components_total_us": {
+          "bundle": 536228,
+          "draw_count": 321,
+          "geometry": 29738,
+          "surface": 278191
+        },
+        "main_court_draw_elapsed_ms": {
+          "count": 321,
+          "max": 10.552,
+          "mean": 5.89123987538941,
+          "p50": 5.807,
+          "p95": 9.147,
+          "p99": 9.845,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "main_draw_stage_stats_ms": {
+          "actors": {
+            "count": 321,
+            "max": 1.56,
+            "mean": 0.672797507788162,
+            "p50": 0.606,
+            "p95": 1.091,
+            "p99": 1.412,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "campus_and_setup": {
+            "count": 321,
+            "max": 3.743,
+            "mean": 2.09080373831776,
+            "p50": 2.064,
+            "p95": 2.481,
+            "p99": 3.073,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "combat_hud": {
+            "count": 321,
+            "max": 3.176,
+            "mean": 1.44400934579439,
+            "p50": 1.355,
+            "p95": 1.973,
+            "p99": 2.939,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "garden": {
+            "count": 321,
+            "max": 0.172,
+            "mean": 0.0970093457943925,
+            "p50": 0.095,
+            "p95": 0.122,
+            "p99": 0.166,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "garden_inspection": {
+            "count": 321,
+            "max": 0.131,
+            "mean": 0.0371806853582555,
+            "p50": 0.035,
+            "p95": 0.048,
+            "p99": 0.071,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "local_labels_reticle": {
+            "count": 321,
+            "max": 0.955,
+            "mean": 0.307264797507788,
+            "p50": 0.285,
+            "p95": 0.445,
+            "p99": 0.64,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "paid_ground": {
+            "count": 321,
+            "max": 10.571,
+            "mean": 5.9108722741433,
+            "p50": 5.829,
+            "p95": 9.168,
+            "p99": 9.866,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "panels": {
+            "count": 321,
+            "max": 0.11,
+            "mean": 0.0458193146417445,
+            "p50": 0.044,
+            "p95": 0.061,
+            "p99": 0.088,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "practice_coach": {
+            "count": 321,
+            "max": 0.3,
+            "mean": 0.128538940809969,
+            "p50": 0.127,
+            "p95": 0.168,
+            "p99": 0.268,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "projectiles_targets_cues": {
+            "count": 321,
+            "max": 2.487,
+            "mean": 1.00339563862928,
+            "p50": 1.09,
+            "p95": 1.538,
+            "p99": 2.242,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "visibility": {
+            "count": 321,
+            "max": 2.52,
+            "mean": 1.54950778816199,
+            "p50": 1.492,
+            "p95": 1.903,
+            "p99": 2.235,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          }
+        },
+        "matter_paid_delta": 3600,
+        "max_paid_cells": 33,
+        "max_projectiles": 1,
+        "max_resident_plots": 0,
+        "memory_endpoint_bytes": {
+          "after": {
+            "static": 242174187,
+            "textures": 111501327,
+            "video": 120181719
+          },
+          "before": {
+            "static": 240043131,
+            "textures": 111500119,
+            "video": 120142055
+          }
+        },
+        "memory_max_bytes": {
+          "static": 242118771,
+          "textures": 111501327,
+          "video": 120183471
+        },
+        "observer_mode": "full",
+        "observer_overhead_elapsed_ms": {
+          "count": 321,
+          "max": 0.11,
+          "mean": 0.0406978193146417,
+          "p50": 0.039,
+          "p95": 0.053,
+          "p99": 0.083,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "paid_cells_endpoints": {
+          "after": 28,
+          "before": 0
+        },
+        "position_after": [
+          1536.0,
+          880.0
+        ],
+        "position_before": [
+          1536.0,
+          880.0
+        ],
+        "pov_elapsed_ms": {
+          "count": 321,
+          "max": 2.09,
+          "mean": 1.3175046728972,
+          "p50": 1.278,
+          "p95": 1.534,
+          "p99": 1.855,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "process_elapsed_ms": {
+          "count": 321,
+          "max": 9.701,
+          "mean": 5.81538317757009,
+          "p50": 5.993,
+          "p95": 8.226,
+          "p99": 9.255,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "quality": "low",
+        "ready": true,
+        "render_last": {
+          "draw_calls": 388.0,
+          "primitives": 5580.0
+        },
+        "screenshot": "C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-mantle-profile-v2\\metrics-low-paid_all_six_mantle.png",
+        "temperature": "warm",
+        "terrain_after": {
+          "bytes": 29360128,
+          "closed": false,
+          "error": "",
+          "pending": 0,
+          "queued": 0,
+          "ready": 15,
+          "requests": 28,
+          "required": 15,
+          "resident": 28,
+          "suspended": false,
+          "uploads": 28
+        },
+        "terrain_before": {
+          "bytes": 29360128,
+          "closed": false,
+          "error": "",
+          "pending": 0,
+          "queued": 0,
+          "ready": 15,
+          "requests": 28,
+          "required": 15,
+          "resident": 28,
+          "suspended": false,
+          "uploads": 28
+        },
+        "terrain_loading_frames": 0,
+        "terrain_tile_crossings": 0,
+        "ticks_advanced": 1202,
+        "ticks_per_wall_second": 119.740746341482,
+        "unavailable_metrics": [],
+        "unfocused_frames": 0,
+        "wall_seconds": 10.038354,
+        "window_focus_end": true,
+        "window_size": [
+          1280,
+          720
+        ],
+        "world_map": "wellspring-campus-loop-v2",
+        "world_stage_sample_scope": "One final completed fixed step per rendered process frame; not every step or a sum across catch-up steps. Includes the stage timing overhead and may undersample rare earlier steps."
+      },
+      {
+        "cast_attempts": 10,
+        "champion_wire": 1,
+        "clamped_delta_seconds": 0.0,
+        "distance_pixels": 0.0,
+        "draw_submission_elapsed_ms": {
+          "count": 242,
+          "max": 52.82,
+          "mean": 16.4236074380165,
+          "p50": 15.957,
+          "p95": 22.357,
+          "p99": 36.287,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 35,
+            "over_33_3ms": 3,
+            "over_50ms": 1
+          }
+        },
+        "dropped_accumulator_seconds": 0.0,
+        "engine_render_setup_cpu_ms": {
+          "count": 242,
+          "max": 0.02,
+          "mean": 0.00965702479338841,
+          "p50": 0.009,
+          "p95": 0.012,
+          "p99": 0.017,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "fixture": {
+          "cast_interval_ticks": 120,
+          "fixture_prepare_ms": 0.098,
+          "fresh_world": true,
+          "source_case": "paid_all_six_mantle",
+          "spell_wire": 1319
+        },
+        "flux_after": 114400,
+        "flux_before": 114400,
+        "frame_interval_ms": {
+          "count": 241,
+          "max": 135.796,
+          "mean": 41.6510124481328,
+          "p50": 39.451,
+          "p95": 63.063,
+          "p99": 98.194,
+          "threshold_counts": {
+            "over_100ms": 2,
+            "over_20ms": 234,
+            "over_33_3ms": 196,
+            "over_50ms": 43
+          }
+        },
+        "garden_draw_elapsed_ms": {
+          "count": 242,
+          "max": 0.037,
+          "mean": 0.014900826446281,
+          "p50": 0.014,
+          "p95": 0.025,
+          "p99": 0.029,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "garden_stage_stats_ms": {},
+        "garden_step_elapsed_ms": {
+          "count": 1182,
+          "max": 0.293,
+          "mean": 0.0489052453468698,
+          "p50": 0.05,
+          "p95": 0.09,
+          "p99": 0.139,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "label": "paid_all_six_mantle",
+        "last_fixed_step_stage_stats_ms": {
+          "actor_product_effects": {
+            "count": 242,
+            "max": 1.147,
+            "mean": 0.195309917355372,
+            "p50": 0.187,
+            "p95": 0.361,
+            "p99": 0.703,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "chemistry_exposure": {
+            "count": 242,
+            "max": 0.246,
+            "mean": 0.0969421487603306,
+            "p50": 0.102,
+            "p95": 0.166,
+            "p99": 0.204,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "command_order": {
+            "count": 242,
+            "max": 0.064,
+            "mean": 0.0110909090909091,
+            "p50": 0.009,
+            "p95": 0.024,
+            "p99": 0.034,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "finalize": {
+            "count": 242,
+            "max": 0.066,
+            "mean": 0.0102190082644628,
+            "p50": 0.008,
+            "p95": 0.019,
+            "p99": 0.023,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "movement_cast_admission": {
+            "count": 242,
+            "max": 2.466,
+            "mean": 0.624628099173554,
+            "p50": 0.539,
+            "p95": 1.104,
+            "p99": 1.688,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "projectile_contacts": {
+            "count": 242,
+            "max": 1.631,
+            "mean": 0.137578512396694,
+            "p50": 0.133,
+            "p95": 0.28,
+            "p99": 0.415,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "spray_contacts": {
+            "count": 242,
+            "max": 0.206,
+            "mean": 0.0662561983471074,
+            "p50": 0.057,
+            "p95": 0.146,
+            "p99": 0.182,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "surfaces_expiry": {
+            "count": 242,
+            "max": 0.108,
+            "mean": 0.0304380165289256,
+            "p50": 0.023,
+            "p95": 0.073,
+            "p99": 0.098,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "terminal_deposits": {
+            "count": 242,
+            "max": 0.009,
+            "mean": 0.00253305785123967,
+            "p50": 0.002,
+            "p95": 0.005,
+            "p99": 0.008,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          }
+        },
+        "main_campus_draw_elapsed_ms": {
+          "count": 242,
+          "max": 4.448,
+          "mean": 2.22640909090909,
+          "p50": 2.077,
+          "p95": 3.659,
+          "p99": 4.089,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "main_court_components_total_us": {
+          "bundle": 409714,
+          "draw_count": 242,
+          "geometry": 23518,
+          "surface": 701926
+        },
+        "main_court_draw_elapsed_ms": {
+          "count": 242,
+          "max": 35.264,
+          "mean": 8.29419834710743,
+          "p50": 8.133,
+          "p95": 13.461,
+          "p99": 22.195,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 3,
+            "over_33_3ms": 1,
+            "over_50ms": 0
+          }
+        },
+        "main_draw_stage_stats_ms": {
+          "actors": {
+            "count": 242,
+            "max": 3.714,
+            "mean": 0.743185950413223,
+            "p50": 0.63,
+            "p95": 1.331,
+            "p99": 1.636,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "campus_and_setup": {
+            "count": 242,
+            "max": 4.52,
+            "mean": 2.2975867768595,
+            "p50": 2.142,
+            "p95": 3.763,
+            "p99": 4.21,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "combat_hud": {
+            "count": 242,
+            "max": 5.15,
+            "mean": 1.65726033057851,
+            "p50": 1.415,
+            "p95": 3.08,
+            "p99": 4.385,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "garden": {
+            "count": 242,
+            "max": 0.349,
+            "mean": 0.102537190082645,
+            "p50": 0.096,
+            "p95": 0.148,
+            "p99": 0.196,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "garden_inspection": {
+            "count": 242,
+            "max": 0.106,
+            "mean": 0.0398429752066116,
+            "p50": 0.037,
+            "p95": 0.058,
+            "p99": 0.102,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "local_labels_reticle": {
+            "count": 242,
+            "max": 1.037,
+            "mean": 0.350177685950414,
+            "p50": 0.299,
+            "p95": 0.69,
+            "p99": 0.896,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "paid_ground": {
+            "count": 242,
+            "max": 35.316,
+            "mean": 8.31522314049587,
+            "p50": 8.151,
+            "p95": 13.481,
+            "p99": 22.228,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 3,
+              "over_33_3ms": 1,
+              "over_50ms": 0
+            }
+          },
+          "panels": {
+            "count": 242,
+            "max": 0.415,
+            "mean": 0.0495826446280991,
+            "p50": 0.045,
+            "p95": 0.069,
+            "p99": 0.101,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "practice_coach": {
+            "count": 242,
+            "max": 0.264,
+            "mean": 0.138661157024793,
+            "p50": 0.133,
+            "p95": 0.206,
+            "p99": 0.252,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "projectiles_targets_cues": {
+            "count": 242,
+            "max": 3.466,
+            "mean": 1.07686363636364,
+            "p50": 1.128,
+            "p95": 1.775,
+            "p99": 2.93,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "visibility": {
+            "count": 242,
+            "max": 3.558,
+            "mean": 1.63161570247934,
+            "p50": 1.517,
+            "p95": 2.388,
+            "p99": 3.009,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          }
+        },
+        "matter_paid_delta": 3000,
+        "max_paid_cells": 33,
+        "max_projectiles": 1,
+        "max_resident_plots": 0,
+        "memory_endpoint_bytes": {
+          "after": {
+            "static": 243236269,
+            "textures": 111501327,
+            "video": 120180231
+          },
+          "before": {
+            "static": 242061467,
+            "textures": 111501327,
+            "video": 120169479
+          }
+        },
+        "memory_max_bytes": {
+          "static": 243182817,
+          "textures": 111501327,
+          "video": 120192687
+        },
+        "observer_mode": "full",
+        "observer_overhead_elapsed_ms": {
+          "count": 242,
+          "max": 0.217,
+          "mean": 0.0447727272727273,
+          "p50": 0.04,
+          "p95": 0.075,
+          "p99": 0.105,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "paid_cells_endpoints": {
+          "after": 28,
+          "before": 0
+        },
+        "position_after": [
+          1536.0,
+          880.0
+        ],
+        "position_before": [
+          1536.0,
+          880.0
+        ],
+        "pov_elapsed_ms": {
+          "count": 242,
+          "max": 2.823,
+          "mean": 1.37796280991736,
+          "p50": 1.296,
+          "p95": 1.975,
+          "p99": 2.445,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "process_elapsed_ms": {
+          "count": 242,
+          "max": 37.389,
+          "mean": 8.1003347107438,
+          "p50": 7.298,
+          "p95": 13.572,
+          "p99": 24.268,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 3,
+            "over_33_3ms": 1,
+            "over_50ms": 0
+          }
+        },
+        "quality": "standard",
+        "ready": true,
+        "render_last": {
+          "draw_calls": 422.0,
+          "primitives": 5482.0
+        },
+        "screenshot": "C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-mantle-profile-v2\\metrics-standard-paid_all_six_mantle.png",
+        "temperature": "warm",
+        "terrain_after": {
+          "bytes": 29360128,
+          "closed": false,
+          "error": "",
+          "pending": 0,
+          "queued": 0,
+          "ready": 15,
+          "requests": 32,
+          "required": 15,
+          "resident": 28,
+          "suspended": false,
+          "uploads": 32
+        },
+        "terrain_before": {
+          "bytes": 29360128,
+          "closed": false,
+          "error": "",
+          "pending": 0,
+          "queued": 0,
+          "ready": 15,
+          "requests": 32,
+          "required": 15,
+          "resident": 28,
+          "suspended": false,
+          "uploads": 32
+        },
+        "terrain_loading_frames": 0,
+        "terrain_tile_crossings": 0,
+        "ticks_advanced": 1182,
+        "ticks_per_wall_second": 117.300155318505,
+        "unavailable_metrics": [],
+        "unfocused_frames": 0,
+        "wall_seconds": 10.076713,
+        "window_focus_end": true,
+        "window_size": [
+          1280,
+          720
+        ],
+        "world_map": "wellspring-campus-loop-v2",
+        "world_stage_sample_scope": "One final completed fixed step per rendered process frame; not every step or a sum across catch-up steps. Includes the stage timing overhead and may undersample rare earlier steps."
+      }
+    ],
+    "schema": "hex-gameplay-profile-v1",
+    "scope": "Instrumented native source runtime. Main-thread elapsed timers can include scheduling/driver waits. Frame-start intervals are not GPU time, physical presentation or input-to-photon latency. Nested timers are not additive. No 60FPS acceptance is inferred.",
+    "screen_id": 0,
+    "screen_refresh_hz": 60.0,
+    "screen_size": [
+      1920,
+      1080
+    ],
+    "soak_seconds": 0.0,
+    "started_utc": "2026-10-10T03:10:46",
+    "startup_synchronous_ms": 5516.701,
+    "statistics": "Nearest-rank quantiles of raw process-start intervals; short samples do not establish stable tails. Sequential profile order is recorded; repeat in reverse order for comparisons.",
+    "tick_rate": 120,
+    "user_data": "C:/Users/sende/Projects/hex/.godot/smooth-mantle-profile-v2/isolated-roaming/Godot/app_userdata/FLUX 2",
+    "window_size": [
+      1280,
+      720
+    ],
+    "window_vsync_mode": 1
+  }
+}

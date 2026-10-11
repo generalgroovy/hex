@@ -1,0 +1,45 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+OpenGL API OpenGL ES 3.0 (ANGLE 2.1.1 git hash: aaebda1c5a40) - Compatibility - Using Device: Google Inc. (AMD) - ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001506) Direct3D11 vs_5_0 ps_5_0, D3D11-32.0.21045.5002)
+
+FAIL: hex-viewport-candidate; 1319 assertions; 6 failures; output=res://.godot/hex-viewport-candidate-v1.json
+ERROR: unified Wellspring profile: synthetic-material-extremes-normal-50 visible target material changes pixels against disabled control
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/performance/profile_unified_wellspring.gd:694)
+       [1] _direct_pixel_control (res://tests/performance/profile_hex_viewport_candidate.gd:409)
+       [2] _present_direct (res://tests/performance/profile_hex_viewport_candidate.gd:430)
+ERROR: unified Wellspring profile: synthetic-material-extremes-reduced-50 visible target material changes pixels against disabled control
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/performance/profile_unified_wellspring.gd:694)
+       [1] _direct_pixel_control (res://tests/performance/profile_hex_viewport_candidate.gd:409)
+       [2] _present_direct (res://tests/performance/profile_hex_viewport_candidate.gd:430)
+ERROR: unified Wellspring profile: synthetic boundary fixture has an occupied cell
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/performance/profile_unified_wellspring.gd:694)
+       [1] _boundary_pixel_matrix (res://tests/performance/profile_hex_viewport_candidate.gd:331)
+       [2] _run (res://tests/performance/profile_hex_viewport_candidate.gd:124)
+       [3] _synthetic_material_pixel_matrix (res://tests/performance/profile_hex_viewport_candidate.gd:324)
+       [4] _direct_pixel_control (res://tests/performance/profile_hex_viewport_candidate.gd:422)
+ERROR: unified Wellspring profile: all 55 full-frame RGBA8 oracle cases complete
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/performance/profile_unified_wellspring.gd:694)
+       [1] _run (res://tests/performance/profile_hex_viewport_candidate.gd:125)
+       [2] _synthetic_material_pixel_matrix (res://tests/performance/profile_hex_viewport_candidate.gd:324)
+       [3] _direct_pixel_control (res://tests/performance/profile_hex_viewport_candidate.gd:422)
+ERROR: unified Wellspring profile: synthetic-material-extremes-normal-50 has exact pixels, result, authority, regions and counts
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/performance/profile_unified_wellspring.gd:694)
+       [1] _run (res://tests/performance/profile_hex_viewport_candidate.gd:127)
+       [2] _synthetic_material_pixel_matrix (res://tests/performance/profile_hex_viewport_candidate.gd:324)
+       [3] _direct_pixel_control (res://tests/performance/profile_hex_viewport_candidate.gd:422)
+ERROR: unified Wellspring profile: synthetic-material-extremes-reduced-50 has exact pixels, result, authority, regions and counts
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _check (res://tests/performance/profile_unified_wellspring.gd:694)
+       [1] _run (res://tests/performance/profile_hex_viewport_candidate.gd:127)
+       [2] _synthetic_material_pixel_matrix (res://tests/performance/profile_hex_viewport_candidate.gd:324)
+       [3] _direct_pixel_control (res://tests/performance/profile_hex_viewport_candidate.gd:422)

@@ -1,5 +1,11 @@
 extends FluxTestSuite
 
+# Compatibility primitive coverage for the retained no-Hex rectangular surface
+# adapter. Current paid Rampart301 uses selected whole-hex cover; its six-face
+# collision, actual paid formation and prediction are tested by hex-collision,
+# hex-projectile-combat and unified-prediction. These rectangle dimensions are
+# not evidence of the current live recipe's geometry.
+
 const CENTER := Vector2i(600_000, 500_000)
 
 func run() -> int:

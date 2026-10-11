@@ -1,0 +1,3969 @@
+{
+	"assertions": 1273,
+	"definition_hash": "3d1c27b4db05e5ae37ad65abe7332faa85980c8bbb71376b786d9af2b050493d",
+	"diagnostic_status": "PASS",
+	"engine": "4.7.1-stable (official)",
+	"failures": 0,
+	"map_hash": "8009c2b17a43244067fb15e3249fb5ce879d01b55d85aad73e3160205c4ecaf5",
+	"memory_semantics": "Process-global OS static/peak observations outside timers include both arms and observer overhead; unavailable readings are null. No allocation count or per-arm peak claim.",
+	"paid_steps": 41,
+	"percentile_limit": "Six warm samples per arm/state; p95/p99 are the sample-limited maximum, not capacity/tail estimates. Cold samples are individual observations.",
+	"performance_acceptance": "NOT_ESTABLISHED. This bridge retains full-cell geometry copies and canonical hashing. It does not prove 60Hz envelopes, 120Hz simulation, rendered/networked hosting, or 16/32/64-player capacity.",
+	"profile_version": "producer-topology-reuse-v1",
+	"receipt_complete": true,
+	"records": [
+		{
+			"case": "sustained-distributed",
+			"completed": true,
+			"paid_metrics": {
+				"admitted": 7,
+				"deposited": 1,
+				"exposure_queries": 0,
+				"matter_consumed": 0,
+				"matter_expired": 600,
+				"matter_paid": 4200,
+				"modifiers": 0,
+				"reactions": 0,
+				"refused": 0,
+				"requested": 7
+			},
+			"reverse_command_order": false,
+			"stages": [
+				{
+					"actors": 8,
+					"candidate": {
+						"samples_us": [
+							363450,
+							370685,
+							420419,
+							430523,
+							352690,
+							378713
+						],
+						"statistics_us": {
+							"max": 430523,
+							"p50": 370685,
+							"p95": 430523,
+							"p99": 430523,
+							"samples": 6
+						}
+					},
+					"casts": 0,
+					"cold_capture_us": {
+						"candidate": 499391,
+						"legacy": 550085
+					},
+					"completed": true,
+					"legacy": {
+						"samples_us": [
+							415749,
+							421311,
+							458087,
+							476856,
+							407496,
+							419439
+						],
+						"statistics_us": {
+							"max": 476856,
+							"p50": 419439,
+							"p95": 476856,
+							"p99": 476856,
+							"samples": 6
+						}
+					},
+					"memory_after": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 73851802
+					},
+					"memory_before": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 64271818
+					},
+					"pairs": [
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 0,
+							"samples_us": {
+								"candidate": 363450,
+								"legacy": 415749
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 1,
+							"samples_us": {
+								"candidate": 370685,
+								"legacy": 421311
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 2,
+							"samples_us": {
+								"candidate": 420419,
+								"legacy": 458087
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 3,
+							"samples_us": {
+								"candidate": 430523,
+								"legacy": 476856
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 4,
+							"samples_us": {
+								"candidate": 352690,
+								"legacy": 407496
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 5,
+							"samples_us": {
+								"candidate": 378713,
+								"legacy": 419439
+							}
+						}
+					],
+					"products": 0,
+					"snapshot_bytes": 6412,
+					"source_state_hash": "c8837551570b9e44d19dc6e9c5580183237505f1ddc0e711102ff2a13ac33e3c",
+					"state": "empty",
+					"tick": 120,
+					"topology_cells": 11337
+				},
+				{
+					"actors": 8,
+					"candidate": {
+						"samples_us": [
+							382031,
+							400003,
+							392968,
+							391436,
+							380218,
+							379220
+						],
+						"statistics_us": {
+							"max": 400003,
+							"p50": 382031,
+							"p95": 400003,
+							"p99": 400003,
+							"samples": 6
+						}
+					},
+					"casts": 6,
+					"cold_capture_us": {
+						"candidate": 543878,
+						"legacy": 602009
+					},
+					"completed": true,
+					"legacy": {
+						"samples_us": [
+							438119,
+							433701,
+							457419,
+							425878,
+							430695,
+							429961
+						],
+						"statistics_us": {
+							"max": 457419,
+							"p50": 430695,
+							"p95": 457419,
+							"p99": 457419,
+							"samples": 6
+						}
+					},
+					"memory_after": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 74210335
+					},
+					"memory_before": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 64447791
+					},
+					"pairs": [
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 0,
+							"samples_us": {
+								"candidate": 382031,
+								"legacy": 438119
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 1,
+							"samples_us": {
+								"candidate": 400003,
+								"legacy": 433701
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 2,
+							"samples_us": {
+								"candidate": 392968,
+								"legacy": 457419
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 3,
+							"samples_us": {
+								"candidate": 391436,
+								"legacy": 425878
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 4,
+							"samples_us": {
+								"candidate": 380218,
+								"legacy": 430695
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 5,
+							"samples_us": {
+								"candidate": 379220,
+								"legacy": 429961
+							}
+						}
+					],
+					"products": 0,
+					"snapshot_bytes": 8080,
+					"source_state_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+					"state": "paid-40",
+					"tick": 160,
+					"topology_cells": 11337
+				},
+				{
+					"actors": 8,
+					"candidate": {
+						"samples_us": [
+							379703,
+							402234,
+							474874,
+							461680,
+							391492,
+							389497
+						],
+						"statistics_us": {
+							"max": 474874,
+							"p50": 391492,
+							"p95": 474874,
+							"p99": 474874,
+							"samples": 6
+						}
+					},
+					"casts": 6,
+					"cold_capture_us": {
+						"candidate": 551788,
+						"legacy": 619429
+					},
+					"completed": true,
+					"legacy": {
+						"samples_us": [
+							432045,
+							436142,
+							435271,
+							455569,
+							451892,
+							433610
+						],
+						"statistics_us": {
+							"max": 455569,
+							"p50": 435271,
+							"p95": 455569,
+							"p99": 455569,
+							"samples": 6
+						}
+					},
+					"memory_after": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 74224519
+					},
+					"memory_before": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 64461975
+					},
+					"pairs": [
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 0,
+							"samples_us": {
+								"candidate": 379703,
+								"legacy": 432045
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 1,
+							"samples_us": {
+								"candidate": 402234,
+								"legacy": 436142
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 2,
+							"samples_us": {
+								"candidate": 474874,
+								"legacy": 435271
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 3,
+							"samples_us": {
+								"candidate": 461680,
+								"legacy": 455569
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 4,
+							"samples_us": {
+								"candidate": 391492,
+								"legacy": 451892
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 5,
+							"samples_us": {
+								"candidate": 389497,
+								"legacy": 433610
+							}
+						}
+					],
+					"products": 0,
+					"snapshot_bytes": 8080,
+					"source_state_hash": "18c0d0e333bc2617f270666cbea8c203a0fd5dc6b9dbfa7701664241af479b7f",
+					"state": "paid-41",
+					"tick": 161,
+					"topology_cells": 11337
+				}
+			],
+			"trace": [
+				{
+					"events": [
+						[
+							[
+								"entity_id",
+								1
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								159
+							]
+						],
+						[
+							[
+								"entity_id",
+								3
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								181
+							]
+						],
+						[
+							[
+								"entity_id",
+								5
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								160
+							]
+						],
+						[
+							[
+								"entity_id",
+								7
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								182
+							]
+						]
+					],
+					"state_hash": "8f5636f86e249d1b4bff1dd2017cabbe90ee02874575c0a0abba25dc727e98b9",
+					"tick": 121
+				},
+				{
+					"events": [],
+					"state_hash": "a30ccd7f363cc46739192ab869bc9ee31328f4ce3bd5a251d48558ab1ef2501b",
+					"tick": 122
+				},
+				{
+					"events": [],
+					"state_hash": "b5c6e83269a78e70bee4ba0ee883a13d442a6b9c55d50e10e17988448061ae0b",
+					"tick": 123
+				},
+				{
+					"events": [
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								7
+							],
+							[
+								"projectile_id",
+								1000
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								182
+							]
+						]
+					],
+					"state_hash": "29b4dbd1df0e0078aaa15f16f6bc49a763baa263b5f794ea04824e85e3e627fb",
+					"tick": 124
+				},
+				{
+					"events": [],
+					"state_hash": "1941810e9fae7754d5ac0a88323ed3a0bd9241c7462fc21d9484e4b7c552122e",
+					"tick": 125
+				},
+				{
+					"events": [],
+					"state_hash": "d7cb32f6540f061ed08a286ba5cb6cecf7823a502245d4cd6cc91866e506d713",
+					"tick": 126
+				},
+				{
+					"events": [],
+					"state_hash": "35feed8a64b0020ec751b179a56d5b7bdaa9f736a102965886177ac03dc4bf16",
+					"tick": 127
+				},
+				{
+					"events": [
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								1
+							],
+							[
+								"projectile_id",
+								1001
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								159
+							]
+						]
+					],
+					"state_hash": "c270c4e4e4722afa32778eec81b08670beb27415133966ed3b72c3f2bf338f54",
+					"tick": 128
+				},
+				{
+					"events": [],
+					"state_hash": "4447b11e8df218f10bfa0388405765ded26aa1e618c1015d389bdb538cf0758e",
+					"tick": 129
+				},
+				{
+					"events": [],
+					"state_hash": "1e3696e47f0d65899136d68924aa969d54a4add94c8cd41f2a80344593f25030",
+					"tick": 130
+				},
+				{
+					"events": [],
+					"state_hash": "0ac2e00c8a32f92adc21c613d994fc74ecb86eac071a728e32956e9948f2fe94",
+					"tick": 131
+				},
+				{
+					"events": [],
+					"state_hash": "70585fcbf2470a016ec7493b516b0bfedd7f3c0b59b509af4567cffc89f77b1a",
+					"tick": 132
+				},
+				{
+					"events": [],
+					"state_hash": "0f3f1483f42a4c5a29ea1188960225dc28f686b78c782216e5753db2a0d64c4b",
+					"tick": 133
+				},
+				{
+					"events": [
+						[
+							[
+								"entity_id",
+								7
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								182
+							]
+						]
+					],
+					"state_hash": "5bf478c96df46df779ec2a57aa5e57ad6627c88555caad3426291997fe515e02",
+					"tick": 134
+				},
+				{
+					"events": [],
+					"state_hash": "72d8349b41c7eb19b954f293e42c7ec59154e945c6f0ea681e89a0fee24e43c6",
+					"tick": 135
+				},
+				{
+					"events": [
+						[
+							[
+								"end_x",
+								1639040
+							],
+							[
+								"end_y",
+								2166708
+							],
+							[
+								"hit_count",
+								0
+							],
+							[
+								"owner_id",
+								5
+							],
+							[
+								"range",
+								379846
+							],
+							[
+								"source_wire_id",
+								160
+							],
+							[
+								"type",
+								"spray_fired"
+							]
+						]
+					],
+					"state_hash": "e4e59261eb46e87ba01f6c849b4432fb5f3de055e4c7517194122268b11c47f1",
+					"tick": 136
+				},
+				{
+					"events": [
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								7
+							],
+							[
+								"projectile_id",
+								1003
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								182
+							]
+						]
+					],
+					"state_hash": "1d4302b5d6068106acc1e9304d783063a6f1f54f019a9b6175e01986c3beb4ce",
+					"tick": 137
+				},
+				{
+					"events": [],
+					"state_hash": "cbdc0f60f964aff660e9814a7d84f4e78bc7391d1bd2f4efd4938bc3d35bd0e7",
+					"tick": 138
+				},
+				{
+					"events": [],
+					"state_hash": "587ad537948235008326d31df9408c5045a83ac4c47e6c87ba164576698518d4",
+					"tick": 139
+				},
+				{
+					"events": [],
+					"state_hash": "26f3cf49a3cef4a69eae02d60d6af3a0cdb7234b02736eb68bd92e37c371057a",
+					"tick": 140
+				},
+				{
+					"events": [
+						[
+							[
+								"entity_id",
+								3
+							],
+							[
+								"type",
+								"cast_blocked"
+							],
+							[
+								"wire_id",
+								181
+							]
+						]
+					],
+					"state_hash": "c1801ce20692bdf3d02c40e290fe65d343a3d76e6e15d11c0b015ccecd5307dd",
+					"tick": 141
+				},
+				{
+					"events": [],
+					"state_hash": "29f894186c15b77f9495103da8c3e7ac42d0faed8796901e850e6709954aa05d",
+					"tick": 142
+				},
+				{
+					"events": [],
+					"state_hash": "2f8adda7e344f08a58417410eb8704efad9d78d6edba7fe3178cf13fdc888759",
+					"tick": 143
+				},
+				{
+					"events": [],
+					"state_hash": "938722931053441744db79612e8e558020b0460a7eaa320ed7d689512bb34c57",
+					"tick": 144
+				},
+				{
+					"events": [],
+					"state_hash": "17058302ffc7e92b1c12e27e94a2151367f8d6a54033bcb0335a6a8be3a08e75",
+					"tick": 145
+				},
+				{
+					"events": [],
+					"state_hash": "b7ee72cac8aac32a8259638fe436e73b69274de05354dcdbb1e2c042d0ca1c89",
+					"tick": 146
+				},
+				{
+					"events": [
+						[
+							[
+								"entity_id",
+								7
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								182
+							]
+						]
+					],
+					"state_hash": "466bbf3cb924464c9a0f11158275f925b8bf49904b316ceeb3b778af0f28cd78",
+					"tick": 147
+				},
+				{
+					"events": [],
+					"state_hash": "ad863b02d732953d064d0a765dd0b6615a0d98d9ba917a90cb16ec24896cf141",
+					"tick": 148
+				},
+				{
+					"events": [],
+					"state_hash": "0dd6e934fedd8204de2833ba315290ca4f9296f12408184892a96e3a16a448f8",
+					"tick": 149
+				},
+				{
+					"events": [
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								7
+							],
+							[
+								"projectile_id",
+								1004
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								182
+							]
+						]
+					],
+					"state_hash": "8befa77bbf4be22b16578d1dba8334644d8d22f4a6f18aac170233de37d2c970",
+					"tick": 150
+				},
+				{
+					"events": [],
+					"state_hash": "de96c394c454fae6ab563225571c4afc3624525f5277229862c9ad2d05508686",
+					"tick": 151
+				},
+				{
+					"events": [],
+					"state_hash": "2fb8ecac1c6fd477a6cd913d508cdf8e03eba6db3bdfba32a6caeab7444e1b17",
+					"tick": 152
+				},
+				{
+					"events": [],
+					"state_hash": "c9b7d95ecd9dcdb78dc52c3660442fef62e73baf06d2c7072eb1f9c02c8780d6",
+					"tick": 153
+				},
+				{
+					"events": [],
+					"state_hash": "bf6b1da08c01b87524bfdf884e953f337cc6392b1388c0ebd1ab240fc93b167e",
+					"tick": 154
+				},
+				{
+					"events": [],
+					"state_hash": "069566450021051c741e98cd6fc1ed2e89e8a2bef687724a86137e9ef07b723f",
+					"tick": 155
+				},
+				{
+					"events": [],
+					"state_hash": "ac339911fdd9e86259a67a34ab2307b5348873a92c3f3d33a11af9deae47b161",
+					"tick": 156
+				},
+				{
+					"events": [
+						[
+							[
+								"entity_id",
+								6
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								180
+							]
+						]
+					],
+					"state_hash": "0c9d044e989015d1ca88d25b1e3dd441bc1a95a3ce4848877cc5be4a32420a4a",
+					"tick": 157
+				},
+				{
+					"events": [],
+					"state_hash": "ed79e3ae8cf5bc693b8fb785bafabb433457792b2336be27273897ad3022e368",
+					"tick": 158
+				},
+				{
+					"events": [],
+					"state_hash": "adba4de0a8c5e871ef34330693b45f2f886c6b9521bd3d887f8dd15e884fd83a",
+					"tick": 159
+				},
+				{
+					"events": [
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								6
+							],
+							[
+								"projectile_id",
+								1005
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								180
+							]
+						]
+					],
+					"state_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+					"tick": 160
+				},
+				{
+					"events": [],
+					"state_hash": "18c0d0e333bc2617f270666cbea8c203a0fd5dc6b9dbfa7701664241af479b7f",
+					"tick": 161
+				}
+			]
+		},
+		{
+			"case": "sustained-distributed",
+			"completed": true,
+			"paid_metrics": {
+				"admitted": 7,
+				"deposited": 1,
+				"exposure_queries": 0,
+				"matter_consumed": 0,
+				"matter_expired": 600,
+				"matter_paid": 4200,
+				"modifiers": 0,
+				"reactions": 0,
+				"refused": 0,
+				"requested": 7
+			},
+			"reverse_command_order": true,
+			"stages": [
+				{
+					"actors": 8,
+					"candidate": {
+						"samples_us": [
+							361597,
+							373286,
+							359666,
+							360593,
+							381442,
+							364111
+						],
+						"statistics_us": {
+							"max": 381442,
+							"p50": 361597,
+							"p95": 381442,
+							"p99": 381442,
+							"samples": 6
+						}
+					},
+					"casts": 0,
+					"cold_capture_us": {
+						"candidate": 555497,
+						"legacy": 631004
+					},
+					"completed": true,
+					"legacy": {
+						"samples_us": [
+							416629,
+							409062,
+							412384,
+							415426,
+							431241,
+							414028
+						],
+						"statistics_us": {
+							"max": 431241,
+							"p50": 414028,
+							"p95": 431241,
+							"p99": 431241,
+							"samples": 6
+						}
+					},
+					"memory_after": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 73949958
+					},
+					"memory_before": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 64369974
+					},
+					"pairs": [
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 0,
+							"samples_us": {
+								"candidate": 361597,
+								"legacy": 416629
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 1,
+							"samples_us": {
+								"candidate": 373286,
+								"legacy": 409062
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 2,
+							"samples_us": {
+								"candidate": 359666,
+								"legacy": 412384
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 3,
+							"samples_us": {
+								"candidate": 360593,
+								"legacy": 415426
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 4,
+							"samples_us": {
+								"candidate": 381442,
+								"legacy": 431241
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 5,
+							"samples_us": {
+								"candidate": 364111,
+								"legacy": 414028
+							}
+						}
+					],
+					"products": 0,
+					"snapshot_bytes": 6412,
+					"source_state_hash": "c8837551570b9e44d19dc6e9c5580183237505f1ddc0e711102ff2a13ac33e3c",
+					"state": "empty",
+					"tick": 120,
+					"topology_cells": 11337
+				},
+				{
+					"actors": 8,
+					"candidate": {
+						"samples_us": [
+							394744,
+							398968,
+							404451,
+							401398,
+							392412,
+							389192
+						],
+						"statistics_us": {
+							"max": 404451,
+							"p50": 394744,
+							"p95": 404451,
+							"p99": 404451,
+							"samples": 6
+						}
+					},
+					"casts": 6,
+					"cold_capture_us": {
+						"candidate": 541557,
+						"legacy": 618456
+					},
+					"completed": true,
+					"legacy": {
+						"samples_us": [
+							447157,
+							455976,
+							437644,
+							438052,
+							448154,
+							451090
+						],
+						"statistics_us": {
+							"max": 455976,
+							"p50": 447157,
+							"p95": 455976,
+							"p99": 455976,
+							"samples": 6
+						}
+					},
+					"memory_after": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 74308467
+					},
+					"memory_before": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 64545923
+					},
+					"pairs": [
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 0,
+							"samples_us": {
+								"candidate": 394744,
+								"legacy": 447157
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 1,
+							"samples_us": {
+								"candidate": 398968,
+								"legacy": 455976
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 2,
+							"samples_us": {
+								"candidate": 404451,
+								"legacy": 437644
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 3,
+							"samples_us": {
+								"candidate": 401398,
+								"legacy": 438052
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 4,
+							"samples_us": {
+								"candidate": 392412,
+								"legacy": 448154
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 5,
+							"samples_us": {
+								"candidate": 389192,
+								"legacy": 451090
+							}
+						}
+					],
+					"products": 0,
+					"snapshot_bytes": 8080,
+					"source_state_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+					"state": "paid-40",
+					"tick": 160,
+					"topology_cells": 11337
+				},
+				{
+					"actors": 8,
+					"candidate": {
+						"samples_us": [
+							384295,
+							390160,
+							396931,
+							381857,
+							380542,
+							385662
+						],
+						"statistics_us": {
+							"max": 396931,
+							"p50": 384295,
+							"p95": 396931,
+							"p99": 396931,
+							"samples": 6
+						}
+					},
+					"casts": 6,
+					"cold_capture_us": {
+						"candidate": 542208,
+						"legacy": 592623
+					},
+					"completed": true,
+					"legacy": {
+						"samples_us": [
+							435795,
+							456217,
+							452669,
+							443303,
+							434940,
+							433330
+						],
+						"statistics_us": {
+							"max": 456217,
+							"p50": 435795,
+							"p95": 456217,
+							"p99": 456217,
+							"samples": 6
+						}
+					},
+					"memory_after": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 74322651
+					},
+					"memory_before": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 64560107
+					},
+					"pairs": [
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 0,
+							"samples_us": {
+								"candidate": 384295,
+								"legacy": 435795
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 1,
+							"samples_us": {
+								"candidate": 390160,
+								"legacy": 456217
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 2,
+							"samples_us": {
+								"candidate": 396931,
+								"legacy": 452669
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 3,
+							"samples_us": {
+								"candidate": 381857,
+								"legacy": 443303
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 4,
+							"samples_us": {
+								"candidate": 380542,
+								"legacy": 434940
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 5,
+							"samples_us": {
+								"candidate": 385662,
+								"legacy": 433330
+							}
+						}
+					],
+					"products": 0,
+					"snapshot_bytes": 8080,
+					"source_state_hash": "18c0d0e333bc2617f270666cbea8c203a0fd5dc6b9dbfa7701664241af479b7f",
+					"state": "paid-41",
+					"tick": 161,
+					"topology_cells": 11337
+				}
+			],
+			"trace": [
+				{
+					"events": [
+						[
+							[
+								"entity_id",
+								1
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								159
+							]
+						],
+						[
+							[
+								"entity_id",
+								3
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								181
+							]
+						],
+						[
+							[
+								"entity_id",
+								5
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								160
+							]
+						],
+						[
+							[
+								"entity_id",
+								7
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								182
+							]
+						]
+					],
+					"state_hash": "8f5636f86e249d1b4bff1dd2017cabbe90ee02874575c0a0abba25dc727e98b9",
+					"tick": 121
+				},
+				{
+					"events": [],
+					"state_hash": "a30ccd7f363cc46739192ab869bc9ee31328f4ce3bd5a251d48558ab1ef2501b",
+					"tick": 122
+				},
+				{
+					"events": [],
+					"state_hash": "b5c6e83269a78e70bee4ba0ee883a13d442a6b9c55d50e10e17988448061ae0b",
+					"tick": 123
+				},
+				{
+					"events": [
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								7
+							],
+							[
+								"projectile_id",
+								1000
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								182
+							]
+						]
+					],
+					"state_hash": "29b4dbd1df0e0078aaa15f16f6bc49a763baa263b5f794ea04824e85e3e627fb",
+					"tick": 124
+				},
+				{
+					"events": [],
+					"state_hash": "1941810e9fae7754d5ac0a88323ed3a0bd9241c7462fc21d9484e4b7c552122e",
+					"tick": 125
+				},
+				{
+					"events": [],
+					"state_hash": "d7cb32f6540f061ed08a286ba5cb6cecf7823a502245d4cd6cc91866e506d713",
+					"tick": 126
+				},
+				{
+					"events": [],
+					"state_hash": "35feed8a64b0020ec751b179a56d5b7bdaa9f736a102965886177ac03dc4bf16",
+					"tick": 127
+				},
+				{
+					"events": [
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								1
+							],
+							[
+								"projectile_id",
+								1001
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								159
+							]
+						]
+					],
+					"state_hash": "c270c4e4e4722afa32778eec81b08670beb27415133966ed3b72c3f2bf338f54",
+					"tick": 128
+				},
+				{
+					"events": [],
+					"state_hash": "4447b11e8df218f10bfa0388405765ded26aa1e618c1015d389bdb538cf0758e",
+					"tick": 129
+				},
+				{
+					"events": [],
+					"state_hash": "1e3696e47f0d65899136d68924aa969d54a4add94c8cd41f2a80344593f25030",
+					"tick": 130
+				},
+				{
+					"events": [],
+					"state_hash": "0ac2e00c8a32f92adc21c613d994fc74ecb86eac071a728e32956e9948f2fe94",
+					"tick": 131
+				},
+				{
+					"events": [],
+					"state_hash": "70585fcbf2470a016ec7493b516b0bfedd7f3c0b59b509af4567cffc89f77b1a",
+					"tick": 132
+				},
+				{
+					"events": [],
+					"state_hash": "0f3f1483f42a4c5a29ea1188960225dc28f686b78c782216e5753db2a0d64c4b",
+					"tick": 133
+				},
+				{
+					"events": [
+						[
+							[
+								"entity_id",
+								7
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								182
+							]
+						]
+					],
+					"state_hash": "5bf478c96df46df779ec2a57aa5e57ad6627c88555caad3426291997fe515e02",
+					"tick": 134
+				},
+				{
+					"events": [],
+					"state_hash": "72d8349b41c7eb19b954f293e42c7ec59154e945c6f0ea681e89a0fee24e43c6",
+					"tick": 135
+				},
+				{
+					"events": [
+						[
+							[
+								"end_x",
+								1639040
+							],
+							[
+								"end_y",
+								2166708
+							],
+							[
+								"hit_count",
+								0
+							],
+							[
+								"owner_id",
+								5
+							],
+							[
+								"range",
+								379846
+							],
+							[
+								"source_wire_id",
+								160
+							],
+							[
+								"type",
+								"spray_fired"
+							]
+						]
+					],
+					"state_hash": "e4e59261eb46e87ba01f6c849b4432fb5f3de055e4c7517194122268b11c47f1",
+					"tick": 136
+				},
+				{
+					"events": [
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								7
+							],
+							[
+								"projectile_id",
+								1003
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								182
+							]
+						]
+					],
+					"state_hash": "1d4302b5d6068106acc1e9304d783063a6f1f54f019a9b6175e01986c3beb4ce",
+					"tick": 137
+				},
+				{
+					"events": [],
+					"state_hash": "cbdc0f60f964aff660e9814a7d84f4e78bc7391d1bd2f4efd4938bc3d35bd0e7",
+					"tick": 138
+				},
+				{
+					"events": [],
+					"state_hash": "587ad537948235008326d31df9408c5045a83ac4c47e6c87ba164576698518d4",
+					"tick": 139
+				},
+				{
+					"events": [],
+					"state_hash": "26f3cf49a3cef4a69eae02d60d6af3a0cdb7234b02736eb68bd92e37c371057a",
+					"tick": 140
+				},
+				{
+					"events": [
+						[
+							[
+								"entity_id",
+								3
+							],
+							[
+								"type",
+								"cast_blocked"
+							],
+							[
+								"wire_id",
+								181
+							]
+						]
+					],
+					"state_hash": "c1801ce20692bdf3d02c40e290fe65d343a3d76e6e15d11c0b015ccecd5307dd",
+					"tick": 141
+				},
+				{
+					"events": [],
+					"state_hash": "29f894186c15b77f9495103da8c3e7ac42d0faed8796901e850e6709954aa05d",
+					"tick": 142
+				},
+				{
+					"events": [],
+					"state_hash": "2f8adda7e344f08a58417410eb8704efad9d78d6edba7fe3178cf13fdc888759",
+					"tick": 143
+				},
+				{
+					"events": [],
+					"state_hash": "938722931053441744db79612e8e558020b0460a7eaa320ed7d689512bb34c57",
+					"tick": 144
+				},
+				{
+					"events": [],
+					"state_hash": "17058302ffc7e92b1c12e27e94a2151367f8d6a54033bcb0335a6a8be3a08e75",
+					"tick": 145
+				},
+				{
+					"events": [],
+					"state_hash": "b7ee72cac8aac32a8259638fe436e73b69274de05354dcdbb1e2c042d0ca1c89",
+					"tick": 146
+				},
+				{
+					"events": [
+						[
+							[
+								"entity_id",
+								7
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								182
+							]
+						]
+					],
+					"state_hash": "466bbf3cb924464c9a0f11158275f925b8bf49904b316ceeb3b778af0f28cd78",
+					"tick": 147
+				},
+				{
+					"events": [],
+					"state_hash": "ad863b02d732953d064d0a765dd0b6615a0d98d9ba917a90cb16ec24896cf141",
+					"tick": 148
+				},
+				{
+					"events": [],
+					"state_hash": "0dd6e934fedd8204de2833ba315290ca4f9296f12408184892a96e3a16a448f8",
+					"tick": 149
+				},
+				{
+					"events": [
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								7
+							],
+							[
+								"projectile_id",
+								1004
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								182
+							]
+						]
+					],
+					"state_hash": "8befa77bbf4be22b16578d1dba8334644d8d22f4a6f18aac170233de37d2c970",
+					"tick": 150
+				},
+				{
+					"events": [],
+					"state_hash": "de96c394c454fae6ab563225571c4afc3624525f5277229862c9ad2d05508686",
+					"tick": 151
+				},
+				{
+					"events": [],
+					"state_hash": "2fb8ecac1c6fd477a6cd913d508cdf8e03eba6db3bdfba32a6caeab7444e1b17",
+					"tick": 152
+				},
+				{
+					"events": [],
+					"state_hash": "c9b7d95ecd9dcdb78dc52c3660442fef62e73baf06d2c7072eb1f9c02c8780d6",
+					"tick": 153
+				},
+				{
+					"events": [],
+					"state_hash": "bf6b1da08c01b87524bfdf884e953f337cc6392b1388c0ebd1ab240fc93b167e",
+					"tick": 154
+				},
+				{
+					"events": [],
+					"state_hash": "069566450021051c741e98cd6fc1ed2e89e8a2bef687724a86137e9ef07b723f",
+					"tick": 155
+				},
+				{
+					"events": [],
+					"state_hash": "ac339911fdd9e86259a67a34ab2307b5348873a92c3f3d33a11af9deae47b161",
+					"tick": 156
+				},
+				{
+					"events": [
+						[
+							[
+								"entity_id",
+								6
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								180
+							]
+						]
+					],
+					"state_hash": "0c9d044e989015d1ca88d25b1e3dd441bc1a95a3ce4848877cc5be4a32420a4a",
+					"tick": 157
+				},
+				{
+					"events": [],
+					"state_hash": "ed79e3ae8cf5bc693b8fb785bafabb433457792b2336be27273897ad3022e368",
+					"tick": 158
+				},
+				{
+					"events": [],
+					"state_hash": "adba4de0a8c5e871ef34330693b45f2f886c6b9521bd3d887f8dd15e884fd83a",
+					"tick": 159
+				},
+				{
+					"events": [
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								6
+							],
+							[
+								"projectile_id",
+								1005
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								180
+							]
+						]
+					],
+					"state_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+					"tick": 160
+				},
+				{
+					"events": [],
+					"state_hash": "18c0d0e333bc2617f270666cbea8c203a0fd5dc6b9dbfa7701664241af479b7f",
+					"tick": 161
+				}
+			]
+		},
+		{
+			"case": "dense-crucible",
+			"completed": true,
+			"paid_metrics": {
+				"admitted": 8,
+				"deposited": 1,
+				"exposure_queries": 8,
+				"matter_consumed": 1200,
+				"matter_expired": 0,
+				"matter_paid": 4800,
+				"modifiers": 0,
+				"reactions": 1,
+				"refused": 0,
+				"requested": 8
+			},
+			"reverse_command_order": false,
+			"stages": [
+				{
+					"actors": 8,
+					"candidate": {
+						"samples_us": [
+							341710,
+							350449,
+							360548,
+							363109,
+							347730,
+							347814
+						],
+						"statistics_us": {
+							"max": 363109,
+							"p50": 347814,
+							"p95": 363109,
+							"p99": 363109,
+							"samples": 6
+						}
+					},
+					"casts": 0,
+					"cold_capture_us": {
+						"candidate": 501713,
+						"legacy": 549778
+					},
+					"completed": true,
+					"legacy": {
+						"samples_us": [
+							396391,
+							404649,
+							398084,
+							425728,
+							394430,
+							398334
+						],
+						"statistics_us": {
+							"max": 425728,
+							"p50": 398084,
+							"p95": 425728,
+							"p99": 425728,
+							"samples": 6
+						}
+					},
+					"memory_after": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 74048510
+					},
+					"memory_before": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 64468526
+					},
+					"pairs": [
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 0,
+							"samples_us": {
+								"candidate": 341710,
+								"legacy": 396391
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 1,
+							"samples_us": {
+								"candidate": 350449,
+								"legacy": 404649
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 2,
+							"samples_us": {
+								"candidate": 360548,
+								"legacy": 398084
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 3,
+							"samples_us": {
+								"candidate": 363109,
+								"legacy": 425728
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 4,
+							"samples_us": {
+								"candidate": 347730,
+								"legacy": 394430
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 5,
+							"samples_us": {
+								"candidate": 347814,
+								"legacy": 398334
+							}
+						}
+					],
+					"products": 0,
+					"snapshot_bytes": 6412,
+					"source_state_hash": "37f33e0b4a5cb1f243c64e290c52ca6ad557742f6a221aa79cdae22475e29074",
+					"state": "empty",
+					"tick": 120,
+					"topology_cells": 11337
+				},
+				{
+					"actors": 8,
+					"candidate": {
+						"samples_us": [
+							396301,
+							390134,
+							365102,
+							358314,
+							360338,
+							365415
+						],
+						"statistics_us": {
+							"max": 396301,
+							"p50": 365102,
+							"p95": 396301,
+							"p99": 396301,
+							"samples": 6
+						}
+					},
+					"casts": 8,
+					"cold_capture_us": {
+						"candidate": 504801,
+						"legacy": 566316
+					},
+					"completed": true,
+					"legacy": {
+						"samples_us": [
+							413471,
+							430263,
+							417164,
+							415465,
+							412406,
+							424876
+						],
+						"statistics_us": {
+							"max": 430263,
+							"p50": 415465,
+							"p95": 430263,
+							"p99": 430263,
+							"samples": 6
+						}
+					},
+					"memory_after": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 74257142
+					},
+					"memory_before": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 64607354
+					},
+					"pairs": [
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 0,
+							"samples_us": {
+								"candidate": 396301,
+								"legacy": 413471
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 1,
+							"samples_us": {
+								"candidate": 390134,
+								"legacy": 430263
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 2,
+							"samples_us": {
+								"candidate": 365102,
+								"legacy": 417164
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 3,
+							"samples_us": {
+								"candidate": 358314,
+								"legacy": 415465
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 4,
+							"samples_us": {
+								"candidate": 360338,
+								"legacy": 412406
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 5,
+							"samples_us": {
+								"candidate": 365415,
+								"legacy": 424876
+							}
+						}
+					],
+					"products": 0,
+					"snapshot_bytes": 7788,
+					"source_state_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+					"state": "paid-40",
+					"tick": 160,
+					"topology_cells": 11337
+				},
+				{
+					"actors": 8,
+					"candidate": {
+						"samples_us": [
+							370792,
+							368547,
+							373592,
+							373100,
+							377356,
+							362183
+						],
+						"statistics_us": {
+							"max": 377356,
+							"p50": 370792,
+							"p95": 377356,
+							"p99": 377356,
+							"samples": 6
+						}
+					},
+					"casts": 6,
+					"cold_capture_us": {
+						"candidate": 513054,
+						"legacy": 579477
+					},
+					"completed": true,
+					"legacy": {
+						"samples_us": [
+							436231,
+							418023,
+							434284,
+							417121,
+							417186,
+							411162
+						],
+						"statistics_us": {
+							"max": 436231,
+							"p50": 417186,
+							"p95": 436231,
+							"p99": 436231,
+							"samples": 6
+						}
+					},
+					"memory_after": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 74273506
+					},
+					"memory_before": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 64627082
+					},
+					"pairs": [
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 0,
+							"samples_us": {
+								"candidate": 370792,
+								"legacy": 436231
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 1,
+							"samples_us": {
+								"candidate": 368547,
+								"legacy": 418023
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 2,
+							"samples_us": {
+								"candidate": 373592,
+								"legacy": 434284
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 3,
+							"samples_us": {
+								"candidate": 373100,
+								"legacy": 417121
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 4,
+							"samples_us": {
+								"candidate": 377356,
+								"legacy": 417186
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 5,
+							"samples_us": {
+								"candidate": 362183,
+								"legacy": 411162
+							}
+						}
+					],
+					"products": 1,
+					"snapshot_bytes": 7708,
+					"source_state_hash": "66adb8961bb3b02e2363fadd39d5ae4c378d18da4a30b40a555f8d78f77bd86b",
+					"state": "paid-41",
+					"tick": 161,
+					"topology_cells": 11337
+				}
+			],
+			"trace": [
+				{
+					"events": [
+						[
+							[
+								"entity_id",
+								1
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								159
+							]
+						],
+						[
+							[
+								"entity_id",
+								2
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								145
+							]
+						],
+						[
+							[
+								"entity_id",
+								3
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								140
+							]
+						],
+						[
+							[
+								"entity_id",
+								4
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								163
+							]
+						],
+						[
+							[
+								"entity_id",
+								5
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								159
+							]
+						],
+						[
+							[
+								"entity_id",
+								6
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								145
+							]
+						],
+						[
+							[
+								"entity_id",
+								7
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								140
+							]
+						],
+						[
+							[
+								"entity_id",
+								8
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								163
+							]
+						]
+					],
+					"state_hash": "bbdde74cc6ca3f1f991bdcdaa6cc2def45039449452c9f34b06928033cb34ea0",
+					"tick": 121
+				},
+				{
+					"events": [],
+					"state_hash": "f226aefa4c9fa0a91ea8664023da4a1ae0af357078a6a9b0c0a266693feaf322",
+					"tick": 122
+				},
+				{
+					"events": [],
+					"state_hash": "4f868cdcccdbb85a4d23544d3e90fa3d2c28fe6ecc8ece59824f8baf26d76123",
+					"tick": 123
+				},
+				{
+					"events": [],
+					"state_hash": "ef45088eecf012c77d65f82009ffecb626432648e6b38f7083cf3cce0963c04f",
+					"tick": 124
+				},
+				{
+					"events": [],
+					"state_hash": "5eeb1a036f413fd9b476d0f7457fffd7dc948441122b79c37532aeea2489eb69",
+					"tick": 125
+				},
+				{
+					"events": [],
+					"state_hash": "fb40a926b9f0e62cf0a1d8bd4a7f9c56d95590663120e64c94ea82616cd1a479",
+					"tick": 126
+				},
+				{
+					"events": [
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								2
+							],
+							[
+								"projectile_id",
+								1000
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								145
+							]
+						],
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								3
+							],
+							[
+								"projectile_id",
+								1001
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								140
+							]
+						],
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								6
+							],
+							[
+								"projectile_id",
+								1002
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								145
+							]
+						],
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								7
+							],
+							[
+								"projectile_id",
+								1003
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								140
+							]
+						]
+					],
+					"state_hash": "a629ae14b329b2cb5c5889f47dcdb831f4f2786af45ef21158f2b9f395b7f4ff",
+					"tick": 127
+				},
+				{
+					"events": [
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								1
+							],
+							[
+								"projectile_id",
+								1004
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								159
+							]
+						],
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								4
+							],
+							[
+								"projectile_id",
+								1005
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								163
+							]
+						],
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								5
+							],
+							[
+								"projectile_id",
+								1006
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								159
+							]
+						],
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								8
+							],
+							[
+								"projectile_id",
+								1007
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								163
+							]
+						]
+					],
+					"state_hash": "5c59d49bc558b36634dcb635de9acd91170924ebc153b0e95dd0a388f450fbb4",
+					"tick": 128
+				},
+				{
+					"events": [],
+					"state_hash": "a84836b2f13c7efe892b1310325388374e1f9728b39e650c2014eee78a1c78f0",
+					"tick": 129
+				},
+				{
+					"events": [],
+					"state_hash": "1d7b13ff2c985cfd4dce49c84410f2848ed5014e004df995a17951c3a69815f6",
+					"tick": 130
+				},
+				{
+					"events": [],
+					"state_hash": "449cd03aa395d2637f50b57c9b4c530f4ab8512f10bbbce7ae33f3a2f09ba018",
+					"tick": 131
+				},
+				{
+					"events": [],
+					"state_hash": "cf2f764a0048d1034aada5a7ab04da0a0fe1f98f4e629aae20478f52cb5700df",
+					"tick": 132
+				},
+				{
+					"events": [],
+					"state_hash": "6017625ab1a1a626bfc804a498c2da80b0288447ad437325891c57c762b749c7",
+					"tick": 133
+				},
+				{
+					"events": [],
+					"state_hash": "26f79d5d44e90c055af3635c7a512d06df0dc693a1209a77d53a56ba44c4f1c3",
+					"tick": 134
+				},
+				{
+					"events": [],
+					"state_hash": "39104edf9e641d73d145563793f8d125b0d65b92547d4dd9030dfaf6f5f20596",
+					"tick": 135
+				},
+				{
+					"events": [],
+					"state_hash": "f796fe56a7eafcd85bb0921023fc93908790edb722f81553fab66503c098c11c",
+					"tick": 136
+				},
+				{
+					"events": [],
+					"state_hash": "a4df9301c30bb605e6640c3ee401c318d6447b506f30b766b84908967ff42090",
+					"tick": 137
+				},
+				{
+					"events": [],
+					"state_hash": "02d47e692f63f5a499cb9e108a4b32c83caceb062aeb65f44e9ff69f6854427b",
+					"tick": 138
+				},
+				{
+					"events": [],
+					"state_hash": "2eded040b9f695b083ba5685508ee469130e46e8e3352308537e1c8b0e9efaed",
+					"tick": 139
+				},
+				{
+					"events": [],
+					"state_hash": "20af4645de4b30b786e3df1ad1f5739fee36fb33fa7905738a792418c7e2328f",
+					"tick": 140
+				},
+				{
+					"events": [],
+					"state_hash": "9ae08fa28210477d276bd4763044003c7004fc55fee36a03d295c29cc6ca4bd7",
+					"tick": 141
+				},
+				{
+					"events": [],
+					"state_hash": "566a1ee8434c2b90ee120807fe6448a7a6c342cb89ff93e7ce7d19200a6f8bfc",
+					"tick": 142
+				},
+				{
+					"events": [],
+					"state_hash": "46d38fca4aec6aae1c086197d120c7ce742b5f66a90a4b22aacd42712a2e1250",
+					"tick": 143
+				},
+				{
+					"events": [],
+					"state_hash": "0e22fe020881b97bf1826a9e839982d03df73fdc33e043f60be2b60ed59cc56d",
+					"tick": 144
+				},
+				{
+					"events": [],
+					"state_hash": "39cd23836f2839ff30322ce1b0f8065b14b32cd6a96e23d5199b8009247475e2",
+					"tick": 145
+				},
+				{
+					"events": [],
+					"state_hash": "f42109f476d0918727eb0ace58eaf8be50a91d3945484facd869e13556afc616",
+					"tick": 146
+				},
+				{
+					"events": [],
+					"state_hash": "053c72c53b391e26249ea3858fa56bc7f8b68b213d2a61bae33b3e5f657699aa",
+					"tick": 147
+				},
+				{
+					"events": [],
+					"state_hash": "d147da4f064d3aa375df1eaf6b9553d3eed40148d7962c8b23045341ca0c7967",
+					"tick": 148
+				},
+				{
+					"events": [],
+					"state_hash": "7278304d10e9f3a717c55caf9ad3335337a45f0fbb2f6988dc44ef40bc4b2468",
+					"tick": 149
+				},
+				{
+					"events": [],
+					"state_hash": "3f9a3b45bdcb5671d1ad31ff5ad9b51821b6796eefd5a1f1ed211e06c5556b2c",
+					"tick": 150
+				},
+				{
+					"events": [],
+					"state_hash": "8c95b7e3f4026df8201e0e1b88744ba07790f89cc2caf776fd346aceed8da977",
+					"tick": 151
+				},
+				{
+					"events": [],
+					"state_hash": "f256734ef43c204fdd7c85883353a20e5dcc9728136fa027c1924338c5c10eff",
+					"tick": 152
+				},
+				{
+					"events": [],
+					"state_hash": "1a548a6d6fa7d00f3dbcd0efe3e2db27bf83988b47743bfa617be4d5fa53252d",
+					"tick": 153
+				},
+				{
+					"events": [],
+					"state_hash": "fd265af0c72037f63689d0d083699d8d807555acd63f3a63172772d42bf450fe",
+					"tick": 154
+				},
+				{
+					"events": [],
+					"state_hash": "e9bed023f1bbb80b38ea1298fb47ad54ba34465f51ff9aecba24a88777cb8eaf",
+					"tick": 155
+				},
+				{
+					"events": [],
+					"state_hash": "82ebb910e1044802bb31a903342a6745ec8f7da3aefd2831dd2b9d942a928486",
+					"tick": 156
+				},
+				{
+					"events": [],
+					"state_hash": "cb9e5e2dc0a38dd872b9ed542bf9ee9a24c345f7b58ab4622e7cfef2c303bdc3",
+					"tick": 157
+				},
+				{
+					"events": [
+						[
+							[
+								"contact_position",
+								[
+									1500000,
+									1350960
+								]
+							],
+							[
+								"projectile_id",
+								1001
+							],
+							[
+								"type",
+								"projectile_expired"
+							],
+							[
+								"wall_id",
+								0
+							]
+						]
+					],
+					"state_hash": "b09802ed0d02d0b497fab049e63cb999c8e38915727603ef3e97b5e7bdfb3ce2",
+					"tick": 158
+				},
+				{
+					"events": [],
+					"state_hash": "2d6d63e8da39f9225a86248cdd6618c9e35385c5940cdcc199725c7fe862430d",
+					"tick": 159
+				},
+				{
+					"events": [],
+					"state_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+					"tick": 160
+				},
+				{
+					"events": [
+						[
+							[
+								"contact_kind",
+								"field"
+							],
+							[
+								"contact_quantization_outside",
+								false
+							],
+							[
+								"field_source_id",
+								1001
+							],
+							[
+								"first_remaining",
+								0
+							],
+							[
+								"matched_strength",
+								5
+							],
+							[
+								"other_wire_id",
+								140
+							],
+							[
+								"owner_id",
+								7
+							],
+							[
+								"projectile_id",
+								1003
+							],
+							[
+								"reaction_id",
+								1
+							],
+							[
+								"recipe_wire_id",
+								316
+							],
+							[
+								"second_remaining",
+								0
+							],
+							[
+								"source_wire_id",
+								140
+							],
+							[
+								"type",
+								"hex_clash"
+							],
+							[
+								"x",
+								1538628
+							],
+							[
+								"y",
+								1342514
+							]
+						]
+					],
+					"state_hash": "66adb8961bb3b02e2363fadd39d5ae4c378d18da4a30b40a555f8d78f77bd86b",
+					"tick": 161
+				}
+			]
+		},
+		{
+			"case": "dense-crucible",
+			"completed": true,
+			"paid_metrics": {
+				"admitted": 8,
+				"deposited": 1,
+				"exposure_queries": 8,
+				"matter_consumed": 1200,
+				"matter_expired": 0,
+				"matter_paid": 4800,
+				"modifiers": 0,
+				"reactions": 1,
+				"refused": 0,
+				"requested": 8
+			},
+			"reverse_command_order": true,
+			"stages": [
+				{
+					"actors": 8,
+					"candidate": {
+						"samples_us": [
+							359449,
+							351230,
+							364115,
+							373364,
+							347578,
+							350321
+						],
+						"statistics_us": {
+							"max": 373364,
+							"p50": 351230,
+							"p95": 373364,
+							"p99": 373364,
+							"samples": 6
+						}
+					},
+					"casts": 0,
+					"cold_capture_us": {
+						"candidate": 496526,
+						"legacy": 576102
+					},
+					"completed": true,
+					"legacy": {
+						"samples_us": [
+							416553,
+							405215,
+							408458,
+							410037,
+							418108,
+							400392
+						],
+						"statistics_us": {
+							"max": 418108,
+							"p50": 408458,
+							"p95": 418108,
+							"p99": 418108,
+							"samples": 6
+						}
+					},
+					"memory_after": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 74157902
+					},
+					"memory_before": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 64577918
+					},
+					"pairs": [
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 0,
+							"samples_us": {
+								"candidate": 359449,
+								"legacy": 416553
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 1,
+							"samples_us": {
+								"candidate": 351230,
+								"legacy": 405215
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 2,
+							"samples_us": {
+								"candidate": 364115,
+								"legacy": 408458
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 3,
+							"samples_us": {
+								"candidate": 373364,
+								"legacy": 410037
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 4,
+							"samples_us": {
+								"candidate": 347578,
+								"legacy": 418108
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 5,
+							"samples_us": {
+								"candidate": 350321,
+								"legacy": 400392
+							}
+						}
+					],
+					"products": 0,
+					"snapshot_bytes": 6412,
+					"source_state_hash": "37f33e0b4a5cb1f243c64e290c52ca6ad557742f6a221aa79cdae22475e29074",
+					"state": "empty",
+					"tick": 120,
+					"topology_cells": 11337
+				},
+				{
+					"actors": 8,
+					"candidate": {
+						"samples_us": [
+							399919,
+							404352,
+							371146,
+							375556,
+							370942,
+							380794
+						],
+						"statistics_us": {
+							"max": 404352,
+							"p50": 375556,
+							"p95": 404352,
+							"p99": 404352,
+							"samples": 6
+						}
+					},
+					"casts": 8,
+					"cold_capture_us": {
+						"candidate": 532488,
+						"legacy": 590720
+					},
+					"completed": true,
+					"legacy": {
+						"samples_us": [
+							424851,
+							442156,
+							418001,
+							426576,
+							425053,
+							452908
+						],
+						"statistics_us": {
+							"max": 452908,
+							"p50": 425053,
+							"p95": 452908,
+							"p99": 452908,
+							"samples": 6
+						}
+					},
+					"memory_after": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 74366534
+					},
+					"memory_before": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 64716746
+					},
+					"pairs": [
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 0,
+							"samples_us": {
+								"candidate": 399919,
+								"legacy": 424851
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 1,
+							"samples_us": {
+								"candidate": 404352,
+								"legacy": 442156
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 2,
+							"samples_us": {
+								"candidate": 371146,
+								"legacy": 418001
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 3,
+							"samples_us": {
+								"candidate": 375556,
+								"legacy": 426576
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 4,
+							"samples_us": {
+								"candidate": 370942,
+								"legacy": 425053
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 5,
+							"samples_us": {
+								"candidate": 380794,
+								"legacy": 452908
+							}
+						}
+					],
+					"products": 0,
+					"snapshot_bytes": 7788,
+					"source_state_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+					"state": "paid-40",
+					"tick": 160,
+					"topology_cells": 11337
+				},
+				{
+					"actors": 8,
+					"candidate": {
+						"samples_us": [
+							353545,
+							355533,
+							410866,
+							363500,
+							356817,
+							353843
+						],
+						"statistics_us": {
+							"max": 410866,
+							"p50": 355533,
+							"p95": 410866,
+							"p99": 410866,
+							"samples": 6
+						}
+					},
+					"casts": 6,
+					"cold_capture_us": {
+						"candidate": 508229,
+						"legacy": 573768
+					},
+					"completed": true,
+					"legacy": {
+						"samples_us": [
+							410463,
+							416343,
+							431426,
+							404244,
+							398992,
+							403843
+						],
+						"statistics_us": {
+							"max": 431426,
+							"p50": 404244,
+							"p95": 431426,
+							"p99": 431426,
+							"samples": 6
+						}
+					},
+					"memory_after": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 74377590
+					},
+					"memory_before": {
+						"process_global_peak_bytes": 115345667,
+						"static_bytes": 64731166
+					},
+					"pairs": [
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 0,
+							"samples_us": {
+								"candidate": 353545,
+								"legacy": 410463
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 1,
+							"samples_us": {
+								"candidate": 355533,
+								"legacy": 416343
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 2,
+							"samples_us": {
+								"candidate": 410866,
+								"legacy": 431426
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 3,
+							"samples_us": {
+								"candidate": 363500,
+								"legacy": 404244
+							}
+						},
+						{
+							"order": [
+								"legacy",
+								"candidate"
+							],
+							"pair": 4,
+							"samples_us": {
+								"candidate": 356817,
+								"legacy": 398992
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"legacy"
+							],
+							"pair": 5,
+							"samples_us": {
+								"candidate": 353843,
+								"legacy": 403843
+							}
+						}
+					],
+					"products": 1,
+					"snapshot_bytes": 7708,
+					"source_state_hash": "66adb8961bb3b02e2363fadd39d5ae4c378d18da4a30b40a555f8d78f77bd86b",
+					"state": "paid-41",
+					"tick": 161,
+					"topology_cells": 11337
+				}
+			],
+			"trace": [
+				{
+					"events": [
+						[
+							[
+								"entity_id",
+								1
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								159
+							]
+						],
+						[
+							[
+								"entity_id",
+								2
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								145
+							]
+						],
+						[
+							[
+								"entity_id",
+								3
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								140
+							]
+						],
+						[
+							[
+								"entity_id",
+								4
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								163
+							]
+						],
+						[
+							[
+								"entity_id",
+								5
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								159
+							]
+						],
+						[
+							[
+								"entity_id",
+								6
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								145
+							]
+						],
+						[
+							[
+								"entity_id",
+								7
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								140
+							]
+						],
+						[
+							[
+								"entity_id",
+								8
+							],
+							[
+								"type",
+								"cast_started"
+							],
+							[
+								"wire_id",
+								163
+							]
+						]
+					],
+					"state_hash": "bbdde74cc6ca3f1f991bdcdaa6cc2def45039449452c9f34b06928033cb34ea0",
+					"tick": 121
+				},
+				{
+					"events": [],
+					"state_hash": "f226aefa4c9fa0a91ea8664023da4a1ae0af357078a6a9b0c0a266693feaf322",
+					"tick": 122
+				},
+				{
+					"events": [],
+					"state_hash": "4f868cdcccdbb85a4d23544d3e90fa3d2c28fe6ecc8ece59824f8baf26d76123",
+					"tick": 123
+				},
+				{
+					"events": [],
+					"state_hash": "ef45088eecf012c77d65f82009ffecb626432648e6b38f7083cf3cce0963c04f",
+					"tick": 124
+				},
+				{
+					"events": [],
+					"state_hash": "5eeb1a036f413fd9b476d0f7457fffd7dc948441122b79c37532aeea2489eb69",
+					"tick": 125
+				},
+				{
+					"events": [],
+					"state_hash": "fb40a926b9f0e62cf0a1d8bd4a7f9c56d95590663120e64c94ea82616cd1a479",
+					"tick": 126
+				},
+				{
+					"events": [
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								2
+							],
+							[
+								"projectile_id",
+								1000
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								145
+							]
+						],
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								3
+							],
+							[
+								"projectile_id",
+								1001
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								140
+							]
+						],
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								6
+							],
+							[
+								"projectile_id",
+								1002
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								145
+							]
+						],
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								7
+							],
+							[
+								"projectile_id",
+								1003
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								140
+							]
+						]
+					],
+					"state_hash": "a629ae14b329b2cb5c5889f47dcdb831f4f2786af45ef21158f2b9f395b7f4ff",
+					"tick": 127
+				},
+				{
+					"events": [
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								1
+							],
+							[
+								"projectile_id",
+								1004
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								159
+							]
+						],
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								4
+							],
+							[
+								"projectile_id",
+								1005
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								163
+							]
+						],
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								5
+							],
+							[
+								"projectile_id",
+								1006
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								159
+							]
+						],
+						[
+							[
+								"lane_angle_degrees",
+								0
+							],
+							[
+								"lane_count",
+								1
+							],
+							[
+								"lane_index",
+								0
+							],
+							[
+								"owner_id",
+								8
+							],
+							[
+								"projectile_id",
+								1007
+							],
+							[
+								"type",
+								"projectile_spawned"
+							],
+							[
+								"wire_id",
+								163
+							]
+						]
+					],
+					"state_hash": "5c59d49bc558b36634dcb635de9acd91170924ebc153b0e95dd0a388f450fbb4",
+					"tick": 128
+				},
+				{
+					"events": [],
+					"state_hash": "a84836b2f13c7efe892b1310325388374e1f9728b39e650c2014eee78a1c78f0",
+					"tick": 129
+				},
+				{
+					"events": [],
+					"state_hash": "1d7b13ff2c985cfd4dce49c84410f2848ed5014e004df995a17951c3a69815f6",
+					"tick": 130
+				},
+				{
+					"events": [],
+					"state_hash": "449cd03aa395d2637f50b57c9b4c530f4ab8512f10bbbce7ae33f3a2f09ba018",
+					"tick": 131
+				},
+				{
+					"events": [],
+					"state_hash": "cf2f764a0048d1034aada5a7ab04da0a0fe1f98f4e629aae20478f52cb5700df",
+					"tick": 132
+				},
+				{
+					"events": [],
+					"state_hash": "6017625ab1a1a626bfc804a498c2da80b0288447ad437325891c57c762b749c7",
+					"tick": 133
+				},
+				{
+					"events": [],
+					"state_hash": "26f79d5d44e90c055af3635c7a512d06df0dc693a1209a77d53a56ba44c4f1c3",
+					"tick": 134
+				},
+				{
+					"events": [],
+					"state_hash": "39104edf9e641d73d145563793f8d125b0d65b92547d4dd9030dfaf6f5f20596",
+					"tick": 135
+				},
+				{
+					"events": [],
+					"state_hash": "f796fe56a7eafcd85bb0921023fc93908790edb722f81553fab66503c098c11c",
+					"tick": 136
+				},
+				{
+					"events": [],
+					"state_hash": "a4df9301c30bb605e6640c3ee401c318d6447b506f30b766b84908967ff42090",
+					"tick": 137
+				},
+				{
+					"events": [],
+					"state_hash": "02d47e692f63f5a499cb9e108a4b32c83caceb062aeb65f44e9ff69f6854427b",
+					"tick": 138
+				},
+				{
+					"events": [],
+					"state_hash": "2eded040b9f695b083ba5685508ee469130e46e8e3352308537e1c8b0e9efaed",
+					"tick": 139
+				},
+				{
+					"events": [],
+					"state_hash": "20af4645de4b30b786e3df1ad1f5739fee36fb33fa7905738a792418c7e2328f",
+					"tick": 140
+				},
+				{
+					"events": [],
+					"state_hash": "9ae08fa28210477d276bd4763044003c7004fc55fee36a03d295c29cc6ca4bd7",
+					"tick": 141
+				},
+				{
+					"events": [],
+					"state_hash": "566a1ee8434c2b90ee120807fe6448a7a6c342cb89ff93e7ce7d19200a6f8bfc",
+					"tick": 142
+				},
+				{
+					"events": [],
+					"state_hash": "46d38fca4aec6aae1c086197d120c7ce742b5f66a90a4b22aacd42712a2e1250",
+					"tick": 143
+				},
+				{
+					"events": [],
+					"state_hash": "0e22fe020881b97bf1826a9e839982d03df73fdc33e043f60be2b60ed59cc56d",
+					"tick": 144
+				},
+				{
+					"events": [],
+					"state_hash": "39cd23836f2839ff30322ce1b0f8065b14b32cd6a96e23d5199b8009247475e2",
+					"tick": 145
+				},
+				{
+					"events": [],
+					"state_hash": "f42109f476d0918727eb0ace58eaf8be50a91d3945484facd869e13556afc616",
+					"tick": 146
+				},
+				{
+					"events": [],
+					"state_hash": "053c72c53b391e26249ea3858fa56bc7f8b68b213d2a61bae33b3e5f657699aa",
+					"tick": 147
+				},
+				{
+					"events": [],
+					"state_hash": "d147da4f064d3aa375df1eaf6b9553d3eed40148d7962c8b23045341ca0c7967",
+					"tick": 148
+				},
+				{
+					"events": [],
+					"state_hash": "7278304d10e9f3a717c55caf9ad3335337a45f0fbb2f6988dc44ef40bc4b2468",
+					"tick": 149
+				},
+				{
+					"events": [],
+					"state_hash": "3f9a3b45bdcb5671d1ad31ff5ad9b51821b6796eefd5a1f1ed211e06c5556b2c",
+					"tick": 150
+				},
+				{
+					"events": [],
+					"state_hash": "8c95b7e3f4026df8201e0e1b88744ba07790f89cc2caf776fd346aceed8da977",
+					"tick": 151
+				},
+				{
+					"events": [],
+					"state_hash": "f256734ef43c204fdd7c85883353a20e5dcc9728136fa027c1924338c5c10eff",
+					"tick": 152
+				},
+				{
+					"events": [],
+					"state_hash": "1a548a6d6fa7d00f3dbcd0efe3e2db27bf83988b47743bfa617be4d5fa53252d",
+					"tick": 153
+				},
+				{
+					"events": [],
+					"state_hash": "fd265af0c72037f63689d0d083699d8d807555acd63f3a63172772d42bf450fe",
+					"tick": 154
+				},
+				{
+					"events": [],
+					"state_hash": "e9bed023f1bbb80b38ea1298fb47ad54ba34465f51ff9aecba24a88777cb8eaf",
+					"tick": 155
+				},
+				{
+					"events": [],
+					"state_hash": "82ebb910e1044802bb31a903342a6745ec8f7da3aefd2831dd2b9d942a928486",
+					"tick": 156
+				},
+				{
+					"events": [],
+					"state_hash": "cb9e5e2dc0a38dd872b9ed542bf9ee9a24c345f7b58ab4622e7cfef2c303bdc3",
+					"tick": 157
+				},
+				{
+					"events": [
+						[
+							[
+								"contact_position",
+								[
+									1500000,
+									1350960
+								]
+							],
+							[
+								"projectile_id",
+								1001
+							],
+							[
+								"type",
+								"projectile_expired"
+							],
+							[
+								"wall_id",
+								0
+							]
+						]
+					],
+					"state_hash": "b09802ed0d02d0b497fab049e63cb999c8e38915727603ef3e97b5e7bdfb3ce2",
+					"tick": 158
+				},
+				{
+					"events": [],
+					"state_hash": "2d6d63e8da39f9225a86248cdd6618c9e35385c5940cdcc199725c7fe862430d",
+					"tick": 159
+				},
+				{
+					"events": [],
+					"state_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+					"tick": 160
+				},
+				{
+					"events": [
+						[
+							[
+								"contact_kind",
+								"field"
+							],
+							[
+								"contact_quantization_outside",
+								false
+							],
+							[
+								"field_source_id",
+								1001
+							],
+							[
+								"first_remaining",
+								0
+							],
+							[
+								"matched_strength",
+								5
+							],
+							[
+								"other_wire_id",
+								140
+							],
+							[
+								"owner_id",
+								7
+							],
+							[
+								"projectile_id",
+								1003
+							],
+							[
+								"reaction_id",
+								1
+							],
+							[
+								"recipe_wire_id",
+								316
+							],
+							[
+								"second_remaining",
+								0
+							],
+							[
+								"source_wire_id",
+								140
+							],
+							[
+								"type",
+								"hex_clash"
+							],
+							[
+								"x",
+								1538628
+							],
+							[
+								"y",
+								1342514
+							]
+						]
+					],
+					"state_hash": "66adb8961bb3b02e2363fadd39d5ae4c378d18da4a30b40a555f8d78f77bd86b",
+					"tick": 161
+				}
+			]
+		}
+	],
+	"schema_version": 1,
+	"scope": "Complete HexWorldSnapshot.capture, frozen pre-bridge producer versus call-local topology reuse, on identical unchanged eight-champion distributed/dense paid fixture states. Both input orders; neutral empty state, paid tick40, and next mutating tick41. No actor/chemistry/resource/capacity limit changes; no synthetic authority injection.",
+	"seed": 906190,
+	"source_sha256_after": {
+		"content/abilities/foundation_abilities_v1.json": "720c16ce73f11ae9e723f43e31f39d1d700bc7a583619cd418ec3408b16f52bc",
+		"content/champions/foundation_champions_v1.json": "23a1f624a9de6c2bf88dc76578a69b23613465707605528e2988e209abba458a",
+		"content/maps/sanctum_campus_g2_v1.json": "a1d17e155000ebbdf36cb033823a2b42b1c8e31f844444da347fbac400b3c817",
+		"src/net/authoritative_session.gd": "1b6511639f9660fe623803a6e3fdb0415b3927ed46a9e0ad63463e049ce83298",
+		"src/net/hex_chemistry_snapshot.gd": "e3a39d69dde57c42fb912d3483779642e05502013771395b03b79f235e3d4abf",
+		"src/net/hex_snapshot_wire_packing.gd": "12190d705d99244a4cdc52160cffe0465c3a1eb6e7a2ccedb65144491026cb23",
+		"src/net/hex_world_snapshot.gd": "585dff1fa8013bd3c3107f05e0c60a511436b0b9c10b568933f15bbeab2f860a",
+		"src/net/session_transport.gd": "fb3c6e987936ab713655e65932763f9f69d6dce6eacf8f86d162c7c9beab4f05",
+		"src/net/world_snapshot_envelope.gd": "a66175221a6e23e3b03d2c37875fe35990878c74f9ccd792b5cad31f309ffdf0",
+		"src/presentation/hex_court_presenter.gd": "a39a674c708031eae39a8e624112d7701c7c43e38662d5daa3e1c9ca82e0f9e9",
+		"src/sim/combat/combat_definition_table.gd": "aa1332c283c28536079292e660fe5d2a998d127f390997651828a72662495d83",
+		"src/sim/combat/combat_system.gd": "9dd42a2a06218b7deaa6819877ee7c66e852d757f7a9c5985356d21c9fc8f8db",
+		"src/sim/combat/combat_tuning.gd": "1abd32b257fe274712f9f89f50cb3e248dca7abf946abe87606c9029f76ffb92",
+		"src/sim/core/sim_world.gd": "502b5e0bbc84a4d13e2ba1fbc8f18e09acc9c6a07947073fffb97043c5445289",
+		"src/sim/hex/hex_chemistry_world.gd": "e7fd51257d23100a39db1deb578a7220005a51a3951a7ef3bdbc116376ff4e1f",
+		"src/sim/hex/hex_collision_world.gd": "1bcd71df727bad17d0751c3ae077a767206dbb0009b9abc99b9a3d43e7437358",
+		"src/sim/hex/hex_contact_workset.gd": "6b545be93a34064bf00bf0c8330533d90cedb7b6bfa39ef26c05dddea801465b",
+		"src/sim/hex/hex_convex_geometry.gd": "214c9a70c8421761dcba5f2edd984e69142834eb20e9c8223acc830519fd9168",
+		"src/sim/hex/hex_footprint.gd": "07e2fefe0b41ddc6d49708fe30023b6091f20384e5815d6383f839328f88351d",
+		"src/sim/hex/hex_product_effects.gd": "598933dd652e6b3961d506fab2ebcf4426f63b028ece9618f33e40c103ffbb57",
+		"src/sim/hex/hex_projectile_combat.gd": "ba0f80546663dd9c2db99d2996e65fc2b6572fc0179da2405d0c82a6e67b001b",
+		"src/sim/hex/hex_world_definition.gd": "e15d75d48ddedc6bc891400f508ae43d892742c151e54bb5b93aef68dfa23f18",
+		"tests/performance/profile_producer_topology_reuse.gd": "e6e83b98f73deaad33d582caef1547602965d1a7565611aa05cbd2fa89c80c70",
+		"tests/performance/profile_unified_wellspring.gd": "1c9e4f4f00553e44e94a6485bba0c92f6f2f06ac52f91ff16562784b2069a90a",
+		"tests/support/hex_producer_topology_legacy_oracle.gd": "9233c90c502a59f145932d6838363f1db2411b74fb1c844994ca8cf53aeb974c",
+		"tests/unit/test_hex_producer_topology_reuse.gd": "0079109d139d76ac1d51328635132b1187c4b240356ba7dab5836597f2a83345"
+	},
+	"source_sha256_before": {
+		"content/abilities/foundation_abilities_v1.json": "720c16ce73f11ae9e723f43e31f39d1d700bc7a583619cd418ec3408b16f52bc",
+		"content/champions/foundation_champions_v1.json": "23a1f624a9de6c2bf88dc76578a69b23613465707605528e2988e209abba458a",
+		"content/maps/sanctum_campus_g2_v1.json": "a1d17e155000ebbdf36cb033823a2b42b1c8e31f844444da347fbac400b3c817",
+		"src/net/authoritative_session.gd": "1b6511639f9660fe623803a6e3fdb0415b3927ed46a9e0ad63463e049ce83298",
+		"src/net/hex_chemistry_snapshot.gd": "e3a39d69dde57c42fb912d3483779642e05502013771395b03b79f235e3d4abf",
+		"src/net/hex_snapshot_wire_packing.gd": "12190d705d99244a4cdc52160cffe0465c3a1eb6e7a2ccedb65144491026cb23",
+		"src/net/hex_world_snapshot.gd": "585dff1fa8013bd3c3107f05e0c60a511436b0b9c10b568933f15bbeab2f860a",
+		"src/net/session_transport.gd": "fb3c6e987936ab713655e65932763f9f69d6dce6eacf8f86d162c7c9beab4f05",
+		"src/net/world_snapshot_envelope.gd": "a66175221a6e23e3b03d2c37875fe35990878c74f9ccd792b5cad31f309ffdf0",
+		"src/presentation/hex_court_presenter.gd": "a39a674c708031eae39a8e624112d7701c7c43e38662d5daa3e1c9ca82e0f9e9",
+		"src/sim/combat/combat_definition_table.gd": "aa1332c283c28536079292e660fe5d2a998d127f390997651828a72662495d83",
+		"src/sim/combat/combat_system.gd": "9dd42a2a06218b7deaa6819877ee7c66e852d757f7a9c5985356d21c9fc8f8db",
+		"src/sim/combat/combat_tuning.gd": "1abd32b257fe274712f9f89f50cb3e248dca7abf946abe87606c9029f76ffb92",
+		"src/sim/core/sim_world.gd": "502b5e0bbc84a4d13e2ba1fbc8f18e09acc9c6a07947073fffb97043c5445289",
+		"src/sim/hex/hex_chemistry_world.gd": "e7fd51257d23100a39db1deb578a7220005a51a3951a7ef3bdbc116376ff4e1f",
+		"src/sim/hex/hex_collision_world.gd": "1bcd71df727bad17d0751c3ae077a767206dbb0009b9abc99b9a3d43e7437358",
+		"src/sim/hex/hex_contact_workset.gd": "6b545be93a34064bf00bf0c8330533d90cedb7b6bfa39ef26c05dddea801465b",
+		"src/sim/hex/hex_convex_geometry.gd": "214c9a70c8421761dcba5f2edd984e69142834eb20e9c8223acc830519fd9168",
+		"src/sim/hex/hex_footprint.gd": "07e2fefe0b41ddc6d49708fe30023b6091f20384e5815d6383f839328f88351d",
+		"src/sim/hex/hex_product_effects.gd": "598933dd652e6b3961d506fab2ebcf4426f63b028ece9618f33e40c103ffbb57",
+		"src/sim/hex/hex_projectile_combat.gd": "ba0f80546663dd9c2db99d2996e65fc2b6572fc0179da2405d0c82a6e67b001b",
+		"src/sim/hex/hex_world_definition.gd": "e15d75d48ddedc6bc891400f508ae43d892742c151e54bb5b93aef68dfa23f18",
+		"tests/performance/profile_producer_topology_reuse.gd": "e6e83b98f73deaad33d582caef1547602965d1a7565611aa05cbd2fa89c80c70",
+		"tests/performance/profile_unified_wellspring.gd": "1c9e4f4f00553e44e94a6485bba0c92f6f2f06ac52f91ff16562784b2069a90a",
+		"tests/support/hex_producer_topology_legacy_oracle.gd": "9233c90c502a59f145932d6838363f1db2411b74fb1c844994ca8cf53aeb974c",
+		"tests/unit/test_hex_producer_topology_reuse.gd": "0079109d139d76ac1d51328635132b1187c4b240356ba7dab5836597f2a83345"
+	},
+	"sources_unchanged": true,
+	"timing_semantics": "One cold capture per arm after clearing both existing pure caches, then six warm complete-capture samples per arm in alternating AB/BA order. Timers include encoding, wire packing/compression, detached producer decode, all dynamic/relation/hash checks and local context disposal. Equality, public incoming restore, simulation, hashing for observer traces, and memory observations are outside timers. No sums of nested percentiles.",
+	"warm_pairs": 6,
+	"warmup_ticks": 120
+}

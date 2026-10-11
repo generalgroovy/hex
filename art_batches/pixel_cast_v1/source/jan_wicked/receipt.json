@@ -1,0 +1,106 @@
+{
+  "id": "jan_wicked",
+  "display_name": "Jan Wicked",
+  "ancestry": "human",
+  "body_type": "middle",
+  "generator": "built-in image_gen",
+  "generator_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-ece9-7650-9c46-262da7c2d18d\\exec-2b9469e6-a36f-48eb-85bb-5ee79c1a3515.png",
+  "source_file": "source.png",
+  "attempt": 2,
+  "attempt1_generator_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-ece9-7650-9c46-262da7c2d18d\\exec-c0c07c5a-a0be-471e-b2d8-f08cbdb04d88.png",
+  "attempt1_local": "attempt-1.png",
+  "references": [
+    "C:\\Users\\sende\\Projects\\hex\\assets\\sprites\\fullbody_cast_v1\\jan_wicked-detail.png",
+    "C:\\Users\\sende\\Pictures\\styleref1.png",
+    "C:\\Users\\sende\\Projects\\hex\\art_batches\\pixel_body_pilot_v1\\source\\s-wayne.png"
+  ],
+  "correction_references": [
+    "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-ece9-7650-9c46-262da7c2d18d\\exec-c0c07c5a-a0be-471e-b2d8-f08cbdb04d88.png"
+  ],
+  "observed": {
+    "width": 1774,
+    "height": 887,
+    "pixel_format": "Format32bppArgb",
+    "sampled_zero_alpha": 14581,
+    "sampled_partial_alpha": 10041,
+    "sampled_total": 24642,
+    "sha256": "A6FF57EDC2B6BC46EAF0838B68D31C83CAAE9BC19D6B5D354C2B1B987B70C4FE",
+    "columns": 8,
+    "rows": 4,
+    "row_mapping": [
+      "idle",
+      "walk_contact_a",
+      "walk_contact_b",
+      "cast"
+    ],
+    "canonical_headings": [
+      "S",
+      "SE",
+      "E",
+      "NE",
+      "N",
+      "NW",
+      "W",
+      "SW"
+    ],
+    "source_column_mapping_by_row": [
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      [
+        0,
+        1,
+        2,
+        5,
+        4,
+        3,
+        6,
+        7
+      ]
+    ]
+  },
+  "visual_assessment": {
+    "status": "accepted_source_candidate_with_cast_column_mapping",
+    "strengths": [
+      "32 intact human bodies with black silver fur-collar coat",
+      "rows0-2 NE and NW face correct opposite sides after correction",
+      "cast has both rear diagonals but stored in opposite columns",
+      "empty hands and no effects"
+    ],
+    "quality_flags": [
+      "CAST ROW ONLY: output NE must read source column5; output NW must read source column3",
+      "Soft alpha needs deterministic cleanup",
+      "N walk stride subtle",
+      "No runtime acceptance claimed"
+    ]
+  },
+  "exact_prompt": "Use case: stylized-concept\nAsset type: production 2D game character pixel-art sprite source sheet for H.E.X.\nPrimary request: ONE coherent identity, exactly EIGHT columns and FOUR rows, total 32 separate full-body poses on genuinely transparent RGBA.\nInput images: Image 1 is CURRENT identity reference, preserving ONLY its face, ancestry, hair, clothing colors, costume and anatomy; do not copy any erroneous duplicate directional poses from Image1; Image 2 is old pixel STYLE ONLY, ignore its text, outdated names/races, props and spells; Image 3 is compact appealing proportion/style and eight-heading reference ONLY, do NOT copy its five-row layout or its identity.\nStyle/medium: charming endearing compact oldschool pixel art, expressive readable face, crisp deliberate chunky pixel clusters, restrained shading and dark colored outline; unified cranial head size and sturdy connected anatomy. Do not elongate limbs or torso. Middle body build, approx 2.7 heads high with volume rather than stretched height; the final assembler will make body 63 pixels high inside 128 pixel cells.\nComposition: exactly 8 equal columns x 4 equal rows, landscape sheet. Each sprite centered in its own invisible cell with generous fully transparent gutters and margin. Entire head, hands, feet, costume, tail/wings when present must fit intact. No sprites touching.\nEvery row has these precise eight distinct directions LEFT TO RIGHT: column0 S straight FRONT facing viewer; column1 SE FRONT-RIGHT 45 degrees (both eyes and front chest); column2 E pure RIGHT PROFILE 90 degrees (one eye only, nose silhouette pointing image RIGHT, narrower torso); column3 NE BACK-RIGHT 45 degrees with back of head and NO frontal eyes, body visibly turning toward image RIGHT; column4 N straight BACK with NO face; column5 NW BACK-LEFT 45 degrees with back of head and NO frontal eyes, body visibly turning toward image LEFT; column6 W pure LEFT PROFILE 270 degrees (one eye only, nose silhouette pointing image LEFT, narrower torso); column7 SW FRONT-LEFT 45 degrees (both eyes and front chest).\nFOUR ROWS ONLY top to bottom: row0 relaxed IDLE neutral standing; row1 WALK CONTACT A with LEFT foot forward and RIGHT arm forward; row2 WALK CONTACT B with RIGHT foot forward and LEFT arm forward, clearly opposite legs from row1; row3 CAST with both EMPTY hands extended forward in that heading. Four rows, never five. Keep body shape, head size, costume and scale consistent through all 32 poses; head, torso, arms, hands, legs, feet physically connected.\nNo weapons, staves, held tools, baked spells, magic particles, aura, ground shadow, ground plane, scene, labels, letters, watermarks, visible grid or checkerboard. Actual transparent background with alpha=0 between figures.\nSubject: Jan Wicked, current ancestry HUMAN. Compact young pale-skinned human man with spiky tousled short BLACK hair, dark expressive eyes, no beard. Long black/charcoal coat with fluffy light grey fur collar, thin silver trim and silver buckles, black tunic, black fitted trousers, black boots, black gloves with small fingers. Preserve current Image1 human costume and personality. No weapon, no horns/ears/wings/tail. Cast empty palms toward each facing direction.",
+  "exact_correction_prompt": "Use case: identity-preserve\nAsset type: H.E.X. transparent pixel-art 8-direction x4-pose sprite sheet.\nImage 1 is the sheet to correct. Preserve its human identity, connected full bodies, costumes, pixel style, four rows, eight columns, scale, generous transparent gutters, alternating walk contacts and empty-hand cast. Change ONLY rear diagonal facing orientation. In EVERY ROW: column3 (fourth from left) must face BACK-RIGHT, showing back of head and body turned toward the image RIGHT; column5 (sixth from left) must face BACK-LEFT, showing back of head and body turned toward the image LEFT. These two columns must be clearly opposite back diagonals, not duplicate facing. Neither back diagonal may show frontal eyes. Keep column4 pure BACK. Unchanged column order is S(front), SE(front-right), E(right profile), NE(back-right), N(back), NW(back-left), W(left profile), SW(front-left). Unchanged rows idle, walk contact A, opposite walk contact B, empty-hand cast. Keep the black silver coat with light gray fur collar, black gloves and short spiky black hair. No background or ground/shadow, no weapons, no spell effects, no labels, no visible grid. Genuine transparent RGBA alpha background. Exactly32 intact sprites, no new rows."
+}

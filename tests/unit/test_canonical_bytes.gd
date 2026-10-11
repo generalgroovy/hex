@@ -92,7 +92,7 @@ func _test_utf8_string_lengths() -> void:
 
 func _test_reaction_strength_is_append_only() -> void:
 	var projectile := ProjectileState.new(
-		1000, 1, 2, CombatTuning.RILLSHOT_WIRE_ID, 2,
+		1000, 1, 2, CombatTuning.RILLSHOT_WIRE_ID, 3,
 		Vector2i(500_000, 600_000), Vector2i(480_000, -20_000),
 		12_000, 9_000, 90,
 	)
@@ -104,19 +104,27 @@ func _test_reaction_strength_is_append_only() -> void:
 	projectile.reaction_strength = 15
 	projectile.range_subunit = 123_456
 	var projectile_values := projectile.canonical_values()
-	equal(projectile_values.size(), 30, "projectile canonical state appends strength and range remainder after its variable graze history")
+	equal(projectile_values.size(), 34, "projectile canonical state appends delivery state after strength and range remainder without shifting graze history")
 	equal(projectile_values[25], 2, "published projectile graze-count index is unchanged")
 	equal(projectile_values[26], 2, "first sorted graze ID retains its published index")
 	equal(projectile_values[27], 3, "second sorted graze ID retains its published index")
 	equal(projectile_values[28], 15, "cast strength follows the complete existing projectile payload")
 	equal(projectile_values[29], 123_456, "range remainder follows cast strength without shifting published fields")
+	equal(projectile_values.slice(30), PackedInt64Array([0, 0, 0, 0]), "ordinary projectile retains explicit empty delivery phase, clock, pool and contact count")
+	projectile.delivery_phase = 1
+	projectile.delivery_ticks = 72
+	projectile.delivery_damage_remaining = 12000
+	projectile.contact_entity_ids = PackedInt64Array([2, 3])
+	var with_contacts := projectile.canonical_values()
+	equal(with_contacts.slice(0, 30), projectile_values.slice(0, 30), "appended delivery history cannot shift any previously published canonical value")
+	equal(with_contacts.slice(30), PackedInt64Array([1, 72, 12000, 2, 2, 3]), "canonical suffix includes the full finite delivery state and every contacted identity")
 	var deposit := ElementDepositState.new()
 	deposit.entity_id = 3000
 	deposit.source_cast_id = 7001
 	deposit.source_wire_id = CombatTuning.RILLSHOT_WIRE_ID
 	deposit.owner_id = 1
 	deposit.team_id = 2
-	deposit.element_wire_id = 2
+	deposit.element_wire_id = 3
 	deposit.position_x = 500_000
 	deposit.position_y = 600_000
 	deposit.created_tick = 100
@@ -177,8 +185,9 @@ func _test_production_command_and_world_payloads() -> void:
 	# Explicitly exercise nonempty chemistry lanes, their new ID counters, and
 	# variable-length reaction data, not merely the two empty-lane count words.
 	var matter: Array = []
+	var source_wires: Array[int] = [145, 140, 163] # Fire, Water, Air: exact live identities.
 	for index: int in range(3):
-		equal(ElementChemistrySystem.deposit_terminal(matter, 3000 + index, 5000 + index, CombatTuning.CINDERBOLT_WIRE_ID, 1, 1, 2 + index, Vector2i(500_000, 500_000), world.tick, world.config), 1, "canonical fixture builds validated elemental material")
+		equal(ElementChemistrySystem.deposit_terminal(matter, 3000 + index, 5000 + index, source_wires[index], 1, 1, 2 + index, Vector2i(500_000, 500_000), world.tick, world.config), 1, "canonical fixture builds validated elemental material")
 	world.deposits.append(matter[2])
 	var reaction := ElementChemistrySystem.form_reaction(matter[0], matter[1], 4000, world.tick, world.config)
 	reaction.linked_deposit_ids = PackedInt64Array([3002])

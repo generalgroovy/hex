@@ -1,0 +1,54 @@
+# Independent D2 hash-integration review
+
+Status: **FINAL REVIEW COMPLETE. D2 is complete as a bounded canonical-hash optimization and verified Windows candidate; rendered timing acceptance remains failed and broader capacity/human acceptance remains open.** No supported-domain integration blocker found. This review does not approve release, capacity, human visuals, or rendered responsiveness.
+
+Review scope: actual production `HexChemistryWorld._state_hash_bytes`, `_stable_hash_cells`, and `state_hash`; the preserved test-only prototype and old source under `baseline-source/`; `tests/unit/test_hex_hash_specialization.gd`; suite registration; and `tests/performance/profile_hex_hash_integrated.gd`. Checkout: `C:\Users\sende\Projects\hex`. This reviewer runs no engine operations and changes only this review document.
+
+## Static findings
+
+1. **The bounded production change matches the measured algorithm.** All source before the former `state_hash` section is byte-for-byte unchanged against the preserved world. Integration removes the helper's `world` qualifiers, calls production `_stable` locally, and inlines the compact-record fallback. It preserves every ordered outer field, Vector2i formatting/sort, exact integral metadata guard, template equality, metadata order, fallback omission rule, JSON encoding, signed 64-bit byte-length prefix, and SHA-256 behavior. No cache or retained authority reference was added.
+2. **The pre-integration evidence remains attributable.** SHA-256 values for preserved old world, oracle/prototype support, and prototype profiler all match the historical candidate-v2 receipt. Live support and prototype profiler still exactly equal their preserved copies. The old-versus-new speedup remains the historical pre-integration experiment; production has now changed.
+3. **Tests reach actual production bytes.** The new registered suite completes 38 intended cases. Each compares `_state_hash_bytes()` directly with independent `FrozenOracle.frozen_original_bytes()`, compares production SHA-256 with the oracle bytes, and verifies instance/cell/complete hashed-authority preservation. Cases cover negative/reordered cells, integral metadata, extras, missing/malformed metadata/material layers, both insertion orders of nested equal-format key ties, mutation/restoration, layer transitions, and no cells. It has a completion counter so a skipped helper cannot silently satisfy the intended case count.
+4. **Existing transition coverage is relevant and registered.** `test_hex_world_snapshot.gd:55` restores a paid complete-world snapshot and at lines 82-85 advances original/restored worlds with the identical next command before comparing their state hashes. `test_hex_chemistry_snapshot.gd:26` covers canonical recapture plus subsequent retirement/expiry equivalence. `test_hex_snapshot_optimization.gd:199` covers paid authority with a live projectile and the complete-world hash; its legacy sparse hash remains a separate oracle. `tests/replay/test_replay.gd` verifies per-tick replay and rejects altered checkpoints/stale protocol. These are source-level coverage observations until fresh D2 execution passes.
+5. **The integrated profiler is correctly scoped.** It extends the preserved workload and timers, adds comparisons of actual production bytes against both frozen old bytes and prototype bytes, and records its own source hash. Its receipt explicitly says `production_current` is now the integrated implementation and comparison B is the preserved prototype. It cannot substantiate a second old-versus-new speedup. Exact old bytes still provide an outside-timer equivalence oracle.
+
+The valid-domain and timing limits from the prototype review still apply: top-level Vector2i keys/Dictionary records, String-typed record-key iteration, no promise about error timing for unsupported types or cyclic graphs, sample-limited p99=max, synthetic all-nonempty authority used only for fallback pressure, and resource-constrained local execution. Existing dirty files outside this slice were not reverted or reviewed as new hash changes.
+
+## Evidence and recommendation
+
+Fresh `focused-v1.json` is **PASS: 8 suites, 4,707 assertions, zero failures and zero stderr**, including 264 assertions in the new specialization suite and the snapshot, next-state, prediction, reconciliation and replay suites identified above. Its recorded suite-log and current-state SHA-256 values were verified against the files. The snapshot/transition coverage is now fresh executed evidence within these suites.
+
+Fresh `.godot/hex-hash-candidate-hash-integrated-v1.json` is **PASS: 1,210 assertions, 38 completed equivalence cases, three populated workloads and zero-byte stderr**. All 11 recorded source SHA-256 values match disk. All 48 block entries, alternating order, 7 samples per block, 56 per implementation/case, flattened aggregate samples, and all six p50/p95/p99 rows recompute correctly. `freeze.json` records `p55-a9837cac9e8c`; all seven listed frozen file hashes match disk at review time. This is source-identity consistency, not a packaged-executable verification.
+
+| Case | Integrated p50/p95/p99, us | Preserved prototype p50/p95/p99, us |
+| --- | --- | --- |
+| Empty topology | 57,927 / 66,117 / 88,786 | 58,244 / 63,488 / 71,739 |
+| Legal paid workload | 62,361 / 67,552 / 154,434 | 62,346 / 65,881 / 67,296 |
+| Synthetic all-nonempty | 134,985 / 141,742 / 190,635 | 137,437 / 142,567 / 149,260 |
+
+Integrated median cost is consistent with the measured prototype. The 154,434 us legal and 190,635 us synthetic maxima are retained, with no asserted cause. These are complete-hash-call measurements; no new old-versus-new speedup is claimed. The sparse test fixtures compare actual production bytes directly; the large paid/empty/synthetic workload cases compare candidate bytes to old bytes and actual production hash to both paths. Static integration equivalence and the direct production-byte fixtures support that distinction.
+
+Fresh `full-v1.json` is **PASS: 159 suites, 805,014 assertions, zero failures and zero stderr**, with import, asset inventory, doctor/current-state checks, deterministic suites and a 120 Hz boot check. Duration: 270,496 ms. This reviewer verified every recorded log hash, the current-state hash and asset-inventory hash, and independently summed suite assertion/failure counts. A 120 Hz boot check is not sustained rendered-performance acceptance. The Windows package receipt reports **PASS** for `p55-a9837cac9e8c`, native launch, source identity and safe close; export and smoke stderr files are empty. The exact-PCK basic movement/casting receipt passes 27 cases / 11,601 checks and advanced movement passes 9 cases / 5,909 checks, each with zero failed check records and the frozen runtime identity. Loom opens through interaction, applies twelve slots, closes through Escape, allows movement and a paid cast, saves the file, and restores the expected wires in a separate process. This is scripted application-input evidence, not physical controls or the complete movement matrix.
+
+Exact-PCK capture receipts match the frozen runtime identity: Water **32 frames / 888 checks / zero failed checks**; station labels **27 assertions / 12 gameplay frames / no failures**; terrain visibility **31 captures / 165 assertions / zero failures**. Eight representative stills were visually inspected: normal and reduced-motion active Water, normal and reduced-motion expired Water, nearby live Movement Guide title, far normal current/legacy labels, and 50% reduced-motion current labels. Active Water shows bounded whole-hex blue coverage with visible wave cues; expired frames clear that coverage. The nearby title remains legible. Current far-label output removes the legacy distant Movement Guide/Farflow title artifacts while retaining the nearby Momentum Chime label. No obvious new visual blocker was identified in these samples. Still-image inspection does not establish animation quality, actual reduced-motion comfort, responsiveness, or human aesthetic acceptance.
+
+The package receipt records PCK SHA-256 `72a819c26adef5557bb416a96380ad4a4cd3327096d5f2424777e41d9272deb8` and ZIP SHA-256 `e67e92e1ebabc8b68183d741f0d972b220c0e35c8a77b48fd7f4c9422e69aaaa`. After rendered stress finished, this reviewer independently matched the actual PCK and ZIP hashes to these values, all **223 preserved evidence-file hashes**, all **28 protected/frozen hashes**, and every rendered-profile source hash. There were no mismatches. `package-audit.json` records seven ZIP entries and their hashes; the matching ZIP hash binds that audit to the reviewed archive. The audit includes the frozen identity and preservation receipt, and root curation verifies the previous responsive fallback PCK/ZIP unchanged. Installer is NOT_RUN and checkpoint promotion is false in the receipt.
+
+## Final rendered stress and acceptance boundary
+
+Fresh `.godot/unified-wellspring-render-profile-hash-v1.json` completes **7,991 correctness assertions with zero failures**, zero reported draw-authority mutations, and four populated runs. **Rendered timing fails: all 1,440 measured present frames miss 16,667 us.** This correctness pass must not be described as a performance pass.
+
+| Workload | Mode | Frames / deadline misses | Present elapsed p50/p95/p99, us |
+| --- | --- | --- | --- |
+| Sustained distributed | Normal | 360 / 360 | 245,497 / 331,476 / 377,237 |
+| Sustained distributed | Reduced | 360 / 360 | 241,766 / 312,498 / 334,598 |
+| Dense Crucible | Reduced | 360 / 360 | 126,320 / 206,273 / 273,105 |
+| Dense Crucible | Normal | 360 / 360 | 125,330 / 210,184 / 257,760 |
+
+The verified receipt sources identify the current `p55-a9837cac9e8c` candidate and declared rendered workload; prior timings remain historical observations rather than a controlled before/after rendered-performance experiment. The exact-EXE 300-second networking lifecycle is **NOT_RUN for D2**. Its prior responsive-milestone run failed with resource/allocation/JSON errors; that failure has not been resolved by this hash optimization. Physical controls, native spectator behavior, two-PC/Internet networking, sustained multiplayer capacity, and human Water/motion/style approval remain open.
+
+Final recommendation: retain this candidate and its evidence as the completed D2 slice. No remaining static blocker was found in the bounded production change. Do not promote a responsiveness/capacity or overall acceptance claim from the isolated hash improvement, passing regression suites, successful package journeys, or sampled stills. The separate snapshot-lifetime diagnostic remains separate work and supplies no acceptance evidence here. Preserve the previous responsive package and historical receipts; a later validated build needs its own identity and package evidence. Isolated faster hashing does not close the previously failed frame-stress or exact-EXE lifecycle gates.
+
+
+
+

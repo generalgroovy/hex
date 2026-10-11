@@ -8,7 +8,7 @@ extends RefCounted
 const StrengthBudget = preload("res://src/sim/combat/strength_budget.gd")
 const HexFootprint = preload("res://src/sim/hex/hex_footprint.gd")
 const Grid = preload("res://src/sim/hex/hex_grid.gd")
-const MAX_SELECTED_CELLS: int = 127
+const MAX_SELECTED_CELLS: int = 511 # Fourfold density; world-space effect radii unchanged.
 
 
 static func initialize(record: Dictionary, entity_id: int) -> bool:

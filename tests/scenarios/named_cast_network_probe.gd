@@ -57,7 +57,7 @@ func _exercise() -> void:
 	var signature := SessionTransport.compatibility_signature(SimConfig.PROTOCOL_VERSION, 120,
 		FileAccess.get_sha256(node.CAMPUS_LAYOUT_PATH), node.ability_catalog.content_hash,
 		node.champion_catalog.content_hash, SessionCharter.catalog_hash(),
-		FileAccess.get_sha256("res://content/reactions/first_eight_element_reactions_v1.json"))
+		FileAccess.get_sha256(ReactionCatalog.DEFAULT_PATH))
 	if not _check(host.start_host(0, signature, "Roster Host"), "host binds unique automatic UDP port: " + host.last_error): return
 	if not _check(client.start_join("127.0.0.1", host.bound_port, signature, "Roster Guest"), "guest starts real ENet join: " + client.last_error): return
 	if not _check(_poll(func() -> bool: return client.is_connected_client()), "current compatibility handshake completes"): return

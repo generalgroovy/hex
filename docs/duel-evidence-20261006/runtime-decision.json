@@ -1,0 +1,14 @@
+{
+  "decision": "NOT_PROMOTED",
+  "production_changed": false,
+  "production_sha256": "f59aed162a15c824e37971a30b4cdbc274725f7ecb4482c10bbfc8373a6bc6c3",
+  "final_diagnostic": "canonical-leaf-oct6-v3.json",
+  "fresh_probe_assertions": 2603,
+  "fresh_probe_failures": 0,
+  "independent_unit_assertions": 261,
+  "reason": "All three real paid fixtures select baseline fallback because strength provenance is PackedInt64Array, outside the isolated prototype admission. Potential eligible map shapes do not establish actual allocation avoidance. No speed benefit claimed and no production hook or A/B/B/A promotion attempted.",
+  "failed_receipts": ["canonical-leaf-oct6-v1.json", "canonical-leaf-oct6-v2.json"],
+  "reporting_repairs": ["Accept explicit -1 admission fallback and report rejection path/type instead of claiming avoided allocations.", "Validate JSON-decoded numeric statistics by exact finite integral value and shape, not int/float Dictionary identity. Reject fractions, booleans and missing/extra fields."],
+  "next_bounded_hypothesis": "If resumed, admit only unchanged scalar PackedInt64Array JSON passthrough, demonstrate exercised admission and exact canonical bytes first, then measure complete owned-publication A/B/B/A. Do not reuse fallback timings as candidate speed evidence.",
+  "dense_120hz": "NOT_ACCEPTED"
+}

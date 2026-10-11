@@ -98,9 +98,9 @@ func _test_true_six_face_pillar_parity() -> void:
 
 
 func _test_ground_modifier_and_flow_parity_without_replica_mutation() -> void:
-	var products := [_product(1, 303), _product(2, 316)]
+	var products := [_product(1, 303), _product(2, 317)]
 	var replica := _world(products)
-	var host := _world([_product(1, 303), _product(2, 316)])
+	var host := _world([_product(1, 303), _product(2, 317)])
 	var replica_actor := _actor(ORIGIN)
 	var host_actor := _copy_actor(replica_actor)
 	replica.players = [replica_actor]
@@ -121,17 +121,17 @@ func _test_ground_modifier_and_flow_parity_without_replica_mutation() -> void:
 	check(prediction.queue_input(1, command), "modifier/flow input advances prediction")
 	_host_step(host, command)
 
-	_assert_prediction_state(prediction.predicted_state, host_actor, "Mud and Flood")
-	equal(prediction.hex_authority.flow_carry, host.hex_court.flow_carry, "predicted Flood fractional carry exactly matches authority")
-	check(prediction.hex_authority.flow_carry.has("2:2"), "real Flood actor flow records a bounded product/actor carry")
+	_assert_prediction_state(prediction.predicted_state, host_actor, "Mud and Hailcurrent")
+	equal(prediction.hex_authority.flow_carry, host.hex_court.flow_carry, "predicted Hailcurrent fractional carry exactly matches authority")
+	check(prediction.hex_authority.flow_carry.has("2:2"), "real Hailcurrent actor flow records a bounded product/actor carry")
 	var dry := _actor(ORIGIN)
 	MovementSystem.step(dry, command, SimConfig.new(120), CollisionWorld.new(2_000_000, 2_000_000), 1000, 1000, 1000)
 	check(host_actor.velocity_x < dry.velocity_x, "Mud changes real ground acceleration rather than only reporting a modifier")
-	check(host_actor.position_x > ORIGIN.x, "Flood applies real grounded directional movement after ordinary motion")
+	check(host_actor.position_x > ORIGIN.x, "Hailcurrent applies real grounded directional movement after ordinary motion")
 
 	equal(replica_actor.canonical_values(), replica_actor_before, "prediction leaves the authoritative replica actor untouched")
 	equal(replica.hex_court.products, replica_products_before, "prediction leaves authoritative product contacts and phases untouched")
-	equal(replica.hex_court.flow_carry, replica_flow_before, "prediction stores Flood carry only in its detached authority")
+	equal(replica.hex_court.flow_carry, replica_flow_before, "prediction stores Hailcurrent carry only in its detached authority")
 	equal(replica.hex_court.cells, replica_cells_before, "prediction never retile-writes the authoritative replica cells")
 
 
@@ -213,13 +213,13 @@ func _copy_actor(source: PlayerState) -> PlayerState:
 
 func _host_step(world: SimWorld, command: SimCommand) -> void:
 	var actor := world.player(ACTOR_ID)
-	actor.spawn_protection_ticks = maxi(0, actor.spawn_protection_ticks - 1)
 	actor.aim_x = command.aim_x
 	actor.aim_y = command.aim_y
 	world.hex_court.expire_at(world.tick)
 	world.hex_court.fracture_products(world.tick)
 	world.hex_court.move_products(world.tick, world.reaction_movement)
 	(world.reaction_movement as HexCollisionWorld).refresh_surfaces(world.tick)
+	PlayerResourcesSystem.step(actor, world.config)
 	world.reaction_movement.begin_actor(Vector2i(actor.position_x, actor.position_y), MovementTuning.PLAYER_RADIUS)
 	ReactionMovementWorld.clear_stale_contact(actor, world.reaction_movement)
 	var point := Vector2i(actor.position_x, actor.position_y)

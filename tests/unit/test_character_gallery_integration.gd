@@ -10,12 +10,19 @@ const Compendium = preload("res://src/presentation/player_compendium.gd")
 # Request handling, feedback, open/close and modal command code remain inherited.
 class GalleryHarness:
 	extends "res://src/app/bootstrap.gd"
+	var forced_round_phase: int = -1
+	var submitted_requests: Array[Vector2i] = []
 	func _ready() -> void:
 		pass
 	func _process(_delta: float) -> void:
 		pass
 	func _draw() -> void:
 		pass
+	func _current_round_state() -> Dictionary:
+		return {"phase": forced_round_phase} if forced_round_phase >= 0 else super._current_round_state()
+	func _submit_session_request(action: int, value: int = 0) -> void:
+		submitted_requests.append(Vector2i(action, value))
+		super._submit_session_request(action, value)
 
 
 class ActivePagesRecorder:
@@ -37,7 +44,7 @@ func run() -> int:
 	equal(neutral.move_x, 0, "Gallery removes horizontal movement including capture overrides")
 	equal(neutral.move_y, 0, "Gallery removes vertical movement including capture overrides")
 	equal(neutral.held_actions, 0, "Gallery removes held movement/spells")
-	equal(neutral.pressed_actions, 0, "Gallery removes paid action edges")
+	equal(neutral.pressed_actions, SimCommand.PRESSED_CANCEL_MOVEMENT, "Gallery sends only safe movement cancellation, never a paid action edge or intentional jump release")
 	equal(neutral.aim_x, command.aim_x, "Gallery keeps harmless facing")
 	equal(neutral.aim_target_x, -1, "Gallery does not retain a cursor spell endpoint")
 	check(Bootstrap.gallery_modal_command(command, false) == command, "closed Gallery leaves ordinary commands untouched")
@@ -61,9 +68,11 @@ func run() -> int:
 	node.world = SimWorld.new(120, 1, CollisionWorld.new(3_072_000, 1_728_000))
 	var state: PlayerState = node.world.player()
 	check(node.champion_catalog.apply_to_player(state, "oh_tipi"), "Gallery host begins as Oh Tipi")
-	check(node.authoritative_session.bind(node.world, node.champion_catalog, Vector2i(1568, 640), "Test Host"), "Gallery host session binds without sockets")
-	state.position_x = 1_568_000
-	state.position_y = 640_000
+	var gallery_position: Array = node.campus_layout.stations_by_id["champion-loom"].position
+	var gallery_approach := Vector2i(int(gallery_position[0]), int(gallery_position[1]) + 48)
+	check(node.authoritative_session.bind(node.world, node.champion_catalog, gallery_approach, "Test Host"), "Gallery host session binds without sockets")
+	state.position_x = gallery_approach.x * SimConfig.FIXED_SCALE
+	state.position_y = gallery_approach.y * SimConfig.FIXED_SCALE
 	node.selected_champion_id = "oh_tipi"
 	node.input_router = InputRouter.new(1)
 	(Engine.get_main_loop() as SceneTree).root.add_child(node)
@@ -75,9 +84,18 @@ func run() -> int:
 	equal(Input.mouse_mode, Input.MOUSE_MODE_VISIBLE, "Gallery opening exposes native pointer")
 	node._open_player_compendium(Compendium.MOVEMENT)
 	check(not node.player_compendium.is_open, "Gallery cannot overlap the read-only Compendium")
-	node.character_selection_grid.model.pending_wire = 2
-	node._submit_session_request(SessionTransport.REQUEST_CHAMPION_SELECT, 2)
-	equal(state.champion_wire_id, 2, "offline path uses ordinary host request handler for exact selection")
+	_test_whole_roster_inspection(node, state)
+	_select_champion(node, "s_wayne")
+	var before_early_feedback := state.canonical_values()
+	var before_early_notice := node.station_notice
+	node._ingest_session_feedback([{"type": "champion_attuned", "entity_id": 1, "champion_wire_id": 2}])
+	equal(state.canonical_values(), before_early_feedback, "early attunement feedback cannot mutate actual offline authority")
+	equal(node.character_selection_grid.model.equipped_id, "oh_tipi", "unconfirmed feedback cannot optimistically equip the selected Gallery card")
+	equal(node.station_notice, before_early_notice, "unconfirmed local feedback cannot announce an attunement")
+	var requests_before := node.submitted_requests.size()
+	node._handle_character_gallery_input(_key(KEY_ENTER))
+	equal(node.submitted_requests.size(), requests_before + 1, "eligible Enter confirmation sends exactly one actual Gallery request")
+	equal(state.champion_wire_id, 2, "eligible input path uses ordinary host request handling for exact selection")
 	equal(node.selected_champion_id, "s_wayne", "host selection source updates only after accepted attunement")
 	equal(node.character_selection_grid.model.equipped_id, "s_wayne", "actual champion_attuned feedback confirms the local UI")
 	equal(node.character_selection_grid.model.pending_wire, 0, "actual acceptance clears pending selection")
@@ -85,6 +103,7 @@ func run() -> int:
 	var before := state.canonical_values()
 	node._submit_session_request(SessionTransport.REQUEST_CHAMPION_SELECT, 2)
 	equal(state.canonical_values(), before, "same champion request is byte-stable through actual host handler")
+	_test_selection_availability(node, state)
 	state.position_x = 500_000
 	node.character_selection_grid.model.pending_wire = 1
 	node._submit_session_request(SessionTransport.REQUEST_CHAMPION_SELECT, 1)
@@ -118,7 +137,7 @@ func run() -> int:
 		var inactive := node._sample_gameplay_command(node.world.tick, Vector2.ZERO, Vector2.RIGHT, false)
 		equal(inactive.move_x, 0, "focus latch neutralizes movement even if a caller omits its modal flag")
 		equal(inactive.held_actions, 0, "unfocused held primary and Rapid cannot fire")
-		equal(inactive.pressed_actions, 0, "unfocused action edges cannot spend resources")
+		equal(inactive.pressed_actions, SimCommand.PRESSED_CANCEL_MOVEMENT, "unfocused input sends exactly movement cancellation and cannot spend resources")
 		equal(inactive.aim_target_x, -1, "unfocused command carries no live cursor endpoint")
 		check(node.world.step([inactive]), "authoritative world still advances with neutral unfocused commands")
 	equal(node.world.tick, focus_tick_before + 3, "focus loss never pauses shared simulation time")
@@ -169,6 +188,119 @@ func run() -> int:
 	return finish("character-gallery-integration")
 
 
+func _test_whole_roster_inspection(node: GalleryHarness, state: PlayerState) -> void:
+	var grid := node.character_selection_grid
+	var before := state.canonical_values()
+	var requests_before := node.submitted_requests.size()
+	var seen: Dictionary = {}
+	grid.model.select_display_index(0)
+	# Follow the visible grid using actual Bootstrap event routing, not model
+	# selection setters. Alternating direction covers every row with no pages.
+	for row: int in range(5):
+		for column: int in range(6):
+			var champion_id := String(grid.model.selected_entry().id)
+			check(not seen.has(champion_id), "real modal navigation visits each flat-grid identity once")
+			seen[champion_id] = true
+			equal(grid.model.display_cells().size(), 30, "real Gallery routing retains every card on screen")
+			equal(grid.model.equipped_id, "oh_tipi", "whole-roster inspection never relabels authoritative attunement")
+			equal(grid.model.pending_wire, 0, "whole-roster inspection creates no pending authority work")
+			equal(state.canonical_values(), before, "whole-roster inspection preserves character, resources and exact equipped weave")
+			if column < 5:
+				node._handle_character_gallery_input(_key(KEY_RIGHT if row % 2 == 0 else KEY_LEFT))
+		if row < 4:
+			node._handle_character_gallery_input(_key(KEY_DOWN))
+	equal(seen.size(), 30, "all thirty characters are reachable by direct grid navigation")
+	equal(node.submitted_requests.size(), requests_before, "browsing all thirty characters sends no host requests")
+	check(grid.is_open, "whole-roster browsing keeps the Gallery modal open")
+
+
+func _test_selection_availability(node: GalleryHarness, state: PlayerState) -> void:
+	_select_champion(node, "oh_tipi")
+	var retained_status: String = "Previous attunement confirmation remains visible."
+	node.character_selection_grid.model.status_message = retained_status
+	var station: Array = node.campus_layout.stations_by_id["champion-loom"].position
+	state.position_x = int(station[0]) * 1000
+	state.position_y = (int(station[1]) + 48) * 1000
+	var availability: Dictionary = node._gallery_selection_availability(state)
+	check(bool(availability.get("enabled", false)), "free grounded actor beside Gallery keeps the positive selection path")
+	state.position_x = 400_000
+	state.position_y = 400_000
+	availability = node._gallery_selection_availability(state)
+	check(not bool(availability.get("enabled", true)) and String(availability.get("reason", "")).contains("beside the Gallery"), "remote Gallery inspection reports the exact station requirement")
+	var requests_before := node.submitted_requests.size()
+	node._handle_character_gallery_input(_key(KEY_ENTER))
+	equal(node.submitted_requests.size(), requests_before, "remote Enter confirmation sends no refused request")
+	equal(node.character_selection_grid.model.pending_wire, 0, "remote Enter confirmation creates no pending request")
+	equal(node.character_selection_grid.model.status_message, retained_status, "remote availability does not overwrite retained feedback")
+	state.position_x = int(station[0]) * 1000
+	state.position_y = (int(station[1]) + 48) * 1000
+	node.forced_round_phase = SessionRound.Phase.ACTIVE
+	availability = node._gallery_selection_availability(state)
+	check(not bool(availability.get("enabled", true)) and String(availability.get("reason", "")).contains("Wellspring free practice"), "arranged active phase exposes the policy reason without claiming a lifecycle journey")
+	node._handle_character_gallery_input(_key(KEY_ENTER))
+	equal(node.submitted_requests.size(), requests_before, "active-round Enter confirmation sends no refused request")
+	equal(node.character_selection_grid.model.pending_wire, 0, "active-round confirmation creates no pending request")
+	node.forced_round_phase = SessionRound.Phase.HEARTH
+	state.cast_recovery_ticks = 2
+	availability = node._gallery_selection_availability(state)
+	check(not bool(availability.get("enabled", true)) and String(availability.get("reason", "")).contains("active action"), "active actor sees a specific attunement reason")
+	node._handle_character_gallery_input(_key(KEY_ENTER))
+	equal(node.submitted_requests.size(), requests_before, "active-action confirmation sends no refused request")
+	equal(node.character_selection_grid.model.pending_wire, 0, "active-action confirmation creates no pending request")
+	state.cast_recovery_ticks = 0
+	state.health = 0
+	availability = node._gallery_selection_availability(state)
+	check(not bool(availability.get("enabled", true)) and String(availability.get("reason", "")).contains("alive"), "dead actor sees a specific attunement reason")
+	node._handle_character_gallery_input(_key(KEY_ENTER))
+	equal(node.submitted_requests.size(), requests_before, "dead-actor confirmation sends no refused request")
+	equal(node.character_selection_grid.model.pending_wire, 0, "dead-actor confirmation creates no pending request")
+	state.health = state.health_maximum
+	availability = node._gallery_selection_availability(null)
+	check(not bool(availability.get("enabled", true)) and String(availability.get("reason", "")).contains("unavailable"), "missing actor context fails closed with a visible reason")
+	node.client_request_sequence = 0x7fffffff
+	availability = node._gallery_selection_availability(state)
+	check(not bool(availability.get("enabled", true)) and String(availability.get("reason", "")).contains("Restart the session"), "exhausted request sequence is unavailable before pending state")
+	node._handle_character_gallery_input(_key(KEY_ENTER))
+	equal(node.submitted_requests.size(), requests_before, "exhausted sequence confirmation sends no request")
+	equal(node.character_selection_grid.model.pending_wire, 0, "exhausted sequence confirmation creates no pending request")
+	node.client_request_sequence = 0
+	var original_map_id: String = node.world.map_id
+	node.world.map_id = "hex-court-v1"
+	state.position_x = 400_000
+	state.position_y = 400_000
+	availability = node._gallery_selection_availability(state)
+	check(bool(availability.get("enabled", false)), "isolated offline Hex Court retains station-free Gallery admission")
+	node.world.map_id = original_map_id
+	node.forced_round_phase = -1
+	state.position_x = int(station[0]) * 1000
+	state.position_y = (int(station[1]) + 48) * 1000
+	check(bool(node._gallery_selection_availability(state).get("enabled", false)), "restored ordinary Gallery context remains available")
+	node.character_selection_grid.model.pending_wire = int(node.character_selection_grid.model.selected_entry().get("wire_id", 0))
+	check(bool(node._gallery_selection_availability(state).get("enabled", false)), "contextual policy stays enabled while the grid owns pending confirmation")
+	node._handle_character_gallery_input(_key(KEY_ENTER))
+	equal(node.submitted_requests.size(), requests_before, "pending confirmation retains its existing no-duplicate request behavior")
+	check(node.character_selection_grid.model.pending_wire != 0 and node.character_selection_grid.model.status_message.contains("Waiting for the host"), "pending selection retains the existing waiting state")
+	node.character_selection_grid.model.pending_wire = 0
+	node.character_selection_grid.model.status_message = retained_status
+	equal(node.character_selection_grid.model.status_message, retained_status, "availability queries and blocked controls preserve status feedback")
+
+
+func _select_champion(node: GalleryHarness, champion_id: String) -> void:
+	for race: int in range(node.character_selection_grid.model.races().size()):
+		for character: int in range(node.character_selection_grid.model.characters(race).size()):
+			var entry: Dictionary = node.character_selection_grid.model.characters(race)[character]
+			if String(entry.get("id", "")) == champion_id:
+				node.character_selection_grid.model.select_cell(race, character)
+				return
+
+
+func _key(code: Key) -> InputEventKey:
+	var event := InputEventKey.new()
+	event.keycode = code
+	event.pressed = true
+	return event
+
+
 func _test_missing_presenter_procedural_fallback_contract() -> void:
 	var source := FileAccess.get_file_as_string("res://src/app/bootstrap.gd").replace("\r\n", "\n")
 	check(source.contains("if not sprite_drawn:\n\t\t\tdraw_circle(body_position, player_radius"), "missing visible local body presentation retains the bounded procedural circle")
@@ -177,6 +309,9 @@ func _test_missing_presenter_procedural_fallback_contract() -> void:
 
 func _test_station_guide_device(node: GalleryHarness) -> void:
 	var original_preferences := node.player_preferences
+	var actor: PlayerState = node._local_player_state()
+	var original_position := Vector2i(actor.position_x, actor.position_y)
+	var original_focus := node.focused_station_id
 	if node.player_preferences == null:
 		node.player_preferences = PlayerPreferences.new()
 	var original_events := InputMap.action_get_events(InputRouter.INTERACT_ACTION)
@@ -205,9 +340,15 @@ func _test_station_guide_device(node: GalleryHarness) -> void:
 	node.player_preferences.keyboard_bindings[&"interact"] = KEY_G
 	node.player_preferences.mouse_bindings[&"interact"] = MOUSE_BUTTON_XBUTTON1
 	node.player_preferences.controller_bindings[&"interact"] = {"kind": "button", "index": JOY_BUTTON_RIGHT_STICK, "direction": 0}
+	node.focused_station_id = ""
 	for station_id: String in node.campus_layout.stations_by_id:
 		if String(node.campus_layout.stations_by_id[station_id].get("command", "")) == "movement_guide":
 			node.focused_station_id = station_id
+			var position: Array = node.campus_layout.stations_by_id[station_id].position
+			actor.position_x = int(position[0]) * SimConfig.FIXED_SCALE
+			# Lodge has a practice wall south of its door: +12 remains clear
+			# for the common wall radius, unlike the Academy's +48 approach.
+			actor.position_y = (int(position[1]) + 12) * SimConfig.FIXED_SCALE
 			break
 	check(not node.focused_station_id.is_empty(), "device fixture finds the actual movement-guide station")
 	var editor := ControlBindingEditor.new()
@@ -242,7 +383,7 @@ func _test_station_guide_device(node: GalleryHarness) -> void:
 	node.station_activation_device = ControlBindingEditor.DEVICE_MOUSE
 	node.player_preferences.mouse_bindings[&"interact"] = 0
 	equal(node._station_interact_label(), "UNBOUND", "explicitly unbound Interact never falls back to a false F prompt")
-	equal(node._station_interact_instruction("confirms the action"), "Bind Interact at Controls Lectern.", "unbound station instructions explain how to bind instead of claiming an available action")
+	equal(node._station_interact_instruction("confirms the action"), "Bind Interact in the Lodge controls.", "unbound station instructions explain how to bind instead of claiming an available action")
 	InputMap.action_erase_events(InputRouter.INTERACT_ACTION)
 	for event: InputEvent in original_events:
 		InputMap.action_add_event(InputRouter.INTERACT_ACTION, event)
@@ -253,6 +394,9 @@ func _test_station_guide_device(node: GalleryHarness) -> void:
 	node.player_preferences.mouse_bindings[&"interact"] = original_interact_mouse
 	node.player_preferences.controller_bindings[&"interact"] = original_interact_pad
 	node.player_preferences = original_preferences
+	actor.position_x = original_position.x
+	actor.position_y = original_position.y
+	node.focused_station_id = original_focus
 
 
 func _test_prediction_gait_metadata() -> void:
@@ -285,7 +429,7 @@ func _test_prediction_gait_metadata() -> void:
 		check(node.client_prediction.configure(node.world.config, node.world.collision, 2), "real local client prediction configures")
 		check(node.client_prediction.reconcile(ClientPrediction.capture_packet(authority, 10, -1)), "actual movement-only reconciliation packet restores prediction")
 		var predicted := node.client_prediction.predicted_state
-		equal(predicted.champion_wire_id, 0, "fixture proves prediction packets do not carry authoritative character identity")
+		equal(predicted.champion_wire_id, authority.champion_wire_id, "prediction restores the authoritative identity required by situational movement perks")
 		# Simulate local movement leading the last received authority snapshot.
 		authority.movement_mode = PlayerState.MovementMode.IDLE
 		authority.velocity_x = 0
@@ -337,8 +481,9 @@ func _test_prediction_gait_metadata() -> void:
 		check(node.actor_motion_history.gait_phase(2) > 0.0, "revived client resumes predicted travel normally")
 		_test_prediction_correction_tail(node, authority, champion_id)
 		check(node.champion_catalog.apply_to_player(authority, "oh_tipi"), "client switches actual identity without changing movement packet layout")
+		check(predicted.champion_wire_id != authority.champion_wire_id, "the previous prediction identity intentionally trails the new authoritative attunement")
 		node._update_character_gaits(1.0 / 120.0)
-		equal(node.actor_motion_history.gait_phase(2), 0.0, "client identity switch resets even when predicted identity remains zero")
+		equal(node.actor_motion_history.gait_phase(2), 0.0, "client identity switch resets even while predicted identity still belongs to the previous character")
 	node.free()
 
 

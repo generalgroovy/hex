@@ -3,7 +3,11 @@ extends RefCounted
 
 
 const DEFAULT_PATH := "user://character_weaves_v1.json"
-const BACKUP_SUFFIX := ".pre_character_weaves_v1.bak"
+const BACKUP_SUFFIX := ".pre_six_elements_v1.bak"
+const MIGRATION_ID := "six-elements-v1"
+# Explicit former live family identities only. Never use this mapping in
+# gameplay admission, snapshots, cooldown ownership or ordinary catalog lookup.
+const LEGACY_LIVE_WIRE_REPLACEMENTS := {170:140, 189:181, 190:182, 171:141, 101:145, 187:179, 188:180, 167:154}
 const SCHEMA_VERSION := 1
 const CHARACTER_COUNT := 30
 const SLOT_COUNT := 12
@@ -41,6 +45,62 @@ func load_from_file(path: String, champions: ChampionCatalog, abilities: Ability
 
 func saved_weave(champion_id: String) -> Dictionary:
 	return weaves_by_champion.get(champion_id, {}).duplicate(true)
+
+
+func migration_preview(champion_id: String) -> Dictionary:
+	var saved := saved_weave(champion_id)
+	if saved.is_empty() or _champions == null or _abilities == null:
+		return {"required": false}
+	var before: PackedInt32Array = saved.wire_ids
+	var required := false
+	for wire: int in before:
+		required = required or LEGACY_LIVE_WIRE_REPLACEMENTS.has(wire)
+	if not required:
+		return {"required": false}
+	var after := before.duplicate()
+	var occupied := {}
+	# Existing canonical positions win even when an old alias occurs earlier.
+	# Unrelated archived spells remain untouched and cannot silently go live.
+	var unavailable := false
+	for wire: int in before:
+		if not LEGACY_LIVE_WIRE_REPLACEMENTS.has(wire):
+			occupied[wire] = true
+			unavailable = unavailable or not _abilities.runtime_wire_ids.has(wire)
+	var reasons := {}
+	for slot: int in range(SLOT_COUNT):
+		var old_wire := int(before[slot])
+		if not LEGACY_LIVE_WIRE_REPLACEMENTS.has(old_wire): continue
+		var replacement := int(LEGACY_LIVE_WIRE_REPLACEMENTS[old_wire])
+		if occupied.has(replacement):
+			after[slot] = 0
+			reasons[slot] = "folded element duplicates an already retained spell"
+		else:
+			after[slot] = replacement
+			occupied[replacement] = true
+			reasons[slot] = "Ice joins Water" if old_wire in [170, 189, 190, 171] else "Charge joins Fire"
+	var starter := StarterKit.build(_champions, _abilities, champion_id)
+	if not bool(starter.get("valid", false)):
+		return {"required": true, "valid": false, "notice": "Saved weave preserved; the new starter could not be prepared."}
+	var candidates: PackedInt32Array = starter.wire_ids.duplicate()
+	for wire: int in _abilities.runtime_wire_ids:
+		if not candidates.has(wire): candidates.append(wire)
+	for slot: int in range(SLOT_COUNT):
+		if after[slot] != 0: continue
+		for wire: int in candidates:
+			if not occupied.has(wire):
+				after[slot] = wire
+				occupied[wire] = true
+				break
+	var changes: Array[Dictionary] = []
+	for slot: int in range(SLOT_COUNT):
+		if before[slot] == after[slot]: continue
+		changes.append({"slot": slot, "before": int(before[slot]), "after": int(after[slot]),
+			"before_id": _abilities.ability_id_from_wire(before[slot]), "after_id": _abilities.ability_id_from_wire(after[slot]),
+			"reason": String(reasons.get(slot, "six-element migration"))})
+	var valid := not unavailable and not after.has(0) and occupied.size() == SLOT_COUNT
+	return {"required": true, "valid": valid, "migration_id": MIGRATION_ID,
+		"champion_id": champion_id, "before_wire_ids": before.duplicate(), "after_wire_ids": after,
+		"changes": changes, "notice": "Review %d changed positions. Original saved bytes and all canonical spell positions stay intact until Apply." % changes.size() if valid else "Saved weave preserved. An unrelated archived spell is unavailable; choose a starter or replace it in the Loom."}
 
 
 func remember(

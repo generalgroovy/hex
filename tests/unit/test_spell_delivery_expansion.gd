@@ -2,25 +2,192 @@ extends FluxTestSuite
 @warning_ignore_start("integer_division")
 
 
-const ELEMENTS: Array[int] = [2, 3, 1, 4, 6, 5, 7, 8]
+const ELEMENTS: Array[int] = [3, 2, 4, 1, 7, 8]
+const HEAVY_WIRES: Array[int] = [181, 179, 185, 183, 191, 193]
+const ORIGINAL_WIRES: Array[int] = [140, 181, 182, 141, 145, 179, 180, 154, 163, 185, 186, 164, 159, 183, 184, 160, 173, 191, 192, 174, 142, 193, 194, 176]
 const FAR_POINT := Vector2i(6_000_000, 1_000_000)
 const ORIGIN := Vector2i(1_000_000, 1_000_000)
 
 
+class RefusingAdmissionPolicy:
+	extends RefCounted
+	var reason: String = ""
+	var calls := PackedStringArray()
+
+	func admission_reason(_wire_id: int) -> String:
+		calls.append("admission")
+		return reason
+
+	func reserve_cast(_owner_id: int, _wire_id: int) -> bool:
+		calls.append("reserve")
+		# A second policy query would change the existing reservation-failure
+		# taxonomy. Production must use the already selected intent and outcome.
+		reason = "hex_unsupported_delivery"
+		return false
+
+	func cancel_pending(_owner_id: int) -> void:
+		calls.append("cancel")
+
+	func commit_payment(_owner_id: int) -> void:
+		calls.append("payment")
+
+
 func run() -> int:
 	_test_real_catalog_and_paid_lanes()
+	_test_reactive_tempo()
+	_test_persistent_hex_tempo_and_retirement()
+	_test_held_bolt_controls()
 	_test_archived_field_records_are_gated()
 	_test_retired_delivery_admission_fails_closed()
 	_test_heavy_direct_hit_and_single_terminal()
 	_test_heavy_protection_and_split_damage()
 	_test_heavy_solid_and_temporary_cover()
 	_test_heavy_range_wall_and_lifetime()
+	_test_wider_spray_remains_close_range_and_cover_bound()
 	_test_private_terminal_event_once()
 	_test_rapid_repeat_payment_and_release()
 	_test_held_priority_and_silent_refusals()
+	_test_held_repeatable_slot_arbitration()
+	_test_held_repeatable_priority_gates()
+	_test_held_hex_capacity_feedback()
+	_test_hex_reservation_failure_feedback()
+	_test_held_noncapacity_policy_errors()
 	_test_router_plain_ctrl_alt_rapid()
 	_test_delivery_replay_in_eight_directions()
 	return finish("spell-delivery-expansion")
+
+
+func _test_reactive_tempo() -> void:
+	var catalog := AbilityCatalog.new()
+	check(catalog.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "tempo catalog validates")
+	equal(catalog.runtime_wire_ids.size(), 504, "expanded library has 63 mixtures times eight live families")
+	equal(Array(catalog.runtime_wire_ids.slice(0, 24)), ORIGINAL_WIRES, "the original cadence matrix retains its exact 24 wires and order")
+	var family_cooldowns := {"bolt":200, "heavy":900, "rapid":80, "spray":700}
+	var wire_cooldowns := {140:170, 141:750, 142:210, 145:190}
+	# Preserve the original non-Hex cadence oracle independently of the expanded
+	# library. Persistent deliveries have a separate actual Hex route below.
+	for wire: int in ORIGINAL_WIRES:
+		var ability := catalog.ability_from_wire(wire)
+		var family := AbilityCatalog._spell_family(ability)
+		var expected_ms := int(wire_cooldowns.get(wire, family_cooldowns[family]))
+		var definition := CombatTuning.cast_definition(wire)
+		if family == "rapid": equal(int(definition.startup_ms), 8, "Rapid has independently specified8ms startup")
+		equal(int(definition.cooldown_ms), expected_ms, "all24 spells retain their explicitly balanced firing interval")
+		check(expected_ms >= 80 and expected_ms <= 900, "all paid families retain bounded reactive cadence")
+		var world := _world()
+		check(world.player().place_proven_spell(0, wire), "tempo fixture equips each live spell")
+		var before_flux := world.player().flux
+		var starts: Array[int] = []
+		# Cooldown begins at release, so complete start-to-start cadence includes
+		# startup. Keep that existing rule explicit rather than silently moving it.
+		var interval := world.config.milliseconds_to_ticks(expected_ms) + world.config.milliseconds_to_ticks(int(definition.startup_ms))
+		for unused: int in interval + 3:
+			_step(world, _command(world, SimCommand.SPELL_HELD_BITS[0] if family == "rapid" else 0, 0 if family == "rapid" else SimCommand.PRESSED_SPELL_1))
+			for event: Dictionary in _events(world, "cast_started", wire): starts.append(world.tick - 1)
+			if starts.size() == 2: break
+		equal(starts.size(), 2, "real admission admits two paid casts at the new cadence")
+		if starts.size() == 2:
+			equal(starts[1] - starts[0], interval, "actual start-to-start cadence is exactly startup plus release-owned cooldown")
+		equal(world.player().flux, before_flux - int(definition.flux_cost) * 2, "family cadence pays its authored positive cost on every shot")
+
+
+func _test_persistent_hex_tempo_and_retirement() -> void:
+	# Independent authored timing/cost oracles; both a singleton and a complete
+	# mixture must obey the same delivery economy, without a legacy fallback.
+	var rules := {
+		"mantle": [100, 1500, 16_000], "fuse": [120, 900, 18_000],
+		"split": [80, 650, 10_000], "rebound": [80, 650, 9_000],
+	}
+	# Six ingredients add 75% to base cost, rounded UP to whole Flux before
+	# fixed-point conversion. Keep literal expectations independent of compilation.
+	var full_mixture_costs := {"mantle": 28_000, "fuse": 32_000, "split": 18_000, "rebound": 16_000}
+	for family: String in ["mantle", "fuse", "split", "rebound"]:
+		for mask: int in [4, 63]:
+			var wire := MixtureCatalog.wire_for(mask, family)
+			var definition := CombatTuning.cast_definition(wire)
+			var rule: Array = rules[family]
+			var expected_cost := int(full_mixture_costs[family]) if mask == 63 else int(rule[2])
+			equal(int(definition.startup_ms), int(rule[0]), "persistent family retains independently specified startup")
+			equal(int(definition.cooldown_ms), int(rule[1]), "persistent family retains independently specified cooldown")
+			equal(int(definition.flux_cost), expected_cost, "persistent family retains independently specified singleton or rounded mixture cost")
+			check(not bool(definition.get("repeat_while_held", false)), "new persistent deliveries require deliberate press edges")
+			var world := _world()
+			world.player().champion_wire_id = 0 # Neutral timing oracle, without an identity perk.
+			var court := HexChemistryWorld.new()
+			check(court.configure_geometry(ORIGIN, HexGrid.disk(Vector2i.ZERO, 12)), "persistent cadence uses a real bounded Hex court")
+			court.chemistry_enabled = true
+			world.hex_court = court
+			check(world.player().place_proven_spell(0, wire), "new family equips on the live Hex route")
+			var before := world.player().flux
+			var interval := world.config.milliseconds_to_ticks(int(rule[0])) + world.config.milliseconds_to_ticks(int(rule[1]))
+			var starts: Array[int] = []
+			for unused: int in range(interval + 3):
+				_step(world, _command(world, 0, SimCommand.PRESSED_SPELL_1))
+				for event: Dictionary in _events(world, "cast_started", wire): starts.append(world.tick - 1)
+				if starts.size() == 2: break
+			equal(starts.size(), 2, "actual Hex admission starts two deliberately requested paid casts")
+			if starts.size() == 2: equal(starts[1] - starts[0], interval, "persistent start interval includes preparation and release-owned cooldown")
+			equal(world.player().flux, before - 2 * expected_cost, "two persistent casts pay exactly twice without a branch surcharge or refund")
+			# Four seconds exceeds the longest 3.2s flight + 0.6s Fuse warning +
+			# 0.12s preparation. Holding after the last press must add no third cast.
+			for unused: int in range(world.config.milliseconds_to_ticks(4000)):
+				_step(world, _command(world, SimCommand.SPELL_HELD_BITS[0]))
+				equal(_events(world, "cast_started", wire).size(), 0, "held input cannot repeat a deliberate persistent delivery")
+				check(world.hex_court.conservation_valid(), "actual release and retirement preserve funded material")
+			equal(world.player().pending_cast_wire_id, 0, "persistent preparations finish inside the independent bound")
+			equal(world.projectiles.size(), 0, "all new deliveries and Split children retire inside their finite flight/warning bound")
+			equal(int(world.hex_court.metrics.matter_paid), 1200, "two releases own exactly two paid source stocks")
+			equal(world.player().flux, before - 2 * expected_cost, "held waiting cannot issue another cost, refund, or free cast")
+			world.player().flux = 0
+			_step(world, _command(world, 0, SimCommand.PRESSED_SPELL_1))
+			equal(_events(world, "cast_started", wire).size(), 0, "exhaustion refuses a fresh persistent cast")
+			equal(world.player().pending_cast_wire_id, 0, "exhaustion leaves no unfunded preparation")
+			equal(int(world.hex_court.metrics.matter_paid), 1200, "exhaustion cannot mint a third source stock")
+			check(world.hex_court.conservation_valid(), "failed payment preserves the existing finite ledger")
+
+
+func _test_held_bolt_controls() -> void:
+	var catalog := AbilityCatalog.new()
+	check(catalog.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "held Bolt fixture uses the real catalog")
+	for ability_id: String in ["cinder-shell", "tideline"]:
+		var invalid := AbilityCatalog.new()
+		invalid.data = catalog.data.duplicate(true)
+		if ability_id == "cinder-shell":
+			invalid.data.spell_matrix.family_templates.heavy.repeat_while_held = true
+		else:
+			for ability: Dictionary in invalid.data.abilities:
+				if String(ability.id) == ability_id: ability.repeat_while_held = true
+		check(not invalid.validate() and invalid.last_error.contains("only Bolt and Rapid"),
+			"authoring rejects held %s, not just the current data values: %s" % [ability_id, invalid.last_error])
+	for element: String in AbilityCatalog.DISPLAY_ELEMENT_IDS:
+		var wire := int(catalog.ability(catalog.spell_id_at(element, "bolt")).wire_id)
+		var definition := CombatTuning.cast_definition(wire)
+		check(bool(definition.repeat_while_held), "every element's Bolt supports the same held input")
+		for slot: int in [0, 4, 8]:
+			var world := _world()
+			check(world.player().place_proven_spell(slot, wire), "Bolt can be assigned to each layer")
+			var before := world.player().flux
+			var starts := 0
+			for tick: int in 84:
+				_step(world, _command(world, SimCommand.SPELL_HELD_BITS[slot], SimCommand.SPELL_PRESSED_BITS[slot] if tick == 0 else 0))
+				starts += _events(world, "cast_started", wire).size()
+			check(starts >= 3, "held Bolt repeats through the normal cooldown without repeated press edges")
+			equal(before - world.player().flux, starts * int(definition.flux_cost), "every repeated Bolt pays exactly once")
+			var after_release := world.player().flux
+			for tick: int in 40:
+				_step(world, _command(world))
+				equal(_events(world, "cast_started", wire).size(), 0, "release stops new Bolts; an already paid startup may finish")
+			equal(world.player().flux, after_release, "released input never schedules or pays a latent repeat")
+			world.player().flux = 0
+			for tick: int in 40:
+				_step(world, _command(world, SimCommand.SPELL_HELD_BITS[slot]))
+				equal(_events(world, "cast_started", wire).size(), 0, "holding Bolt cannot mint Flux or bypass payment")
+				equal(_events(world, "cast_refused").size(), 0, "held unaffordable Bolt does not spam refusals")
+		var priority := _world()
+		check(priority.player().place_proven_spell(0, wire) and priority.player().place_proven_spell(1, 179), "priority uses one held Bolt and a deliberate Heavy")
+		_step(priority, _command(priority, SimCommand.SPELL_HELD_BITS[0], SimCommand.PRESSED_SPELL_2))
+		equal(priority.player().pending_cast_wire_id, 179, "fresh Heavy wins over held Bolt when ready, without replacing paid startup")
+		equal(priority.player().flux, 140_000, "switching from held Bolt pays exactly20 Flux for one Heavy only")
 
 
 func _world(seed: int = 8209) -> SimWorld:
@@ -106,16 +273,16 @@ func _test_real_catalog_and_paid_lanes() -> void:
 	check(catalog.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "expanded real catalog validates")
 	for index: int in range(ELEMENTS.size()):
 		for family: String in ["heavy", "rapid"]:
-			var wire: int = 179 + index * 2 + int(family == "rapid")
+			var wire: int = HEAVY_WIRES[index] + int(family == "rapid")
 			var definition := CombatTuning.cast_definition(wire)
 			equal(int(definition.get("element_wire_id", 0)), ELEMENTS[index], "%s wire %d preserves element identity" % [family, wire])
 			if family == "heavy":
 				for key: String in ["speed", "radius", "damage", "blast_radius", "blast_damage", "flux_cost", "startup_ms", "cooldown_ms"]:
-					var expected: Dictionary = {"speed": 320_000, "radius": 19_200, "damage": 18_000, "blast_radius": 84_000, "blast_damage": 18_000, "flux_cost": 18_000, "startup_ms": 200, "cooldown_ms": 1000}
+					var expected: Dictionary = {"speed": 180_000, "radius": 30_000, "damage": 24_000, "blast_radius": 120_000, "blast_damage": 18_000, "flux_cost": 20_000, "startup_ms": 200, "cooldown_ms": 900}
 					equal(int(definition.get(key, 0)), int(expected[key]), "Heavy %d has the shared %s contract" % [wire, key])
 			elif family == "rapid":
 				for key: String in ["speed", "radius", "damage", "flux_cost", "startup_ms", "cooldown_ms"]:
-					var expected: Dictionary = {"speed": 608_000, "radius": 6000, "damage": 3000, "flux_cost": 2000, "startup_ms": 25, "cooldown_ms": 100}
+					var expected: Dictionary = {"speed": 600_000, "radius": 4000, "damage": 3000, "flux_cost": 2000, "startup_ms": 8, "cooldown_ms": 80}
 					equal(int(definition.get(key, 0)), int(expected[key]), "Rapid %d has the shared %s contract" % [wire, key])
 				equal(bool(definition.get("repeat_while_held", false)), true, "every element's Rapid explicitly opts into held-number repeat")
 			var world := _world()
@@ -132,7 +299,7 @@ func _test_real_catalog_and_paid_lanes() -> void:
 					remaining = lane.remaining_distance
 				equal(lane.source_cast_id, first_cast, "all lanes share one paid cast identity")
 				equal(lane.element_wire_id, ELEMENTS[index], "live projectile carries its real element")
-				equal(lane.radius, int(definition["radius"]), "live collision radius matches the authored readable silhouette")
+				equal(lane.radius, int(definition["radius"]), "live collision radius exactly matches authored simulation geometry")
 				check(lane.velocity_x > 0, "later mouse movement cannot redirect the locked eastward release")
 				check(lane.remaining_distance > 0 and absi(lane.remaining_distance - remaining) <= 10, "lanes share one finite locked range")
 				strength += lane.material_strength
@@ -157,11 +324,11 @@ func _test_archived_field_records_are_gated() -> void:
 
 func _test_retired_delivery_admission_fails_closed() -> void:
 	var state := PlayerState.new()
-	for wire: int in [146, 155, 156]:
+	for wire: int in [146, 155, 156, 101, 167, 170, 171, 187, 188, 189, 190]:
 		var before_slots := PackedInt32Array(state.spell_wire_ids)
 		var before_cooldowns := PackedInt32Array(state.spell_cooldown_ticks)
 		var before_flux := state.flux
-		check(not state.place_proven_spell(0, wire), "retired Wave, Beam, or Field wire is rejected: %d" % wire)
+		check(not state.place_proven_spell(0, wire), "retired delivery or Ice/Charge base wire is rejected: %d" % wire)
 		equal(state.spell_wire_ids, before_slots, "retired delivery rejection preserves weave positions")
 		equal(state.spell_cooldown_ticks, before_cooldowns, "retired delivery rejection preserves cooldowns")
 		equal(state.flux, before_flux, "retired delivery rejection spends no Flux")
@@ -169,7 +336,7 @@ func _test_retired_delivery_admission_fails_closed() -> void:
 
 func _test_heavy_direct_hit_and_single_terminal() -> void:
 	for index: int in range(ELEMENTS.size()):
-		var wire := 179 + index * 2
+		var wire := HEAVY_WIRES[index]
 		var world := _world()
 		var direct := _victim(2, ORIGIN + Vector2i(200_000, 0))
 		var splash := _victim(3, ORIGIN + Vector2i(175_000, 55_000))
@@ -194,7 +361,7 @@ func _test_heavy_direct_hit_and_single_terminal() -> void:
 			terminals = world.next_deposit_id - initial_deposit_id - seen_trail_ids.size()
 			if not terminal_deposits.is_empty():
 				break
-		equal(direct.health, direct_before - 18_000, "Heavy %d direct victim is not double-damaged by its own blast" % wire)
+		equal(direct.health, direct_before - 24_000, "Heavy %d direct victim receives its stronger contact hit, never a second blast hit" % wire)
 		equal(splash.health, splash_before - 18_000, "Heavy %d applies one nearby area hit" % wire)
 		equal(hit_count, {2: 1, 3: 1}, "direct and area victims each receive exactly one hit event")
 		equal(terminals, 1, "Heavy emits exactly one normal terminal event")
@@ -215,18 +382,28 @@ func _test_heavy_protection_and_split_damage() -> void:
 	var config := SimConfig.new(120)
 	var collision := CollisionWorld.new(8_000_000, 8_000_000)
 	for index: int in range(ELEMENTS.size()):
-		for protection: String in ["none", "height_only", "ally", "owner", "dead", "spawn", "float", "hop", "air_dodge", "excluded", "outside"]:
+		for protection: String in ["none", "height_only", "below_clearance", "slide", "neutral_slide", "crouch", "wallrun", "ally", "owner", "dead", "spawn", "float", "hop", "air_dodge", "excluded", "outside"]:
 			var victim := _victim(2, ORIGIN + Vector2i(50_000, 0))
 			match protection:
 				"height_only":
-					victim.air_height = 25_000
+					victim.air_height = MovementTuning.GROUND_PROJECTILE_CLEARANCE_HEIGHT
 					victim.hop_ticks = 10
+				"below_clearance": victim.air_height = MovementTuning.GROUND_PROJECTILE_CLEARANCE_HEIGHT - 1
+				"slide": victim.slide_ticks = 10
+				"neutral_slide":
+					victim.champion_wire_id = 19 # Jan's Human and personal windows are inactive while sliding.
+					victim.slide_ticks = 10
+				"crouch": victim.crouching = true
+				"wallrun":
+					victim.air_height = 60_000
+					victim.wall_skim_ticks = 10
 				"ally": victim.team_id = 1
 				"owner": victim.entity_id = 1
 				"dead": victim.health = 0
 				"spawn": victim.spawn_protection_ticks = 5
 				"float":
 					victim.air_height = 25_000
+					victim.flight_capable = true
 					victim.air_floating = true
 					victim.float_ticks = 10
 				"hop":
@@ -237,14 +414,20 @@ func _test_heavy_protection_and_split_damage() -> void:
 			var before := victim.health
 			var events: Array[Dictionary] = []
 			var players: Array[PlayerState] = [victim]
-			CombatSystem._explode_projectile(_shell(179 + index * 2), players, config, collision, [], 50, events, 2 if protection == "excluded" else 0)
-			var damages := protection in ["none", "height_only"]
-			equal(victim.health, before - 18_000 if damages else before, "Heavy %d respects %s without making ordinary height invulnerable" % [179 + index * 2, protection])
-			equal(events.filter(func(event: Dictionary) -> bool: return event.get("type") == "projectile_hit").size(), 1 if damages else 0, "ineligible area victims emit no misleading hit event")
+			CombatSystem._explode_projectile(_shell(HEAVY_WIRES[index]), players, config, collision, [], 50, events, 2 if protection == "excluded" else 0)
+			var damages := protection in ["none", "below_clearance", "slide", "neutral_slide", "crouch", "wallrun", "hop"]
+			# The same grounded slide is hittable for both identities. OhTipi's
+			# Seakin tradeoff adds exactly 5% incoming damage during this window.
+			var expected_damage := 18_900 if protection == "slide" else 18_000
+			equal(victim.health, before - expected_damage if damages else before, "Heavy %d ground blast respects %s height, timed protection and situational vulnerability" % [HEAVY_WIRES[index], protection])
+			var hit_events := events.filter(func(event: Dictionary) -> bool: return event.get("type") == "projectile_hit")
+			equal(hit_events.size(), 1 if damages else 0, "ineligible area victims emit no misleading hit event")
+			if not hit_events.is_empty():
+				equal(int(hit_events[0].damage), expected_damage, "area hit feedback reports actual Health loss, including the independently expected Seakin slide tradeoff")
 		var split_target := _victim(2, ORIGIN + Vector2i(50_000, 0))
 		var before := split_target.health
 		var split_events: Array[Dictionary] = []
-		CombatSystem._explode_projectile(_shell(179 + index * 2, 9000), [split_target], config, collision, [], 50, split_events)
+		CombatSystem._explode_projectile(_shell(HEAVY_WIRES[index], 9000), [split_target], config, collision, [], 50, split_events)
 		equal(split_target.health, before - 9000, "an optical half-damage shell cannot recreate a full-strength blast")
 	var defeated := _victim(2, ORIGIN + Vector2i(50_000, 0))
 	defeated.health = 10_000
@@ -380,9 +563,50 @@ func _test_heavy_range_wall_and_lifetime() -> void:
 			check(point.x <= ORIGIN.x + 150_000 and point.y == ORIGIN.y, "wall impact never deposits the shell through solid worldbone")
 
 
+func _test_wider_spray_remains_close_range_and_cover_bound() -> void:
+	var catalog := AbilityCatalog.new()
+	check(catalog.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "wide Spray geometry uses every live authored element")
+	var config := SimConfig.new(120)
+	var owner := PlayerState.new(1)
+	_configure(owner)
+	for element: String in AbilityCatalog.DISPLAY_ELEMENT_IDS:
+		var wire := int(catalog.ability(catalog.spell_id_at(element, "spray")).wire_id)
+		var definition := CombatTuning.cast_definition(wire)
+		for scenario: String in ["wide_left", "wide_right", "angle_edge", "angle_outside", "range_edge", "range_outside", "cover", "airborne", "crouch", "spawn", "ally"]:
+			var collision := CollisionWorld.new(8_000_000, 8_000_000)
+			var offset := Vector2i(200_000, 160_000) #38.7 degrees: outside either previous25/30-degree half-cone.
+			if scenario == "wide_left": offset.y = -offset.y
+			if scenario == "angle_edge": offset = Vector2i(100_000, 100_000)
+			if scenario == "angle_outside": offset = Vector2i(100_000, 100_001)
+			if scenario == "range_edge": offset = Vector2i(int(definition.range), 0)
+			if scenario == "range_outside": offset = Vector2i(int(definition.range) + 1, 0)
+			var target := _victim(2, ORIGIN + offset)
+			if scenario == "cover": collision.add_obstacle(CollisionWorld.Obstacle.new(7, ORIGIN.x + 100_000, ORIGIN.y + 50_000, ORIGIN.x + 120_000, ORIGIN.y + 110_000, false))
+			if scenario == "airborne": target.air_height = MovementTuning.GROUND_PROJECTILE_CLEARANCE_HEIGHT
+			if scenario == "crouch": target.crouching = true
+			if scenario == "spawn": target.spawn_protection_ticks = 1
+			if scenario == "ally": target.team_id = owner.team_id
+			var before := target.health
+			var events: Array[Dictionary] = []
+			CombatSystem._resolve_spray(owner, wire, definition, ORIGIN, Vector2i(1000, 0), ORIGIN + Vector2i(int(definition.range), 0), [target], config, collision, events)
+			var expected_hit := scenario in ["wide_left", "wide_right", "angle_edge", "range_edge"]
+			equal(target.health, before - int(definition.damage) if expected_hit else before, "%s Spray: wider %s cone obeys exact range, cover, and avoidance" % [element, scenario])
+			var hits := 0
+			for event: Dictionary in events:
+				if event.get("type", "") == "spray_hit": hits += 1
+			equal(hits, 1 if expected_hit else 0, "wide fan never invents an extra or refused damage event")
+			if scenario in ["wide_left", "wide_right"]:
+				var previous_cone := definition.duplicate(true)
+				previous_cone.cone_cosine_squared_per_million = 750_000 if element == "water" else 820_000
+				target = _victim(2, ORIGIN + offset)
+				events.clear()
+				CombatSystem._resolve_spray(owner, wire, previous_cone, ORIGIN, Vector2i(1000, 0), ORIGIN + Vector2i(int(definition.range), 0), [target], config, collision, events)
+				equal(target.health, before, "negative control proves newly useful side area came from the wider authored cone")
+
+
 func _test_rapid_repeat_payment_and_release() -> void:
 	for index: int in range(ELEMENTS.size()):
-		var wire := 180 + index * 2
+		var wire := HEAVY_WIRES[index] + 1
 		var world := _world()
 		check(world.player().place_proven_spell(0, wire), "Rapid repeat fixture equips the real elemental spell")
 		var before := world.player().flux
@@ -399,7 +623,7 @@ func _test_rapid_repeat_payment_and_release() -> void:
 		check(starts >= 6 and releases.size() >= 6, "holding Rapid %d repeatedly accepts and releases paid shots" % wire)
 		equal(before - world.player().flux, starts * 2000, "Rapid pays exactly once per accepted shot, never once per held tick")
 		for release_index: int in range(1, releases.size()):
-			check(releases[release_index] - releases[release_index - 1] >= world.config.milliseconds_to_ticks(100), "Rapid cannot bypass its authored cooldown")
+			equal(releases[release_index] - releases[release_index - 1], world.config.milliseconds_to_ticks(8) + world.config.milliseconds_to_ticks(80), "held Rapid pays its exact8ms startup plus80ms release-owned cooldown")
 		var after_release := world.player().flux
 		for _tick: int in range(50):
 			_step(world, _command(world))
@@ -454,23 +678,23 @@ func _test_private_terminal_event_once() -> void:
 
 
 func _test_held_priority_and_silent_refusals() -> void:
-	for wire: int in [145, 179, 154]:
+	for wire: int in [179, 154]:
 		var world := _world()
-		check(world.player().place_proven_spell(0, wire), "non-Rapid held fixture equips a real spell")
+		check(world.player().place_proven_spell(0, wire), "deliberate single-press fixture equips Heavy or Spray")
 		var before := world.player().flux
 		for _tick: int in range(30): _step(world, _command(world, SimCommand.SPELL_HELD_BITS[0]))
-		equal(world.player().flux, before, "holding a non-Rapid number without an edge never auto-starts wire %d" % wire)
+		equal(world.player().flux, before, "holding Heavy or Spray without an edge never auto-starts wire %d" % wire)
 		_start(world, wire)
 		var starts := 0
 		for _tick: int in range(180):
 			_step(world, _command(world, SimCommand.SPELL_HELD_BITS[0]))
 			starts += _events(world, "cast_started", wire).size()
-		equal(starts, 0, "holding a non-Rapid number after its explicit cast cannot repeat wire %d" % wire)
+		equal(starts, 0, "holding Heavy or Spray after its explicit cast cannot repeat wire %d" % wire)
 	var priority := _world()
 	check(priority.player().place_proven_spell(0, 180) and priority.player().place_proven_spell(1, 179), "priority fixture equips Rapid and Heavy")
 	_step(priority, _command(priority, SimCommand.SPELL_HELD_BITS[0] | SimCommand.HELD_PRIMARY, SimCommand.PRESSED_SPELL_2))
 	equal(priority.player().pending_cast_wire_id, 179, "fresh explicit Heavy press wins over held Rapid and held primary")
-	equal(priority.player().flux, 142_000, "priority resolves one payment, not multiple concurrent casts")
+	equal(priority.player().flux, 140_000, "priority resolves one20Flux payment, not multiple concurrent casts")
 	for refusal: String in ["flux", "capacity"]:
 		var world := _world()
 		check(world.player().place_proven_spell(0, 180), "silent refusal fixture equips Rapid")
@@ -498,6 +722,191 @@ func _test_held_priority_and_silent_refusals() -> void:
 		_step(primary, _command(primary, SimCommand.HELD_PRIMARY))
 		starts += _events(primary, "cast_started").size()
 	check(starts > 1, "existing held-left-mouse primary behavior remains available")
+
+
+func _test_held_repeatable_slot_arbitration() -> void:
+	for repeat_slot: int in range(SimCommand.SPELL_HELD_BITS.size()):
+		for repeat_wire: int in [140, 180]:
+			for single_wire: int in [179, 154]:
+				var world := _world()
+				var single_slot := (repeat_slot + 11) % 12
+				check(world.player().place_proven_spell(single_slot, single_wire) and world.player().place_proven_spell(repeat_slot, repeat_wire), "held arbitration equips a repeating and a single-press spell across all twelve positions")
+				var before := world.player().flux
+				var held := SimCommand.SPELL_HELD_BITS[single_slot] | SimCommand.SPELL_HELD_BITS[repeat_slot]
+				_step(world, _command(world, held))
+				equal(world.player().pending_cast_wire_id, repeat_wire, "held Heavy or Spray cannot suppress held Bolt or Rapid in position %d" % (repeat_slot + 1))
+				equal(world.player().flux, before - int(CombatTuning.cast_definition(repeat_wire).flux_cost), "held arbitration admits exactly one paid repeating spell")
+				var deliberate := _world()
+				check(deliberate.player().place_proven_spell(single_slot, single_wire) and deliberate.player().place_proven_spell(repeat_slot, repeat_wire), "fresh-press arbitration uses the same twelve-position chord")
+				_step(deliberate, _command(deliberate, held | SimCommand.HELD_PRIMARY, SimCommand.SPELL_PRESSED_BITS[single_slot]))
+				equal(deliberate.player().pending_cast_wire_id, single_wire, "fresh Heavy or Spray overrides every held repeat and primary in position %d" % (single_slot + 1))
+				equal(deliberate.player().flux, before - int(CombatTuning.cast_definition(single_wire).flux_cost), "fresh priority still starts and pays exactly one spell")
+				var starts := 1
+				for _tick: int in range(45):
+					_step(world, _command(world, held))
+					starts += _events(world, "cast_started", repeat_wire).size()
+					check(_events(world, "cast_started", single_wire).is_empty(), "held single-press spell never starts during repeat arbitration")
+				check(starts >= 2, "mixed held chord actually repeats the selected Bolt or Rapid")
+				equal(world.player().flux, before - starts * int(CombatTuning.cast_definition(repeat_wire).flux_cost), "mixed chord pays the exact complete repeating-cast count")
+				var release_flux := world.player().flux
+				for _tick: int in range(30):
+					_step(world, _command(world, SimCommand.SPELL_HELD_BITS[single_slot]))
+					check(_events(world, "cast_started").is_empty(), "releasing repeating input leaves no latent cast behind a held single-press spell")
+				equal(world.player().flux, release_flux, "release stops new payment while preserving an already-paid startup")
+
+
+func _test_held_repeatable_priority_gates() -> void:
+	var empty := _world()
+	check(empty.player().place_proven_spell(11, 180), "empty lower hold fixture equips an upper-layer Rapid")
+	# Starter weaves fill all twelve positions; make this slot explicitly empty.
+	empty.player().spell_wire_ids[5] = 0
+	empty.player().spell_cooldown_ticks[5] = 0
+	empty.player()._sync_legacy_spell_cooldowns()
+	check(empty.player().has_valid_spell_slots() and empty.player().spell_wire_id(6) == 0, "held empty-position fixture is valid and actually empty")
+	_step(empty, _command(empty, SimCommand.SPELL_HELD_BITS[5] | SimCommand.SPELL_HELD_BITS[11]))
+	equal(empty.player().pending_cast_wire_id, 180, "an empty lower held position cannot mask a repeat-enabled upper position")
+	for slot: int in range(SimCommand.SPELL_HELD_BITS.size()):
+		var other := (slot + 1) % 12
+		var low := mini(slot, other)
+		var high := maxi(slot, other)
+		var held := SimCommand.SPELL_HELD_BITS[low] | SimCommand.SPELL_HELD_BITS[high] | SimCommand.HELD_PRIMARY
+		var world := _world()
+		check(world.player().place_proven_spell(low, 140) and world.player().place_proven_spell(high, 180), "two repeat-enabled positions are independently equipped")
+		check(world.player().set_spell_cooldown(140, 2), "lower repeating position has one complete refused tick remaining")
+		var before := world.player().flux
+		_step(world, _command(world, held))
+		equal(world.player().pending_cast_wire_id, 0, "cooling lower repeat-enabled slot cannot silently fall through to a higher spell or primary")
+		equal(world.player().flux, before, "held cooldown arbitration never makes a replacement payment")
+		check(_events(world, "cast_refused").is_empty(), "held cooldown remains silent")
+		_step(world, _command(world, held))
+		equal(world.player().pending_cast_wire_id, 140, "lowest repeat-enabled position starts exactly when its own cooldown expires")
+		equal(world.player().flux, before - int(CombatTuning.cast_definition(140).flux_cost), "cooldown boundary retains ordinary positive payment")
+		var fresh := _world()
+		check(fresh.player().place_proven_spell(low, 140) and fresh.player().place_proven_spell(high, 180), "fresh priority fixture equips both repeats")
+		_step(fresh, _command(fresh, held, SimCommand.SPELL_PRESSED_BITS[high]))
+		equal(fresh.player().pending_cast_wire_id, 180, "fresh higher-position repeat wins over deterministic lower held priority")
+	for reason: String in ["cooldown", "empty_slot", "flux", "control_rooted"]:
+		var fresh := _world()
+		check(fresh.player().place_proven_spell(0, 180) and fresh.player().place_proven_spell(11, 179), "refused fresh chord equips held Rapid and deliberate Heavy")
+		var pressed := SimCommand.PRESSED_SPELL_12
+		if reason == "cooldown": check(fresh.player().set_spell_cooldown(179, 3), "fresh Heavy owns its cooldown")
+		if reason == "empty_slot":
+			fresh.player().spell_wire_ids[5] = 0
+			fresh.player().spell_cooldown_ticks[5] = 0
+			fresh.player()._sync_legacy_spell_cooldowns()
+			check(fresh.player().has_valid_spell_slots() and fresh.player().spell_wire_id(6) == 0, "fresh empty-position fixture is valid and actually empty")
+			pressed = SimCommand.PRESSED_SPELL_6
+		if reason == "flux": fresh.player().flux = int(CombatTuning.cast_definition(179).flux_cost) - 1
+		if reason == "control_rooted": MovementSystem.apply_control_state(fresh.player(), PlayerState.ControlState.ROOTED, 1000, Vector2i.ZERO, 0, fresh.config)
+		var before := fresh.player().flux
+		_step(fresh, _command(fresh, SimCommand.SPELL_HELD_BITS[0] | SimCommand.SPELL_HELD_BITS[11] | SimCommand.HELD_PRIMARY, pressed))
+		equal(fresh.player().pending_cast_wire_id, 0, "refused fresh " + reason + " cannot fall through to an affordable held alternative")
+		equal(fresh.player().flux, before, "fresh " + reason + " refusal cannot spend for another held spell")
+		var refused := _events(fresh, "cast_refused")
+		equal(refused.size(), 1, "fresh refused priority gives one actionable explanation")
+		if refused.size() == 1: equal(String(refused[0].reason), reason, "fresh refusal retains its exact admission reason")
+	for reason: String in ["flux", "capacity", "control_rooted"]:
+		var world := _world()
+		check(world.player().place_proven_spell(0, 179) and world.player().place_proven_spell(11, 180), "mixed hold refusal fixture equips lower Heavy and upper Rapid")
+		var actor := world.player()
+		if reason == "flux": actor.flux = 0
+		if reason == "control_rooted": MovementSystem.apply_control_state(actor, PlayerState.ControlState.ROOTED, 1000, Vector2i.ZERO, 0, world.config)
+		var before := actor.flux
+		var events: Array[Dictionary] = []
+		var held := SimCommand.SPELL_HELD_BITS[0] | SimCommand.SPELL_HELD_BITS[11] | SimCommand.HELD_PRIMARY
+		var result: Variant = CombatSystem.step_player(actor, _command(world, held), world.config, 300, 400, world.collision, events, world.transition_policy, 0 if reason == "capacity" else -1)
+		check(result == null and actor.pending_cast_wire_id == 0 and events.is_empty(), "mixed held " + reason + " stays silent without a replacement cast")
+		equal(actor.flux, before, "mixed held " + reason + " spends no Flux")
+
+
+func _full_hex_capacity_policy() -> HexChemistryWorld:
+	var court := HexChemistryWorld.new()
+	check(court.configure_geometry(ORIGIN, [Vector2i.ZERO]), "capacity fixture configures actual immutable hex geometry")
+	court.chemistry_enabled = true
+	# Exercise actual reservation accounting, without injected product records,
+	# raised limits or a synthetic admission_reason implementation.
+	for index: int in HexChemistryWorld.MAX_PRODUCTS:
+		var owner_id := 100 + index
+		var reserved := court.reserve_cast(owner_id, 140)
+		check(reserved, "capacity fixture reserves each real finite product slot")
+		if reserved: court.commit_payment(owner_id)
+	equal(court.reserved_products(), HexChemistryWorld.MAX_PRODUCTS, "real reservations occupy the existing product bound")
+	equal(court.admission_reason(180), "hex_capacity", "real hex admission reports product capacity")
+	check(court.conservation_valid(), "paid capacity fixture preserves its finite matter")
+	return court
+
+
+func _test_held_hex_capacity_feedback() -> void:
+	var court := _full_hex_capacity_policy()
+	var court_before := court.state_hash()
+	for wire: int in [140, 180]:
+		for primary: bool in [false, true]:
+			var world := _world()
+			var actor := world.player()
+			check(actor.place_proven_spell(0, wire), "real hex-capacity fixture equips a repeating Bolt or Rapid")
+			actor.primary_wire_id = wire
+			var actor_before := actor.canonical_values()
+			var last_event_before := actor.last_event
+			var held: int = SimCommand.HELD_PRIMARY if primary else SimCommand.SPELL_HELD_BITS[0]
+			for _tick: int in range(4):
+				var events: Array[Dictionary] = []
+				var result: Variant = CombatSystem.step_player(actor, _command(world, held), world.config, 500, 600, world.collision, events, world.transition_policy, -1, -1, court)
+				check(result == null and events.is_empty(), "held hex-capacity retry creates neither attack nor repeated refusal")
+				equal(actor.canonical_values(), actor_before, "held hex capacity preserves resources, cooldowns and pending cast state")
+				equal(actor.last_event, last_event_before, "held hex capacity does not overwrite the latest action with refusal noise")
+				equal(court.state_hash(), court_before, "held hex capacity cannot reserve, spend, cancel or change paid authority")
+			var events: Array[Dictionary] = []
+			var result: Variant = CombatSystem.step_player(actor, _command(world, held, SimCommand.PRESSED_SPELL_1), world.config, 500, 600, world.collision, events, world.transition_policy, -1, -1, court)
+			check(result == null and events.size() == 1, "fresh press over held input retains one actionable hex-capacity refusal")
+			if events.size() == 1:
+				equal(events[0], {"type": "cast_refused", "entity_id": actor.entity_id, "wire_id": wire, "reason": "hex_capacity", "slot": 1}, "explicit hex capacity retains exact event identity and reason")
+				equal(SessionSnapshot.decode_event(SessionSnapshot.encode_event(events[0])).reason, "other", "existing protocol keeps its preceding generic guest encoding for hex capacity")
+			equal(actor.canonical_values(), actor_before, "explicit hex refusal changes no resources, cooldowns or pending cast")
+			equal(court.state_hash(), court_before, "explicit hex refusal leaves all existing reservations untouched")
+	check(court.conservation_valid(), "all held and explicit capacity failures leave paid matter conserved")
+
+
+func _test_hex_reservation_failure_feedback() -> void:
+	for pressed: bool in [false, true]:
+		for primary: bool in [false, true]:
+			var world := _world()
+			var actor := world.player()
+			check(actor.place_proven_spell(0, 180), "reservation failure fixture equips Rapid")
+			actor.primary_wire_id = 180
+			var actor_before := actor.canonical_values()
+			var last_event_before := actor.last_event
+			var policy := RefusingAdmissionPolicy.new()
+			var events: Array[Dictionary] = []
+			var held: int = SimCommand.HELD_PRIMARY if primary else SimCommand.SPELL_HELD_BITS[0]
+			var command := _command(world, held, SimCommand.PRESSED_SPELL_1 if pressed else 0)
+			var result: Variant = CombatSystem.step_player(actor, command, world.config, 500, 600, world.collision, events, world.transition_policy, -1, -1, policy)
+			check(result == null, "failed reservation never begins or releases an attack")
+			equal(policy.calls, PackedStringArray(["admission", "reserve"]), "reservation failure makes no requery, payment or cancellation callback")
+			equal(actor.canonical_values(), actor_before, "reservation failure preserves resources, cooldowns and pending action")
+			equal(events.size(), 1 if pressed else 0, "reservation failure is actionable only for a fresh explicit press")
+			if pressed and events.size() == 1:
+				equal(String(events[0].reason), "hex_capacity", "reservation failure retains its original taxonomy even when the callback changes future policy reasons")
+				equal(actor.last_event, "cast_refused_hex_capacity_180", "explicit reservation refusal retains its ordinary action label")
+			else:
+				equal(actor.last_event, last_event_before, "held reservation failure does not overwrite the action label")
+
+
+func _test_held_noncapacity_policy_errors() -> void:
+	for reason: String in ["hex_court_preparation", "hex_unsupported_delivery", "extension_refusal"]:
+		for pressed: bool in [false, true]:
+			var world := _world()
+			var actor := world.player()
+			check(actor.place_proven_spell(0, 180), "non-capacity policy fixture equips Rapid")
+			var actor_before := actor.canonical_values()
+			var policy := RefusingAdmissionPolicy.new()
+			policy.reason = reason
+			var events: Array[Dictionary] = []
+			var command := _command(world, SimCommand.SPELL_HELD_BITS[0], SimCommand.PRESSED_SPELL_1 if pressed else 0)
+			var result: Variant = CombatSystem.step_player(actor, command, world.config, 500, 600, world.collision, events, world.transition_policy, -1, -1, policy)
+			check(result == null and events.size() == 1, "non-capacity policy errors stay visible for held and pressed input")
+			if events.size() == 1: equal(String(events[0].reason), reason, "non-capacity policy feedback retains its exact reason")
+			equal(policy.calls, PackedStringArray(["admission"]), "non-capacity rejection cannot reserve or change callback order")
+			equal(actor.canonical_values(), actor_before, "non-capacity policy rejection preserves resources, cooldowns and pending cast")
 
 
 func _test_delivery_replay_in_eight_directions() -> void:

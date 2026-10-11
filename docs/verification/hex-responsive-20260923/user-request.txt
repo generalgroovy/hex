@@ -1,0 +1,233 @@
+Continue development of H.E.X. — Help, Everything eXploded!
+
+Act as the integration lead for gameplay, rendering, assets, performance and usability. Implement, test, inspect and refine the game in small coherent slices. Do not stop at another broad plan or repeat work already completed.
+
+The desired experience is a charming, crisp, movement-led magical combat sandbox: easy to understand, difficult to master, expressive under pressure, and full of interesting interactions.
+
+There is NO user-imposed percentage usage cutoff. Continue through safe, useful slices without requiring “continue” after each one. Respect platform limits, explicit human-approval gates and the user’s ability to interrupt. Never purchase usage or redeem reset credits automatically.
+
+AUTHORITATIVE START
+
+Repository:
+https://github.com/generalgroovy/hex
+
+Checkout:
+C:\Users\sende\Projects\hex
+
+Do not work in the old FLUX checkout simply because the task opens there.
+
+Read the current versions of:
+C:\Users\sende\Projects\hex\SPECIFICATION.md
+C:\Users\sende\Projects\hex\.agent\OVERHAUL-IMPLEMENTATION.md
+C:\Users\sende\Projects\hex\.agent\HEX-RESUME.md
+C:\Users\sende\Projects\hex\docs\verification\hex-design-20260923\HANDOFF.md
+
+Follow the handoff’s linked runtime audit, reaction decisions, art/runtime audit and worker briefs. Read further files only as required for the next slice.
+
+Orientation, not a substitute for fresh verification:
+- Last identified candidate: p55-ede24ea44158.
+- C1 visibility correction is implemented and packaged for human review.
+- Spell Loom assignment, close, paid casting and persistence have protected regression evidence.
+- The complete 36-reaction design review already exists; proposed mechanics are not automatically approved.
+- Live grid remains 48 px.
+- Complete-map experiments produced 6,495 cells at 32 px and 11,633 at 24 px, exceeding the current 4,096-cell bound.
+- Thirty character identities still use three shared body templates.
+- Stress performance and the complete multiplayer lifecycle remain unaccepted.
+
+Inspect current source and receipts before relying on those facts. Preserve later work.
+
+FIRST ACTIONS
+
+1. Record the dirty/staged boundary, current runtime identity, working fallback and existing engine processes.
+2. Identify the next highest-value unblocked slice from the existing queue.
+3. Give a brief update stating the intended player benefit and acceptance test.
+4. Begin implementation and bounded delegation.
+
+Do not replace the active queue with another master plan. Amend it only where new evidence changes dependencies.
+
+FIRST MILESTONE
+
+Deliver a clearly improved, locally playable Wellspring candidate that:
+- Preserves the visibility and Spell Loom fixes.
+- Demonstrates a measured improvement in the dominant runtime bottleneck.
+- Includes one integrated, readable Water pixel-art/material sample.
+- Keeps movement, aiming and casting dependable.
+- Has exact exported-build evidence and honest remaining limitations.
+
+Continue with subsequent unblocked slices after that milestone. Do not declare the whole game complete from this partial result.
+
+DELEGATION
+
+Use one integration lead and at most three independent workers, within available capacity.
+
+Suggested initial assignments:
+- Runtime: one measured snapshot/validation hotspot and its equivalence tests.
+- Visuals: the existing Water asset pilot, with exact runtime mapping and captures.
+- Gameplay/usability or review: actual player-action coverage, movement/casting defects, or independent review of a completed candidate.
+
+Assign exact files/directories, exclusions, acceptance criteria and expected handoff. Tell every worker they are not alone in the checkout and must preserve others’ edits.
+
+The integration lead alone schedules shared Godot imports, tests, profiles, captures, networking fixtures and exports. Rotate completed workers into review instead of creating overlapping agents.
+
+Use available skills, research, image generation and specialist tools when they solve a concrete task. Do not install tools, introduce dependencies or generate large asset batches merely to demonstrate capability.
+
+PRIORITY 1 — PERFORMANCE THAT ENABLES THE GAME
+
+Treat performance as gameplay work: severe frame stalls make movement, reaction timing and combat unreadable.
+
+Start with the source-backed hotspot in the runtime audit. Evaluate the proposed stateless empty-cell validation shortcut against the old implementation. Do not assume it is sufficient or beneficial before measuring.
+
+Preserve:
+- Exact acceptance and rejection of input shapes.
+- Canonical ordering, hashes and snapshot semantics.
+- Conservation, provenance and independent mutable ownership.
+- Mutation visibility between calls.
+- Next-tick/replay/round-trip correctness.
+- Existing workload, cadence and validation strength.
+
+Use matched before/after runs with adequate samples and alternating run order. Report p50/p95/p99 where meaningful, deadline misses, allocations, admitted work and hardware/backend.
+
+Separate simulation, snapshot preparation, draw submission and frame elapsed time. Do not sum overlapping measurements. The existing stress harness’s 16.667 ms frame deadline is not proof of 120 FPS; 120 Hz authority has an 8.333 ms tick budget.
+
+After the smallest verified optimization, reprofile. If dense construction, copying or hashing still dominates, design the next bounded improvement around immutable topology, sparse active state or compact layouts, with an old-oracle comparison and explicit ownership rules.
+
+Do not lower cadence, omit work, suppress validation, stretch timeouts or truncate coverage to obtain a passing result. Do not spend weeks building speculative infrastructure before proving a useful improvement.
+
+PRIORITY 2 — CRISP, EXPRESSIVE MOVEMENT AND CASTING
+
+Inspect actual gameplay, not just movement-state names.
+
+Exercise the approved movement set across:
+- All three sizes.
+- Eight travel directions and independent eight-direction aim.
+- Starting, stopping, reversing and diagonal transitions.
+- Jump/Float, slide, air dodge, fastfall and wall actions.
+- Casting during movement and transitions.
+- Low resources, interrupted input, focus loss and remapped controls.
+
+Fix dropped inputs, contradictory action transitions, unwanted velocity loss, animation-facing mistakes, sticky controls and misleading protection cues.
+
+Preserve accepted movement semantics and costs unless a separate tuning change is justified and recorded. Do not revive retired mechanics or obsolete keybindings from historical documentation.
+
+Keep physical control immediate. Use presentation interpolation deliberately; avoid stacked smoothing that produces input lag or rubbery movement.
+
+For balance changes, state:
+problem → hypothesis → smallest adjustment → expected trade-off → test.
+
+Prefer clear choices over “everything is faster, larger and stronger.” Evaluate escape time, recovery windows, resource economy and counterplay together.
+
+PRIORITY 3 — A DISTINCT PIXEL-ART IDENTITY
+
+Use this documented character reference unless a newer accepted one exists:
+C:\Users\sende\Projects\hex\reference\art\cast_proportions_v5\flux-current-cast-final.png
+
+Preserve character identity and proportions while translating them into coherent native-pixel artwork. Do not crop the illustrated reference board into runtime sprites or mistake portraits for finished characters.
+
+Style:
+- Zelda Oracle-era charm, compact forms and thoughtful tile construction.
+- Enter the Gungeon-like silhouettes, readable threats and economical impact animation.
+- H.E.X.’s own visual identity, not copied proprietary assets.
+- Crisp edges, restrained shading, purposeful outlines and consistent pixel density.
+- Quiet scenery, readable actors, unmistakable threats.
+
+Begin with the existing Water pilot at the live 48 px scale. Prove launch, travel, impact, occupied cells and expiry in actual exported gameplay before multiplying the style across elements.
+
+Essential hazard coverage must remain visible in normal and reduced-effects modes. Use animated material to communicate affected cells; avoid generic range circles and excessive glow.
+
+Fix the known static-label/fog-edge inconsistency without weakening concealment. Preserve the distinction between readable unseen terrain and hidden live activity.
+
+PRIORITY 4 — REUSABLE CHARACTER ANIMATION
+
+Complete and review the shared Small, Middle and Large motion foundations before mass-producing named skins.
+
+Require:
+- Fixed proportions and foot pivots across actions.
+- Clearly different eight-direction poses.
+- Alternating foot contacts with cadence derived from real travel.
+- Plausible strafing/backpedaling while aiming elsewhere.
+- Readable takeoff, Float, landing, slide, dodge and wall-action transitions.
+- No false “complete” status from duplicated poses or occupied atlas cells.
+- Separate body, shadow, spell and environmental layers.
+- Size-based hurtboxes and common wall clearance preserved independently of art.
+
+Build or improve a reusable animation inspection scene if it materially accelerates this work. Compare action transitions and movement/aim combinations at normal gameplay scale.
+
+Then complete one named character end-to-end using reusable anatomy/clothing components. Verify it actually loads in selection and gameplay, including portraits. Expand one accepted identity at a time.
+
+PRIORITY 5 — SPELLS AND CREATIVE CHEMISTRY
+
+Keep the four delivery families: Bolt, Heavy, Rapid and Spray.
+
+Give each a distinct tactical purpose through speed, strength, reach, coverage, resource cost, commitment and interception—not just different particles.
+
+Use simple readable projectile cores, distinct elemental color and restrained material-specific motion. Strength scaling must be legible without misleading players about collision or dangerous coverage.
+
+Preserve positive spell costs, subtractive strength, finite material, ownership, independent expiry and per-origin/per-pulse deduplication. Rapid remains trail-free unless deliberately redesigned.
+
+Keep the element order:
+Water, Earth, Fire, Air, Ice, Charge, Light, Dark.
+
+Use the existing 36-pair review. Do not silently replace Steam with Vaporwave, Frostway with Icewall, Capacitor with Overload, or change optical roles. These are substantive design decisions.
+
+For approved reaction work, implement one pair at a time using shared bounded primitives. Every new interaction needs:
+- A distinct purpose.
+- Clear formation, active and expiry cues.
+- Practical counterplay.
+- Explicit self/allied/enemy behavior.
+- Finite damage, movement and transformation budgets.
+- No free recursive chains or indefinite refresh.
+- Accurate whole-hex coverage and networking/replay behavior.
+
+Pending design approval should block that redesign, not unrelated performance, visual or usability work.
+
+PRIORITY 6 — WELLSPRING AS A PLAYABLE TEACHER
+
+Improve one purposeful area before expanding the entire map.
+
+Prioritize:
+- A readable spawn and short route to essential actions.
+- A movement loop with space for turning, jumping, sliding and wall practice.
+- A compact chemistry rehearsal that uses real paid casts.
+- Clear escape and reset routes.
+- Respawning test targets with understandable feedback.
+- Easy character/loadout changes.
+- Distinct landmarks rather than excessive floor text.
+
+Menus should complement the world, not require long walks for every routine action. Use concise tables, icons and contextual details, with deeper rules available on demand.
+
+Only expose options whose actual input → confirmation → gameplay effect works in the offered mode. Preserve saved IDs and configurations when gating incomplete content.
+
+Smaller hexes and larger playable areas remain goals, but require capacity, geometry and coverage work. Do not shrink the map, truncate eligible cells or raise caps blindly.
+
+ITERATION AND VERIFICATION
+
+For every slice:
+observe → form a testable hypothesis → implement a bounded change →
+run focused checks → inspect actual behavior/visuals →
+measure relevant cost → independent review → integrate → document.
+
+Keep a runnable fallback. Use isolated test profiles and owned processes. Preserve useful failed attempts as evidence, but clean up owned scratch files and unnecessary generated clutter.
+
+At coherent checkpoints, validate the exact Windows export:
+- Launch and safe close.
+- Ordinary movement and paid casting.
+- Spell assignment and persistence.
+- Relevant visual captures.
+- Relevant performance and same-build networking checks.
+- Package/runtime identity and integrity.
+
+Do not imply that unit tests prove human feel, images prove animation quality, localhost proves physical two-PC play, or configured 120 Hz proves sustained performance.
+
+Keep documentation concise and source-derived: current implementation, current candidate, remaining gates and next slices. No automatic publication, force-push, installer replacement or checkpoint promotion.
+
+CONTINUATION BEHAVIOR
+
+Work through safe slices without repeatedly asking permission for ordinary implementation decisions.
+
+When human aesthetic or gameplay approval is required, prepare an isolated comparison and continue other independent work; do not grant yourself that approval.
+
+When a material design choice is unresolved, ask one concise question and avoid implementing the disputed behavior meanwhile.
+
+Report concrete progress at checkpoints: player-visible improvements, measured engineering results, remaining failures and exact launch instructions.
+
+The aim is not maximum code or maximum features. Make each iteration noticeably more responsive, understandable, charming and tactically interesting.

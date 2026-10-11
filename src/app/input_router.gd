@@ -40,6 +40,7 @@ var consumed_physical_frames: Dictionary[StringName, int] = {}
 var physical_hold_frames: Dictionary[StringName, int] = {}
 var physical_holds: Dictionary[StringName, bool] = {}
 var quarantined_actions: Dictionary[StringName, bool] = {}
+var movement_cancel_pending: bool = false
 
 
 func _init(requested_entity_id: int = 1) -> void:
@@ -226,6 +227,7 @@ func consume_wheel_pulse(action: StringName, timestamp_ms: int) -> bool:
 
 
 func discard_transient_movement_input() -> void:
+	movement_cancel_pending = true
 	# Quarantine paid holds across modal/focus interruptions. Directional movement
 	# may resume, but UI presses and drags cannot become fresh gameplay actions.
 	pending_wheel_pulses.clear()
@@ -290,6 +292,9 @@ func sample(tick: int, player_position: Vector2, pointer_position: Vector2) -> S
 	if slide_down:
 		held |= SimCommand.HELD_SLIDE # Same wire bit becomes fast fall while airborne.
 	var pressed: int = SimCommand.PRESSED_EVADE if evade_pressed else 0
+	if movement_cancel_pending:
+		pressed |= SimCommand.PRESSED_CANCEL_MOVEMENT
+		movement_cancel_pending = false
 	if jump_pressed:
 		pressed |= SimCommand.PRESSED_JUMP
 	if technique_pressed:

@@ -303,8 +303,11 @@ var keyboard_bindings: Dictionary[StringName, int] = {}
 var mouse_bindings: Dictionary[StringName, int] = {}
 var controller_bindings: Dictionary = {}
 var reduced_motion: bool = false
+var direction_indicator: bool = true
 var high_contrast: bool = false
 var sound_volume_percent: int = 30
+var render_quality: String = "low"
+var frame_limit: int = 60
 var farflow_join_address: String = DEFAULT_FARFLOW_JOIN_ADDRESS
 var migration_notices: Array[Dictionary] = []
 var last_error: String = ""
@@ -324,8 +327,11 @@ func reset_to_defaults() -> void:
 	mouse_bindings = DEFAULT_MOUSE_BINDINGS.duplicate()
 	controller_bindings = DEFAULT_CONTROLLER_BINDINGS.duplicate(true)
 	reduced_motion = false
+	direction_indicator = true
 	high_contrast = false
 	sound_volume_percent = 30
+	render_quality = "low"
+	frame_limit = 60
 	farflow_join_address = DEFAULT_FARFLOW_JOIN_ADDRESS
 	migration_notices.clear()
 	last_error = ""
@@ -372,7 +378,19 @@ func apply_dictionary(data: Dictionary) -> bool:
 		last_error = "sound_volume_percent must be an integer from 0 to 100"
 		return false
 	var requested_sound_volume := int(raw_sound)
+	var requested_quality: Variant = data.get("render_quality", "low")
+	if not requested_quality is String or requested_quality not in ["low", "standard"]:
+		last_error = "render_quality must be low or standard"
+		return false
+	var requested_limit: Variant = data.get("frame_limit", 60)
+	if not _is_whole_number(requested_limit) or float(requested_limit) not in [0.0, 60.0, 120.0]:
+		last_error = "frame_limit must be 0, 60 or 120"
+		return false
 	var requested_pov_mode: String = str(data.get("pov_mode", ""))
+	var requested_direction_indicator: Variant = data.get("direction_indicator", true)
+	if not requested_direction_indicator is bool:
+		last_error = "direction_indicator must be a boolean"
+		return false
 	var requested_reduced_motion: bool = false
 	if requested_schema >= 2:
 		var raw_reduced_motion: Variant = data.get("reduced_motion", false)
@@ -639,8 +657,11 @@ func apply_dictionary(data: Dictionary) -> bool:
 	mouse_bindings = requested_mouse_bindings
 	controller_bindings = requested_controller_bindings
 	reduced_motion = requested_reduced_motion
+	direction_indicator = requested_direction_indicator
 	high_contrast = requested_high_contrast
 	sound_volume_percent = requested_sound_volume
+	render_quality = requested_quality
+	frame_limit = int(requested_limit)
 	farflow_join_address = requested_farflow_join_address
 	migration_notices = requested_migration_notices.duplicate(true)
 	last_error = ""
@@ -664,8 +685,11 @@ func to_dictionary() -> Dictionary:
 		"mouse_bindings": mouse_bindings,
 		"controller_bindings": controller_bindings,
 		"reduced_motion": reduced_motion,
+		"direction_indicator": direction_indicator,
 		"high_contrast": high_contrast,
 		"sound_volume_percent": sound_volume_percent,
+		"render_quality": render_quality,
+		"frame_limit": frame_limit,
 		"farflow_join_address": farflow_join_address,
 	}
 
@@ -688,6 +712,13 @@ func load_from_file(path: String = DEFAULT_PATH) -> bool:
 
 
 func save_to_file(path: String = DEFAULT_PATH) -> bool:
+	# Validate a detached outgoing snapshot before touching either file. Runtime
+	# settings/binding maps are mutable; a successful write must remain loadable.
+	var outgoing := to_dictionary().duplicate(true)
+	var validator := PlayerPreferences.new()
+	if not validator.apply_dictionary(outgoing):
+		last_error = "Preferences kept unchanged; current settings are invalid: %s" % validator.last_error
+		return false
 	# The original bytes survive the first normalization by this catalogue version.
 	# Validate disk state on every save: a failed load followed by default settings
 	# or shutdown must never overwrite a damaged or unsupported existing profile.
@@ -701,7 +732,7 @@ func save_to_file(path: String = DEFAULT_PATH) -> bool:
 				return false
 		elif not _write_profile_bytes(backup_path, original):
 			return false
-	return _write_profile_bytes(path, (JSON.stringify(to_dictionary(), "\t") + "\n").to_utf8_buffer())
+	return _write_profile_bytes(path, (JSON.stringify(outgoing, "\t") + "\n").to_utf8_buffer())
 
 
 func _read_valid_profile_bytes(path: String) -> PackedByteArray:

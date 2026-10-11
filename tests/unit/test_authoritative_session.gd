@@ -7,10 +7,139 @@ const CHAMPION_PATH: String = "res://content/champions/foundation_champions_v1.j
 
 func run() -> int:
 	_test_authoritative_presence_and_input()
+	_test_round_reconnect_team_invariance()
 	_test_hitch_input_coalescing_contract()
 	_test_event_burst_overflow_contract()
 	_test_hex_clash_outcome_delivery()
 	return finish("authoritative-session")
+
+
+func _test_round_reconnect_team_invariance() -> void:
+	var abilities := AbilityCatalog.new()
+	check(abilities.load_from_file(ABILITY_PATH), "abilities load for round reconnect invariance")
+	var champions := ChampionCatalog.new()
+	check(champions.load_from_file(CHAMPION_PATH, abilities), "champions load for round reconnect invariance")
+	var world := SimWorld.new(120, 95, CollisionWorld.new(3_000_000, 2_000_000))
+	check(champions.apply_to_player(world.player(), "oh_tipi"), "round reconnect host champion applies")
+	var session := AuthoritativeSession.new()
+	check(session.bind(world, champions, Vector2i(1280, 720), "Return Host"), "round reconnect uses the Open Commons charter")
+	# Six entrants with holes in the entity sequence exercise the real capacity
+	# without pretending that the current individual-score court is a team mode.
+	var participants: Array[int] = [1, 2, 4, 5, 7, 8]
+	var roster: Array[Dictionary] = []
+	for entity_id: int in participants:
+		if entity_id != 1:
+			roster.append({"entity_id": entity_id, "name": "Return %d" % entity_id})
+	equal(session.register_peers(roster), 5, "sparse roster admits five guests beside the host")
+	equal(session.hearth.connected_entity_ids(), participants, "six-person roster retains its sparse authoritative identities")
+	var definition := {
+		"bounds": [400, 300, 1200, 900], "score_limit": 3, "round_seconds": 15,
+		"result_seconds": 2, "respawn_ms": 500, "spawn_protection_ms": 250,
+		"spawns": [[500, 400], [1500, 400], [500, 1100], [1500, 1100], [500, 750], [1500, 750]],
+	}
+	check(session.begin_round(definition), "six sparse entrants begin the real authoritative court")
+	if not session.session_round.active():
+		return
+	equal(session.session_round.scores_by_entity.size(), 6, "round freezes exactly six participants")
+	var original_spawns := session.session_round.spawn_by_entity.duplicate()
+	var actors: Dictionary[int, PlayerState] = {}
+	for entity_id: int in participants:
+		var actor := world.player(entity_id)
+		actors[entity_id] = actor
+		equal(actor.team_id, entity_id, "court owns the sparse participant's individual team %d" % entity_id)
+		actor.position_x += entity_id * 1000
+		actor.health -= entity_id * 1000
+		actor.flux -= entity_id * 100
+		check(actor.place_proven_spell(0, actor.spell_wire_ids[1]), "participant %d retains a nondefault valid weave" % entity_id)
+		check(actor.set_spell_cooldown(actor.spell_wire_ids[0], entity_id + 10), "participant %d has a live cooldown to preserve" % entity_id)
+		session.session_round.scores_by_entity[entity_id] = entity_id % 3
+
+	for entity_id: int in participants:
+		if entity_id != 1:
+			_assert_reconnect_invariants(session, entity_id, entity_id, "active sparse participant %d" % entity_id)
+	# A sentinel assignment rejects a repair that recomputes entity-id teams
+	# instead of retaining the existing authority. It does not add a team mode.
+	world.player(7).team_id = 4
+	_assert_reconnect_invariants(session, 7, 4, "active round-owned nondefault team")
+	world.player(7).team_id = 7
+	# A pending respawn is round state too, not permission to reassign a team.
+	world.player(4).health = 0
+	session.session_round.respawn_tick_by_entity[4] = world.tick + session.session_round.respawn_ticks
+	_assert_reconnect_invariants(session, 4, 4, "defeated active participant")
+
+	equal(session.register_peers([{"entity_id": 3, "name": "Waiting Guest"}]), 1, "late observer uses one unoccupied identity, not a seventh round slot")
+	var observer := world.player(3)
+	if observer == null:
+		return
+	equal(observer.health, 0, "late observer remains health-zero outside the round")
+	observer.team_id = 77
+	_assert_reconnect_invariants(session, 3, 1, "active nonparticipant")
+	check(session.input_locked(3), "resumed observer remains authority-input-locked")
+	check(not session.session_round.scores_by_entity.has(3), "observer resume cannot enroll a participant")
+
+	world.tick = session.session_round.round_end_tick
+	session.advance_round([])
+	equal(session.session_round.phase, SessionRound.Phase.RESULT, "timeout enters the real result path before result reconnects")
+	for entity_id: int in participants:
+		if entity_id != 1:
+			_assert_reconnect_invariants(session, entity_id, entity_id, "result sparse participant %d" % entity_id)
+	world.player(7).team_id = 4
+	_assert_reconnect_invariants(session, 7, 4, "result round-owned nondefault team")
+	world.player(7).team_id = 7
+	observer.team_id = 77
+	_assert_reconnect_invariants(session, 3, 1, "result nonparticipant")
+	check(session.input_locked(3), "result observer stays input-locked after resume")
+
+	# Bind the next Hearth phase directly: world reconstruction is separately
+	# covered, while this fixture isolates phase-dependent resume assignment.
+	session.session_round.bind_hearth()
+	for entity_id: int in participants:
+		if entity_id != 1:
+			_assert_reconnect_invariants(session, entity_id, 1, "Hearth traveller %d" % entity_id)
+	observer.team_id = 77
+	_assert_reconnect_invariants(session, 3, 1, "Hearth former observer")
+	check(not session.input_locked(3), "Hearth resume is no longer gated as a round observer")
+	equal(session.remove_peers([{"entity_id": 3}]), 1, "waiting guest leaves before the six-person rematch")
+	check(session.begin_round(definition), "same sparse six-person roster can begin the next round")
+	equal(session.session_round.serial, 2, "reconnects do not consume or rewind the round serial")
+	equal(session.session_round.spawn_by_entity, original_spawns, "next round preserves the deterministic sparse-roster spawn mapping")
+	for entity_id: int in participants:
+		check(world.player(entity_id) == actors[entity_id], "next round retains exact participant actor %d" % entity_id)
+		equal(world.player(entity_id).team_id, entity_id, "next round owns participant team %d again" % entity_id)
+		equal(int(session.session_round.scores_by_entity[entity_id]), 0, "next round resets participant score %d only at begin" % entity_id)
+		check(world.player(entity_id).has_valid_spell_slots(), "next round keeps participant %d weave valid" % entity_id)
+
+
+func _assert_reconnect_invariants(session: AuthoritativeSession, entity_id: int, expected_team: int, label: String) -> void:
+	var actor := session.world.player(entity_id)
+	check(actor != null, "%s has an existing actor" % label)
+	if actor == null:
+		return
+	var expected_actor_values := actor.canonical_values()
+	expected_actor_values[1] = expected_team
+	var round_before := session.session_round.capture(session.world)
+	check(SessionRound.validate_packet(round_before), "%s begins with a valid round packet" % label)
+	var scores_before := session.session_round.scores_by_entity.duplicate()
+	var spawns_before := session.session_round.spawn_by_entity.duplicate()
+	var respawns_before := session.session_round.respawn_tick_by_entity.duplicate()
+	var player_count_before := session.world.players.size()
+	var player_name := String(session.names_by_entity[entity_id])
+	session.last_processed_input_sequence_by_entity[entity_id] = 77
+	equal(session.suspend_peers([{"entity_id": entity_id, "reserved": true}]), 1, "%s suspends its reserved presence" % label)
+	check(session.world.player(entity_id) == actor, "%s suspension retains the exact actor" % label)
+	equal(session.register_peers([{"entity_id": entity_id, "name": player_name, "resumed": true}]), 1, "%s resumes once" % label)
+	check(session.world.player(entity_id) == actor, "%s resume retains the exact actor" % label)
+	equal(actor.team_id, expected_team, "%s uses the correct phase-owned team" % label)
+	equal(actor.canonical_values(), expected_actor_values, "%s preserves identity, position, health, resources, loadout and cooldowns" % label)
+	equal(session.world.players.size(), player_count_before, "%s cannot duplicate the roster" % label)
+	equal(session.session_round.scores_by_entity, scores_before, "%s preserves every round score" % label)
+	equal(session.session_round.spawn_by_entity, spawns_before, "%s preserves every spawn assignment" % label)
+	equal(session.session_round.respawn_tick_by_entity, respawns_before, "%s preserves pending respawn timing" % label)
+	equal(session.session_round.capture(session.world), round_before, "%s preserves the complete round packet" % label)
+	equal(int(session.last_processed_input_sequence_by_entity[entity_id]), -1, "%s resets only the reconnect input acknowledgement" % label)
+	equal(int(session.hearth.presence_by_entity[entity_id]), SessionHearth.STATUS_CONNECTED, "%s reconnects Hearth presence" % label)
+	check(not session.hearth.is_ready(entity_id), "%s requires fresh readiness" % label)
+	equal(actor.last_event, "farflow_return", "%s retains ordinary reconnect feedback" % label)
 
 
 func _test_hex_clash_outcome_delivery() -> void:
@@ -280,7 +409,7 @@ func _test_authoritative_presence_and_input() -> void:
 	equal(Vector2i(copied_command.aim_target_x, copied_command.aim_target_y), Vector2i(1_500_000, 750_000), "command copying cannot drop the captured world target")
 	check(world.step(commands), "host simulates both travellers in one tick")
 	check(world.player(2).position_x > 1_352_000, "remote input moves only through host simulation")
-	check(world.player(2).hop_ticks > 0, "remote jump action executes once through the shared movement grammar")
+	check(world.player(2).jumpsquat_active and not world.player(2).is_airborne(), "remote held jump prepares through the shared movement grammar")
 	var reconciliation := session.capture_reconciliation(2)
 	check(ClientPrediction.validate_packet(reconciliation), "authority emits a validated movement reconciliation")
 	equal(int(reconciliation.get("sequence", -1)), 1, "reconciliation acknowledges the input sequence actually processed")
@@ -289,6 +418,13 @@ func _test_authoritative_presence_and_input() -> void:
 	var second_commands := session.commands_for_tick(SimCommand.new(world.tick, 1))
 	equal(second_commands[1].pressed_actions, 0, "remote pressed action is consumed exactly once")
 	check(world.step(second_commands), "held remote command continues on the next tick")
+	var released_packet := packet.duplicate(true)
+	released_packet["sequence"] = 2
+	released_packet["held"] = 0
+	released_packet["pressed"] = 0
+	equal(session.ingest_inputs([released_packet]), 1, "remote release enters authority")
+	check(world.step(session.commands_for_tick(SimCommand.new(world.tick, 1))), "remote release advances authority")
+	check(world.player(2).is_airborne(), "remote release launches exactly one real jump")
 	for _index: int in range(world.config.milliseconds_to_ticks(AuthoritativeSession.REMOTE_INPUT_TIMEOUT_MS) + 2):
 		check(world.step(session.commands_for_tick(SimCommand.new(world.tick, 1))), "host advances toward remote input timeout")
 	var stale_commands := session.commands_for_tick(SimCommand.new(world.tick, 1))
@@ -319,7 +455,7 @@ func _test_authoritative_presence_and_input() -> void:
 	equal(late_commands[2].move_x, 0, "nonparticipant movement is neutralized by host authority")
 	equal(late_commands[2].move_y, 0, "nonparticipant diagonal movement is neutralized")
 	equal(late_commands[2].held_actions, 0, "nonparticipant held casts and sprint are neutralized")
-	equal(late_commands[2].pressed_actions, 0, "nonparticipant jump and active presses are neutralized")
+	equal(late_commands[2].pressed_actions, SimCommand.PRESSED_CANCEL_MOVEMENT, "nonparticipant paid actions become only safe movement cancellation")
 	equal(int(session.last_processed_input_sequence_by_entity.get(3, -1)), -1, "neutralized spectator input is never acknowledged as simulated")
 	var late_snapshot := session.capture_snapshot()
 	check(SessionSnapshot.validate(late_snapshot), "late friend and active round subset share a valid snapshot")

@@ -24,6 +24,12 @@ const DECLARED_REFUSAL_REASONS: Array[String] = [
 	"control_launched", "control_grappled", "control_charging",
 	"control_stunned", "control_rooted",
 ]
+const MAX_CACHED_SOURCE_BYTES := 65_536
+
+# One complete value is replaced on a successful ordinary load, never mutated
+# after publication. Readers retain one local entry, so overlapping loads cannot
+# pair one source's data with another source's hash. No live policy is retained.
+static var _load_cache: Dictionary = {}
 
 var data: Dictionary = {}
 var content_hash: String = ""
@@ -34,7 +40,27 @@ func load_from_file(path: String = DEFAULT_PATH) -> bool:
 	data = {}
 	content_hash = ""
 	last_error = ""
-	var parsed := _parsed_dictionary(path)
+	var concrete: bool = get_script() == load("res://src/sim/core/action_transition_policy.gd")
+	var source_text := ""
+	var parsed: Dictionary
+	if concrete:
+		# Always open and read the requested path. A path, timestamp or length is
+		# not proof that the current bytes match a previously validated policy.
+		var file := FileAccess.open(path, FileAccess.READ)
+		if file == null:
+			return _fail("Action transition matrix is missing or invalid JSON")
+		source_text = file.get_as_text()
+		file.close()
+		var cached: Dictionary = _load_cache
+		if not cached.is_empty() and source_text == cached.source:
+			data = cached.data.duplicate(true)
+			content_hash = cached.hash
+			return true
+		var value: Variant = JSON.parse_string(source_text)
+		parsed = value if value is Dictionary else {}
+	else:
+		# Extensions preserve the preceding helper and validation/callback path.
+		parsed = _parsed_dictionary(path)
 	if parsed.is_empty():
 		return _fail("Action transition matrix is missing or invalid JSON")
 	if int(parsed.get("schema_version", 0)) != 1 or String(parsed.get("id", "")) != EXPECTED_ID:
@@ -68,6 +94,10 @@ func load_from_file(path: String = DEFAULT_PATH) -> bool:
 		return _fail("Action transition refusal vocabulary is incomplete")
 	data = parsed
 	content_hash = CanonicalContent.sha256(data)
+	if concrete and source_text.to_utf8_buffer().size() <= MAX_CACHED_SOURCE_BYTES:
+		# Both cold and warm results remain independently writable. The cache's
+		# private deep copy is never handed to a caller or mutated after commit.
+		_load_cache = {"source": source_text, "data": data.duplicate(true), "hash": content_hash}
 	return true
 
 

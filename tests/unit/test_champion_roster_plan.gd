@@ -12,7 +12,7 @@ func run() -> int:
 	equal(roster.data["status"], "canonical_identity_availability_registry", "registry describes live canonical identity and availability rather than planned-only content")
 	equal(int(roster.data["schema_version"]), 1, "status clarification does not invent a structural schema change")
 	var affinity_metadata: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(String(roster.data["affinity_catalog"])))
-	equal(affinity_metadata["status"], "canonical_first_eight_affinity_allocation", "affinity metadata describes current first-eight allocations")
+	equal(affinity_metadata["status"], "canonical_six_element_affinity_allocation", "affinity metadata describes current six-element allocations")
 	var stale_status = ChampionRosterPlanScript.new()
 	stale_status.data = roster.data.duplicate(true)
 	stale_status.data["status"] = "design_locked_nonselectable_registry"
@@ -21,7 +21,7 @@ func run() -> int:
 	equal(roster.ids_by_availability("planned").size(), 0, "all named entries have explicit baseline implementations")
 	equal(roster.data["allowed_ancestries"].size(), 21, "Spiderkin replaces the unused ancestry slot instead of inventing an extra race")
 	check("spiderkin" in roster.data["allowed_ancestries"] and "arachnoid" not in roster.data["allowed_ancestries"], "canonical active race vocabulary uses Spiderkin")
-	for newcomer: Array in [["luuh_i_zeh", "Luuh I Zeh", "spiderkin", "small", {"dark": 2, "water": 1}], ["juul_i_yaina", "Juul I Yaina", "demon", "small", {"ice": 2, "wind": 1}], ["faab_i_yaina", "Faab I Yaina", "angel", "middle", {"fire": 2, "light": 1}], ["joh_haynes", "Joh Haynes", "orc", "large", {"earth": 2, "charge": 1}]]:
+	for newcomer: Array in [["luuh_i_zeh", "Luuh I Zeh", "spiderkin", "small", {"dark": 2, "water": 1}], ["juul_i_yaina", "Juul I Yaina", "demon", "small", {"water": 2, "wind": 1}], ["faab_i_yaina", "Faab I Yaina", "angel", "middle", {"fire": 2, "light": 1}], ["joh_haynes", "Joh Haynes", "orc", "large", {"earth": 2, "fire": 1}]]:
 		var identity: Dictionary = roster.entry(String(newcomer[0]))
 		equal(identity.get("display_name"), newcomer[1], "newcomer preserves the exact reference name")
 		equal(identity.get("ancestry"), newcomer[2], "newcomer preserves the assigned ancestry")
@@ -98,7 +98,7 @@ func run() -> int:
 	(adapted["archive_elements"] as Array).append("ice")
 	equal(archived["elements"], ["wind"], "archive metadata is deeply copied")
 	(adapted["elements"] as Array).clear()
-	equal(roster.affinity_entry("wa_bidi")["affinities"], ["charge", "wind", "fire"], "adapter cannot mutate canonical affinities")
+	equal(roster.affinity_entry("wa_bidi")["affinities"], ["fire", "wind"], "adapter cannot mutate canonical affinities")
 	check(roster.visual_metadata("missing", archived).is_empty(), "unknown visual identity fails closed")
 	_test_full_cast_candidate(roster)
 	return finish("champion-roster-plan")
@@ -125,13 +125,13 @@ func _test_full_cast_candidate(roster: ChampionRosterPlan) -> void:
 	var projected := ChampionCatalog.new()
 	# Explicit in-memory projection validates candidate numbers and existing
 	# kits without changing paths, selection, or any production catalog file.
-	projected.data = {"schema_version": ChampionCatalog.SUPPORTED_SCHEMA_VERSION, "id": "full-cast-candidate-test-projection", "default_champion_id": "oh_tipi", "champions": candidate.get("champions", [])}
+	projected.data = {"schema_version": ChampionCatalog.SUPPORTED_SCHEMA_VERSION, "id": "full-cast-candidate-test-projection", "default_champion_id": "oh_tipi", "champions": (candidate.get("champions", []) as Array).map(_migrate_historical_profile)}
 	check(projected.validate(abilities), "all candidate stats, weighted affinities, ancestry and kits pass the existing runtime rules: %s" % projected.last_error)
 	if not projected.last_error.is_empty(): return
 	equal(projected.ordered_champion_ids().size(), 30, "candidate has every named identity and no extra champion")
 	check(projected.champion("unnamed_angel").is_empty(), "placeholder is not assigned a candidate playable wire")
 	equal((candidate.get("decisions_by_id", {}) as Dictionary).size(), 25, "only the twenty-five added profiles carry new-decision labels")
-	equal(candidate.get("shared_runtime_spell_count"), 32, "candidate records the exact four-family runtime library")
+	equal(candidate.get("shared_runtime_spell_count"), 32, "historical candidate records its original eight-element library")
 	var seen := {}
 	var baseline_ids := {"small": "s_wayne", "middle": "oh_tipi", "large": "red_baron"}
 	var expected_wire := 6
@@ -146,7 +146,7 @@ func _test_full_cast_candidate(roster: ChampionRosterPlan) -> void:
 		equal(entry.get("body_type"), identity["body_role"], "candidate preserves documented body class")
 		equal(entry.get("affinities"), roster.affinity_entry(id)["affinities"], "candidate preserves canonical affinity ordering")
 		equal(entry.get("affinity_points"), roster.affinity_entry(id)["affinity_points"], "candidate never invents replacement affinity weights")
-		equal(entry, live.champion(id), "every live baseline agrees with its explicit provenance record")
+		equal(_current_profile_from_provenance(entry), live.champion(id), "every live field agrees with historical provenance except the exact declared perk-copy correction")
 		if id in candidate["preserved_live_champion_ids"]:
 			equal(entry, live.champion(id), "current live profile remains verbatim in the candidate")
 		else:
@@ -164,7 +164,7 @@ func _test_full_cast_candidate(roster: ChampionRosterPlan) -> void:
 		var state := PlayerState.new(1)
 		check(projected.apply_to_player(state, id), "candidate can initialize the existing generic player state in isolation")
 		check(state.has_valid_spell_slots(), "candidate produces an ordinary valid twelve-slot weave")
-		equal(state.proven_spell_wire_ids().size(), 32, "all candidates share the exact four-family proven spell access")
+		equal(state.proven_spell_wire_ids().size(), 504, "all candidates share the complete authoritative spell vocabulary before local progression filtering")
 		for wire: int in state.kit_spell_wire_ids():
 			check(CombatTuning.is_runtime_wire_id(wire), "candidate starter kit uses an existing authoritative spell only")
 	equal(seen.size(), 30, "all thirty named identities are covered")
@@ -173,3 +173,49 @@ func _test_full_cast_candidate(roster: ChampionRosterPlan) -> void:
 	invalid.data = projected.data.duplicate(true)
 	((invalid.data["champions"] as Array)[-1] as Dictionary)["stats"]["stamina_maximum"] = 800_001
 	check(not invalid.validate(abilities), "candidate validation retains existing stat caps rather than expanding them")
+
+
+func _migrate_historical_profile(historical: Dictionary) -> Dictionary:
+	var result := historical.duplicate(true)
+	var affinities: Array[String] = []
+	var points := {}
+	for old_element: String in historical.affinities:
+		var element := ElementRules.fold_legacy_id(old_element)
+		check(not element.is_empty(), "historical affinity has an explicit canonical parent")
+		if not affinities.has(element): affinities.append(element)
+		points[element] = float(points.get(element, 0.0)) + float(historical.affinity_points[old_element])
+	result.affinities = affinities
+	result.affinity_points = points
+	const SPELLS := {"rimeshard":"rillshot", "frost-shell":"tide-shell", "sleet-stream":"rill-stream", "sleet":"tideline", "arc-primary":"cinderbolt", "thunder-shell":"cinder-shell", "spark-stream":"ember-stream", "spark-shower":"ember-sweep"}
+	for slot: String in result.foundation_kit:
+		result.foundation_kit[slot] = String(SPELLS.get(result.foundation_kit[slot], result.foundation_kit[slot]))
+	for old_element: String in ["ice", "charge"]:
+		var pattern := RegEx.new()
+		check(pattern.compile("\\b" + old_element + "\\b") == OK, "explicit historical element word replacement compiles")
+		result.playstyle = pattern.sub(String(result.playstyle), ElementRules.fold_legacy_id(old_element), true)
+	return result
+
+
+func _current_profile_from_provenance(historical: Dictionary) -> Dictionary:
+	# Keep the promoted candidate as historical evidence. Only the explicit
+	# obsolete perk denial changes; identity, role prose, numbers and kits remain
+	# under whole-dictionary equality with the independently loaded live profile.
+	const BASELINE_IDS := ["steezo", "treevor_mason", "oll_i", "fluup", "nico_lai",
+		"spai_si", "leaf_hidden", "ha_rekt", "dr_apex", "haara", "hesus_christo",
+		"grimm_bow", "biggy_bob", "jan_wicked", "ba_djoh", "urzh", "donnok",
+		"djonah_thaan", "luuh_i_zeh", "juul_i_yaina", "faab_i_yaina", "joh_haynes"]
+	const LATER_IDS := ["h_le_ne", "fimu_yashiha", "sai_laas"]
+	var expected := historical.duplicate(true)
+	var id := String(historical.get("id", ""))
+	var old_suffix := ""
+	if id in BASELINE_IDS:
+		old_suffix = "no unique ability or race-bonus claim."
+	elif id in LATER_IDS:
+		old_suffix = "no unique racial passive."
+	else:
+		return expected
+	var old_copy := String(historical.get("playstyle", ""))
+	check(old_copy.ends_with(old_suffix), "historical copy must match its exact declared replacement: " + id)
+	if old_copy.ends_with(old_suffix):
+		expected["playstyle"] = old_copy.trim_suffix(old_suffix) + "race and personal perks apply in their listed windows."
+	return expected

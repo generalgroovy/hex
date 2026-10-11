@@ -1,0 +1,42 @@
+{
+  "extends": "seakin.recipe.json",
+  "visual_holds": [
+    "Shared geometric limbs and boots still read mechanically against generated head and vest.",
+    "Head-to-body proportions require user visual approval.",
+    "Rear-quarter facing silhouettes remain ambiguous and need authored-art review.",
+    "Tail and dedicated race limb anatomy are not authored."
+  ],
+  "torso": {
+    "source_png": "reference/seakin-torsos-v2.png",
+    "source_sha256": "1592a86ba68c44c5aaeafa39e845364ebc2f3dad8498020220bc5094544dd69c",
+    "alpha_threshold": 127,
+    "held_states": ["slide", "roll"],
+    "measurement_notes": "Short-vest generated correction, independently remeasured after alpha127 normalization. Rectangles use actual source silhouettes plus4px transparent border, not v1grid. Neck anchors measured from top-collar central axes; pelvis anchors from sourcebelt centers at y207,481,746. Standing neck-pelvis calibration remains original rig; no body/cell rescale or gameplaychanges. Slide/roll remain review-held even if geometricfall-back countiszero.",
+    "parts": {
+      "neutral/S": {"rect": [47,62,165,172], "neck_anchor": [82,16], "pelvis_anchor": [82,145]},
+      "neutral/SE": {"rect": [274,60,161,174], "neck_anchor": [86,16], "pelvis_anchor": [74,147]},
+      "neutral/E": {"rect": [496,57,136,179], "neck_anchor": [82,16], "pelvis_anchor": [64,150]},
+      "neutral/NE": {"rect": [707,57,153,164], "neck_anchor": [82,16], "pelvis_anchor": [74,150]},
+      "neutral/N": {"rect": [916,60,164,163], "neck_anchor": [82,16], "pelvis_anchor": [82,147]},
+      "neutral/NW": {"rect": [1137,57,152,164], "neck_anchor": [70,16], "pelvis_anchor": [78,150]},
+      "neutral/W": {"rect": [1365,57,137,179], "neck_anchor": [53,16], "pelvis_anchor": [72,150]},
+      "neutral/SW": {"rect": [1561,62,166,172], "neck_anchor": [81,16], "pelvis_anchor": [89,145]},
+      "masculine/S": {"rect": [34,322,189,185], "neck_anchor": [94,16], "pelvis_anchor": [94,159]},
+      "masculine/SE": {"rect": [269,322,176,185], "neck_anchor": [90,16], "pelvis_anchor": [78,159]},
+      "masculine/E": {"rect": [491,322,150,185], "neck_anchor": [85,16], "pelvis_anchor": [70,159]},
+      "masculine/NE": {"rect": [694,322,176,172], "neck_anchor": [91,16], "pelvis_anchor": [86,159]},
+      "masculine/N": {"rect": [906,322,184,172], "neck_anchor": [92,16], "pelvis_anchor": [92,159]},
+      "masculine/NW": {"rect": [1127,322,175,172], "neck_anchor": [84,16], "pelvis_anchor": [88,159]},
+      "masculine/W": {"rect": [1355,322,150,185], "neck_anchor": [65,16], "pelvis_anchor": [80,159]},
+      "masculine/SW": {"rect": [1553,325,186,182], "neck_anchor": [93,16], "pelvis_anchor": [99,156]},
+      "feminine/S": {"rect": [56,598,146,174], "neck_anchor": [74,16], "pelvis_anchor": [72,148]},
+      "feminine/SE": {"rect": [274,598,161,174], "neck_anchor": [90,16], "pelvis_anchor": [74,148]},
+      "feminine/E": {"rect": [494,598,130,175], "neck_anchor": [83,16], "pelvis_anchor": [62,148]},
+      "feminine/NE": {"rect": [704,598,149,163], "neck_anchor": [84,16], "pelvis_anchor": [72,148]},
+      "feminine/N": {"rect": [922,598,152,165], "neck_anchor": [76,16], "pelvis_anchor": [76,148]},
+      "feminine/NW": {"rect": [1145,598,147,163], "neck_anchor": [62,16], "pelvis_anchor": [77,148]},
+      "feminine/W": {"rect": [1373,598,130,175], "neck_anchor": [46,16], "pelvis_anchor": [67,148]},
+      "feminine/SW": {"rect": [1563,598,165,174], "neck_anchor": [77,16], "pelvis_anchor": [86,148]}
+    }
+  }
+}

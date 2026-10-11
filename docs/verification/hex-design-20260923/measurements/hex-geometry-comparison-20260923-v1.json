@@ -1,0 +1,109 @@
+{
+	"assertions": 25,
+	"cases": [
+		{
+			"cap_margin": 1330,
+			"definition_hash": "6122177196f65528fd9291827319778a82faf4ee5dbc2cf7a629a59390f1e23e",
+			"eligible_cells": 2766,
+			"enumeration_us": {
+				"max": 196169,
+				"p50": 194648,
+				"p95": 196169,
+				"samples": 5
+			},
+			"face_to_face_px": 48,
+			"half_height_fixed": 27712,
+			"half_width_fixed": 24000,
+			"live_cap": 4096,
+			"row_pitch_fixed": 41568,
+			"runtime_coordinate_bounds_safe": true,
+			"samples_us": [
+				194827,
+				193619,
+				194150,
+				196169,
+				194648
+			],
+			"within_live_cap": true
+		},
+		{
+			"cap_margin": -2399,
+			"definition_hash": "c7ddf46ea5b052634e81bd9f8037cf2f49453c3400814f299423058e360d3753",
+			"eligible_cells": 6495,
+			"enumeration_us": {
+				"max": 450581,
+				"p50": 446606,
+				"p95": 450581,
+				"samples": 5
+			},
+			"face_to_face_px": 32,
+			"half_height_fixed": 18476,
+			"half_width_fixed": 16000,
+			"live_cap": 4096,
+			"row_pitch_fixed": 27714,
+			"runtime_coordinate_bounds_safe": true,
+			"samples_us": [
+				442241,
+				450581,
+				446423,
+				446606,
+				450565
+			],
+			"within_live_cap": false
+		},
+		{
+			"cap_margin": -7537,
+			"definition_hash": "dc0db7b8f2f6674f6b262c7d6b247d85c49c7f33b59f48e4142460c0062a9630",
+			"eligible_cells": 11633,
+			"enumeration_us": {
+				"max": 812379,
+				"p50": 807595,
+				"p95": 812379,
+				"samples": 5
+			},
+			"face_to_face_px": 24,
+			"half_height_fixed": 13856,
+			"half_width_fixed": 12000,
+			"live_cap": 4096,
+			"row_pitch_fixed": 20784,
+			"runtime_coordinate_bounds_safe": true,
+			"samples_us": [
+				788880,
+				812379,
+				806722,
+				807595,
+				808133
+			],
+			"within_live_cap": false
+		}
+	],
+	"clearance_fixed": 18000,
+	"engine": "4.7.1-stable (official)",
+	"failures": 0,
+	"live_topology_cap": 4096,
+	"map_content_hash": "9d481a582a0e84c1ecb74ee7637ba6cd7f9119deb0eeacdc509904f5d4810417",
+	"map_path": "res://content/maps/sanctum_campus_g2_v1.json",
+	"map_sha256": "496c96c80168dd6e4053e03ece86b8a8f010a44c24c5fca7eaebe8cd13b51cea",
+	"probe_version": "hex-geometry-comparison-20260923-v1",
+	"production_48_equivalence": {
+		"cells_and_order_match": true,
+		"definition_hash": "6122177196f65528fd9291827319778a82faf4ee5dbc2cf7a629a59390f1e23e",
+		"definition_hash_match": true,
+		"eligible_cells": 2766
+	},
+	"schema_version": 1,
+	"scope": "Read-only same-map eligibility enumeration at 48, 32 and 24 px. It does not configure a candidate authority, mutate HexGrid, change the map, raise caps, select effects, truncate cells, or claim gameplay/performance equivalence.",
+	"source_sha256": {
+		"src/sim/hex/hex_chemistry_world.gd": "b87e2cafa243646395db58a0ad7071806be129eca1eb12de647e16aed7fd27cd",
+		"src/sim/hex/hex_grid.gd": "2e99c993e5ab72cd084b445804f1f69230631a760f6de681fb4b03ab321d5505",
+		"src/sim/hex/hex_world_definition.gd": "e15d75d48ddedc6bc891400f508ae43d892742c151e54bb5b93aef68dfa23f18",
+		"tests/diagnostics/hex_geometry_comparison_20260923.gd": "0c9c78dd12e53bb79ad039216a225f202ed06ffd046a75da73d533090659eb63"
+	},
+	"timing_semantics": "Five inclusive topology-enumeration samples per lattice. Map load, collision construction, equivalence checks, hashing and receipt writing are outside timers.",
+	"world_bounds": [
+		0,
+		112000,
+		3072000,
+		2192000
+	]
+}

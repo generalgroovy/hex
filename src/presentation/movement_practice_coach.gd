@@ -21,16 +21,20 @@ static func sample(state: PlayerState, preferences: PlayerPreferences, bounds_pi
 		kind = "control"
 		title = "SOUTH LOOP / REGAIN CONTROL"
 		lines = ["Wait for this control state or recovery to clear.", "The walking loop bypasses the optional walls."]
+	elif state.jumpsquat_active:
+		kind = "jumpsquat"
+		title = "SOUTH LOOP / PREPARE THEN RELEASE"
+		lines = ["Release %s to jump; hold charges a little higher." % jump, "Still grounded: projectiles and floor effects hit."]
 	elif state.movement_commitment_ticks > 0:
 		kind = "commitment"
 		title = "SOUTH LOOP / FINISH THE OPENING"
 		lines = ["Let the opening movement commitment finish.", "A new action still needs its own Stamina and gate."]
-	elif state.air_floating and state.float_ticks > 0 and state.stamina > 0:
-		kind = "float"
-		title = "SOUTH LOOP / FLOAT"
-		lines = ["Hold %s: paid height + protection; release to fall." % jump, "Neutral %s / fresh %s: fast fall, no protection." % [evade, slide]]
+	elif state.flight_capable and state.air_floating and state.float_ticks > 0 and state.stamina > 0:
+		kind = "flight"
+		title = "SOUTH LOOP / FLIGHT"
+		lines = ["Hold %s to fly; release to fall. No immunity." % jump, "Neutral %s / fresh %s: fast fall, no protection." % [evade, slide]]
 		if _wheel_jump(preferences, device):
-			lines[0] = "A wheel pulse cannot sustain Float; use a button."
+			lines[0] = "A wheel pulse cannot sustain flight; use a button."
 		elif jump == "UNBOUND":
 			lines[0] = "Jump is UNBOUND; set a hold input at Controls."
 		if evade == "UNBOUND" and slide == "UNBOUND":
@@ -42,40 +46,47 @@ static func sample(state: PlayerState, preferences: PlayerPreferences, bounds_pi
 	elif state.wall_skim_ticks > 0:
 		kind = "wallrun"
 		title = "SOUTH LOOP / WALLRUN"
-		lines = ["Steer away to detach into ordinary descent.", "Neutral %s: fast fall + detach; walls do not refill." % evade]
-		if state.hop_stage < 2 and jump != "UNBOUND":
-			lines[0] = "Fresh %s + away: try a paid wall kick." % jump
-		elif technique != "UNBOUND":
-			lines[0] = "%s again or steer away to detach." % technique
+		lines = ["Release %s + move: outward walljump; no immunity." % jump, "Neutral %s: fast fall + detach; walls do not refill." % evade]
+		if jump == "UNBOUND":
+			lines[0] = "Jump UNBOUND; steer away to detach."
 		if evade == "UNBOUND":
 			lines[1] = "Evade UNBOUND; walls refill no spent air budgets."
 	elif state.is_airborne():
 		kind = "airborne"
 		title = "SOUTH LOOP / STEER THE EXIT"
-		lines = ["%s neutral: zero-cost fast fall; +move: paid dodge." % evade, "Steer freely; spent Float stays spent until landing."]
+		lines = ["", "Steer freely; spent air budgets reset on landing."]
 		if evade == "UNBOUND":
 			lines[0] = "Evade UNBOUND; set it at Controls for fast fall/dodge."
+		elif state.air_dodge_used:
+			lines[0] = "%s neutral: free fast fall; dodge spent until landing." % evade
+		else:
+			# The earlier control/commitment branches already suppress blocked
+			# actions. Match the remaining air-dodge budget and paid-cost gates;
+			# neutral Evade still takes its independent, zero-cost fast-fall path.
+			var dodge_cost := MovementSystem._movement_action_cost(state, MovementTuning.AIR_DODGE_COST)
+			if state.stamina < dodge_cost:
+				lines[0] = "%s neutral: free fast fall; dodge needs " % evade + MovementGuideModel._units(dodge_cost) + " Stamina."
+			else:
+				lines[0] = "%s neutral: free fast fall; +move: paid dodge." % evade
 		var can_turn := state.hop_ticks > 0 and state.air_redirects_remaining > 0 and technique != "UNBOUND" and state.stamina >= MovementSystem._movement_action_cost(state, MovementTuning.AIR_REDIRECT_COST) and Vector2i(state.air_velocity_x, state.air_velocity_y) != Vector2i.ZERO
-		if not state.float_used:
-			lines[1] = "Fresh press + hold %s: paid Float." % jump
+		if (state.flight_capable and not state.float_used) or (not state.flight_capable and not state.double_jump_used):
+			lines[1] = "Press again + hold %s: paid flight, finite time." % jump if state.flight_capable else "Fresh %s: one paid double jump; steer freely." % jump
 			if jump == "UNBOUND":
-				lines[1] = "Jump is UNBOUND; set it at Controls for Float."
-			elif _wheel_jump(preferences, device):
+				lines[1] = "Jump is UNBOUND; set it at Controls."
+			elif state.flight_capable and _wheel_jump(preferences, device):
 				lines[1] = "Wheel is a pulse; bind Jump to a hold button."
-			elif can_turn:
-				lines[1] = "%s + new direction: paid turn; press + hold %s: Float." % [technique, jump]
 		elif can_turn:
-			lines[1] = "%s + new direction: paid turn; Float stays spent." % technique
-		# The actual Jump dispatch prefers a remembered first-stage wall kick
-		# when steering outward; do not label that same input as Float here.
-		if state.hop_ticks > 0 and state.hop_stage == 1 and state.wall_memory_ticks > 0 and state.wall_contact_id > 0 and jump != "UNBOUND":
-			lines[1] = "Near wall: fresh %s + away tries a paid kick." % jump
+			lines[1] = "%s + new direction: paid turn; air budget spent." % technique
+		if state.wall_memory_ticks > 0 and state.wall_contact_id > 0 and jump != "UNBOUND":
+			# A wheel pulse can jump, but InputRouter never turns it into the
+			# held Jump required for wallrun. Do not overwrite that distinction.
+			lines[1] = "Wallrun needs held Jump; bind a button at Controls." if _wheel_jump(preferences, device) else "Hold %s + along wall: wallrun. Release: walljump." % jump
 	else:
-		lines = ["Walk around walls; %s adds paid sprint." % sprint, "%s rolls by move/facing; wall + %s: wallrun." % [evade, technique]]
+		lines = ["Walk around walls; %s adds paid sprint." % sprint, "Press then release %s: jump. %s + move: roll." % [jump, evade]]
 		if sprint == "UNBOUND":
 			lines[0] = "Walk around walls; Sprint is UNBOUND."
-		if technique == "UNBOUND":
-			lines[1] = "%s rolls by move/facing; Technique is UNBOUND." % evade
+		if jump == "UNBOUND":
+			lines[1] = "%s rolls by move/facing; Jump is UNBOUND." % evade
 		if evade == "UNBOUND":
 			lines[1] = "Evade UNBOUND; set it at Controls for ground roll."
 		if state.stamina == 0:

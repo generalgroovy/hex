@@ -73,7 +73,9 @@ func ingest(event: Dictionary, tick: int, actor_id: int, catalog: AbilityCatalog
 		return false
 	var selected := -1
 	for index: int in range(VOICES):
-		if occupied_until[index] <= tick:
+		# Simulation can catch up or jump ahead of the audio mixer. A logical
+		# expiry must not cut off a voice that is still finishing in real time.
+		if occupied_until[index] <= tick and (players.is_empty() or not players[index].playing):
 			selected = index
 			break
 	if selected < 0:

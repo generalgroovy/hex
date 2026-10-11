@@ -17,6 +17,7 @@ func run() -> int:
 
 func _air_state() -> PlayerState:
 	var state := PlayerState.new(1)
+	state.flight_capable = true # Explicit fixture for the catalog-gated flight capability.
 	state.position_x = 5_000_000
 	state.position_y = 5_000_000
 	state.air_height = 50_000
@@ -43,13 +44,13 @@ func _test_held_float_all_directions() -> void:
 		var starting_stamina := state.stamina
 		_begin(state, direction)
 		var health_before := state.health
-		check(not PlayerResourcesSystem.damage(state, 1000, config), "active Float rejects real authoritative damage")
-		equal(state.health, health_before, "Float damage refusal preserves health")
+		check(PlayerResourcesSystem.damage(state, 1000, config), "flight does not reject unfiltered direct damage")
+		equal(state.health, health_before - 1000, "flight is a height filter, not global immunity")
 		for tick: int in range(1, 121):
 			_step(state, direction if tick < 60 else -direction, SimCommand.HELD_JUMP)
 			equal(state.air_height, height, "held Float maintains exact current height without extra lift")
 			equal(state.air_vertical_velocity, 0, "held Float has zero vertical speed")
-			check(MovementSystem.is_combat_intangible(state, config), "held affordable Float remains protected beyond the old short jump window")
+			check(not MovementSystem.is_combat_intangible(state, config) and MovementSystem.avoids_ground_effects(state), "flight remains above contact effects without blanket protection")
 			equal(state.stamina_recovery_idle_ticks, 0, "every paid Float tick resets Stamina recovery age")
 		check(state.velocity_x * direction.x + state.velocity_y * direction.y < 0, "Float freely steers and reverses in every direction")
 		equal(starting_stamina - state.stamina, MovementTuning.FLOAT_COST + 100_833, "121 Float ticks preserve exact fractional100-per-second drain")
@@ -158,7 +159,7 @@ func _test_recovery_spend_hooks() -> void:
 	equal(state.stamina_recovery_idle_ticks, 0, "positive movement startup resets accumulated recovery")
 	state.stamina_recovery_idle_ticks = 360
 	_step(state, Vector2i.ZERO, SimCommand.HELD_JUMP)
-	equal(state.stamina_recovery_idle_ticks, 0, "held jump maintenance resets accumulated recovery")
+	equal(state.stamina_recovery_idle_ticks, 360, "ordinary nonflier airborne Jump hold has no hidden sustain spend resetting recovery")
 
 
 func _test_replay() -> void:
@@ -213,14 +214,21 @@ func _test_size_caps_and_wall_chain() -> void:
 			check(not state.float_used and state.float_ticks == 0, "actual landing restores independent Float budget")
 	for normal: Vector2i in [Vector2i.RIGHT * 1000, Vector2i.LEFT * 1000, Vector2i.UP * 1000, Vector2i.DOWN * 1000]:
 		var wall := _air_state()
-		wall.wall_memory_ticks = 12
-		wall.wall_contact_id = 7
-		wall.wall_x = normal.x
-		wall.wall_y = normal.y
-		_step(wall, normal, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
+		var wall_world := CollisionWorld.new(10_000_000, 10_000_000)
+		var lower := Vector2i(4_000_000, 4_000_000)
+		var upper := Vector2i(6_000_000, 6_000_000)
+		if normal.x < 0: lower.x = 5_020_000
+		elif normal.x > 0: upper.x = 4_980_000
+		elif normal.y < 0: lower.y = 5_020_000
+		else: upper.y = 4_980_000
+		wall_world.add_obstacle(CollisionWorld.Obstacle.new(7, lower.x, lower.y, upper.x, upper.y))
+		var tangent := Vector2i(-normal.y, normal.x)
+		_step(wall, tangent, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP, wall_world)
+		check(wall.wall_skim_ticks > 0 and not wall.float_used, "held jump chooses the real nearby wall before flight")
+		_step(wall, normal, 0, 0, wall_world)
 		check(wall.hop_stage == 2 and not wall.float_used, "wall jump spends only its finite lift budget, leaving Float ready")
 		for _index: int in range(wall.movement_commitment_ticks):
-			_step(wall, normal, SimCommand.HELD_JUMP)
+			_step(wall, normal)
 		_step(wall, normal)
 		_begin(wall, normal)
 		equal(wall.hop_stage, 2, "Float after wall jump cannot restore another wall lift")

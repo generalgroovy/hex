@@ -20,13 +20,14 @@ func run() -> int:
 	_test_full_layer_registry()
 	_test_sparse_topology_allocation_wire()
 	_test_dispersed_authority_exceeds_one_footprint(catalog)
+	_test_funding_provenance(catalog)
 	return finish("hex-chemistry-snapshot")
 
 
 func _test_round_trip_and_subsequent_state(catalog: AbilityCatalog) -> void:
 	var original := _rich_world(catalog)
 	var snapshot := SnapshotCodec.capture(original)
-	check(not snapshot.is_empty(), "valid paid unified authority captures as schema 3")
+	check(not snapshot.is_empty(), "valid paid unified authority captures as current chemistry schema5")
 	equal(int(snapshot.schema), SnapshotCodec.SCHEMA_VERSION, "capture identifies the local schema explicitly")
 	check(SnapshotCodec.encoded_size(snapshot) > 0 and SnapshotCodec.encoded_size(snapshot) <= SnapshotCodec.MAX_ENCODED_BYTES, "encoded capture stays within its explicit one MiB boundary")
 	var first_hash := SnapshotCodec.snapshot_hash(snapshot)
@@ -57,7 +58,7 @@ func _test_pending_products_and_auxiliary_ledgers(catalog: AbilityCatalog) -> vo
 	check(not bool(restored.casts[int(restored.pending[5])].paid), "unpaid pending reservation remains unpaid")
 	check(bool(restored.casts[int(restored.pending[6])].paid), "paid pending reservation remains paid without inventing a source ledger")
 	equal(restored.casts[int(restored.pending[6])].ledger, {}, "pre-release payment remains distinct from a bound source ledger")
-	var flood_id := _product_id(restored, HexCourt.FLOOD_WIRE)
+	var flood_id := _product_id(restored, HexCourt.FROSTWAY_WIRE)
 	var steam_id := _product_id(restored, HexCourt.STEAM_WIRE)
 	check(flood_id > 0, "production Water mirror retains its Flood identity")
 	check(steam_id > 0 and bool(restored.products[steam_id].heated), "production modifier channel preserves the Steam heated flag")
@@ -148,8 +149,8 @@ func _test_trusted_topology_and_size_boundaries(catalog: AbilityCatalog) -> void
 	too_many_allocations.cast_cells = rows
 	_rejects_without_mutation(too_many_allocations, "cast allocation row cap")
 
-	equal(SnapshotCodec.MAX_TOPOLOGY_CELLS, 4096, "trusted map topology has its explicit finite 4096-cell boundary")
-	equal(SnapshotCodec.MAX_SELECTED_CELLS, 127, "each authored footprint retains its finite selected-cell budget")
+	equal(SnapshotCodec.MAX_TOPOLOGY_CELLS, 65_536, "trusted topology has an explicit 65536-cell u16 index boundary")
+	equal(SnapshotCodec.MAX_SELECTED_CELLS, 511, "each authored footprint retains its finite selected-cell budget")
 	equal(SnapshotCodec.MAX_CAST_CELL_ROWS, HexCourt.MAX_CASTS * HexCourt.MATTER_PER_CAST, "positive cast allocations are bounded by finite paid matter across casts")
 	equal(SnapshotCodec.MAX_PRODUCT_CELL_ROWS, HexCourt.MAX_PRODUCTS * SnapshotCodec.MAX_SELECTED_CELLS, "each finite product coverage contributes at most127 allocation rows")
 	equal(SnapshotCodec.MAX_FLOW_ROWS, HexCourt.MAX_PRODUCTS * SnapshotCodec.MAX_TRACKED_ACTORS, "Flood carry boundary is product and actor bounded")
@@ -167,10 +168,10 @@ func _test_extended_footprint_lanes() -> void:
 
 func _test_sparse_topology_allocation_wire() -> void:
 	var ids := PackedInt32Array([11, 22])
-	var allocations := PackedInt64Array([11, 0, 600, 11, 4095, 1, 22, 2048, 400])
+	var allocations := PackedInt64Array([11, 0, 600, 11, 16383, 1, 22, 8192, 400])
 	var packed: Variant = HexSnapshotWirePacking._pack_sparse_plane(
 		allocations, ids, SnapshotCodec.MAX_TOPOLOGY_CELLS, SnapshotCodec.MAX_CAST_CELL_ROWS)
-	check(packed is PackedByteArray, "4096-cell trusted topology packs sparse allocation triples")
+	check(packed is PackedByteArray, "historical 16384-cell indices still pack sparse allocation triples")
 	if not packed is PackedByteArray:
 		return
 	equal((packed as PackedByteArray).size(), 20, "three sparse allocations use one header and three six-byte tuples")
@@ -179,6 +180,16 @@ func _test_sparse_topology_allocation_wire() -> void:
 		allocations,
 		"sparse topology allocation tuples round trip exactly",
 	)
+	# Retain the old-domain witness above; exercise both u16 endpoints separately.
+	var boundary := PackedInt64Array([11, 0, 600, 11, 65_535, 1])
+	var boundary_packed: Variant = HexSnapshotWirePacking._pack_sparse_plane(boundary, ids, 65_536, SnapshotCodec.MAX_CAST_CELL_ROWS)
+	check(boundary_packed is PackedByteArray, "last u16 index packs without signed truncation")
+	if boundary_packed is PackedByteArray:
+		equal(HexSnapshotWirePacking._unpack_sparse_plane(boundary_packed, ids, 65_536, SnapshotCodec.MAX_CAST_CELL_ROWS), boundary, "first and last 65536-cell indices round trip exactly")
+		check(HexSnapshotWirePacking._unpack_sparse_plane(boundary_packed, ids, 65_535, SnapshotCodec.MAX_CAST_CELL_ROWS) == null, "same last-index bytes refuse a shorter caller-owned topology")
+		check(HexSnapshotWirePacking._unpack_sparse_plane(boundary_packed, ids, 65_537, SnapshotCodec.MAX_CAST_CELL_ROWS) == null, "decoder refuses caller topology beyond u16 domain even with otherwise valid bytes")
+	check(HexSnapshotWirePacking._pack_sparse_plane(boundary, ids, 65_537, SnapshotCodec.MAX_CAST_CELL_ROWS) == null, "encoder refuses oversized topology before accepting smaller indices")
+	check(HexSnapshotWirePacking._pack_sparse_plane(PackedInt64Array([11, 65_536, 1]), ids, 65_537, SnapshotCodec.MAX_CAST_CELL_ROWS) == null, "index65536 cannot wrap to zero through u16 encoding")
 	var duplicate := PackedInt64Array([11, 0, 600, 11, 0, 1])
 	check(
 		HexSnapshotWirePacking._pack_sparse_plane(duplicate, ids, SnapshotCodec.MAX_TOPOLOGY_CELLS, SnapshotCodec.MAX_CAST_CELL_ROWS) == null,
@@ -193,29 +204,33 @@ func _test_sparse_topology_allocation_wire() -> void:
 
 func _test_dispersed_authority_exceeds_one_footprint(catalog: AbilityCatalog) -> void:
 	var world := HexChemistryWorld.new()
-	var topology := HexGrid.disk(Vector2i.ZERO, 14)
+	var topology := HexGrid.disk(Vector2i.ZERO, 28)
 	check(world.configure_geometry(Vector2i.ZERO, topology), "dispersed snapshot fixture configures a trusted topology above127 cells")
 	world.chemistry_enabled = true
+	var wire := _wire(catalog, "water", "heavy")
+	var definition := CombatTuning.cast_definition(wire)
+	var separation_envelope := 2 * (int(definition.blast_radius) + HexGrid.HALF_HEIGHT)
 	var anchors: Array[Vector2i] = []
 	for cell: Vector2i in topology:
 		var separated := true
 		for anchor: Vector2i in anchors:
-			if HexGrid.distance(cell, anchor) < 5:
+			if HexGrid.distance(cell, anchor) < 13:
 				separated = false
 				break
 		if separated:
+			for anchor: Vector2i in anchors:
+				check((HexGrid.center(cell) - HexGrid.center(anchor)).length_squared() > separation_envelope * separation_envelope,
+					"dispersed live Heavy disks and their full whole-cell envelopes cannot overlap")
 			anchors.append(cell)
 		if anchors.size() == 16:
 			break
 	equal(anchors.size(), 16, "dispersed fixture finds sixteen separated whole-map anchors")
-	var wire := _wire(catalog, "water", "heavy")
 	for index: int in anchors.size():
 		var owner := index + 1
 		var source := 80_000 + index
 		check(world.reserve_cast(owner, wire), "dispersed fixture reserves finite cast %d" % index)
 		world.commit_payment(owner)
 		world.bind_release(owner, source, HexGrid.center(anchors[index]), Vector2i(1000, 0), owner)
-		var definition := CombatTuning.cast_definition(wire)
 		world.deposit_terminal({
 			"type": "projectile_terminal", "projectile_id": source,
 			"source_cast_id": source, "source_wire_id": wire,
@@ -279,13 +294,52 @@ func _test_zero_allocation_ground_coverage(catalog: AbilityCatalog) -> void:
 func _test_full_layer_registry() -> void:
 	var court := _court()
 	var sample: Dictionary = court.cells[court.cells.keys()[0]]
-	for element: int in range(1, 9):
+	for element: int in ElementRules.WIRE_IDS:
 		var layer := HexRecipePolicy.ingredient_layer(element)
-		check(not layer.is_empty() and sample.has(layer), "ingredient layer %d is present in trusted topology" % element)
-	for wire: int in range(301, 337):
+		check(not layer.is_empty() and HexChemistryWorld.material_layers().has(layer) and not sample.has(layer), "ingredient layer %d is known but allocated only on deposit" % element)
+	for wire: int in HexRecipePolicy.active_wire_ids():
 		var layer := HexRecipePolicy.product_layer(wire)
-		check(not layer.is_empty() and sample.has(layer), "product wire %d owns one local topology layer" % wire)
+		check(not layer.is_empty() and HexChemistryWorld.material_layers().has(layer) and not sample.has(layer), "product wire %d owns one lazily allocated material layer" % wire)
 		equal(SnapshotCodec._material_name(SnapshotCodec._material_code(layer)), layer, "product wire %d material lane round trips" % wire)
+
+
+func _test_funding_provenance(catalog: AbilityCatalog) -> void:
+	var world := _rich_world(catalog)
+	world.sync_flights([], [])
+	var snapshot := SnapshotCodec.capture(world)
+	check(not snapshot.is_empty(), "source funding survives retired paid cast records")
+	if snapshot.is_empty(): return
+	var restored := _court()
+	check(SnapshotCodec.restore(snapshot, restored), "funded products restore after original source cleanup")
+	equal(restored.state_hash(), world.state_hash(), "funding and remaining pool are exact canonical state")
+	for product: Dictionary in restored.products.values():
+		equal(product.source_funding.size(), product.source_ids.size() * 3, "every historical source retains its spell and actual contribution")
+	for mutation: String in ["pool", "scalar", "partial", "retired", "mask", "latch"]:
+		var forged := _rich_world(catalog)
+		var product: Dictionary = forged.products.values()[0]
+		match mutation:
+			"pool": product.damage_budget_remaining = int(product.funded_strength) * 4000 + 1
+			"scalar": product.funded_strength += 1
+			"partial":
+				var rows: PackedInt64Array = product.source_funding.duplicate()
+				# A Rapid of the same element cannot fund a Bolt's five units.
+				var definition := CombatTuning.cast_definition(rows[1])
+				rows[1] = _wire(catalog, ElementRules.id_from_wire(int(definition.element_wire_id)), "rapid")
+				product.source_funding = rows
+			"retired":
+				var rows: PackedInt64Array = product.source_funding.duplicate()
+				rows[1] = 170
+				product.source_funding = rows
+			"mask": product.element_mask = 63
+			"latch": product.contacts[2] = {"inside": true, "entered": 0, "last_pulse": 0, "effect_used": true}
+		var malformed := SnapshotCodec._capture_for_outer_roundtrip(forged)
+		if mutation == "latch":
+			# Boolean coercion in a producer does not permit a malformed wire flag.
+			var row: PackedInt64Array = malformed.product_states[0].duplicate()
+			row[18] = 2
+			malformed.product_states[0] = row
+		check(not malformed.is_empty(), "forged %s reaches detached decoding with a recomputed authority hash" % mutation)
+		_rejects_without_mutation(malformed, "funding %s cannot evade structural validation with a fresh hash" % mutation)
 
 
 func _rich_world(catalog: AbilityCatalog) -> HexCourt:
@@ -299,7 +353,7 @@ func _rich_world(catalog: AbilityCatalog) -> HexCourt:
 	equal(court.products.size(), 2, "production paid terminals form one Steam and one Flood snapshot fixture")
 	_deposit(court, 7, fire_bolt, 10_005, Vector2i(-2, 0), 6)
 	_deposit(court, 8, fire_bolt, 10_006, Vector2i(0, 4), 7)
-	var flood_id := _product_id(court, HexCourt.FLOOD_WIRE)
+	var flood_id := _product_id(court, HexCourt.FROSTWAY_WIRE)
 	check(flood_id > 0, "snapshot fixture forms its Flood product through production contact")
 	court.flow_carry["%d:8" % flood_id] = Vector2i(17, -23)
 	court.exposure[8] = 19

@@ -95,6 +95,7 @@ func _test_directional_hop_control(tick_rate: int) -> void:
 	var world := SimWorld.new(tick_rate)
 	var state: PlayerState = world.player()
 	_step(world, 707, 707, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
+	_step(world, 707, 707) # Release is the authored takeoff edge.
 	equal(Vector2i(state.hop_x, state.hop_y), Vector2i(707, 707), "%d Hz jump records live input without a launch impulse" % tick_rate)
 	equal(Vector2i(state.facing_x, state.facing_y), Vector2i(707, 707), "%d Hz takeoff facing follows startup input" % tick_rate)
 	var initial_velocity := Vector2i(state.velocity_x, state.velocity_y)
@@ -114,6 +115,7 @@ func _test_directional_hop_control(tick_rate: int) -> void:
 	var facing_world := SimWorld.new(tick_rate)
 	var facing_state: PlayerState = facing_world.player()
 	_step(facing_world, 1000, 0, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
+	_step(facing_world, 1000, 0)
 	for direction_id: String in EightDirectionResolver.DIRECTION_ORDER:
 		var fixed := EightDirectionResolver.fixed_vector(direction_id)
 		_step(facing_world, fixed.x, fixed.y, SimCommand.HELD_JUMP)
@@ -129,6 +131,7 @@ func _test_vertical_jump_live_control(tick_rate: int) -> void:
 		state.facing_x = input.x
 		state.facing_y = input.y
 		_step(world, 0, 0, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
+		_step(world)
 		for _tick: int in range(5):
 			_step(world, 0, 0, SimCommand.HELD_JUMP)
 		equal(Vector2i(state.position_x, state.position_y), start, "%s neutral jump is vertical regardless of facing" % direction_id)
@@ -153,6 +156,8 @@ func _test_air_control_tick_rate_parity() -> void:
 	var repeat := SimWorld.new(120)
 	_step(first, 707, 707, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
 	_step(repeat, 707, 707, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
+	_step(first, 707, 707)
+	_step(repeat, 707, 707)
 	for _index: int in range(first.config.milliseconds_to_ticks(120)):
 		_step(first, -707, -707, SimCommand.HELD_JUMP)
 		_step(repeat, -707, -707, SimCommand.HELD_JUMP)
@@ -167,13 +172,13 @@ func _test_double_jump(tick_rate: int) -> void:
 		_step(world, 1000, 0)
 	var after_hop: int = state.stamina
 	_step(world, 0, -1000, 0, SimCommand.PRESSED_JUMP)
-	equal(state.last_event, "air_float", "%d Hz second edge starts Float at current height" % tick_rate)
-	equal(state.stamina, after_hop - MovementTuning.FLOAT_COST * 1100 / 1000 - world.config.per_tick(MovementTuning.FLOAT_DRAIN_PER_SECOND), "%d Hz Float pays continuation cost and its first maintenance tick" % tick_rate)
-	check(state.float_used, "%d Hz Float consumes its independent once-per-airtime allowance" % tick_rate)
+	equal(state.last_event, "double_jump", "%d Hz second edge launches the nonflier double jump" % tick_rate)
+	equal(state.stamina, after_hop - MovementTuning.DOUBLE_JUMP_COST * 1100 / 1000, "%d Hz double jump pays continuation cost without flight maintenance" % tick_rate)
+	check(state.double_jump_used, "%d Hz double jump consumes its independent once-per-airtime allowance" % tick_rate)
 	var after_double: int = state.stamina
 	_step(world, -1000, 0, 0, SimCommand.PRESSED_JUMP)
-	equal(state.stamina, after_double, "%d Hz released Float cannot be restarted by another pulse during the same airtime" % tick_rate)
-	check(state.float_used, "%d Hz denied Float restart preserves its spent allowance" % tick_rate)
+	equal(state.stamina, after_double, "%d Hz spent double jump cannot be restarted by another pulse during the same airtime" % tick_rate)
+	check(state.double_jump_used, "%d Hz denied double jump preserves its spent allowance" % tick_rate)
 
 
 func _test_slide_and_slide_jump(tick_rate: int) -> void:
@@ -249,7 +254,7 @@ func _test_ground_roll_and_evasion_windows(tick_rate: int) -> void:
 	var jump_world := SimWorld.new(tick_rate)
 	var jumper: PlayerState = jump_world.player()
 	_step(jump_world, 1000, 0, 0, SimCommand.PRESSED_JUMP)
-	check(MovementSystem.is_combat_intangible(jumper, jump_world.config), "%d Hz jump begins inside its invulnerability window" % tick_rate)
+	check(not MovementSystem.is_combat_intangible(jumper, jump_world.config), "%d Hz jump never grants blanket invulnerability" % tick_rate)
 	while MovementSystem.is_combat_intangible(jumper, jump_world.config):
 		_step(jump_world, 1000, 0, SimCommand.HELD_JUMP)
 	check(jumper.hop_ticks > 0, "%d Hz jump has readable recovery after invulnerability" % tick_rate)
@@ -292,14 +297,10 @@ func _test_action_buffers(tick_rate: int) -> void:
 func _test_wall_contact_and_wall_kick(tick_rate: int) -> void:
 	var world := SimWorld.new(tick_rate)
 	var state: PlayerState = world.player()
-	state.position_x = state.radius + 1000
-	state.velocity_x = -MovementTuning.BASE_SPEED
-	_step(world, -1000, 0)
+	_attach_authored_wall(world)
 	check(state.wall_memory_ticks > 0, "%d Hz collision records wall memory" % tick_rate)
-	state.hop_cooldown_ticks = 0
-	state.stamina = MovementTuning.STAMINA_MAXIMUM
-	_step(world, -1000, 1000, 0, SimCommand.PRESSED_JUMP)
-	equal(state.last_event, "wall_kick", "%d Hz hop consumes wall memory" % tick_rate)
+	_step(world, -1000, 1000) # Releasing held Jump requests the paid wall jump.
+	equal(state.last_event, "wall_kick", "%d Hz release consumes attached wall memory" % tick_rate)
 	equal(state.hop_speed, MovementTuning.WALL_KICK_SPEED, "%d Hz wall kick speed is authored" % tick_rate)
 	equal(state.movement_mode, PlayerState.MovementMode.WALL_KICK, "%d Hz wall kick remains explicit state" % tick_rate)
 
@@ -308,21 +309,23 @@ func _test_variable_jump_and_fast_fall(tick_rate: int) -> void:
 	var held_world := SimWorld.new(tick_rate)
 	var held_state: PlayerState = held_world.player()
 	_step(held_world, 1000, 0, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
-	for _index: int in range(3):
+	for _index: int in range(held_world.config.milliseconds_to_ticks(MovementTuning.JUMPSQUAT_CHARGE_MS)):
 		_step(held_world, 1000, 0, SimCommand.HELD_JUMP)
+	check(held_state.jumpsquat_active and held_state.air_height == 0, "charged anticipation stays grounded until release")
+	_step(held_world, 1000, 0)
 	var held_remaining: int = held_state.hop_ticks
 
 	var cut_world := SimWorld.new(tick_rate)
 	var cut_state: PlayerState = cut_world.player()
 	_step(cut_world, 1000, 0, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
 	_step(cut_world, 1000, 0)
-	equal(cut_state.last_event, "jump_cut", "%d Hz releasing jump cuts the authored arc" % tick_rate)
-	check(cut_state.air_vertical_velocity <= MovementTuning.SHORT_HOP_VERTICAL_SPEED and cut_state.air_height > 0, "%d Hz release cuts rising velocity without resetting height" % tick_rate)
-	check(cut_state.hop_ticks < held_remaining, "%d Hz released jump lands before held jump" % tick_rate)
+	equal(cut_state.last_event, "hop", "%d Hz releasing jump starts the authored arc" % tick_rate)
+	check(cut_state.air_vertical_velocity < held_state.air_vertical_velocity and cut_state.air_height > 0, "%d Hz shorter ground charge starts a lower arc" % tick_rate)
+	check(cut_state.hop_ticks < held_remaining, "%d Hz lightly charged jump lands before fully charged jump" % tick_rate)
 
 	var fall_world := SimWorld.new(tick_rate)
 	var fall_state: PlayerState = fall_world.player()
-	_step(fall_world, 1000, 0, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
+	_step(fall_world, 1000, 0, 0, SimCommand.PRESSED_JUMP)
 	for _index: int in range(8):
 		_step(fall_world, 1000, 0, SimCommand.HELD_JUMP)
 	var before_fall: int = fall_state.hop_ticks
@@ -350,27 +353,31 @@ func _test_paid_jump_and_slide_sustain(tick_rate: int) -> void:
 	var held_jump := SimWorld.new(tick_rate)
 	var tap_jump := SimWorld.new(tick_rate)
 	_step(held_jump, 0, 0, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
+	for _tick: int in range(held_jump.config.milliseconds_to_ticks(MovementTuning.JUMPSQUAT_CHARGE_MS)):
+		_step(held_jump, 0, 0, SimCommand.HELD_JUMP)
+	equal(held_jump.player().stamina, MovementTuning.STAMINA_MAXIMUM, "ground anticipation has no hidden sustain payment")
+	_step(held_jump)
 	_step(tap_jump, 0, 0, 0, SimCommand.PRESSED_JUMP)
-	_step(held_jump, 0, 0, SimCommand.HELD_JUMP)
-	_step(tap_jump)
-	check(held_jump.player().hop_ticks > tap_jump.player().hop_ticks, "held jump buys more airtime than a tap")
-	check(held_jump.player().stamina < tap_jump.player().stamina, "only held jump pays sustain Stamina")
+	check(held_jump.player().hop_ticks > tap_jump.player().hop_ticks, "ground charge earns more airtime than a tap")
+	equal(held_jump.player().stamina, tap_jump.player().stamina, "charged jump pays the same explicit opening cost")
 	equal(tap_jump.player().stamina, MovementTuning.STAMINA_MAXIMUM - MovementTuning.HOP_COST, "tap jump pays only its reliable opening cost")
-	var jump_protection := held_jump.player().jump_protection_ticks
 	_step(held_jump, 0, 0, SimCommand.HELD_JUMP)
-	equal(held_jump.player().jump_protection_ticks, jump_protection - 1, "holding jump never refreshes opening protection")
+	equal(held_jump.player().jump_protection_ticks, 0, "holding jump never grants opening protection")
 
 	var exhausted_jump := SimWorld.new(tick_rate)
 	exhausted_jump.player().stamina = MovementTuning.HOP_COST
+	exhausted_jump.player().stamina_recovery_delay_ticks = 20
 	_step(exhausted_jump, 0, 0, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
-	_step(exhausted_jump, 0, 0, SimCommand.HELD_JUMP)
-	equal(exhausted_jump.player().last_event, "jump_sustain_empty", "empty Stamina releases jump sustain honestly")
-	check(exhausted_jump.player().air_height > 0 and exhausted_jump.player().air_vertical_velocity <= MovementTuning.SHORT_HOP_VERTICAL_SPEED, "empty jump cuts the rise without deleting earned height")
+	_step(exhausted_jump)
+	equal(exhausted_jump.player().stamina, 0, "exactly the opening cost buys a full nonflier jump")
+	check(exhausted_jump.player().air_height > 0 and exhausted_jump.player().air_vertical_velocity > 0, "paid jump does not require hidden sustain resources")
 	var partial_jump := SimWorld.new(tick_rate)
-	partial_jump.player().stamina = MovementTuning.HOP_COST + partial_jump.config.per_tick(MovementTuning.JUMP_SUSTAIN_DRAIN_PER_SECOND) - 1
+	partial_jump.player().stamina = MovementTuning.HOP_COST - 1
+	partial_jump.player().stamina_recovery_delay_ticks = 20
 	_step(partial_jump, 0, 0, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
-	_step(partial_jump, 0, 0, SimCommand.HELD_JUMP)
-	equal(partial_jump.player().last_event, "jump_sustain_empty", "a partial tick of Stamina cannot buy a full jump-sustain tick")
+	_step(partial_jump)
+	check(not partial_jump.player().is_airborne(), "one unit below the opening cost cannot buy a jump")
+	equal(partial_jump.player().stamina, MovementTuning.HOP_COST - 1, "refused jump never partially charges")
 
 	var held_slide := SimWorld.new(tick_rate)
 	var tap_slide := SimWorld.new(tick_rate)
@@ -404,12 +411,12 @@ func _test_movement_chain_economy_and_momentum(tick_rate: int) -> void:
 	_step(world, 1000, 0, SimCommand.HELD_SLIDE, SimCommand.PRESSED_SLIDE)
 	equal(state.movement_chain_count, 1, "first movement action starts one explicit chain")
 	equal(state.stamina, before - MovementTuning.SLIDE_COST - world.config.per_tick(MovementTuning.SLIDE_SUSTAIN_DRAIN_PER_SECOND), "first movement action pays base cost plus its requested sustain tick")
-	equal(state.velocity_x, 840_000 - world.config.per_tick(MovementTuning.SLIDE_DRAG_PER_SECOND), "slide preserves earned entry momentum minus explicit friction")
+	equal(state.velocity_x, 900_000 - world.config.per_tick(MovementTuning.SLIDE_DRAG_PER_SECOND), "paid slide adds90k once to840k entry, caps at900k, then pays explicit friction")
 	for _tick: int in range(world.config.milliseconds_to_ticks(MovementTuning.SLIDE_JUMP_MINIMUM_COMMITMENT_MS)):
 		_step(world, 1000, 0, SimCommand.HELD_SLIDE)
 	before = state.stamina
 	var entry_speed := state.velocity_x
-	_step(world, 1000, 0, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
+	_step(world, 1000, 0, 0, SimCommand.PRESSED_JUMP)
 	equal(state.movement_chain_count, 2, "slide jump extends the same movement chain")
 	equal(state.stamina, before - MovementTuning.SLIDE_JUMP_COST * 1100 / 1000, "second movement action pays a ten-percent premium")
 	equal(state.hop_speed, entry_speed, "slide jump carries actual earned slide momentum")
@@ -434,11 +441,9 @@ func _test_movement_chain_economy_and_momentum(tick_rate: int) -> void:
 func _test_same_wall_lockout(tick_rate: int) -> void:
 	var world := SimWorld.new(tick_rate)
 	var state: PlayerState = world.player()
-	state.position_x = state.radius + 1000
-	state.velocity_x = -MovementTuning.BASE_SPEED
-	_step(world, -1000, 0)
+	_attach_authored_wall(world)
 	var contacted_wall: int = state.wall_contact_id
-	_step(world, -1000, 0, 0, SimCommand.PRESSED_JUMP)
+	_step(world, -1000, 0)
 	equal(state.wall_lockout_id, contacted_wall, "%d Hz wall kick records wall identity" % tick_rate)
 	check(state.wall_lockout_ticks > 0, "%d Hz same-wall lockout starts" % tick_rate)
 	state.hop_ticks = 0
@@ -446,10 +451,22 @@ func _test_same_wall_lockout(tick_rate: int) -> void:
 	state.air_vertical_velocity = 0
 	state.hop_cooldown_ticks = 0
 	state.wall_memory_ticks = 0
-	state.position_x = state.radius + 1000
-	state.velocity_x = -MovementTuning.BASE_SPEED
-	_step(world, -1000, 0)
+	state.position_x = 560_000 - MovementTuning.PLAYER_RADIUS - 1000
+	state.velocity_x = MovementTuning.BASE_SPEED
+	_step(world, 1000, 0)
 	equal(state.wall_memory_ticks, 0, "%d Hz same wall cannot immediately refresh a kick" % tick_rate)
+
+
+func _attach_authored_wall(world: SimWorld) -> void:
+	var state := world.player()
+	state.position_x = 560_000 - MovementTuning.PLAYER_RADIUS - 1000
+	state.position_y = 340_000
+	state.velocity_x = MovementTuning.BASE_SPEED
+	_step(world, 1000, 0, 0, SimCommand.PRESSED_JUMP)
+	while state.movement_commitment_ticks > 1:
+		_step(world)
+	_step(world, 0, 1000, SimCommand.HELD_JUMP)
+	check(state.wall_skim_ticks > 0, "actual airborne held input attaches to authored wall")
 
 
 func _test_wall_skim(tick_rate: int) -> void:
@@ -460,24 +477,28 @@ func _test_wall_skim(tick_rate: int) -> void:
 	state.velocity_x = MovementTuning.BASE_SPEED
 	_step(world, 1000, 0)
 	equal(state.wall_contact_id, 1, "%d Hz authored obstacle records a positive surface identity" % tick_rate)
+	_step(world, 0, 0, 0, SimCommand.PRESSED_JUMP)
+	while state.movement_commitment_ticks > 1:
+		_step(world)
 	var before_stamina: int = state.stamina
 	var start_y: int = state.position_y
-	_step(world, 0, 1000, 0, SimCommand.PRESSED_TECHNIQUE)
-	equal(state.last_event, "wall_skim", "%d Hz technique converts recent obstacle contact into wall skim" % tick_rate)
-	equal(state.stamina, before_stamina - MovementTuning.WALL_SKIM_COST, "%d Hz wall skim Stamina cost is exact" % tick_rate)
+	_step(world, 0, 1000, SimCommand.HELD_JUMP)
+	equal(state.last_event, "wall_skim", "%d Hz held airborne Jump converts real obstacle contact into wallrun" % tick_rate)
+	equal(state.stamina, before_stamina - MovementTuning.WALL_SKIM_COST * 1100 / 1000, "%d Hz chained wallrun Stamina cost is exact" % tick_rate)
 	equal(state.movement_mode, PlayerState.MovementMode.WALL_SKIM, "%d Hz wall skim is explicit canonical state" % tick_rate)
 	check(state.wall_skim_ticks > 0, "%d Hz wall skim has a bounded authored duration" % tick_rate)
 	check(state.position_y > start_y, "%d Hz wall skim follows the requested wall tangent" % tick_rate)
 	var skim_surface: int = state.wall_skim_surface_id
 	while state.wall_skim_ticks > 0:
-		_step(world, 0, 1000)
+		_step(world, 0, 1000, SimCommand.HELD_JUMP)
 	equal(state.last_event, "wall_end", "%d Hz wall skim emits an explicit recovery event" % tick_rate)
-	check(state.air_height == 0 and not state.is_airborne(), "%d Hz ground-level wallrun exit cannot fabricate extra height" % tick_rate)
+	check(state.air_height > 0 and state.is_airborne(), "%d Hz airborne wallrun exit preserves earned height for natural descent" % tick_rate)
 	equal(state.jump_protection_ticks, 0, "%d Hz wall exit never buys fresh protection" % tick_rate)
 	state.wall_memory_ticks = world.config.milliseconds_to_ticks(MovementTuning.WALL_MEMORY_MS)
 	state.wall_contact_id = skim_surface
 	state.wall_x = -1000
 	state.wall_y = 0
+	state.air_redirects_remaining = 0 # Isolate the refused wall admission from a legal paid sharp turn.
 	state.stamina_recovery_delay_ticks = world.config.milliseconds_to_ticks(MovementTuning.STAMINA_RECOVERY_DELAY_MS)
 	var after_first_skim: int = state.stamina
 	_step(world, 0, -1000, 0, SimCommand.PRESSED_TECHNIQUE)

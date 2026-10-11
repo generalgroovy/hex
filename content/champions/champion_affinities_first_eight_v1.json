@@ -1,14 +1,12 @@
 {
   "schema_version": 1,
   "id": "champion-affinities-first-eight-v1",
-  "status": "canonical_first_eight_affinity_allocation",
+  "status": "canonical_six_element_affinity_allocation",
   "fundamental_elements": [
-    "earth",
-    "fire",
     "water",
+    "fire",
     "wind",
-    "ice",
-    "charge",
+    "earth",
     "light",
     "dark"
   ],
@@ -22,7 +20,7 @@
   "default_affinity_count": 2,
   "default_max_affinities": 3,
   "ordinary_pair_uniqueness_required": false,
-  "strength_rule": "every champion spends three points: specialists split 2+1 across two affinities; generalists split 1+1+1 across three",
+  "strength_rule": "Every champion keeps three points. Legacy Ice points fold into Water and Charge points into Fire; repeated parents sum without changing the budget.",
   "deferred_affinity_rule": "omit a gated affinity until its complete element promotion; never alias chaos or legacy void to dark",
   "exceptions": {},
   "champions": [
@@ -31,13 +29,13 @@
       "display_name": "Oh Tipi",
       "affinities": [
         "water",
-        "charge"
+        "fire"
       ],
       "affinity_points": {
         "water": 2,
-        "charge": 1
+        "fire": 1
       },
-      "migration_note": "Water is the dominant current-rider identity; Charge is the secondary conductive affinity.",
+      "migration_note": "Water is the dominant current-rider identity; Charge is the secondary conductive affinity. Six-element migration: Ice joins Water; Charge joins Fire; points are conserved.",
       "availability": "playable"
     },
     {
@@ -58,26 +56,24 @@
       "display_name": "The Red Baron",
       "affinities": [
         "fire",
-        "ice"
+        "water"
       ],
       "affinity_points": {
         "fire": 2,
-        "ice": 1
+        "water": 1
       },
-      "migration_note": "Legacy Void remains removed; Fire dominates the thermal aerial identity with Ice as control support.",
+      "migration_note": "Legacy Void remains removed; Fire dominates the thermal aerial identity with Ice as control support. Six-element migration: Ice joins Water; Charge joins Fire; points are conserved.",
       "availability": "playable"
     },
     {
       "id": "steezo",
       "display_name": "Steezo",
       "affinities": [
-        "charge",
         "fire",
         "light"
       ],
       "affinity_points": {
-        "charge": 1,
-        "fire": 1,
+        "fire": 2,
         "light": 1
       },
       "availability": "playable"
@@ -117,13 +113,13 @@
       "display_name": "Fluup",
       "affinities": [
         "wind",
-        "charge",
-        "ice"
+        "fire",
+        "water"
       ],
       "affinity_points": {
         "wind": 1,
-        "charge": 1,
-        "ice": 1
+        "fire": 1,
+        "water": 1
       },
       "availability": "playable"
     },
@@ -131,14 +127,12 @@
       "id": "wa_bidi",
       "display_name": "Wa Bidi",
       "affinities": [
-        "charge",
-        "wind",
-        "fire"
+        "fire",
+        "wind"
       ],
       "affinity_points": {
-        "charge": 1,
-        "wind": 1,
-        "fire": 1
+        "fire": 2,
+        "wind": 1
       },
       "availability": "playable"
     },
@@ -161,14 +155,14 @@
       "id": "nico_lai",
       "display_name": "Waka Aren Si",
       "affinities": [
-        "charge",
+        "fire",
         "light"
       ],
       "affinity_points": {
-        "charge": 2,
+        "fire": 2,
         "light": 1
       },
-      "migration_note": "Character formerly displayed as Nico Lai; technical id is retained during asset/runtime migration.",
+      "migration_note": "Character formerly displayed as Nico Lai; technical id is retained during asset/runtime migration. Six-element migration: Ice joins Water; Charge joins Fire; points are conserved.",
       "availability": "playable"
     },
     {
@@ -205,12 +199,12 @@
       "id": "ha_rekt",
       "display_name": "Ha Rekt",
       "affinities": [
-        "ice",
+        "water",
         "wind",
         "fire"
       ],
       "affinity_points": {
-        "ice": 1,
+        "water": 1,
         "wind": 1,
         "fire": 1
       },
@@ -242,7 +236,7 @@
         "light": 2,
         "wind": 1
       },
-      "migration_note": "Spirit remains deferred; Light is the dominant support affinity.",
+      "migration_note": "Spirit remains deferred; Light is the dominant support affinity. Six-element migration: Ice joins Water; Charge joins Fire; points are conserved.",
       "availability": "playable"
     },
     {
@@ -269,7 +263,7 @@
         "earth": 2,
         "water": 1
       },
-      "migration_note": "Chaos is a reserved future affinity and is omitted until Chaos promotion; legacy Void never aliases Dark.",
+      "migration_note": "Chaos is a reserved future affinity and is omitted until Chaos promotion; legacy Void never aliases Dark. Six-element migration: Ice joins Water; Charge joins Fire; points are conserved.",
       "availability": "playable"
     },
     {
@@ -291,14 +285,14 @@
       "id": "jan_wicked",
       "display_name": "Jan Wicked",
       "affinities": [
-        "ice",
+        "water",
         "dark",
-        "charge"
+        "fire"
       ],
       "affinity_points": {
-        "ice": 1,
+        "water": 1,
         "dark": 1,
-        "charge": 1
+        "fire": 1
       },
       "availability": "playable"
     },
@@ -322,13 +316,11 @@
       "display_name": "Urzh",
       "affinities": [
         "earth",
-        "fire",
-        "charge"
+        "fire"
       ],
       "affinity_points": {
         "earth": 1,
-        "fire": 1,
-        "charge": 1
+        "fire": 2
       },
       "availability": "playable"
     },
@@ -345,7 +337,7 @@
         "fire": 1,
         "water": 1
       },
-      "migration_note": "donnok remains a temporary compatibility ID until an atomic identity migration.",
+      "migration_note": "donnok remains a temporary compatibility ID until an atomic identity migration. Six-element migration: Ice joins Water; Charge joins Fire; points are conserved.",
       "availability": "playable"
     },
     {
@@ -353,13 +345,11 @@
       "display_name": "Djonah Thaan",
       "affinities": [
         "dark",
-        "charge",
         "fire"
       ],
       "affinity_points": {
         "dark": 1,
-        "charge": 1,
-        "fire": 1
+        "fire": 2
       },
       "availability": "playable"
     },
@@ -374,21 +364,21 @@
         "dark": 2,
         "water": 1
       },
-      "migration_note": "Current v4 reference identity implemented using shared baseline stats and spells; temporary body-template artwork is not unique-character art acceptance.",
+      "migration_note": "Current v4 reference identity implemented using shared baseline stats and spells; temporary body-template artwork is not unique-character art acceptance. Six-element migration: Ice joins Water; Charge joins Fire; points are conserved.",
       "availability": "playable"
     },
     {
       "id": "juul_i_yaina",
       "display_name": "Juul I Yaina",
       "affinities": [
-        "ice",
+        "water",
         "wind"
       ],
       "affinity_points": {
-        "ice": 2,
+        "water": 2,
         "wind": 1
       },
-      "migration_note": "Current v4 reference identity implemented using shared baseline stats and spells; temporary body-template artwork is not unique-character art acceptance.",
+      "migration_note": "Current v4 reference identity implemented using shared baseline stats and spells; temporary body-template artwork is not unique-character art acceptance. Six-element migration: Ice joins Water; Charge joins Fire; points are conserved.",
       "availability": "playable"
     },
     {
@@ -402,7 +392,7 @@
         "fire": 2,
         "light": 1
       },
-      "migration_note": "Current v4 reference identity implemented using shared baseline stats and spells; temporary body-template artwork is not unique-character art acceptance.",
+      "migration_note": "Current v4 reference identity implemented using shared baseline stats and spells; temporary body-template artwork is not unique-character art acceptance. Six-element migration: Ice joins Water; Charge joins Fire; points are conserved.",
       "availability": "playable"
     },
     {
@@ -410,13 +400,13 @@
       "display_name": "Joh Haynes",
       "affinities": [
         "earth",
-        "charge"
+        "fire"
       ],
       "affinity_points": {
         "earth": 2,
-        "charge": 1
+        "fire": 1
       },
-      "migration_note": "Current v4 reference identity implemented using shared baseline stats and spells; temporary body-template artwork is not unique-character art acceptance.",
+      "migration_note": "Current v4 reference identity implemented using shared baseline stats and spells; temporary body-template artwork is not unique-character art acceptance. Six-element migration: Ice joins Water; Charge joins Fire; points are conserved.",
       "availability": "playable"
     },
     {
@@ -433,7 +423,7 @@
         "fire": 1
       },
       "availability": "playable",
-      "migration_note": "User-requested identity and three elements; equal 1+1+1 allocation, existing same-size baseline stats and shared spells. Portrait and individual animation acceptance remain pending."
+      "migration_note": "User-requested identity and three elements; equal 1+1+1 allocation, existing same-size baseline stats and shared spells. Portrait and individual animation acceptance remain pending. Six-element migration: Ice joins Water; Charge joins Fire; points are conserved."
     },
     {
       "id": "fimu_yashiha",
@@ -449,7 +439,7 @@
         "light": 1
       },
       "availability": "playable",
-      "migration_note": "User-requested identity and three elements; equal 1+1+1 allocation, existing same-size baseline stats and shared spells. Portrait and individual animation acceptance remain pending."
+      "migration_note": "User-requested identity and three elements; equal 1+1+1 allocation, existing same-size baseline stats and shared spells. Portrait and individual animation acceptance remain pending. Six-element migration: Ice joins Water; Charge joins Fire; points are conserved."
     },
     {
       "id": "sai_laas",
@@ -463,7 +453,11 @@
         "fire": 1
       },
       "availability": "playable",
-      "migration_note": "User-requested Nymph with Air and Fire; conservative Small baseline and Air 2 / Fire 1 allocation use the existing specialist rule. Shared body-template artwork is not unique-character art acceptance."
+      "migration_note": "User-requested Nymph with Air and Fire; conservative Small baseline and Air 2 / Fire 1 allocation use the existing specialist rule. Shared body-template artwork is not unique-character art acceptance. Six-element migration: Ice joins Water; Charge joins Fire; points are conserved."
     }
-  ]
+  ],
+  "derived_elements": {
+    "ice": "water",
+    "charge": "fire"
+  }
 }

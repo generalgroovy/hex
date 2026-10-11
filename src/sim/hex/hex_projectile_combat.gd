@@ -1,6 +1,7 @@
 class_name HexProjectileCombat
 extends RefCounted
 @warning_ignore_start("integer_division")
+const Workset = preload("res://src/sim/hex/hex_contact_workset.gd")
 
 # Ordered continuous combat over the shared, finite hex chemistry authority.
 static func sync_strength(world: SimWorld) -> bool:
@@ -30,6 +31,7 @@ static func resolve_sprays(world: SimWorld) -> void:
 	var pulses: Array[Dictionary] = []
 	var requests := {}
 	var retained: Array[Dictionary] = []
+	var bounds: CollisionWorld = null
 	for event: Dictionary in world.combat_events:
 		if event.get("type", "") != "spray_requested":
 			retained.append(event)
@@ -40,7 +42,10 @@ static func resolve_sprays(world: SimWorld) -> void:
 		var definition := CombatSystem.spray_request_definition(event)
 		var endpoint := origin + ElementChemistrySystem.scaled(aim, int(definition.range))
 		var requested_shape := HexFootprint.sector(origin, aim, int(definition.range), int(definition.cone_cosine_squared_per_million))
-		var wall := ContinuousContact.wall_contact(origin, endpoint, int(definition.radius), world.collision)
+		# Keep the authored fan even when its center meets a narrow pillar. Only
+		# world bounds shorten this envelope; cover clips each queried ray below.
+		if bounds == null: bounds = CollisionWorld.new(world.collision.width, world.collision.height)
+		var wall := ContinuousContact.wall_contact(origin, endpoint, int(definition.radius), bounds)
 		if not wall.is_empty(): endpoint = wall.center
 		var offset := endpoint - origin
 		var reach := SimCommand._integer_square_root(offset.x * offset.x + offset.y * offset.y)
@@ -50,13 +55,16 @@ static func resolve_sprays(world: SimWorld) -> void:
 		definition.range = reach
 		var pulse := {"source": source, "owner": int(event.owner_id), "wire": int(event.source_wire_id),
 			"origin": origin, "aim": aim, "endpoint": endpoint, "definition": definition,
-			"wall_cutoff": not wall.is_empty(),
 			"requested_shape": requested_shape,
 			"footprint": HexFootprint.sector(origin, aim, reach, int(definition.cone_cosine_squared_per_million))}
 		pulses.append(pulse)
 		requests[source] = pulse
 	world.combat_events = retained
 	var contacts: Array[Dictionary] = []
+	# No contact has resolved yet: every pulse sees the same initial field set.
+	# Resolution below still revalidates each source after strength/coverage edits.
+	var initial_fields: Array[Dictionary] = []
+	if not pulses.is_empty(): initial_fields = _ground_fields(world)
 	for index: int in pulses.size():
 		var pulse: Dictionary = pulses[index]
 		for shot: ProjectileState in world.projectiles:
@@ -64,21 +72,21 @@ static func resolve_sprays(world: SimWorld) -> void:
 			var point := footprint_contact(pulse.footprint, HexFootprint.disk(Vector2i(shot.position_x, shot.position_y), shot.radius))
 			if point.is_empty(): continue
 			contacts.append({"first": mini(int(pulse.source), _source(shot)), "second": maxi(int(pulse.source), _source(shot)),
-				"a": int(pulse.source), "b": _source(shot), "point": point.point, "other_wire": shot.source_wire_id})
+				"a": int(pulse.source), "b": _source(shot), "point": point.point, "witness": point, "other_wire": shot.source_wire_id})
 		for other_index: int in range(index + 1, pulses.size()):
 			var other: Dictionary = pulses[other_index]
 			var point := footprint_contact(pulse.footprint, other.footprint)
 			if point.is_empty(): continue
 			contacts.append({"first": mini(int(pulse.source), int(other.source)), "second": maxi(int(pulse.source), int(other.source)),
-				"a": int(pulse.source), "b": int(other.source), "point": point.point, "kind": "pulse", "other_wire": int(other.wire)})
+				"a": int(pulse.source), "b": int(other.source), "point": point.point, "witness": point, "kind": "pulse", "other_wire": int(other.wire)})
 		# Phase-zero field interception is source-owned and analytic. Iterating
 		# records rather than storage cells deduplicates multi-cell footprints.
-		for field: Dictionary in _ground_fields(world):
+		for field: Dictionary in initial_fields:
 			if int(field.source) == int(pulse.source): continue
 			var point := HexFootprint.contact_shape_selected(pulse.footprint, HexChemistryWorld.coverage(field), world.hex_court.origin, pulse.origin)
-			if point.is_empty() or not _before_spray_wall_cutoff(pulse, point): continue
+			if point.is_empty() or not _spray_contact_visible(pulse, point, world.collision): continue
 			contacts.append({"first": mini(int(pulse.source), int(field.source)), "second": maxi(int(pulse.source), int(field.source)),
-				"a": int(pulse.source), "b": int(field.source), "point": point.point, "kind": "field",
+				"a": int(pulse.source), "b": int(field.source), "point": point.point, "witness": point, "kind": "field",
 				"other_wire": int(field.wire), "quantization_outside": bool(point.get("quantization_outside", false))})
 	contacts.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.first) < int(b.first) if int(a.first) != int(b.first) else int(a.second) < int(b.second))
 	for contact: Dictionary in contacts:
@@ -87,11 +95,12 @@ static func resolve_sprays(world: SimWorld) -> void:
 			var current_field := _ground_field_for_source(world, int(contact.b))
 			if current_field.is_empty(): continue
 			var current_point := HexFootprint.contact_shape_selected(pulse.footprint, HexChemistryWorld.coverage(current_field), world.hex_court.origin, pulse.origin)
-			if current_point.is_empty() or not _before_spray_wall_cutoff(pulse, current_point): continue
+			if current_point.is_empty(): continue
 			contact.point = current_point.point
+			contact.witness = current_point
 			contact.quantization_outside = bool(current_point.get("quantization_outside", false))
-		if not SprayInterception.clear_ray(pulse.origin, contact.point, world.collision, [], world.tick): continue
-		if requests.has(int(contact.b)) and not SprayInterception.clear_ray(requests[int(contact.b)].origin, contact.point, world.collision, [], world.tick): continue
+		if not _spray_contact_visible(pulse, contact.witness, world.collision): continue
+		if requests.has(int(contact.b)) and not _spray_contact_visible(requests[int(contact.b)], contact.witness, world.collision): continue
 		var outcome: Dictionary = world.hex_court.resolve_contact(int(contact.a), int(contact.b), contact.point, world.tick)
 		if not bool(outcome.get("accepted", false)): continue
 		var clash_event := {"type": "hex_clash", "source_wire_id": int(pulse.wire), "other_wire_id": int(contact.other_wire), "owner_id": int(pulse.owner),
@@ -112,6 +121,7 @@ static func resolve_sprays(world: SimWorld) -> void:
 		# killed its owner. Captured origin/aim and its paid ledger remain valid.
 		if owner == null: continue
 		var definition: Dictionary = pulse.definition
+		definition.source_cast_id = int(pulse.source)
 		definition.damage = int(definition.damage) * int(ledger.remaining_strength) / int(ledger.initial_strength)
 		CombatSystem._resolve_spray(owner, int(pulse.wire), definition, pulse.origin, pulse.aim, pulse.endpoint,
 			world.players, world.config, world.collision, world.combat_events, [], world.tick)
@@ -122,7 +132,7 @@ static func resolve_sprays(world: SimWorld) -> void:
 			"strength": int(ledger.flight_quantity), "reaction_strength": int(ledger.initial_strength),
 			"initial_strength": int(ledger.initial_strength), "remaining_strength": int(ledger.remaining_strength)})
 		var terminal_event: Dictionary = world.combat_events.back()
-		world.hex_court.deposit_terminal(terminal_event, world.tick)
+		world.hex_court.deposit_terminal(terminal_event, world.tick, world.collision)
 		terminal_event.hex_committed = true
 	var survivors: Array[ProjectileState] = []
 	for shot: ProjectileState in world.projectiles:
@@ -166,18 +176,20 @@ static func footprint_contact(first: Dictionary, second: Dictionary) -> Dictiona
 	return HexFootprint.contact_point(first, second, preferred)
 
 
-# A cover-clamped Spray owns the closed sector up to its physical wall cutoff,
-# but the wall wins a field contact whose continuous witness lies exactly on
-# that terminal arc. Compare the retained scalar witness; never shorten the
-# authored range by a whole fixed-grid unit.
-static func _before_spray_wall_cutoff(pulse: Dictionary, witness: Dictionary) -> bool:
-	if not bool(pulse.get("wall_cutoff", false)):
-		return true
+# Test the selected contact ray, never the fan's center ray. The existing
+# bounded nearest-witness selection remains conservative for a field whose
+# nearest witness is shadowed even if another part of that same field is clear.
+# Retain the scalar witness: a wall wins an exact tie, but not a fractional
+# pre-wall contact rounded onto its face. Doubling the integer segment lets the
+# analytic query see a wall just beyond that rounded endpoint without stepping.
+static func _spray_contact_visible(pulse: Dictionary, witness: Dictionary, collision: CollisionWorld) -> bool:
 	var origin: Vector2i = pulse.origin
+	var delta: Vector2i = Vector2i(witness.point) - origin
+	var wall := ContinuousContact.wall_contact(origin, origin + delta * 2, int(pulse.definition.radius), collision)
+	if wall.is_empty(): return true
 	var x := float(witness.get("continuous_x", int(witness.point.x))) - float(origin.x)
 	var y := float(witness.get("continuous_y", int(witness.point.y))) - float(origin.y)
-	var reach := float(pulse.definition.range)
-	var reach_squared := reach * reach
+	var reach_squared := float(delta.length_squared()) * 4.0 * float(wall.fraction) * float(wall.fraction)
 	var tolerance := maxf(1.0, reach_squared) * HexFootprint.PARAMETER_EPSILON
 	return x * x + y * y < reach_squared - tolerance
 
@@ -186,7 +198,7 @@ static func _eligible(shot: ProjectileState, target: PlayerState, config: SimCon
 	return target.entity_id != shot.owner_id and target.team_id != shot.team_id \
 		and target.health > 0 and target.spawn_protection_ticks == 0 \
 		and not MovementSystem.is_combat_intangible(target, config) \
-		and target.air_height < MovementTuning.GROUND_PROJECTILE_CLEARANCE_HEIGHT
+		and not MovementSystem.avoids_ordinary_projectiles(target)
 
 
 static func _ordered(a: Dictionary, b: Dictionary) -> bool:
@@ -247,10 +259,12 @@ static func _interceptable_field(record: Dictionary, world: SimWorld) -> Diction
 # center path, rather than their actor/projectile collision radius, determines
 # field eligibility. Earliest entry remains a continuous parameter while
 # HexFootprint supplies its bounded, stored-union-aware fixed-grid witness.
-static func _field_contacts(plan: Dictionary, world: SimWorld) -> Array[Dictionary]:
+static func _field_contacts(plan: Dictionary, world: SimWorld, prepared_fields: Variant = null) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	var source_id: int = int(plan.source_id)
-	for field: Dictionary in _ground_fields(world):
+	# null means a fresh query; an empty prepared set is a valid empty result.
+	var fields: Array = _ground_fields(world) if prepared_fields == null else prepared_fields
+	for field: Dictionary in fields:
 		var field_source: int = int(field.source)
 		if field_source == source_id:
 			continue
@@ -282,7 +296,8 @@ static func _plan(shot: ProjectileState, world: SimWorld) -> Dictionary:
 	var start := Vector2i(shot.position_x, shot.position_y)
 	var ratio := 1000
 	for product: Dictionary in world.hex_court.products.values():
-		if int(product.recipe_wire_id) == 327 and world.tick >= int(product.active_tick) and world.tick < int(product.decay_tick) and world.hex_court.contains_stored(product, start): ratio = 650
+		if world.tick >= int(product.active_tick) and world.tick < int(product.decay_tick) and world.hex_court.contains_stored(product, start):
+			ratio = mini(ratio, int(HexRecipePolicy.runtime_definition(int(product.recipe_wire_id)).get("projectile_speed_ratio", 1000)))
 	var tx := shot.remainder_x + shot.velocity_x * ratio / 1000
 	var ty := shot.remainder_y + shot.velocity_y * ratio / 1000
 	var delta := Vector2i(tx / world.config.tick_rate, ty / world.config.tick_rate)
@@ -312,20 +327,26 @@ static func _plan(shot: ProjectileState, world: SimWorld) -> Dictionary:
 
 static func advance(world: SimWorld) -> void:
 	if not sync_strength(world): return
+	var stationary := HexExpandedDelivery.prepare(world)
 	var plans: Array[Dictionary] = []
 	var by_id := {}
-	var queue: Array[Dictionary] = []
+	var queue := Workset.OrderedQueue.new(_ordered)
 	var scheduled_pairs := {}
+	# Borrow only while scheduling the initial paths. Repaths/children use fresh
+	# queries because an earlier event may have exhausted or retiled a field.
+	var initial_fields: Array[Dictionary] = []
+	if not world.projectiles.is_empty(): initial_fields = _ground_fields(world)
 	for shot: ProjectileState in world.projectiles:
+		if HexExpandedDelivery.stationary(shot): continue
 		if shot.remaining_strength <= 0: continue
 		var plan := _plan(shot, world)
 		plan.time = 0.0
 		plan.generation = 0
 		plans.append(plan)
 		by_id[shot.entity_id] = plan
-		_enqueue_path(plan, world, queue)
-	for plan: Dictionary in plans: _enqueue_pairs(plan, plans, queue, scheduled_pairs)
-	queue.sort_custom(_ordered)
+		_enqueue_path(plan, world, queue, initial_fields)
+	var spatial := Workset.SpatialPlans.new(plans)
+	for plan: Dictionary in plans: _enqueue_pairs(plan, spatial, queue, scheduled_pairs)
 	var ended := {}
 	while not queue.is_empty():
 		var event: Dictionary = queue.pop_front()
@@ -361,7 +382,6 @@ static func advance(world: SimWorld) -> void:
 				event.fraction = fraction
 				event.point = interval.point
 				queue.append(event)
-				queue.sort_custom(_ordered)
 				continue
 			if not SprayInterception.clear_ray(query_start, interval.point, world.collision, [], world.tick): continue
 			var outcome: Dictionary = world.hex_court.resolve_contact(_source(shot), int(event.second), interval.point, world.tick)
@@ -372,11 +392,41 @@ static func advance(world: SimWorld) -> void:
 		var center := _plan_point(plan, float(event.fraction))
 		shot.position_x = center.x
 		shot.position_y = center.y
+		if shot.delivery_phase == 1: continue
+		var delivery_family := MixtureCatalog.family_for_wire(shot.source_wire_id)
+		if delivery_family == "fuse" and String(event.kind) in ["actor","wall","range"]:
+			HexExpandedDelivery.arm(shot,world.config)
+			plan.finish = center
+			stationary.append(shot)
+			ended[shot.entity_id] = true
+			world.combat_events.append({"type":"fuse_armed","projectile_id":shot.entity_id,"source_wire_id":shot.source_wire_id,"owner_id":shot.owner_id,"x":center.x,"y":center.y,"delay_ticks":shot.delivery_ticks})
+			continue
+		if delivery_family == "rebound" and event.kind == "wall" and shot.remaining_bounces > 0:
+			var normal: Vector2i = plan.wall.get("normal",Vector2i.ZERO)
+			var velocity := _reflected(Vector2i(shot.velocity_x,shot.velocity_y),normal)
+			shot.velocity_x = velocity.x
+			shot.velocity_y = velocity.y
+			shot.remaining_bounces -= 1
+			shot.remainder_x = 0
+			shot.remainder_y = 0
+			var remainder: Vector2i = plan.finish-center
+			var nudged := center+Vector2i(signi(normal.x),signi(normal.y))
+			_repath(plan,nudged,nudged+_reflected(remainder,normal),float(event.fraction),world)
+			_enqueue_path(plan,world,queue)
+			spatial.update(plan)
+			_enqueue_pairs(plan,spatial,queue,scheduled_pairs)
+			world.combat_events.append({"type":"projectile_rebounded","projectile_id":shot.entity_id,"remaining_bounces":shot.remaining_bounces})
+			continue
 		if event.kind == "product":
 			var product: Dictionary = world.hex_court.products.get(int(event.second), {})
 			if not _product_eligible(product, shot, world.tick): continue
 			var wire := int(product.recipe_wire_id)
-			if wire in [301, 305, 306] or (wire == 329 and shot.element_wire_id != 7):
+			if wire in [301, 305, 306] or (wire == 329 and not _has_element(shot, 16)):
+				if delivery_family == "fuse":
+					HexExpandedDelivery.arm(shot,world.config)
+					stationary.append(shot)
+					ended[shot.entity_id] = true
+					continue
 				var damage := scaled_damage(shot)
 				var absorbed := mini(int(product.capacity), damage) if wire == 306 and shot.element_wire_id == 6 else 0
 				product.capacity -= absorbed
@@ -394,7 +444,8 @@ static func advance(world: SimWorld) -> void:
 					shot.chemistry_interaction_mask &= ~(1 << (wire - 301))
 				continue
 			if wire in [320, 335]:
-				product.pulse_index = world.tick
+				# Non-deflecting crossings retain their once-only interaction mask.
+				# pulse_index belongs to actor-effect cadence, not optical contact.
 				continue
 			var original_velocity := Vector2i(shot.velocity_x, shot.velocity_y)
 			var original_remaining: Vector2i = plan.finish - center
@@ -420,6 +471,11 @@ static func advance(world: SimWorld) -> void:
 				shot.material_strength -= child.material_strength
 				child.chemistry_interaction_mask = shot.chemistry_interaction_mask
 				child.grazed_entity_ids = shot.grazed_entity_ids.duplicate()
+				child.delivery_phase = shot.delivery_phase
+				child.delivery_ticks = shot.delivery_ticks
+				child.delivery_damage_remaining = shot.delivery_damage_remaining / 2
+				shot.delivery_damage_remaining -= child.delivery_damage_remaining
+				child.contact_entity_ids = shot.contact_entity_ids.duplicate()
 				world.projectiles.append(child)
 			if wire == 307:
 				var normal: Vector2i = product.flow_aim
@@ -435,7 +491,8 @@ static func advance(world: SimWorld) -> void:
 			shot.remainder_x = 0
 			shot.remainder_y = 0
 			_enqueue_path(plan, world, queue)
-			_enqueue_pairs(plan, plans, queue, scheduled_pairs)
+			spatial.update(plan)
+			_enqueue_pairs(plan, spatial, queue, scheduled_pairs)
 			if child != null:
 				var child_plan := {"entity_id": child.entity_id, "source_id": _source(child), "shot": child, "radius": child.radius,
 					"remaining_strength": child.remaining_strength, "terminal_fraction": plan.terminal_fraction, "terminal_inclusive": true,
@@ -444,9 +501,9 @@ static func advance(world: SimWorld) -> void:
 				plans.append(child_plan)
 				by_id[child.entity_id] = child_plan
 				_enqueue_path(child_plan, world, queue)
-				_enqueue_pairs(child_plan, plans, queue, scheduled_pairs)
+				spatial.update(child_plan)
+				_enqueue_pairs(child_plan, spatial, queue, scheduled_pairs)
 			world.combat_events.append({"type": "hex_optical_contact", "projectile_id": shot.entity_id, "reaction_id": int(product.id), "recipe_wire_id": wire})
-			queue.sort_custom(_ordered)
 			continue
 		if event.kind == "actor":
 			var target := world.player(int(event.second))
@@ -454,10 +511,12 @@ static func advance(world: SimWorld) -> void:
 			var local_fraction := (float(event.fraction) - float(plan.time)) / maxf(1e-12, 1.0 - float(plan.time))
 			var point := ContinuousContact.circle_contact(plan.start, plan.finish, local_fraction, Vector2i(target.position_x, target.position_y), target.radius)
 			var damage := scaled_damage(shot)
+			var health_before := target.health
 			if not PlayerResourcesSystem.damage(target, damage, world.config): continue
+			SpellStatusPolicy.apply_hit(target,shot.source_wire_id,_source(shot),shot.owner_id,shot.team_id,health_before-target.health,world.config,SimCommand._normalized_direction(shot.velocity_x,shot.velocity_y))
 			if target.health > 0 and shot.hit_control_duration_ms > 0:
 				MovementSystem.apply_control_state(target, shot.hit_control_state, shot.hit_control_duration_ms, SimCommand._normalized_direction(shot.velocity_x, shot.velocity_y), shot.hit_control_speed, world.config, shot.hit_control_slow_ratio)
-			world.combat_events.append({"type": "projectile_hit", "projectile_id": shot.entity_id, "source_wire_id": shot.source_wire_id, "owner_id": shot.owner_id, "target_id": target.entity_id, "damage": damage, "contact_position": point})
+			world.combat_events.append({"type": "projectile_hit", "projectile_id": shot.entity_id, "source_wire_id": shot.source_wire_id, "owner_id": shot.owner_id, "target_id": target.entity_id, "damage": health_before - target.health, "contact_position": point})
 			if target.actor_kind == PlayerState.ActorKind.CHAMPION and target.health == 0:
 				world.combat_events.append({"type": "champion_defeated", "projectile_id": shot.entity_id, "owner_id": shot.owner_id, "target_id": target.entity_id})
 			_terminal(world, shot, point, "actor", target.entity_id)
@@ -478,6 +537,11 @@ static func advance(world: SimWorld) -> void:
 		shot.position_y = plan.finish.y
 		shot.lifetime_ticks -= 1
 		survivors.append(shot)
+	for held: ProjectileState in stationary:
+		var held_ledger: Dictionary = world.hex_court.ledger_for_source(_source(held))
+		if held_ledger.is_empty() or int(held_ledger.remaining_strength) <= 0 or world.hex_court.flight_quantity(_source(held),held.entity_id) <= 0: continue
+		held.remaining_strength = int(held_ledger.remaining_strength)
+		survivors.append(held)
 	world.projectiles = survivors
 
 
@@ -488,18 +552,25 @@ static func _plan_point(plan: Dictionary, time: float) -> Vector2i:
 # A terminal changes authoritative ownership at its TOI, not after the queue.
 # New field contacts start at that global time; nothing can hit a field before
 # its source actually deposited. Existing queued contacts revalidate normally.
-static func _enqueue_new_ground(plans: Array[Dictionary], ended: Dictionary, queue: Array[Dictionary], time: float, new_source: int, world: SimWorld) -> void:
+static func _enqueue_new_ground(plans: Array[Dictionary], ended: Dictionary, queue: Workset.OrderedQueue, time: float, new_source: int, world: SimWorld) -> void:
+	# This synchronous pass only queues contacts; authority cannot change until
+	# it returns to the resolver. Existing fields were already scheduled, so
+	# prepare the newly deposited source once instead of querying every field
+	# for every surviving path and discarding the unrelated witnesses afterward.
+	var new_fields: Array[Dictionary] = []
+	for field: Dictionary in _ground_fields(world):
+		if int(field.source) == new_source: new_fields.append(field)
+	if new_fields.is_empty(): return
 	for plan: Dictionary in plans:
 		if ended.has(int(plan.entity_id)) or time > float(plan.terminal_fraction): continue
 		var probe := plan.duplicate()
 		probe.time = maxf(time, float(plan.time))
 		probe.start = _plan_point(plan, float(probe.time))
-		for field: Dictionary in _field_contacts(probe, world):
+		for field: Dictionary in _field_contacts(probe, world, new_fields):
 			if int(field.field_source) != new_source: continue
 			var fraction := float(probe.time) + (1.0 - float(probe.time)) * float(field.fraction)
 			queue.append({"kind": "field", "fraction": fraction, "priority": 1, "first": int(plan.entity_id),
 				"second": int(field.field_source), "generation": int(plan.generation), "point": field.point, "formed_after": float(probe.time)})
-	queue.sort_custom(_ordered)
 
 
 static func _repath(plan: Dictionary, start: Vector2i, finish: Vector2i, time: float, world: SimWorld) -> void:
@@ -510,7 +581,7 @@ static func _repath(plan: Dictionary, start: Vector2i, finish: Vector2i, time: f
 	plan.wall = ContinuousContact.wall_contact(start, finish, int(plan.radius), world.collision.base_world if world.collision is HexCollisionWorld else world.collision)
 
 
-static func _enqueue_path(plan: Dictionary, world: SimWorld, queue: Array[Dictionary]) -> void:
+static func _enqueue_path(plan: Dictionary, world: SimWorld, queue: Workset.OrderedQueue, prepared_fields: Variant = null) -> void:
 	var common := {"first": int(plan.entity_id), "generation": int(plan.generation)}
 	if not plan.wall.is_empty():
 		var wall: Dictionary = plan.wall
@@ -532,7 +603,7 @@ static func _enqueue_path(plan: Dictionary, world: SimWorld, queue: Array[Dictio
 		var event := common.duplicate()
 		event.merge({"kind": "actor", "fraction": fraction, "priority": 2, "second": actor.entity_id})
 		queue.append(event)
-	for field: Dictionary in _field_contacts(plan, world):
+	for field: Dictionary in _field_contacts(plan, world, prepared_fields):
 		var fraction := float(plan.time) + (1.0 - float(plan.time)) * float(field.fraction)
 		if fraction > float(plan.terminal_fraction): continue
 		var event := common.duplicate()
@@ -549,8 +620,8 @@ static func _enqueue_path(plan: Dictionary, world: SimWorld, queue: Array[Dictio
 		queue.append(event)
 
 
-static func _enqueue_pairs(plan: Dictionary, plans: Array[Dictionary], queue: Array[Dictionary], scheduled: Dictionary) -> void:
-	for other: Dictionary in plans:
+static func _enqueue_pairs(plan: Dictionary, spatial: Workset.SpatialPlans, queue: Workset.OrderedQueue, scheduled: Dictionary) -> void:
+	for other: Dictionary in spatial.query(plan):
 		if int(plan.entity_id) == int(other.entity_id) or int(plan.source_id) == int(other.source_id): continue
 		var low: Dictionary = plan if int(plan.entity_id) < int(other.entity_id) else other
 		var high: Dictionary = other if int(plan.entity_id) < int(other.entity_id) else plan
@@ -573,13 +644,17 @@ static func _enqueue_pairs(plan: Dictionary, plans: Array[Dictionary], queue: Ar
 				"first": int(low.entity_id), "second": int(high.entity_id), "generation": int(low.generation), "other_generation": int(high.generation), "point": contact.point})
 
 
+static func _has_element(shot: ProjectileState, bit: int) -> bool:
+	return (int(CombatTuning.cast_definition_view(shot.source_wire_id).get("element_mask",0)) & bit) != 0
+
+
 static func _product_eligible(product: Dictionary, shot: ProjectileState, tick: int) -> bool:
 	if product.is_empty() or tick < int(product.active_tick) or tick >= int(product.decay_tick): return false
 	var wire := int(product.recipe_wire_id)
-	if wire in [301, 305, 306] or (wire == 329 and shot.element_wire_id != 7): return int(product.health) > 0
+	if wire in [301, 305, 306] or (wire == 329 and not _has_element(shot, 16)): return int(product.health) > 0
 	if wire not in [307, 317, 320, 325, 329, 335] or (shot.chemistry_interaction_mask & (1 << (wire - 301))) != 0: return false
-	if wire in [325, 329] and shot.element_wire_id != 7: return false
-	if wire == 317 and (shot.element_wire_id != 2 or int(product.capacity) <= 0): return false
+	if wire in [325, 329] and not _has_element(shot, 16): return false
+	if wire == 317 and (not _has_element(shot, 2) or int(product.capacity) <= 0): return false
 	return wire not in [307, 329] or int(product.health) > 0
 
 
@@ -615,14 +690,21 @@ static func _terminal(world: SimWorld, shot: ProjectileState, point: Vector2i, r
 	var definition := CombatTuning.cast_definition(shot.source_wire_id)
 	var damage := mini(scaled_damage(shot), int(definition.get("blast_damage", 0)) * shot.remaining_strength / maxi(1, shot.initial_strength))
 	if radius > 0 and damage > 0:
+		# Range and cover must share the physical impact origin. The flight
+		# center can be a full Heavy radius behind it and see around a different
+		# side of a corner. Move only one fixed unit toward that free center so
+		# an inclusive wall/hex face does not block its own outward blast.
+		var blast_origin := point + Vector2i(signi(shot.position_x - point.x), signi(shot.position_y - point.y))
 		for target: PlayerState in world.players:
-			if target.entity_id in [shot.owner_id, excluded_id] or target.team_id == shot.team_id or target.health <= 0 or target.spawn_protection_ticks > 0 or MovementSystem.is_combat_intangible(target, world.config): continue
+			if target.entity_id in [shot.owner_id, excluded_id] or target.team_id == shot.team_id or target.health <= 0 or target.spawn_protection_ticks > 0 or MovementSystem.is_combat_intangible(target, world.config) or MovementSystem.avoids_ground_effects(target): continue
 			var target_point := Vector2i(target.position_x, target.position_y)
 			if (target_point - point).length_squared() > (radius + target.radius) * (radius + target.radius): continue
-			if not SprayInterception.clear_ray(Vector2i(shot.position_x, shot.position_y), target_point, world.collision, [], world.tick): continue
+			if not SprayInterception.clear_ray(blast_origin, target_point, world.collision, [], world.tick): continue
+			var health_before := target.health
 			if PlayerResourcesSystem.damage(target, damage, world.config):
+				SpellStatusPolicy.apply_hit(target,shot.source_wire_id,_source(shot),shot.owner_id,shot.team_id,health_before-target.health,world.config,SimCommand._normalized_direction(target_point.x-point.x,target_point.y-point.y))
 				world.combat_events.append({"type": "projectile_hit", "projectile_id": shot.entity_id, "source_wire_id": shot.source_wire_id,
-					"owner_id": shot.owner_id, "target_id": target.entity_id, "damage": damage, "contact_position": point})
+					"owner_id": shot.owner_id, "target_id": target.entity_id, "damage": health_before - target.health, "contact_position": point})
 				if target.actor_kind == PlayerState.ActorKind.CHAMPION and target.health == 0:
 					world.combat_events.append({"type": "champion_defeated", "projectile_id": shot.entity_id, "owner_id": shot.owner_id, "target_id": target.entity_id})
 	CombatSystem._emit_terminal(shot, world.combat_events, reason, point)

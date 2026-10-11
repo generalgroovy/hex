@@ -1,0 +1,86 @@
+{
+  "status": "PROPOSAL",
+  "do_not_replace_authoritative_command_fields": true,
+  "binding_rule": "Resolve input action + device at draw time; never hard-code E/Q/F into new prompts. F is only documented source-default Interact; saved profile unavailable.",
+  "current_stations": 12,
+  "proposed_destinations": [
+    {
+      "id": "learning-canopy",
+      "station_ids": [
+        "movement-guide",
+        "controls-lectern",
+        "champion-loom",
+        "spell-loom"
+      ],
+      "visual_cues": [
+        "footstep relief",
+        "key-and-stick plate",
+        "standing mirror",
+        "brass weave frame"
+      ],
+      "world_copy": [
+        "Movement",
+        "Controls",
+        "Champion",
+        "Spells"
+      ]
+    },
+    {
+      "id": "farflow-rail",
+      "station_ids": [
+        "farflow-host",
+        "farflow-join",
+        "farflow-charter",
+        "session-hearth",
+        "company-ledger",
+        "parting-bell"
+      ],
+      "visual_cues": [
+        "outgoing pennant",
+        "incoming pennant",
+        "rules seal",
+        "ready lantern",
+        "roster plaque",
+        "guarded bell"
+      ],
+      "world_copy": [
+        "Host",
+        "Join",
+        "Rules",
+        "Ready",
+        "Company",
+        "Parting"
+      ]
+    },
+    {
+      "id": "chemistry-courtyard",
+      "station_ids": [
+        "training-reset"
+      ],
+      "world_copy": [
+        "Reset practice"
+      ],
+      "warning": "Reset isolation is not established; label scope only after runtime verification."
+    },
+    {
+      "id": "movement-garden-return",
+      "station_ids": [
+        "momentum-chime"
+      ],
+      "visual_cues": [
+        "struck brass chime, distinct from reset bell"
+      ],
+      "world_copy": [
+        "Movement feedback"
+      ]
+    }
+  ],
+  "remote_panel": {
+    "entry": "F4 > Company (new tab, PROPOSAL)",
+    "new_live_key": null,
+    "authority": "No proximity bypass without explicit runtime-owner review; pending host acknowledgements and lifecycle checks.",
+    "world_keeps_running": true,
+    "sanctuary": false,
+    "destructive_action": "Selection is not dismissal. Arm named peer, then confirm before the existing 3-second window expires."
+  }
+}

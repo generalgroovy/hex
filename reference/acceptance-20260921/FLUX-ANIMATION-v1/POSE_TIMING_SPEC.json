@@ -1,0 +1,477 @@
+{
+  "schema_version": 1,
+  "task_id": "ANIMATION",
+  "status": "PROPOSAL",
+  "scope": "Shared foundation review and precise annotated pilots; not a runtime asset manifest or game patch",
+  "source_motion_revision": "slide_v1",
+  "source_style_id": "warm_adventurer_foundation_v1",
+  "frozen": {
+    "cell_px": [
+      96,
+      96
+    ],
+    "feet_pivot_px": [
+      48,
+      84
+    ],
+    "display_height_px": {
+      "small": 58,
+      "middle": 63,
+      "large": 68
+    },
+    "reference_height_px": {
+      "small": 58,
+      "middle": 68,
+      "large": 76
+    },
+    "baked_scale": {
+      "small": 1.0,
+      "middle": 0.9264705882352942,
+      "large": 0.8947368421052632
+    },
+    "scale_policy": "per_size_baked_about_feet_pivot",
+    "hurtbox_radius_px": {
+      "small": 17,
+      "middle": 18,
+      "large": 19
+    },
+    "common_wall_clearance_px": 18,
+    "stamina_maximum": {
+      "small": 620,
+      "middle": 660,
+      "large": 700
+    },
+    "other_stats": "UNCHANGED",
+    "simulation_tick_rate_hz": 120,
+    "spell_effects_baked_into_body": false,
+    "runtime_changes_in_this_package": false
+  },
+  "coordinate_contract": {
+    "screen_x_positive": "right / east",
+    "screen_y_positive": "down / south",
+    "directions": [
+      "south",
+      "south_east",
+      "east",
+      "north_east",
+      "north",
+      "north_west",
+      "west",
+      "south_west"
+    ],
+    "fixed_vectors": [
+      [
+        0,
+        1000
+      ],
+      [
+        707,
+        707
+      ],
+      [
+        1000,
+        0
+      ],
+      [
+        707,
+        -707
+      ],
+      [
+        0,
+        -1000
+      ],
+      [
+        -707,
+        -707
+      ],
+      [
+        -1000,
+        0
+      ],
+      [
+        -707,
+        707
+      ]
+    ],
+    "base_rows": [
+      "grounded",
+      "jump",
+      "cast",
+      "hit",
+      "walk",
+      "sprint",
+      "slide",
+      "roll",
+      "walk_b",
+      "sprint_b"
+    ],
+    "gait_phases": 8,
+    "gait_pairs": 64,
+    "index_formula": "((travel*8+aim)*8+phase)",
+    "sheet_columns": 16,
+    "sheet_rows": 32,
+    "phase_formula": "min(7, floor(fposmod(normalized_phase, 1.0) * 8))",
+    "zero_travel": "No gait lookup; base row, reported travel index falls back to aim index. Do not make footsteps from aim changes.",
+    "zero_aim_in_this_presenter": "Static classify_index defaults to SOUTH. Upstream retained-aim behavior cannot be inferred from this function.",
+    "direction_boundary": "abs(x)*1000000 <= abs(y)*414214 chooses N/S; corresponding horizontal comparison chooses E/W. Equality is cardinal.",
+    "hysteresis": "Stateful resolver offers an 8-degree margin (hold dot 0.8616291604415258); frame() calls static classify_index, not resolve_index. No new aim lag proposed."
+  },
+  "evidence_legend": {
+    "SOURCE_VISIBLE": "Directly present in read source or inspected source pixels",
+    "DOCUMENTED_NOT_TRACEABLE": "Described in supplied docs; required implementation or caller absent",
+    "INFERRED": "Review hypothesis, not direct or runtime proof",
+    "MISSING": "No corresponding input or slot supplied",
+    "PROPOSED": "Candidate specification, not implemented",
+    "HUMAN_ONLY": "Perception or feel requires playtest"
+  },
+  "clock_contract": {
+    "gait_clock_evidence": "DOCUMENTED_NOT_TRACEABLE",
+    "document": "repository/docs/SPRITE-PIPELINE.md:49-57",
+    "driver": "realized ground distance, excluding prediction correction and non-gait actions",
+    "documented_cycle_distance_body_heights": 1.3,
+    "documented_walk_cap_cycles_per_second": 3,
+    "documented_sprint_cap_cycles_per_second": 5,
+    "body_height_scalar_used_by_actual_caller": null,
+    "scalar_note": "Small reference/display are both 58. For Middle/Large inspect missing caller before choosing reference or display height. This package does not silently reinterpret it.",
+    "stop_and_block": "Freeze phase; no catch-up burst. Preserve phase through heading and walk/sprint bank changes.",
+    "air_slide_roll": "No gait advancement attributed to these modes. Reconcile actual caller before implementation.",
+    "offline_flipbook_cycle_ms": 800,
+    "offline_timing_note": "800 ms is a viewing aid only. It is not measured or proposed gameplay cadence."
+  },
+  "pose_invariants": {
+    "rig": "Use the existing fixed-bone authoring rig when supplied; no new per-character animation system.",
+    "joint_lengths": "Retain source rig rest lengths, head/neck dimensions and rigid torso volume. Those values are NOT recoverable exactly from these PNGs.",
+    "head_chest_pelvis_yaw": "Same current aim heading; no axial waist twist. Travel changes contact trajectories and lean, not shot aim.",
+    "scale": "Never resize each pose to fill the cell or double-apply the baked scale. Pose bounds may change.",
+    "gait_contact_phase_labels": [
+      "L contact",
+      "L load",
+      "L support",
+      "L unload",
+      "R contact",
+      "R load",
+      "R support",
+      "R unload"
+    ],
+    "gait_anatomical_support": [
+      "L",
+      "L",
+      "L",
+      "L",
+      "R",
+      "R",
+      "R",
+      "R"
+    ],
+    "debug_identity": "L diamond and R square, labels as well as color; these glyphs are never body art.",
+    "occlusion": "Anatomical identity is stable, but draw order follows depth after projection. Do not relabel feet on a turn.",
+    "foot_contact_vs_lowest_pixel": "Use rig sole landmarks plus actual receiving surface; sprite alpha bounds are not collision or contact authority.",
+    "body_action_priority": "Authoritative death/forced control, airborne/slide/roll/wall locomotion state, then ground gait; legal cast arms may coexist. Inspect actual caller priority before patching.",
+    "interruption": "New authoritative locomotion/action state wins immediately. No landing, slide-exit or cast-recovery pose may hold movement or prolong protection."
+  },
+  "gait_candidate": {
+    "status": "PROPOSED",
+    "scope": "Contact readability changes within existing 8-phase banks; not a speed/stride/cap change",
+    "support": "P0..P3 left; P4..P7 right. Phase boundaries exchange support without swapping anatomical IDs. Retain accepted source contact ordering if the missing rig proves a different zero phase.",
+    "sole_shape": "A planted sole has a stable flat contact cluster; swing toe is separated visibly at native resolution. Avoid both feet looking planted or both looking airborne throughout a walk.",
+    "target_passing_toe_lift_display_px": {
+      "small": 3,
+      "middle": 3,
+      "large": 4
+    },
+    "support_residual_at_keyframes_native_px_max": 1,
+    "residual_scope": "Proposed sampled-keyframe rig target only, never a measurement of current source PNGs or a guarantee during held frames.",
+    "quantization_limit": "With an 8-frame held sprite, translating the actor moves every sprite pixel between frame changes. Exact continuous world-locked feet are impossible without extra presentation machinery. Do not hide this by shifting the authoritative actor or its fixed pivot.",
+    "example_small_cycle_px_if_documented_rule_applies": 75.4,
+    "example_small_distance_per_phase_px": 9.425,
+    "cadence_limit_risk": "At a speed above cycle_distance * cadence_cap, a fixed authored stride necessarily slips. Measure actual speed/caller behavior; do not silently raise cadence or shorten travel to obtain a passing test.",
+    "new_subframe_ik_runtime_system": "NOT_PROPOSED"
+  },
+  "pilots": [
+    {
+      "id": "P01",
+      "slug": "forward-walk",
+      "title": "Forward walk · alternating support",
+      "travel_index": 0,
+      "aim_index": 0,
+      "bank": "locomotion",
+      "source_mode": "eight_exact_gait_cells",
+      "source_label": "SOURCE LOOKUP · walk T0 / A0 · exact phases 0–7",
+      "source_refs": [
+        "wireframe_body_presenter.gd:104-132",
+        "SPRITE-PIPELINE.md:49-70"
+      ],
+      "phase_labels": [
+        "L contact",
+        "L load",
+        "L support",
+        "L unload",
+        "R contact",
+        "R load",
+        "R support",
+        "R unload"
+      ],
+      "observed": "Eight distinct poses already exchange the apparent advancing leg. A still strip cannot establish world-space planting.",
+      "proposal": "Keep the eight-phase distance clock. Make the supporting sole flat, the passing toe visibly lifted, and the two anatomical feet distinguishable without debug color.",
+      "native_review": "Observe at 1x before enlarging. Do not call a moving foot planted just because it is the lowest pixel.",
+      "runtime_gate": "Measure realized ground displacement and sole samples over two cycles; repeat blocked, stopping, turning and walk-to-sprint.",
+      "status": "OFFLINE_PREVIEW",
+      "proposal_status": "PROPOSAL",
+      "human_acceptance": "PENDING"
+    },
+    {
+      "id": "P02",
+      "slug": "diagonal-slide",
+      "title": "True diagonal slide · travel NE / aim S",
+      "travel_index": 3,
+      "aim_index": 0,
+      "bank": "base",
+      "source_state": "slide",
+      "source_mode": "same_exact_slide_cell_repeated",
+      "source_label": "SOURCE LOOKUP · slide T3 / A0 · phase ignored by this presenter",
+      "source_refs": [
+        "wireframe_body_presenter.gd:97-132",
+        "PROPORTION-CAST-CHECKPOINT.md:69-75"
+      ],
+      "phase_labels": [
+        "Enter",
+        "Lower",
+        "Settle",
+        "Hold A",
+        "Hold B",
+        "Brake",
+        "Rise",
+        "Exit"
+      ],
+      "observed": "The source has a real NE slide drawing, but selection uses aim, not travel. This probe therefore repeats the S slide cell, even while travel is NE.",
+      "proposal": "Author contact and recline along actual NE travel with head/chest/pelvis yaw still S. Slide soles glide; they must not be labeled alternating walk plants.",
+      "native_review": "Look for a recognizable travel axis without relying on arrows, a skid particle trail or a rotated South bitmap.",
+      "runtime_gate": "Actual diagonal admission, momentum, brake, exit, wall contact and all 64 travel/aim pairs need the missing caller and live captures.",
+      "status": "OFFLINE_PREVIEW",
+      "proposal_status": "PROPOSAL",
+      "human_acceptance": "PENDING"
+    },
+    {
+      "id": "P03",
+      "slug": "backpedal",
+      "title": "Backpedal · travel N / aim S",
+      "travel_index": 4,
+      "aim_index": 0,
+      "bank": "locomotion",
+      "source_mode": "eight_exact_gait_cells",
+      "source_label": "SOURCE LOOKUP · walk T4 / A0 · distinct from forward bank",
+      "source_refs": [
+        "eight_direction_resolver.gd:71-88",
+        "wireframe_body_presenter.gd:119-132"
+      ],
+      "phase_labels": [
+        "L contact",
+        "L load",
+        "L support",
+        "L unload",
+        "R contact",
+        "R load",
+        "R support",
+        "R unload"
+      ],
+      "observed": "A separate backward travel/forward aim sequence already exists. It is not an absent feature or merely the forward strip played backward.",
+      "proposal": "Keep face and ready hands on S. Use a clear rearward placement, low passing toe and alternating support; no 180-degree waist twist.",
+      "native_review": "The viewer should identify travel as N with the direction arrows hidden, while identifying aim as S.",
+      "runtime_gate": "Repeat with rapid aim reversal, actual deceleration through zero, collision and the back-diagonal neighbors.",
+      "status": "OFFLINE_PREVIEW",
+      "proposal_status": "PROPOSAL",
+      "human_acceptance": "PENDING"
+    },
+    {
+      "id": "P04",
+      "slug": "strafe-cast",
+      "title": "Strafe while casting · travel N / aim E",
+      "travel_index": 4,
+      "aim_index": 2,
+      "bank": "locomotion",
+      "source_mode": "documented_lower_body_gait_only",
+      "source_label": "GAIT-ONLY PROBE · T4 / A2 · not a replay of live cast routing",
+      "source_refs": [
+        "PROPORTION-CAST-CHECKPOINT.md:73-75",
+        "wireframe_body_presenter.gd:111-132",
+        "SPECIFICATION.md:649-656"
+      ],
+      "phase_labels": [
+        "Ready",
+        "Startup*",
+        "Prepare*",
+        "Release*",
+        "Follow*",
+        "Recover*",
+        "Ready",
+        "Ready"
+      ],
+      "observed": "The checkpoint says moving casts retain gait legs without a new arm layer. Direct frame(\"cast\", ...) instead selects a static base cell. The caller resolving these choices is absent.",
+      "proposal": "Preserve gait phase while an admitted hand action reads startup, release and recovery. Current body aim turns immediately; a committed shot keeps its recorded start aim.",
+      "native_review": "The arm extension must be readable at 1x without glow. Release a hand pose on the release event, not merely when a locomotion phase number is reached.",
+      "runtime_gate": "Admitted/refused cast, release while turning, repeated Rapid casts, all four families, interruption and frame-rate changes; no restart of feet.",
+      "asterisk": "The eight displayed labels are a storyboard sample, not an action-to-gait phase coupling or measured cast timing.",
+      "status": "OFFLINE_PREVIEW",
+      "proposal_status": "PROPOSAL",
+      "human_acceptance": "PENDING"
+    },
+    {
+      "id": "P05",
+      "slug": "air-to-land",
+      "title": "Airborne → contact → recovery",
+      "travel_index": 0,
+      "aim_index": 0,
+      "bank": "base",
+      "source_mode": "authored_storyboard_using_jump_then_grounded",
+      "source_label": "STORYBOARD · jump ×2, grounded ×6 · no landing body exists in this manifest",
+      "source_refs": [
+        "wireframe_body_presenter.gd:15-19",
+        "PROPORTION-CAST-CHECKPOINT.md:69-75",
+        "PLAYER-CONTROLS-AND-POV.md:218-222"
+      ],
+      "phase_labels": [
+        "Descent*",
+        "Precontact*",
+        "Contact",
+        "Absorb",
+        "Low point",
+        "Recover",
+        "Unweight",
+        "Ready"
+      ],
+      "observed": "There is a jump cell and a grounded cell, but no land/compression row. Their source soles both register at the feet pivot; physical lift is separate.",
+      "proposal": "On confirmed landing, plant both feet, bend fixed-length knees and lower the rigid torso; recover without adding a control lock. Do not recycle a one-foot walk pose as landing.",
+      "native_review": "Distinguish airborne feet from ground contact at normal and reduced effects. Keep the receiving-surface shadow separate from the body.",
+      "runtime_gate": "Jump/Float/air-dodge/wall exit/fast fall into landing; immediate re-jump, moving cast, platform or height changes, prediction correction and death.",
+      "asterisk": "Precontact is an offline illustration only. Never predict a ground plant from a sprite, shadow or expected touchdown time.",
+      "status": "OFFLINE_PREVIEW",
+      "proposal_status": "PROPOSAL",
+      "human_acceptance": "PENDING"
+    }
+  ],
+  "action_proposals": {
+    "slide": {
+      "status": "PROPOSED",
+      "selection": "travel × aim; existing 8-direction order; eight action pose slots, not a looping walk clock",
+      "slots": [
+        "entry_high",
+        "entry_low",
+        "settle",
+        "hold_a",
+        "hold_b",
+        "brake",
+        "rise",
+        "exit"
+      ],
+      "entry_candidate_ticks": 8,
+      "entry_candidate_ms": 66.66666666666667,
+      "hold_duration": "Driven by actual admitted slide; never fixed by this spec",
+      "brake_candidate_ticks": 6,
+      "brake_candidate_ms": 50,
+      "exit_candidate_ticks": 8,
+      "exit_candidate_ms": 66.66666666666667,
+      "hold_animation": "Prefer one stable held body; optional second hold pose must not simulate new steps.",
+      "timing_boundaries": "Presentation-only proposals. No new admission, sustain, protection, brake, cost or cooldown intervals. Clip cosmetic entry/exit immediately if authority changes.",
+      "geometry": "Gliding long/tucked soles and recline follow travel. Head/chest/pelvis yaw still aim. A diagonal is authored in 3D rig/projected, never a 2D-rotated cardinal sprite.",
+      "contact": "SLIDING contact, not a planted walk sole. Wallrun cannot inherit a new deeper slide recline without its own contact regression."
+    },
+    "moving_cast": {
+      "status": "PROPOSED",
+      "input_fields": "Conceptual channels only; actual runtime field names and caller are missing.",
+      "required_channels": [
+        "current aim",
+        "committed cast start aim",
+        "accepted cast/action identifier",
+        "startup progress",
+        "release event",
+        "recovery progress",
+        "existing gait phase"
+      ],
+      "startup_and_recovery_ticks": null,
+      "null_reason": "Family-specific live timing must come from missing cast presentation state, not an invented universal duration.",
+      "pose_stages": [
+        "ready",
+        "hand draw-back",
+        "aimed hand extension on release",
+        "return to ready"
+      ],
+      "startup_arm_extension_weights": [
+        0,
+        0.25,
+        0.65
+      ],
+      "release_arm_extension_weight": 1,
+      "recovery_arm_extension_weights": [
+        0.65,
+        0.25,
+        0
+      ],
+      "release_alignment": "On the actual release event; do not delay for a gait contact or move the committed projectile.",
+      "gait_blend": "Lower gait phase continues. Upper body follows current aim. Do not cross-fade the whole actor or reset foot phase.",
+      "draw_implementation": "Start with offline existing-rig composites. A bounded masked hand/forearm overlay could avoid combinatorial full-body pages, but it is an unapproved renderer/schema extension, not a supplied live layer.",
+      "spell_layer": "No glow, projectiles, elemental particles or magic aura baked into body."
+    },
+    "landing": {
+      "status": "PROPOSED",
+      "trigger": "Confirmed airborne→ground contact / lifecycle event, not guessed sprite height or elapsed jump time",
+      "preview_keyframe_offsets_ticks": [
+        -12,
+        -6,
+        0,
+        2,
+        4,
+        8,
+        12,
+        14
+      ],
+      "negative_offset_note": "Illustrative descent samples, not predictive runtime precontact logic.",
+      "post_contact_visual_duration_ticks": 14,
+      "post_contact_visual_duration_ms": 116.66666666666667,
+      "peak_compression_at_tick": 4,
+      "max_pelvis_lowering_display_px": {
+        "small": 3,
+        "middle": 3,
+        "large": 4
+      },
+      "compression_method": "Bend fixed-length knees; move rigid head/torso together. No vertical raster scale or squash. Feet remain on the confirmed receiving surface.",
+      "contact_pose": "Dedicated two-foot load pose; the historical walk-frame shortcut was rejected.",
+      "moving_landing": "Retain travel and gait context; interrupted recovery must not drag both planted soles with a translating root. Lift a foot into the first legal moving support immediately.",
+      "intensity": "Canonical 0..1000 landing intensity is documented; use it only to scale bounded cosmetic compression. Exact field name/sampler unavailable.",
+      "normal_reduced": "Identical contact event, limb pose and interruption. Keep optional secondary cues reduced; preserve separately owned documented 28/7px airborne lift behavior rather than rebaking it.",
+      "zero_lift": "A reduced-effects small lift must not be mistaken for grounded contact."
+    }
+  },
+  "transfer": {
+    "order": [
+      "small pilot review",
+      "small continuous runtime acceptance",
+      "middle on original rig",
+      "large on original rig",
+      "all sizes and actions human acceptance",
+      "individual skins only afterwards"
+    ],
+    "method": "Transfer normalized pose rules/contact labels/timing, not scaled copies of the Small bitmap. Bake Middle at 63/68 and Large at 68/76 exactly once about (48,84).",
+    "display_ratio_to_small": {
+      "small": 1,
+      "middle": 1.0862068965517242,
+      "large": 1.1724137931034482
+    },
+    "same_ticks": true,
+    "large_warning": "Broader projected shoulders/hands and 19px hurt radius do not authorize different wall clearance or longer visual protection.",
+    "native_tolerances": "One-pixel cluster/gutter review after each per-size bake; rigid source bones preserved before rasterization."
+  },
+  "integration_budget": {
+    "existing_nine_texture_rgba_bytes": 122093568,
+    "existing_nine_texture_rgba_mib": 116.4375,
+    "one_96px_cell_rgba_bytes": 36864,
+    "one_8_cell_pilot_rgba_bytes": 294912,
+    "new_live_bytes_this_package": 0,
+    "single_full_64x8_action_bank_all_three_sizes_rgba_bytes": 56623104,
+    "single_full_64x8_action_bank_all_three_sizes_rgba_mib": 54,
+    "naive_three_cast_stages_times_all_gait_combinations_all_sizes_rgba_mib": 162,
+    "illustrative_8_aim_x3_stage_arm_overlay_all_sizes_rgba_mib": 2.53125,
+    "budget_note": "CPU/GPU upload, texture padding, simultaneous banks and draw costs not measured. Overlay geometry/occlusion remains unapproved. No full action/skin expansion before pilot acceptance."
+  },
+  "runtime_verification": "NOT_RUN",
+  "human_acceptance": "PENDING"
+}

@@ -126,6 +126,20 @@ static func shadow_convex_polygon(origin: Vector2, occluder: PackedVector2Array,
 	])
 
 
+# Surface shading is separate from strict actor LOS. The tangent chord cuts
+# through a blocker; subtract its actual shape so the first surface stays lit.
+# Another blocker's shadow still covers that surface, independent of draw order.
+static func shadow_outside_surface(origin: Vector2, occluder: PackedVector2Array, outer_distance: float) -> Array[PackedVector2Array]:
+	var shadow := shadow_convex_polygon(origin, occluder, outer_distance)
+	if shadow.is_empty():
+		return []
+	return Geometry2D.clip_polygons(shadow, occluder)
+
+
+static func rectangle_polygon(bounds: Rect2) -> PackedVector2Array:
+	return PackedVector2Array([bounds.position, Vector2(bounds.end.x, bounds.position.y), bounds.end, Vector2(bounds.position.x, bounds.end.y)])
+
+
 static func _valid_convex_polygon(points: PackedVector2Array) -> bool:
 	if points.size() < 3:
 		return false

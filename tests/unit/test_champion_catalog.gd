@@ -56,7 +56,12 @@ func _test_all_promoted_kits_execute() -> void:
 				var releases := 0
 				var release_kind: String = {"projectile": "projectile_spawned", "beam": "beam_fired", "spray": "spray_fired", "field": "field_spawned"}.get(String(definition["shape"]), "")
 				var expected_releases := (definition.get("projectile_rotations", [Vector2i(1000, 0)]) as Array).size() if definition["shape"] == "projectile" else 1
-				for _tick: int in range(world.config.milliseconds_to_ticks(int(definition["startup_ms"])) + 1):
+				# Real profiles can adjust admission startup through their current
+				# posture. Keep a separately bounded wait for that accepted timer.
+				var accepted_startup_ticks := state.pending_cast_ticks
+				var maximum_startup_ticks := world.config.milliseconds_to_ticks(ceili(int(definition["startup_ms"]) * 1.35))
+				check(accepted_startup_ticks > 0 and accepted_startup_ticks <= maximum_startup_ticks, champion_id + " accepted startup respects the independently bounded 1350 timing factor")
+				for _tick: int in range(mini(accepted_startup_ticks, maximum_startup_ticks) + 1):
 					check(world.step([SimCommand.new(world.tick, 1, 0, 0, 0, 0, direction.x, direction.y)]), "kit completes authoritative startup without error")
 					for event: Dictionary in world.combat_events:
 						check(event.get("type") != "cast_refused", "accepted startup cannot silently become a refused cast")
@@ -112,16 +117,16 @@ func _test_repository_catalog() -> void:
 	equal(String(catalog.champion("s_wayne").get("body_type")), "small", "S. Wayne uses the small reusable body type")
 	equal(String(catalog.champion("red_baron").get("body_type")), "large", "The Red Baron uses the large reusable body type")
 	equal(ChampionCatalog.SUPPORTED_BODY_TYPES, ["small", "middle", "large"], "runtime exposes exactly three body types")
-	equal(catalog.champion("oh_tipi").get("affinities", []), ["water", "charge"], "Oh Tipi owns Water/Charge")
+	equal(catalog.champion("oh_tipi").get("affinities", []), ["water", "fire"], "Oh Tipi owns Water/Fire")
 	equal(catalog.affinity_strength("oh_tipi", "water"), 2, "Oh Tipi has primary Water strength 2")
-	equal(catalog.affinity_strength("oh_tipi", "charge"), 1, "Oh Tipi has secondary Charge strength 1")
+	equal(catalog.affinity_strength("oh_tipi", "fire"), 1, "Oh Tipi folds secondary Charge into Fire strength 1")
 	equal(catalog.affinity_strength("oh_tipi", "ice"), 0, "Oh Tipi has no innate Ice affinity")
 	equal(catalog.champion("s_wayne").get("affinities", []), ["dark", "light"], "S. Wayne keeps Dark/Light")
 	equal(catalog.affinity_strength("s_wayne", "dark"), 2, "S. Wayne has primary Dark strength 2")
 	equal(catalog.affinity_strength("s_wayne", "light"), 1, "S. Wayne has secondary Light strength 1")
-	equal(catalog.champion("red_baron").get("affinities", []), ["fire", "ice"], "The Red Baron owns Fire/Ice")
+	equal(catalog.champion("red_baron").get("affinities", []), ["fire", "water"], "The Red Baron owns Fire/Water")
 	equal(catalog.affinity_strength("red_baron", "fire"), 2, "The Red Baron has primary Fire strength 2")
-	equal(catalog.affinity_strength("red_baron", "ice"), 1, "The Red Baron has secondary Ice strength 1")
+	equal(catalog.affinity_strength("red_baron", "water"), 1, "The Red Baron folds secondary Ice into Water strength 1")
 	for champion_id: String in catalog.ordered_champion_ids():
 		var kit_wires: Dictionary = catalog.kit_wires_by_champion[champion_id]
 		var seen_wires: Dictionary = {}
@@ -144,13 +149,13 @@ func _test_affinity_point_budget_and_treevor_exception() -> void:
 
 	var ordinary := ChampionCatalog.new()
 	ordinary.data = source.data.duplicate(true)
-	(ordinary.data["champions"][0] as Dictionary)["affinities"] = ["water", "charge", "ice"]
-	(ordinary.data["champions"][0] as Dictionary)["affinity_points"] = {"water": 1, "charge": 1, "ice": 1}
+	(ordinary.data["champions"][0] as Dictionary)["affinities"] = ["water", "fire", "earth"]
+	(ordinary.data["champions"][0] as Dictionary)["affinity_points"] = {"water": 1, "fire": 1, "earth": 1}
 	check(ordinary.validate(abilities), "any champion may split the same three-point budget across three affinities")
 
 	var bad_total := ChampionCatalog.new()
 	bad_total.data = source.data.duplicate(true)
-	(bad_total.data["champions"][0] as Dictionary)["affinity_points"] = {"water": 1, "charge": 1}
+	(bad_total.data["champions"][0] as Dictionary)["affinity_points"] = {"water": 1, "fire": 1}
 	check(not bad_total.validate(abilities), "ordinary champion must spend exactly three affinity points")
 	check(bad_total.last_error.contains("must total"), "bad affinity-point total is diagnosable")
 
@@ -182,11 +187,11 @@ func _test_shared_affinity_pairs() -> void:
 	duplicate_pair["id"] = "duplicate_pair_fixture"
 	duplicate_pair["wire_id"] = 98
 	duplicate_pair["display_name"] = "Duplicate Pair Fixture"
-	duplicate_pair["affinities"] = ["charge", "water"]
-	duplicate_pair["affinity_points"] = {"charge": 2, "water": 1}
+	duplicate_pair["affinities"] = ["fire", "water"]
+	duplicate_pair["affinity_points"] = {"fire": 2, "water": 1}
 	(candidate.data["champions"] as Array).append(duplicate_pair)
 	check(candidate.validate(abilities), "shared two-affinity sets remain legal as declared by the canonical plan")
-	equal(candidate.affinity_strength("duplicate_pair_fixture", "charge"), 2, "shared pair still preserves its exact independent point allocation")
+	equal(candidate.affinity_strength("duplicate_pair_fixture", "fire"), 2, "shared pair still preserves its exact independent point allocation")
 	duplicate_pair["affinities"] = ["water", "water"]
 	duplicate_pair["affinity_points"] = {"water": 3}
 	check(not candidate.validate(abilities), "duplicate elements inside one profile still fail closed")
@@ -198,7 +203,7 @@ func _test_existing_single_lane_bolt_primaries() -> void:
 	var source := ChampionCatalog.new()
 	check(source.load_from_file(CHAMPION_PATH, abilities), "live named roster validates before primary eligibility checks")
 	var matrix: Dictionary = abilities.data["spell_matrix"]
-	for element: String in AbilityCatalog.FIRST_EIGHT_ELEMENTS:
+	for element: String in AbilityCatalog.DISPLAY_ELEMENT_IDS:
 		var bolt_id := String((matrix["cells"][element] as Array)[0])
 		var candidate := ChampionCatalog.new()
 		candidate.data = source.data.duplicate(true)
@@ -247,7 +252,7 @@ func _test_profiles_are_authoritative() -> void:
 	equal(state.champion_wire_id, 1, "Oh Tipi owns stable wire id 1")
 	equal(state.primary_wire_id, CombatTuning.RILLSHOT_WIRE_ID, "Oh Tipi equips Rillshot")
 	equal(state.active_1_wire_id, CombatTuning.TIDELINE_WIRE_ID, "Oh Tipi equips Tideline")
-	equal(state.active_2_wire_id, 167, "Oh Tipi equips affinity-aligned Spark Shower as the third proven spell")
+	equal(state.active_2_wire_id, 154, "Oh Tipi folds Spark Shower into affinity-aligned Ember Sweep")
 	equal(state.spell_wire_ids, CharacterStarterKit.build(catalog, abilities, "oh_tipi").wire_ids, "Oh Tipi initializes its canonical affinity-derived twelve")
 	equal(state.health, 108_000, "Oh Tipi starts at authored maximum Health")
 	equal(state.stamina_maximum, 660_000, "Oh Tipi has the Middle 660-point Stamina reserve")
@@ -271,7 +276,7 @@ func _test_profiles_are_authoritative() -> void:
 	check(catalog.apply_to_player(state, "red_baron"), "The Red Baron profile applies")
 	equal(state.champion_wire_id, 3, "The Red Baron owns stable wire id 3")
 	equal(state.primary_wire_id, CombatTuning.CINDERBOLT_WIRE_ID, "The Red Baron equips Cinderbolt")
-	equal(state.active_1_wire_id, 171, "The Red Baron equips affinity-aligned Sleet")
+	equal(state.active_1_wire_id, 141, "The Red Baron folds Sleet into affinity-aligned Tideline")
 	equal(state.active_2_wire_id, 154, "The Red Baron equips affinity-aligned Ember Sweep")
 	equal(state.spell_wire_ids, CharacterStarterKit.build(catalog, abilities, "red_baron").wire_ids, "The Red Baron initializes its canonical affinity-derived twelve")
 	equal(state.health_maximum, 132_000, "large body owns the deepest Health reserve")
@@ -364,27 +369,38 @@ func _test_profiles_execute_at_rate(tick_rate: int) -> void:
 	check(s_wayne.position_x > oh_tipi.position_x, "%d Hz S. Wayne gains measurable ground over Oh Tipi" % tick_rate)
 	check(oh_tipi.velocity_x > red_baron.velocity_x, "%d Hz the large anchor preserves its deliberate speed tradeoff" % tick_rate)
 	check(red_baron.health_maximum > oh_tipi.health_maximum and red_baron.stamina_maximum > oh_tipi.stamina_maximum, "%d Hz the large anchor receives real reserve compensation" % tick_rate)
-	oh_tipi.flux = 0
-	s_wayne.flux = 0
-	red_baron.flux = 0
+	# Resource-only stepping preserves velocity. Keep an explicit walking control
+	# for Shadow Budget, and stop the base-rate fixtures before their quiet second.
+	var walking_wayne := PlayerState.new(2)
+	check(catalog.apply_to_player(walking_wayne, "s_wayne"), "%d Hz walking S. Wayne control applies" % tick_rate)
+	walking_wayne.velocity_x = s_wayne.velocity_x
+	walking_wayne.velocity_y = s_wayne.velocity_y
 	for state: PlayerState in [oh_tipi, s_wayne, red_baron]:
+		state.velocity_x = 0
+		state.velocity_y = 0
+	for state: PlayerState in [oh_tipi, s_wayne, red_baron, walking_wayne]:
+		state.flux = 0
 		state.flux_recovery_remainder = 0
 		state.flux_recovery_idle_ticks = 0
 	for _index: int in range(tick_rate):
 		PlayerResourcesSystem.step(oh_tipi, oh_world.config)
 		PlayerResourcesSystem.step(s_wayne, wayne_world.config)
 		PlayerResourcesSystem.step(red_baron, baron_world.config)
+		PlayerResourcesSystem.step(walking_wayne, wayne_world.config)
 	equal(oh_tipi.flux, _quiet_second_recovery(oh_tipi.flux_recovery_per_second), "%d Hz Oh Tipi applies the quiet curve to its authored Flux rate" % tick_rate)
-	equal(s_wayne.flux, _quiet_second_recovery(s_wayne.flux_recovery_per_second), "%d Hz S. Wayne applies the quiet curve to its authored Flux rate" % tick_rate)
+	equal(s_wayne.flux, _quiet_second_recovery(s_wayne.flux_recovery_per_second), "%d Hz stationary S. Wayne applies the quiet curve without the walking perk" % tick_rate)
 	equal(red_baron.flux, _quiet_second_recovery(red_baron.flux_recovery_per_second), "%d Hz Red Baron applies the quiet curve to its authored Flux rate" % tick_rate)
+	check(walking_wayne.velocity_x > 0 and walking_wayne.flux * 3 <= walking_wayne.flux_maximum, "%d Hz walking control remains inside Shadow Budget's low-Flux window for the full second" % tick_rate)
+	equal(walking_wayne.flux, _quiet_second_recovery(walking_wayne.flux_recovery_per_second, 1150), "%d Hz walking S. Wayne applies the authored 15-percent bonus to each quiet-curve rate" % tick_rate)
+	check(walking_wayne.flux > s_wayne.flux, "%d Hz the same profile recovers more Flux only in its active walking window" % tick_rate)
 	check(oh_world.state_hash() != wayne_world.state_hash(), "%d Hz champion identity changes canonical world state" % tick_rate)
 	check(baron_world.state_hash() != oh_world.state_hash(), "%d Hz the large profile changes canonical world state" % tick_rate)
 
 
-func _quiet_second_recovery(base_rate: int) -> int:
+func _quiet_second_recovery(base_rate: int, ratio: int = 1000) -> int:
 	var total := 0
 	for tick: int in range(1, 121):
-		total += Recovery.rate_per_second(base_rate, tick, 120)
+		total += Recovery.rate_per_second(base_rate, tick, 120) * ratio / 1000
 	return total / 120
 
 
@@ -398,7 +414,7 @@ func _test_invalid_profiles_fail_closed() -> void:
 		func(data: Dictionary) -> void: (data["champions"][0] as Dictionary)["body_type"] = "size_3_medium",
 		func(data: Dictionary) -> void: (data["champions"][0] as Dictionary)["wire_id"] = 2,
 		func(data: Dictionary) -> void: (data["champions"][0] as Dictionary)["affinities"] = ["water"],
-		func(data: Dictionary) -> void: (data["champions"][0] as Dictionary)["affinities"] = ["water", "charge", "ice"],
+		func(data: Dictionary) -> void: (data["champions"][0] as Dictionary)["affinities"] = ["water", "fire", "earth"],
 		func(data: Dictionary) -> void: ((data["champions"][0] as Dictionary)["affinity_points"] as Dictionary)["water"] = 3,
 		func(data: Dictionary) -> void: (data["champions"][0] as Dictionary)["affinities"] = ["water", "spirit"],
 		func(data: Dictionary) -> void: ((data["champions"][0] as Dictionary)["stats"] as Dictionary)["movement_speed_ratio"] = 5000,

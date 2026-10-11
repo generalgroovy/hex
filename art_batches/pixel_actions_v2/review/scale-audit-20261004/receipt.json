@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-04",
+  "status": "READ_ONLY_PIXEL_AUDIT_COMPLETE_NOT_RUNTIME_ACCEPTANCE",
+  "repository": "C:/Users/sende/Projects/hex",
+  "snapshot": "snapshot.json",
+  "snapshot_sha256": "ce19520112e0cc51f4ccd8ce2d3e228111c26956a4889b564e18ecd1ebad8970",
+  "character_count": 30,
+  "manifest_rgba_hash_verification": "PASS: all 30 current ground and 30 current action PNGs match their manifests",
+  "visual_coverage": [
+    "All 30 identities: eight directions, current idle plus all four action keys, at native atlas pixel scale",
+    "All 30 identities: South idle, anticipation, rise, fall and landing at exactly 2x nearest-neighbour for scale comparison",
+    "All 30 identities: South idle, walk A, walk B and cast at exactly 2x nearest-neighbour"
+  ],
+  "measurement_coverage": "All 1920 runtime cells: 30 identities by 8 directions by 4 ground/cast plus 4 action poses",
+  "method": "Read current PNGs, verify manifest RGBA hashes, copy existing cells at their existing pivot, compose diagnostic-only boards, measure alpha ink bounds and area; never content-fit individual poses",
+  "highest_priority": [
+    {
+      "id": "fluup",
+      "finding": "Gross idle-to-action loss of head, shoulder and torso mass. Nearly matching overall fall height conceals a visibly slimmer smaller model.",
+      "south_idle_height_px": 66,
+      "south_fall_height_px": 65,
+      "south_idle_ink_pixels": 2726,
+      "south_fall_ink_pixels": 1788,
+      "fall_to_idle_ink_ratio": 0.6559,
+      "recommendation": "First bounded neutral-calibrated source repair, preserving approved neutral skull, shoulder and body mass.",
+      "board": "fluup-native.png",
+      "magnified_front_page": "south-page-02.png"
+    },
+    {
+      "id": "joh_haynes",
+      "finding": "Gross action-body narrowing and reduced head/neck/shoulder mass relative to the bulky approved neutral body, despite nearly identical overall height.",
+      "south_idle_height_px": 68,
+      "south_fall_height_px": 67,
+      "south_idle_ink_pixels": 2698,
+      "south_fall_ink_pixels": 1832,
+      "fall_to_idle_ink_ratio": 0.6790,
+      "recommendation": "Defer until lead reviews the Fluup repair; do not automatically expand replacement work.",
+      "board": "joh_haynes-native.png",
+      "magnified_front_page": "south-page-06.png"
+    }
+  ],
+  "secondary_lead_review_only": [
+    {"id": "biggy_bob", "finding": "Smaller head/beard and body mass in actions; front fall/idle ink ratio 0.740, heights 61/62 px.", "board": "biggy_bob-native.png"},
+    {"id": "oll_i", "finding": "Smaller front head and shoulder/body volume in actions; front fall/idle ink ratio 0.738, heights 65/66 px.", "board": "oll_i-native.png"}
+  ],
+  "protected_or_current_candidates": [
+    {"id": "s_wayne", "finding": "Visible action-body/head reduction remains in the exact locked action atlas; front fall/idle ink ratio 0.698 with both heights 57 px.", "action": "Excluded from repair queue: preserve exact lock."},
+    {"id": "red_baron", "finding": "Current newly published v2 is visibly closer in crown/skull and armored mass; front fall/idle ink ratio 1.051, heights 72/67 px.", "action": "Native idle-to-action transition review remains with lead. Slightly taller fall is not a new regeneration recommendation."}
+  ],
+  "gross_action_direction_or_pose_defects": "No additional gross missing, swapped or cropped action direction found in this static pass; rise and fall remained distinguishable across all 30 inspected boards.",
+  "ground_cast_result": "Front neutral/walk/cast comparison across all 30 exposed no additional gross scale discontinuity warranting a new repair ticket.",
+  "interpretation_limits": [
+    "Ink area is a screening measurement, not an anatomical-volume measurement or automatic acceptance threshold; arms, wings, hair, tails and cape occlusion change silhouettes.",
+    "Shortlist is based on visual mass discontinuity together with measurements, not on ink ratio alone.",
+    "Ground/cast oblique and rear directions were measured but not all individually visually reinspected; the approved neutral row was the reference.",
+    "This audit does not prove animation timing, rendered transition quality, physical input, human feel or native runtime acceptance."
+  ],
+  "unchanged": ["runtime assets", "source art", "manifests", "builders", "lead-review gates", "Godot imports", "S. Wayne lock"],
+  "generated_images": false,
+  "permitted_output_scope": "Only new files under art_batches/pixel_actions_v2/review/scale-audit-20261004",
+  "next_authorized_step": "Generate one Fluup neutral-calibrated 8x5 source candidate; no Joh Haynes generation before lead review."
+}

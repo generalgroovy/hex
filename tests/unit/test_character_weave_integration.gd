@@ -1,6 +1,13 @@
 extends FluxTestSuite
 
 
+class FailedSaveLibrary:
+	extends CharacterWeaveLibrary
+	func save_to_file(_path: String) -> bool:
+		last_error = "Simulated persistent write failure."
+		return false
+
+
 func run() -> int:
 	var abilities := AbilityCatalog.new()
 	var champions := ChampionCatalog.new()
@@ -13,6 +20,7 @@ func run() -> int:
 	_test_legacy_alias_cooldown()
 	_test_whole_request()
 	_test_session_memory(champions, abilities)
+	_test_failed_save_keeps_accepted_session_weave(champions, abilities)
 	return finish("character-weave-integration")
 
 
@@ -83,3 +91,28 @@ func _test_session_memory(champions: ChampionCatalog, abilities: AbilityCatalog)
 	check(memory.restore_actor(state, true), "switch back restores first custom")
 	equal(state.spell_wire_ids, custom, "custom weave survives character switching")
 	check(not FileAccess.file_exists(store), "configuration and transient saves leave no profile file")
+
+
+func _test_failed_save_keeps_accepted_session_weave(champions: ChampionCatalog, abilities: AbilityCatalog) -> void:
+	var memory := CharacterWeaveCoordinator.new()
+	memory.library = FailedSaveLibrary.new()
+	var store := "user://weave-failed-save-%d-%d.json" % [OS.get_process_id(), Time.get_ticks_usec()]
+	check(not FileAccess.file_exists(store), "failed-save fixture never touches an existing user library")
+	check(memory.configure(champions, abilities, true, store), "failed-save fixture loads canonical in-memory starters")
+	var ids := champions.ordered_champion_ids()
+	var state := PlayerState.new()
+	check(champions.apply_to_player(state, ids[0]), "failed-save fixture equips its original character")
+	var saved_before := memory.library.to_dictionary()
+	var accepted := state.spell_wire_ids.duplicate()
+	accepted.reverse()
+	check(CharacterWeavePolicy.apply(state, accepted), "authority accepts a valid custom weave before persistence")
+	var authority_before_save := state.canonical_values()
+	check(not memory.save_local(state, CharacterWeaveLibrary.MODE_CUSTOM), "persistent write failure is explicitly reported")
+	equal(state.canonical_values(), authority_before_save, "failed persistence cannot undo host-accepted actor authority")
+	equal(memory.library.to_dictionary(), saved_before, "failed persistence restores prior saved-library memory")
+	equal(memory.preferred_weave(state, true), accepted, "accepted weave remains preferred for this session after disk failure")
+	check(not memory.last_error.is_empty(), "failed persistence keeps an actionable error")
+	check(champions.apply_to_player(state, ids[1]) and memory.restore_actor(state, true), "another character remains usable after disk failure")
+	check(champions.apply_to_player(state, ids[0]) and memory.restore_actor(state, true), "returning character restores accepted session weave despite disk failure")
+	equal(state.spell_wire_ids, accepted, "failed save does not lose the accepted weave during character switching")
+	check(not FileAccess.file_exists(store), "failed-save test creates no profile file")

@@ -1,68 +1,146 @@
-# H.E.X. smaller-grid handoff
+# H.E.X. resume handoff
 
-Status: CODE SLICE COMPLETE; local playtest candidate, multiplayer gate FAILED.
-Date: September 21, 2026. Stop for human playtesting after the authorized source
-push; do not start further mechanics or silently promote a release.
+Status: **current source checkpoint, October 11, 2026.** Gameplay and local performance qualification completed on October 10; the October 11 request authorizes source cleanup, documentation, commit and push.
+Current source identity: **p60-be3efd332e1a**, 3,390 canonical production records,
+protocol 60 / snapshot 24. Runtime SHA-256:
+`be3efd332e1a9cc584a4cdc4e983c2ce9e5de84ed5a179a0d1152f5ef8237e33`.
+The source and final portable above have completed Full validation, native pixel
+and timing checks, export/terrain verification and actual visible-EXE measurement.
+Play the final portable (`exports/hex-smooth-fields-20261010/windows/PLAY-HEX.cmd`, local only).
+First-pass **p60-d649c4d1d99c** remains an unchanged fallback.
 
-| Authority | Value |
-| --- | --- |
-| Checkout | `C:\Users\sende\Projects\hex` (the old FLUX checkout is preserved) |
-| Repository / branch | Public `https://github.com/generalgroovy/hex`, `main`; check Git for exact publication state |
-| Frozen runtime | `p55-c7b7694f8d23` |
-| Runtime SHA256 | `c7b7694f8d23a6ca1c7b069729760302a6c11a7ef6f6ff53e16548a832c937b5` |
-| Schemas | Protocol 55 / SessionSnapshot21 / HexWorldSnapshot3 / chemistry3 / envelope1 |
-| Usage boundary | Stop before 33% weekly remaining; last successful check 42% remaining, no credits redeemed |
-| Effort | High through code/validation; Medium is sufficient for final branding/docs/push; current-turn effort cannot be changed by available tools |
+Repository: `C:/Users/sende/Projects/hex`, remote `generalgroovy/hex`, branch `main`.
+The pre-publication baseline was `1559a566e33255c59337c5963f1c3c685d757f1f`;
+use Git history for the current commit. Documents/ChatGPT/H.E.X is a local wrapper.
+Preserve original art, user changes, profiles, failed receipts and older portables.
+Root owns and serializes all Godot imports, tests, profiling and exports.
 
-The user requested smaller hexes and the public H.E.X. rename. The already
-created HEX repository is authoritative; do not recreate it or force-push.
-The completed dirty vision work is included, not reverted. Original source,
-assets, user profiles and earlier packages remain untouched.
+[Specification](../SPECIFICATION.md) owns rules; [README](../README.md) and
+[player guide](../docs/PLAYER-GUIDE.md) own player instructions;
+[one closed queue](OVERHAUL-IMPLEMENTATION.md) records this completed work;
+[performance report](../docs/performance-implementation-20261010.md) owns this batch's
+implementation, measured results, references and limitations.
 
-Hex width is 48 px, previously 64, with 2,766 eligible cells under the 4,096 cap.
-World bounds, obstacles, character visuals/hurtboxes, 18 px common wall clearance,
-spell radii/costs and authored damage coefficients stay fixed. Radius selects
-whole cells; material remains finite. Fire/Steam pressure uses per-cell density,
-so finer coverage can lower pressure. Do not silently multiply material or tune
-damage to hide that consequence. Protocol 55 rejects old geometry peers/replays.
+## Playable contract
 
-Vision remains character-centered 360/720 under 55-degree projection, independent
-of aim/zoom. Opaque buildings and actual solid hex cover occlude other actors and
-attached feedback; own body stays visible. Legacy profiles migrate without
-resetting controls or twelve-slot weaves. This is rendering, not state redaction.
-All 30 playable profiles still use three shared size templates, not 30 finished skins.
+30 profiles and 21 ancestry passives use existing controls. Six ingredients form
+63 compositions across eight delivery families: 504 spells and twelve equipped
+positions. Finite statuses, 30 earned rival signatures, temporary Range loans,
+clearly marked Developer tools and the optional introduction are implemented.
+Wellspring has seven districts, thirteen named travel arrivals and 63 physical
+Element Garden exhibits. All paid budgets, movement timing, collision, chemistry,
+status and visibility rules retain simulation authority at 120 Hz.
 
-| Fresh evidence | Result |
-| --- | --- |
-| Geometry Focused v3 | PASS 9 suites / 62,515 assertions / zero stderr |
-| Chemistry/branding Focused v5 | PASS 7 / 7,741; all ten first-four pairs, both orders and three paid trigger paths |
-| Full v3 | PASS 157 / 803,865; zero failures/stderr; import, asset audit,120 Hz configured boot |
-| Native Wellspring | PASS 7 reviewed frames; paid Water/Fire without dummy, Steam/contact, normal/reduced |
-| Windows portable | PASS exact PCK/source identity, actual EXE launch, safe close, zero stderr and 7-entry ZIP byte audit |
-| Same-export localhost lifecycle | FAILED 300 s deadline (300,939 ms including cleanup); first round/reconnect/spectating observed, second-round completion/stewardship not established |
+Menu → Performance adds Low/Standard visual detail and 60/120/unlimited limits.
+Low/60 defaults reduce optional presentation. Reduced Motion remains separate.
+The launcher uses `--fullbody-art --pixel-cast`; saved controls and weaves keep the
+compatible `Godot/app_userdata/FLUX 2` location. Use 1280×720 for supporting text.
 
-Use `scripts/run.cmd` for source, or open
-`exports/hex-small-grid-20260921/windows/PLAY-HEX.cmd`.
-ZIP: `exports/hex-small-grid-20260921/HEX-p55-c7b7694f8d23-Windows-x64.zip`.
-Previous protocol 54 fallback: `exports/hex-vision-20260920/windows/PLAY-HEX.cmd`.
-Never mix builds. Payloads are local, not in Git or a new GitHub release.
+## Current qualification
 
-Routes: `SPECIFICATION.md` -> `.agent/OVERHAUL-IMPLEMENTATION.md` ->
-`docs/HEX-SMALL-GRID-CHECKPOINT.md`. Curated receipts/logs/frames:
-`docs/verification/hex-small-grid-20260921/`. Earlier success/failure attempts
-are retained. Full fixture corrections did not change gameplay coefficients.
-Historical vision/integration evidence is separately labeled.
+- Implemented: retained Garden and Range geometry; sparse paid material preparation;
+  bounded outline/HUD caches; lossless baked terrain and bounded background loading;
+  correct departure/exit ownership; bounded character page residency; batched visibility;
+  measured simulation fast paths; compact Performance settings; reusable diagnostics.
+- Final shared rendering adds exact fixed-to-pixel geometry, shared fill/layout,
+  compatible same-cell boundary deduplication and retained Standard glow, with
+  bounded caches and original drawing fallback. Live field inputs stay fresh.
+- Import and generated source identity checks passed. **Full v5 passed 244 suites /
+  6,880,581 assertions, zero failures and zero stderr, followed by the 120 Hz boot.**
+  [Final source receipt](../docs/performance-qualification-20261010/full-v5.json).
+- Four focused suites passed **154,856 assertions**, including 5,506 paid-field
+  checks. The independent native comparison passed **614 exact RGBA comparisons**,
+  including 176 real paid-field phase comparisons and retained/overflow glow.
+  [Focused log](../docs/performance-qualification-20261010/shared-paid-focused.log),
+  [pixel receipt](../docs/performance-qualification-20261010/shared-paid-equivalence.json).
+- Final native v3 completed **25 records / 18 warm rows**, with source unchanged and
+  clean wrapper checks. Low mean intervals: Hearth 17.35 ms, Garden entry/middle
+  17.44/17.91 ms, all-six Mantle 28.17 ms / 36.25 ms p95, close Fire 25.75 ms /
+  39.51 ms p95. Standard Mantle was 27.58 / 33.35 ms; close Fire 24.86 / 39.21 ms.
+  Warm rows recorded zero unfocused frames and dropped/clamped time, with about
+  119.88–120.42 simulation ticks per wall second.
+- Both 60-second Garden loops, Mantle rows and close-Fire rows had no intervals
+  above 50 ms. Low distant Fire still had seven of 438 intervals above 50 ms.
+  Close Fire includes empty post-expiry time and caches warmed by prior cases;
+  it is not a sustained-battle or isolated causal speedup result. Range firing
+  produced no occupied paid-ground cells. Startup took 5.54 seconds; Garden
+  travel reached 140–177 ms intervals; Range preparation took 1.31–1.32 seconds.
+  [Final native receipt](../docs/performance-qualification-20261010/native-final-v3.json),
+  [independent raw audit](../docs/performance-qualification-20261010/native-final-v3-audit.json).
+- Historical first-pass evidence remains separate: Full v4 243 suites / 6,875,075
+  assertions; 440 outline/material/HUD plus 101 complete Range pixel comparisons;
+  Performance menu navigation and 1280x720/960x540 layout checks.
+- First-pass portable p60-d649c4d1d99c was built at exports/hex-smooth-20261010/windows;
+  native startup/safe quit and ZIP byte comparisons passed. Original EXE/PCK
+  remain unchanged during diagnostics. All 132 terrain chunks and the overview
+  passed exact PCK pixel/provenance verification. Visible portable Hearth averaged
+  59.77 FPS and Garden entry 57.57 FPS, against 24.57 and 2.75 in the old visible
+  portable. These are sequential engine-FPS observations, not controlled GPU timings.
+- Rapid nearby twelve-cast Fire exposed first-pass 11 FPS samples. The matched
+  native case averaged 32.80 ms / 70.70 ms p95 with up to 150 visible paid regions.
+  Intermediate geometry/palette/layout source p60-6980b3dcafec passed 3,249 focused assertions and
+  606 native pixel comparisons, with close Fire improving to 27.27 ms mean /
+  48.51 ms p95. These earlier finite measurements do not replace the final native
+  source matrix above or prove the final export's performance.
+- Final be3 export passed native boot, pixel-bank admission and safe quit. The
+  standalone verifier passed **18 checks**, with exact **ten-entry ZIP inventory**,
+  payload hashes and unchanged d64 fallback PCK/ZIP. The **153.5 MiB** final ZIP
+  and its executable reside under `exports/hex-smooth-fields-20261010`.
+  [Package receipt](../docs/performance-qualification-20261010/package-final.json),
+  [ZIP verification](../docs/performance-qualification-20261010/zip-verification-final.json).
+- Final exported terrain passed **2,062 checks** for all **132 chunks plus the
+  overview**, including exact pixels, dimensions, provenance and identity from
+  the isolated mounted PCK. [Terrain receipt](../docs/performance-qualification-20261010/terrain-pack-final.json),
+  [mount provenance](../docs/performance-qualification-20261010/terrain-pack-provenance-final.json).
+- Actual visible final-EXE mean reported FPS: Hearth **57.64** (14 observations,
+  46–60); Garden **59.00** (14, 56–61); nearby twelve-Fire sequence **49.125**
+  (16, 21–60); all-six Mantle **38.714** (21, 36–50). Both spell cases admitted
+  twelve casts with zero refusals; EXE/PCK hashes stayed unchanged and stderr was
+  empty. These finite samples include idle after casting/expiry, not sustained
+  battle, physical presentation or a flat 60 FPS result.
+  [Final visible portable receipt](../docs/performance-qualification-20261010/portable-visible-final.json).
+- Repaired terrain lifecycle focused suite: 285 assertions, zero failures. The first
+  run exposed two destructive rejection guards; its failed evidence is retained.
+- The profiler's completed matrix initially failed PowerShell completion-line counting;
+  its original failure is preserved, data independently revalidated and the fixed
+  wrapper passed a native check. Current evidence labels that distinction explicitly.
 
-Next authorized engineering priority: profile and reduce snapshot/topology cost
-on the identical 48 px workload until the unchanged lifecycle and 8.333 ms capacity
-gates pass. Current host trace samples spend about 0.4-0.6s capturing/sending a
-snapshot; these are trace samples, not a new p95 benchmark. Do not enlarge the
-timeout, drop authority or relax validation to manufacture acceptance. Then
-measure density-normalized balance and close focused Vortex/Mistcurrent oracles.
+[Qualification evidence](../docs/performance-qualification-20261010/) retains original
+failures and exact comparison receipts. Measurements of debug/native callbacks are
+separate from packaged engine FPS, GPU duration and physical input/presentation.
 
-No current dense/rendered performance certification, physical two-PC/Internet
-acceptance, installer/updater, human art/feel acceptance or pointer promotion.
-`docs/current-checkpoint.json` retains its historical P48 delivery in original FLUX.
-One integration owner serializes Godot work through isolated-profile wrappers.
-Preserve raw runtime/evidence bytes and their Git `-text` rules. Close only owned
-helpers; never delete original assets, working evidence, fallbacks or user data.
+## Final package and preserved fallbacks
+
+- Final portable (`exports/hex-smooth-fields-20261010/windows/PLAY-HEX.cmd`, local only): p60-be3efd332e1a.
+- Final ZIP (`exports/hex-smooth-fields-20261010/HEX-p60-be3efd332e1a-Windows-x64.zip`, local only): 153.5 MiB.
+  ZIP SHA-256: `79c7511324725e6b6661810e7eccac6696388a758be704e287e44ed5057afbd4`.
+  PCK SHA-256: `4d75c71cc68845da6053733653f1de405ce69bd897d01402f80709a7a44ea812`.
+- First-pass fallback (`exports/hex-smooth-20261010/windows/PLAY-HEX.cmd`, local only):
+  p60-d649c4d1d99c, preserved with its own separate receipts.
+
+- October 9 portable (`exports/hex-element-expansion-20261009/windows/PLAY-HEX.cmd`, local only):
+  p60-6d80c3bce71e, before this performance work.
+- October 9 ZIP (`exports/hex-element-expansion-20261009/HEX-p60-6d80c3bce71e-Windows-x64.zip`, local only),
+  with [its own complete evidence](../docs/element-expansion-evidence-20261009/integration.md).
+- Earlier animation fallback (`exports/hex-animation-20261009/windows/PLAY-HEX.cmd`, local only):
+  p59-a289f67c1acf, with its older spell catalogue and qualification.
+
+## Closure and boundaries
+
+This implementation and local qualification queue is closed. Final be3 package
+receipts qualify its own bytes; first-pass receipts remain historical evidence.
+Measured heavy-field frame times and cold-load costs above remain real limits,
+not an automatic open-ended optimization backlog. The original hidden-window portable
+run averaged only 33 FPS at Hearth; the visible run averaged 59.77 FPS with
+foreground/visibility observations, so the launch condition is material.
+Preserve both receipts and old packages. The October 11 user request explicitly
+authorizes committing and pushing the current source and relevant evidence.
+See the [publication record](../docs/source-publication-20261011/README.md).
+The source push does not create a binary release or installer. Portable builds,
+personal profiles, caches and recovery copies remain outside Git.
+
+Human learning, balance, wayfinding, physical input feel, complete authored animation,
+dense sustained performance and physical multiplayer remain separate product acceptance;
+they do not reopen this completed implementation queue without a new request.
+Earlier integration history is linked above; do not restart its completed work as a new queue.
+`docs/current-checkpoint.json` remains the historical September FLUX delivery pointer.

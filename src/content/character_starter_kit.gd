@@ -2,7 +2,7 @@ class_name CharacterStarterKit
 extends RefCounted
 
 
-const EXPERIMENT_FAMILIES: Array[String] = ["rapid", "spray", "rapid"]
+const EXPERIMENT_FAMILIES: Array[String] = ["rapid", "spray", "rapid", "spray", "heavy"]
 
 
 # Pure preview projection. Applying a starter, preserving a custom weave and
@@ -29,7 +29,7 @@ static func build(champions, abilities: AbilityCatalog, champion_id: String) -> 
 	var affinity_point_total := 0
 	for affinity_value_entry: Variant in affinities:
 		var affinity := String(affinity_value_entry)
-		if affinity not in AbilityCatalog.FIRST_EIGHT_ELEMENTS or seen_elements.has(affinity) \
+		if affinity not in AbilityCatalog.DISPLAY_ELEMENT_IDS or seen_elements.has(affinity) \
 				or not affinity_points.has(affinity):
 			return _failure(champion_id, "Character starter kit affinity is unknown or duplicated: %s/%s" % [champion_id, affinity])
 		var strength := int(affinity_points[affinity])
@@ -40,10 +40,10 @@ static func build(champions, abilities: AbilityCatalog, champion_id: String) -> 
 		priority_elements.append(affinity)
 	if affinity_point_total != int(champions.AFFINITY_POINT_BUDGET):
 		return _failure(champion_id, "Character starter kit affinity points do not match the canonical budget: %s" % champion_id)
-	for element_id: String in AbilityCatalog.FIRST_EIGHT_ELEMENTS:
+	for element_id: String in AbilityCatalog.DISPLAY_ELEMENT_IDS:
 		if not seen_elements.has(element_id):
 			priority_elements.append(element_id)
-	if priority_elements.size() != AbilityCatalog.FIRST_EIGHT_ELEMENTS.size():
+	if priority_elements.size() != AbilityCatalog.DISPLAY_ELEMENT_IDS.size():
 		return _failure(champion_id, "Character starter kit element priority is incomplete: %s" % champion_id)
 
 	var highest_affinity := String(affinities[0])
@@ -62,7 +62,7 @@ static func build(champions, abilities: AbilityCatalog, champion_id: String) -> 
 	var heavy_error := _append_matrix_spell(abilities, highest_affinity, "heavy", spell_ids, wire_ids)
 	if not heavy_error.is_empty():
 		return _failure(champion_id, heavy_error)
-	for element_id: String in AbilityCatalog.FIRST_EIGHT_ELEMENTS:
+	for element_id: String in AbilityCatalog.DISPLAY_ELEMENT_IDS:
 		if seen_elements.has(element_id):
 			continue
 		var remaining_bolt_error := _append_matrix_spell(abilities, element_id, "bolt", spell_ids, wire_ids)

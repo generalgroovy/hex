@@ -19,39 +19,39 @@ static func entries(preferences: PlayerPreferences = null, device: int = Control
 			{}, "No protection; read and leave incoming projectile lanes."),
 		_row("sprint", "Sprint", "sprint", 0,
 			"Hold {sprint} while moving. Release it to stop paying the sprint drain.",
-			"Drains Stamina only while moving; empty reserves return you to ordinary movement.",
+			"Targets %.1fx walk speed. Drains Stamina only while moving; release carries excess speed down naturally. Opposite movement brakes harder; empty reserves cannot buy more sprint speed." % (float(MovementTuning.SPRINT_MULTIPLIER) / 1000.0),
 			{"sustain_milli_per_second": MovementTuning.SPRINT_DRAIN_PER_SECOND}, "No protection; predict the longer travel lane."),
-		_row("jump", "Jump / held jump", "jump", MovementTuning.HOP_COST,
-			"Tap {jump} to lift; hold while rising for a higher paid jump. Momentum carries through takeoff; steer, coast or counter-steer in air. Jump alone adds no forward launch.",
-			"Release caps remaining upward speed at %s units/s, not remaining flight time. Full hold reaches about %s units high from ground; only ascent pays sustain. Landing refreshes jump readiness." % [_units(MovementTuning.SHORT_HOP_VERTICAL_SPEED), _units(full_jump_height())],
-			{"duration_ms": MovementTuning.HOP_DURATION_MS, "duration_note": "nominal full jump from ground", "protection_ms": MovementTuning.JUMP_INVULNERABILITY_MS, "sustain_milli_per_second": MovementTuning.JUMP_SUSTAIN_DRAIN_PER_SECOND},
-			"Above %s units, low ground projectiles pass beneath you. This does not clear beams, areas or explosions; the later airborne arc has no general immunity." % _units(MovementTuning.GROUND_PROJECTILE_CLEARANCE_HEIGHT)),
-		_row("double_jump", "Float / held air jump", "jump", MovementTuning.FLOAT_COST,
-			"While airborne, release and press {jump} again, then hold. Float holds your current height; steer, coast or brake freely. Release to fall.",
-			"One Float per airtime, independent of wall jump: wall jump -> Float -> air dodge is legal. Small %.1fs, middle %.1fs, large %.1fs maximum. Release, expiry, exhaustion or another movement action ends it." % [float(MovementTuning.FLOAT_SMALL_DURATION_MS) / 1000.0, float(MovementTuning.FLOAT_MIDDLE_DURATION_MS) / 1000.0, float(MovementTuning.FLOAT_LARGE_DURATION_MS) / 1000.0],
-			{"sustain_milli_per_second": MovementTuning.FLOAT_DRAIN_PER_SECOND, "protection_note": "Protected only while Float is active and paid; ending Float ends its protection immediately."},
-			"Continuous protection costs heavy Stamina. Wall contact does not refill Float. Predict your exit before release; there is no second upward launch."),
+		_row("jump", "Press / release jump", "jump", MovementTuning.HOP_COST,
+			"Press {jump} to prepare a jumpsquat; release to launch. Held preparation gradually brakes momentum for a bounded stronger jump. A complete tap carries momentum; steer, coast or counter-steer after takeoff.",
+			"Jumpsquat remains grounded and vulnerable. A quick tap still jumps. No automatic repeat or free charge; landing restores air opportunities.",
+			{"protection_note": "Height clearance, not immunity: above %s units avoids ordinary projectiles and ground-contact effects." % _units(MovementTuning.GROUND_PROJECTILE_CLEARANCE_HEIGHT), "protection_label": "Height clearance"},
+			"Takeoff and landing remain vulnerable below clearance. Existing timed statuses are not cleansed; tall hazards can still reach you."),
+		_row("double_jump", "Double jump / racial flight", "jump", MovementTuning.FLOAT_COST,
+			"Every race first jumps normally: press then release {jump} on the ground. In air, press {jump} again for one double jump. Sylphs, Wyrmborn, Angels and Demons use that deliberate second press and hold to fly; release to descend. Steer and cast independently.",
+			"Flight is finite and paid. It ends on release, exhaustion or expiry; wall contact does not refill the air budget. After a dodge discards held {jump}, or a wallrun consumes it, release and press {jump} again to fly. Other races cannot Float.",
+			{"sustain_milli_per_second": MovementTuning.FLOAT_DRAIN_PER_SECOND, "protection_note": "Only actual height avoids ground effects/projectiles; flight grants no universal immunity.", "protection_label": "Height clearance"},
+			"Plan a safe landing. Double jump, flight and air dodge are finite opportunities, not repeatable resource resets."),
 		_row("slide", "Slide / held slide", "slide", MovementTuning.SLIDE_COST,
-			"Build ground speed, then press {slide}. Hold for the longer slide; release for the shorter remainder.",
-			"Needs at least %s world units/s. Release limits the remainder to %d ms; holding never extends protection." % [_units(MovementTuning.SLIDE_ENTRY_SPEED), MovementTuning.SLIDE_MINIMUM_MS],
-			{"duration_ms": MovementTuning.SLIDE_DURATION_MS, "cooldown_ms": MovementTuning.SLIDE_COOLDOWN_MS, "protection_ms": MovementTuning.SLIDE_INVULNERABILITY_MS, "sustain_milli_per_second": MovementTuning.SLIDE_SUSTAIN_DRAIN_PER_SECOND},
-			"Only the opening is protected. The committed lane becomes punishable."),
+			"Build ground speed, then press {slide} for a paid boost along the incoming travel lane. Side input carves; opposite input brakes. Speed lost in a turn stays lost. Near landing, fresh {slide} fast-falls and buffers one paid slide. Hold for the longer slide or release for the shorter remainder.",
+			"Needs %s units/s; adds %s up to the %s speed cap. Landing buffer lasts %d ms and rechecks cost, speed and cooldown. During an air dodge, Slide only fast-falls into the existing wavedash route. Release limits slide remainder to %d ms." % [_units(MovementTuning.SLIDE_ENTRY_SPEED), _units(MovementTuning.SLIDE_ENTRY_BOOST), _units(MovementTuning.MAX_AUTHORED_SPEED), MovementTuning.INPUT_BUFFER_MS, MovementTuning.SLIDE_MINIMUM_MS],
+			{"duration_ms": MovementTuning.SLIDE_DURATION_MS, "cooldown_ms": MovementTuning.SLIDE_COOLDOWN_MS, "sustain_milli_per_second": MovementTuning.SLIDE_SUSTAIN_DRAIN_PER_SECOND, "protection_note": "Low profile passes under ordinary projectiles, never ground effects.", "protection_label": "Low profile"},
+			"Fire and other ground-contact effects still affect crouching/sliding characters."),
 		_row("slide_brake", "Slide brake", "slide", 0,
 			"Release and press {slide} again during the slide to stop immediately.",
 			"Free cancellation; does not refund cost or cooldown. Repeated wheel notches in one gesture do not count as deliberate second presses.", {},
-			"Braking removes slide protection; choose a safe stopping point."),
+			"Braking ends the slide lane; choose a safe stopping point away from ground effects."),
 		_row("slide_jump", "Slide jump", "jump", MovementTuning.SLIDE_JUMP_COST,
-			"While sliding, press {jump} after the minimum commitment; choose the outgoing direction.",
-			"Available after %d ms of accepted slide time, even while {slide} is held. Retains earned speed within the global cap." % MovementTuning.SLIDE_JUMP_MINIMUM_COMMITMENT_MS,
-			{"duration_ms": MovementTuning.HOP_DURATION_MS, "duration_note": "nominal full jump from ground", "protection_ms": MovementTuning.JUMP_INVULNERABILITY_MS, "sustain_milli_per_second": MovementTuning.JUMP_SUSTAIN_DRAIN_PER_SECOND},
-			"Costs another paid action and chain premium; later flight is vulnerable."),
+			"While sliding, press then release {jump} after the minimum commitment. A complete tap carries momentum; holding Jump gradually brakes for charge, then release carries the remaining velocity.",
+			"Available after %d ms of accepted slide time, even while {slide} is held. Held preparation ends slide sustain, not its cooldown or paid jump family; travel slows naturally." % MovementTuning.SLIDE_JUMP_MINIMUM_COMMITMENT_MS,
+			{"protection_note": "Only actual height grants ground/projectile clearance.", "protection_label": "Height clearance"},
+			"Costs another paid action and chain premium; anticipation and landing remain vulnerable."),
 		_row("roll", "Ground roll", "evade", MovementTuning.ROLL_COST,
 			"On the ground, press {evade} with a direction. Use a neutral direction only when your facing is the intended escape.",
 			"Ground roll has its own cooldown. Air dodge uses a separate once-per-airtime opportunity.",
 			{"duration_ms": MovementTuning.ROLL_DURATION_MS, "cooldown_ms": MovementTuning.ROLL_COOLDOWN_MS, "protection_ms": MovementTuning.ROLL_INVULNERABILITY_MS},
 			"The end of the roll is vulnerable; do not roll into the next projectile."),
 		_row("air_dodge", "Air dodge / neutral fast fall", "evade", MovementTuning.AIR_DODGE_COST,
-			"While airborne or wallrunning, press {evade}. With movement direction, it attempts a paid air dodge. With neutral movement, it detaches any wallrun, ends Float and its protection, then takes the free vertical fast-fall path. Fresh {slide} remains the same free fast-fall alias.",
+			"While airborne or wallrunning, press {evade}. With movement direction, it attempts a paid air dodge. With neutral movement, it detaches wallrun, ends flight and takes the free vertical fast-fall path. Fresh {slide} also descends, with a separate paid landing-slide buffer outside active dodges.",
 			"Buffered Evade samples current movement direction at admission for up to %d ms. One air dodge per airtime is available with direction. Its burst decays, preserving height and vertical motion, then returns to steerable flight; landing refills it without a cooldown wait and wall contact does not. An old airborne Evade is dropped after grounding. Neutral Evade on the last airborne tick fast-falls before landing; it does not become a ground roll." % MovementTuning.INPUT_BUFFER_MS,
 			{"duration_ms": MovementTuning.AIR_DODGE_DURATION_MS, "protection_ms": MovementTuning.AIR_DODGE_INVULNERABILITY_MS, "cost_scope": "Directional air dodge cost", "protection_scope": "Directional air dodge protection"},
 			"Directional dodge protection ends immediately on landing. Neutral fast fall adds no protection, spends no Stamina, and resets no air budget or cooldown."),
@@ -62,21 +62,21 @@ static func entries(preferences: PlayerPreferences = null, device: int = Control
 			"The landing dash grants no new protection; an early input gives an ordinary air dodge."),
 		_row("air_turn", "Air turn", "technique", MovementTuning.AIR_REDIRECT_COST,
 			"During a jump, press {technique} with a changed direction for a stronger immediate turn. At a wall, along-wall input chooses a valid wallrun; an unavailable wallrun can fall back to a legal air turn.",
-			"One redirect per jump stage. Ordinary air steering is free; this purchases a sharper correction. Continuing straight ahead does not spend a redirect.", {},
+			"One redirect per jump stage. After air-dodge commitment, this turns the remaining dodge without extending its timer or protection. Ordinary steering is free; straight-ahead input spends nothing.", {},
 			"No new protection; predict the redirected path."),
-		_row("wall_run", "Wallrun / detach", "technique", MovementTuning.WALL_SKIM_COST,
-			"Touch a runnable wall, hold along its face and press {technique}. Press it again, steer away or reach the wall end to detach.",
-			"Works from ground or air. Detaching returns to finite steerable descent, not a new protected jump. Wall contact does not refill the air dodge or Float. Same-surface lockout: %d ms." % MovementTuning.WALL_SKIM_SAME_SURFACE_LOCKOUT_MS,
+		_row("wall_run", "Held wallrun", "jump", MovementTuning.WALL_SKIM_COST,
+			"In air near a runnable wall, hold {jump} and movement along its face. Release {jump} to walljump; steer away or reach the wall end to detach.",
+			"Wallrun takes priority over racial flight near eligible geometry. Wall contact refills no air budget. Same-surface lockout: %d ms." % MovementTuning.WALL_SKIM_SAME_SURFACE_LOCKOUT_MS,
 			{"duration_ms": MovementTuning.WALL_SKIM_DURATION_MS, "cooldown_ms": MovementTuning.WALL_SKIM_COOLDOWN_MS},
 			"No protection. Follow the exposed wall lane or threaten its exit."),
 		_row("wall_jump", "Wall jump", "jump", MovementTuning.HOP_COST,
-			"Press {jump} near a remembered wall contact. In the first air jump, steer away from that wall when pressing.",
-			"Contact memory lasts %d ms; same-wall lockout %d ms. Wall jump leaves Float and the one air dodge available if not already spent." % [MovementTuning.WALL_MEMORY_MS, MovementTuning.SAME_WALL_LOCKOUT_MS],
-			{"duration_ms": MovementTuning.HOP_DURATION_MS, "duration_note": "nominal lift cycle; landing depends on height", "protection_ms": MovementTuning.JUMP_INVULNERABILITY_MS, "sustain_milli_per_second": MovementTuning.JUMP_SUSTAIN_DRAIN_PER_SECOND},
-			"Cannot climb indefinitely; anticipate the outward path and later vulnerable landing."),
+			"Release {jump} during wallrun to kick in movement direction, constrained outward from the wall. Without movement, the wall normal supplies a safe outward direction, never cursor aim.",
+			"Same-wall lockout %d ms. Retains useful momentum; another wallrun, unused racial flight/double jump, air dodge and casting can chain when legal." % MovementTuning.SAME_WALL_LOCKOUT_MS,
+			{"protection_note": "Clearance begins only above the height threshold, not on button release.", "protection_label": "Height clearance"},
+			"Re-arm deliberately between wall chains; held input cannot grant infinite climbing."),
 		_row("fast_fall", "Fast fall", "slide", 0,
 			"After takeoff, press {slide} afresh to commit to an earlier landing. If you were already holding Slide before jumping, release and press again first. Neutral {evade} takes the same free vertical path; held Evade does not repeat it.",
-			"An accepted wheel-down gesture also commits without a hold. Sets downward speed to at least %s units/s; ordinary gravity continues until real ground contact. It ends active Float and its protection without clearing Float-used state." % _units(MovementTuning.AIR_FAST_FALL_SPEED),
+			"A fresh Slide also buffers a paid landing slide for %d ms outside an active air dodge; neutral Evade descends without that purchase. Sets downward speed to at least %s units/s; ordinary gravity continues to real contact. Ends flight without clearing spent air budgets." % [MovementTuning.INPUT_BUFFER_MS, _units(MovementTuning.AIR_FAST_FALL_SPEED)],
 			{}, "No new protection; land earlier only if the floor lane is safe."),
 		_row("landing_cut", "Landing reversal", "move", 0,
 			"Press against your current travel immediately after landing for a firmer reversal.",
@@ -147,7 +147,7 @@ static func compact_cells(row: Dictionary) -> Array[String]:
 		cost += " dir / 0 neutral"
 		protection = "%d ms dir only" % int(row.protection_ms)
 	if not String(row.get("protection_note", "")).is_empty():
-		protection = "While held + paid"
+		protection = String(row.get("protection_label", "See rule"))
 	var cooldown := "%d ms" % int(row.cooldown_ms) if int(row.cooldown_ms) > 0 else "See rule"
 	return [String(row.title), String(row.binding), cost, _units(int(row.sustain_milli_per_second)) + "/s", protection, cooldown]
 
@@ -162,11 +162,11 @@ static func summary_lines(state: PlayerState = null) -> Array[String]:
 		"Costs shown are base. Each paid continuation adds %d%%, capped at %d%%; resets after %d ms. Next premium: %d%%." % [step_percent, step_percent * MovementTuning.MOVEMENT_CHAIN_MAXIMUM_STEPS, MovementTuning.MOVEMENT_CHAIN_RESET_MS, steps * step_percent],
 		"The newest movement tap replaces older intent for up to %d ms; legal state, cooldown and Stamina are checked again. One paid action starts per tick; a refused move spends nothing." % MovementTuning.INPUT_BUFFER_MS,
 		"For simultaneous movement presses, priority is Evade, then Jump, Slide, Technique. Initial commitment is the short interval before another action can replace the current one, not a new immunity window.",
-		"Airborne Evade reads current movement when admitted: direction attempts the paid air dodge; neutral takes free fast fall with no protection, spend, budget use or cooldown reset. Fresh Slide remains the fast-fall alias; held Evade does not repeat.",
-		"Flux pays for spells; movement uses Stamina. Ordinary held jump and slide never extend opening immunity. Float is the explicit exception: protected only while held, paid and active.",
-		"Learn Travel first: move, sprint, jump, slide. Then Escape: roll, air dodge, fast fall, impact recovery. Expression adds Float, wall routes, turns, wavedashes and landing reversals.",
+		"Airborne Evade reads current movement at admission: direction buys air dodge; neutral fast-falls freely with no landing purchase. Fresh Slide fast-falls and buffers one paid landing slide for %d ms outside active dodges. Held inputs do not repeat." % MovementTuning.INPUT_BUFFER_MS,
+		"Flux pays for spells; movement uses Stamina. High clears ordinary projectiles and ground effects; low clears ordinary projectiles only. Standing and wallrunning evade neither. Shield brackets mean timed dodge/spawn immunity, not height.",
+		"Learn Travel first: move, sprint, press/release jump, slide. Then Escape: roll, air dodge, fast fall. Expression adds double jump or racial flight, held wallruns, release walljumps, turns and wavedashes.",
 		"Wheel movement is a short pulse, not a hold. Same-direction notches group until %d ms without another notch; use buttons for precise second presses or sustained height and distance." % InputRouter.WHEEL_GESTURE_QUIET_MS,
-		"Hold drain and sprint cost are additional to base cost; the chain premium applies to paid starts. Float consumes Stamina continuously for its protected hold, not a fixed immunity window.",
+		"Hold drain and sprint cost are additional to base cost; chain premiums apply to paid starts. Flight spends Stamina and a finite air budget but never grants universal immunity.",
 		"Unused Flux and Stamina independently ramp recovery from 1x to %.0fx over %.1f seconds after their own delay. Any positive spend resets only that resource's ramp; failed and free actions do not. Health recovery is unchanged." % [float(PlayerTuning.RESOURCE_RECOVERY_MAXIMUM_RATIO) / 1000.0, float(PlayerTuning.RESOURCE_RECOVERY_RAMP_MS) / 1000.0],
 		"Unbound action? Assign it at the Controls Lectern. Vault and crest-superglide are not active techniques.",
 	]
@@ -187,29 +187,29 @@ static func _intent_for(id: String) -> Dictionary:
 		"sprint":
 			return _intent("While ordinary movement accepts held Sprint and a movement direction.", "Sprint follows current movement direction.", "Sprint held without movement adds no travel and pays no drain.", "Change movement normally; release Sprint to return to ordinary speed and cost.", "Jump, Slide, Evade and Technique retain their normal admission gates.", "Higher travel speed and live Stamina drain distinguish accepted Sprint.")
 		"jump":
-			return _intent("On legal ground contact with a fresh or buffered Jump press.", "Movement steers carried horizontal momentum; Jump adds no forward launch.", "Neutral Jump adds vertical lift without horizontal impulse and carries current momentum.", "Hold during ascent for paid height, then steer, coast or counter-steer in air.", "After commitment, fresh legal air movement is checked normally.", "Lift and opening protection confirm admission; later airtime is vulnerable.")
+			return _intent("On legal ground, press prepares; release launches.", "Held preparation gradually brakes existing travel without acceleration or a direction snap. Steering resumes after release.", "Neutral release carries the remaining velocity; a complete tap carries existing momentum.", "Hold moving anticipation for bounded charge. External pushes still act; steer or coast after release.", "Fresh legal air movement is checked normally; no automatic repeat jump.", "Gather then lift confirm admission. Up chevron means height clearance, not immunity.")
 		"double_jump":
-			return _intent("Airborne after Jump release, with Float unused and a fresh paid Jump accepted.", "Movement steers horizontally while height is held.", "Neutral Float holds current height and coasts current horizontal momentum.", "Steer, coast or brake while the held paid state remains active.", "Release, expiry, exhaustion or another accepted movement ends Float; held Jump cannot re-enter consumed Float.", "FLOAT, live drain and protection persist together and end together.")
+			return _intent("After the ordinary first ground jump, airborne with the second air opportunity unused.", "Movement steers horizontal momentum independently of the upward jump or flight.", "Neutral direction preserves coast; a deliberate second Jump double-jumps, or begins paid held flight for capable races.", "Flight holds height only while paid and within its finite budget; release descends.", "Wall contact cannot refresh consumed air opportunities.", "A second lift or actual held flight with a budget meter confirms admission; only clearance avoids low threats.")
 		"slide":
-			return _intent("On ground above the entry-speed gate with a fresh Slide press.", "Movement direction chooses the slide lane.", "Neutral Slide uses movement-facing fallback, never aim direction.", "The lane is committed; hold extends the paid remainder and release shortens it.", "After minimum commitment, fresh Slide brakes and fresh Jump can slide-jump when legal.", "Low travel and opening protection mark admission; the later lane is vulnerable.")
+			return _intent("On ground with fresh Slide; a fresh air Slide outside an active dodge may buffer the landing purchase for %d ms." % MovementTuning.INPUT_BUFFER_MS, "Incoming velocity sets the boosted slide lane; movement carves without instantly redirecting earned speed.", "Neutral Slide keeps actual travel, never stale facing or aim direction.", "The lane is committed; hold extends the paid remainder and release shortens it. Every boost pays cost and cooldown.", "After minimum commitment, fresh Slide brakes; a Jump tap carries through, while held Jump gradually brakes for charge.", "Low body and downward chevron mean ordinary projectiles pass above; ground effects still hit.")
 		"slide_brake":
 			return _intent("During active Slide after release and a fresh second Slide press.", "Supplied direction is ignored by the brake.", "Neutral and directional second presses stop the same slide.", "Braking ends the committed lane instead of steering it.", "Later actions use ordinary state, cooldown, commitment and resource gates.", "The slide stops and protection ends; no cost or cooldown is refunded.")
 		"slide_jump":
-			return _intent("During Slide after minimum commitment, on a fresh paid Jump accepted.", "Movement chooses the outgoing direction while earned speed stays under the cap.", "Neutral Slide Jump carries the current slide lane without a new horizontal impulse.", "After takeoff, ordinary air steering, coasting and counter-steering apply.", "Fresh legal Float, fast fall, air dodge and wall actions stay independently gated.", "Lift and opening Jump protection confirm admission; later flight is vulnerable.")
+			return _intent("During Slide after minimum commitment, press then release Jump.", "A complete tap carries the slide vector; held Jump gradually brakes it before ordinary air steering resumes.", "Neutral tap carries the current slide lane; held release carries the remaining velocity.", "Holding brakes without refunding Slide or its cooldown. After takeoff, ordinary air steering and coasting apply.", "Legal double jump or racial flight, fast fall, air dodge and wall actions stay independently gated.", "Lift grants clearance only after crossing the threshold; anticipation is vulnerable.")
 		"roll":
 			return _intent("On legal ground with Roll cooldown ready and a paid Evade accepted.", "Current movement chooses the roll lane.", "Neutral Evade rolls along movement-facing fallback, never aim direction.", "The admitted roll lane is committed until ordinary control returns.", "A later action must pass commitment and its own state, cooldown and Stamina gates.", "The burst and opening protection confirm Roll; its ending is vulnerable.")
 		"air_dodge":
-			return _intent("Airborne or wallrunning when fresh or buffered Evade is admitted; current direction is sampled then.", "Non-zero movement attempts the paid once-per-airtime directional dodge.", "Zero movement takes free vertical fast fall, spends no Stamina, ends Float protection, preserves Float-used state and leaves air-dodge budget and cooldown unchanged.", "Directional burst decays into steerable flight; neutral keeps horizontal coast and ordinary steering while forcing descent.", "Fresh paid actions stay gated. Held Evade does not repeat; buffered airborne Evade drops after grounding.", "AIR DODGE marks the paid burst; FAST FALL marks neutral Evade. Only directional dodge has opening protection.")
+			return _intent("Airborne or wallrunning when fresh or buffered Evade is admitted; current direction is sampled then.", "Non-zero movement attempts the paid once-per-airtime directional dodge.", "Zero movement takes free vertical fast fall, ends flight and preserves spent air budgets and cooldowns.", "Directional burst decays into steerable air travel; neutral keeps horizontal coast while forcing descent.", "Fresh paid actions stay gated. Held Evade does not repeat; buffered airborne Evade drops after grounding.", "AIR DODGE marks the paid burst; FAST FALL marks neutral Evade. Only directional dodge has opening protection.")
 		"wave_dash":
 			return _intent("Descending near legal ground within the landing estimate, with air dodge available.", "Non-zero current movement chooses the low landing-dash lane.", "Neutral Evade takes free fast fall instead of wavedash.", "The landing dash has limited steering after admission.", "Fresh later actions retain landing state, commitment and their own gates.", "WAVEDASH and the low lane confirm conversion; it grants no new protection.")
 		"air_turn":
 			return _intent("During a jump stage with redirect available and a fresh paid Technique.", "A changed non-zero direction purchases the sharper correction.", "Neutral Technique is refused as an air redirect and spends nothing.", "Ordinary air steering stays free before and after the sharp turn.", "Another redirect needs a new jump stage; wall geometry may admit wallrun instead.", "A sharp path change and Stamina spend confirm admission; no protection is added.")
 		"wall_run":
-			return _intent("At runnable wall geometry from ground or air, with wallrun gates ready.", "Along-face movement can admit wallrun; away movement detaches an active one.", "Neutral Technique cannot invent an along-wall direction; during wallrun another Technique press detaches.", "Follow the constrained wall face until Technique, away steering, wall end or expiry detaches.", "A legal remembered-wall Jump may kick away; Float and air dodge stay spent if used.", "WALLRUN and face-constrained travel confirm admission; no protection is added.")
+			return _intent("Airborne near runnable geometry, holding Jump with wallrun gates ready.", "Along-face movement admits wallrun; away movement detaches.", "Neutral movement cannot invent a wallrun lane.", "Hold Jump along the wall; release Jump kicks outward, wall end or expiry detaches.", "Re-arm deliberately; used air opportunities stay consumed.", "WALLRUN, running legs and contact sparks confirm admission; no height avoidance or immunity.")
 		"wall_jump":
-			return _intent("Near remembered legal wall contact with Jump and same-wall gates ready.", "On first air jump, away movement supplies the required kick direction.", "Neutral first-air Jump does not satisfy away; admitted Jump adds no separate horizontal impulse beyond its wall rule and carried momentum.", "After launch, ordinary air steering, coasting and counter-steering apply.", "Unused Float and air dodge remain available; same-wall lockout prevents indefinite climbing.", "Outward lift and opening Jump protection confirm admission; later flight is vulnerable.")
+			return _intent("During accepted wallrun, release Jump.", "Movement chooses the kick direction, constrained safely outward from the wall.", "Neutral release uses the outward wall normal, not cursor aim.", "Retain tangential momentum and steer freely after launch.", "Unused extra air action and air dodge remain available; same-wall lockout prevents infinite climbing.", "Contact burst and outward lift confirm release; clearance depends on actual height.")
 		"fast_fall":
-			return _intent("Airborne on fresh Slide, or on Evade admitted with zero current movement.", "Direction does not bend fast fall; directional airborne Evade attempts paid air dodge.", "Neutral Evade takes this free path. Fresh Slide takes it regardless of movement direction.", "Horizontal momentum keeps ordinary coast and air steering while vertical speed is forced down.", "Fresh paid actions stay gated; fast fall spends no air-dodge opportunity and resets no cooldown.", "FAST FALL and earlier descent confirm admission; Float protection ends and no new protection begins.")
+			return _intent("Airborne on fresh Slide, or on Evade admitted with zero current movement.", "Direction does not bend fast fall; directional airborne Evade attempts paid air dodge.", "Neutral Evade takes this free path. Fresh Slide takes it regardless of movement direction.", "Horizontal momentum keeps ordinary coast and air steering while vertical speed is forced down.", "Fresh paid actions stay gated; fast fall spends no air-dodge opportunity and resets no cooldown.", "FAST FALL and earlier descent confirm admission; flight ends and no new immunity begins.")
 		"landing_cut":
 			return _intent("Immediately after landing within the source-derived landing window.", "Movement against current travel activates stronger reversal acceleration.", "Neutral movement does not create reversal; ordinary ground braking applies.", "Counter-steer chooses the reverse lane but does not increase top speed.", "Fresh actions retain their normal ground state and gates.", "A firmer reversal confirms the cut; it adds no protection or attack cancel.")
 		"impact_tech":

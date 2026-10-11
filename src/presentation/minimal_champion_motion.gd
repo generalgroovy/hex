@@ -76,7 +76,7 @@ func accent_by_id(accent_id: String) -> Dictionary:
 	return (movement_accents.get(accent_id, {}) as Dictionary).duplicate(true)
 
 
-func sample(profile_id: String, motion_id: String, elapsed_ticks_at_60: float, reduced_motion: bool = false) -> Sample:
+func sample(profile_id: String, motion_id: String, elapsed_ticks_at_60: float, reduced_motion: bool = false, include_offset: bool = true) -> Sample:
 	var result := Sample.new()
 	if not profiles.has(profile_id):
 		return result
@@ -100,7 +100,10 @@ func sample(profile_id: String, motion_id: String, elapsed_ticks_at_60: float, r
 	var span := maxf(0.0001, float(right.get("at", 1.0)) - float(left.get("at", 0.0)))
 	var blend := clampf((phase - float(left.get("at", 0.0))) / span, 0.0, 1.0)
 	blend = smoothstep(0.0, 1.0, blend)
-	result.offset = _vector2(left.get("offset", []), Vector2.ZERO).lerp(_vector2(right.get("offset", []), Vector2.ZERO), blend)
+	# The fixed/fullbody renderer already owns its body offset. Its wrapper
+	# still needs this exact aura sample, not unused legacy vector preparation.
+	if include_offset:
+		result.offset = _vector2(left.get("offset", []), Vector2.ZERO).lerp(_vector2(right.get("offset", []), Vector2.ZERO), blend)
 	# Body dimensions belong to the three atlas templates. Motion may translate
 	# the pose and animate detached aura layers, but never resize body pixels.
 	result.scale = Vector2.ONE
@@ -114,16 +117,23 @@ func sample(profile_id: String, motion_id: String, elapsed_ticks_at_60: float, r
 func locomotion_pivot_offset(profile_id: String, motion_id: String, elapsed_ticks_at_60: float, direction: Vector2, response: float, reduced_motion: bool = false) -> Vector2:
 	if motion_id not in ["walk", "sprint"] or not profiles.has(profile_id):
 		return Vector2.ZERO
+	if not is_finite(elapsed_ticks_at_60) or not is_finite(response) or not direction.is_finite() or direction == Vector2.ZERO:
+		return Vector2.ZERO
 	var profile: Dictionary = profiles[profile_id]
 	var duration := float((profile.get(motion_id, {}) as Dictionary).get("duration_ticks", 1))
 	var phase := fposmod(maxf(0.0, elapsed_ticks_at_60), maxf(1.0, duration)) / maxf(1.0, duration)
 	var strength := clampf(response, 0.0, 1.0) * (0.25 if reduced_motion else 1.0)
-	# Contact A and B remain discrete crisp atlas frames. This tiny continuous
-	# pivot path returns to zero at both foot plants; body scale never changes.
-	var airborne_fraction := pow(sin(TAU * phase), 2.0)
-	var bob := -airborne_fraction * (1.25 if motion_id == "sprint" else 0.85)
-	var lean := direction.normalized() * sin(4.0 * PI * phase) * 0.35
-	return (Vector2(0.0, bob) + lean) * strength
+	# Gate every axis at both contact poses: position AND velocity settle at
+	# the plant, so atlas feet no longer drift sideways through touchdown.
+	# A tiny alternating support shift follows travel, never facing/aim.
+	var stride_wave := sin(TAU * phase)
+	var transfer := stride_wave * stride_wave
+	var travel := direction.normalized()
+	var side := Vector2(-travel.y, travel.x)
+	var bob := -transfer * (1.25 if motion_id == "sprint" else 0.85)
+	var lean := travel * sin(2.0 * TAU * phase) * transfer * 0.35
+	var support := side * stride_wave * transfer * 0.16
+	return (Vector2(0.0, bob) + lean + support) * strength
 
 
 func locomotion_contact_frame(profile_id: String, motion_id: String, elapsed_ticks_at_60: float, phase_seed: int = 0) -> int:
@@ -187,7 +197,7 @@ static func elapsed_for_state(state: PlayerState, motion_id_value: String, visua
 		if timer.y > 0:
 			return float(timer.y - timer.x) * 60.0 / float(config.tick_rate)
 	if motion_id_value == "cast" and state.pending_cast_wire_id > 0:
-		var definition := CombatTuning.cast_definition(state.pending_cast_wire_id)
+		var definition := CombatTuning.cast_definition_view(state.pending_cast_wire_id)
 		var total := config.milliseconds_to_ticks(int(definition.get("startup_ms", 0)))
 		if total > 0:
 			return float(maxi(0, total - state.pending_cast_ticks)) * 60.0 / float(config.tick_rate)

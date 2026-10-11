@@ -1,0 +1,451 @@
+extends FluxTestSuite
+
+
+const World = preload("res://src/sim/hex/hex_chemistry_world.gd")
+const Snapshot = preload("res://src/net/hex_world_snapshot.gd")
+const ChemistrySnapshot = preload("res://src/net/hex_chemistry_snapshot.gd")
+const LegacyTrustedCells = preload("res://tests/support/hex_trusted_cells_legacy_oracle.gd")
+const CanonicalBytes = preload("res://src/sim/core/canonical_bytes.gd")
+const ABILITY_PATH := "res://content/abilities/foundation_abilities_v1.json"
+
+
+func run() -> int:
+	_test_trusted_cells_valid_and_canonical_equivalence()
+	_test_trusted_cells_malformed_equivalence()
+	_test_trusted_cells_bounds_and_mutation_visibility()
+	_test_configured_cell_shape_and_ownership()
+	_test_prepare_revision_compatibility()
+	_test_canonical_row_cache_mutations()
+	_test_geometry_template_isolation()
+	_test_typed_content_cache()
+	return finish("hex-snapshot-optimization")
+
+
+func _test_typed_content_cache() -> void:
+	var world := _trusted_fixture(Vector2i(5000, -7000), [Vector2i.ZERO, Vector2i(1, -1)])
+	if world == null: return
+	World._canonical_cell_documents.clear()
+	ChemistrySnapshot._trusted_cell_views.clear()
+	ChemistrySnapshot._topology_byte_views.clear()
+	var original := world.cells.duplicate(true)
+	var expected := world._generic_state_hash_bytes()
+	var order := ChemistrySnapshot._trusted_cells(world)
+	var topology := ChemistrySnapshot._topology_bytes(world, order)
+	for unused: int in 3:
+		equal(world._state_hash_bytes(), expected, "warm typed cell document retains exact published bytes")
+		equal(ChemistrySnapshot._trusted_cells(world), order, "warm trusted-cell validation retains order")
+		equal(ChemistrySnapshot._topology_bytes(world, order), topology, "warm topology encoding stays exact")
+	var detached := ChemistrySnapshot._trusted_cells(world)
+	detached.clear()
+	var detached_bytes := ChemistrySnapshot._topology_bytes(world, order)
+	detached_bytes.fill(255)
+	equal(ChemistrySnapshot._trusted_cells(world), order, "returned order cannot poison the cache")
+	equal(ChemistrySnapshot._topology_bytes(world, order), topology, "returned bytes cannot poison the cache")
+	# Numeric equality alone is insufficient: same-value float metadata must reject.
+	world.cells[Vector2i.ZERO].terrain = 0.0
+	check(ChemistrySnapshot._trusted_cells(world).is_empty(), "integer-to-float replacement cannot hit valid cached metadata")
+	equal(world._state_hash_bytes(), world._generic_state_hash_bytes(), "float metadata keeps canonical fallback")
+	world.cells = original.duplicate(true)
+	world.cells[Vector2i.ZERO].water = {9001: 2}
+	_assert_exact_bytes(world, "new nested layer visible after warm cell cache")
+	world.cells[Vector2i.ZERO].water[9001] = 3
+	_assert_exact_bytes(world, "nested quantity change visible after warm cell cache")
+	world.cells[Vector2i.ZERO].water = 3
+	check(ChemistrySnapshot._trusted_cells(world).is_empty(), "malformed layer cannot use earlier valid typed view")
+	world.cells = original.duplicate(true)
+	world.origin += Vector2i(1000, 0)
+	check(ChemistrySnapshot._topology_bytes(world, order) != topology, "origin belongs to the topology encoding key")
+	for index: int in 8:
+		world.cells[Vector2i.ZERO].terrain = index
+		var current_order := ChemistrySnapshot._trusted_cells(world)
+		equal(ChemistrySnapshot._topology_bytes(world, current_order), ChemistrySnapshot._uncached_topology_bytes(world, current_order), "metadata mutation invalidates topology encoding")
+		_assert_exact_bytes(world, "typed cache eviction %d" % index)
+		check(World._canonical_cell_documents.size() <= 2 and ChemistrySnapshot._trusted_cell_views.size() <= 2 and ChemistrySnapshot._topology_byte_views.size() <= 2, "all typed-content cache lanes remain bounded")
+
+
+func _assert_exact_bytes(world: HexChemistryWorld, label: String) -> void:
+	equal(world._state_hash_bytes(), world._generic_state_hash_bytes(), label + " exact cold/warm canonical bytes")
+	_assert_legacy_hash(world, label + " independent frozen hash oracle")
+	equal(world._state_hash_bytes(), world._generic_state_hash_bytes(), label + " repeated canonical bytes")
+
+
+func _test_canonical_row_cache_mutations() -> void:
+	var world := _trusted_fixture(Vector2i(31_000, -73_000), [Vector2i(-2, 1), Vector2i.ZERO, Vector2i(11, -3)])
+	if world == null: return
+	World._canonical_blank_rows.clear()
+	_assert_exact_bytes(world, "empty cache")
+	var saved := world.state_hash()
+	var original: Dictionary = world.cells.duplicate(true)
+	for index: int in 96:
+		var cell: Vector2i = world.cells.keys()[index % 3]
+		world.cells[cell].terrain = index - 48
+		world.cells[cell].elevation = -index
+		world.cells[cell].structure = index * 3
+		if index % 2 == 0: world.set_cell_amount(cell, "water", 9001, index + 1)
+		else: world.erase_cell_amount(cell, "water", 9001)
+		world.current_tick = index
+		_assert_exact_bytes(world, "direct metadata and material mutation %d" % index)
+		check(World._canonical_blank_rows.size() <= World.MAX_CELLS, "canonical cache stays bounded")
+	for value: Variant in [-2_147_483_648, 2_147_483_647, -2_147_483_649, 2_147_483_648, 4.5, true, "quoted\"text", {}]:
+		world.cells[Vector2i.ZERO].terrain = value
+		_assert_exact_bytes(world, "int32 boundary or typed fallback " + str(value))
+	world.cells = original.duplicate(true)
+	world.cells[Vector2i.ZERO]["unusual"] = {"nested": [Vector2i(-3, 4), "escaped\n\"value", {"deep": [1, 2]}]}
+	world.metrics["opaque"] = ["__hex_canonical_cells__", {"later": [Vector2i(7, 8)]}]
+	_assert_exact_bytes(world, "whole-call arbitrary nested fallback and marker collision")
+	world.cells[Vector2i.ZERO].erase("unusual")
+	_assert_exact_bytes(world, "return from fallback with opaque suffix at original depth")
+	world.metrics.erase("opaque")
+	world.current_tick = 0
+	equal(world.state_hash(), saved, "direct restoration recovers original hash")
+	var reordered := {}
+	var keys: Array = world.cells.keys()
+	keys.reverse()
+	for cell: Vector2i in keys: reordered[cell] = world.cells[cell].duplicate(true)
+	world.cells = reordered
+	_assert_exact_bytes(world, "reverse insertion")
+	equal(world.state_hash(), saved, "canonical bytes ignore insertion order")
+	world.cells.erase(Vector2i(-2, 1))
+	world.cells[Vector2i(-3, 2)] = World._new_empty_cell()
+	_assert_exact_bytes(world, "same-size topology key replacement")
+	var other := _trusted_fixture(Vector2i.ZERO, [Vector2i.ZERO])
+	other.cells[Vector2i.ZERO].terrain = 311
+	_assert_exact_bytes(other, "independent world shares only pure cached text")
+	_assert_exact_bytes(world, "other world cannot alter original authority")
+	# Exercise eviction without configuring an illegal oversized authority world.
+	World._canonical_blank_rows.clear()
+	for index: int in World.MAX_CELLS:
+		World._canonical_blank_rows[Vector2i(index + 1000, 1000)] = [0, 0, 0, "unused"]
+	_assert_exact_bytes(world, "bounded eviction")
+	check(World._canonical_blank_rows.size() <= World.MAX_CELLS, "eviction retains hard cache bound")
+
+
+func _test_geometry_template_isolation() -> void:
+	var source := _trusted_fixture(Vector2i(40_000, -20_000), [Vector2i(-1, 0), Vector2i.ZERO, Vector2i(1, 0)])
+	if source == null: return
+	ChemistrySnapshot._blank_topology_bytes.clear()
+	ChemistrySnapshot._blank_topology_cells.clear()
+	var snapshot := ChemistrySnapshot.capture(source)
+	check(not snapshot.is_empty(), "cold geometry template captures")
+	var first := ChemistrySnapshot._prepare(snapshot, source)
+	var second := ChemistrySnapshot._prepare(snapshot, source)
+	check(first != null and second != null, "warm geometry template restores independently")
+	if first == null or second == null: return
+	first.cells[Vector2i.ZERO].terrain = 55
+	first.set_cell_amount(Vector2i.ZERO, "water", 777, 3)
+	equal(second.cells, source.cells, "mutable first restore cannot affect sibling or source")
+	var third := ChemistrySnapshot._prepare(snapshot, source)
+	check(third != null and third.cells == source.cells, "mutable restore cannot poison cached template")
+	source.cells[Vector2i.ZERO].terrain = 55
+	check(ChemistrySnapshot._prepare(snapshot, source) == null, "changed metadata invalidates old snapshot fingerprint")
+	var updated := ChemistrySnapshot.capture(source)
+	var updated_world := ChemistrySnapshot._prepare(updated, source)
+	check(updated_world != null and updated_world.cells == source.cells, "new metadata gets a fresh validated template")
+	source.cells[Vector2i.ZERO].terrain = 55.0
+	check(ChemistrySnapshot.capture(source).is_empty(), "equal numeric value with wrong type is not hidden by geometry cache")
+	source.cells[Vector2i.ZERO].terrain = 55
+	source.origin.x += 1000
+	check(ChemistrySnapshot._prepare(updated, source) == null, "origin is part of exact template identity")
+	source.origin.x -= 1000
+	source.cells[Vector2i.ZERO]["fire"] = 0
+	check(ChemistrySnapshot._prepare(updated, source) == null, "malformed layer still rejected on cache hit")
+	source.cells[Vector2i.ZERO].erase("fire")
+	source.cells.erase(Vector2i(1, 0))
+	source.cells[Vector2i(257, 0)] = World._new_empty_cell()
+	check(ChemistrySnapshot.capture(source).is_empty(), "invalid geometry never admitted by warm template")
+
+
+func _test_trusted_cells_valid_and_canonical_equivalence() -> void:
+	var topology: Array[Vector2i] = [Vector2i(2, -3), Vector2i(-4, 1), Vector2i.ZERO, Vector2i(-1, -2)]
+	var world := _trusted_fixture(Vector2i(-240_000, 360_000), topology)
+	if world == null:
+		return
+	_assert_trusted_equivalent(world, topology.size(), "ordinary negative and mixed-coordinate topology")
+	var expected := topology.duplicate()
+	expected.sort_custom(HexGrid._cell_less)
+	equal(ChemistrySnapshot._trusted_cells(world), expected, "candidate retains canonical lexicographic cell ordering")
+
+	var reversed := {}
+	for index: int in range(topology.size() - 1, -1, -1):
+		var cell := topology[index]
+		reversed[cell] = world.cells[cell]
+	world.cells = reversed
+	_assert_trusted_equivalent(world, topology.size(), "reversed insertion order")
+	equal(ChemistrySnapshot._trusted_cells(world), expected, "reversed insertion produces the same canonical ordering")
+
+	world.cells[topology[0]]["accepted_extra_scalar"] = 17
+	world.cells[topology[1]]["accepted_extra_dictionary"] = {4: ["opaque", null]}
+	world.set_cell_amount(topology[2], World.material_layers()[0], 91_101, 23)
+	_assert_trusted_equivalent(world, topology.size(), "accepted extras and nonempty authored layer")
+
+
+func _test_trusted_cells_malformed_equivalence() -> void:
+	var metadata_values: Array = [1.5, "1", {}, null, true, []]
+	for property_name: String in ["terrain", "elevation", "structure"]:
+		var missing := _trusted_fixture(Vector2i.ZERO, [Vector2i.ZERO])
+		if missing == null:
+			return
+		missing.cells[Vector2i.ZERO].erase(property_name)
+		_assert_trusted_equivalent(missing, 0, "missing metadata " + property_name)
+		for invalid: Variant in metadata_values:
+			var malformed := _trusted_fixture(Vector2i.ZERO, [Vector2i.ZERO])
+			if malformed == null:
+				return
+			malformed.cells[Vector2i.ZERO][property_name] = invalid
+			_assert_trusted_equivalent(malformed, 0, "%s rejects metadata type %s" % [property_name, type_string(typeof(invalid))])
+
+	var layer := World.material_layers()[0]
+	var missing_layer := _trusted_fixture(Vector2i.ZERO, [Vector2i.ZERO])
+	if missing_layer == null:
+		return
+	missing_layer.cells[Vector2i.ZERO].erase(layer)
+	_assert_trusted_equivalent(missing_layer, 1, "unallocated material layer is intentionally empty")
+	for invalid: Variant in [0, 1.5, "layer", [], null, true]:
+		var malformed_layer := _trusted_fixture(Vector2i.ZERO, [Vector2i.ZERO])
+		if malformed_layer == null:
+			return
+		malformed_layer.cells[Vector2i.ZERO][layer] = invalid
+		_assert_trusted_equivalent(malformed_layer, 0, "material rejects type " + type_string(typeof(invalid)))
+
+	var wrong_key := _trusted_fixture(Vector2i.ZERO, [Vector2i.ZERO])
+	if wrong_key == null:
+		return
+	wrong_key.cells["0,0"] = wrong_key.cells[Vector2i.ZERO].duplicate(true)
+	_assert_trusted_equivalent(wrong_key, 0, "non-Vector2i cell key")
+	var wrong_record := _trusted_fixture(Vector2i.ZERO, [Vector2i.ZERO])
+	if wrong_record == null:
+		return
+	wrong_record.cells[Vector2i.ZERO] = []
+	_assert_trusted_equivalent(wrong_record, 0, "non-Dictionary cell record")
+	for invalid_origin: Vector2i in [Vector2i(HexGrid.MAX_ABS_QUERY_COORDINATE + 1, 0), Vector2i(0, -HexGrid.MAX_ABS_QUERY_COORDINATE - 1)]:
+		var bad_origin := _trusted_fixture(Vector2i.ZERO, [Vector2i.ZERO])
+		if bad_origin == null:
+			return
+		bad_origin.origin = invalid_origin
+		_assert_trusted_equivalent(bad_origin, 0, "out-of-range trusted origin")
+
+
+func _test_trusted_cells_bounds_and_mutation_visibility() -> void:
+	var exact_topology: Array[Vector2i] = []
+	for q: int in 128:
+		for r: int in 128:
+			exact_topology.append(Vector2i(q, r))
+	var exact := _trusted_fixture(Vector2i(-2_000_000, -1_000_000), exact_topology)
+	if exact == null:
+		return
+	_assert_trusted_equivalent(exact, ChemistrySnapshot.MAX_TOPOLOGY_CELLS, "exact16384-cell boundary")
+
+	var oversized := World.new()
+	for index: int in range(ChemistrySnapshot.MAX_TOPOLOGY_CELLS + 1):
+		oversized.cells[Vector2i(index - 2048, 0)] = {}
+	_assert_trusted_equivalent(oversized, 0, "16385-cell topology rejects before record traversal")
+
+	var mutation := _trusted_fixture(Vector2i.ZERO, [Vector2i(-1, 0), Vector2i.ZERO, Vector2i(1, 0)])
+	if mutation == null:
+		return
+	var expected := ChemistrySnapshot._trusted_cells(mutation)
+	_assert_trusted_equivalent(mutation, 3, "pre-mutation valid topology")
+	var material := World.material_layers()[-1]
+	mutation.cells[Vector2i.ZERO][material] = 7
+	_assert_trusted_equivalent(mutation, 0, "direct material-shape mutation is visible on next call")
+	mutation.cells[Vector2i.ZERO][material] = {}
+	equal(ChemistrySnapshot._trusted_cells(mutation), expected, "restoring the material dictionary restores the exact ordered topology")
+	mutation.cells[Vector2i.ZERO]["terrain"] = 3.0
+	_assert_trusted_equivalent(mutation, 0, "direct metadata-type mutation is visible on next call")
+	mutation.cells[Vector2i.ZERO]["terrain"] = 3
+	equal(ChemistrySnapshot._trusted_cells(mutation), expected, "restoring integer metadata restores the exact ordered topology")
+
+
+func _trusted_fixture(origin: Vector2i, topology: Array[Vector2i]) -> HexChemistryWorld:
+	var world := World.new()
+	check(world.configure_geometry(origin, topology), "trusted-cell fixture configures %d cells" % topology.size())
+	return world if world.cells.size() == topology.size() else null
+
+
+func _assert_trusted_equivalent(world: HexChemistryWorld, expected_size: int, label: String) -> void:
+	var before_cells: Dictionary = world.cells.duplicate(true)
+	var before_origin: Vector2i = world.origin
+	var legacy: Array[Vector2i] = _legacy_sparse_cells(world)
+	var candidate: Array[Vector2i] = ChemistrySnapshot._trusted_cells(world)
+	equal(candidate, legacy, label + " matches the frozen old implementation")
+	equal(candidate.size(), expected_size, label + " has the expected acceptance result")
+	equal(world.cells, before_cells, label + " leaves all source cell records unchanged")
+	equal(world.origin, before_origin, label + " leaves source origin unchanged")
+
+
+func _test_configured_cell_shape_and_ownership() -> void:
+	var topology: Array[Vector2i] = [Vector2i(-1, 0), Vector2i.ZERO, Vector2i(1, 0)]
+	var first := World.new()
+	check(first.configure_geometry(Vector2i(120_000, 90_000), topology), "optimized geometry configures the requested trusted topology")
+	if first.cells.size() != topology.size():
+		return
+
+	var expected_keys: Array = ["terrain", "elevation", "structure"]
+	expected_keys.sort()
+	for cell: Vector2i in topology:
+		var actual_keys: Array = first.cells[cell].keys()
+		actual_keys.sort()
+		equal(actual_keys, expected_keys, "configured cell contains metadata only until first material deposit")
+
+	var ingredient_layer: String = World.material_layers()[0]
+	var product_layer: String = World.material_layers()[-1]
+	var empty_hash: String = first.state_hash()
+	first.set_cell_amount(topology[0], ingredient_layer, 91_001, 7)
+	first.set_cell_amount(topology[1], product_layer, 92_001, 3)
+	check(first.state_hash() != empty_hash, "native empty-cell fast path still detects direct orphan material mutations")
+	equal(first.cells[topology[0]][ingredient_layer], {91_001: 7}, "first cell owns its nested ingredient dictionary")
+	equal(first.cells[topology[1]].get(ingredient_layer, {}), {}, "sibling cell does not alias the first ingredient dictionary")
+	equal(first.cells[topology[0]].get(product_layer, {}), {}, "first cell does not alias the sibling product dictionary")
+	equal(first.cells[topology[1]][product_layer], {92_001: 3}, "sibling cell owns its nested product dictionary")
+	equal(first.cells[topology[2]].get(ingredient_layer, {}), {}, "third cell remains isolated from sibling mutations")
+	equal(first.cells[topology[2]].get(product_layer, {}), {}, "third cell retains an independent empty product dictionary")
+
+	var second := World.new()
+	check(second.configure_geometry(Vector2i(120_000, 90_000), topology), "second world configures independently from the first")
+	if second.cells.size() != topology.size():
+		return
+	equal(second.cells[topology[0]].get(ingredient_layer, {}), {}, "new world does not inherit the first world's ingredient mutation")
+	equal(second.cells[topology[1]].get(product_layer, {}), {}, "new world does not inherit the first world's product mutation")
+	equal(second.state_hash(), empty_hash, "independent empty world retains the exact canonical authority hash")
+	second.set_cell_amount(topology[0], ingredient_layer, 93_001, 5)
+	equal(first.cells[topology[0]][ingredient_layer], {91_001: 7}, "later world mutation cannot alter the first world's nested authority")
+
+
+	var malformed := World.new()
+	check(malformed.configure_geometry(Vector2i(120_000, 90_000), topology), "legacy hash oracle configures independently")
+	if malformed.cells.size() != topology.size():
+		return
+	malformed.cells[topology[0]]["terrain"] = {}
+	_assert_legacy_hash(malformed, "empty Dictionary metadata retains the published sparse hash bytes")
+	malformed.cells[topology[1]].erase(product_layer)
+	_assert_legacy_hash(malformed, "missing authored material key retains the published sparse hash bytes")
+	malformed.set_cell_amount(topology[2], ingredient_layer, 94_001, 9)
+	_assert_legacy_hash(malformed, "nonempty orphan material retains the published sparse hash bytes")
+	malformed.cells[topology[2]]["unexpected_authority"] = {95_001: 4}
+	_assert_legacy_hash(malformed, "nonempty unexpected key retains the published sparse hash bytes")
+
+
+func _test_prepare_revision_compatibility() -> void:
+	var catalog := AbilityCatalog.new()
+	check(catalog.load_from_file(ABILITY_PATH), "revision fixture loads the production ability catalog")
+	if not catalog.last_error.is_empty():
+		return
+	var source := SimWorld.new()
+	check(HexCourtPractice.configure(source, catalog, false), "revision fixture configures trusted production topology")
+	equal(ChemistrySnapshot._trusted_cells(source.hex_court), _legacy_sparse_cells(source.hex_court), "production topology matches frozen validation before capture")
+	var verified_hex_hash: String = String(source.hex_court.state_hash())
+	equal(source._state_hash_with_verified_hex_hash(verified_hex_hash), source.state_hash(), "verified chemistry hash helper preserves exact outer canonical bytes")
+	var snapshot: Dictionary = _rich_snapshot(source)
+	check(not snapshot.is_empty(), "revision fixture captures complete paid authority with a live projectile")
+	if snapshot.is_empty():
+		return
+	var prepared: SimWorld = Snapshot.prepare(snapshot, source)
+	check(prepared != null, "revision fixture prepares fresh decoded authority")
+	if prepared == null:
+		return
+	equal(ChemistrySnapshot._trusted_cells(prepared.hex_court), _legacy_sparse_cells(prepared.hex_court), "round-tripped topology matches frozen validation")
+	equal(prepared.hex_court.value_revision, 1, "direct prepare preserves the former fresh blank-plus-restore invalidation revision")
+	equal(prepared.state_hash(), String(snapshot.state_hash), "optimized prepare preserves the published complete-world hash")
+
+	var stale_player: Dictionary = snapshot.duplicate(true)
+	var player_values: PackedInt32Array = stale_player.players.duplicate()
+	player_values[4] += 1
+	stale_player.players = player_values
+	check(Snapshot.validate_wire_structure(stale_player), "stale-player oracle remains a well-formed wire snapshot")
+	check(Snapshot.prepare(stale_player, source) == null, "verified chemistry hash cannot hide a stale player lane")
+
+	var stale_projectile: Dictionary = snapshot.duplicate(true)
+	var projectile_values: PackedInt32Array = stale_projectile.projectiles.duplicate()
+	projectile_values[5] += 1
+	stale_projectile.projectiles = projectile_values
+	check(Snapshot.validate_wire_structure(stale_projectile), "stale-projectile oracle remains a well-formed wire snapshot")
+	check(Snapshot.prepare(stale_projectile, source) == null, "verified chemistry hash cannot hide a stale projectile lane")
+
+	var stale_header: Dictionary = snapshot.duplicate(true)
+	var header: PackedInt64Array = stale_header.header.duplicate()
+	header[2] += 1
+	stale_header.header = header
+	check(Snapshot.validate_wire_structure(stale_header), "stale-header oracle remains a well-formed wire snapshot")
+	check(Snapshot.prepare(stale_header, source) == null, "verified chemistry hash cannot hide a stale outer header")
+
+
+func _rich_snapshot(world: SimWorld) -> Dictionary:
+	for step: int in range(560):
+		var slot := 0 if step in [0, 160, 260] else 1 if step in [100, 190] else -1
+		var pressed := int(SimCommand.SPELL_PRESSED_BITS[slot]) if slot >= 0 else 0
+		var command := SimCommand.new(step, 1, 0, 0, 0, pressed, 0, -1000, 640_000, 480_000)
+		if not world.step([command]):
+			check(false, "paid strict snapshot fixture advances at tick %d" % step)
+			return {}
+		if world.player(1).pending_cast_wire_id > 0 and not world.projectiles.is_empty() and not world.hex_court.products.is_empty():
+			return Snapshot.capture(world)
+	return {}
+
+
+func _assert_legacy_hash(world: World, label: String) -> void:
+	equal(world.state_hash(), _legacy_sparse_hash(world), label)
+
+
+func _legacy_sparse_hash(world: World) -> String:
+	var compact_cells := {}
+	for cell: Vector2i in world.cells:
+		var compact := {}
+		for key: String in world.cells[cell]:
+			var value: Variant = world.cells[cell][key]
+			if not value is Dictionary or not value.is_empty():
+				compact[key] = value
+		compact_cells[cell] = compact
+	var authority := [
+		world.origin, world.current_tick, world.chemistry_enabled,
+		world.next_cast_id, world.next_product_id, world.next_ground_part_id,
+		compact_cells, world.casts, world.products, world.pending, world.sources,
+		world.exposure, world.flow_carry, world.metrics,
+	]
+	var bytes := PackedByteArray()
+	CanonicalBytes.append_string(bytes, JSON.stringify(_original_stable(authority)))
+	return CanonicalBytes.sha256_hex(bytes)
+
+
+func _original_stable(value: Variant) -> Variant:
+	if value is Vector2i:
+		return [value.x, value.y]
+	if value is Dictionary:
+		var keys: Array = value.keys()
+		keys.sort_custom(func(a: Variant, b: Variant) -> bool: return str(a) < str(b))
+		var result: Array = []
+		for key: Variant in keys:
+			result.append([_original_stable(key), _original_stable(value[key])])
+		return result
+	if value is Array:
+		var result: Array = []
+		for item: Variant in value:
+			result.append(_original_stable(item))
+		return result
+	return value
+
+# Adapt representation only: the frozen validator remains unchanged. Each old
+#4096-cell batch gets the empty slots it formerly required; merged results are
+# compared against the new bounded topology without copying its validation.
+func _legacy_sparse_cells(world: HexChemistryWorld) -> Array[Vector2i]:
+	if world.cells.is_empty() or world.cells.size() > 16384: return []
+	var expanded := World.new()
+	expanded.origin = world.origin
+	var result: Array[Vector2i] = []
+	for cell: Variant in world.cells:
+		var value: Variant = world.cells[cell]
+		if value is Dictionary:
+			value = value.duplicate(true)
+			for layer: String in World.material_layers():
+				if not value.has(layer): value[layer] = {}
+		expanded.cells[cell] = value
+		if expanded.cells.size() == 4096:
+			var batch := LegacyTrustedCells.trusted_cells(expanded)
+			if batch.size() != expanded.cells.size(): return []
+			result.append_array(batch)
+			expanded.cells.clear()
+	if not expanded.cells.is_empty():
+		var batch := LegacyTrustedCells.trusted_cells(expanded)
+		if batch.size() != expanded.cells.size(): return []
+		result.append_array(batch)
+	result.sort_custom(func(a: Vector2i,b: Vector2i) -> bool: return a.x < b.x or (a.x == b.x and a.y < b.y))
+	return result

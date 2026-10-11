@@ -32,7 +32,7 @@ func _run() -> void:
 			_fail("free-cast fixture could not equip legal Bolt")
 			return
 	_sync()
-	await _capture_frame("01-before-free-casts", "before", false)
+	if (await _capture_frame("01-before-free-casts", "before", false)).is_empty() or failed: return
 	var target := Vector2i(1_431_000, 867_000)
 	var steps := PackedInt64Array()
 	for frame: int in 150:
@@ -43,26 +43,38 @@ func _run() -> void:
 			return
 		steps.append(Time.get_ticks_usec() - started)
 		_sync()
-		if frame == 65: await _capture_frame("02-water-away-from-dummy", "paid-water", false)
+		if frame == 65:
+			if (await _capture_frame("02-water-away-from-dummy", "paid-water", false)).is_empty() or failed: return
 	var authority: HexChemistryWorld = game.world.hex_court
 	var product := _product_for(310)
 	if product.is_empty() or int(authority.metrics.matter_paid) != 1200 or not authority.conservation_valid() or game.world.players.size() != 1:
 		_fail("two paid target-free Bolts did not form conserved Steam")
 		return
 	game.requested_capture_reduced_effects = false
-	await _capture_frame("03-steam-normal", "steam", false)
+	if (await _capture_frame("03-steam-normal", "steam", false)).is_empty() or failed: return
 	game.requested_capture_reduced_effects = true
-	await _capture_frame("04-steam-reduced", "steam", true)
+	if (await _capture_frame("04-steam-reduced", "steam", true)).is_empty() or failed: return
 	game.requested_capture_reduced_effects = false
 	var before_exposure := int(authority.exposure.get(1, 0))
+	var peak_exposure := before_exposure
+	var crossing_trace: Array[Dictionary] = []
 	for frame: int in 75:
 		if not world.step([SimCommand.new(game.world.tick, 1, -1000, 0, 0, 0, -1000, 0)]):
 			_fail("ordinary actor crossing failed")
 			return
 		_sync()
-		if frame in [20, 40, 60]: await _capture_frame("05-crossing-%02d" % frame, "crossing", false)
-	if int(authority.exposure.get(1, 0)) <= before_exposure:
+		var exposure := int(authority.exposure.get(1, 0))
+		peak_exposure = maxi(peak_exposure, exposure)
+		crossing_trace.append({"tick": world.tick, "x": actor.position_x, "y": actor.position_y, "exposure": exposure})
+		if frame in [20, 40, 60]:
+			if (await _capture_frame("05-crossing-%02d" % frame, "crossing", false)).is_empty() or failed: return
+	# A narrower field can be fully crossed and its exposure decay to zero before
+	# this fixed75-tick route ends. Prove actual entry, not a lingering penalty.
+	if peak_exposure <= before_exposure:
 		_fail("ordinary champion did not enter Steam")
+		return
+	if failed or frames.size() != 7:
+		_fail("incomplete paid field capture")
 		return
 	steps.sort()
 	var receipt := {
@@ -70,10 +82,14 @@ func _run() -> void:
 		"scope": "Native normal Wellspring; real paid Water/Fire Bolts at Nexus spawn; no targets; actual movement into Steam; local only",
 		"topology_cells": authority.cells.size(), "paid_material": authority.metrics.matter_paid,
 		"product": HexChemistryWorld._stable(product), "exposure_after": authority.exposure.get(1, 0),
+		"peak_exposure": peak_exposure, "crossing_trace": crossing_trace,
 		"step_p95_us": steps[int(ceil(steps.size() * 0.95)) - 1], "frames": frames,
 		"display": DisplayServer.get_name(), "sources": _source_manifest(),
 	}
 	var file := FileAccess.open(output + "/receipt.json", FileAccess.WRITE)
+	if file == null:
+		_fail("cannot save paid field receipt")
+		return
 	file.store_string(JSON.stringify(receipt, "\t") + "\n")
 	file.close()
 	print("PASS global-hex-native frames=", frames.size(), " cells=", authority.cells.size())

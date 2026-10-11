@@ -1,0 +1,365 @@
+{
+	"assertions": 270,
+	"batch_size": 1,
+	"blocks_per_cycle": 4,
+	"cases": [
+		{
+			"blocks": [
+				{
+					"block": 0,
+					"cycle": 0,
+					"implementation": "production_current",
+					"samples_us": [
+						58882,
+						54200,
+						52803,
+						54046,
+						54163
+					]
+				},
+				{
+					"block": 1,
+					"cycle": 0,
+					"implementation": "candidate",
+					"samples_us": [
+						48872,
+						45298,
+						46216,
+						45933,
+						44747
+					]
+				},
+				{
+					"block": 2,
+					"cycle": 0,
+					"implementation": "candidate",
+					"samples_us": [
+						45598,
+						48299,
+						48991,
+						45632,
+						45805
+					]
+				},
+				{
+					"block": 3,
+					"cycle": 0,
+					"implementation": "production_current",
+					"samples_us": [
+						50734,
+						50146,
+						50366,
+						55199,
+						52155
+					]
+				},
+				{
+					"block": 0,
+					"cycle": 1,
+					"implementation": "candidate",
+					"samples_us": [
+						44866,
+						46738,
+						46353,
+						44545,
+						41636
+					]
+				},
+				{
+					"block": 1,
+					"cycle": 1,
+					"implementation": "production_current",
+					"samples_us": [
+						49696,
+						48549,
+						51635,
+						54725,
+						52125
+					]
+				},
+				{
+					"block": 2,
+					"cycle": 1,
+					"implementation": "production_current",
+					"samples_us": [
+						50996,
+						51376,
+						49835,
+						49897,
+						85624
+					]
+				},
+				{
+					"block": 3,
+					"cycle": 1,
+					"implementation": "candidate",
+					"samples_us": [
+						46446,
+						45678,
+						43565,
+						44488,
+						44228
+					]
+				},
+				{
+					"block": 0,
+					"cycle": 2,
+					"implementation": "production_current",
+					"samples_us": [
+						47675,
+						50618,
+						51177,
+						52499,
+						52715
+					]
+				},
+				{
+					"block": 1,
+					"cycle": 2,
+					"implementation": "candidate",
+					"samples_us": [
+						48114,
+						45626,
+						44080,
+						42281,
+						45648
+					]
+				},
+				{
+					"block": 2,
+					"cycle": 2,
+					"implementation": "candidate",
+					"samples_us": [
+						43349,
+						42072,
+						44004,
+						43164,
+						45083
+					]
+				},
+				{
+					"block": 3,
+					"cycle": 2,
+					"implementation": "production_current",
+					"samples_us": [
+						53543,
+						54701,
+						51217,
+						53091,
+						52088
+					]
+				},
+				{
+					"block": 0,
+					"cycle": 3,
+					"implementation": "candidate",
+					"samples_us": [
+						43512,
+						42401,
+						44605,
+						44020,
+						44555
+					]
+				},
+				{
+					"block": 1,
+					"cycle": 3,
+					"implementation": "production_current",
+					"samples_us": [
+						51937,
+						49929,
+						56279,
+						56073,
+						53389
+					]
+				},
+				{
+					"block": 2,
+					"cycle": 3,
+					"implementation": "production_current",
+					"samples_us": [
+						50041,
+						49457,
+						55705,
+						53819,
+						53693
+					]
+				},
+				{
+					"block": 3,
+					"cycle": 3,
+					"implementation": "candidate",
+					"samples_us": [
+						47542,
+						45686,
+						45607,
+						42046,
+						43671
+					]
+				}
+			],
+			"case": "legal-sorted-2766-cell-campus",
+			"expected_authority_hash": "85e3a4ac02c3193472b85ff32d4de67df582b6d25cb2c527a583e5ab6e89c050",
+			"expected_variant_bytes": 3485972,
+			"implementations": {
+				"candidate": {
+					"inclusive_us": {
+						"max": 48991,
+						"min": 41636,
+						"p50": 44866,
+						"p95": 48299,
+						"p99": 48991,
+						"samples": 40
+					},
+					"samples_us": [
+						48872,
+						45298,
+						46216,
+						45933,
+						44747,
+						45598,
+						48299,
+						48991,
+						45632,
+						45805,
+						44866,
+						46738,
+						46353,
+						44545,
+						41636,
+						46446,
+						45678,
+						43565,
+						44488,
+						44228,
+						48114,
+						45626,
+						44080,
+						42281,
+						45648,
+						43349,
+						42072,
+						44004,
+						43164,
+						45083,
+						43512,
+						42401,
+						44605,
+						44020,
+						44555,
+						47542,
+						45686,
+						45607,
+						42046,
+						43671
+					]
+				},
+				"production_current": {
+					"inclusive_us": {
+						"max": 85624,
+						"min": 47675,
+						"p50": 52125,
+						"p95": 56279,
+						"p99": 85624,
+						"samples": 40
+					},
+					"samples_us": [
+						58882,
+						54200,
+						52803,
+						54046,
+						54163,
+						50734,
+						50146,
+						50366,
+						55199,
+						52155,
+						49696,
+						48549,
+						51635,
+						54725,
+						52125,
+						50996,
+						51376,
+						49835,
+						49897,
+						85624,
+						47675,
+						50618,
+						51177,
+						52499,
+						52715,
+						53543,
+						54701,
+						51217,
+						53091,
+						52088,
+						51937,
+						49929,
+						56279,
+						56073,
+						53389,
+						50041,
+						49457,
+						55705,
+						53819,
+						53693
+					]
+				}
+			},
+			"origin": [
+				0,
+				0
+			],
+			"topology_cells": 2766
+		}
+	],
+	"cycles": 4,
+	"definition_hash": "6122177196f65528fd9291827319778a82faf4ee5dbc2cf7a629a59390f1e23e",
+	"engine": "4.7.1-stable (official)",
+	"equivalence_cases_completed": 22,
+	"failures": 0,
+	"known_topology_cells": 2766,
+	"map_hash": "9d481a582a0e84c1ecb74ee7637ba6cd7f9119deb0eeacdc509904f5d4810417",
+	"map_path": "res://content/maps/sanctum_campus_g2_v1.json",
+	"material_lanes_per_cell": 44,
+	"order": "ABBA on even cycles; BAAB on odd cycles",
+	"platform": {
+		"display_server": "headless",
+		"logical_processor_count": 8,
+		"os": "Windows",
+		"processor": "AMD Ryzen 3 7320U with Radeon Graphics"
+	},
+	"profile_cases_completed": 1,
+	"profile_version": "hex-ordered-geometry-candidate-abba-v1",
+	"runtime_identity": {
+		"authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate.",
+		"build_id": "p55-1b26a51136d1",
+		"canonical_encoding": "utf8-lf-tagged-length-v1",
+		"engine_identity": "4.7.1.stable.official.a13da4feb",
+		"protocol_version": 55.0,
+		"record_count": 2800.0,
+		"runtime_source_sha256": "1b26a51136d12142fe8c745e334d57af3f73a8ea4244d3ea2ac4bbb004f650b5",
+		"schema_version": 1.0,
+		"scope_id": "production-runtime-source-v1",
+		"snapshot_schema": 21.0,
+		"status": "candidate_generated_not_promoted"
+	},
+	"runtime_identity_path": "res://content/runtime/runtime_build_identity_v1.json",
+	"runtime_identity_sha256": "9064d23a4bda6e7e7096391bb7c4b26b5f222b10d57ab71b9f22a867cc9b4fa0",
+	"samples_per_block": 5,
+	"samples_per_implementation": 40,
+	"schema_version": 1,
+	"scope": "Headless isolated geometry-construction comparison on the genuine sorted 2,766-cell Wellspring topology. production_current calls the actual HexChemistryWorld.configure_geometry; candidate checks strict canonical order and skips only the duplicate sort while retaining validation and fresh nested allocation.",
+	"source_sha256": {
+		"content/maps/sanctum_campus_g2_v1.json": "496c96c80168dd6e4053e03ece86b8a8f010a44c24c5fca7eaebe8cd13b51cea",
+		"src/sim/hex/hex_chemistry_world.gd": "7582964d1c889f1ceaf5114ff6600eb3ead842318e4cf6db95aed1d82985cb7b",
+		"src/sim/hex/hex_grid.gd": "2e99c993e5ab72cd084b445804f1f69230631a760f6de681fb4b03ab321d5505",
+		"src/sim/hex/hex_world_definition.gd": "e15d75d48ddedc6bc891400f508ae43d892742c151e54bb5b93aef68dfa23f18",
+		"tests/performance/profile_hex_ordered_geometry_candidate.gd": "1b3f6b5094a520ed44329a86ff9bfb35d82ea3e639362ad1df29eb384a305be3",
+		"tests/performance/profile_unified_wellspring.gd": "7f524c49f7104f7a549c964f759248c0b1d8abff8da1d12e19a0c7ae728ee6b9",
+		"tests/support/hex_ordered_geometry_candidate.gd": "6811f3c4ac5ef7adc602ff0cdd75449670d4ac401031291437a40d70a25a503c"
+	},
+	"timing_semantics": "Each sample includes fresh HexChemistryWorld construction, all geometry checks, 2,766 cell allocations, and 44 independently owned material dictionaries per cell. Map loading, sorting the trusted input, warmup, source hashes, exact Variant-byte comparisons, state hashes, malformed cases, and ownership checks are outside timers. batch_size is one.",
+	"workload_limit": "Geometry-only fresh empty worlds. No snapshot prepare, hash, simulation tick, paid admission, renderer, network, cadence, capacity, export, or frame gain is measured or inferred."
+}

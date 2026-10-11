@@ -8,6 +8,15 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+if ($PSVersionTable.PSEdition -ne 'Core' -or $PSVersionTable.PSVersion -lt [version]'7.2') {
+    [Console]::Error.WriteLine('H.E.X. developer tasks require PowerShell 7.2 or later. Install PowerShell 7 and run hex.cmd, or invoke this script with pwsh.exe.')
+    exit 1
+}
+$powerShellBinary = Join-Path $PSHOME 'pwsh.exe'
+if (-not (Test-Path -LiteralPath $powerShellBinary -PathType Leaf)) {
+    [Console]::Error.WriteLine('The PowerShell 7 executable is unavailable. Repair the PowerShell installation and ensure pwsh.exe is on PATH.')
+    exit 1
+}
 $scriptsRoot = Join-Path $PSScriptRoot 'scripts'
 
 function Show-FluxTasks {
@@ -25,7 +34,7 @@ function Show-FluxTasks {
 
 function Invoke-FluxTaskScript([string]$Name, [string[]]$PrefixArguments = @()) {
     $scriptPath = Join-Path $scriptsRoot $Name
-    & powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $scriptPath @PrefixArguments @TaskArguments
+    & $powerShellBinary -NoLogo -NoProfile -ExecutionPolicy Bypass -File $scriptPath @PrefixArguments @TaskArguments
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 }
 

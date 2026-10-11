@@ -31,7 +31,8 @@ func _test_eight_way_windows_and_brake() -> void:
 			slider.velocity_y = direction.y * MovementTuning.BASE_SPEED / 1000
 			MovementSystem.step(slider, SimCommand.new(0, 1, direction.x, direction.y, 0, SimCommand.PRESSED_SLIDE), config, arena)
 			for age: int in range(8):
-				equal(MovementSystem.is_combat_intangible(slider, config), age < 6, "slide has exactly six opening protected ticks")
+				check(not MovementSystem.is_combat_intangible(slider, config), "slide has no blanket protected ticks")
+				check(MovementSystem.avoids_ordinary_projectiles(slider) and not MovementSystem.avoids_ground_effects(slider), "slide ducks shots while remaining in ground hazards")
 				MovementSystem.step(slider, SimCommand.new(age + 1, 1, direction.x, direction.y), config, arena)
 			var paid := slider.stamina
 			var cooldown := slider.slide_cooldown_ticks
@@ -45,8 +46,7 @@ func _test_eight_way_windows_and_brake() -> void:
 			MovementSystem.step(jumper, SimCommand.new(0, 1, direction.x, direction.y, SimCommand.HELD_SPRINT, SimCommand.PRESSED_JUMP), config, arena)
 			equal(jumper.hop_mode, PlayerState.MovementMode.HOP, "Sprint + Jump remains directional Jump")
 			for age: int in range(14):
-				var protected := age < config.milliseconds_to_ticks(MovementTuning.JUMP_INVULNERABILITY_MS) and jumper.hop_ticks > 0
-				equal(MovementSystem.is_combat_intangible(jumper, config), protected, "short hop / fast fall never refreshes or prematurely ages jump protection")
+				check(not MovementSystem.is_combat_intangible(jumper, config), "jump and fast fall never grant blanket immunity")
 				MovementSystem.step(jumper, SimCommand.new(age + 1, 1, direction.x, direction.y, held), config, arena)
 
 
@@ -55,23 +55,28 @@ func _test_air_wall_budget() -> void:
 	var arena := CollisionWorld.new(4_000_000, 4_000_000)
 	for normal: Vector2i in [Vector2i(1000, 0), Vector2i(-1000, 0), Vector2i(0, 1000), Vector2i(0, -1000)]:
 		var state := _state()
-		MovementSystem.step(state, SimCommand.new(0, 1, 1000, 0, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP), config, arena)
-		for tick: int in range(1, config.milliseconds_to_ticks(MovementTuning.HOP_COMMITMENT_MS)):
-			MovementSystem.step(state, SimCommand.new(tick, 1, 1000, 0), config, arena)
-		state.wall_memory_ticks = 12
-		state.wall_contact_id = 3
-		state.wall_x = normal.x
-		state.wall_y = normal.y
+		state.air_height = 40_000
+		state.hop_ticks = MovementSystem._remaining_air_ticks(state, config)
+		state.double_jump_used = true
 		state.air_redirects_remaining = 0
-		MovementSystem.step(state, SimCommand.new(1, 1, normal.x, normal.y, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP), config, arena)
-		equal(state.hop_mode, PlayerState.MovementMode.WALL_KICK, "outward airborne wall contact selects kick")
-		equal(state.hop_stage, 2, "wall kick spends second air action")
+		var wall_arena := CollisionWorld.new(4_000_000, 4_000_000)
+		var lower := Vector2i(1_000_000, 1_000_000)
+		var upper := Vector2i(3_000_000, 3_000_000)
+		if normal.x < 0: lower.x = 2_020_000
+		elif normal.x > 0: upper.x = 1_980_000
+		elif normal.y < 0: lower.y = 2_020_000
+		else: upper.y = 1_980_000
+		wall_arena.add_obstacle(CollisionWorld.Obstacle.new(3, lower.x, lower.y, upper.x, upper.y))
+		var tangent := Vector2i(-normal.y, normal.x)
+		MovementSystem.step(state, SimCommand.new(0, 1, tangent.x, tangent.y, SimCommand.HELD_JUMP), config, wall_arena)
+		check(state.wall_skim_ticks > 0, "held airborne intent admits real wall contact")
+		MovementSystem.step(state, SimCommand.new(1, 1, normal.x, normal.y), config, wall_arena)
+		equal(state.hop_mode, PlayerState.MovementMode.WALL_KICK, "release at real wall contact selects kick")
+		check(state.double_jump_used, "wall kick cannot replenish spent double jump")
 		equal(state.air_redirects_remaining, 0, "wall kick cannot refresh spent redirect")
 		var paid := state.stamina
-		state.wall_memory_ticks = 12
-		state.wall_contact_id = 4
 		MovementSystem.step(state, SimCommand.new(2, 1, normal.x, normal.y, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP), config, arena)
-		equal(state.stamina, paid - config.per_tick(MovementTuning.JUMP_SUSTAIN_DRAIN_PER_SECOND), "opposite wall cannot grant a third air action; its held tick only sustains the current arc")
+		equal(state.stamina, paid, "held jump cannot grant free third lift or charge hidden sustain")
 		equal(state.hop_stage, 2, "denied opposite-wall repeat preserves the spent air stage")
 
 
@@ -92,6 +97,8 @@ func _test_explicit_intents_and_attachment() -> void:
 	state.wall_contact_id = 7
 	state.wall_memory_ticks = 12
 	state.wall_x = -1000
+	state.air_height = 40_000
+	state.hop_ticks = MovementSystem._remaining_air_ticks(state, config)
 	MovementSystem.step(state, SimCommand.new(0, 1, 0, 1000, 0, SimCommand.PRESSED_TECHNIQUE), config, arena)
 	check(state.wall_skim_ticks > 0, "tangent + wall intent starts contact run")
 	check(not MovementSystem.is_combat_intangible(state, config), "wallrun has no protection")
@@ -103,11 +110,13 @@ func _test_explicit_intents_and_attachment() -> void:
 	state.wall_contact_id = 7
 	state.wall_memory_ticks = 12
 	state.wall_x = -1000
-	MovementSystem.step(state, SimCommand.new(0, 1, 0, 1000, 0, SimCommand.PRESSED_TECHNIQUE), config, arena)
+	state.air_height = 40_000
+	state.hop_ticks = MovementSystem._remaining_air_ticks(state, config)
+	MovementSystem.step(state, SimCommand.new(0, 1, 0, 1000, SimCommand.HELD_JUMP, SimCommand.PRESSED_TECHNIQUE), config, arena)
 	for tick: int in range(1, config.milliseconds_to_ticks(MovementTuning.WALL_RUN_COMMITMENT_MS)):
-		MovementSystem.step(state, SimCommand.new(tick, 1, 0, 1000), config, arena)
-	MovementSystem.step(state, SimCommand.new(1, 1, 0, 1000, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP), config, arena)
-	equal(state.hop_mode, PlayerState.MovementMode.WALL_KICK, "Jump exits attached wallrun as a wall kick")
+		MovementSystem.step(state, SimCommand.new(tick, 1, 0, 1000, SimCommand.HELD_JUMP), config, arena)
+	MovementSystem.step(state, SimCommand.new(1, 1, 0, 1000), config, arena)
+	equal(state.hop_mode, PlayerState.MovementMode.WALL_KICK, "Jump release exits attached wallrun as a wall kick")
 	equal(state.wall_skim_ticks, 0, "wall jump cleanly ends wallrun")
 	state = _state()
 	state.velocity_x = MovementTuning.BASE_SPEED
@@ -122,7 +131,7 @@ func _test_airborne_wallrun_chain() -> void:
 	arena.add_obstacle(CollisionWorld.Obstacle.new(9, 2_020_000, 1_800_000, 2_048_000, 2_200_000))
 	var state := _state()
 	state.position_x = 2_002_000
-	MovementSystem.step(state, SimCommand.new(0, 1, 0, 1000, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP), config, arena)
+	MovementSystem.step(state, SimCommand.new(0, 1, 0, 1000, 0, SimCommand.PRESSED_JUMP), config, arena)
 	for tick: int in range(1, config.milliseconds_to_ticks(MovementTuning.HOP_COMMITMENT_MS)):
 		MovementSystem.step(state, SimCommand.new(tick, 1, 0, 1000), config, arena)
 	state.wall_contact_id = 9
@@ -145,6 +154,8 @@ func _test_wall_contact_and_turns() -> void:
 	arena.add_obstacle(CollisionWorld.Obstacle.new(7, 2_020_000, 1_800_000, 2_048_000, 2_200_000))
 	var state := _state()
 	state.position_x = 2_002_000
+	state.air_height = 40_000
+	state.hop_ticks = MovementSystem._remaining_air_ticks(state, config)
 	MovementSystem.step(state, SimCommand.new(0, 1, 0, 1000, 0, SimCommand.PRESSED_TECHNIQUE), config, arena)
 	check(state.wall_skim_ticks > 0, "Technique acquires actual nearby contact without a prerequisite collision tick")
 	var remaining := state.wall_skim_ticks
@@ -177,6 +188,8 @@ func _test_wall_contact_and_turns() -> void:
 	check(reentry.float_used and reentry.air_dodge_used and reentry.hop_stage == 2, "paid re-entry never refills Float, dash or wall-kick lift")
 	var gap := _state()
 	gap.position_x = 1_998_000
+	gap.air_height = 40_000
+	gap.hop_ticks = MovementSystem._remaining_air_ticks(gap, config)
 	MovementSystem.step(gap, SimCommand.new(0, 1, 0, 1000, 0, SimCommand.PRESSED_TECHNIQUE), config, arena)
 	equal(gap.wall_skim_ticks, 0, "Technique cannot attach across more than three pixels of real gap")
 	equal(gap.stamina, gap.stamina_maximum, "out-of-contact Technique refuses without a wallrun payment")
@@ -186,6 +199,8 @@ func _test_wall_contact_and_turns() -> void:
 	nonrunnable.add_obstacle(scenery)
 	var refused := _state()
 	refused.position_x = 2_002_000
+	refused.air_height = 40_000
+	refused.hop_ticks = MovementSystem._remaining_air_ticks(refused, config)
 	MovementSystem.step(refused, SimCommand.new(0, 1, 0, 1000, 0, SimCommand.PRESSED_TECHNIQUE), config, nonrunnable)
 	equal(refused.wall_skim_ticks, 0, "non-runnable solid scenery never becomes wallrun contact")
 	arena.add_obstacle(CollisionWorld.Obstacle.new(8, 1_800_000, 2_100_000, 2_020_000, 2_128_000))
@@ -208,6 +223,8 @@ func _test_wall_contact_and_turns() -> void:
 	var edge := _state()
 	edge.position_x = 2_002_000
 	edge.position_y = 2_198_000
+	edge.air_height = 40_000
+	edge.hop_ticks = MovementSystem._remaining_air_ticks(edge, config)
 	MovementSystem.step(edge, SimCommand.new(0, 1, 0, 1000, 0, SimCommand.PRESSED_TECHNIQUE), config, arena)
 	equal(edge.wall_skim_ticks, 0, "outside edge ends wallrun rather than snapping across empty space")
 
@@ -270,7 +287,7 @@ func _test_slide_jump_commitment() -> void:
 				equal(state.jump_buffer_ticks, 0, "slide conversion consumes exactly one buffered Jump")
 				equal(state.slide_ticks, 0, "Jump ends optional slide sustain")
 				equal(state.slide_cooldown_ticks, starting_cooldown - converted_age, "conversion never refreshes the slide cooldown")
-				equal(state.jump_protection_ticks, config.milliseconds_to_ticks(MovementTuning.JUMP_INVULNERABILITY_MS), "conversion retains the original jump protection window")
+				equal(state.jump_protection_ticks, 0, "conversion gains height rather than blanket jump protection")
 				equal(state.hop_speed, retained_entry, "all directions preserve actual post-drag momentum without exceeding the cap")
 				check(state.velocity_x * direction.x + state.velocity_y * direction.y > 0, "conversion follows the requested travel direction")
 	var refused := _state()

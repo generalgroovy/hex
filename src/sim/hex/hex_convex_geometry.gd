@@ -15,6 +15,7 @@ static func polygon(cell: Vector2i, origin: Vector2i) -> Array[Vector2i]:
 
 static func box_overlaps(center: Vector2i, radius: int, cell: Vector2i, origin: Vector2i) -> bool:
 	if not _valid_query(center, center, radius, cell, origin): return false
+	if not swept_bounds_overlap(center,center,radius,cell,origin): return false
 	for plane: Dictionary in _box_planes(cell, origin, radius):
 		var n: Vector2i = plane.n
 		if center.x * n.x + center.y * n.y >= int(plane.limit): return false
@@ -22,6 +23,7 @@ static func box_overlaps(center: Vector2i, radius: int, cell: Vector2i, origin: 
 
 static func sweep_box(start: Vector2i, finish: Vector2i, radius: int, cell: Vector2i, origin: Vector2i) -> Dictionary:
 	if not _valid_query(start, finish, radius, cell, origin): return {}
+	if not swept_bounds_overlap(start,finish,radius,cell,origin): return {}
 	# SAT axes of hex + AABB. The additional Y planes are essential: offsetting
 	# only six hex faces would overfill the Minkowski sum at its top/bottom tips.
 	var enter := 0.0
@@ -49,6 +51,7 @@ static func sweep_box(start: Vector2i, finish: Vector2i, radius: int, cell: Vect
 
 static func sweep_circle(start: Vector2i, finish: Vector2i, radius: int, cell: Vector2i, origin: Vector2i) -> Dictionary:
 	if not _valid_query(start, finish, radius, cell, origin): return {}
+	if not swept_bounds_overlap(start,finish,radius,cell,origin): return {}
 	var points := polygon(cell, origin)
 	var best := {}
 	if HexGrid._point_strictly_in_cell(start - origin, cell):
@@ -84,6 +87,16 @@ static func sweep_circle(start: Vector2i, finish: Vector2i, radius: int, cell: V
 		var normal := SimCommand._normalized_direction(center.x - a.x, center.y - a.y)
 		best = _earlier(best, {"fraction": vertex_time, "center": center, "point": a, "normal": normal, "face": index, "runnable": false})
 	return best
+
+# Conservative rejection only: keep equality/tangency and run the unchanged
+# exact six-face solver for every possible contact. Avoid constructing eight
+# plane dictionaries or testing six circle edges for distant stationary pillars.
+static func swept_bounds_overlap(start: Vector2i, finish: Vector2i, radius: int, cell: Vector2i, origin: Vector2i) -> bool:
+	var center := HexGrid.center(cell)+origin
+	var x := HexGrid.HALF_WIDTH+radius
+	var y := HexGrid.HALF_HEIGHT+radius
+	return maxi(start.x,finish.x)>=center.x-x and mini(start.x,finish.x)<=center.x+x and maxi(start.y,finish.y)>=center.y-y and mini(start.y,finish.y)<=center.y+y
+
 
 static func nearby_face(center: Vector2i, radius: int, tolerance: int, cell: Vector2i, origin: Vector2i, requested_face: int = -1) -> Dictionary:
 	if not _valid_query(center, center, radius, cell, origin) or tolerance < 0 or tolerance > 10_000 or requested_face < -1 or requested_face >= 6: return {}
@@ -156,4 +169,4 @@ static func _earlier(first: Dictionary, second: Dictionary) -> Dictionary:
 
 
 static func _valid_query(start: Vector2i, finish: Vector2i, radius: int, cell: Vector2i, origin: Vector2i) -> bool:
-	return radius >= 0 and radius <= HexGrid.MAX_SWEEP_RADIUS and absi(cell.x) <= 256 and absi(cell.y) <= 256 and HexGrid._query_point_valid(start) and HexGrid._query_point_valid(finish) and HexGrid._query_point_valid(origin) and HexGrid._query_point_valid(HexGrid.center(cell) + origin)
+	return radius >= 0 and radius <= HexGrid.MAX_SWEEP_RADIUS and absi(cell.x) <= HexGrid.MAX_ABS_CELL_COORDINATE and absi(cell.y) <= HexGrid.MAX_ABS_CELL_COORDINATE and HexGrid._query_point_valid(start) and HexGrid._query_point_valid(finish) and HexGrid._query_point_valid(origin) and HexGrid._query_point_valid(HexGrid.center(cell) + origin)

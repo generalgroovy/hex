@@ -1,6 +1,28 @@
 # Windows installer, launcher and offline updater
 
-Status: local Windows playtest delivery, 2026-09-08; isolated installer journey passed.
+**Historical delivery reference.** The current H.E.X. launch recommendation and
+qualification status are in the [player guide](../README.md) and
+[resume handoff](../.agent/HEX-RESUME.md). The October 5 and September artifacts
+below retain their original evidence and are not automatically promoted by this
+page. See the [documentation map](README.md) for current ownership.
+
+Status: October 5 H.E.X. installer and installed-launcher validation passed.
+
+[Current setup EXE](../exports/hex-setup-engagement-20261005/HEX-Setup-p56-4ac12ff25baf.exe)
+contains build `p56-4ac12ff25baf`. Use **Install and play**, then the H.E.X.
+shortcut. New trusted setup files provide offline updates; **Previous build**
+selects a verified retained version. No development tools or admin install needed.
+The complete [current evidence and limits](HEX-POLISH-CHECKPOINT.md) and
+[player/developer delivery instructions](../packaging/hex-windows/README.txt)
+supersede the historical FLUX instructions below.
+
+Unsigned; no automatic online feed, public release or registered uninstall yet.
+Tests used isolated directories and saves, with shortcuts disabled. Internet
+friend play still requires the undeployed relay and physical two-PC acceptance.
+
+## September 8 FLUX delivery (historical, not current)
+
+Status: historical Windows playtest delivery, 2026-09-08; isolated installer journey passed.
 
 **Historical receipt.** September9's latest exported game and policy-blocked new
 installer are recorded in [the current checkpoint](TEMPLATE-DELIVERY-CHECKPOINT.md).

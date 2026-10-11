@@ -1,0 +1,67 @@
+{
+  "id": "biggy_bob",
+  "display_name": "Biggy Bob",
+  "ancestry": "dwarf",
+  "body_type": "middle",
+  "generator": "built-in image_gen",
+  "generator_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-ece9-7650-9c46-262da7c2d18d\\exec-e2121688-8d4c-41f5-8489-e1c9a6ffcd94.png",
+  "source_file": "source.png",
+  "additional_rear_correction": "rear-correction.png",
+  "additional_rear_correction_receipt": "rear-correction-receipt.json",
+  "attempt": 2,
+  "attempt1_generator_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-ece9-7650-9c46-262da7c2d18d\\exec-9940b47b-f548-4055-b0d3-9de3e918908e.png",
+  "attempt1_local": "attempt-1.png",
+  "references": [
+    "C:\\Users\\sende\\Projects\\hex\\assets\\sprites\\fullbody_cast_v1\\biggy_bob-detail.png",
+    "C:\\Users\\sende\\Pictures\\styleref1.png",
+    "C:\\Users\\sende\\Projects\\hex\\art_batches\\pixel_body_pilot_v1\\source\\s-wayne.png"
+  ],
+  "correction_references": [
+    "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-ece9-7650-9c46-262da7c2d18d\\exec-9940b47b-f548-4055-b0d3-9de3e918908e.png"
+  ],
+  "observed": {
+    "width": 1774,
+    "height": 887,
+    "pixel_format": "Format32bppArgb",
+    "sampled_zero_alpha": 13617,
+    "sampled_partial_alpha": 10987,
+    "sampled_total": 24642,
+    "sha256": "FDA84286E849C403E90F6986B2B218F020D562E5BFFEEB617E141888B794F262",
+    "columns": 8,
+    "rows": 4,
+    "row_mapping": [
+      "idle",
+      "walk_contact_a",
+      "walk_contact_b",
+      "cast"
+    ],
+    "requested_headings": [
+      "S",
+      "SE",
+      "E",
+      "NE",
+      "N",
+      "NW",
+      "W",
+      "SW"
+    ]
+  },
+  "visual_assessment": {
+    "status": "candidate_not_directionally_accepted",
+    "strengths": [
+      "32 intact connected dwarf bodies with clear identity and costume",
+      "No weapons, ground, effects or clipping",
+      "RGBA alpha-zero gutters"
+    ],
+    "quality_flags": [
+      "Attempt2 improves NE/NW for idle and walkA only",
+      "WalkB rear diagonals appear reversed (columns3 and5)",
+      "Cast columns3 and5 remain similar back-left views; required back-right cast missing",
+      "E/W remain too similar to corresponding front diagonals",
+      "Two-attempt cap reached; no full directional acceptance claim",
+      "Source saved for provenance/review; lead must not silently claim complete 8-heading animation"
+    ]
+  },
+  "exact_prompt": "Use case: stylized-concept\nAsset type: production 2D game character pixel-art sprite source sheet for H.E.X.\nPrimary request: ONE coherent identity, exactly EIGHT columns and FOUR rows, total 32 separate full-body poses on genuinely transparent RGBA.\nInput images: Image 1 is CURRENT identity reference, preserving its face, ancestry, hair, clothing colors, costume and anatomy; Image 2 is old pixel STYLE ONLY, ignore its text, outdated names/races, props and spells; Image 3 is compact appealing proportion/style and eight-heading reference ONLY, do NOT copy its five-row layout or its identity.\nStyle/medium: charming endearing compact oldschool pixel art, expressive readable face, crisp deliberate chunky pixel clusters, restrained shading and dark colored outline; unified cranial head size and sturdy connected anatomy. Do not elongate limbs or torso. Middle body build, approx 2.7 heads high with volume rather than stretched height; the final assembler will make body 63 pixels high inside 128 pixel cells.\nComposition: exactly 8 equal columns x 4 equal rows, landscape sheet. Each sprite centered in its own invisible cell with generous fully transparent gutters and margin. Entire head, hands, feet, costume, tail/wings when present must fit intact. No sprites touching.\nEvery row has these precise eight distinct directions LEFT TO RIGHT: column0 S straight FRONT facing viewer; column1 SE FRONT-RIGHT 45 degrees; column2 E RIGHT PROFILE; column3 NE BACK-RIGHT 45 degrees with back of head and NO frontal eyes, body visibly turning toward image RIGHT; column4 N straight BACK with NO face; column5 NW BACK-LEFT 45 degrees with back of head and NO frontal eyes, body visibly turning toward image LEFT; column6 W LEFT PROFILE; column7 SW FRONT-LEFT 45 degrees.\nFOUR ROWS ONLY top to bottom: row0 relaxed IDLE neutral standing; row1 WALK CONTACT A with LEFT foot forward and RIGHT arm forward; row2 WALK CONTACT B with RIGHT foot forward and LEFT arm forward, clearly opposite legs from row1; row3 CAST with both EMPTY hands extended forward in that heading. Four rows, never five. Keep body shape, head size, costume and scale consistent through all 32 poses; head, torso, arms, hands, legs, feet physically connected.\nNo weapons, staves, held tools, baked spells, magic particles, aura, ground shadow, ground plane, scene, labels, letters, watermarks, visible grid or checkerboard. Actual transparent background with alpha=0 between figures.\nSubject: Biggy Bob, current ancestry DWARF. Compact broad sturdy dwarf, warm pale skin, thick brown full beard and moustache, swept-back brown hair tied into a low back knot, expressive strong eyebrows. Rounded dark charcoal steel shoulder plates, heavy dark armour with warm gold edging/rivets, segmented bracers, dark gloves, gold square belt buckle, dark sturdy boots. Preserve current Image1 costume; he is bareheaded with visible hair, NO helmet. Empty hands. Do not copy the hammer or helmet from the old style reference.",
+  "exact_correction_prompt": "Use case: identity-preserve\nImage 1 is a transparent dwarf sprite sheet to correct. Preserve its exact dwarf identity, brown tied-back hair and big beard, dark charcoal/gold armour, connected stout body proportions, pixel-art rendering, four rows and all32 full bodies. Correct ONLY the directional views to a true eight-heading turntable in EVERY row. The columns left-to-right must be: 0 pure FRONT (both eyes); 1 FRONT-RIGHT 45degree, front chest and both eyes with far eye narrower; 2 exact RIGHT PROFILE 90degree (only ONE eye, nose silhouette points right, torso narrow sideways); 3 BACK-RIGHT 135degree (NO eyes, back of head, body points to the image RIGHT, opposite silhouette to column5); 4 pure BACK (NO face); 5 BACK-LEFT 225degree (NO eyes, back of head, body points to the image LEFT); 6 exact LEFT PROFILE 270degree (ONE eye, nose silhouette points left, torso narrow sideways); 7 FRONT-LEFT 315degree (front chest and both eyes). The two side profiles must be distinct from the front diagonals. The two back diagonals must be distinct and face opposite screen sides. Keep same row actions: idle; left-foot-forward/right-arm-forward walk; opposite right-foot-forward/left-arm-forward walk; both empty-hands-forward cast. In cast, hands extend toward the heading, not away from it. Genuinely transparent RGBA outside figures, no background, ground shadow, grid, text, weapons, spells, extra rows or cropped feet. Exactly8columnsx4rows."
+}

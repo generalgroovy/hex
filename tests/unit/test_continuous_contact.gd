@@ -19,7 +19,34 @@ func run() -> int:
 	_test_actor_order()
 	_test_wall_and_range()
 	_test_diagonal_contacts_and_range()
+	_test_indexed_wall_queries()
 	return finish("continuous-contact")
+
+
+func _test_indexed_wall_queries() -> void:
+	var indexed := CollisionWorld.new(4000000,3000000)
+	var exhaustive := CollisionWorld.new(4000000,3000000)
+	var random := RandomNumberGenerator.new()
+	random.seed=915821
+	for index: int in 120:
+		var x := random.randi_range(100000,3700000)
+		var y := random.randi_range(100000,2700000)
+		indexed.add_obstacle(CollisionWorld.Obstacle.new(index+1,x,y,x+90000,y+60000))
+		exhaustive.add_obstacle(CollisionWorld.Obstacle.new(index+1,x,y,x+90000,y+60000))
+	# Public obstacle exposure deliberately disables the index and exercises the
+	# original full scan; both paths retain the same narrow phase and tie rules.
+	var exposed := exhaustive.obstacles
+	equal(exposed.size(),120,"oracle full scan configured")
+	for index: int in 700:
+		var start := Vector2i(random.randi_range(0,4000000),random.randi_range(0,3000000))
+		var end := start+Vector2i(random.randi_range(-150000,150000),random.randi_range(-150000,150000))
+		if index%7==0: end=Vector2i(random.randi_range(0,4000000),random.randi_range(0,3000000))
+		if index%11==0: end=start
+		var radius: int = [0,1000,18000,32000][index%4]
+		equal(ContinuousContact.wall_contact(start,end,radius,indexed),ContinuousContact.wall_contact(start,end,radius,exhaustive),"indexed swept wall contact matches original scan including boundaries")
+	indexed.add_obstacle(CollisionWorld.Obstacle.new(999,200000,200000,220000,220000))
+	exhaustive.add_obstacle(CollisionWorld.Obstacle.new(999,200000,200000,220000,220000))
+	equal(ContinuousContact.wall_contact(Vector2i(150000,210000),Vector2i(250000,210000),0,indexed),ContinuousContact.wall_contact(Vector2i(150000,210000),Vector2i(250000,210000),0,exhaustive),"new walls invalidate index without stale visibility")
 
 
 func _shot() -> ProjectileState:

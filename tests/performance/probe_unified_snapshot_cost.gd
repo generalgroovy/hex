@@ -108,6 +108,10 @@ func _probe_case(case_name: String) -> Dictionary:
 	print("UNIFIED_SNAPSHOT_COST stage=paid_steps case=%s complete tick=%d hash=%s admitted=%d" % [case_name, world.tick, stable_hash.left(12), int(world.hex_court.metrics.admitted)])
 
 	var state_hash_stage := _probe_state_hash(case_name, world, stable_hash)
+	var cold_capture := _probe_cold_capture(world)
+	var detail_stages := _probe_hash_components(world)
+	var hash_pressure := _probe_hash_pressure(world.hex_court)
+	_check(hash_pressure.size() == 2, "both hash-pressure workloads completed")
 	var chemistry_stage := _probe_chemistry_capture(case_name, world, stable_hash)
 	var world_stage := _probe_world_capture(case_name, world, stable_hash)
 	# One normal preflight puts the session into the same pending-ack state used
@@ -166,12 +170,91 @@ func _probe_case(case_name: String) -> Dictionary:
 			"authoritative_session_capture_envelope": envelope_stage,
 			"session_transport_envelope_wire_packets": packet_stage,
 		},
+		"hash_detail": detail_stages,
+		"hash_pressure": hash_pressure,
+		"cold_world_capture_us": cold_capture,
 		"roundtrip": {
 			"chemistry_hash": restored_chemistry_hash,
 			"world_hash": restored_world_hash,
 			"decoded_envelope_equal": decoded_envelope == envelope_preflight,
 		},
 	}
+
+
+func _probe_hash_components(world: SimWorld) -> Dictionary:
+	var court: HexChemistryWorld = world.hex_court
+	var stable_cells: Array = court._stable_hash_cells()
+	var ordered: Array[Vector2i] = HexChemistrySnapshot._trusted_cells(court)
+	var topology_bytes := HexChemistrySnapshot._topology_bytes(court, ordered)
+	var jobs := {
+		"cell_key_order": func() -> Variant: return court._ordered_hash_cell_keys(),
+		"stable_cell_projection": func() -> Variant: return court._stable_hash_cells(),
+		"stable_cell_json": func() -> Variant: return JSON.stringify(stable_cells),
+		"cell_variant_bytes": func() -> Variant: return var_to_bytes(court.cells),
+		"trusted_cells": func() -> Variant: return HexChemistrySnapshot._trusted_cells(court),
+		"topology_hash": func() -> Variant: return HexChemistrySnapshot._topology_hash(court, ordered),
+		"blank_trusted_hex": func() -> Variant: return HexWorldSnapshot._blank_trusted_hex(court),
+		"chemistry_hash": func() -> Variant: return court.state_hash(),
+		"canonical_cell_json": func() -> Variant: return court._canonical_cell_json(),
+		"cached_blank_copy": func() -> Variant: return HexChemistrySnapshot._copy_trusted_geometry(court, ordered, topology_bytes),
+	}
+	var result := {}
+	for label: String in jobs:
+		var samples := PackedInt64Array()
+		for repetition: int in REPETITIONS:
+			var started := Time.get_ticks_usec()
+			var value: Variant = jobs[label].call()
+			samples.append(Time.get_ticks_usec() - started)
+			_check(value != null, "snapshot component " + label + " produces a result")
+		result[label] = _percentiles(samples)
+	return result
+
+
+func _probe_cold_capture(world: SimWorld) -> Dictionary:
+	var reference := HexWorldSnapshot.capture(world)
+	var samples := PackedInt64Array()
+	for index: int in REPETITIONS:
+		HexChemistryWorld._canonical_blank_rows.clear()
+		HexChemistrySnapshot._blank_topology_bytes.clear()
+		HexChemistrySnapshot._blank_topology_cells.clear()
+		var started := Time.get_ticks_usec()
+		var snapshot := HexWorldSnapshot.capture(world)
+		samples.append(Time.get_ticks_usec() - started)
+		_check(not snapshot.is_empty() and snapshot == reference, "cold caches preserve exact snapshot bytes")
+	return _percentiles(samples)
+
+
+func _probe_hash_pressure(source: HexChemistryWorld) -> Dictionary:
+	# Byte-equivalence and cost protection, not a legal combat/capacity fixture.
+	# Source remains untouched. Dense pressure deliberately includes orphan matter.
+	var court := HexChemistryWorld.new()
+	for field: String in ["origin", "current_tick", "chemistry_enabled", "next_cast_id", "next_product_id", "next_ground_part_id", "cells", "casts", "products", "pending", "sources", "exposure", "flow_carry", "metrics"]:
+		var value: Variant = source.get(field)
+		court.set(field, value.duplicate(true) if value is Dictionary else value)
+	var result := {}
+	var edit_cell: Vector2i = court.cells.keys()[0]
+	for mode: String in ["changing-metadata", "synthetic-all-nonempty"]:
+		if mode == "synthetic-all-nonempty":
+			for cell: Vector2i in court.cells: court.set_cell_amount(cell, "water", 999001, 1)
+		var candidate := PackedInt64Array()
+		var generic := PackedInt64Array()
+		for index: int in 12:
+			court.cells[edit_cell].terrain = index
+			var outputs := {}
+			var order: Array = ["candidate", "generic"] if index % 4 in [0, 3] else ["generic", "candidate"]
+			for arm: String in order:
+				var started := Time.get_ticks_usec()
+				var bytes: PackedByteArray = court._state_hash_bytes() if arm == "candidate" else court._generic_state_hash_bytes()
+				var digest := CanonicalBytes.sha256_hex(bytes)
+				var elapsed := Time.get_ticks_usec() - started
+				if arm == "candidate": candidate.append(elapsed)
+				else: generic.append(elapsed)
+				outputs[arm] = bytes
+				_check(digest.length() == 64, "pressure arm emits a full hash")
+			_check(outputs.candidate == outputs.generic, mode + " exact canonical bytes for changed state")
+		result[mode] = {"candidate_us": _percentiles(candidate), "generic_us": _percentiles(generic), "candidate_samples_us": Array(candidate), "generic_samples_us": Array(generic)}
+		_check(candidate.size() == 12 and generic.size() == 12, mode + " completes all paired hash samples")
+	return result
 
 
 func _probe_state_hash(case_name: String, world: SimWorld, stable_hash: String) -> Dictionary:
@@ -287,6 +370,7 @@ func _probe_source_hashes() -> Dictionary:
 		"tests/performance/probe_unified_snapshot_cost.gd",
 		"tests/performance/profile_unified_wellspring.gd",
 		"src/net/hex_chemistry_snapshot.gd",
+		"src/sim/hex/hex_chemistry_world.gd",
 		"src/net/hex_world_snapshot.gd",
 		"src/net/authoritative_session.gd",
 		"src/net/session_transport.gd",

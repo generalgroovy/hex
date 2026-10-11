@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "completed_at_utc": "2026-10-07T14:59:45.6234168Z",
+  "tier": "focused",
+  "result": "failed",
+  "failure": "Godot emitted a script/import/runtime error.",
+  "source": {
+    "current_state_path": ".godot/windows-tests/f066056ffa0546a2a5ead74e370eab4c/current-state.json",
+    "asset_inventory_path": null,
+    "head": "1559a566e33255c59337c5963f1c3c685d757f1f",
+    "branch": "main",
+    "dirty": true,
+    "current_state_sha256": "cdf5f9bb6f4154985171fa9124a2f7477a475e325927b757213802f44afb01d8",
+    "asset_inventory_sha256": null
+  },
+  "requested_suite_ids": [
+    "movement-overhaul",
+    "movement-checkpoint1",
+    "movement-revision",
+    "movement-float",
+    "movement-guide-model",
+    "client-prediction",
+    "unified-prediction"
+  ],
+  "supervision": {
+    "default_engine_timeout_seconds": 180,
+    "suite_timeout_seconds": 180
+  },
+  "isolation": {
+    "appdata_path": ".godot/windows-tests/f066056ffa0546a2a5ead74e370eab4c/isolated-roaming",
+    "scope": "Godot import, suite and boot user data; packaging retains its own isolation policy",
+    "caller_appdata_restored": true
+  },
+  "executed": {
+    "current_state_check": true,
+    "asset_inventory": false,
+    "doctor": true,
+    "import": false,
+    "post_import_identity_check": false,
+    "deterministic_suite_runner": true,
+    "suite_count": 7,
+    "assertion_count": 261998,
+    "suites": [
+      {
+        "id": "movement-checkpoint1",
+        "assertions": 36991,
+        "failures": 0
+      },
+      {
+        "id": "unified-prediction",
+        "assertions": 908,
+        "failures": 0
+      },
+      {
+        "id": "movement-guide-model",
+        "assertions": 421,
+        "failures": 0
+      },
+      {
+        "id": "client-prediction",
+        "assertions": 17472,
+        "failures": 0
+      },
+      {
+        "id": "movement-revision",
+        "assertions": 1590,
+        "failures": 0
+      },
+      {
+        "id": "movement-overhaul",
+        "assertions": 186607,
+        "failures": 0
+      },
+      {
+        "id": "movement-float",
+        "assertions": 18009,
+        "failures": 0
+      }
+    ],
+    "boot_120_hz": false,
+    "package_and_installer": false
+  },
+  "duration_ms": 133613,
+  "stderr_bytes": 1046,
+  "logs": [
+    {
+      "path": ".godot/windows-tests/f066056ffa0546a2a5ead74e370eab4c/suite.log",
+      "sha256": "c6c9513f4a06b9a456e8c21885f034870f0828955a3ee6e6f5c4682513038984",
+      "stderr_bytes": 1046
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 extends FluxTestSuite
 
+const Elements = preload("res://src/content/element_rules.gd")
 const Audio = preload("res://src/presentation/element_audio.gd")
 const Harness = preload("res://tests/support/element_audio_harness.gd")
 const CONTACTS := {"bolt": "projectile_hit", "spray": "spray_hit", "field": "field_triggered", "beam": "beam_fired"}
@@ -13,6 +14,7 @@ func run() -> int:
 	_test_pcm_contract()
 	_test_catalog_admission()
 	_test_rate_pool_and_reset()
+	_test_playback_clock_occupancy()
 	_test_owned_voice_cleanup()
 	_test_inherited_bootstrap_gates()
 	_test_controls_header_and_sound_input()
@@ -24,7 +26,7 @@ func _test_pcm_contract() -> void:
 	var audio := Audio.new()
 	audio.prepare(false)
 	equal(audio.players.size(), 0, "silent preparation creates no playback nodes")
-	equal(audio.clips.size(), 16, "eight elements each cache a cast and contact clip")
+	equal(audio.clips.size(), 16, "eight retained audio styles each cache a cast and contact clip; only six admit live spells")
 	equal(audio.volume_percent, 30, "elemental sound starts at conservative 30 percent gain")
 	check(Audio.PEAK * Audio.VOICES <= 0.88, "four worst-case coherent voices retain full-volume headroom")
 	check(Audio.PEAK * Audio.VOICES * 0.30 <= 0.264, "default four-voice mix stays below 26.4 percent full scale")
@@ -126,7 +128,11 @@ func _test_catalog_admission() -> void:
 				check(cue.is_empty(), "wrong contact family is refused for wire %d/%s" % [wire, kind])
 			check(Audio.describe(hit, 2, catalog).is_empty(), "remote contact is never a local cue")
 			check(Audio.describe(_contact(wire, kind, 1, 0), 1, catalog).is_empty(), "miss/absent target is not confirmed contact")
-	equal(seen_elements.size(), 8, "production playable catalog actually covers all eight synthesized elements")
+	equal(seen_elements.size(), 6, "production playable catalog covers exactly six active audio elements")
+	for element: String in Elements.IDS: check(seen_elements.has(element), "canonical live audio identity is present")
+	for retired: int in [170,101,187,189]:
+		check(Audio.describe(_cast(retired),1,catalog).is_empty(),"retained audio style cannot authorize a retired spell")
+		check(Audio.describe(_contact(retired,"projectile_hit"),1,catalog).is_empty(),"retired spell has no live contact cue")
 	var wire := _wire("fire")
 	for event: Dictionary in [{}, _cast(0), _cast(999999), _cast(wire, 0), _contact(wire, "projectile_hit", 0), _contact(wire, "projectile_hit", 1, -1), {"type": "cast_started", "owner_id": 1, "wire_id": wire}]:
 		check(Audio.describe(event, 1, catalog).is_empty(), "unknown or incomplete event cannot create local sound")
@@ -188,6 +194,51 @@ func _test_rate_pool_and_reset() -> void:
 	audio.silence()
 	equal(audio.occupied_until, [0, 0, 0, 0], "explicit silence cleans every voice reservation")
 	equal(audio.clips, cached_clips, "admission, mute and reset never regenerate or mutate PCM")
+	audio.free()
+
+
+func _test_playback_clock_occupancy() -> void:
+	# Exercise real playback state through Dummy only. Looping, all-zero PCM
+	# holds voices active without mixer scheduling races or wall-clock sleeps.
+	check(AudioServer.get_driver_name() == "Dummy", "playback occupancy regression requires the silent Dummy driver")
+	if AudioServer.get_driver_name() != "Dummy":
+		return
+	var audio := _silent_audio()
+	var silent_clip := AudioStreamWAV.new()
+	silent_clip.format = AudioStreamWAV.FORMAT_16_BITS
+	silent_clip.mix_rate = Audio.RATE
+	silent_clip.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	silent_clip.loop_end = Audio.RATE
+	var bytes := PackedByteArray()
+	bytes.resize(Audio.RATE * 2)
+	bytes.fill(0)
+	silent_clip.data = bytes
+	var cast := _cast(_wire("light"))
+	audio.clips[Audio._key("light", false)] = silent_clip
+	audio.prepare(true)
+	var tree := Engine.get_main_loop() as SceneTree
+	tree.root.add_child(audio)
+	for index: int in range(Audio.VOICES):
+		check(audio.ingest(cast, index * 120, 1, catalog, true), "tick jumps use a free real voice without restarting an active one")
+		check(audio.players[index].playing, "each tick jump occupies a distinct actual playback voice")
+	var before := audio.admitted_count
+	var reservations := audio.occupied_until.duplicate()
+	check(not audio.ingest(cast, 480, 1, catalog, true), "expired logical reservations cannot reclaim four still-playing voices")
+	equal(audio.admitted_count, before, "real playback saturation drops without counting an admission")
+	equal(audio.occupied_until, reservations, "real playback saturation preserves every existing reservation")
+	equal(audio.last_kind_tick.cast, 360, "dropped playback leaves the successful cast gate unchanged")
+	audio.players[2].stop()
+	check(audio.ingest(cast, 480, 1, catalog, true), "an actually stopped voice is reusable after its logical reservation")
+	equal(audio.occupied_until[2], 600, "reuse reserves only the stopped voice for the new clip")
+	equal(audio.players.size(), Audio.VOICES, "tick jumps never grow the actual playback pool")
+	audio.silence()
+	for voice: AudioStreamPlayer in audio.players:
+		check(not voice.playing, "explicit silence clears actual playback as well as reservations")
+	check(audio.ingest(cast, 0, 1, catalog, true), "silence resets both clocks for the next session")
+	audio.players[0].stop()
+	check(audio.ingest(cast, 8, 1, catalog, true), "another voice admits a cue after the unchanged eight-tick cast gap")
+	check(not audio.players[0].playing and audio.players[1].playing, "stopping early does not bypass the first voice's logical reservation")
+	audio.silence()
 	audio.free()
 
 
@@ -363,7 +414,7 @@ func _test_controls_header_and_sound_input() -> void:
 
 
 func _test_real_paid_casts_and_contacts() -> void:
-	for element: String in Audio.ELEMENTS:
+	for element: String in Elements.IDS:
 		for family: String in LIVE_CONTACTS:
 			var node := Harness.new()
 			check(node.configure_fixture(catalog, cached_clips), "real cast fixture starts valid")

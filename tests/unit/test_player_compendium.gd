@@ -10,6 +10,9 @@ const HexPolicy = preload("res://src/sim/hex/hex_recipe_policy.gd")
 func run() -> int:
 	var abilities := AbilityCatalog.new()
 	check(abilities.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "compendium ability catalog loads")
+	var spell_help := " ".join(Compendium.spell_catalog_lines())
+	check(spell_help.contains("Fresh presses win") and spell_help.contains("lowest position wins"), "spell help teaches predictable fresh and held chord priority")
+	check(spell_help.contains("Rapid 600 / 1, Bolt 360 / 5, Heavy 180 / 15") and spell_help.contains("Field slows never increase power"), "spell comparison reports live inverse launch tradeoff without inventing slow damage")
 	var champions := ChampionCatalog.new()
 	check(champions.load_from_file("res://content/champions/foundation_champions_v1.json", abilities), "compendium champion catalog loads")
 	var roster := ChampionRosterPlan.new()
@@ -23,7 +26,7 @@ func run() -> int:
 	equal(panel.row_count(), 16, "all active movement techniques are reachable")
 	equal(panel.visible_row_indices().size(), 10, "row page stays comfortably bounded")
 	panel.move_row(2)
-	check(" ".join(panel.detail_paragraphs()).contains("Tap J"), "live guide resolves rebound controls")
+	check(" ".join(panel.detail_paragraphs()).contains("Press J") and " ".join(panel.detail_paragraphs()).contains("release to launch"), "live guide resolves rebound press/release controls")
 	panel.move_row(100)
 	equal(panel.selected_row, 15, "row selection cannot exceed catalog")
 	equal(panel.visible_row_indices(), [10, 11, 12, 13, 14, 15], "last page exposes remaining techniques")
@@ -77,6 +80,12 @@ func run() -> int:
 			if "wind" in entry["affinities"]:
 				check(combined.contains("Air %s" % str((entry["affinity_points"] as Dictionary).get("wind", 0))), "compendium renders the wind affinity with its player-facing Air label")
 			if bool(entries[character]["stats_available"]):
+				for obsolete: String in ["no unique ability", "no unique racial passive", "no race bonus", "race-bonus claim"]:
+					check(not combined.to_lower().contains(obsolete), "compendium cannot deny the working identity perks: %s / %s" % [entry.id, obsolete])
+				for scope: String in ["race", "character"]:
+					var perk: Dictionary = entry.identity_perks[scope]
+					for field: String in ["name", "summary", "window", "counter"]:
+						check(combined.contains(String(perk[field])), "compendium retains complete %s perk %s for %s" % [scope, field, entry.id])
 				check(combined.contains("Health") and combined.contains("Flux") and combined.contains("Stamina") and combined.contains("Walk speed"), "playable record exposes every stat family")
 				check(combined.contains("Hurtbox radius: %d px" % (champions.body_type_profiles.hurt_radius(String(entries[character]["body_type"])) / 1000)), "compendium exposes source-derived combat footprint")
 				check(combined.contains("Wall clearance: 18 px for every size"), "compendium distinguishes navigation clearance from hurtbox")
@@ -115,6 +124,8 @@ func run() -> int:
 	_test_compact_overviews(panel, preferences, font)
 	_test_selected_chemistry_details(panel, preferences, font)
 	_test_first_ten_policy_copy()
+	_test_current_link_and_vortex_guidance()
+	_test_controller_and_physical_navigation(panel, preferences, font)
 	return finish("player-compendium")
 
 
@@ -137,19 +148,19 @@ func _test_compact_overviews(panel: RefCounted, preferences: PlayerPreferences, 
 			check(font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x <= 1136.01, "compact summary fits its exact visible width")
 	panel.selected_row = 2
 	check(MovementGuideModel.compact_cells(panel.movement_rows[2])[1].contains("J"), "compact jump respects user rebind")
-	check(MovementGuideModel.compact_cells(panel.movement_rows[2])[4].contains("opening"), "jump table cannot imply protection throughout the whole flight")
+	equal(MovementGuideModel.compact_cells(panel.movement_rows[2])[4], "Height clearance", "jump table distinguishes physical clearance from timed immunity")
 	panel.handle_event(_key(KEY_ENTER), font)
 	check(not panel.compact_overview(), "Enter exposes the unchanged full reader")
-	check(" ".join(panel.detail_paragraphs()).contains("Tap J"), "full execution remains available from compact selection")
+	check(" ".join(panel.detail_paragraphs()).contains("Press J") and " ".join(panel.detail_paragraphs()).contains("release to launch"), "full press/release execution remains available from compact selection")
 	panel.handle_event(_joy(JOY_BUTTON_A), font)
 	check(panel.compact_overview(), "controller A returns from reader to overview")
 	panel.set_tab(Compendium.CHEMISTRY)
 	check(panel.compact_overview(), "Chemistry opens with the whole pair matrix")
 	var pairs := {}
-	for row: int in range(8):
-		for column: int in range(8):
+	for row: int in range(6):
+		for column: int in range(6):
 			var rectangle := Compendium.chemistry_overview_rect(row, column)
-			check(Compendium.PANEL.encloses(rectangle), "all sixty-four pair cells fit without scrolling")
+			check(Compendium.PANEL.encloses(rectangle), "all thirty-six pair cells fit without scrolling")
 			check(panel.overview_hit(rectangle.get_center()), "every reaction cell is pointer reachable")
 			equal(panel.selected_row, row + 1, "matrix row maps to existing element reader")
 			equal(panel.selected_element_column, column, "matrix column maps to exact second element")
@@ -162,16 +173,17 @@ func _test_compact_overviews(panel: RefCounted, preferences: PlayerPreferences, 
 			equal(cell.name, definition.name, "matrix uses the current policy name")
 			equal(cell.active_ticks, definition.active_ticks, "matrix timing uses exact policy ticks")
 			equal(cell.purpose, definition.purpose, "matrix projects the current policy purpose")
-			equal(cell.counter, definition.counter, "matrix projects the current policy counter")
+			if wire != 322:
+				equal(cell.counter, definition.counter, "matrix projects the current policy counter")
 			equal(cell.wire_id, Compendium.hex_matrix_cell(column, row).wire_id, "matrix remains symmetric")
 			check(Compendium.wrap_text(cell.name, font, rectangle.size.x - 12, 14).size() <= 2, "complete reaction name fits its cell in at most two lines")
 			pairs[cell.wire_id] = true
 			for line: String in panel.compact_summary(font):
 				check(font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x <= 1136.01, "reaction summary fits without horizontal overflow")
-	equal(pairs.size(), 36, "complete matrix represents exactly the current thirty-six reactions")
-	equal(ChemistryGuide.DISPLAY_WIRES, [3, 1, 2, 4, 5, 6, 7, 8], "visible chemistry order does not change stable element wires")
+	equal(pairs.size(), 21, "complete matrix represents exactly the current twenty-one pair/self reactions")
+	equal(ChemistryGuide.DISPLAY_WIRES, [3, 2, 4, 1, 7, 8], "visible chemistry order does not change stable element wires")
 	equal(ChemistryGuide.matrix_cell(0, 0).first, "Water", "chemistry display begins with Water")
-	equal(ChemistryGuide.matrix_cell(3, 3).first, "Air", "wind wire four uses the player-facing Air label")
+	equal(ChemistryGuide.matrix_cell(2, 2).first, "Air", "wind wire four uses the player-facing Air label")
 	equal(Compendium.hex_matrix_cell(-1, 0), {}, "invalid policy matrix index fails closed")
 	panel.selected_row = 1
 	panel.selected_element_column = 0
@@ -195,8 +207,8 @@ func _test_compact_overviews(panel: RefCounted, preferences: PlayerPreferences, 
 func _test_selected_chemistry_details(panel: RefCounted, preferences: PlayerPreferences, font: Font) -> void:
 	panel.open_panel(Compendium.CHEMISTRY, preferences)
 	var reached := {}
-	for row: int in range(8):
-		for column: int in range(8):
+	for row: int in range(6):
+		for column: int in range(6):
 			check(panel.overview_hit(Compendium.chemistry_overview_rect(row, column).get_center()), "pair details begin at the actual clicked matrix cell")
 			panel.handle_event(_key(KEY_ENTER), font)
 			var first_wire := ChemistryGuide.DISPLAY_WIRES[row]
@@ -210,7 +222,7 @@ func _test_selected_chemistry_details(panel: RefCounted, preferences: PlayerPref
 			var cell := Compendium.hex_matrix_cell(row, column)
 			equal(paragraphs[0], cell.effect, "the selected recipe's current policy behavior leads the details")
 			var text := " ".join(paragraphs)
-			check(text.contains(String(definition.counter).capitalize()), "pair details expose the exact policy counter")
+			check(text.contains(Compendium.sentence_text(String(cell.counter)).trim_suffix(".")), "pair details expose the same whole-hex-safe counter as the matrix")
 			check(text.contains("forming %d ticks" % int(definition.formation_ticks)), "pair details expose formation ticks")
 			check(text.contains("active %d ticks" % int(definition.active_ticks)), "pair details expose active ticks")
 			check(text.contains("harmless decay %d ticks" % int(definition.decay_ticks)), "pair details expose decay ticks")
@@ -225,7 +237,7 @@ func _test_selected_chemistry_details(panel: RefCounted, preferences: PlayerPref
 				"annulus":
 					check(text.contains("inner radius %.0f px / outer radius %.0f px" % [float(definition.length) / 1000.0, float(definition.radius) / 1000.0]), "annulus details expose both bounds")
 			if int(definition.pulse_ticks) > 0:
-				check(text.contains("every %d ticks" % int(definition.pulse_ticks)), "pair details preserve policy pulse cadence")
+				check(text.contains("every %.2f s" % (float(definition.pulse_ticks) / HexPolicy.TICK_RATE)), "pair details preserve policy pulse cadence")
 			var phases: Array[Dictionary] = panel.chemistry_phase_strip()
 			equal(phases.size(), 3, "every recipe has a warning, active, harmless-decay visual sequence")
 			var durations: Array[int] = [int(definition.formation_ticks), int(definition.active_ticks), int(definition.decay_ticks)]
@@ -259,17 +271,17 @@ func _test_selected_chemistry_details(panel: RefCounted, preferences: PlayerPref
 			check(panel.compact_overview(), "controller returns to the same matrix")
 			equal([panel.selected_row, panel.selected_element_column], [row + 1, column], "overview/details switching preserves both selected elements")
 			equal(panel.detail_page, 0, "returning to overview clears stale page selection")
-	equal(reached.size(), 36, "all thirty-six exact recipes remain accessible")
+	equal(reached.size(), 21, "all twenty-one exact pair/self recipes remain accessible")
 	# Directly changing a column must also invalidate the wrapped cache; selection
 	# restoration/capture callers do not necessarily go through move_column().
-	panel.selected_row = 3 # Fire.
-	panel.selected_element_column = 4 # Ice: Thermal Shock, not Fire + Earth.
+	panel.selected_row = 2 # Fire.
+	panel.selected_element_column = 4 # Light: Solar Flare, not Fire + Water.
 	panel.toggle_details()
-	equal(panel.chemistry_title(), "Fire + Ice = Thermal Shock", "non-first column never falls back to its entire element row")
-	check(" ".join(panel.visible_detail_lines(font)).contains(String(HexPolicy.definition(312).counter).capitalize()), "selected Thermal Shock policy counter appears on the first page")
+	equal(panel.chemistry_title(), "Fire + Light = Solar Flare", "non-first column never falls back to its entire element row")
+	check(" ".join(panel.visible_detail_lines(font)).contains(Compendium.sentence_text(String(HexPolicy.definition(314).counter)).trim_suffix(".")), "selected Solar Flare policy counter appears on the first page")
 	panel.selected_element_column = 0 # Water: Steam.
 	var steam_text := " ".join(panel.visible_detail_lines(font))
-	check(steam_text.contains("Transparent Steam") and steam_text.contains("does not conceal"), "wrapped cache key includes Steam's transparent non-conceal contract")
+	check(steam_text.contains(Compendium.sentence_text(String(HexPolicy.definition(310).purpose)).trim_suffix(".")), "wrapped cache key includes Steam's transparent non-conceal contract")
 	panel.detail_page = 1
 	panel.handle_event(_key(KEY_RIGHT), font)
 	equal(panel.selected_element_column, 1, "keyboard changes pair while details stay open")
@@ -277,11 +289,11 @@ func _test_selected_chemistry_details(panel: RefCounted, preferences: PlayerPref
 	check(panel.show_details, "pair navigation never unexpectedly returns to overview")
 	panel.handle_event(_joy(JOY_BUTTON_DPAD_LEFT), font)
 	equal(panel.selected_element_column, 0, "controller has the same pair navigation in details")
-	check(" ".join(panel.visible_detail_lines(font)).contains("Exposure falls by 2 per exit tick"), "controller pair selection immediately refreshes exact Steam behavior")
+	check(" ".join(panel.visible_detail_lines(font)).contains(Compendium.sentence_text(String(HexPolicy.definition(310).purpose)).trim_suffix(".")), "controller pair selection immediately refreshes exact Steam behavior")
 	panel.move_column(-100)
 	equal(panel.selected_element_column, 0, "detail pair selection cannot underflow")
 	panel.move_column(100)
-	equal(panel.selected_element_column, 7, "detail pair selection cannot exceed the element table")
+	equal(panel.selected_element_column, 5, "detail pair selection cannot exceed the element table")
 	panel.selected_row = 0
 	equal(panel.chemistry_phase_strip(), [], "primer is not falsely assigned a reaction timeline")
 	equal(panel.detail_line_limit(), Compendium.LINES_PER_PAGE, "primer retains its full readable first page")
@@ -291,36 +303,34 @@ func _test_selected_chemistry_details(panel: RefCounted, preferences: PlayerPref
 
 
 func _test_first_ten_policy_copy() -> void:
-	var cases := [
-		[1, 1, 301, ["six-face hex pillar", "32 health", "safe creation escape"]],
-		[1, 2, 302, ["5 damage per pulse", "75% ground movement", "instant exit"]],
-		[1, 0, 303, ["70% ground acceleration", "70% braking", "no immobilize", "instant exit"]],
-		[1, 3, 304, ["transparent lateral flow at 25 px/s", "does not trap"]],
-		[2, 2, 309, ["committed ground burn", "8 damage every 72 ticks"]],
-		[2, 0, 310, ["exposure cap 240", "exit decay 2 per tick", "2-12 scald damage"]],
-		[2, 3, 311, ["obstacle-aware front", "neither payload nor lifetime"]],
-		[0, 0, 316, ["directional grounded flow at 40 px/s", "wall clearance 18 px"]],
-		[0, 3, 317, ["transparent steering", "suppression 600 of 600 capacity", "no pulse damage"]],
-		[3, 3, 322, ["tangential rotation at 45 px/s", "projectile speed 100%", "neither immobilizes nor traps"]],
-	]
-	var reached := {}
-	for case: Array in cases:
-		var cell := Compendium.hex_matrix_cell(int(case[0]), int(case[1]))
-		equal(int(cell.wire_id), int(case[2]), "first-ten policy cell keeps its approved recipe wire")
-		var text := " ".join(Compendium.hex_pair_lines(int(case[0]), int(case[1])))
-		for fragment: String in case[3]:
-			check(text.contains(fragment), "recipe %d exposes exact current policy copy: %s" % [int(case[2]), fragment])
-		reached[int(cell.wire_id)] = true
-	equal(reached.size(), 10, "compendium verifies every approved first-ten policy contract")
-	var rampart := Compendium.hex_matrix_cell(1, 1)
-	equal(int(rampart.selection_radius), 34_000, "Rampart displays the effective selection radius rather than its effect extent")
+	for wire: int in HexPolicy.active_wire_ids():
+		var definition := HexPolicy.definition(wire)
+		var copy := " ".join(Compendium._first_ten_policy_lines(wire))
+		check(copy.contains(String(definition.purpose)) and copy.contains(String(definition.counter)), "every live recipe projects its exact purpose and counter")
+		check(copy.contains("TELL:") and copy.contains("harmless decay"), "warning and terminal phases remain explicit")
+		check(copy.contains("TELL: nominal"), "recipe reference distinguishes authored duration from actual field timing")
+		var inherits := HexPolicy.elements_for_mask(HexPolicy.mask_for_wire(wire)).size() > 1
+		equal(copy.contains("COMBINING:"), inherits, "all distinct pairs and larger recipes explain inherited field timing")
+		if inherits:
+			check(copy.contains("shorten the active time") and copy.contains("change the fading time") and copy.contains("never lasts longer"), "inherited timing teaches both shorter attacks and variable harmless fade")
+	equal(Compendium._first_ten_policy_lines(305), [], "retired Ice pair cannot appear as a live recipe")
 
+func _test_current_link_and_vortex_guidance() -> void:
+	var names := {}
+	for mask: int in range(1, 64):
+		var definition := Compendium.combination_definition(mask)
+		check(not definition.is_empty(), "every nonempty six-element mask has an inspectable definition")
+		names[int(definition.wire_id)] = true
+		equal(definition, HexPolicy.definition(HexPolicy.recipe_wire_for_mask(mask)), "combination inspector cannot invent another recipe")
+	equal(names.size(), 63, "all six self recipes and57 distinct-element combinations are accessible")
+	for mask: int in [-1, 0, 64, 255]:
+		equal(Compendium.combination_definition(mask), {}, "out-of-domain mask fails closed")
 
 func _test_chemistry(panel: RefCounted, preferences: PlayerPreferences, font: Font) -> void:
 	panel.open_panel(Compendium.CHARACTERS, preferences)
 	panel.handle_event(_key(KEY_TAB), font)
 	equal(panel.tab, Compendium.CHEMISTRY, "Chemistry is reachable through the existing Tab navigation")
-	equal(panel.row_count(), 9, "primer and eight element rows fit one readable list page")
+	equal(panel.row_count(), 7, "primer and six element rows fit one readable list page")
 	var primer := " ".join(panel.detail_paragraphs())
 	check(primer.contains("3-5 seconds") and primer.contains("endpoint"), "primer explains current paid terminal matter and aim endpoints")
 	check(primer.contains("separate from the reaction area's duration"), "deposit duration cannot be mistaken for a chemistry reaction area")
@@ -333,9 +343,9 @@ func _test_chemistry(panel: RefCounted, preferences: PlayerPreferences, font: Fo
 	check(primer.contains("Fire Bolt + Water Bolt") and primer.contains("same-family spells make the direct match"), "guide turns the current distinct family strengths into an executable cross-element choice")
 	check(primer.contains("one cast cannot react with itself") and primer.contains("finite 600-unit budget"), "guide teaches separate paid sources and finite whole-cast consumption")
 	check(primer.contains("consume the smaller remaining strength from both sources") and primer.contains("stronger survivor"), "guide teaches subtractive strength and finite survivor material")
-	check(primer.contains("Rapid is explicitly trail-free regardless of reaction strength"), "trail teaching does not infer a strength threshold")
+	check(primer.contains("All projectiles are trail-free") and primer.contains("remaining paid payload reaches impact"), "teaching matches trail-free flights and conserved impact payloads")
 	check(primer.contains("lower cast identity") and primer.contains("only the active window"), "guide teaches stable ownership and harmless formation/decay")
-	check(primer.contains("not later") and primer.contains("extra Charge") and primer.contains("extra Ice"), "linked circuits require separate sources present at formation")
+	check(primer.contains("distinct paid ingredient") and not primer.contains("extra Charge"), "larger combinations use canonical paid ingredients, not retired selectors")
 	check(primer.contains("reserves finite product capacity before payment") and primer.contains("refuses without spending Flux"), "finite reservation refusal is explained before payment")
 	panel.detail_page = 0
 	var first_page := " ".join(panel.visible_detail_lines(font))
@@ -347,6 +357,8 @@ func _test_chemistry(panel: RefCounted, preferences: PlayerPreferences, font: Fo
 	check(first_page.contains("Reset Wellspring restarts shared practice") and first_page.contains("retains weaves") and first_page.contains("clears paid fields and practice targets"), "first page states the complete shared reset scope")
 	check(primer.find("1. In the Spell Loom") < primer.find("SPELL IMPACT:"), "practical steps precede impact, reaction-area and matter definitions")
 	_test_chemistry_source_values(ChemistryGuide.entries())
+	_test_combination_navigation(panel, preferences, font)
+	panel.open_panel(Compendium.CHEMISTRY, preferences)
 	check(primer.contains("Every selected hex is affected") and primer.contains("Unselected neighbours stay clear"), "live primer teaches the approved whole-hex authority")
 	check(not primer.contains("Steam conceals") and primer.contains("Steam is transparent capped scald"), "live primer cannot revive retired Steam concealment")
 	var seen := {}
@@ -365,7 +377,7 @@ func _test_chemistry(panel: RefCounted, preferences: PlayerPreferences, font: Fo
 			_assert_widths(lines,font,Compendium.DETAIL_WIDTH)
 			reached.append_array(lines)
 		equal(reached,all_lines,"every pair and effect remains reachable through detail paging")
-	equal(seen.size(),36,"all thirty-six unique pairs are accessible in the live compendium")
+	equal(seen.size(),21,"all twenty-one unique pairs are accessible in the live compendium")
 	panel.handle_event(_joy(JOY_BUTTON_RIGHT_SHOULDER),font)
 	equal(panel.tab,Compendium.MOVEMENT,"controller cycles Chemistry back to Movement")
 	panel.handle_event(_joy(JOY_BUTTON_LEFT_SHOULDER),font)
@@ -375,53 +387,90 @@ func _test_chemistry(panel: RefCounted, preferences: PlayerPreferences, font: Fo
 
 
 func _test_chemistry_source_values(rows: Array[Dictionary]) -> void:
-	equal(ChemistryGuide.EFFECTS.size(), 36, "every current pair has one curated explanation")
-	var unique_effects := {}
-	for description: String in ChemistryGuide.EFFECTS:
-		check(description.length() >= 60, "each effect explains both behavior and a practical response")
-		unique_effects[description] = true
-	equal(unique_effects.size(), 36, "pair explanations are not generic repeated placeholders")
-	for display_row: int in range(8):
-		var element := ChemistryGuide.DISPLAY_WIRES[display_row]
-		var row: Dictionary = rows[display_row + 1]
-		var text := " ".join(row["lines"])
-		check(text.contains("%.1f seconds" % (float(Chemistry.ELEMENT_LIFE_MS[element])/1000.0)), "element deposit lifetime comes from live chemistry tuning")
-		check(text.contains("Plain matter has no automatic status or damage"), "each element page preserves plain-matter constraint")
-		equal(row["recipes"].size(), 8, "each element page retains all eight symmetric pair records")
-		for display_column: int in range(8):
-			var other := ChemistryGuide.DISPLAY_WIRES[display_column]
-			var live := Chemistry.recipe(Chemistry.recipe_wire(element, other))
-			var pair_copy := " ".join(ChemistryGuide.pair_lines(display_row, display_column))
-			check(pair_copy.contains("two separate casts with matching reaction strength") and pair_copy.contains("%s Bolt + %s Bolt" % [ChemistryGuide.ELEMENTS[element], ChemistryGuide.ELEMENTS[other]]), "every exact pair reader carries a same-family example for its selected elements")
-			equal(row["recipes"][display_column], live, "existing recipe API remains an unmodified live-kernel projection")
-			check(text.contains("%.2f s -> %.2f s -> %.2f s" % [float(live.formation_ms)/1000.0,float(live.active_ms)/1000.0,float(live.decay_ms)/1000.0]), "lifecycle labels use actual source phase values")
-			if int(live.pulse_ms) > 0:
-				check(text.contains("Cadence: %.2f s." % (float(live.pulse_ms)/1000.0)), "cadence labels track each recipe rather than a duplicated timing constant")
-			if int(live.wire_id) in [301,305,306,329]:
-				check(text.contains("Shot-cover health: %.0f." % (float(live.health)/1000.0)), "cover durability is readable in player units")
-			if int(live.wire_id) in [313,319,328]:
-				check(text.contains("Link reach: %.0f px per step; at most %d separate source(s)." % [float(live.length)/1000.0,1 if int(live.wire_id) == 313 else Chemistry.MAX_LINKS]), "link reach and source cap are projected from recipe and kernel limits")
-	check(ChemistryGuide.EFFECTS[307-301].contains("ALL elements"), "Crystal Prism is not mislabeled as Light-only")
-	check(ChemistryGuide.EFFECTS[306-301].contains("excess hits ordinary cover"), "Grounding depletion never promises a free pass through intact cover")
-	check(ChemistryGuide.EFFECTS[312-301].contains("active temporary constructs once, not actors or worldbone"), "Thermal Shock does not claim destruction of immutable buildings or unformed cover")
-	check(ChemistryGuide.EFFECTS[319-301].contains("without links"), "Conductive Flood origin fallback remains discoverable")
-	check(ChemistryGuide.EFFECTS[329-301].contains("shared damage") and ChemistryGuide.EFFECTS[329-301].contains("no projectile capacity"), "Lens guide explains conservation and finite capacity")
-	check(ChemistryGuide.EFFECTS[330-301].contains("does not add slippery movement"), "Black Ice cannot imply the deferred material grip system")
-	var config := SimConfig.new(120)
-	var prism := ElementReactionState.new()
-	prism.recipe_wire_id = 307
-	prism.position_x = 500000
-	prism.position_y = 500000
-	prism.radius = int(Chemistry.recipe(307).radius)
-	prism.length = int(Chemistry.recipe(307).length)
-	prism.active_tick = 1
-	prism.decay_tick = 20
-	for element: int in range(1, 9):
-		var projectile := ProjectileState.new(100, 2, 2, 100, element, Vector2i(510000,500000), Vector2i(500000,0), 4000, 12000, 50)
-		projectile.previous_x = 490000
-		check(bool(Chemistry.projectile_interaction(projectile,[prism],null,config,1)["reflected"]), "Prism ALL-elements teaching is backed by real projectile routing: %d" % element)
-		var response := Chemistry.ray_interaction(Vector2i(490000,500000),Vector2i(510000,500000),element,12000,[prism],1)
-		check(bool(response["transformed"]) and int(response["rays"][0]["end"].x) < int(response["rays"][0]["origin"].x), "Prism ALL-elements teaching is backed by real ray routing: %d" % element)
+	equal(rows.size(), 7, "primer plus exactly six canonical ingredient rows")
+	var unique := {}
+	for row: int in range(6):
+		equal(rows[row + 1].recipes.size(), 6, "each ingredient exposes every canonical pair")
+		for column: int in range(6):
+			var cell := ChemistryGuide.matrix_cell(row, column)
+			var definition := HexPolicy.definition(int(cell.wire_id))
+			unique[int(cell.wire_id)] = true
+			equal(rows[row + 1].recipes[column], definition, "guide reads the live policy without a second effect table")
+			var copy := " ".join(ChemistryGuide.pair_lines(row, column))
+			check(copy.contains(String(definition.purpose)) and copy.contains(String(definition.counter)), "both behavior and counter survive projection")
+			check(copy.contains("%s Bolt + %s Bolt" % [cell.first, cell.second]), "exact pair has an executable paid-cast example")
+			check(copy.contains("TELL:") and copy.contains("harmless decay"), "formation and terminal timing remain readable")
+	equal(unique.size(), 21, "pair guide has exactly21 canonical identities")
+	for coordinate: Vector2i in [Vector2i(-1,0),Vector2i(6,0),Vector2i(0,6)]:
+		equal(ChemistryGuide.matrix_cell(coordinate.x,coordinate.y), {}, "retired and invalid menu positions fail closed")
+
+func _test_controller_and_physical_navigation(panel: RefCounted, preferences: PlayerPreferences, font: Font) -> void:
+	panel.open_panel(Compendium.MOVEMENT, preferences, null, ControlBindingEditor.DEVICE_CONTROLLER)
+	for value: float in [0.0, 0.2, -0.2, 0.6, -0.6]:
+		check(panel.handle_event(_axis(JOY_AXIS_LEFT_Y, value), font), "open compendium owns resting controller motion")
+	equal(panel.selected_row, 0, "resting drift and partial tilt do not move selection")
+	panel.handle_event(_axis(JOY_AXIS_LEFT_Y, 0.8), font)
+	equal(panel.selected_row, 1, "deliberate left stick selects the next movement row")
+	for value: float in [0.95, 0.8, 0.5, -0.9]:
+		panel.handle_event(_axis(JOY_AXIS_LEFT_Y, value), font)
+	equal(panel.selected_row, 1, "held jitter and reversal cannot skip rows without returning to neutral")
+	panel.handle_event(_axis(JOY_AXIS_LEFT_Y, 0.3), font)
+	panel.handle_event(_axis(JOY_AXIS_LEFT_Y, -0.8), font)
+	equal(panel.selected_row, 0, "neutral rearms the opposite direction")
+	for axis: int in [JOY_AXIS_RIGHT_X, JOY_AXIS_RIGHT_Y, JOY_AXIS_TRIGGER_LEFT, JOY_AXIS_TRIGGER_RIGHT]:
+		check(panel.handle_event(_axis(axis, 1.0), font), "aim and trigger axes remain owned by the menu")
+	equal(panel.selected_row, 0, "aim and trigger axes cannot navigate or dispatch gameplay")
+	panel.handle_event(_joy(JOY_BUTTON_DPAD_DOWN), font)
+	equal(panel.selected_row, 1, "D-pad remains immediately usable alongside a latched stick")
+	panel.close_panel()
+	check(not panel.handle_event(_axis(JOY_AXIS_LEFT_Y, 0.9), font), "closed compendium does not consume stick input")
+	panel.open_panel(Compendium.CHEMISTRY, preferences)
+	panel.handle_event(_axis(JOY_AXIS_LEFT_X, 0.9), font)
+	equal(panel.selected_row, 1, "horizontal stick moves from primer to an actual pair")
+	equal(panel.selected_element_column, 1, "horizontal stick chooses the second element")
+	panel.handle_event(_axis(JOY_AXIS_LEFT_Y, 0.9), font)
+	equal(panel.selected_row, 2, "reopening releases old vertical latch and axes work independently")
+	for step: int in range(10):
+		panel.handle_event(_axis(JOY_AXIS_LEFT_X, 0.0), font)
+		panel.handle_event(_axis(JOY_AXIS_LEFT_X, 1.0), font)
+		panel.handle_event(_axis(JOY_AXIS_LEFT_Y, 0.0), font)
+		panel.handle_event(_axis(JOY_AXIS_LEFT_Y, 1.0), font)
+	equal(panel.selected_element_column, 5, "rightmost chemistry column clamps without wrapping")
+	equal(panel.selected_row, 6, "last chemistry row clamps without wrapping")
+	panel.handle_event(_joy(JOY_BUTTON_A), font)
+	check(panel.show_details and panel.chemistry_title().contains("Dark + Dark"), "stick selection opens the same exact pair as button navigation")
+	panel.open_panel(Compendium.CHARACTERS, preferences)
+	# A two-character fixture isolates navigation from catalog row population.
+	var original_overview: Dictionary = panel.overview
+	panel.overview = {"rows": [{"champions": [{"display_name": "First"}, {"display_name": "Second"}]}]}
+	panel.handle_event(_axis(JOY_AXIS_LEFT_X, 0.9), font)
+	equal(panel.selected_character, 1, "character stick navigation follows the existing cycle")
+	panel.handle_event(_axis(JOY_AXIS_LEFT_X, 0.0), font)
+	panel.handle_event(_axis(JOY_AXIS_LEFT_X, 0.9), font)
+	equal(panel.selected_character, 0, "character cycle retains its established wrap")
+	panel.overview = original_overview
+	panel.open_panel(Compendium.MOVEMENT, preferences)
+	var physical := _key(KEY_UP)
+	physical.physical_keycode = KEY_DOWN
+	panel.handle_event(physical, font)
+	equal(panel.selected_row, 1, "physical navigation matches other menus when logical code differs")
+	physical.echo = true
+	panel.handle_event(physical, font)
+	physical.echo = false
+	physical.pressed = false
+	panel.handle_event(physical, font)
+	equal(panel.selected_row, 1, "echo and release do not buy additional navigation")
+	physical = _key(KEY_NONE)
+	physical.physical_keycode = KEY_ESCAPE
+	panel.handle_event(physical, font)
+	check(not panel.is_open, "physical-only Escape retains the safe close path")
+
+
+func _axis(axis: int, value: float) -> InputEventJoypadMotion:
+	var event := InputEventJoypadMotion.new()
+	event.axis = axis
+	event.axis_value = value
+	return event
 
 
 func _assert_widths(lines: Array[String], font: Font, width: float) -> void:
@@ -441,3 +490,46 @@ func _joy(button: int) -> InputEventJoypadButton:
 	event.button_index = button
 	event.pressed = true
 	return event
+
+
+func _test_combination_navigation(panel: RefCounted, preferences: PlayerPreferences, font: Font) -> void:
+	panel.open_panel(Compendium.CHEMISTRY, preferences)
+	panel.handle_event(_key(KEY_C), font)
+	check(panel.combination_mode, "keyboard reaches the larger-combination inspector")
+	var before: int = panel.combination_mask
+	panel.handle_event(_key(KEY_ENTER), font)
+	equal(panel.combination_mask, before ^ 4, "Enter toggles the focused Water bit only")
+	panel.handle_event(_joy(JOY_BUTTON_DPAD_RIGHT), font)
+	panel.handle_event(_joy(JOY_BUTTON_A), font)
+	equal(panel.combination_mask, (before ^ 4) ^ 2, "controller toggles the next Fire bit only")
+	panel.handle_event(_joy(JOY_BUTTON_RIGHT_STICK), font)
+	check(not panel.combination_mode, "controller returns to the pair table")
+	panel.handle_event(_key(KEY_C), font)
+	for mask: int in range(1, 64):
+		panel.combination_mask = mask
+		var source: Array[String] = panel.detail_paragraphs()
+		var shown: Array[String] = []
+		var page_ends: Array[int] = []
+		for page: int in range(panel.detail_pages(font)):
+			panel.detail_page = page
+			var lines: Array[String] = panel.visible_detail_lines(font)
+			_assert_widths(lines,font,Compendium.DETAIL_WIDTH)
+			check(lines.size() <= 12, "combination details reserve controls without vertical overflow")
+			shown.append_array(lines)
+			page_ends.append(shown.size())
+		var expected: Array[String] = []
+		for paragraph: String in source:
+			var paragraph_lines := Compendium.wrap_text(paragraph,font,Compendium.DETAIL_WIDTH)
+			var start := expected.size()
+			expected.append_array(paragraph_lines)
+			if paragraph_lines.size() <= 12:
+				for page_end: int in page_ends:
+					check(page_end <= start or page_end >= expected.size(), "one readable rule never breaks across combination pages")
+		equal(shown, expected, "all combination text survives pagination and cache changes")
+		var definition: Dictionary = Compendium.combination_definition(mask)
+		if definition.get("elements", []).size() >= 3:
+			check(" ".join(source).contains("nominal") and " ".join(source).contains("earliest parent expiry"), "composite timing distinguishes authored schedule from inherited actual expiry")
+	equal(Compendium.sentence_text("Water slows physical projectiles"), "Water slows physical projectiles.", "sentence case preserves authored element names without capitalizing every word")
+	equal(Compendium.sentence_text("leave the Fire lane."), "Leave the Fire lane.", "counter case preserves proper names and existing punctuation")
+	panel.handle_event(_key(KEY_ESCAPE),font)
+	check(not panel.is_open, "combination inspector retains modal close")

@@ -1,0 +1,8 @@
+{
+  "date": "2026-09-29",
+  "method": "scripts/prune-local-builds.ps1; explicit -WhatIf review, then same exact verified targets",
+  "retained": ["hex-ux-clarity-20260929", "hex-visual-hierarchy-20260929"],
+  "removed": [{"directory":"exports/hex-performance-eight-20260928","bytes":299595381}],
+  "verified": ["retained payload SHA256 manifests", "both retained portable ZIP hashes", "matching build identity in native boot and safe-close logs", "target scope and no in-use executable"],
+  "recoverability": "Removed generated binaries are not retained; small receipts/logs preserved under docs/build-retention/hex-performance-eight-20260928. Source/art unchanged."
+}

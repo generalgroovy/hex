@@ -17,7 +17,18 @@ function Write-FluxEngineJournal($Record) {
 function Test-FluxRecordedProcess($Record) {
     $candidate = Get-Process -Id ([int]$Record.pid) -ErrorAction SilentlyContinue
     if ($null -eq $candidate) { return $false }
-    try { return $candidate.StartTime.ToUniversalTime().Ticks.ToString() -eq $Record.started -and $candidate.Path -eq $Record.executable }
+    try {
+        # PID reuse may point at a protected process whose name is readable but
+        # whose start time/path is not. A different name already disproves identity.
+        $expectedName = [IO.Path]::GetFileNameWithoutExtension([string]$Record.executable)
+        $actualName = [string]$candidate.ProcessName
+        if (-not [string]::IsNullOrWhiteSpace($expectedName) -and -not [string]::IsNullOrWhiteSpace($actualName) -and
+            -not [string]::Equals($actualName, $expectedName, [StringComparison]::OrdinalIgnoreCase)) { return $false }
+        if ($candidate.StartTime.ToUniversalTime().Ticks.ToString() -ne $Record.started) { return $false }
+        $actualPath = [string]$candidate.Path
+        if ([string]::IsNullOrWhiteSpace($actualPath)) { throw 'The process executable path is unavailable.' }
+        return $actualPath -eq $Record.executable
+    }
     catch { throw "Cannot establish engine ownership for PID $($Record.pid); close or inspect it before retrying." }
 }
 

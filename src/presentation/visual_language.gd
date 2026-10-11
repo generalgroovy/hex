@@ -14,7 +14,8 @@ const REQUIRED_ELEMENTS := [
 	"earth", "fire", "water", "wind", "ice", "charge",
 	"light", "dark", "spirit", "chaos", "gravity", "time",
 ]
-const ACTIVE_ELEMENTS := ["earth", "fire", "water", "wind", "ice", "charge", "light", "dark"]
+const ACTIVE_ELEMENTS := ["water", "fire", "wind", "earth", "light", "dark"]
+const DERIVED_EFFECT_STYLES := {"ice": "water", "charge": "fire"}
 const RESERVED_ELEMENT_STYLES := ["spirit", "chaos", "gravity", "time"]
 const REQUIRED_REACTION_MATERIALS := ["steam", "flood", "conflagration"]
 const REQUIRED_PHASE_COLOR_ROLES := ["dark", "base", "bright", "danger"]
@@ -139,8 +140,8 @@ func validate() -> bool:
 				return _fail("Visual ramp contains an invalid color: %s" % ramp_id)
 	elements = data.get("elements", {})
 	var availability: Dictionary = data.get("element_availability", {})
-	if availability.get("active", []) != ACTIVE_ELEMENTS or availability.get("reserved_style_only", []) != RESERVED_ELEMENT_STYLES:
-		return _fail("Visual language must distinguish eight active elements from four reserved styles")
+	if availability.get("active", []) != ACTIVE_ELEMENTS or availability.get("derived_effect_styles", {}) != DERIVED_EFFECT_STYLES or availability.get("reserved_style_only", []) != RESERVED_ELEMENT_STYLES:
+		return _fail("Visual language must distinguish six active elements, their derived effects and four reserved styles")
 	if elements.size() != REQUIRED_ELEMENTS.size():
 		return _fail("Visual language must define all twelve element families")
 	var shapes: Dictionary = {}

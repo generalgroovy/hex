@@ -34,6 +34,7 @@ func run() -> int:
 		_test_custom_and_disabled_preservation()
 		_test_round_trip_backup_and_failures()
 		_test_atomic_rejections()
+		_test_six_element_migration_preview()
 	equal(abilities.data, ability_source_before, "weave persistence never mutates the ability catalog")
 	equal(champions.data, champion_source_before, "weave persistence never mutates the champion catalog")
 	_cleanup_folder()
@@ -192,6 +193,52 @@ func _test_atomic_rejections() -> void:
 	_remove(oversized_path)
 	check(not library.load_from_file(valid_path, ChampionCatalog.new(), abilities), "invalid champion catalog fails closed")
 	equal(library.to_dictionary(), before, "catalog rejection leaves prior memory unchanged")
+
+
+func _test_six_element_migration_preview() -> void:
+	var path := folder + "/legacy-six.json"
+	var library := Library.new()
+	check(library.load_from_file(path, champions, abilities), "legacy preview fixture initializes current canonical profiles")
+	var legacy := PackedInt32Array([170,140,101,145,189,181,190,171,187,188,167,174])
+	check(library.remember("oh_tipi", legacy, Library.MODE_CUSTOM, champions, abilities), "all eight formerly live spells retain their exact recoverable IDs")
+	var document := library.to_dictionary()
+	var original := (" \n" + JSON.stringify(document, "  ") + "\n\n").to_utf8_buffer()
+	_write_bytes(path, original)
+	check(library.load_from_file(path, champions, abilities), "historical custom weave loads without reinterpretation")
+	var memory_before := library.to_dictionary()
+	var preview := library.migration_preview("oh_tipi")
+	check(bool(preview.get("required", false)) and bool(preview.get("valid", false)), "eight legacy family spells produce one explicit reviewable migration")
+	equal(preview.get("migration_id"), "six-elements-v1", "migration proposal declares its exact local compatibility rule")
+	equal(preview.before_wire_ids, legacy, "preview keeps all original positions for review")
+	var expected := PackedInt32Array([163,140,159,145,173,181,182,141,179,180,154,174])
+	equal(preview.after_wire_ids, expected, "canonical positions win, aliases fold and only collisions use unused starter spells")
+	for slot: int in [1,3,5,11]:
+		equal(preview.after_wire_ids[slot], legacy[slot], "an existing canonical spell never moves to an earlier alias position")
+	equal(preview.changes.size(), 8, "every changed legacy position has one visible explanation")
+	for change: Dictionary in preview.changes:
+		equal(int(change.before), int(legacy[int(change.slot)]), "migration receipt identifies the original wire at the exact slot")
+		equal(int(change.after), int(expected[int(change.slot)]), "migration receipt identifies the reviewed replacement")
+		check(not String(change.reason).is_empty(), "each alias or collision replacement explains its cause")
+	equal(library.to_dictionary(), memory_before, "preview leaves all thirty saved weaves unmodified")
+	equal(FileAccess.get_file_as_bytes(path), original, "load and preview preserve original bytes including whitespace")
+	check(not FileAccess.file_exists(path + Library.BACKUP_SUFFIX), "read-only migration preview does not invent a backup or rewrite")
+	preview.after_wire_ids[0] = 999_999
+	equal(library.migration_preview("oh_tipi").after_wire_ids, expected, "preview arrays cannot mutate subsequent deterministic proposals")
+	var unrelated := legacy.duplicate()
+	unrelated[11] = 146 # Cinder Fan is not one of the eight approved aliases.
+	check(library.remember("oh_tipi", unrelated, Library.MODE_CUSTOM, champions, abilities), "unrelated archived spell remains inspectable")
+	var blocked := library.migration_preview("oh_tipi")
+	check(bool(blocked.required) and not bool(blocked.valid), "unrelated archived spell blocks automatic migration application")
+	equal(int(blocked.after_wire_ids[11]), 146, "migration does not invent a replacement for unrelated archived content")
+	check(library.load_from_file(path, champions, abilities), "explicit reload restores untouched old source")
+	check(library.remember("oh_tipi", expected, Library.MODE_CUSTOM, champions, abilities), "reviewed Apply may commit the exact canonical proposal")
+	check(library.save_to_file(path), "reviewed proposal saves through existing staged verification")
+	equal(FileAccess.get_file_as_bytes(path + Library.BACKUP_SUFFIX), original, "first committed migration backs up byte-exact legacy source")
+	check(library.load_from_file(path, champions, abilities), "migrated custom weave reloads")
+	check(not bool(library.migration_preview("oh_tipi").required), "migration is idempotent after the explicit canonical save")
+	equal(library.saved_weave("oh_tipi").wire_ids, expected, "canonical save retains the reviewed positions")
+	_remove(path)
+	_remove(path + Library.BACKUP_SUFFIX)
 
 
 func _write_json(path: String, data: Dictionary) -> void:

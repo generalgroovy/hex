@@ -1,0 +1,49 @@
+{
+  "id": "steezo",
+  "display_name": "Steezo",
+  "race": "goblin",
+  "status": "source_ready_for_lead_review",
+  "generation_tool": "built-in image_gen",
+  "attempts": 1,
+  "generated_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-3caf-7f02-8030-e4d35e2365b4\\exec-3fcb3617-4bf9-4cef-89b7-a7059e329fc9.png",
+  "reference_paths": [
+    "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/steezo-detail.png",
+    "C:/Users/sende/Pictures/styleref1.png",
+    "C:/Users/sende/Projects/hex/art_batches/pixel_body_pilot_v1/source/s-wayne.png"
+  ],
+  "observed_columns": 8,
+  "observed_rows": 4,
+  "source_row_mapping": {
+    "idle": 0,
+    "walk_left_contact": 1,
+    "walk_right_contact": 2,
+    "cast": 3
+  },
+  "directions": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "inspection": {
+    "directions": "Eight distinct view angles; NE/N/NW show back goggle strap and no frontal eyes.",
+    "contacts": "S/N contacts visibly switch lower boot; diagonals show changed lift/sole angle. E/W silhouette similar due identical boots, exact near/far swap needs animated review.",
+    "whole_bodies": "32 complete bodies and generous gutters; blue goggles/gold-brown costume consistent.",
+    "cast": "Forward empty hands in all eight directions."
+  },
+  "visual_issues": [
+    "Fine dark-gold exterior fringe.",
+    "E/W exact anatomical foot alternation not conclusively verified from static sheet."
+  ],
+  "alpha_check": {
+    "format": "RGBA",
+    "corner_alpha": 0,
+    "gutter_alpha": 0
+  },
+  "prompt": "Use case: stylized-concept. Asset: fixed-pixel game sprite atlas on genuinely transparent RGBA.\nReferences: image 1 is exact character identity and clothing; image 2 is retro pixel style only (ignore its old names); image 3 is compact common-head/body proportions and readable charming finish only, NOT its row count.\nMake exactly 32 whole-body sprites in exactly 8 equal columns by 4 equal rows. Generous empty transparent gutters, identical size and baseline, feet/hair/appendages fully intact in each cell. Coarse clean pixel clusters, crisp limited-palette outlines, compact modest charming proportions matching image 3; no painterly smoothing.\nEVERY row column order: S front, SE front/right45, E right profile, NE back/right45, N straight back, NW back/left45, W left profile, SW front/left45. NE/N/NW show the back of the head with NO frontal eyes. Torso and feet rotate with head. Eight unmistakably distinct directions.\nRows only: 0 idle standing; 1 walk contact with LEFT foot forward and RIGHT arm forward; 2 opposite walk contact RIGHT foot forward and LEFT arm forward, genuinely alternating feet not duplicated poses; 3 planted stance, BOTH EMPTY hands forward casting, no magic. Never add a fifth row.\nMaintain exact face, costume, anatomy and palette in all32 frames. No staves, weapons, held objects, ground shadows, scenery, text, labels, grid lines, sparkles or baked spells. Wide transparent canvas.\nSubject: Steezo, small goblin: olive-green skin, large pointy ears, short brown-black spiky hair, blue round glass goggles in gold rims, dark brown-black engineer tunic with gold edging and buttons, leather gloves, compact boots. No backpack gadget, no held props. Use exact image1 identity.\nCritical animation: two conspicuously different walk contacts. Row1 near leg extends backward/far leg forward in profiles; row2 near leg extends forward/far leg backward. Arms counter-swing. Front/back lower foot visibly switches screen sides. Clear boot separation, not two standing poses.",
+  "runtime_imports_or_tests": "NOT_RUN; source art only"
+}

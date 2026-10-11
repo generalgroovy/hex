@@ -12,6 +12,9 @@ func run() -> int:
 		_test_all_movement_spends_reset_quiet(tick_rate)
 		_test_stamina_quiet_recovery(tick_rate)
 		_test_chemistry_recovery_seal(tick_rate)
+		_test_sprint_exact_tick_admission(tick_rate)
+		_test_sprint_paid_cast_coexistence(tick_rate)
+		_test_depleted_sprint_recovery_cycles(tick_rate)
 	return finish("player-resources")
 
 
@@ -175,7 +178,7 @@ func _test_all_movement_spends_reset_quiet(tick_rate: int) -> void:
 		var state := PlayerState.new()
 		state.position_x = 1_000_000
 		state.position_y = 1_000_000
-		state.stamina_recovery_idle_ticks = 360
+		state.stamina_recovery_idle_ticks = config.tick_rate * 2
 		state.flux_recovery_idle_ticks = 360
 		var held := SimCommand.HELD_JUMP
 		if action == "slide_hold":
@@ -189,6 +192,7 @@ func _test_all_movement_spends_reset_quiet(tick_rate: int) -> void:
 			state.air_vertical_velocity = 300_000
 			state.jump_held_last_tick = true
 			if action == "float_hold":
+				state.flight_capable = true
 				state.air_floating = true
 				state.float_used = true
 				state.float_ticks = 120
@@ -196,8 +200,13 @@ func _test_all_movement_spends_reset_quiet(tick_rate: int) -> void:
 				state.air_vertical_velocity = 0
 		var before := state.stamina
 		MovementSystem.step(state, SimCommand.new(0, 1, 0, 0, held), config, collision)
-		check(state.stamina < before, action + " pays a real positive held cost")
-		equal(state.stamina_recovery_idle_ticks, 0, action + " resets Stamina quiet clock every paid tick")
+		if action == "jump_hold":
+			equal(state.stamina, before, "ordinary nonflier held Jump has no hidden airborne sustain payment")
+			equal(state.stamina_recovery_idle_ticks, config.tick_rate * 2 + 1, "free held Jump continues Stamina quiet time")
+			check(not state.air_floating and state.air_height > 0, "ordinary held Jump retains its ballistic arc without granting flight")
+		else:
+			check(state.stamina < before, action + " pays a real positive held cost")
+			equal(state.stamina_recovery_idle_ticks, 0, action + " resets Stamina quiet clock every paid tick")
 		equal(state.flux_recovery_idle_ticks, 360, action + " cannot reset Flux quiet clock")
 
 
@@ -241,3 +250,140 @@ func _test_stamina_quiet_recovery(tick_rate: int) -> void:
 	MovementSystem.step(state, SimCommand.new(0, 1, 0, 0, 0, SimCommand.PRESSED_SLIDE), config, collision)
 	equal(state.slide_ticks, 0, "deliberate Slide brake cancels the active slide")
 	equal(state.stamina_recovery_idle_ticks, 181, "free Slide brake preserves the quiet ramp")
+
+
+func _sprint_resource_fixture(direction: Vector2i, speed_ratio: int, reserve: int, remainder: int) -> PlayerState:
+	var state := PlayerState.new(1)
+	state.position_x = 5_000_000
+	state.position_y = 5_000_000
+	state.movement_speed_ratio = speed_ratio
+	state.radius = int({900: 19_000, 1000: 18_000, 1100: 17_000}[speed_ratio])
+	@warning_ignore("integer_division")
+	var walking_speed := MovementTuning.BASE_SPEED * speed_ratio / 1000
+	@warning_ignore("integer_division")
+	state.velocity_x = direction.x * walking_speed / 1000
+	@warning_ignore("integer_division")
+	state.velocity_y = direction.y * walking_speed / 1000
+	state.stamina = reserve
+	state.stamina_remainder = remainder
+	state.stamina_recovery_delay_ticks = 20
+	state.stamina_recovery_idle_ticks = 180
+	return state
+
+
+func _test_sprint_exact_tick_admission(tick_rate: int) -> void:
+	var config := SimConfig.new(tick_rate)
+	var arena := CollisionWorld.new(10_000_000, 10_000_000)
+	equal(MovementTuning.SPRINT_DRAIN_PER_SECOND, 34_000, "sprint boundary oracle uses the unchanged authored drain")
+	# Independent exact rows: prior remainder, whole milli-unit debit, next
+	# remainder. Both spending debt and positive recovery credit affect the gate.
+	var debit_rows: Array[Vector3i] = [
+		Vector3i(-119, 284, -39), Vector3i(-80, 284, 0),
+		Vector3i(-40, 283, -80), Vector3i(0, 283, -40),
+		Vector3i(40, 283, 0), Vector3i(119, 282, -41),
+	]
+	for speed_ratio: int in [900, 1000, 1100]:
+		for direction: Vector2i in EightDirectionResolver.FIXED_VECTORS:
+			for row: Vector3i in debit_rows:
+				for reserve: int in [0, 1, row.y - 1, row.y, row.y + 1]:
+					var runner := _sprint_resource_fixture(direction, speed_ratio, reserve, row.x)
+					var walker := _sprint_resource_fixture(direction, speed_ratio, reserve, row.x)
+					var expected_sprint := reserve >= row.y
+					var context := "sprint ratio=%d dir=%s reserve=%d remainder=%d" % [speed_ratio, direction, reserve, row.x]
+					MovementSystem.step(runner, SimCommand.new(0, 1, direction.x, direction.y, SimCommand.HELD_SPRINT), config, arena)
+					MovementSystem.step(walker, SimCommand.new(0, 1, direction.x, direction.y), config, arena)
+					equal(runner.sprinting, expected_sprint, context + " requires the full pending tick debit")
+					equal(walker.stamina, reserve, context + " walking remains free during recovery delay")
+					equal(walker.stamina_remainder, row.x, context + " walking preserves fractional accounting")
+					equal(runner.health, walker.health, context + " cannot spend Health")
+					equal(runner.flux, walker.flux, context + " cannot spend Flux")
+					if expected_sprint:
+						equal(runner.stamina, reserve - row.y, context + " exact funds buy one complete sprint tick")
+						equal(runner.stamina_remainder, row.z, context + " retains the exact unpaid sub-unit remainder")
+						equal(runner.stamina_recovery_delay_ticks, config.milliseconds_to_ticks(MovementTuning.STAMINA_RECOVERY_DELAY_MS), context + " paid sprint resets delay")
+						equal(runner.stamina_recovery_idle_ticks, 0, context + " paid sprint resets its quiet ramp")
+						check(Vector2i(runner.velocity_x, runner.velocity_y).length_squared() > Vector2i(walker.velocity_x, walker.velocity_y).length_squared(), context + " affordable sprint retains its speed advantage")
+					else:
+						equal(runner.canonical_values(), walker.canonical_values(), context + " refused sprint is exactly ordinary walking without debit or timer reset")
+
+
+func _test_sprint_paid_cast_coexistence(tick_rate: int) -> void:
+	var abilities := AbilityCatalog.new()
+	check(abilities.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "sprint coexistence uses the production spell catalog")
+	var definition := CombatTuning.cast_definition(179)
+	check(not definition.is_empty(), "sprint coexistence uses a retained paid Heavy")
+	if definition.is_empty(): return
+	for reserve: int in [0, 1, 283, 284, 285]:
+		var world := SimWorld.new(tick_rate)
+		check(HexCourtPractice.configure(world, abilities, false), "sprint coexistence prepares real paid hex authority")
+		var state := world.player()
+		check(state.place_proven_spell(0, 179), "sprint coexistence equips the real Heavy")
+		state.stamina = reserve
+		state.stamina_remainder = -80
+		state.stamina_recovery_delay_ticks = 20
+		state.stamina_recovery_idle_ticks = 180
+		state.flux = int(definition.flux_cost)
+		state.flux_recovery_delay_ticks = 20
+		state.flux_recovery_idle_ticks = 180
+		var context := "sprint/cast reserve=%d" % reserve
+		check(world.step([SimCommand.new(world.tick, 1, 1000, 0, SimCommand.HELD_SPRINT, SimCommand.PRESSED_SPELL_1, 0, -1000)]), context + " shares one real authority tick")
+		equal(state.sprinting, reserve >= 284, context + " sprint independently requires its remainder-aware debit")
+		equal(state.stamina, reserve - 284 if reserve >= 284 else reserve, context + " cast cannot waive or invent Stamina payment")
+		equal(state.pending_cast_wire_id, 179, context + " affordable casting survives sprint refusal")
+		equal(state.flux, 0, context + " admitted Heavy pays its complete exact Flux reserve")
+		equal(state.flux_recovery_idle_ticks, 0, context + " actual cast payment resets only its Flux ramp")
+		equal(state.stamina_recovery_idle_ticks, 0 if reserve >= 284 else 180, context + " Flux payment cannot reset an unpaid Stamina ramp")
+		var released := false
+		var starts := 0
+		for event: Dictionary in world.combat_events:
+			if event.get("type") == "cast_started": starts += 1
+		for _tick: int in range(world.config.milliseconds_to_ticks(int(definition.startup_ms)) + 2):
+			check(world.step([SimCommand.new(world.tick, 1, 1000, 0)]), context + " release continues after sprint input ends")
+			for event: Dictionary in world.combat_events:
+				if event.get("type") == "cast_started": starts += 1
+			for projectile: ProjectileState in world.projectiles:
+				if projectile.source_wire_id == 179:
+					released = true
+					check(projectile.velocity_x == 0 and projectile.velocity_y < 0, context + " movement cannot retarget the paid northward cast")
+		equal(starts, 1, context + " released input cannot buy a second cast")
+		check(released, context + " fully paid cast actually releases")
+		equal(state.flux, 0, context + " release neither spends again nor refunds the paid cast")
+
+
+func _test_depleted_sprint_recovery_cycles(tick_rate: int) -> void:
+	var config := SimConfig.new(tick_rate)
+	var arena := CollisionWorld.new(10_000_000, 10_000_000)
+	var state := _sprint_resource_fixture(Vector2i(1000, 0), 1000, 1000, 0)
+	state.stamina_recovery_idle_ticks = 0
+	var paid_ticks := 0
+	var recovering_ticks := 0
+	var refused_ticks := 0
+	for tick: int in range(tick_rate * 6):
+		var before := state.stamina
+		var remainder := state.stamina_remainder
+		@warning_ignore("integer_division")
+		var required := (MovementTuning.SPRINT_DRAIN_PER_SECOND - remainder) / tick_rate
+		var affordable := before >= required and before > 0
+		var delay := state.stamina_recovery_delay_ticks
+		var quiet := state.stamina_recovery_idle_ticks
+		MovementSystem.step(state, SimCommand.new(tick, 1, 1000, 0, SimCommand.HELD_SPRINT), config, arena)
+		equal(state.sprinting, affordable, "depleted held sprint tick %d never purchases an underpaid speed tick" % tick)
+		if affordable:
+			paid_ticks += 1
+			equal(state.stamina, before - required, "every affordable held sprint pays its exact whole-unit debit")
+			equal(state.stamina_remainder, remainder - MovementTuning.SPRINT_DRAIN_PER_SECOND + required * tick_rate, "continuous sprint preserves fractional debt")
+			equal(state.stamina_recovery_idle_ticks, 0, "each actual sprint payment resets quiet time")
+		else:
+			refused_ticks += 1
+			check(state.stamina >= before, "unaffordable held sprint cannot spend or starve eligible recovery")
+			equal(state.stamina_recovery_delay_ticks, maxi(0, delay - 1), "unaffordable retries do not postpone recovery")
+			equal(state.stamina_recovery_idle_ticks, Recovery.advance_idle(quiet, maxi(0, delay - 1), tick_rate), "unaffordable retries do not reset the quiet ramp")
+			if state.stamina > before: recovering_ticks += 1
+		check(state.stamina >= 0 and state.stamina <= state.stamina_maximum, "held depletion and recovery stay within the resource envelope")
+	check(paid_ticks > 4 and refused_ticks > 0 and recovering_ticks > 0, "six-second held run includes initial depletion, refusal, recovery and paid resumption")
+	var before_release := state.stamina
+	for tick: int in range(tick_rate * 4):
+		MovementSystem.step(state, SimCommand.new(tick, 1, 1000, 0), config, arena)
+		check(not state.sprinting, "released Sprint remains ordinary walking throughout recovery")
+	check(state.stamina > before_release, "deliberate Sprint release restores a useful reserve")
+	equal(state.stamina_recovery_idle_ticks, Recovery.maximum_idle_ticks(tick_rate), "released Sprint reaches the existing finite quiet-recovery cap")

@@ -55,7 +55,7 @@ func run() -> int:
 	for _frame: int in range(2):
 		var blocked := node._gameplay_input_blocked()
 		node.controls_input_guard_frames -= 1
-		equal(node._sample_gameplay_command(0, Vector2.ZERO, Vector2.RIGHT, blocked).pressed_actions, 0, "closing cannot convert UI input into a gameplay press")
+		equal(node._sample_gameplay_command(0, Vector2.ZERO, Vector2.RIGHT, blocked).pressed_actions, SimCommand.PRESSED_CANCEL_MOVEMENT, "closing emits only safe movement cancellation, never a paid action")
 	_send_key(node, KEY_J, false)
 	node._sample_gameplay_command(0, Vector2.ZERO, Vector2.RIGHT, false)
 	_send_key(node, KEY_J, true)
@@ -64,11 +64,13 @@ func run() -> int:
 	check(command.has_pressed(SimCommand.PRESSED_JUMP), "release and repress of saved key reaches the real gameplay command")
 	var stamina_before := node.world.player().stamina
 	check(node.world.step([command]), "saved key advances the real authoritative world")
-	check(node.world.player().is_airborne() and node.world.player().stamina < stamina_before, "saved key admits the ordinary paid jump")
+	check(node.world.player().jumpsquat_active and not node.world.player().is_airborne() and node.world.player().stamina == stamina_before, "saved held key prepares an unpaid grounded jump")
 	_send_key(node, KEY_J, false)
+	check(node.world.step([node._sample_gameplay_command(node.world.tick, Vector2.ZERO, Vector2.RIGHT, false)]), "saved key release advances authority")
+	check(node.world.player().is_airborne() and node.world.player().stamina < stamina_before, "saved key release admits the ordinary paid jump")
 	_send_key(node, KEY_F4, true)
 	check(node.player_compendium.is_open, "F4 retains its fixed Compendium action after Controls closes")
-	equal(node._sample_gameplay_command(node.world.tick, Vector2.ZERO, Vector2.RIGHT, node._gameplay_input_blocked()).pressed_actions, 0, "Compendium shortcut never produces a paid action")
+	equal(node._sample_gameplay_command(node.world.tick, Vector2.ZERO, Vector2.RIGHT, node._gameplay_input_blocked()).pressed_actions, SimCommand.PRESSED_CANCEL_MOVEMENT, "Compendium shortcut delivers only cancellation, never a paid action")
 	_send_key(node, KEY_F4, false)
 	node.preferences_persistence_allowed = false
 	check(not node._save_player_preferences_if_persistent(), "failed initial profile preservation blocks later settings saves")

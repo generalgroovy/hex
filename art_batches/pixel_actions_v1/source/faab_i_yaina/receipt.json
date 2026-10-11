@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "character_id": "faab_i_yaina",
+  "display_name": "Faab I Yaina",
+  "ancestry": "angel",
+  "body_type": "middle",
+  "identity_source": "content/champions/foundation_champions_v1.json",
+  "generated_date": "2026-10-03",
+  "provenance": {
+    "generator": "built-in image_gen",
+    "generation_calls": 1,
+    "corrective_calls": 0,
+    "original_path": "C:/Users/sende/.codex/generated_images/01a100dd-1f0d-7f42-b58f-79ed7b962905/exec-2ea4418b-69f2-4716-967e-35f7721b2eb4.png",
+    "copy_method": "Copy-Item",
+    "original_sha256": "E72C7FA02397435999A8D8E77C537E051453CCB42E9B8CD95A12A5AA58FEB24E",
+    "copied_sha256": "E72C7FA02397435999A8D8E77C537E051453CCB42E9B8CD95A12A5AA58FEB24E",
+    "byte_identical": true,
+    "pixel_edits_performed": false
+  },
+  "source_path": "art_batches/pixel_actions_v1/source/faab_i_yaina/source.png",
+  "prompt_path": "art_batches/pixel_actions_v1/prompts/faab_i_yaina.md",
+  "references": [
+    {
+      "path": "assets/sprites/pixel_cast_v1/faab_i_yaina.png",
+      "role": "Primary current runtime identity, costume, compact body proportions and headings",
+      "sha256": "9A2F513AD10C0E4918D7ACC6D02D50026B7E170310A1D207D839FEE393C6E163",
+      "inspected_before_generation": true
+    },
+    {
+      "path": "assets/sprites/fullbody_cast_v1/faab_i_yaina-detail.png",
+      "role": "Supporting identity, armor, wings and profile/rear anatomy",
+      "sha256": "942E91FE4CB343C6D7CACEA4F0E1FEF7AA592DB79F30D9F909C3CB6E237AFCAF",
+      "inspected_before_generation": true
+    },
+    {
+      "path": "C:/Users/sende/Pictures/styleref1.png",
+      "role": "Retro pixel style only; old names, races, props and effects excluded",
+      "sha256": "C0FB63C912718D64CA061CCD85817869FFC3348A3C81A910962DF57066279FD4",
+      "inspected_before_generation": true
+    }
+  ],
+  "dimensions": {
+    "width": 1774,
+    "height": 887
+  },
+  "transparency": {
+    "format": "32-bit RGBA PNG",
+    "genuine_alpha_channel": true,
+    "alpha_0_pixels": 968806,
+    "alpha_255_pixels": 710,
+    "partial_alpha_pixels": 604022,
+    "partial_alpha_ge128_pixels": 415397,
+    "alpha_0_nonzero_rgb_pixels": 2006,
+    "saturated_red_yellow_pixels_alpha_lt128": 29947,
+    "saturated_red_yellow_pixels_alpha_ge128": 111,
+    "saturated_color_test": "R > 220 and B < 40 and (G < 40 or G > 220); diagnostic only, may include intended palette pixels",
+    "cleanup_performed": false
+  },
+  "layout": {
+    "columns": 8,
+    "rows": 4,
+    "complete_full_body_sprites_visually_counted": 32,
+    "column_order": [
+      "S",
+      "SE",
+      "E",
+      "NE",
+      "N",
+      "NW",
+      "W",
+      "SW"
+    ],
+    "row_order": [
+      "jumpsquat_anticipation",
+      "rising_tucked_jump",
+      "descending_feet_ready_jump",
+      "compressed_landing"
+    ]
+  },
+  "source_review": {
+    "status": "SOURCE_CANDIDATE_REVIEWED_WITH_LIMITATIONS",
+    "reviewed_original": true,
+    "observations": [
+      "One bald brown-skinned angel identity with white/silver-and-gold armor and white feathered wings throughout; runtime gender presentation retained without sexualization.",
+      "All 32 sprites are complete at source review; no wing, hand or boot intersects an outer image edge, and neighboring figures remain separated.",
+      "Genuine rear-quarter shoulder, torso, rear skirt-panel and wing overlaps are visible in NE/NW; these are not front torsos with hidden eyes.",
+      "Rising row uses lifted/open wings, raised arms and flexed knees; descending row lowers wings, brings hands forward and extends boots downward.",
+      "Landing uses deeper profile knee bending and lower pelvis than anticipation; anatomical head size appears broadly consistent across rows.",
+      "Hands are empty, with no wand, weapon, shield, baked magic, labels, floor or cast shadow."
+    ],
+    "limitations": [
+      "Colored red/yellow edge speckles are visible in the original viewer. Most saturated red/yellow diagnostic pixels have alpha below 128, but 111 pass alpha >= 128; some may be intended gold. Lead must review cleanup results.",
+      "Partial alpha is substantial and zero-alpha pixels retain some RGB. No alpha thresholding, hidden-RGB removal, registration, cropping, downsampling or other pixel editing was performed.",
+      "Front/back landing compression is subtler than profile landing compression and should be checked at common native scale.",
+      "Some descending oblique/profile poses keep a trailing knee flexed; their forward/downward ready boot still differentiates them from the rise. Transition readability requires native-scale review.",
+      "Raised wings increase row-two overall envelope; do not fit each sprite to its own box or derive body scale from wing envelope.",
+      "Exact anatomical pixel lengths and native-scale skull continuity are unverified; source-size visual review is not runtime acceptance.",
+      "These are four authored keys, not full animation cycles or cast animation."
+    ]
+  },
+  "acceptance": {
+    "source_size_visual_review": "PERFORMED_WITH_LIMITATIONS",
+    "native_scale": "NOT_RUN",
+    "runtime": "NOT_RUN",
+    "godot_import": "NOT_RUN",
+    "human_acceptance": "NOT_RUN"
+  },
+  "scope": {
+    "runtime_files_modified": false,
+    "shared_manifest_or_builder_modified": false,
+    "engine_or_capture_run": false,
+    "commit_or_push": false
+  },
+  "completion_marker": "SOURCE_TICKET_COMPLETE"
+}

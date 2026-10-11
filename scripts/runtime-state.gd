@@ -14,7 +14,7 @@ func _initialize() -> void:
 	if not champions.load_from_file("res://content/champions/foundation_champions_v1.json", abilities):
 		_fail(champions.last_error)
 		return
-	if not reactions.load_from_file("res://content/reactions/first_eight_element_reactions_v1.json"):
+	if not reactions.load_from_file(ReactionCatalog.DEFAULT_PATH):
 		_fail(reactions.last_error)
 		return
 	var summary: Dictionary = SummaryScript.build(abilities, champions, reactions)

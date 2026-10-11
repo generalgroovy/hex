@@ -19,7 +19,7 @@ func _test_world_and_snapshot_lifecycle() -> void:
 	var target := _target()
 	world.players.append(target)
 	world.projectiles.append(ProjectileState.new(
-		1000, 1, 1, CombatTuning.RILLSHOT_WIRE_ID, 2,
+		1000, 1, 1, CombatTuning.RILLSHOT_WIRE_ID, 3,
 		Vector2i(target.position_x - 10_000, target.position_y), Vector2i(600_000, 0),
 		8_000, target.health_maximum, 30,
 	))

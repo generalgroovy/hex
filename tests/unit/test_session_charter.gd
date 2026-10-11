@@ -8,7 +8,7 @@ func run() -> int:
 
 
 func _test_catalog() -> void:
-	equal(SessionCharter.PROFILE_ORDER.size(), 3, "three concise Farflow charters are available")
+	equal(SessionCharter.PROFILE_ORDER.size(), 5, "five explicit social, individual and team Farflow charters are available")
 	equal(SessionCharter.DEFAULT_ID, "open_commons", "social Commons is the safe default")
 	check(SessionCharter.catalog_hash().length() == 64, "charter catalog has a compatibility hash")
 	var distinct_hashes: Dictionary[String, bool] = {}
@@ -22,7 +22,9 @@ func _test_catalog() -> void:
 	check(not SessionCharter.validate_assignment("open_commons", SessionCharter.profile_hash("duel_knot")), "cross-charter hash substitution fails closed")
 	check(SessionCharter.definition("unknown").is_empty(), "unknown charter has no permissive fallback definition")
 	equal(SessionCharter.next_id("open_commons"), "sparring_circle", "charter order advances deterministically")
-	equal(SessionCharter.next_id("duel_knot"), "open_commons", "charter order wraps to the safe default")
+	equal(SessionCharter.next_id("duel_knot"), "duos", "Duel advances to the explicit Duos charter")
+	equal(SessionCharter.next_id("duos"), "trios", "Duos advances to Trios")
+	equal(SessionCharter.next_id("trios"), "open_commons", "charter order wraps to the safe default")
 
 
 func _test_rules() -> void:

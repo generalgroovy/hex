@@ -30,7 +30,7 @@ func _state() -> PlayerState:
 func _step(state: PlayerState, move: Vector2i = Vector2i.ZERO, held: int = 0, pressed: int = 0, collision: CollisionWorld = null) -> void:
 	MovementSystem.step(state, SimCommand.new(0, 1, move.x, move.y, held, pressed), config, arena if collision == null else collision)
 	check(state.air_height >= 0 and state.air_height <= MovementTuning.AIR_MAX_HEIGHT, "physical height stays within shared bounds")
-	check(state.air_vertical_velocity >= -MovementTuning.AIR_TERMINAL_FALL_SPEED and state.air_vertical_velocity <= MovementTuning.JUMP_VERTICAL_SPEED, "vertical speed stays bounded")
+	check(state.air_vertical_velocity >= -MovementTuning.AIR_TERMINAL_FALL_SPEED and state.air_vertical_velocity <= MovementTuning.CHARGED_JUMP_VERTICAL_SPEED, "vertical speed stays bounded")
 	check(absi(state.air_height_remainder) < 2 * config.tick_rate, "vertical integration remainder is canonical and bounded")
 
 
@@ -42,27 +42,28 @@ func _test_physical_arc_and_float() -> void:
 		var tap_apex := 0
 		var full_land_tick := -1
 		var tap_land_tick := -1
-		for tick: int in range(75):
+		for tick: int in range(100):
 			var pressed := SimCommand.PRESSED_JUMP if tick == 0 else 0
-			_step(full, direction, SimCommand.HELD_JUMP, pressed)
+			_step(full, direction, SimCommand.HELD_JUMP if tick < 36 else 0, pressed)
 			_step(tap, direction, 0, pressed)
 			full_apex = maxi(full_apex, full.air_height)
 			tap_apex = maxi(tap_apex, tap.air_height)
-			if full.air_height == 0 and full_land_tick < 0:
+			if tick > 36 and full.air_height == 0 and full_land_tick < 0:
 				full_land_tick = tick + 1
 			if tap.air_height == 0 and tap_land_tick < 0:
 				tap_land_tick = tick + 1
 			if tick == 30:
 				check(not MovementSystem.is_combat_intangible(full, config), "high held apex never extends jump protection")
-		equal(full_apex, 28_900, "every direction reaches the low28.9-pixel full-hop apex")
-		equal(full_land_tick, 34, "full hop lands in34ticks at120Hz")
-		check(tap_apex >= 21_000 and tap_apex <= 23_000, "tap arc stays readable and clears the eighteen-pixel projectile plane")
+		check(full_apex >= 58_000 and full_apex <= 61_000, "charged release reaches the bounded sixty-pixel apex")
+		check(full_land_tick >= 83 and full_land_tick <= 87, "charged release lands after its longer physical arc")
+		check(tap_apex >= 45_000 and tap_apex <= 49_000, "tap arc stays readable and clears the eighteen-pixel projectile plane")
 		check(tap_land_tick > 0 and tap_land_tick < full_land_tick, "short hop lands before held hop")
-		check(full.stamina < tap.stamina, "additional held rise has a real sustain cost")
+		check(full.stamina <= full.stamina_maximum and tap.stamina <= tap.stamina_maximum, "charge is bounded ground anticipation rather than hidden airborne sustain")
 		var double := _state()
-		_step(double, direction, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
+		double.flight_capable = true
+		_step(double, direction, 0, SimCommand.PRESSED_JUMP)
 		for _tick: int in range(16):
-			_step(double, direction, SimCommand.HELD_JUMP)
+			_step(double, direction)
 		check(double.air_height > 28_000, "first apex remains real shared height")
 		_step(double, direction) # A real release before the next fresh press.
 		var before_height := double.air_height
@@ -88,14 +89,16 @@ func _test_fresh_jump_edge() -> void:
 	_step(state, Vector2i.ZERO, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
 	for _index: int in range(20):
 		_step(state, Vector2i.ZERO, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
-	equal(state.hop_stage, 1, "repeated held-key edges cannot automatically Float")
+	check(state.jumpsquat_active and not state.is_airborne(), "repeated held-key edges keep anticipation without automatic takeoff")
 	_step(state)
+	for _index: int in range(config.milliseconds_to_ticks(MovementTuning.HOP_COMMITMENT_MS)):
+		_step(state)
 	_step(state, Vector2i.ZERO, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
-	check(state.float_used and state.air_floating, "release and fresh press starts Float")
+	check(state.double_jump_used and not state.air_floating, "release and fresh press starts nonflier double jump")
 	_step(state)
 	for _index: int in range(12):
 		_step(state, Vector2i.ZERO, 0, SimCommand.PRESSED_JUMP)
-	check(state.float_used and not state.air_floating, "third fresh presses cannot rearm Float")
+	check(state.double_jump_used and not state.air_floating, "third fresh presses cannot rearm double jump or grant flight")
 
 
 func _test_dodge_decay_and_airtime_allowance() -> void:
@@ -188,6 +191,7 @@ func _test_evade_direction_and_neutral_fast_fall() -> void:
 func _test_evade_float_wall_and_landing_transitions() -> void:
 	for duration: int in [MovementTuning.FLOAT_SMALL_DURATION_MS, MovementTuning.FLOAT_MIDDLE_DURATION_MS, MovementTuning.FLOAT_LARGE_DURATION_MS]:
 		var floating := _state()
+		floating.flight_capable = true
 		floating.air_height = 90_000
 		floating.hop_ticks = MovementSystem._remaining_air_ticks(floating, config)
 		floating.air_floating = true
@@ -297,7 +301,7 @@ func _test_contact_and_forced_control() -> void:
 
 func _test_fast_fall_and_landing_windows() -> void:
 	var state := _state()
-	_step(state, Vector2i.ZERO, SimCommand.HELD_JUMP, SimCommand.PRESSED_JUMP)
+	_step(state, Vector2i.ZERO, 0, SimCommand.PRESSED_JUMP)
 	for _index: int in range(15):
 		_step(state, Vector2i.ZERO, SimCommand.HELD_JUMP)
 	var height := state.air_height
@@ -338,8 +342,19 @@ func _test_replay_and_canonical_reset() -> void:
 		var prediction_values := PackedInt64Array()
 		for field: StringName in ClientPrediction.STATE_FIELDS:
 			prediction_values.append(int(first.player().get(field)))
+		# Keep the independent scalar assembly, then include the complete status
+		# suffix that production prediction captures after those movement fields.
+		prediction_values.append_array(PackedInt64Array(Array(first.player().spell_status_values)))
 		prediction_values[0] = 2 # Prediction packets belong to guests, never host entity1.
+		equal(prediction_values.size(), ClientPrediction.STATE_FIELDS.size() + 48, "physical replay packet includes all six eight-value status channels")
 		check(ClientPrediction.validate_values(prediction_values), "physical state remains admissible for exact prediction")
+		var restored := ClientPrediction.restore_state(prediction_values)
+		check(restored != null, "every physical trajectory tick restores through the actual prediction decoder")
+		if restored != null:
+			equal(restored.spell_status_values, first.player().spell_status_values, "prediction restoration preserves the full status suffix alongside movement")
+			equal(ClientPrediction.capture_packet(restored, tick, -1).get("values", PackedInt64Array()), prediction_values, "restored physical trajectory and statuses recapture to every exact prediction value")
+		if tick == 0:
+			check(not ClientPrediction.validate_values(prediction_values.slice(0, ClientPrediction.STATE_FIELDS.size())), "the preceding scalar-only prediction row is still rejected")
 	var command_log: Array[SimCommand] = []
 	for replay_tick: int in range(48):
 		var replay_held := SimCommand.HELD_JUMP if replay_tick < 12 else 0
@@ -368,6 +383,7 @@ func _test_landing_readiness() -> void:
 	state.air_dodge_used = true
 	state.hop_cooldown_ticks = 60
 	state.float_used = true
+	state.double_jump_used = true
 	state.air_dodge_cooldown_ticks = 74
 	_step(state, Vector2i(1000, 0), 0, SimCommand.PRESSED_JUMP)
 	check(state.jump_buffer_ticks > 0, "spent-air Jump buffers a meaningful upcoming landing")

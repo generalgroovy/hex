@@ -1,0 +1,2247 @@
+{
+  "schema_version": 1,
+  "status": "measured",
+  "scope": "Actual named release EXE/PCK; engine one-second FPS observations include cold startup and output logging. Not a frame-present trace, input-latency measurement, GPU timer, or sustained casting certification. Twelve finite slot-1 attempts use ordinary cooldown/Flux rules; refusals and idle after sequence/expiry remain in the sample. No resource refill, app closure, or current-source engine is used. Requested --quit-after iterations are not seconds or verified displayed-frame counts. Win32 foreground ownership and main-window visibility/minimization are sampled roughly every500ms after process launch; unavailable handles are null, not proof of a hidden window. Visibility does not prove unobscured presentation.",
+  "pack_directory": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-element-expansion-20261009\\windows",
+  "output_directory": "C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-old-portable-visible-v1",
+  "wrapper_sha256": "6235a1d9676b86f49426c003178a7e45483a766397f5936a625ac894506bf781",
+  "expected_release_identity": {
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate.",
+    "build_id": "p60-6d80c3bce71e",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "protocol_version": 60,
+    "record_count": 3240,
+    "runtime_source_sha256": "6d80c3bce71e9d7eb0fe9246f5f440d304da77f779edfc4054a965732b806e61",
+    "schema_version": 1,
+    "scope_id": "production-runtime-source-v1",
+    "snapshot_schema": 24,
+    "status": "candidate_generated_not_promoted"
+  },
+  "payload_before": {
+    "exe_sha256": "04baf75cc1d69dd93eb709533ecab4fd7770bb8a530645717017a06a9d9809fc",
+    "pack_sha256": "09471becff639270e630b2a1bd8ad9b4e830fc54317ad89caa95a7a6266b8368",
+    "build_state_sha256": "c18ec0ba289407e6f9eb76f58effcbdb41a215c0ba9583b717ea8a17060ca225"
+  },
+  "payload_after": {
+    "exe_sha256": "04baf75cc1d69dd93eb709533ecab4fd7770bb8a530645717017a06a9d9809fc",
+    "pack_sha256": "09471becff639270e630b2a1bd8ad9b4e830fc54317ad89caa95a7a6266b8368",
+    "build_state_sha256": "c18ec0ba289407e6f9eb76f58effcbdb41a215c0ba9583b717ea8a17060ca225"
+  },
+  "payload_unchanged": true,
+  "available_memory_before": {
+    "observed_utc": "2026-10-10T02:49:13.5800598Z",
+    "available_mb": 890.03,
+    "error": null
+  },
+  "available_memory_after": {
+    "observed_utc": "2026-10-10T02:51:02.3813172Z",
+    "available_mb": 1440.05,
+    "error": null
+  },
+  "requested_cases": [
+    "hearth",
+    "garden-entry"
+  ],
+  "cases": [
+    {
+      "case": "hearth",
+      "status": "measured",
+      "started_utc": "2026-10-10T02:49:13.6241230Z",
+      "process_wall_seconds": 25.9022429,
+      "engine_iterations_requested": 180,
+      "watchdog_seconds": 180,
+      "arguments": [
+        "--print-fps",
+        "--windowed",
+        "--resolution",
+        "1280x720",
+        "--quit-after",
+        "180",
+        "--",
+        "--fullbody-art",
+        "--pixel-cast",
+        "--no-lan-discovery",
+        "--capture-spawn=1536,880"
+      ],
+      "requested_spawn_px": [
+        1536,
+        880
+      ],
+      "requested_wire_id": 0,
+      "finite_sequence_attempts_requested": 0,
+      "admitted_cast_events": 0,
+      "refused_cast_events": 0,
+      "memory_before": {
+        "observed_utc": "2026-10-10T02:49:13.6239148Z",
+        "available_mb": 890.11,
+        "error": null
+      },
+      "memory_after": {
+        "observed_utc": "2026-10-10T02:49:39.5594082Z",
+        "available_mb": 1202.96,
+        "error": null
+      },
+      "stderr_bytes": 0,
+      "validation_errors": [],
+      "observations": {
+        "fps_summary": {
+          "sample_count": 7,
+          "mean_reported_fps": 24.571428571428573,
+          "minimum_reported_fps": 19.0,
+          "maximum_reported_fps": 28.0
+        },
+        "fps_samples": [
+          {
+            "line_number": 12,
+            "fps": 24.0,
+            "reported_mspf": 41.66,
+            "raw": "Project FPS: 24 (41.66 mspf)"
+          },
+          {
+            "line_number": 13,
+            "fps": 27.0,
+            "reported_mspf": 37.03,
+            "raw": "Project FPS: 27 (37.03 mspf)"
+          },
+          {
+            "line_number": 14,
+            "fps": 27.0,
+            "reported_mspf": 37.03,
+            "raw": "Project FPS: 27 (37.03 mspf)"
+          },
+          {
+            "line_number": 15,
+            "fps": 28.0,
+            "reported_mspf": 35.71,
+            "raw": "Project FPS: 28 (35.71 mspf)"
+          },
+          {
+            "line_number": 16,
+            "fps": 22.0,
+            "reported_mspf": 45.45,
+            "raw": "Project FPS: 22 (45.45 mspf)"
+          },
+          {
+            "line_number": 17,
+            "fps": 19.0,
+            "reported_mspf": 52.63,
+            "raw": "Project FPS: 19 (52.63 mspf)"
+          },
+          {
+            "line_number": 18,
+            "fps": 25.0,
+            "reported_mspf": 40.0,
+            "raw": "Project FPS: 25 (40.00 mspf)"
+          }
+        ],
+        "chemistry_observations": [],
+        "combat_observations": [],
+        "runtime_identities": [
+          {
+            "line_number": 8,
+            "build_id": "p60-6d80c3bce71e",
+            "runtime_source_sha256": "6d80c3bce71e9d7eb0fe9246f5f440d304da77f779edfc4054a965732b806e61"
+          }
+        ],
+        "parse_errors": []
+      },
+      "scope": "Actual named release EXE/PCK; engine one-second FPS observations include cold startup and output logging. Not a frame-present trace, input-latency measurement, GPU timer, or sustained casting certification. Twelve finite slot-1 attempts use ordinary cooldown/Flux rules; refusals and idle after sequence/expiry remain in the sample. No resource refill, app closure, or current-source engine is used. Requested --quit-after iterations are not seconds or verified displayed-frame counts. Win32 foreground ownership and main-window visibility/minimization are sampled roughly every500ms after process launch; unavailable handles are null, not proof of a hidden window. Visibility does not prove unobscured presentation.",
+      "requested_window_style": "Normal",
+      "window_observations": [
+        {
+          "elapsed_ms": 268,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 857,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 1387,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 1906,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 2411,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 2914,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 3417,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 3948,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 4466,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 4969,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 5487,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 6017,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 6546,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 7063,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 7593,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 8110,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 8613,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 9127,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 9657,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 10159,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 10663,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 11176,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 11690,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 12191,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 12721,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 13240,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 13765,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 14268,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 14784,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 15286,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 15804,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 16321,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 16848,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 17363,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 17880,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 18395,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 18926,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 19427,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 19954,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 20471,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 21000,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 21514,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 22019,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 22520,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 23051,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 23565,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 24093,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 24609,
+          "foreground_process_matches": null,
+          "main_window_available": null,
+          "main_window_visible": null,
+          "main_window_minimized": null,
+          "error": "Process exited before this observation."
+        }
+      ]
+    },
+    {
+      "case": "garden-entry",
+      "status": "measured",
+      "started_utc": "2026-10-10T02:49:40.0361328Z",
+      "process_wall_seconds": 81.7119409,
+      "engine_iterations_requested": 180,
+      "watchdog_seconds": 180,
+      "arguments": [
+        "--print-fps",
+        "--windowed",
+        "--resolution",
+        "1280x720",
+        "--quit-after",
+        "180",
+        "--",
+        "--fullbody-art",
+        "--pixel-cast",
+        "--no-lan-discovery",
+        "--capture-spawn=4880,720"
+      ],
+      "requested_spawn_px": [
+        4880,
+        720
+      ],
+      "requested_wire_id": 0,
+      "finite_sequence_attempts_requested": 0,
+      "admitted_cast_events": 0,
+      "refused_cast_events": 0,
+      "memory_before": {
+        "observed_utc": "2026-10-10T02:49:40.0359032Z",
+        "available_mb": 1285.12,
+        "error": null
+      },
+      "memory_after": {
+        "observed_utc": "2026-10-10T02:51:01.9090165Z",
+        "available_mb": 1358.36,
+        "error": null
+      },
+      "stderr_bytes": 0,
+      "validation_errors": [],
+      "observations": {
+        "fps_summary": {
+          "sample_count": 63,
+          "mean_reported_fps": 2.746031746031746,
+          "minimum_reported_fps": 1.0,
+          "maximum_reported_fps": 5.0
+        },
+        "fps_samples": [
+          {
+            "line_number": 12,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 13,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 14,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 15,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 16,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 17,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 18,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 19,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 20,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 21,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 22,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 23,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 24,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 25,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 26,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 27,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 28,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 29,
+            "fps": 5.0,
+            "reported_mspf": 200.0,
+            "raw": "Project FPS: 5 (200.00 mspf)"
+          },
+          {
+            "line_number": 30,
+            "fps": 4.0,
+            "reported_mspf": 250.0,
+            "raw": "Project FPS: 4 (250.00 mspf)"
+          },
+          {
+            "line_number": 31,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 32,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 33,
+            "fps": 1.0,
+            "reported_mspf": 1000.0,
+            "raw": "Project FPS: 1 (1000.00 mspf)"
+          },
+          {
+            "line_number": 34,
+            "fps": 1.0,
+            "reported_mspf": 1000.0,
+            "raw": "Project FPS: 1 (1000.00 mspf)"
+          },
+          {
+            "line_number": 35,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 36,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 37,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 38,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 39,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 40,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 41,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 42,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 43,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 44,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 45,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 46,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 47,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 48,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 49,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 50,
+            "fps": 4.0,
+            "reported_mspf": 250.0,
+            "raw": "Project FPS: 4 (250.00 mspf)"
+          },
+          {
+            "line_number": 51,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 52,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 53,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 54,
+            "fps": 4.0,
+            "reported_mspf": 250.0,
+            "raw": "Project FPS: 4 (250.00 mspf)"
+          },
+          {
+            "line_number": 55,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 56,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 57,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 58,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 59,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 60,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 61,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 62,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 63,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 64,
+            "fps": 2.0,
+            "reported_mspf": 500.0,
+            "raw": "Project FPS: 2 (500.00 mspf)"
+          },
+          {
+            "line_number": 65,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 66,
+            "fps": 4.0,
+            "reported_mspf": 250.0,
+            "raw": "Project FPS: 4 (250.00 mspf)"
+          },
+          {
+            "line_number": 67,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 68,
+            "fps": 4.0,
+            "reported_mspf": 250.0,
+            "raw": "Project FPS: 4 (250.00 mspf)"
+          },
+          {
+            "line_number": 69,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 70,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 71,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 72,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 73,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          },
+          {
+            "line_number": 74,
+            "fps": 3.0,
+            "reported_mspf": 333.33,
+            "raw": "Project FPS: 3 (333.33 mspf)"
+          }
+        ],
+        "chemistry_observations": [],
+        "combat_observations": [],
+        "runtime_identities": [
+          {
+            "line_number": 8,
+            "build_id": "p60-6d80c3bce71e",
+            "runtime_source_sha256": "6d80c3bce71e9d7eb0fe9246f5f440d304da77f779edfc4054a965732b806e61"
+          }
+        ],
+        "parse_errors": []
+      },
+      "scope": "Actual named release EXE/PCK; engine one-second FPS observations include cold startup and output logging. Not a frame-present trace, input-latency measurement, GPU timer, or sustained casting certification. Twelve finite slot-1 attempts use ordinary cooldown/Flux rules; refusals and idle after sequence/expiry remain in the sample. No resource refill, app closure, or current-source engine is used. Requested --quit-after iterations are not seconds or verified displayed-frame counts. Win32 foreground ownership and main-window visibility/minimization are sampled roughly every500ms after process launch; unavailable handles are null, not proof of a hidden window. Visibility does not prove unobscured presentation.",
+      "requested_window_style": "Normal",
+      "window_observations": [
+        {
+          "elapsed_ms": 265,
+          "foreground_process_matches": false,
+          "main_window_available": false,
+          "main_window_visible": null,
+          "main_window_minimized": null,
+          "error": null
+        },
+        {
+          "elapsed_ms": 767,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 1296,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 1810,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 2338,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 2863,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 3378,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 3894,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 4409,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 4924,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 5452,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 5979,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 6481,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 7011,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 7527,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 8043,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 8559,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 9071,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 9599,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 10113,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 10631,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 11160,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 11677,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 12205,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 12721,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 13251,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 13766,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 14281,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 14809,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 15324,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 15853,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 16382,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 16895,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 17424,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 17954,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 18456,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 18957,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 19473,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 19990,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 20506,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 21036,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 21553,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 22056,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 22570,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 23085,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 23600,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 24117,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 24633,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 25148,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 25676,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 26179,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 26708,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 27224,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 27754,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 28270,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 28799,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 29315,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 29845,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 30362,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 30866,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 31383,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 31886,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 32400,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 32927,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 33443,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 33960,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 34488,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 35018,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 35548,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 36064,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 36581,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 37108,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 37623,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 38154,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 38668,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 39191,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 39703,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 40205,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 40719,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 41246,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 41749,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 42263,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 42778,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 43295,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 43797,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 44314,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 44844,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 45360,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 45863,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 46390,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 46906,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 47425,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 47940,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 48456,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 48973,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 49503,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 50004,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 50517,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 51034,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 51537,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 52062,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 52576,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 53093,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 53608,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 54135,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 54650,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 55177,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 55692,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 56206,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 56722,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 57251,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 57765,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 58294,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 58808,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 59323,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 59839,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 60352,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 60854,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 61370,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 61899,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 62403,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 62908,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 63423,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 63939,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 64469,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 64985,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 65498,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 66001,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 66528,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 67045,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 67546,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 68061,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 68563,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 69079,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 69583,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 70101,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 70605,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 71121,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 71625,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 72144,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 72659,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 73173,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 73678,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 74203,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 74719,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 75249,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 75777,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 76292,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 76809,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 77336,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 77866,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 78381,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 78898,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 79415,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 79943,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 80472,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 80987,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 81505,
+          "foreground_process_matches": null,
+          "main_window_available": null,
+          "main_window_visible": null,
+          "main_window_minimized": null,
+          "error": "Process exited before this observation."
+        }
+      ]
+    }
+  ],
+  "error": null
+}

@@ -15,12 +15,17 @@ const GEOMETRY := ["boundary_formation", "boundary_active", "boundary_decay", "c
 const PHASES := ["formation", "active", "decay"]
 const VARIANTS := ["normal", "reduced"]
 const LAYERS := ["attack_cap", "attack_material", "caller_body_alpha_mask", "concealment_material", "essential_boundary", "essential_link_state", "essential_protection", "finite_deposit_material", "ground_material", "harmless_cast_detail", "harmless_movement", "harmless_trail", "projectile_core", "reaction_material", "terminal_contact"]
-const SOURCE_PATHS := ["src/sim/chemistry/element_chemistry_system.gd", "content/reactions/first_eight_element_reactions_v1.json", "content/visual/visual_language_v1.json", "content/visual/foundation_spell_visuals_v1.json", "content/visual/spell_animation_skeletons_v1.json"]
-const Chemistry = preload("res://src/sim/chemistry/element_chemistry_system.gd")
+const ARCHIVE_SOURCE_PATHS := ["src/sim/chemistry/element_chemistry_system.gd", "content/reactions/first_eight_element_reactions_v1.json", "content/visual/visual_language_v1.json", "content/visual/foundation_spell_visuals_v1.json", "content/visual/spell_animation_skeletons_v1.json"]
+const LIVE_SOURCE_PATH := "content/reactions/six_element_reactions_v2.json"
+const SOURCE_PATHS := ARCHIVE_SOURCE_PATHS + [LIVE_SOURCE_PATH]
+const ArchiveContract = preload("res://src/presentation/archive_magic_contract.gd")
+const Elements = preload("res://src/content/element_rules.gd")
+const LivePolicy = preload("res://src/sim/hex/hex_recipe_policy.gd")
 
 static var _shared: PixelMagicLibrary
 var last_error := ""
 var content_hash := ""
+var live_binding_hash := ""
 var source_hash_differences: Array[String] = []
 var _assets: Dictionary = {}
 var _reactions: Dictionary = {}
@@ -90,7 +95,8 @@ func load_from_manifest(document: Dictionary, pack_root: String = PACK_ROOT) -> 
 		pages[relative] = texture
 	# Source-file byte hashes are audit evidence, not a gameplay compatibility
 	# gate: comments, source export remapping or unrelated refactors may differ.
-	# The actual supported recipe geometry/timing was checked structurally above.
+	# Frozen authoring geometry/timing was checked structurally above. Live
+	# authority now uses an explicit visual binding and never borrows these values.
 	for recorded: Dictionary in document["source_files"]:
 		var source_path := "res://" + String(recorded["path"])
 		if not FileAccess.file_exists(source_path) or FileAccess.get_sha256(source_path) != String(recorded["sha256"]):
@@ -133,6 +139,11 @@ func load_from_manifest(document: Dictionary, pack_root: String = PACK_ROOT) -> 
 	_reactions = prepared_reactions
 	_textures = pages
 	content_hash = JSON.stringify(document).sha256_text()
+	var bindings: Array = [FileAccess.get_sha256("res://" + LIVE_SOURCE_PATH)]
+	for wire: int in LivePolicy.active_wire_ids():
+		var current := LivePolicy.definition(wire)
+		bindings.append([wire, current.get("archive_recipe_wire", 0), current.get("visual_material", "")])
+	live_binding_hash = JSON.stringify(bindings).sha256_text()
 	return true
 
 
@@ -142,6 +153,16 @@ func asset(asset_id: String) -> Dictionary:
 
 func reaction(wire_id: int) -> Dictionary:
 	return _reactions.get(wire_id, _empty)
+
+
+func live_reaction(wire_id: int) -> Dictionary:
+	var definition := LivePolicy.definition(wire_id)
+	return reaction(int(definition.get("archive_recipe_wire", 0))) if not definition.is_empty() else _empty
+
+
+func live_reaction_asset_id(wire_id: int, phase: String, reduced: bool = false) -> String:
+	var definition := LivePolicy.definition(wire_id)
+	return reaction_asset_id(int(definition.get("archive_recipe_wire", 0)), phase, reduced) if not definition.is_empty() else ""
 
 
 func asset_count() -> int:
@@ -270,10 +291,10 @@ func validate_manifest(document: Dictionary) -> bool:
 	if not budgets is Dictionary or budgets.get("atlas_pages") != 3 or budgets.get("decoded_rgba_bytes") != DECODED_BYTES or budgets.get("normal_total_material_stamps") != 192 or budgets.get("reduced_total_material_stamps") != 96 or budgets.get("essential_boundaries_are_never_dropped") != true:
 		return _fail("Magic prepared-page or decoration budget is invalid")
 	var sources: Variant = document.get("source_files")
-	if not sources is Array or sources.size() != SOURCE_PATHS.size():
+	if not sources is Array or sources.size() != ARCHIVE_SOURCE_PATHS.size():
 		return _fail("Magic source audit must name the five known authority files")
-	for index: int in range(SOURCE_PATHS.size()):
-		if not sources[index] is Dictionary or sources[index].get("path") != SOURCE_PATHS[index] or not _sha256(sources[index].get("sha256")):
+	for index: int in range(ARCHIVE_SOURCE_PATHS.size()):
+		if not sources[index] is Dictionary or sources[index].get("path") != ARCHIVE_SOURCE_PATHS[index] or not _sha256(sources[index].get("sha256")):
 			return _fail("Magic source audit path/hash is invalid")
 	var raw_assets: Variant = document.get("assets")
 	if not raw_assets is Array or raw_assets.size() != 474:
@@ -330,33 +351,28 @@ func _validate_asset(entry: Dictionary) -> bool:
 
 
 func _validate_reactions(document: Dictionary, by_id: Dictionary) -> bool:
+	# The original pack remains eight styles and 36 authored sequences. These
+	# are archive identities, separate from the six live ingredients/63 recipes.
+	# JSON numbers parse as floats. Dictionary equality distinguishes their
+	# Variant types from GDScript integer constants, so compare validated values.
 	var lifetimes: Variant = document.get("deposit_lifetime_ticks")
-	if not lifetimes is Dictionary or lifetimes.size() != 8:
-		return _fail("Magic deposit lifetimes are incomplete")
-	for index: int in range(ELEMENTS.size()):
-		var ticks := int(ceili(float(Chemistry.ELEMENT_LIFE_MS[index + 1]) * 120.0 / 1000.0))
-		if not _integer(lifetimes.get(ELEMENTS[index]), ticks, ticks):
-			return _fail("Magic deposit lifetime is incompatible with current authority")
+	if not lifetimes is Dictionary or lifetimes.size() != ArchiveContract.DEPOSIT_LIFETIMES.size():
+		return _fail("Magic archived deposit lifetimes differ from their frozen authoring contract")
+	for element: String in ArchiveContract.DEPOSIT_LIFETIMES:
+		var expected := int(ArchiveContract.DEPOSIT_LIFETIMES[element])
+		if not _integer(lifetimes.get(element), expected, expected):
+			return _fail("Magic archived deposit lifetime differs: " + element)
 	var reactions: Variant = document.get("reactions")
-	if not reactions is Array or reactions.size() != 36:
-		return _fail("Magic reaction coverage requires 36 stable identities")
-	for index: int in range(36):
+	if not reactions is Array or reactions.size() != ArchiveContract.REACTIONS.size():
+		return _fail("Magic archive requires all 36 prepared reaction identities")
+	for index: int in range(ArchiveContract.REACTIONS.size()):
 		var entry: Variant = reactions[index]
-		var actual := Chemistry.recipe(301 + index)
-		if not entry is Dictionary or entry.get("wire_id") != 301 + index or entry.get("id") != actual["id"] or entry.get("shape") != actual["shape"] or entry.get("elements") != [ELEMENTS[int(actual["elements"][0]) - 1], ELEMENTS[int(actual["elements"][1]) - 1]]:
-			return _fail("Magic reaction identity or shape is incompatible with current authority")
-		for field: String in ["formation_ms", "active_ms", "decay_ms", "pulse_ms"]:
-			if not _integer(entry.get(field), int(actual[field]), int(actual[field])):
-				return _fail("Magic reaction timing is incompatible with current authority")
-		for phase: String in PHASES:
-			var duration := int(ceili(float(actual[phase + "_ms"]) * 120.0 / 1000.0))
-			if not _integer(entry.get(phase + "_ticks"), duration, duration):
-				return _fail("Magic reaction ticks must use ceiling-rounded 120Hz phase durations")
-		for key: String in ["nominal_radius_px", "nominal_length_px", "speed_px_per_second", "cover_health"]:
-			var source_key: String = {"nominal_radius_px": "radius", "nominal_length_px": "length", "speed_px_per_second": "speed", "cover_health": "health"}[key]
-			var value: Variant = entry.get(key)
-			if not _number(value) or float(value) * 1000.0 != float(actual[source_key]):
-				return _fail("Magic nominal geometry is incompatible with current authority")
+		var archived: Dictionary = ArchiveContract.REACTIONS[index]
+		if not entry is Dictionary:
+			return _fail("Magic archived reaction must be an object")
+		for key: String in archived:
+			if entry.get(key) != archived[key]:
+				return _fail("Magic archived reaction metadata differs: %s/%s" % [str(archived.wire_id), key])
 		for key: String in ["phases", "essential_boundary"]:
 			var bindings: Variant = entry.get(key)
 			if not bindings is Dictionary or bindings.size() != 3:
@@ -365,7 +381,7 @@ func _validate_reactions(document: Dictionary, by_id: Dictionary) -> bool:
 				if not bindings.get(phase) is Dictionary or bindings[phase].size() != 2:
 					return _fail("Magic reaction phase requires both accessibility variants")
 				for variant: String in VARIANTS:
-					var expected := "magic.reaction.%s.%s.%s" % [actual["id"], phase, variant] if key == "phases" else "magic.geometry.boundary_%s.%s" % [phase, variant]
+					var expected := "magic.reaction.%s.%s.%s" % [archived.id, phase, variant] if key == "phases" else "magic.geometry.boundary_%s.%s" % [phase, variant]
 					if bindings[phase].get(variant) != expected or not by_id.has(expected) or by_id[expected]["lifecycle_phase"] != phase:
 						return _fail("Magic phase binding must refer to its exact prepared lifecycle sequence")
 	return true
@@ -413,6 +429,7 @@ static func _freeze(value: Variant) -> void:
 func _clear() -> void:
 	last_error = ""
 	content_hash = ""
+	live_binding_hash = ""
 	source_hash_differences.clear()
 	_assets = {}
 	_reactions = {}

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "status": "PASS_OFFLINE_ONLY",
+  "command": "python -m unittest discover -s tests/art -p test_character_volume.py -v",
+  "tests": 10,
+  "pose_records_rendered": 3312,
+  "sizes": 3,
+  "directions": 8,
+  "checks": [
+    "source rig remains immutable",
+    "semantic state, aim, travel and phase preserved",
+    "new fixed bone lengths preserved through every pose",
+    "original contact and airborne foot classification preserved",
+    "96x96 cell and 48,84 pivot unchanged",
+    "double adaptation rejected",
+    "front heights exactly 58,63,68",
+    "width and coverage distinguish volume more than height",
+    "profile depth expands in anatomical camera space",
+    "all frames binary alpha and inside horizontal cell bounds"
+  ],
+  "engine_validation": "NOT_RUN_BY_WORKER",
+  "production_assets_changed": false,
+  "human_style_acceptance": "PENDING"
+}

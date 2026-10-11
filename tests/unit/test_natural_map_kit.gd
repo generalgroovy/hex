@@ -4,6 +4,7 @@ extends FluxTestSuite
 func run() -> int:
 	_test_repository_kit()
 	_test_surface_resolution()
+	_test_ground_family_registration()
 	_test_fail_closed_budget()
 	return finish("natural-map-kit")
 
@@ -51,6 +52,58 @@ func _test_surface_resolution() -> void:
 	equal(smoothed[0], open_path[0], "smoothed route preserves its authored start")
 	equal(smoothed[smoothed.size() - 1], open_path[open_path.size() - 1], "smoothed route preserves its authored finish")
 	check(smoothed.size() > open_path.size(), "smoothed route adds bounded curve samples")
+
+
+func _test_ground_family_registration() -> void:
+	var language := VisualLanguage.new()
+	check(language.load_from_file(), "visual language loads for live receiving materials")
+	var kit := NaturalMapKit.new()
+	check(kit.configure(language), "receiving profiles load for live ground registration")
+	var layout := SanctumCampusLayout.new()
+	check(layout.load_from_file("res://content/maps/sanctum_campus_g2_v1.json"), "live map loads for material registration")
+	var original := CanonicalContent.sha256(layout.data)
+	var illustrated := WellspringIllustratedKit.new()
+	check(illustrated.configure(layout), "actual illustrated ground binds for receiving shadows: " + illustrated.last_error)
+	check(illustrated.ground_ready() and illustrated.ground == null, "large-map receiving queries bind without a whole-world texture")
+	equal(illustrated.ground_chunk_builds, 0, "receiving fixture starts with no native region work")
+	# This exact coastal cell is inside the garden's broad rectangle, but its
+	# center is only eight pixels inside the shore envelope and is painted water.
+	var shore := HexEnvironmentLayout.center_pixels(Vector2i(-14, 34))
+	equal(kit.receiving_surface_id_at(layout, shore), "garden", "legacy district fallback reproduces the shore mismatch")
+	var shore_family := illustrated.pixel_family(illustrated.surface_at(shore))
+	equal(shore_family, "water", "the actual canonical shore cell is rendered as water")
+	var shore_sample := kit.receiving_shadow_sample(layout, shore, shore_family)
+	equal(String(shore_sample.get("surface_id", "")), "water", "shore shadow now agrees with its rendered water instead of the district name")
+	equal(shore_sample.get("fill_color"), language.ramp_color("deep_water", 0), "shore uses the existing deep-water shadow pixels")
+	equal(int(shore_sample.get("elevation", -1)), layout.elevation_at(Vector2i(shore.round())), "material correction preserves authored elevation")
+	var expected_profiles := {"water": "water", "grass": "garden", "earth": "proving", "paving": "nexus", "worldbone": "nexus"}
+	var found_families := {}
+	# Discover current production material samples, without restating the route,
+	# activity-area, shore or hex-membership implementation in the test.
+	for y: int in range(0, layout.canvas_size.y, 24):
+		if found_families.size() == expected_profiles.size(): break
+		for x: int in range(0, layout.canvas_size.x, 24):
+			var point := Vector2(x, y)
+			var family := illustrated.pixel_family(illustrated.surface_at(point))
+			if found_families.has(family): continue
+			found_families[family] = true
+			var sample := kit.receiving_shadow_sample(layout, point, family)
+			var expected_id := String(expected_profiles[family])
+			equal(String(sample.get("surface_id", "")), expected_id, "live %s ground selects its existing %s shadow profile" % [family, expected_id])
+			var profile: Dictionary = kit.receiving_shadow_profiles[expected_id]
+			equal(sample.get("fill_color"), language.ramp_color(String(profile["ramp"]), int(profile["fill_step"])), "%s contact reuses its admitted fill ramp" % family)
+			equal(sample.get("rim_color"), language.ramp_color(String(profile["ramp"]), int(profile["rim_step"])), "%s contact reuses its admitted rim ramp" % family)
+			equal(float(sample.get("rim_opacity", -1.0)), float(profile["rim_opacity"]), "%s correction does not invent brighter contact ink" % family)
+			equal(kit.receiving_shadow_sample(layout, point, family), sample, "%s shadow sampling is stable across repeated draws" % family)
+	equal(found_families.size(), expected_profiles.size(), "all five actual floor material families receive a tested profile")
+	var legacy := kit.receiving_shadow_sample(layout, shore)
+	for unknown: String in ["", "lava", "WATER", "paving "]:
+		equal(kit.receiving_shadow_sample(layout, shore, unknown), legacy, "unknown or omitted material preserves the quiet district fallback")
+	equal(kit.receiving_shadow_sample(null, shore, "unknown"), kit.receiving_shadow_sample(null, shore), "unknown material with no layout preserves the existing safe fallback")
+	equal(CanonicalContent.sha256(layout.data), original, "receiving registration cannot change collision, routes or authoritative map content")
+	equal(illustrated.cached_terrain_builds, 0, "receiving material queries never allocate a whole-world texture")
+	equal(illustrated.ground_chunk_builds, 0, "all actual receiving-shadow and material queries perform no chunk composition")
+	check(illustrated.ground_chunks.is_empty() and illustrated.ground_overview == null, "read-only surface registration leaves both native and overview image caches empty")
 
 
 func _test_fail_closed_budget() -> void:

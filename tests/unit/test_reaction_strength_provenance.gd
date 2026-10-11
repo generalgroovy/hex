@@ -1,121 +1,140 @@
 extends FluxTestSuite
 
 const Chemistry = preload("res://src/sim/chemistry/element_chemistry_system.gd")
-const STRENGTHS: Array[int] = [1, 3, 5, 15]
+const Policy = preload("res://src/sim/hex/hex_recipe_policy.gd")
+const Funding = preload("res://src/sim/hex/hex_reaction_funding.gd")
+const CENTER := Vector2i(1_000_000, 1_000_000)
+const STRENGTHS := {"rapid": 1, "spray": 3, "bolt": 5, "heavy": 15, "mantle": 8, "fuse": 10, "split": 8, "rebound": 6}
 var config := SimConfig.new(120)
+var catalog := AbilityCatalog.new()
+
 
 func run() -> int:
+	check(catalog.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "real six-element catalog loads")
 	_test_paid_provenance()
-	_test_exact_deposit_matching()
-	_test_sibling_admission()
-	_test_optical_inheritance()
+	_test_exact_source_matching()
+	_test_compatibility_sibling_admission()
+	_test_branch_ownership()
 	return finish("reaction-strength-provenance")
 
-func _deposit(id: int, cast_id: int, element: int, reaction_strength: int, quantity: int = 1000, trail: bool = false) -> ElementDepositState:
-	var deposits: Array = []
-	equal(Chemistry.deposit_terminal(deposits, id, cast_id, 140, 1, 1, element,
-		Vector2i(500000, 500000), 0, config, Vector2i(1000, 0), quantity, trail, reaction_strength), 1,
-		"bounded ingredient admission preserves a separate reaction strength")
-	return deposits[0]
+
+func _court() -> HexChemistryWorld:
+	var court := HexChemistryWorld.new()
+	check(court.configure_geometry(CENTER, HexGrid.disk(Vector2i.ZERO, 18)), "provenance topology configures")
+	court.chemistry_enabled = true
+	return court
+
+
+func _wire(element: String, family: String) -> int:
+	return int(catalog.ability(catalog.spell_id_at(element, family)).wire_id)
+
+
+func _bind(court: HexChemistryWorld, source: int, wire: int) -> Dictionary:
+	check(court.reserve_cast(source, wire), "source reserves an actual live spell")
+	court.commit_payment(source); court.bind_release(source, source, CENTER, Vector2i(1000, 0), 1)
+	return court.casts[int(court.sources[source])]
+
 
 func _test_paid_provenance() -> void:
-	var catalog := AbilityCatalog.new()
-	check(catalog.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "real catalogue loads")
-	for element: String in AbilityCatalog.DISPLAY_ELEMENT_IDS:
-		for family: String in ["bolt", "heavy", "rapid"]:
-			var ability := catalog.ability(catalog.spell_id_at(element, family))
-			var wire := int(ability.wire_id)
-			var expected := int(ability.reaction_strength)
+	for element: String in ElementRules.IDS:
+		for family: String in ["bolt", "heavy", "rapid", "spray"]:
+			var wire := _wire(element, family)
+			var expected := int(STRENGTHS[family])
 			var world := SimWorld.new(120, 851, CollisionWorld.new(8000000, 8000000))
-			world.player().champion_wire_id = 1
-			world.player().position_x = 1000000
-			world.player().position_y = 1000000
-			world.player().flux_recovery_per_second = 0
-			check(world.player().place_proven_spell(0, wire), "real spell is equipped before paid release")
-			var seen_projectile := false
-			var seen_trail := false
+			world.hex_court = _court()
+			var actor := world.player()
+			actor.champion_wire_id = 0; actor.position_x = CENTER.x; actor.position_y = CENTER.y
+			actor.spawn_protection_ticks = 0; actor.flux_recovery_per_second = 0
+			check(actor.place_proven_spell(0, wire), "real spell is equipped before paid release")
 			var seen_terminal := false
-			var coherent := true
-			var stepped := true
-			var before_flux := world.player().flux
-			for step: int in range(400):
-				var command := SimCommand.new(world.tick, 1, 0, 0, 0, SimCommand.PRESSED_SPELL_1 if step == 0 else 0, 1000, 0)
-				command.aim_target_x = 1600000
-				command.aim_target_y = 1000000
-				stepped = world.step([command]) and stepped
-				for shot: ProjectileState in world.projectiles:
-					seen_projectile = true
-					coherent = coherent and shot.reaction_strength == expected and shot.source_cast_id > 0
-				for deposit: ElementDepositState in world.deposits:
-					coherent = coherent and deposit.reaction_strength == expected
-					seen_trail = seen_trail or deposit.is_trail()
-					seen_terminal = seen_terminal or not deposit.is_trail()
-				if seen_projectile and world.projectiles.is_empty():
-					break
-			check(stepped and world.last_error.is_empty(), "%s/%s paid simulation finishes without capacity loss" % [element, family])
-			check(seen_projectile and seen_terminal and coherent, "%s/%s cast, trails and terminal retain the exact authored integer" % [element, family])
-			equal(seen_trail, family != "rapid", "Rapid trail exclusion does not use a strength threshold")
-			equal(before_flux - world.player().flux, int(CombatTuning.cast_definition(wire).flux_cost), "strength propagation adds no resource charge or reward")
+			var seen_source := false
+			var before_flux := actor.flux
+			for step: int in range(240):
+				var command := SimCommand.new(world.tick, 1, 0, 0, 0, SimCommand.PRESSED_SPELL_1 if step == 0 else 0, 1000, 0, CENTER.x + 120000, CENTER.y)
+				check(world.step([command]), "paid provenance executes: " + world.last_error)
+				for record: Dictionary in world.hex_court.casts.values():
+					equal(int(record.strength), expected, "paid source retains the independently authored family strength")
+					if not record.ledger.is_empty():
+						seen_source = true
+						equal(int(record.ledger.initial_strength), expected, "release binds the exact immutable initial strength")
+						equal(int(record.ledger.remaining_strength), expected, "uncontested travel does not spend reaction strength")
+						for part: Dictionary in record.ground_parts.values():
+							seen_terminal = true
+							check(not bool(part.trail), "original24 singleton spells retain trail-free paid terminals; Mantle transfer is separately exercised by elemental-spell-expansion")
+							equal(int(part.quantity), 600, "one terminal owns only its actual600-unit paid stock")
+				check(world.hex_court.conservation_valid(), "every paid propagation tick conserves material")
+				if seen_terminal: break
+			check(seen_source and seen_terminal, "%s/%s reaches a bound source and terminal" % [element, family])
+			equal(before_flux - actor.flux, int(CombatTuning.cast_definition(wire).flux_cost), "provenance adds no resource charge or reward")
+			check(world.deposits.is_empty() and world.reactions.is_empty(), "live acceptance uses only the unified authority")
 
-func _test_exact_deposit_matching() -> void:
-	for first: int in range(1, 9):
-		for second: int in range(first, 9):
-			for strength_a: int in STRENGTHS:
-				for strength_b: int in STRENGTHS:
+
+func _test_exact_source_matching() -> void:
+	# Current matching consumes the smaller stock, retaining the difference.
+	# The preserved old suite required equality; it is not current acceptance.
+	for first_index: int in ElementRules.IDS.size():
+		for second_index: int in range(first_index, ElementRules.IDS.size()):
+			for first_family: String in STRENGTHS:
+				for second_family: String in STRENGTHS:
 					for reversed: bool in [false, true]:
-						var a := _deposit(3000, 1000, first, strength_a, 400)
-						var b := _deposit(3001, 1001, second, strength_b, 1000)
-						var before_a := a.canonical_values()
-						var before_b := b.canonical_values()
-						var deposits: Array = [b, a] if reversed else [a, b]
-						var reactions: Array = []
-						var events: Array = []
-						var next := Chemistry.step(deposits, reactions, [], null, config, 0, 4000, events)
-						if strength_a == strength_b:
-							equal(next, 4001, "equal reaction strength admits exactly one recipe despite unequal material quantities")
-							check(reactions.size() == 1 and deposits.is_empty(), "equal inputs spend only their single shared chemistry payloads")
-							equal(reactions[0].recipe_wire_id, Chemistry.recipe_wire(first, second), "all36 recipes keep their elemental identity")
-						else:
-							equal(next, 4000, "unequal persistent strengths allocate no reaction")
-							check(reactions.is_empty() and events.is_empty() and deposits.size() == 2, "unequal matter stays present without dominance or feedback multiplication")
-							equal(a.canonical_values(), before_a, "first unequal ingredient is unchanged in both storage orders")
-							equal(b.canonical_values(), before_b, "second unequal ingredient is unchanged in both storage orders")
+						var court := _court()
+						var first_wire := _wire(ElementRules.IDS[first_index], first_family)
+						var second_wire := _wire(ElementRules.IDS[second_index], second_family)
+						var first := _bind(court, 1000, first_wire)
+						var second := _bind(court, 1001, second_wire)
+						var first_strength := int(STRENGTHS[first_family])
+						var second_strength := int(STRENGTHS[second_family])
+						var matched := mini(first_strength, second_strength)
+						var result := court.resolve_contact(1001 if reversed else 1000, 1000 if reversed else 1001, CENTER, 0)
+						check(bool(result.accepted), "all21 actual element pairs admit all eight-family strength pairings with finite paid sources")
+						if not bool(result.accepted): continue
+						equal(int(first.ledger.remaining_strength), first_strength - matched, "first source retains the exact unmatched strength")
+						equal(int(second.ledger.remaining_strength), second_strength - matched, "second source retains the exact unmatched strength")
+						var product: Dictionary = court.products[int(result.product_id)]
+						equal(int(product.recipe_wire_id), Policy.recipe_wire(int(first.element), int(second.element)), "strength never changes elemental recipe identity")
+						equal(product.source_funding, PackedInt64Array([1000, first_wire, matched, 1001, second_wire, matched]), "funding stores only actual deltas in stable source order")
+						equal(Funding.total(product.source_funding), 2 * matched, "both contributions add linearly")
+						equal(int(product.damage_budget_remaining), matched * 8000, "damage pool has an independent two-source numeric oracle")
+						@warning_ignore("integer_division")
+						var expected_quantity := 600 * matched / first_strength + 600 * matched / second_strength
+						equal(int(product.quantity), expected_quantity, "matter transfer is the exact cumulative fraction of each600-unit source")
+						check(court.conservation_valid(), "family asymmetry never mints material")
+						var before := court.state_hash()
+						check(not bool(court.resolve_contact(1000, 1000, CENTER, 1).accepted), "source cannot combine with its sibling")
+						equal(court.state_hash(), before, "same-source refusal is atomic")
 
-func _test_sibling_admission() -> void:
-	var trail := _deposit(3000, 1000, 3, 5, 250, true)
+
+func _compatibility_deposit(id: int, source: int, reaction_strength: int, trail: bool) -> ElementDepositState:
+	var values: Array = []
+	equal(Chemistry.deposit_terminal(values, id, source, 140, 1, 1, 3, CENTER, 0, config, Vector2i(1000, 0), 1000, trail, reaction_strength), 1, "compatibility fixture admits a live Water source")
+	return values[0]
+
+
+func _test_compatibility_sibling_admission() -> void:
+	# This fifteen-value legacy packet adapter does not simulate live products.
+	var trail := _compatibility_deposit(3000, 1000, 5, true)
 	var original := trail.canonical_values()
 	var deposits: Array = [trail]
-	equal(Chemistry.deposit_terminal(deposits, 3001, 1000, 140, 1, 1, 3, Vector2i(500000, 500000), 1, config, Vector2i(1000, 0), 1000, false, 1), -1, "a mismatched terminal cannot overwrite its same-cast trail")
-	equal(trail.canonical_values(), original, "failed sibling promotion preserves all paid trail data")
-	var malformed := _deposit(3002, 1000, 3, 1)
-	deposits.append(malformed)
-	equal(Chemistry.deposit_terminal(deposits, 3003, 1000, 140, 1, 1, 3, Vector2i(500000, 500000), 1, config, Vector2i(1000, 0), 1000, true, 5), -1, "early coalescing cannot hide a later inconsistent sibling")
-	equal(deposits.size(), 2, "inconsistent input rejection does not erase either existing ingredient")
+	equal(Chemistry.deposit_terminal(deposits, 3001, 1000, 140, 1, 1, 3, CENTER, 1, config, Vector2i(1000, 0), 1000, false, 1), -1, "mismatched sibling cannot overwrite its paid trail")
+	equal(trail.canonical_values(), original, "refused promotion preserves every source value")
+	deposits.append(_compatibility_deposit(3002, 1000, 1, false))
+	equal(Chemistry.deposit_terminal(deposits, 3003, 1000, 140, 1, 1, 3, CENTER, 1, config, Vector2i(1000, 0), 1000, true, 5), -1, "coalescing cannot hide a later inconsistent sibling")
+	equal(deposits.size(), 2, "inconsistent input refusal preserves existing records")
 	deposits = [trail]
-	equal(Chemistry.deposit_terminal(deposits, 3004, 1000, 140, 1, 1, 3, Vector2i(500000, 500000), 1, config, Vector2i(1000, 0), 1000, false, 5), 1, "equal cast strength permits ordinary trail-to-terminal promotion")
-	equal(deposits[0].reaction_strength, 5, "promotion preserves cast strength while material quantity changes")
-	var same: Array = [_deposit(3010, 1010, 2, 15), _deposit(3011, 1010, 3, 15)]
-	var reactions: Array = []
-	Chemistry.step(same, reactions, [], null, config, 0, 4000, [])
-	check(reactions.is_empty() and same.size() == 2, "strength equality never permits same-cast self-combination")
+	equal(Chemistry.deposit_terminal(deposits, 3004, 1000, 140, 1, 1, 3, CENTER, 1, config, Vector2i(1000, 0), 1000, false, 5), 1, "equal source strength permits compatibility promotion")
+	equal(deposits[0].reaction_strength, 5, "promotion preserves strength while material quantity changes")
 
-func _test_optical_inheritance() -> void:
-	for material: int in range(1001):
-		var elements: Array = Chemistry.recipe(329).elements
-		var lens := Chemistry.form_reaction(_deposit(3000, 1000, int(elements[0]), 5), _deposit(3001, 1001, int(elements[1]), 5), 4000, 0, config)
-		var shot := ProjectileState.new(2000, 1, 1, 173, 7, Vector2i(500000, 500000), Vector2i(120000, 0), 10000, 5001, 200)
-		shot.source_cast_id = 0 if material % 2 == 0 else 2000
-		shot.reaction_strength = 7 # Test a value, not a family lookup in optics.
-		shot.material_strength = material
-		var events: Array[Dictionary] = []
-		var survivors := CombatSystem.advance_projectiles([shot], [], config, CollisionWorld.new(8000000, 8000000), events, [lens], lens.active_tick, 1, {1: 1})
-		var children := events.filter(func(event: Dictionary) -> bool: return event.get("type") == "chemistry_projectile_split")
-		check(survivors.size() == 1 and children.size() == 1, "real Lens interaction produces one bounded split")
-		if children.size() != 1:
-			continue
-		var child: ProjectileState = children[0].projectile
-		equal(child.reaction_strength, 7, "optical child inherits the unchanged numeric reaction strength even when spent")
-		equal(shot.reaction_strength, 7, "split never subtracts or pools parent's reaction strength")
-		equal(child.source_cast_id, shot.source_cast_id if shot.source_cast_id > 0 else shot.entity_id, "optical branches share the original identity including a legacy zero-cast parent")
-		equal(child.material_strength + shot.material_strength, material, "optical split conserves separate material quantity and cannot refill spent chemistry")
-		equal(child.damage + shot.damage, 5001, "reaction strength copying does not multiply odd damage")
+
+func _test_branch_ownership() -> void:
+	# Lens is retired. Exercise the retained partition primitive directly without
+	# pretending an archived Ice ingredient is a current route.
+	for family: String in STRENGTHS:
+		var court := _court()
+		var record := _bind(court, 1000, _wire("light", family))
+		check(court.split_flight(1000, 1000, 1001), "retained branch primitive partitions a paid source")
+		equal(record.flight_parts, {1000: 300, 1001: 300}, "branch split conserves the600-unit stock exactly")
+		equal(int(record.ledger.remaining_strength), int(STRENGTHS[family]), "branch count never multiplies or subtracts source strength")
+		var before := court.state_hash()
+		check(not court.split_flight(1000, 1000, 1001), "duplicate child cannot acquire a second allocation")
+		equal(court.state_hash(), before, "duplicate branch refusal leaves authority unchanged")
+		check(court.conservation_valid(), "retained branch primitive preserves global funding")

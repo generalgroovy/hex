@@ -13,8 +13,8 @@ func _run() -> void:
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--output="):
 			output = argument.trim_prefix("--output=")
-	if not output.begins_with("res://.godot/cleanup-20260908/campus-") or ".." in output or DirAccess.dir_exists_absolute(output):
-		push_error("Provide a new --output=res://.godot/cleanup-20260908/campus-NAME")
+	if not output.begins_with("res://.godot/campus-") or ".." in output or DirAccess.dir_exists_absolute(output):
+		push_error("Provide a new --output=res://.godot/campus-NAME")
 		quit(1)
 		return
 	var sheet := CampusSheet.new()
@@ -57,7 +57,7 @@ class CampusSheet:
 
 
 	func configure() -> bool:
-		return language.load_from_file() and layout.load_from_file("res://content/maps/sanctum_campus_g2_v1.json") and renderer.configure(language) and renderer.configure_campus(layout)
+		return language.load_from_file() and layout.load_from_file("res://content/maps/sanctum_campus_g2_v1.json") and renderer.configure(language) and renderer.configure_campus(layout) and renderer.prepare_overview()
 
 
 	func _draw() -> void:

@@ -15,6 +15,12 @@ class DiscoveryBootstrap:
 	var session_port := SessionTransport.DEFAULT_PORT
 	var identity_ready := true
 	var join_calls := 0
+	var host_calls := 0
+	var focused_station_id := "farflow-join"
+	var gameplay_blocked := false
+	var visible_result := false
+	var active_cast := false
+	var result_view_builds := 0
 	var signature := "a".repeat(64)
 
 	func _init() -> void:
@@ -37,7 +43,17 @@ class DiscoveryBootstrap:
 		session_transport.mode = SessionTransport.Mode.OFFLINE
 
 	func _toggle_host_session() -> void:
-		pass
+		host_calls += 1
+
+	func _gameplay_input_blocked() -> bool:
+		return gameplay_blocked
+
+	func _has_visible_demo_result() -> bool:
+		return visible_result
+
+	func _demo_result_view() -> Dictionary:
+		result_view_builds += 1
+		return {"visible": visible_result}
 
 
 class RetryLobby:
@@ -51,6 +67,28 @@ class RetryLobby:
 		discovery_error = "" if listener_ready else "LAN discovery unavailable (test listener)."
 
 
+class LegacyContextBootstrap:
+	extends Node
+	var session_transport := SessionTransport.new()
+	var focused_station_id := "farflow-join"
+
+
+class ContextLobby:
+	extends LanLobby
+	var discovery_polls := 0
+	var host_broadcasts := 0
+	var browser_probes := 0
+
+	func _poll_discovery_packets() -> void:
+		discovery_polls += 1
+
+	func _maybe_broadcast_host(_now: int) -> void:
+		host_broadcasts += 1
+
+	func _maybe_probe_for_hosts(_now: int) -> void:
+		browser_probes += 1
+
+
 func run() -> int:
 	check(LanLobby.discovery_enabled(PackedStringArray()), "normal play retains LAN discovery")
 	check(not LanLobby.discovery_enabled(PackedStringArray(["--no-lan-discovery"])), "isolated smoke explicitly avoids the shared LAN port")
@@ -62,6 +100,8 @@ func run() -> int:
 	_test_identity_rows_and_refresh()
 	_test_status_identity_and_rejection_persistence()
 	_test_wellspring_context_boundary()
+	_test_overlay_context_and_discovery()
+	_test_explicit_capture_context()
 	_test_discovery_expiry_empty_error_and_retry()
 	return finish("lan-lobby")
 
@@ -321,4 +361,79 @@ func _test_wellspring_context_boundary() -> void:
 	check(LanLobby.context_panel_visible("farflow-charter", false), "LAN controls remain available beside the Farflow charter")
 	check(not LanLobby.context_panel_visible("spell-loom", false), "LAN controls do not become a detached always-on menu")
 	check(not LanLobby.context_panel_visible("farflow-join", true), "visual acceptance runs remain free of diagnostic LAN UI")
+	for station: String in ["farflow-host", "farflow-join", "farflow-charter"]:
+		check(not LanLobby.context_panel_visible(station, false, true), "normal production LAN panel yields to a modal or visible result")
+		check(LanLobby.context_panel_visible(station, false, false), "optional overlay argument preserves the existing station visibility contract")
+
+
+func _test_overlay_context_and_discovery() -> void:
+	var boot := DiscoveryBootstrap.new()
+	var lobby := ContextLobby.new()
+	lobby.bootstrap = boot
+	lobby._build_ui()
+	lobby.listener_ready = true # No socket is opened by this UI/discovery fixture.
+	lobby.visual_capture_run = false # Exercise the production guard, not diagnostic hiding.
+	boot.session_transport.mode = SessionTransport.Mode.HOSTING
+	lobby._process(0.0)
+	check(lobby.panel.visible, "unblocked physical Farflow context displays the real panel")
+	equal(lobby.discovery_polls, 1, "normal process polls discovery")
+	equal(lobby.host_broadcasts, 1, "normal host process advertises")
+	lobby.browser_open = true
+	lobby.browser_box.visible = true
+	boot.gameplay_blocked = true
+	lobby._process(0.0)
+	check(not lobby.panel.visible, "actual process hides CanvasLayer panel behind a gameplay-blocking modal")
+	check(not lobby.browser_open and not lobby.browser_box.visible, "modal context loss closes the host browser")
+	equal(lobby.discovery_polls, 2, "hidden LAN UI still polls discovery")
+	equal(lobby.host_broadcasts, 2, "hidden LAN UI does not stop host advertisements")
+	lobby._on_host_pressed()
+	lobby._on_join_pressed()
+	equal(boot.host_calls, 0, "stale host-button signal cannot mutate a session behind a modal")
+	var endpoint := "10.0.0.7:%d" % SessionTransport.DEFAULT_PORT
+	lobby.discovered_hosts[endpoint] = LanLobby.normalized_host(_advertisement(boot.signature), "10.0.0.7", boot.signature, Time.get_ticks_msec(), LOCAL_SOURCE_HASH)
+	lobby._join_discovered_host(endpoint)
+	equal(boot.join_calls, 0, "stale discovered-host signal cannot join behind a modal")
+	boot.gameplay_blocked = false
+	boot.visible_result = true
+	lobby._process(0.0)
+	check(not lobby.panel.visible, "nonmodal retained result also owns its visible UI region")
+	equal(lobby.discovery_polls, 3, "visible result does not pause discovery")
+	equal(lobby.host_broadcasts, 3, "visible result does not pause hosting")
+	equal(boot.result_view_builds, 0, "visibility polling never builds or reformats the result card")
+	boot.visible_result = false
+	boot.active_cast = true
+	lobby._process(0.0)
+	check(lobby.panel.visible, "ordinary casting is not mistaken for a modal or retained result")
+	check(not lobby.browser_open, "dismissed overlay does not silently reopen the prior host browser")
+	boot.session_transport.mode = SessionTransport.Mode.OFFLINE
+	lobby.browser_open = true
+	lobby._process(0.0)
+	equal(lobby.browser_probes, 1, "an explicitly open browser still probes in valid offline context")
+	boot.focused_station_id = "spell-loom"
+	lobby._process(0.0)
+	check(not lobby.panel.visible and not lobby.browser_open, "leaving Farflow closes both panel and browser")
+	equal(lobby.browser_probes, 1, "context loss stops browser-only probes without stopping discovery polls")
+	equal(lobby.discovery_polls, 6, "all six context updates continued the discovery polling path")
+	boot.focused_station_id = "farflow-join"
+	lobby.browser_open = true
+	lobby.bootstrap = null
+	lobby._process(0.0)
+	check(not lobby.panel.visible and not lobby.browser_open, "losing the bootstrap context cannot retain detached visible controls")
+	lobby.free()
+	boot.free()
+	var legacy_boot := LegacyContextBootstrap.new()
+	var legacy_lobby := LanLobby.new()
+	legacy_lobby.bootstrap = legacy_boot
+	legacy_lobby._build_ui()
+	check(legacy_lobby._refresh_context_visibility(), "older callers without optional overlay hooks retain normal LAN visibility")
+	legacy_lobby.free()
+	legacy_boot.free()
+
+
+func _test_explicit_capture_context() -> void:
+	for argument: String in ["--capture-expanded-station=farflow-charter", "--visual-specimen", "--native-capture"]:
+		check(LanLobby.is_visual_capture_run(PackedStringArray([argument])), "explicit capture mode is recognized: " + argument)
+	check(not LanLobby.is_visual_capture_run(PackedStringArray()), "normal launches do not hide LAN controls as captures")
+	check(not LanLobby.is_visual_capture_run(PackedStringArray(["--output=res://.godot/team-checkpoint-native-test", "--fullbody-art", "--pixel-cast"])), "generic native harness output is not misclassified to mask production UI overlap")
+	check(not LanLobby.is_visual_capture_run(PackedStringArray(["--native-capture=false"])), "alternate capture flag syntax cannot silently hide production UI")
 

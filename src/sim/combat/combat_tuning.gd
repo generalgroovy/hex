@@ -5,7 +5,7 @@ extends RefCounted
 # Stable wire IDs are protocol adapters. All spell economy, timing, geometry,
 # damage, control, and runtime ordering are authored in the ability catalog and
 # compiled once by CombatDefinitionTable.
-const PRIMARY_WIRE_ID: int = 101
+const PRIMARY_WIRE_ID: int = 145
 const VECTOR_LANCE_WIRE_ID: int = 110
 const RILLSHOT_WIRE_ID: int = 140
 # New authored profiles use retained Rillshot for Active 1. Known retired
@@ -67,3 +67,7 @@ static func projectile_definition(wire_id: int) -> Dictionary:
 
 static func cast_definition(wire_id: int) -> Dictionary:
 	return CombatDefinitionTable.default_table().definition(wire_id)
+
+
+static func cast_definition_view(wire_id: int) -> Dictionary:
+	return CombatDefinitionTable.default_table().definition_view(wire_id)

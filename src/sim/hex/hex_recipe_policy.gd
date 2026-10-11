@@ -3,6 +3,7 @@ extends RefCounted
 
 @warning_ignore_start("integer_division")
 
+const Composite = preload("res://src/sim/hex/hex_composite_policy.gd")
 const Footprint = preload("res://src/sim/hex/hex_footprint.gd")
 
 const TICK_RATE := 120
@@ -10,12 +11,12 @@ const FIRST_RECIPE_WIRE := 301
 const LAST_RECIPE_WIRE := 336
 const DIRECTIONAL_COSINE_SQUARED := 820_000
 const MAX_EFFECT_HEIGHT := 256_000
+const REACTION_EXTENT_PERMILLE := 750 # Linear extents, after authored overrides; not ingredient fields.
+const MEDIUM_RADIUS := 64_000 * REACTION_EXTENT_PERMILLE / 1000
 const PENDING_CAPSULE_KIND := Footprint.KIND_CAPSULE
 
-const INGREDIENT_LAYERS := {
-	1: "earth", 2: "fire", 3: "water", 4: "wind",
-	5: "ice", 6: "charge", 7: "light", 8: "dark",
-}
+const INGREDIENT_LAYERS := {1: "earth", 2: "fire", 3: "water", 4: "wind", 7: "light", 8: "dark"}
+const ACTIVE_RECIPE_WIRES: Array[int] = [301, 302, 303, 304, 307, 308, 309, 310, 311, 314, 315, 316, 317, 320, 321, 322, 325, 326, 334, 335, 336, 407, 411, 413, 414, 415, 419, 421, 422, 423, 425, 426, 427, 428, 429, 430, 431, 435, 437, 438, 439, 441, 442, 443, 444, 445, 446, 447, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463]
 
 # Explicit triangular matrix. Zero entries are invalid; every stable first-eight
 # unordered pair appears exactly once and is symmetric through recipe_wire().
@@ -32,7 +33,8 @@ const PAIR_WIRES: Array = [
 
 # Stable compiled recipe rows retained locally so this pure policy never calls
 # the legacy formation loop. Values are id, elements, effect geometry, phase ms,
-# radius/length before the existing 1.25 extent, motion, pulse ms and health k.
+# radius/length before the existing 1.25 extent, historical motion, pulse ms and
+# health k. The current compact/stationary override is applied after authoring.
 const COMPILED_ROWS: Array = [
 	["fortify", 1, 1, "cover", 180, 3125, 400, 18000, 64000, 0, 0, 32],
 	["magma", 1, 2, "front", 350, 2750, 500, 24000, 80000, 30000, 400, 0],
@@ -75,25 +77,25 @@ const COMPILED_ROWS: Array = [
 const PURPOSES: Array[String] = [
 	"temporary six-face hex pillar cover", "grounded damage and route denial", "ground acceleration and braking choice", "transparent lateral positioning front",
 	"temporary brittle cover", "charge-draining ground node", "predictable reflection plane", "growth and recovery suppression surface",
-	"committed concentrated ground burn", "visible capped scald pressure", "bounded moving route-cutting fire front", "brief structure fracture pulse",
-	"linked conductor burst", "reveal and glare pulse", "concealing delayed ember pressure", "directional grounded route steering",
+	"committed concentrated ground burn", "visible capped scald pressure", "stationary route-cutting fire sector", "grounded shatter burst and structure fracture",
+	"conductor burst; extra Charge extends its reach", "damaging reveal and glare pulse", "concealing delayed ember pressure", "directional grounded route steering",
 	"visible wet steering and finite suppression", "grounded entry slow", "connected wet charge path", "moving and entry disturbance reveal",
-	"concealing water with movement reveal", "rotational redirection and slingshot utility", "repeated directional hail pressure", "bounded drifting charged field",
-	"predictable optical bend", "moving concealment bands", "finite low-friction Frostway lane", "focused extended charge path",
-	"split and redirect light", "entry reveal and delayed grounded slow", "Capacitor movement lane and terminal discharge", "brief revealing conductive line",
-	"entry and exit silhouette veil", "bounded persistent reveal area", "readable light-dark crossing boundary", "bounded concealment and delayed attrition",
+	"concealing water with movement reveal", "rotational redirection and slingshot utility", "repeated pressure across a stationary hail lane", "stationary charged field",
+	"predictable optical bend", "stationary pulsing concealment bands", "ground movement and projectile slowdown lane; slide and air movement unchanged", "charge pulses; extra Ice extends their reach",
+	"split and redirect light", "entry reveal and delayed grounded slow", "Capacitor movement lane and terminal discharge", "damaging revealing conductive line",
+	"entry and exit silhouette veil", "persistent reveal and searing light pulses", "crossing reveal and light-dark pressure", "bounded concealment and delayed attrition",
 ]
 
 const COUNTERS: Array[String] = [
 	"break, go around, or wait", "leave or jump before the next pulse", "leave for immediate full movement", "jump or leave laterally",
 	"break the cover or wait", "break with non-Charge impacts or exhaust its capacity", "use Spray to break the cover", "leave the recovery-suppression surface",
-	"leave or jump during warning", "exit or cool with a fresh Water cast", "leave laterally or use solid cover", "move cover outside the forming fracture area",
-	"remove the Charge link or leave", "wait for the short reveal to fade", "leave before the delayed ember pulse", "jump or leave the current",
+	"leave or jump during warning", "exit or cool with a fresh Water cast", "leave laterally or use solid cover", "jump or exit during the fracture warning",
+	"leave during formation or break an added Charge link", "exit during the forming flash", "leave before the delayed ember pulse", "jump or leave the current",
 	"jump or leave the wet corridor", "leave and let the brief entry slow expire", "leave or break the Water links", "stand still after the entry reveal fades",
-	"movement reveals concealed actors", "use the center opening, jump, or exit", "leave the moving hail lane", "leave the drifting field",
-	"change the Light approach angle", "use the transparent interval between bands", "slide, jump, or leave", "break the Ice links or leave",
-	"break with non-Light impacts or Spray", "leave before the delayed slow", "leave before the terminal discharge", "wait for the short reveal to fade",
-	"entry and exit briefly reveal actors", "leave the reveal area", "let the crossing mark fade", "move to reveal or leave before attrition",
+	"movement reveals concealed actors", "use the center opening, jump, or exit", "leave the marked hail lane", "leave the marked charged field",
+	"change the Light approach angle", "use the transparent interval between bands", "slide, jump, or leave", "leave the frost path or break added Ice links",
+	"break with non-Light impacts or Spray", "leave before the delayed slow", "leave before the terminal discharge", "exit the line during its warning",
+	"entry and exit briefly reveal actors", "leave between searing light pulses", "cross quickly and let the mark fade", "move to reveal or leave before attrition",
 ]
 
 const FIRST_TEN_WIRES: Array[int] = [301, 302, 303, 304, 309, 310, 311, 316, 317, 322]
@@ -104,9 +106,9 @@ static func ingredient_layer(element: int) -> String:
 
 
 static func product_layer(wire: int) -> String:
-	if wire < FIRST_RECIPE_WIRE or wire > LAST_RECIPE_WIRE:
+	if wire not in ACTIVE_RECIPE_WIRES:
 		return ""
-	return String(COMPILED_ROWS[wire - FIRST_RECIPE_WIRE][0])
+	return "compound_%02d" % (wire - 400) if wire > 400 else String(COMPILED_ROWS[wire - FIRST_RECIPE_WIRE][0])
 
 
 static func recipe_wire(element_a: int, element_b: int) -> int:
@@ -117,9 +119,36 @@ static func recipe_wire(element_a: int, element_b: int) -> int:
 	return int(PAIR_WIRES[low - 1][high - 1])
 
 
+static var _runtime_definitions: Dictionary = {}
+
+
+# Simulation readers share a recursively immutable compiled contract. The
+# public definition() factory remains detached/mutable for authoring callers.
+static func runtime_definition(wire: int) -> Dictionary:
+	if _runtime_definitions.has(wire): return _runtime_definitions[wire]
+	var result := definition(wire)
+	_freeze_contract(result)
+	if wire in ACTIVE_RECIPE_WIRES:
+		_runtime_definitions[wire] = result
+	return result
+
+
+static func _freeze_contract(value: Variant) -> void:
+	if value is Dictionary:
+		for child: Variant in value.values(): _freeze_contract(child)
+		value.make_read_only()
+	elif value is Array:
+		for child: Variant in value: _freeze_contract(child)
+		value.make_read_only()
+
+
 static func definition(wire: int) -> Dictionary:
-	if wire < FIRST_RECIPE_WIRE or wire > LAST_RECIPE_WIRE:
+	if wire not in ACTIVE_RECIPE_WIRES:
 		return {}
+	if wire > 400:
+		var compound := Composite.definition(wire - 400)
+		compound.visual_material = String(COMPILED_ROWS[int(compound.archive_recipe_wire) - 301][0])
+		return compound
 	var index := wire - FIRST_RECIPE_WIRE
 	var row: Array = COMPILED_ROWS[index]
 	var result := {
@@ -147,7 +176,8 @@ static func definition(wire: int) -> Dictionary:
 		"slow_ratio": _compiled_slow_ratio(wire),
 		"health": int(row[11]) * 1000,
 		"capacity": 36_000 if wire == 306 else 0,
-		"motion_speed": int(row[9]),
+		"motion_speed": 0,
+		"footprint_motion": "stationary",
 		"counter": COUNTERS[index],
 		"purpose": PURPOSES[index],
 		"trigger_eligibility": "distinct_paid_sources",
@@ -155,6 +185,17 @@ static func definition(wire: int) -> Dictionary:
 		"implementation_status": "runtime_implemented",
 	}
 	_apply_first_ten_contract(result)
+	_apply_combat_options(result)
+	_apply_six_element_contract(result)
+	result.archive_recipe_wire = int({311:313,316:327,317:323,321:330}.get(wire, wire))
+	result.visual_material = String(COMPILED_ROWS[int(result.archive_recipe_wire) - 301][0])
+	result.element_mask = mask_for_wire(wire)
+	result.arity = 2
+	# One authority for compact footprints, including Rampart's explicit disk.
+	# Phase times, pulses, paid quantities and actor flow are deliberately separate.
+	for extent: String in ["radius", "length", "selection_radius"]:
+		if result.has(extent):
+			result[extent] = int(result[extent]) * REACTION_EXTENT_PERMILLE / 1000
 	result.requires_canonical_capsule = false
 	result.selection_activation_ready = String(result.selection_kind) in [Footprint.KIND_DISK, Footprint.KIND_SECTOR, Footprint.KIND_CAPSULE, Footprint.KIND_ANNULUS]
 	if String(result.selection_kind) == Footprint.KIND_CAPSULE:
@@ -170,7 +211,7 @@ static func definition(wire: int) -> Dictionary:
 
 
 static func selection_shape(wire: int, exact_point: Vector2i, normalized_aim: Vector2i) -> Dictionary:
-	var contract := definition(wire)
+	var contract := runtime_definition(wire)
 	if contract.is_empty() or not _aim_valid(normalized_aim):
 		return {}
 	if String(contract.selection_kind) == Footprint.KIND_SECTOR:
@@ -245,7 +286,7 @@ static func _apply_first_ten_contract(result: Dictionary) -> void:
 		311:
 			result.selection_kind = Footprint.KIND_SECTOR
 			result.pulse_damage = 4_000
-			result.obstacle_aware_motion = true
+			result.obstacle_aware_motion = false
 			result.refreshes_payload = false
 			result.refreshes_lifetime = false
 		316:
@@ -280,6 +321,147 @@ static func _apply_current_water_fire(result: Dictionary) -> void:
 	result.radius = 64_000
 	result.length = 0
 	result.quantity_policy = "matched_source_quantity"
+
+
+# Retain geometry, paid formation and control identities. Utility reactions
+# stay useful tools; light/fracture gain bounded hostile pressure, not stun.
+static func _apply_combat_options(result: Dictionary) -> void:
+	match int(result.wire_id):
+		312:
+			result.pulse_damage = 8_000
+			result.ground_only = true
+			result.maximum_height = 0
+		314, 332:
+			result.pulse_damage = 6_000
+		334, 335:
+			result.pulse_damage = 3_000
+			result.pulse_ticks = 72
+
+
+# Six live ingredients retain stable sparse wire identities. Archived rows above
+# remain art/legacy identifiers, never active recipes or selectable ingredients.
+static func _apply_six_element_contract(result: Dictionary) -> void:
+	var wire := int(result.wire_id)
+	result.effect_once_per_actor = wire in [301, 304, 307, 311, 314, 315, 316, 321, 325, 335]
+	match wire:
+		301:
+			result.pulse_damage = 6_000
+			result.purpose = "one eruption hit raises a breakable pillar that cuts a firing lane or creates a wallrun approach"
+			result.counter = "break the 32-Health pillar, go around, or wait; trapped occupants can escape"
+		303:
+			result.name = "Quagmire"
+			result.pulse_ticks = 42
+			result.pulse_damage = 3_000
+			result.purpose = "70% ground acceleration and braking; staying for 350 ms starts grounded attrition"
+			result.counter = "jump or leave before 350 ms; movement ratios end immediately outside"
+		304:
+			result.name = "Sandblast"
+			result.flow_speed = 0
+			result.pulse_damage = 6_000
+			result.purpose = "one grounded hit and 14 px sideways displacement per hostile actor"
+			result.counter = "jump across or leave during formation; solid cover stops the displacement"
+		307:
+			result.pulse_damage = 6_000
+			result.purpose = "one hostile contact cut; bank existing paid projectiles off a breakable reflection plane"
+			result.counter = "change approach or break the 18-Health plane with Spray; ownership never changes"
+		308:
+			result.pulse_ticks = 60
+			result.pulse_damage = 3_000
+			result.ground_only = true
+			result.maximum_height = 0
+			result.purpose = "grounded pulses deny Health, Flux and Stamina recovery while occupied"
+			result.counter = "jump or leave the soil; ordinary recovery waits still apply afterwards"
+		311:
+			result.name = "Arcstorm"
+			result.geometry_kind = "branch"
+			result.selection_kind = Footprint.KIND_CAPSULE
+			result.radius = _extent(10_000)
+			result.length = _extent(180_000)
+			result.formation_ticks = 54
+			result.active_ticks = 15
+			result.pulse_ticks = 0
+			result.pulse_damage = 9_000
+			result.purpose = "one warned electrical line burst; one separate paid Fire source can extend the arc"
+			result.counter = "leave the previewed line before activation or consume its optional Fire link"
+		314:
+			result.purpose = "one radial flash deals damage and reveals targets for 700 ms"
+			result.counter = "leave the forming disk; this pulse cannot fire again"
+		315:
+			result.name = "Backdraft"
+			result.pulse_ticks = 0
+			result.pulse_damage = 12_000
+			result.purpose = "concealing fuse becomes transparent for its last 600 ms, then bursts once"
+			result.counter = "leave during the visible final warning; no damage before detonation"
+		316:
+			result.name = "Frostway"
+			result.pulse_damage = 4_000
+			result.ground_target_ratio = 750
+			result.geometry_kind = "corridor"
+			result.selection_kind = Footprint.KIND_CAPSULE
+			result.radius = _extent(24_000)
+			result.length = _extent(160_000)
+			result.formation_ticks = 78
+			result.active_ticks = 420
+			result.decay_ticks = 72
+			result.flow_kind = "none"
+			result.flow_speed = 0
+			result.quantity_policy = "paid_source_transfer"
+			result.projectile_speed_ratio = 650
+			result.slow_ratio = 750
+			result.purpose = "one grounded freezing hit; ground travel is 75% and physical projectiles travel at 65%"
+			result.counter = "slide, jump, or leave; air movement and slide speed remain unchanged"
+		317:
+			result.name = "Hailcurrent"
+			result.geometry_kind = "pulse_lane"
+			result.selection_kind = Footprint.KIND_CAPSULE
+			result.radius = _extent(14_000)
+			result.length = _extent(180_000)
+			result.pulse_ticks = 54
+			result.pulse_damage = 3_000
+			result.capacity = 0
+			result.suppression_quantity = 0
+			result.purpose = "narrow hail pulses combine with a grounded current along the cast direction"
+			result.counter = "leave laterally; jumping avoids current and ground-level hail"
+		320:
+			result.pulse_ticks = 60
+			result.pulse_damage = 3_000
+			result.purpose = "disturbing the mirror surface reveals movement and triggers damage on each pulse"
+			result.counter = "stand still between pulses after the entry reveal, or leave the disk"
+		321:
+			result.name = "Black Ice"
+			result.ground_only = true
+			result.maximum_height = 0
+			result.pulse_damage = 4_000
+			result.purpose = "entry briefly slows; the first grounded exit fractures the ice for one hit"
+			result.counter = "jump out to avoid the exit fracture; each actor can be hit only once"
+		322:
+			result.pulse_ticks = 54
+			result.pulse_damage = 3_000
+			result.purpose = "rotating ground current and pulses guard an annulus around an open center"
+			result.counter = "use the center opening, jump, or leave between pulses"
+		325:
+			result.pulse_damage = 6_000
+			result.purpose = "one hostile contact flash; bend paid Light projectiles by 15 degrees for a different attack angle"
+			result.counter = "change the Light approach angle or leave the redirected firing lane"
+		326:
+			result.pulse_ticks = 36
+			result.pulse_damage = 4_000
+			result.purpose = "a stationary corridor alternates 300 ms of concealing damage and 300 ms of clear safety"
+			result.counter = "cross during the transparent interval or leave laterally"
+		334:
+			result.purpose = "continuous reveal and regular searing pulses also threaten airborne actors"
+			result.counter = "leave between 600 ms pulses; jumping alone does not escape"
+		335:
+			result.geometry_kind = "annulus"
+			result.selection_kind = Footprint.KIND_ANNULUS
+			result.length = _extent(46_000)
+			result.pulse_damage = 6_000
+			result.pulse_ticks = 0
+			result.purpose = "one damaging revealed boundary crossing per actor, with a safe interior"
+			result.counter = "avoid the marked ring or shelter inside; repeated crossings cannot repeat the hit"
+		336:
+			result.purpose = "concealed dwell pressure grows from 2 to 6 Health per pulse after one second"
+			result.counter = "move to reveal occupants or exit before one second; exit resets dwell pressure"
 
 
 static func _selection_kind(effect_geometry: String) -> String:
@@ -326,3 +508,33 @@ static func _ticks(milliseconds: int) -> int:
 static func _aim_valid(aim: Vector2i) -> bool:
 	var squared := aim.x * aim.x + aim.y * aim.y
 	return absi(aim.x) <= 1000 and absi(aim.y) <= 1000 and squared >= 998_001 and squared <= 1_000_000
+
+
+static func active_wire_ids() -> Array[int]:
+	return ACTIVE_RECIPE_WIRES.duplicate()
+
+
+static func element_bit(element: int) -> int:
+	var index := Composite.ELEMENT_WIRES.find(element)
+	return 0 if index < 0 else 1 << index
+
+
+static func mask_for_wire(wire: int) -> int:
+	if wire > 400: return wire - 400 if Composite.NAMES.has(wire - 400) else 0
+	if wire not in ACTIVE_RECIPE_WIRES: return 0
+	var row: Array = COMPILED_ROWS[wire - 301]
+	return element_bit(int(row[1])) | element_bit(int(row[2]))
+
+
+static func elements_for_mask(mask: int) -> Array[int]:
+	return Composite.elements(mask)
+
+
+static func wire_for_mask(mask: int) -> int:
+	var elements := elements_for_mask(mask)
+	if elements.size() >= 3: return 400 + mask if Composite.NAMES.has(mask) else 0
+	return recipe_wire(elements[0], elements[-1]) if not elements.is_empty() else 0
+
+
+static func recipe_wire_for_mask(mask: int) -> int:
+	return wire_for_mask(mask)

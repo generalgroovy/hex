@@ -28,6 +28,12 @@ class Sample:
 	var puff_offsets: Array[Vector2] = []
 	var puff_radius: float = 0.0
 	var puff_opacity: float = 0.0
+	var reduced_effects: bool = false
+	var contact_offsets := PackedVector2Array()
+	var contact_width: int = 0
+	var contact_height: int = 2
+	var contact_opacity: float = 0.0
+	var dust_offset := Vector2.ZERO
 
 
 static func sample(
@@ -37,7 +43,11 @@ static func sample(
 	reduced_motion: bool = false,
 ) -> Sample:
 	var result := Sample.new()
-	if state == null or config == null or state.landing_ticks <= 0 or state.landing_intensity <= 0:
+	if state == null or config == null or state.health <= 0 or state.landing_ticks <= 0 or state.landing_intensity <= 0:
+		return result
+	# Forced-impact recovery also owns this timer while physical height may
+	# remain airborne. Heel contacts and the landing shadow require real ground.
+	if state.is_airborne():
 		return result
 	var total_ticks: int = config.milliseconds_to_ticks(MovementTuning.LANDING_WINDOW_MS)
 	if total_ticks <= 0:
@@ -68,6 +78,26 @@ static func sample(
 		result.puff_offsets.append(-result.travel_direction * distance + side * side_sign * spread)
 	result.puff_radius = (3.5 + result.normalized_phase * 3.0) * (0.65 + result.intensity_ratio * 0.35)
 	result.puff_opacity = result.ring_opacity * 0.80
+	result.reduced_effects = reduced_motion
+	# Two compact heel contacts give impact a readable shape and force, without
+	# drawing a circular protection/attack boundary. No emitter or event survives
+	# this accepted landing window. Reduced Effects keeps its geometry still.
+	var settle := 1.0 - pow(1.0 - result.normalized_phase, 3.0)
+	var span := 8.0 + result.intensity_ratio * 3.0
+	if not reduced_motion:
+		span += settle * 4.0 * result.intensity_ratio
+	result.contact_offsets = PackedVector2Array([
+		-side * span - result.travel_direction * 2.0,
+		side * span - result.travel_direction * 2.0,
+	])
+	result.contact_width = 3 + roundi(3.0 * result.intensity_ratio)
+	# The floor mark compresses and settles, not the actor. Reduced Effects
+	# retains a still two-pixel contact with the same accepted timing/force.
+	result.contact_height = 2 if reduced_motion else 1 + roundi((1.0 - settle) * (1.0 + result.intensity_ratio))
+	result.contact_opacity = (0.35 + result.intensity_ratio * 0.45) * (1.0 - result.normalized_phase)
+	if reduced_motion:
+		result.contact_opacity *= 0.78
+	result.dust_offset = -result.travel_direction * (2.0 + result.intensity_ratio * 2.0)
 	return result
 
 
@@ -83,24 +113,16 @@ static func motion_direction(state: PlayerState) -> Vector2:
 static func draw(canvas: CanvasItem, center: Vector2, landing: Sample, language: VisualLanguage) -> void:
 	if canvas == null or landing == null or language == null or not landing.active:
 		return
+	var ink := language.ramp_color("warm_stone", 0)
+	var light := language.ramp_color("warm_stone", 4)
+	# Axis-aligned, snapped two-tone blocks retain native-pixel edges even when
+	# coast direction is diagonal. The open center leaves feet/threats visible.
+	for offset: Vector2 in landing.contact_offsets:
+		var origin := (center + offset - Vector2(float(landing.contact_width) * 0.5, 1.0)).round()
+		canvas.draw_rect(Rect2(origin - Vector2.ONE, Vector2(landing.contact_width + 2, landing.contact_height + 2)), Color(ink, landing.contact_opacity))
+		canvas.draw_rect(Rect2(origin, Vector2(landing.contact_width, landing.contact_height)), Color(light, landing.contact_opacity))
 	if pixel_movement == null:
 		pixel_movement = PixelMovement.new()
 	if pixel_movement.ready():
 		var age := floori(landing.normalized_phase * ceilf(MovementTuning.LANDING_WINDOW_MS * 0.12))
-		var reduced := landing.ring_width == REDUCED_RING_WIDTH
-		pixel_movement.stamp(canvas,"landing_contact",center,age,reduced)
-		pixel_movement.stamp(canvas,"landing_dust",center,age,reduced,0.0,0.5 if reduced else 0.7)
-		return
-	var color := language.ramp_color("warm_stone", 4)
-	var angle := landing.travel_direction.angle()
-	# Open contact arcs and sparse backward puffs leave the feet and forward
-	# escape lane clear; this draws no new collision or protection boundary.
-	for side_sign: float in [-1.0, 1.0]:
-		var start := angle + side_sign * 0.85
-		canvas.draw_arc(center, landing.ring_radius, start, start + side_sign * 0.75, 7, Color(color, landing.ring_opacity * 0.54), landing.ring_width)
-	for offset: Vector2 in landing.puff_offsets:
-		var puff := center + offset
-		canvas.draw_circle(puff, landing.puff_radius, Color(color, landing.puff_opacity * 0.24))
-		canvas.draw_arc(puff, landing.puff_radius, angle + 0.8, angle + 5.4, 8, Color(color, landing.puff_opacity), landing.ring_width)
-		canvas.draw_arc(puff - landing.travel_direction * landing.puff_radius * 0.48, landing.puff_radius * 0.65, angle + 1.1, angle + 4.7, 6, Color(color, landing.puff_opacity * 0.72), landing.ring_width)
-		canvas.draw_line(puff - landing.travel_direction * landing.puff_radius, puff - landing.travel_direction * (landing.puff_radius + 3.0), Color(color, landing.puff_opacity * 0.65), landing.ring_width)
+		pixel_movement.stamp(canvas, "landing_dust", center + landing.dust_offset, age, landing.reduced_effects, 0.0, landing.puff_opacity * 0.75)

@@ -2,7 +2,7 @@ class_name ReactionDefinitionTable
 extends RefCounted
 
 
-const COMPILER_CONTRACT_VERSION: int = 2
+const COMPILER_CONTRACT_VERSION: int = 3
 const Chemistry = preload("res://src/sim/chemistry/element_chemistry_system.gd")
 
 var last_error: String = ""
@@ -22,7 +22,7 @@ func compile(reactions: ReactionCatalog, abilities: AbilityCatalog) -> bool:
 		return _fail("reaction definitions require one validated reaction catalog")
 	if abilities == null or abilities.content_hash.length() != 64:
 		return _fail("reaction definitions require one validated ability catalog")
-	if abilities.active_element_ids() != _sorted_copy(ReactionCatalog.FIRST_EIGHT_ELEMENTS):
+	if abilities.active_element_ids() != _sorted_copy(ReactionCatalog.FUNDAMENTAL_ELEMENTS):
 		return _fail("reaction and ability catalogs disagree on enabled elements")
 	runtime_bounds = reactions.runtime_bounds.duplicate(true)
 	for wire_id: int in reactions.ordered_wire_ids():
@@ -32,14 +32,14 @@ func compile(reactions: ReactionCatalog, abilities: AbilityCatalog) -> bool:
 		var definition := _compile_definition(reaction, pair, profile, reactions, abilities)
 		if definition.is_empty():
 			return false
-		var key := ReactionCatalog.pair_key(pair[0], pair[1])
+		var key := ReactionCatalog.combination_key(pair)
 		_definitions_by_pair[key] = definition
 		_definitions_by_wire[wire_id] = definition
 	content_hash = CanonicalContent.sha256({
 		"compiler_contract_version": COMPILER_CONTRACT_VERSION,
 		"reaction_catalog_hash": reactions.content_hash,
 		"ability_catalog_hash": abilities.content_hash,
-		"level_one_runtime_rows": Chemistry.RECIPE_ROWS,
+		"active_reaction_contracts": _definitions_by_wire.values(),
 		"deposit_lifetimes": Chemistry.ELEMENT_LIFE_MS,
 		"extent_policy": Chemistry.extent_policy(),
 		"trail_policy": Chemistry.trail_policy(),
@@ -67,7 +67,7 @@ func ordered_wire_ids() -> Array[int]:
 
 
 func mutation_enabled() -> bool:
-	return _definitions_by_wire.size() == 36 and content_hash.length() == 64
+	return _definitions_by_wire.size() == 63 and content_hash.length() == 64
 
 
 func _compile_definition(
@@ -77,7 +77,7 @@ func _compile_definition(
 	reactions: ReactionCatalog,
 	abilities: AbilityCatalog,
 ) -> Dictionary:
-	if pair.size() != 2 or profile.is_empty():
+	if pair.size() < 2 or pair.size() > 6 or profile.is_empty():
 		_fail("reaction compiler received incomplete validated content")
 		return {}
 	var element_wires: Array[int] = []
@@ -99,7 +99,7 @@ func _compile_definition(
 			)
 	var live := Chemistry.recipe(int(reaction.get("wire_id",0)))
 	if live.is_empty() or String(live["id"]) != String(reaction.get("id","")) or live["elements"] != element_wires:
-		_fail("first-grade runtime and authored recipe identity disagree")
+		_fail("finite combination runtime and authored recipe identity disagree")
 		return {}
 	return {
 		"id": String(reaction.get("id", "")),
@@ -113,9 +113,9 @@ func _compile_definition(
 		"formation_ms": int(live["formation_ms"]),
 		"active_ms": int(live["active_ms"]),
 		"residue_ms": int(live["decay_ms"]),
-		"level_one": live,
-		# These expansive authored descriptions remain future design context;
-		# only the explicit level_one geometry/rule signature executes today.
+		"runtime_contract": live,
+		# Authored role prose is retained beside the executable policy projection.
+		# Runtime products own finite funding, timing, contacts and descendants.
 		"authored_actor_effects": (reaction.get("actor_effects",[]) as Array).duplicate(),
 		"authored_map_effects": (reaction.get("map_effects",[]) as Array).duplicate(),
 		"authored_profile": profile.duplicate(true),

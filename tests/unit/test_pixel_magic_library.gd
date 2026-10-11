@@ -12,24 +12,25 @@ func run() -> int:
 		return finish("pixel-magic-library")
 	equal(library.page_count(), 3, "magic prepares exactly three shared textures")
 	equal(library.asset_count(), 474, "all authored normal/reduced sequences are addressable")
-	# B1 audit: strength admission changes which deposits may combine; authored
-	# recipe geometry, phases, pulses and atlas pixels are unchanged. Preserve the
-	# original art manifest and acknowledge only this reviewed source difference.
-	# Evidence: four-delivery-b-20260913/provenance-final-review.md.
-	# S1 adds phase/danger roles while preserving all eight element and legacy
-	# Steam atlas RGB tokens. The pixel palette checks below verify that boundary.
+	# Six-element migration intentionally changes live chemistry. The old pack
+	# is now validated against ArchiveContract, not advertised as live geometry.
+	# Its exact manifest/pixels remain preserved; explicit bindings bridge63 live
+	# recipes to36 archived sequences without borrowing simulation parameters.
 	var reviewed_differences: Array[String] = ["src/sim/chemistry/element_chemistry_system.gd", "content/visual/visual_language_v1.json"]
-	equal(library.source_hash_differences, reviewed_differences, "reviewed source snapshot has no unexplained drift")
-	equal(FileAccess.get_sha256("res://src/sim/chemistry/element_chemistry_system.gd"), "26d35914ab43742fec06e9670cb436edc77e9be5ee3de424d8c30b05ee1a0339", "reviewed B1 strength admission preserves authored visual footprints and lifecycles; future authority drift requires renewed audit")
+	equal(library.source_hash_differences, reviewed_differences, "only declared live schema and availability sources differ from frozen art")
+	equal(FileAccess.get_sha256(Library.MANIFEST_PATH), "6cdf1d12d08dc80ac6605bbffc1cc81b01c3d0931a0067057888b71f32259638", "the historical art manifest itself is byte-preserved")
 	equal(library.content_hash, FileAccess.get_sha256(Library.MANIFEST_PATH), "library identity comes from the current raw manifest")
+	check(Library.LIVE_SOURCE_PATH in Library.SOURCE_PATHS and Library.LIVE_SOURCE_PATH not in Library.ARCHIVE_SOURCE_PATHS, "new live recipes are an explicit binding source, not rewritten historical art evidence")
+	check(library.live_binding_hash.length() == 64 and library.live_binding_hash != library.content_hash, "live policy binding identity is independent of immutable atlas identity")
 	var stale_snapshot: Dictionary = document.duplicate(true)
-	stale_snapshot["source_files"][1]["sha256"] = "a".repeat(64)
+	stale_snapshot["source_files"][3]["sha256"] = "a".repeat(64)
 	var stale_library := Library.new()
-	check(stale_library.load_from_manifest(stale_snapshot), "stale source evidence does not replace structural gameplay validation")
-	equal(stale_library.source_hash_differences, [reviewed_differences[0], String(stale_snapshot["source_files"][1]["path"]), reviewed_differences[1]], "one additional deliberately stale source hash is reported exactly in manifest order")
+	check(stale_library.load_from_manifest(stale_snapshot), "stale source evidence does not replace frozen structural art validation")
+	equal(stale_library.source_hash_differences, [reviewed_differences[0], reviewed_differences[1], String(stale_snapshot["source_files"][3]["path"])], "one additional deliberately stale source hash is reported exactly in manifest order")
 	_test_all_frames_and_absolute_clocks()
 	_test_canonical_native_palettes()
 	_test_lookup_and_orientation()
+	_test_live_archive_bindings()
 	_test_invalid_manifests()
 	_test_atomic_page_failure_and_singleton()
 	_test_shared_decoration_budget()
@@ -47,7 +48,7 @@ func _test_canonical_native_palettes() -> void:
 		var element: Variant = authored.get("element_id")
 		var reaction: Variant = authored.get("reaction_id")
 		var families: Array = []
-		if element != null and String(element) in VisualLanguage.ACTIVE_ELEMENTS:
+		if element != null and String(element) in Library.ELEMENTS:
 			families = [String(element)]
 		elif reaction != null and recipes.has(String(reaction)):
 			families = ["steam"] if String(reaction) == "steam" else recipes[String(reaction)]
@@ -58,7 +59,7 @@ func _test_canonical_native_palettes() -> void:
 				var color := Color(String(language.data.reaction_materials.steam[role])) if family == "steam" else language.element_color(family, role)
 				check(color.to_html(true) in authored.palette_rgba, "native flight/impact/field/reaction palette matches canonical categorical hue: " + String(authored.id) + " / " + family + " / " + role)
 		inspected += 1
-	check(inspected >= 400, "palette audit covers all elemental and reaction sequences, not only UI chips")
+	equal(inspected, 440, "palette audit covers every archived elemental/reaction sequence, including derived Ice/Charge art")
 
 
 func _test_all_frames_and_absolute_clocks() -> void:
@@ -192,6 +193,11 @@ func _test_invalid_manifests() -> void:
 		func(data: Dictionary) -> void: data["reactions"][0]["shape"] = "disk",
 		func(data: Dictionary) -> void: data["reactions"][0]["phases"]["active"]["normal"] = "magic.reaction.mud.active.normal",
 		func(data: Dictionary) -> void: data["deposit_lifetime_ticks"]["fire"] += 1,
+		func(data: Dictionary) -> void: data["deposit_lifetime_ticks"]["fire"] = 480.5,
+		func(data: Dictionary) -> void: data["deposit_lifetime_ticks"]["fire"] = "480",
+		func(data: Dictionary) -> void: data["deposit_lifetime_ticks"].erase("fire"),
+		func(data: Dictionary) -> void: data["deposit_lifetime_ticks"]["extra"] = 480,
+		func(data: Dictionary) -> void: data["deposit_lifetime_ticks"] = [],
 	]
 	for index: int in range(mutations.size()):
 		var altered := document.duplicate(true)
@@ -241,3 +247,24 @@ func _test_shared_decoration_budget() -> void:
 	check(not shared.take_decoration("magic.unknown.normal"), "unknown decoration fails without consuming or inventing a component")
 	shared.begin_frame()
 	equal(shared.decoration_remaining(), 192, "next actual canvas frame explicitly restores the normal budget")
+
+
+func _test_live_archive_bindings() -> void:
+	var seen := {}
+	for wire: int in Library.LivePolicy.active_wire_ids():
+		var definition := Library.LivePolicy.definition(wire)
+		var archive_wire := int(definition.archive_recipe_wire)
+		check(archive_wire >=301 and archive_wire <=336,"every live recipe names an existing archived motif")
+		equal(library.live_reaction(wire),library.reaction(archive_wire),"live-to-art binding uses explicit metadata rather than dense wire indexing")
+		for phase: String in Library.PHASES:
+			for reduced: bool in [false,true]:
+				var id := library.live_reaction_asset_id(wire,phase,reduced)
+				check(not library.asset(id).is_empty(),"all63 live definitions have every normal/reduced phase asset")
+				equal(library.asset(id).lifecycle_phase,phase,"archive motif never changes requested current phase")
+		seen[wire] = true
+	equal(seen.size(),63,"every live definition is checked once")
+	equal(library.live_reaction_asset_id(316,"active"),library.reaction_asset_id(327,"active"),"Water Frostway reuses archived Ice art explicitly")
+	equal(library.live_reaction_asset_id(311,"active"),library.reaction_asset_id(313,"active"),"Fire-Air Arcstorm reuses archived electrical art explicitly")
+	for retired: int in [305,306,312,313,319,327,331]:
+		equal(library.live_reaction_asset_id(retired,"active"),"","retired live recipe cannot be revived by available art")
+		check(not library.reaction_asset_id(retired,"active").is_empty(),"retired art remains addressable in the archive")

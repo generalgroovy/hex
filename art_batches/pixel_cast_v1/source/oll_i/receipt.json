@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "id": "oll_i",
+  "display_name": "Oll' I",
+  "race": "werewolf",
+  "body_tier": "large",
+  "status": "source_candidate_with_facing_gap",
+  "generator": "built_in_imagegen",
+  "attempt": 2,
+  "original_output_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b8-7f02-7203-8a99-a2a2e2cf443d\\exec-84f6339e-d102-48be-93b4-f595337e1649.png",
+  "reference_paths": [
+    "C:\\Users\\sende\\Projects\\hex\\assets\\sprites\\fullbody_cast_v1\\oll_i-detail.png",
+    "C:\\Users\\sende\\Pictures\\styleref1.png",
+    "C:\\Users\\sende\\Projects\\hex\\art_batches\\pixel_body_pilot_v1\\source\\red-baron.png"
+  ],
+  "source_dimensions": [
+    1536,
+    1024
+  ],
+  "columns": 8,
+  "rows": 4,
+  "column_mapping": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "row_mapping": [
+    "idle",
+    "walk_left_foot_forward_right_arm_forward",
+    "walk_right_foot_forward_left_arm_forward",
+    "empty_hand_cast"
+  ],
+  "quality_flags": {
+    "visually_inspected": true,
+    "full_bodies_inside_canvas": true,
+    "identity_preserved": true,
+    "eight_facing_layout": true,
+    "rear_views_have_no_frontal_eyes": false,
+    "empty_hands": true,
+    "no_baked_magic": true,
+    "rgba_confirmed": true,
+    "sampled_gutters_alpha_zero": true,
+    "native_pixel_calibration_pending": true,
+    "walk_contact_exactness_requires_integration_review": true,
+    "rear_diagonal_head_turn_gap": true
+  },
+  "notes": [
+    "First sheet is preserved as source.png for coherent original layout; rear diagonals expose profile eyes/teeth and need assembly or later correction.",
+    "Second and final permitted generation tried targeted head correction but applied the clean rear-right head to zero-based column 2 (E slot) instead of requested column 3. Corrected no-eye rear-right is usable in row 0 and row 3; rows 1/2 retain tiny far-eye marks.",
+    "Correction sheet preserved as rear-right-correction.png; no procedural pose synthesis or local raster edit applied. Lead decides any deterministic assembly or whether to retain gap.",
+    "No engine import, test, runtime edit, deletion or commit."
+  ],
+  "exact_prompt": "Use case: style-transfer.\nAsset type: production pixel-art character animation source sheet for H.E.X.\nInput image 1 is the character identity/costume reference only. Input image 2 is the retro pixel-art style reference only; IGNORE its old labels, held objects and magic. Input image 3 is the approved sheet/proportion/style reference only; do NOT copy its character.\nPrimary request: redraw the identity in image 1 as one coherent compact 16-bit pixel-art sheet, exactly 32 full-body sprites in an invisible 8-column by 4-row grid, on a genuinely transparent RGBA background. Landscape canvas, preferably 1536 x 1024. One character in each equal cell with generous empty gutters; keep every head, hand, foot, cape, horn, tail and wing completely inside its cell. Do not render grid lines or labels.\nStyle: charming dense handmade retro pixel clusters, crisp stepped edges, restrained 3-4 shade material ramps and readable dark outlines, matching the references. NO smooth vector/Flash shapes, airbrush, glossy 3D, high-definition painting, blurry outlines or noise. Large tier means broad bulky chest, heavy arms and thick legs; a compact head comparable to other character sizes, not a thin stretched giant or oversized bobblehead. Complete connected anatomy in every pose.\nColumns in EVERY row, left to right: 0 S = precisely symmetrical direct front, both eyes; 1 SE = 45-degree front-right three-quarter; 2 E = strict 90-degree right-facing profile; 3 NE = 135-degree rear-right three-quarter, show BACK of head/torso, NO frontal eyes or front chest; 4 N = direct full back, NO face; 5 NW = 225-degree rear-left three-quarter, show BACK of head/torso, NO frontal eyes or front chest; 6 W = strict 270-degree left-facing profile; 7 SW = 315-degree front-left three-quarter. All eight directions must be clearly distinct, proper rotation of one design, not repeated front views.\nRows top to bottom: row 0 neutral idle standing; row 1 walking contact with anatomical LEFT FOOT forward and RIGHT ARM forward, opposite limbs behind; row 2 opposite walking contact with RIGHT FOOT forward and LEFT ARM forward, visibly different from row 1; row 3 active empty-hand casting stance, BOTH HANDS lifted and extended toward the character's facing direction, open palms/fingers. Exactly these FOUR rows, no additional rows.\nKeep the identity, clothing, colors, anatomy and head size stable across all 32 sprites. Hands are EMPTY, including the casting row; keep intrinsic armor gauntlets, but remove all weapons, staves, shields and held props. No baked spells, elemental effects, aura, sparkles, floating debris, smoke, shadows, floor, scenery, text or symbols outside clothing. All unused pixels must have alpha 0, not a checkerboard picture or colored matte.\nCharacter identity: OLL' I is a LARGE WEREWOLF, never a minotaur. Use only the WEREWOLF identity in image 1: muscular brown fur, lupine long muzzle with visible ivory fangs, pointed wolf ears, shaggy mane, thick furry tail, massive clawed wolf hands and clawed feet, brown leather wrist cuffs with gold studs, leather cross-body harness with a gold center ring, broad dark belt with square gold buckle, short tattered burgundy-red studded loincloth panels. No horns, no cattle nose, no weapons or shield. Keep the compact wolf head with heavy broad shoulders, thick arms and short strong legs.",
+  "correction": {
+    "original_output_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b8-7f02-7203-8a99-a2a2e2cf443d\\exec-c4b20adf-49d4-4a8c-8e5b-351449943645.png",
+    "local_file": "rear-right-correction.png",
+    "exact_prompt": "Use case: precise-object-edit. Edit only the provided 32-sprite OLL' I WEREWOLF sheet. Make ONE targeted correction: in all FOUR rows, column 3 (fourth from left, NE rear-right) and column 5 (sixth from left, NW rear-left), rotate the HEAD to face AWAY together with its torso. Show rear skull/mane and back of ears. Absolutely NO EYES, NO front of face and NO teeth in these eight rear-diagonal cells. The nose may only protrude very subtly beyond far silhouette; do not show muzzle front. Rear diagonal must be 135 and 225 degrees, midway between strict profile and full back. Maintain the original character identity, muscular brown fur, leather gold harness, burgundy loincloth, bushy tail, compact bulky proportions, colors, pixel clusters, scale, and every body/hand/foot pose unchanged. All OTHER 24 cells must remain unchanged. Preserve exactly EIGHT columns and FOUR rows, idle, left-contact, right-contact, casting. Empty hands and no effects. Keep full bodies within their cells with clear gutters and genuine transparent alpha 0 background, no visible matte, grid, text, shadows, particles or extra row.",
+    "observed_mapping": [
+      "S",
+      "SE",
+      "NE_attempted_no_face_correction",
+      "NE_head_still_profile",
+      "N",
+      "NW_head_still_profile",
+      "W",
+      "SW"
+    ]
+  }
+}

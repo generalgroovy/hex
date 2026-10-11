@@ -330,12 +330,32 @@ function Get-FluxActiveCharacterArtCoverage($Root, $Catalog, $Manifest, [string]
         return $true
     }
     $manifestPath = 'res://assets/sprites/wireframe_motion_v2/manifest.json'
+    # Source-default coverage still describes the eager wireframe branch. Known
+    # explicit Fullbody flags may select its atomic metadata-only alternative;
+    # neither branch is inferred from texture residency or launcher defaults.
+    $legacyBootstrapBinding = $BootstrapSource -match '(?m)^\s*if not cartoon_champion_presenter\.configure\(visual_language\):\s*\r?$'
+    $guardedBootstrapLines = @(
+        'var pixel_body_pilot := OS.get_cmdline_user_args().has("--pixel-body-pilot")',
+        'var pixel_cast := OS.get_cmdline_user_args().has("--pixel-cast")',
+        'var fullbody_requested := OS.get_cmdline_user_args().has("--fullbody-art") or pixel_body_pilot or pixel_cast',
+        'var characters_ready := cartoon_champion_presenter.configure_fullbody_startup(visual_language, pixel_body_pilot, pixel_cast) if fullbody_requested else cartoon_champion_presenter.configure(visual_language)',
+        'if not characters_ready:',
+        'push_error(cartoon_champion_presenter.last_error)',
+        'get_tree().quit(1)',
+        'return'
+    )
+    $guardedBootstrapPattern = '(?m)^\s*' + (($guardedBootstrapLines | ForEach-Object { [regex]::Escape($_) }) -join '\s*\r?\n\s*') + '\s*\r?$'
+    $guardedBootstrapBinding = $BootstrapSource -match $guardedBootstrapPattern -and
+        $PresenterSource -match '(?m)^func _configure_validated\([^\r\n]*metadata_only:\s*bool\s*=\s*false\)' -and
+        $PresenterSource -match '(?m)^\s*if _configure_validated\(visual_language, path\) and \(wireframe_mode or _configure_overrides\(override_path\)\):\s*\r?$' -and
+        $PresenterSource -match '(?m)^\s*if not candidate\._configure_validated\(visual_language, path, true\):\s*\r?$' -and
+        $PresenterSource -match '(?m)^\s*if not candidate\.enable_fullbody_art\(use_pixel_pilot, use_full_cast, true\):\s*\r?$'
     $bindingRecognized = $PresenterSource -match '(?m)^var wireframe_mode:\s*bool\s*=\s*true\s*\r?$' -and
         $PresenterSource -match '(?m)^func configure\([^\r\n]*use_wireframe:\s*bool\s*=\s*true\)' -and
         $PresenterSource -match '(?m)^\s+wireframe_mode = use_wireframe\s*\r?$' -and
         $PresenterSource -match '(?m)^\s+if not wireframe_body\.configure\(\):\s*\r?$' -and
         $BodyPresenterSource -match ('(?m)^const DEFAULT_PATH := "' + [regex]::Escape($manifestPath) + '"\s*\r?$') -and
-        $BootstrapSource -match '(?m)^\s*if not cartoon_champion_presenter\.configure\(visual_language\):\s*\r?$'
+        ($legacyBootstrapBinding -or $guardedBootstrapBinding)
     if (-not $bindingRecognized) { Problem 'wireframe_source_binding' '' 'Default presenter/manifest/bootstrap binding is not the recognized wireframe source path; active totals withheld.' }
     $directions = @('south','south_east','east','north_east','north','north_west','west','south_west')
     $states = @('grounded','jump','cast','hit','walk','sprint','slide','roll','walk_b','sprint_b')
@@ -447,7 +467,7 @@ function Get-FluxDocumentStatuses {
 
 $projectText = Read-FluxText 'project.godot'
 $abilityPath = 'content/abilities/foundation_abilities_v1.json'
-$reactionPath = 'content/reactions/first_eight_element_reactions_v1.json'
+$reactionPath = 'content/reactions/six_element_reactions_v2.json'
 $playableChampionPath = 'content/champions/foundation_champions_v1.json'
 $plannedAffinityPath = 'content/champions/champion_affinities_first_eight_v1.json'
 $rosterPlanPath = 'content/champions/champion_roster_plan_v1.json'
@@ -504,19 +524,41 @@ Add-FluxIssue ($simulationHz -eq 120) "Simulation rate is $simulationHz Hz; curr
 Add-FluxIssue ($projectPhysicsHz -eq $simulationHz) "Project physics rate $projectPhysicsHz disagrees with simulation rate $simulationHz"
 Add-FluxIssue ($projectMaximumFps -eq 120) "Project frame cap is $projectMaximumFps; current Windows target requires 120"
 Add-FluxIssue ($projectText -match 'simulation/supported_tick_rates=PackedInt32Array\(120\)') 'Project exposes a gameplay tick rate other than the single supported 120 Hz cadence'
-Add-FluxIssue ($protocolVersion -eq 55) "Protocol is $protocolVersion; the 48px authoritative hex lattice requires 55"
-Add-FluxIssue ($snapshotSchema -eq 21) "Snapshot schema is $snapshotSchema; bounded hex-clash feedback requires 21"
+Add-FluxIssue ($protocolVersion -eq 60) "Protocol is $protocolVersion; composed spells and persistent delivery state require 60"
+Add-FluxIssue ($snapshotSchema -eq 24) "Snapshot schema is $snapshotSchema; finite status and delivery lanes require 24"
 Add-FluxIssue ($preferencesSchema -eq 11) "Preferences schema is $preferencesSchema; current documentation requires 11"
 Add-FluxIssue ($snapshotHz -eq 60) "Transport snapshot cadence is $snapshotHz Hz; current contract requires 60 Hz"
 Add-FluxIssue ($presentationBaseHz -eq 60) "Presentation sample base is $presentationBaseHz Hz; current contract requires 60"
 Add-FluxIssue ($maximumPlayers -eq 8) "Session capacity is $maximumPlayers; current tested cap requires 8"
-Add-FluxIssue ($abilityCount -eq 62) "Effective authored ability count is $abilityCount; current contract requires 62"
-Add-FluxIssue ($runtimeWireIds.Count -eq 32) "Runtime-selectable spell count is $($runtimeWireIds.Count); current four-delivery contract requires 32"
-Add-FluxIssue (($abilities.spell_matrix.column_order -join ',') -ceq 'bolt,heavy,rapid,spray') 'Playable matrix must expose exactly Bolt, Heavy, Rapid, Spray'
+Add-FluxIssue ($abilityCount -eq 542) "Effective authored ability count is $abilityCount; current contract requires 542 including retained disabled records"
+Add-FluxIssue ($runtimeWireIds.Count -eq 504) "Runtime-selectable spell count is $($runtimeWireIds.Count); 63 mixtures and eight delivery families require 504"
+Add-FluxIssue (($abilities.spell_matrix.row_order -join ',') -ceq 'water,fire,wind,earth,light,dark') 'Playable matrix must expose Water, Fire, Air, Earth, Light, Dark in that order'
+Add-FluxIssue (($abilities.spell_matrix.column_order -join ',') -ceq 'bolt,heavy,rapid,spray,mantle,fuse,split,rebound') 'Playable matrix must expose all eight canonical delivery families in order'
 Add-FluxIssue (@($runtimeWireIds | Sort-Object -Unique).Count -eq $runtimeWireIds.Count) 'Runtime spell wire IDs are not unique'
 Add-FluxIssue (@($runtimeWireIds | Where-Object { $abilityWireIds -notcontains $_ }).Count -eq 0) 'Runtime spell order references a missing authored ability wire ID'
-Add-FluxIssue (@($reactions.reactions).Count -eq 36) "Reaction definition count is $(@($reactions.reactions).Count); first-eight coverage requires 36"
-Add-FluxIssue ([bool]$reactions.runtime_enabled -and $reactions.status -eq 'bounded_level_one') 'Reaction runtime must identify the bounded first-grade promotion'
+Add-FluxIssue (@($reactions.reactions).Count -eq 63) "Reaction definition count is $(@($reactions.reactions).Count); all nonempty six-element subsets require 63"
+Add-FluxIssue ([bool]$reactions.runtime_enabled -and $reactions.status -eq 'bounded_combinations' -and $reactions.policy.mutation_gate -eq 'bounded_combinations') 'Reaction runtime must identify bounded combinations'
+Add-FluxIssue ($reactions.schema_version -eq 3 -and $reactions.id -ceq 'six-element-reactions-v2') 'Reaction catalog identity must distinguish the live six-element model from archived first-eight art'
+$elementBits = @{ earth = 1; fire = 2; water = 4; wind = 8; light = 16; dark = 32 }
+Add-FluxIssue (($reactions.fundamental_elements -join ',') -ceq 'earth,fire,water,wind,light,dark') 'Reaction ingredients must be the six canonical live elements'
+$reactionMasks = [System.Collections.Generic.HashSet[int]]::new()
+$reactionWires = [System.Collections.Generic.HashSet[int]]::new()
+foreach ($reaction in $reactions.reactions) {
+    $inputs = @($reaction.input_elements)
+    $mask = 0
+    $validInputs = $inputs.Count -ge 2 -and $inputs.Count -le 6
+    foreach ($inputElement in $inputs) {
+        if (-not $elementBits.ContainsKey([string]$inputElement)) { $validInputs = $false; continue }
+        $bit = [int]$elementBits[[string]$inputElement]
+        if (($mask -band $bit) -ne 0 -and -not ($inputs.Count -eq 2 -and $inputs[0] -ceq $inputs[1])) { $validInputs = $false }
+        $mask = $mask -bor $bit
+    }
+    Add-FluxIssue $validInputs "Reaction $($reaction.id) has invalid or retired ingredients"
+    Add-FluxIssue ($mask -gt 0 -and $reactionMasks.Add($mask)) "Reaction $($reaction.id) duplicates or omits its ingredient mask"
+    Add-FluxIssue ($reactionWires.Add([int]$reaction.wire_id)) "Reaction $($reaction.id) duplicates a wire ID"
+    if ($inputs.Count -ge 3) { Add-FluxIssue ([int]$reaction.wire_id -eq (400 + $mask)) "Reaction $($reaction.id) does not use its canonical combination wire" }
+}
+Add-FluxIssue ($reactionMasks.Count -eq 63 -and @((1..63) | Where-Object { -not $reactionMasks.Contains($_) }).Count -eq 0) 'Reaction catalog omits one or more same-element or two-through-six-element combinations'
 Add-FluxIssue ($playableIds.Count -eq 30) "Playable champion count is $($playableIds.Count); current foundation requires 30"
 Add-FluxIssue ($plannedIds.Count -eq 30) "Planned champion count is $($plannedIds.Count); current roster plan requires 30"
 Add-FluxIssue (($plannedIds -join ',') -eq ($affinityIds -join ',')) 'Planned roster and affinity catalogs have different identity/order sets'
@@ -544,8 +586,8 @@ foreach ($champion in $rosterPlan.champions) {
 }
 
 $readme = Read-FluxText 'README.md'
-Add-FluxIssue ($readme -match '62 validated effective records; 32 have runtime wire IDs') 'README does not distinguish 62 preserved effective abilities from 32 runtime spells'
-Add-FluxIssue ($readme -match '36 symmetric first-grade reactions') 'README does not report the bounded first-grade reaction contract'
+Add-FluxIssue ($readme -match '542 validated effective records; 504 have runtime wire IDs') 'README does not distinguish 542 preserved effective abilities from 504 runtime spells'
+Add-FluxIssue ($readme -match '63 bounded reactions') 'README does not report the complete six-element reaction contract'
 Add-FluxIssue ($readme -match '30 playable entries; 30 identities') 'README does not describe the current all-playable roster'
 Add-FluxIssue ($readme -match '120 Hz authoritative simulation; 60 Hz transport snapshots') 'README does not distinguish simulation and snapshot cadences'
 

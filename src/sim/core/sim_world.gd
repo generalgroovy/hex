@@ -26,6 +26,15 @@ var next_field_id: int = 2000
 var combat_events: Array[Dictionary] = []
 var last_error: String = ""
 var hex_court: RefCounted = null # Explicit solo migration world; never co-simulate old chemistry.
+var profile_enabled := false # Diagnostic only; excluded from authority/snapshots.
+var profile_stages_us: Dictionary = {}
+
+
+func _profile_stage(label: String, started: int) -> int:
+	if not profile_enabled: return 0
+	var now := Time.get_ticks_usec()
+	profile_stages_us[label] = now - started
+	return now
 
 
 func _init(
@@ -68,6 +77,8 @@ func player(entity_id: int = 1) -> PlayerState:
 func step(commands: Array[SimCommand]) -> bool:
 	if not is_valid():
 		return false
+	var profile_started := Time.get_ticks_usec() if profile_enabled else 0
+	if profile_enabled: profile_stages_us.clear()
 	if hex_court != null:
 		if not deposits.is_empty() or not reactions.is_empty() or not fields.is_empty():
 			last_error = "hex court rejects concurrent legacy chemistry state"
@@ -82,6 +93,7 @@ func step(commands: Array[SimCommand]) -> bool:
 			last_error = "invalid trusted hex physics topology"
 			return false
 		hex_court.move_products(tick, collision)
+	profile_started = _profile_stage("surfaces_expiry", profile_started)
 	var ordered: Array[SimCommand] = commands.duplicate()
 	ordered.sort_custom(func(left: SimCommand, right: SimCommand) -> bool: return left.entity_id < right.entity_id)
 	var commands_by_entity: Dictionary[int, SimCommand] = {}
@@ -104,6 +116,7 @@ func step(commands: Array[SimCommand]) -> bool:
 		reaction_movement.set_surfaces(ReactionMovementWorld.capture_surfaces(reactions, tick), tick)
 	var frostway_lanes := FrostwayFieldPolicy.capture(reactions, tick) if hex_court == null else PackedInt32Array()
 	var capacitor_lanes := CapacitorFieldPolicy.capture(reactions, tick) if hex_court == null else PackedInt32Array()
+	profile_started = _profile_stage("command_order", profile_started)
 	for state: PlayerState in ordered_players:
 		if hex_court != null:
 			hex_paths[state.entity_id] = {"point": Vector2i(state.position_x, state.position_y), "height": state.air_height}
@@ -117,6 +130,8 @@ func step(commands: Array[SimCommand]) -> bool:
 		state.aim_y = command.aim_y
 		state.primary_held = command.has_held(SimCommand.HELD_PRIMARY)
 		PlayerResourcesSystem.step(state, config)
+		SpellStatusPolicy.advance(state,config,combat_events)
+		if state.health <= 0: continue
 		reaction_movement.begin_actor(Vector2i(state.position_x, state.position_y), MovementTuning.PLAYER_RADIUS)
 		ReactionMovementWorld.clear_stale_contact(state, reaction_movement)
 		var point := Vector2i(state.position_x, state.position_y)
@@ -130,6 +145,7 @@ func step(commands: Array[SimCommand]) -> bool:
 			ground_ratio = int(modifiers.ground_target_ratio)
 			acceleration_ratio = int(modifiers.acceleration_ratio)
 			braking_ratio = int(modifiers.braking_ratio)
+		ground_ratio = mini(ground_ratio,SpellStatusPolicy.movement_ratio(state))
 		MovementSystem.step(state, command, config, reaction_movement, ground_ratio, acceleration_ratio, braking_ratio)
 		var capacity := Vector2i.ZERO
 		var admission_offer: Dictionary = {}
@@ -157,42 +173,49 @@ func step(commands: Array[SimCommand]) -> bool:
 			# and cooldown failures. Commit before the next owner's admission.
 			_commit_trail_reclamation(state, admission_offer)
 		_store_combat_result(spawned)
+	profile_started = _profile_stage("movement_cast_admission", profile_started)
 	if hex_court != null:
 		HexProjectileCombat.resolve_sprays(self)
 		if not last_error.is_empty(): return false
 	else:
 		SprayInterception.resolve(self)
 		CombatSystem.resolve_instant_casts(players, config, collision, combat_events, reactions, tick)
+	profile_started = _profile_stage("spray_contacts", profile_started)
 	fields.sort_custom(func(left: FieldState, right: FieldState) -> bool: return left.entity_id < right.entity_id)
 	fields = CombatSystem.advance_fields(fields, players, config, combat_events)
 	projectiles.sort_custom(func(left: ProjectileState, right: ProjectileState) -> bool: return left.entity_id < right.entity_id)
-	var owner_material_slots := _owner_material_slots()
 	if hex_court != null:
 		HexProjectileCombat.advance(self)
 		if not last_error.is_empty(): return false
 	else:
+		var owner_material_slots := _owner_material_slots()
 		projectiles = CombatSystem.advance_projectiles(projectiles, players, config, collision, combat_events, reactions, tick, _free_material_slots(), owner_material_slots)
+	profile_started = _profile_stage("projectile_contacts", profile_started)
 	_consume_projectile_terminals()
+	profile_started = _profile_stage("terminal_deposits", profile_started)
 	if hex_court == null:
-		_seed_projectile_trails()
 		next_reaction_id = ElementChemistrySystem.step(deposits, reactions, players, collision, config, tick, next_reaction_id, combat_events)
 	else:
-		HexTrailEmitter.emit(self)
+		# Mantle alone spends a bounded25% trail allocation from its paid stock.
+		HexTrailEmitter.emit(self,"mantle")
 		hex_court.apply_product_effects(players, tick, config, collision, combat_events, hex_paths)
+		profile_started = _profile_stage("actor_product_effects", profile_started)
 		hex_court.advance(players, hex_paths, tick, config, combat_events)
 		hex_court.sync_flights(players, projectiles)
+	profile_started = _profile_stage("chemistry_exposure", profile_started)
 	# Discharge follows combat/chemistry, using the current temporary cover view.
 	# One shared helper predicts this finite movement without any control reset.
 	if CapacitorFieldPolicy.discharge_due(capacitor_lanes, tick):
 		reaction_movement.set_surfaces(ReactionMovementWorld.capture_surfaces(reactions, tick), tick)
 		for state: PlayerState in ordered_players:
 			reaction_movement.begin_actor(Vector2i(state.position_x, state.position_y), MovementTuning.PLAYER_RADIUS)
-			CapacitorFieldPolicy.apply_discharge(capacitor_lanes, state, tick, reaction_movement)
+			CapacitorFieldPolicy.apply_discharge(capacitor_lanes, state, tick, reaction_movement, config)
 	if hex_court == null:
 		_exhaust_reacted_cast_payloads()
 	for state: PlayerState in ordered_players:
 		TrainingTargetSystemScript.step_target(state, config)
 	tick += 1
+	_profile_stage("finalize", profile_started)
 	return true
 
 
@@ -352,7 +375,7 @@ func _seed_projectile_trails() -> void:
 	for projectile: ProjectileState in projectiles:
 		# Rapid retains terminal matter but is explicitly trail-free. This is a
 		# delivery rule, independent of its cast-owned reaction strength.
-		if projectile.material_strength <= 0 or bool(CombatTuning.cast_definition(projectile.source_wire_id).get("repeat_while_held", false)):
+		if projectile.material_strength <= 0 or String(CombatTuning.cast_definition(projectile.source_wire_id).get("family", "")) == "rapid":
 			continue
 		if (tick + projectile.entity_id) % ElementChemistrySystem.TRAIL_SAMPLE_TICKS != 0:
 			continue
@@ -434,6 +457,7 @@ func _store_combat_result(spawned: Variant) -> void:
 
 
 static func _idle_defeated(state: PlayerState) -> void:
+	state.spell_status_values.fill(0)
 	state.velocity_x = 0
 	state.velocity_y = 0
 	state.primary_held = false

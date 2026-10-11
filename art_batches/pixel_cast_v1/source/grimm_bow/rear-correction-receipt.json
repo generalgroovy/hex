@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "id": "grimm_bow",
+  "asset": "rear_diagonal_correction",
+  "attempt": 1,
+  "generator": "built_in_imagegen",
+  "status": "rear_direction_correction_with_motion_caveats",
+  "original_output_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b8-7f02-7203-8a99-a2a2e2cf443d\\exec-db48090b-397b-421c-bf1f-0eb09842a92b.png",
+  "reference_paths": [
+    "C:\\Users\\sende\\Projects\\hex\\art_batches\\pixel_cast_v1\\source\\grimm_bow\\source.png"
+  ],
+  "reviewed_native_board": "C:\\Users\\sende\\Projects\\hex\\.godot\\pixel-cast-native-20261002\\grimm_bow.png",
+  "source_dimensions": [
+    1024,
+    1536
+  ],
+  "columns": 2,
+  "rows": 4,
+  "column_mapping": [
+    "NE",
+    "NW"
+  ],
+  "row_mapping": [
+    "idle",
+    "contact_a_requested",
+    "contact_b_requested",
+    "empty_hand_cast"
+  ],
+  "quality_flags": {
+    "visually_inspected": true,
+    "distinct_opposite_rear_diagonal_silhouettes": true,
+    "left_column_hands_aim_upper_right": true,
+    "right_column_hands_aim_upper_left": true,
+    "rear_heads_no_face": true,
+    "identity_and_large_volume_preserved": true,
+    "full_bodies_inside_canvas": true,
+    "rgba_confirmed": true,
+    "sampled_gutters_alpha_zero": true,
+    "walk_contact_leg_opposition_weak_or_ambiguous": true,
+    "far_cast_hand_partly_hidden_by_torso": true
+  },
+  "notes": [
+    "Inspected original and native board before single authorized correction attempt. Core duplicated rear-left silhouette issue is improved: columns now read as opposing rear directions.",
+    "Walking rows differ in arm position, but leg lead does not show clean obvious opposition; exact contactA/B choreography is NOT claimed.",
+    "Casting near open hand clearly reaches in the intended diagonal; far hand is partially hidden by torso. No props or baked effects.",
+    "Original source.png preserved. No assembly recipes/runtime/docs edits, no engines. Original generated file remains in place."
+  ],
+  "exact_prompt": "Use case: precise-object-edit.\nAsset: narrow 2-column x 4-row REAR-FACING CORRECTION STRIP.\nInput image: identity/costume/style reference for GRIMM BOW only. Its existing rear directions are WRONG and must not be copied.\nMake exactly EIGHT complete full-body sprites on actual transparent RGBA, preferably1024x1536 tall. TWO columns, FOUR rows, generous transparent gutters, no text or grid.\nLEFT COLUMN: NE, BACK-RIGHT. Rotate the WHOLE body diagonally away toward the UPPER-RIGHT of the page. Head, torso, feet and casting hands all orient toward upper-right. In the casting row BOTH EMPTY HANDS clearly extend to the RIGHT side of that character, away from camera.\nRIGHT COLUMN: NW, BACK-LEFT. Rotate WHOLE body diagonally away toward UPPER-LEFT of page. Head, torso, feet and casting hands all orient upper-left. Casting BOTH EMPTY HANDS extend to LEFT side, away from camera.\nThese two columns must have OPPOSITE rear-diagonal silhouettes. Do not put two rear-left poses next to one another. Do not make either column a symmetric straight-back view. Do not turn heads independently.\nEvery head shows only BACK of black mane/skull and horn backs; no eyes, no face, no tusks, no front chest. Rear-right and rear-left mean 45degrees to either side of the straight back. Camera stays fixed.\nFOUR action rows top to bottom: idle, distinct contactA (anatomical LEFT FOOT forward / RIGHT ARM forward), distinct opposite contactB (RIGHT FOOT forward / LEFT ARM forward), and empty-hand casting with BOTH arms raised and reaching in the column direction. Make contactA and contactB visibly opposing legs/arms, not near duplicates.\nPreserve EXACT GRIMM BOW identity: LARGE muscular PURPLE TROLL, compact head comparable to other size tiers, two short curved cream temple horns, thick swept black hair/mane covering rear neck; broad chest/shoulders and thick purple arms/legs. Dark brown rounded gold-edged pauldrons with gold studs, dark leather cross-back harness, gold-rimmed brown bracers, layered dark leather hip armor and shin cuffs with gold edging, burgundy-red tattered loincloth, gold belt. Exposed purple clawed toes. NO tail, NO wings, NO fur body, NO weapon or bow.\nMatch reference's charming crisp dense hand-pixel clusters and material ramps. No glossy vector/Flash, smooth painting, outline blur or stretched thin anatomy. Constant body volume, head scale and neutral height across all8 sprites. All feet, fingers and horns whole; each sprite stays comfortably within its own cell, at least30px clear padding around all extremities. No aura, effects, particles, props, scenery, shadow, ground, colored matte or extra row. All unused pixels alpha0."
+}

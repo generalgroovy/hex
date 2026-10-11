@@ -1,0 +1,76 @@
+{
+  "status": "STATIC_VERIFIED",
+  "tool": "Chromium via Playwright",
+  "browser_version": "144.0.7559.96",
+  "entry": "preview-standalone.html fed via Playwright set_content; file URL blocked by sandbox policy",
+  "tests": [
+    {
+      "name": "file_url_load",
+      "status": "BLOCKED_BY_ENVIRONMENT",
+      "evidence": "evidence/file-url-blocked.txt"
+    },
+    {
+      "name": "self_contained_content_load",
+      "status": "PASS"
+    },
+    {
+      "name": "tab_bench",
+      "status": "PASS"
+    },
+    {
+      "name": "tab_paintover",
+      "status": "PASS"
+    },
+    {
+      "name": "tab_phases",
+      "status": "PASS"
+    },
+    {
+      "name": "tab_overlap",
+      "status": "PASS"
+    },
+    {
+      "name": "tab_palette",
+      "status": "PASS"
+    },
+    {
+      "name": "tab_evidence",
+      "status": "PASS"
+    },
+    {
+      "name": "select_controls",
+      "status": "PASS"
+    },
+    {
+      "name": "exposure_control",
+      "status": "PASS"
+    },
+    {
+      "name": "pause_freezes_fixture_clock",
+      "status": "PASS"
+    },
+    {
+      "name": "component_matrix",
+      "status": "PASS",
+      "combinations": 432,
+      "dimensions": "3 camera x 3 phases x 3 heat x 8 directions x 2 modes; each includes three materials and two floors"
+    },
+    {
+      "name": "normal_reduced_raster_support_parity",
+      "status": "PASS",
+      "comparisons": 27,
+      "limitation": "Browser support-mask parity, not Godot collision/raster acceptance"
+    },
+    {
+      "name": "opaque_actor_pixels_above_mixed_materials",
+      "status": "PASS",
+      "comparisons": 48,
+      "limitation": "Before own aim/projectile overlays; source body sprites only, no game motion/occlusion test"
+    }
+  ],
+  "console_errors": [],
+  "remote_requests": [],
+  "godot": "NOT_RUN",
+  "human_acceptance": "NOT_RUN",
+  "description": "Browser component rendering and controls only; no game simulation, FPS acceptance or native runtime capture."
+}

@@ -1,0 +1,1373 @@
+{
+  "schema_version": 1,
+  "task_id": "FLUX-VFX-v1",
+  "handoff_id": "FLUX-VFX-v1",
+  "package_root": "FLUX-VFX-v1",
+  "category": "vfx",
+  "created_at_utc": "2026-09-20T21:36:02.247569+00:00",
+  "status": "PROPOSAL",
+  "input_packet_id": "flux-delegation-20260920",
+  "input_manifest_sha256": "b0a9d9a54f575d6e4f056cdf0b35988ba843779d30bb0deaed130744b44175d1",
+  "input_archive_sha256": "844e314277b3df5d6eccb44ec37b1f6a705b55abfb6c2101fc1fbadb939fc45f",
+  "source_identity_as_reported": "p53-cb264f9358a4",
+  "git_head_as_reported": "a1aa02807626823d0fbc1e25e75441ca3b7f4d36",
+  "git_as_reported": {
+    "branch": "main",
+    "head": "a1aa02807626823d0fbc1e25e75441ca3b7f4d36",
+    "dirty_entries": 1118
+  },
+  "source_identity_recomputed": false,
+  "input_files_read": [
+    "INPUT_MANIFEST.json",
+    "00-START-HERE.md",
+    "01-SHARED-CONTRACT.md",
+    "02-CODEX-INTEGRATOR.md",
+    "05-CHAT-VFX.md",
+    "10-HANDOFF-SCHEMA.json",
+    "11-AUDIT-SNAPSHOT.md",
+    "repository/content/visual/visual_language_v1.json",
+    "repository/content/champions/body_type_profiles_v1.json",
+    "repository/assets/sprites/wireframe_motion_v2/manifest.json",
+    "repository/docs/current-checkpoint.json",
+    "repository/SPECIFICATION.md",
+    "repository/.agent/OVERHAUL-IMPLEMENTATION.md",
+    "repository/src/sim/hex/hex_grid.gd",
+    "repository/src/sim/hex/hex_chemistry_world.gd",
+    "repository/src/sim/hex/hex_recipe_policy.gd",
+    "repository/src/presentation/hex_court_presenter.gd",
+    "repository/src/presentation/wireframe_body_presenter.gd",
+    "repository/src/net/hex_world_snapshot.gd",
+    "repository/docs/evidence/global-hex-20260920/native/01-before-free-casts-1280x720.png",
+    "repository/docs/evidence/global-hex-20260920/native/02-water-away-from-dummy-1280x720.png",
+    "repository/docs/evidence/global-hex-20260920/native/03-steam-normal-1280x720.png",
+    "repository/docs/evidence/global-hex-20260920/native/04-steam-reduced-1280x720.png",
+    "repository/assets/sprites/wireframe_motion_v2/small-base.png",
+    "repository/assets/sprites/wireframe_motion_v2/middle-base.png",
+    "repository/assets/sprites/wireframe_motion_v2/large-base.png",
+    "references/character-style-user-reference.png",
+    "references/hex-campus-concept.png"
+  ],
+  "read_scope_details": "evidence/input-access.json; source excerpts are selected spans, not full code review",
+  "missing_inputs": [
+    "complete buildable Godot project / project.godot",
+    "live Windows checkout and dirty work state",
+    "full renderer caller and layer order",
+    "VisualLanguage implementation",
+    "referenced runtime projectile atlas",
+    "nested chemistry snapshot and wire-packing dependencies",
+    "current client exposure/eligibility presentation binding",
+    "exact saved camera/profile settings"
+  ],
+  "outputs": [
+    {
+      "path": "HANDOFF.md",
+      "role": "integration_notes",
+      "status": "PROPOSAL",
+      "sha256": "bbb630c3237863691f518505a835da364d5b82f435e78518718a15b5c8e02ae3",
+      "bytes": 10623
+    },
+    {
+      "path": "PALETTE-AND-MOTION.md",
+      "role": "documentation",
+      "status": "PROPOSAL",
+      "sha256": "39a8275a13044d79f4079330934d2cc1901b90dbecda6425efd10d0481f3b4ac",
+      "bytes": 4624
+    },
+    {
+      "path": "README.md",
+      "role": "documentation",
+      "status": "PROPOSAL",
+      "sha256": "238447418d678fee48f5a787242935b81c884d5ae5cdc6bd134013c5f35c954c",
+      "bytes": 1958
+    },
+    {
+      "path": "assets/actors/large-base.png",
+      "role": "preview_actor_dependency",
+      "status": "STATIC_VERIFIED",
+      "sha256": "ffe87ab9e595fec61ef0869df897bb6a966c2b03cbcf4ef532aee9b0fd8fb97a",
+      "bytes": 72837,
+      "dimensions": [
+        768,
+        960
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values",
+      "cell_size": [
+        96,
+        96
+      ],
+      "pivot": [
+        48,
+        84
+      ],
+      "provenance": "unchanged supplied active base sheet; preview input, not a new skin"
+    },
+    {
+      "path": "assets/actors/middle-base.png",
+      "role": "preview_actor_dependency",
+      "status": "STATIC_VERIFIED",
+      "sha256": "c887c14bb65ff3a90f1ea92e79e92ff34f2139df89e6c124f56b0bd8ff5695ff",
+      "bytes": 67983,
+      "dimensions": [
+        768,
+        960
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values",
+      "cell_size": [
+        96,
+        96
+      ],
+      "pivot": [
+        48,
+        84
+      ],
+      "provenance": "unchanged supplied active base sheet; preview input, not a new skin"
+    },
+    {
+      "path": "assets/actors/small-base.png",
+      "role": "preview_actor_dependency",
+      "status": "STATIC_VERIFIED",
+      "sha256": "b3802e81da9cff00ae043f7265872e3f2087f1af1e881a55a172106dd07bad66",
+      "bytes": 63748,
+      "dimensions": [
+        768,
+        960
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values",
+      "cell_size": [
+        96,
+        96
+      ],
+      "pivot": [
+        48,
+        84
+      ],
+      "provenance": "unchanged supplied active base sheet; preview input, not a new skin"
+    },
+    {
+      "path": "assets/actors/source-player-aim-restoration.png",
+      "role": "preview_actor_dependency",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "b6d69e979bcce4f0d0760e1a167fc71a305ebb144ea2e4af80fab292f8d0b072",
+      "bytes": 5992,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "assets/motifs/fire-normal.png",
+      "role": "material_animation_atlas",
+      "status": "PROPOSAL",
+      "sha256": "e020133619e78cf2449acfbe6efcf03a4b5ee98050251b57bd7bdda14ab34100",
+      "bytes": 2289,
+      "dimensions": [
+        512,
+        240
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values",
+      "cell_size": [
+        64,
+        80
+      ],
+      "pivot": [
+        32,
+        40
+      ],
+      "columns": 8,
+      "rows": [
+        "ignition",
+        "active",
+        "cooling"
+      ],
+      "frames_per_row": 8,
+      "filter": "nearest; no mipmaps"
+    },
+    {
+      "path": "assets/motifs/fire-reduced.png",
+      "role": "material_animation_atlas",
+      "status": "PROPOSAL",
+      "sha256": "b8241cc56af833364827baf1d200722e5b482da8dfdf48f599a7045492561c91",
+      "bytes": 1946,
+      "dimensions": [
+        512,
+        240
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values",
+      "cell_size": [
+        64,
+        80
+      ],
+      "pivot": [
+        32,
+        40
+      ],
+      "columns": 8,
+      "rows": [
+        "ignition",
+        "active",
+        "cooling"
+      ],
+      "frames_per_row": 8,
+      "filter": "nearest; no mipmaps"
+    },
+    {
+      "path": "assets/motifs/steam-normal.png",
+      "role": "material_animation_atlas",
+      "status": "PROPOSAL",
+      "sha256": "89abbdcfda2ae59a83564aeea418a35f362c98cdbfc1ac6981b78f5bcb22c2d2",
+      "bytes": 5716,
+      "dimensions": [
+        512,
+        400
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values",
+      "cell_size": [
+        64,
+        80
+      ],
+      "pivot": [
+        32,
+        40
+      ],
+      "columns": 8,
+      "rows": [
+        "forming",
+        "active",
+        "hot",
+        "cool",
+        "decaying"
+      ],
+      "frames_per_row": 8,
+      "filter": "nearest; no mipmaps"
+    },
+    {
+      "path": "assets/motifs/steam-reduced.png",
+      "role": "material_animation_atlas",
+      "status": "PROPOSAL",
+      "sha256": "88bcacc3003952b961307758c278d09f9126ce19ee9570904c7f32ac59050a98",
+      "bytes": 4750,
+      "dimensions": [
+        512,
+        400
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values",
+      "cell_size": [
+        64,
+        80
+      ],
+      "pivot": [
+        32,
+        40
+      ],
+      "columns": 8,
+      "rows": [
+        "forming",
+        "active",
+        "hot",
+        "cool",
+        "decaying"
+      ],
+      "frames_per_row": 8,
+      "filter": "nearest; no mipmaps"
+    },
+    {
+      "path": "assets/motifs/water-normal.png",
+      "role": "material_animation_atlas",
+      "status": "PROPOSAL",
+      "sha256": "e1fcfe9050503b01186ecc465e064eb11a30986666e41615f97e5e0061ecce76",
+      "bytes": 2819,
+      "dimensions": [
+        512,
+        240
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values",
+      "cell_size": [
+        64,
+        80
+      ],
+      "pivot": [
+        32,
+        40
+      ],
+      "columns": 8,
+      "rows": [
+        "forming",
+        "active",
+        "decaying"
+      ],
+      "frames_per_row": 8,
+      "filter": "nearest; no mipmaps"
+    },
+    {
+      "path": "assets/motifs/water-reduced.png",
+      "role": "material_animation_atlas",
+      "status": "PROPOSAL",
+      "sha256": "0cbd1a1a207a282d6c8224e338313d458331c0cd11e60ee6fc78a57b3f0d0a8b",
+      "bytes": 2467,
+      "dimensions": [
+        512,
+        240
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values",
+      "cell_size": [
+        64,
+        80
+      ],
+      "pivot": [
+        32,
+        40
+      ],
+      "columns": 8,
+      "rows": [
+        "forming",
+        "active",
+        "decaying"
+      ],
+      "frames_per_row": 8,
+      "filter": "nearest; no mipmaps"
+    },
+    {
+      "path": "assets/reference_inputs/01-before-free-casts-1280x720.png",
+      "role": "historical_gameplay_capture",
+      "status": "STATIC_VERIFIED",
+      "sha256": "d0fb61b44fd3d768a63576596ffbd901bad8cc0e02abab6cb5a73cee4a9a9b54",
+      "bytes": 151328,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values",
+      "provenance": "unchanged supplied historical gameplay capture; not captured during this assignment"
+    },
+    {
+      "path": "assets/reference_inputs/02-water-away-from-dummy-1280x720.png",
+      "role": "historical_gameplay_capture",
+      "status": "STATIC_VERIFIED",
+      "sha256": "5921a321688a646662e2450e52b4ce90f4df0abca635844e310b823ee286d6f3",
+      "bytes": 155605,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values",
+      "provenance": "unchanged supplied historical gameplay capture; not captured during this assignment"
+    },
+    {
+      "path": "assets/reference_inputs/03-steam-normal-1280x720.png",
+      "role": "historical_gameplay_capture",
+      "status": "STATIC_VERIFIED",
+      "sha256": "620a9c77b17d9a1a6bb69d294e63f6b66f07d97d8c3e1c6db0b7dca58265555f",
+      "bytes": 158256,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values",
+      "provenance": "unchanged supplied historical gameplay capture; not captured during this assignment"
+    },
+    {
+      "path": "assets/reference_inputs/04-steam-reduced-1280x720.png",
+      "role": "historical_gameplay_capture",
+      "status": "STATIC_VERIFIED",
+      "sha256": "bd7aba036ff6d548b21642aee7c5327591b372fbad5745fc62626d5f5e226441",
+      "bytes": 157281,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values",
+      "provenance": "unchanged supplied historical gameplay capture; not captured during this assignment"
+    },
+    {
+      "path": "assets/ui/charge.png",
+      "role": "element_identity_icon",
+      "status": "PROPOSAL",
+      "sha256": "094316c42119058d0a8a10bedaf478d3b70167ce8a87b6196d71b6aadcd5c27e",
+      "bytes": 329,
+      "dimensions": [
+        48,
+        48
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "assets/ui/dark.png",
+      "role": "element_identity_icon",
+      "status": "PROPOSAL",
+      "sha256": "23c69c2c4c65b1c5ab6f659acc116050d17200b40189abef7202010defe9da2a",
+      "bytes": 374,
+      "dimensions": [
+        48,
+        48
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "assets/ui/earth.png",
+      "role": "element_identity_icon",
+      "status": "PROPOSAL",
+      "sha256": "aa9457acdda1bbfd904335322f44769e0a07a53af3e4c9611aaadaef87e0a20c",
+      "bytes": 265,
+      "dimensions": [
+        48,
+        48
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "assets/ui/fire.png",
+      "role": "element_identity_icon",
+      "status": "PROPOSAL",
+      "sha256": "b373d34cd48a402e6e1bd1e2882c3dcc7bbba287dc60d47bcc448ed1b315ba3b",
+      "bytes": 395,
+      "dimensions": [
+        48,
+        48
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "assets/ui/ice.png",
+      "role": "element_identity_icon",
+      "status": "PROPOSAL",
+      "sha256": "83584d4a1b44f966e558504bbbe45be64a05eb2a811d5425ca5c290e7630c980",
+      "bytes": 346,
+      "dimensions": [
+        48,
+        48
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "assets/ui/light.png",
+      "role": "element_identity_icon",
+      "status": "PROPOSAL",
+      "sha256": "aa80d3b81a5bec13878283b036aa94497f7ec15873ec0cb919422d774bf6d22e",
+      "bytes": 315,
+      "dimensions": [
+        48,
+        48
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "assets/ui/water.png",
+      "role": "element_identity_icon",
+      "status": "PROPOSAL",
+      "sha256": "c1eb1c797eac835b7bb5eda862e6a5835de3f0220e0dcdda109b19e940255022",
+      "bytes": 366,
+      "dimensions": [
+        48,
+        48
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "assets/ui/wind.png",
+      "role": "element_identity_icon",
+      "status": "PROPOSAL",
+      "sha256": "6d8a2afc8caf0580310b959e61f2f7df2b7928a5b9bf474d2713a4757cd3c1c8",
+      "bytes": 407,
+      "dimensions": [
+        48,
+        48
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "straight RGBA",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/coverage-and-scald.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "eab94765046cf8a375074d23251d56fbcbc3880b45c105dc8075995d18cadb53",
+      "bytes": 124858,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/eight-element-table.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "06e710ae7cf0d997e7665f38308b2fe304e79237b2f3552aa7565f77d88a2db3",
+      "bytes": 262008,
+      "dimensions": [
+        1440,
+        1740
+      ],
+      "pixel_mode": "RGB",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/element-identity-color-grayscale.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "35686386c55b70588b096d65feab24bec06067f819224b035ab16563f199788d",
+      "bytes": 28138,
+      "dimensions": [
+        1280,
+        490
+      ],
+      "pixel_mode": "RGB",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/grayscale-normal-100.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "2b52f494dfc73db15bea3479c1bd5abca581a9f29d99626c60673ef5e5012822",
+      "bytes": 78049,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGB",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/grayscale-reduced-100.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "84bca1dae253d14458ff173ff1af0cefa1be13fe1c0e713980d28af2b87ca3ff",
+      "bytes": 77422,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGB",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/lifecycle-normal.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "55643fadfcbda5d6c6e1ba4f52612f698023f7f2baf214156b7f5fba1a4b924a",
+      "bytes": 195587,
+      "dimensions": [
+        1280,
+        1008
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/lifecycle-reduced.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "facd03b724f41159d5b6334292cf007170406c4405746d7b990555ce97fa4a26",
+      "bytes": 194010,
+      "dimensions": [
+        1280,
+        1008
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/normal-100.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "ad069f36ab2b7c5eac19fcdfefafbad387f4649ce9f735df28c7043d00a91d9c",
+      "bytes": 129218,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/normal-50.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "aad12c2a095aa5cbe7caf3e12c69e07f441b5361f83a04507baf9044ff4467d3",
+      "bytes": 97982,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/normal-75.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "97a2800ffda95048cc5acec79ab53dce7a3dc252c2e16d69d8b32cee5dd4475a",
+      "bytes": 113192,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/paintover-normal-1280x720.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "dd7175af6c65bee757b13bd35eb576385679b1fb15a1344f7fe7b28dd41e0057",
+      "bytes": 277371,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/paintover-reduced-1280x720.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "9c5afc8c2a9362c244af7f0ffde96e60c252d0f5203d49746273c0d140a10be5",
+      "bytes": 277428,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/pilot-lifecycle-normal.apng",
+      "role": "offline_motion_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "6938a550136090ce7f5135fa5aec8e81fd42810581b812b6e6352d2265102975",
+      "bytes": 5259526,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 96,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/pilot-lifecycle-reduced.apng",
+      "role": "offline_motion_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "d23c4edd2037209120a45ef944ec6a881231f2ab1de279712b7626b8f2fc9991",
+      "bytes": 4879203,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 96,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/projectile-strength.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "fbf95abe032d26eab09b0fc9fe68ae60aed9f047a5f757010f4b0ebc5c728e89",
+      "bytes": 111644,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/reduced-100.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "f918d3e8cabed34badeb9afc97db42c4ec4cc408d30f8548e1dec58196e8c751",
+      "bytes": 128583,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/reduced-50.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "c9072ba6ac7ebb9638fcac57cc24c906c8b702ce6ea1d2b6b71cb0c5ffab33a6",
+      "bytes": 97688,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/reduced-75.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "b39a30a5f29874c4f8f1cac2fee90d30427622033c233d666cf4857ab5f67801",
+      "bytes": 112651,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/steam-cool-normal.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "9a4e638537e8fdfec2674d2a73923a7569caf70acc6d2910dce7b414dfa28f92",
+      "bytes": 129280,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/steam-cool-reduced.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "c15bbad901a147abc9ca4acbcecbadd0f19e2e923d7686571c4671aae75c1699",
+      "bytes": 128741,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/steam-hot-normal.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "197a57f6bea5bf86ad4d3a0c4760d7a95b5848cca8ca90eb66d369d154122a60",
+      "bytes": 129240,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/steam-hot-reduced.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "a8ff8b1aaae9edec994f87598f18e1ca5c120aade7c097df5aa0079094f4d92c",
+      "bytes": 128638,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "boards/stress-fixture.png",
+      "role": "offline_visual_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "9c68d0b520f721d32c505b70ff6d6df2370e2d2a9c175f5c0604349dbd5dd665",
+      "bytes": 191552,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "pixel_mode": "RGBA",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "definitions/atlas-layout.json",
+      "role": "material_definitions",
+      "status": "PROPOSAL",
+      "sha256": "68bd02542eac62a59a8367b3e27f43902523485740061c1733d857f9a0bebd3b",
+      "bytes": 2741
+    },
+    {
+      "path": "definitions/materials.proposed.json",
+      "role": "material_definitions",
+      "status": "PROPOSAL",
+      "sha256": "6f4fe84276b7c7aa68560ff3e2d8880ae76a3c19268d0999ebd5e51b31325735",
+      "bytes": 13519
+    },
+    {
+      "path": "definitions/palette.json",
+      "role": "material_definitions",
+      "status": "PROPOSAL",
+      "sha256": "b0707b9c57a23c212d825a8a1aa8c2ae1ae1ff3d1d21b802358f30196f8f4ff7",
+      "bytes": 7199
+    },
+    {
+      "path": "evidence/BUILD-NOTES.md",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "4cf7e422b7176f93300561b854e8e777d981b699fcd9be23d6427c5944461168",
+      "bytes": 1497
+    },
+    {
+      "path": "evidence/INPUT-ACCESS.md",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "17e2460c43a4f1a6714a5b8cafde7651c281f50a3a3c1827015a67ee59f4dfb1",
+      "bytes": 3133
+    },
+    {
+      "path": "evidence/asset-tests-first-run.txt",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "b84867fec3710becca15464222caca94dd39bd1ea6ee8667dba6afd07be628a5",
+      "bytes": 4217
+    },
+    {
+      "path": "evidence/asset-tests.txt",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "b798e61d4d89164e6ed4ed8b7de603352c32cf216c3cac782fdfe7cc1c1cfb62",
+      "bytes": 1975
+    },
+    {
+      "path": "evidence/browser-checks.json",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "b4c3a70114c90cf073dc9f58f8b35df8d96d3a66474343b04f35eff37b5e24a5",
+      "bytes": 1951
+    },
+    {
+      "path": "evidence/browser-mobile.png",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "39703bbc4530be390cf0c9a9249c90bc6db54508ceb70e14c1dd34aeedfbcae0",
+      "bytes": 153410,
+      "dimensions": [
+        390,
+        2000
+      ],
+      "pixel_mode": "RGB",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "evidence/browser-workshop.png",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "142262d4c95f730d1ec0afc24bb8537ec1f3228cd6feb8007b1bd634c23f2d64",
+      "bytes": 310676,
+      "dimensions": [
+        1440,
+        2316
+      ],
+      "pixel_mode": "RGB",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "evidence/file-url-blocked.txt",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "5b90be892560c277baf9b7abad8128939b0c882e0e6c85daea754f4d9bbaf7f2",
+      "bytes": 181
+    },
+    {
+      "path": "evidence/geometry-tests.txt",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "8c596b56247fe68e757a2d80a733714dbe818ca29034e97834eb07e416138786",
+      "bytes": 4401
+    },
+    {
+      "path": "evidence/handoff-schema-reference.json",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "48bce1abe18670f1c1e706d7791945fe0c46317270089d05136ca1fb31c652de",
+      "bytes": 911
+    },
+    {
+      "path": "evidence/input-access.json",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "ab9f94eb97681a708d02ac41935f54eabbec3f6499558b05ed1ac5423b27b757",
+      "bytes": 2020
+    },
+    {
+      "path": "evidence/input-integrity.json",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "9773e3f8837edbeef39a467c6128e07703ac94be9d0c1567b339dd262f76f9c1",
+      "bytes": 21801
+    },
+    {
+      "path": "evidence/input-manifest.json",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "b0a9d9a54f575d6e4f056cdf0b35988ba843779d30bb0deaed130744b44175d1",
+      "bytes": 15498
+    },
+    {
+      "path": "evidence/input-visual-language.json",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "8c7592f50e849ab409951a480a10c965a85ced528b2e7c1ff363574f27db27d1",
+      "bytes": 7712
+    },
+    {
+      "path": "evidence/motion-preview.json",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "e68c453828909684707ad1af5c77ca365ec7b12242de4926b50a96fad0b4f3a5",
+      "bytes": 693
+    },
+    {
+      "path": "evidence/package-check.json",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "b9d2655d0b6066b5bc85bde46d73af5c2725ed2bcca544787a03e1bdaf84d2b3",
+      "bytes": 225
+    },
+    {
+      "path": "evidence/rejected_generation/README.md",
+      "role": "input_or_verification_evidence",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "2b3e21d830a789a856f1878f7a59347d2fb77cc4e85a7201978469113f96a22a",
+      "bytes": 853,
+      "disposition": "REJECTED_DO_NOT_INTEGRATE"
+    },
+    {
+      "path": "evidence/rejected_generation/REJECTED-imagegen-board.png",
+      "role": "input_or_verification_evidence",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "0d13eb79e8167db3b9f62a1ce79e07469e89482447ba15fa68c552d519b92122",
+      "bytes": 2888868,
+      "disposition": "REJECTED_DO_NOT_INTEGRATE",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "pixel_mode": "RGB",
+      "frame_count": 1,
+      "alpha": "opaque",
+      "color_space": "sRGB values"
+    },
+    {
+      "path": "evidence/source-excerpts.md",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "dc1421d69d867b9594af12acf744d7e98ea250130cd27ecd64b9eee02ab5063e",
+      "bytes": 48226
+    },
+    {
+      "path": "evidence/verification.json",
+      "role": "input_or_verification_evidence",
+      "status": "STATIC_VERIFIED",
+      "sha256": "d2ee3f2027ec2460fd960288b37a6dcc04b0d27d79ea738c970439715b50f941",
+      "bytes": 3725
+    },
+    {
+      "path": "index.html",
+      "role": "offline_preview_code",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "c8d3bb75e6d0f1526f0f842eb6a7726f4f87aa180087635373df0a429bc36b79",
+      "bytes": 10117
+    },
+    {
+      "path": "integration/CAPTURE-CHECKLIST.md",
+      "role": "integration_notes",
+      "status": "PROPOSAL",
+      "sha256": "be017c35f81ee8d1b48faef42145fbf8f4c3e577841dcb51dd060d55aa89d38a",
+      "bytes": 2569
+    },
+    {
+      "path": "integration/INTEGRATION.md",
+      "role": "integration_notes",
+      "status": "PROPOSAL",
+      "sha256": "202dec2b534eea9848d13f36857e366e1d516365edd27c6a3246424c93432468",
+      "bytes": 9397
+    },
+    {
+      "path": "preview/app.js",
+      "role": "offline_preview_code",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "5a8046813361fa39e4c513e146874ae4023f02a2b045634b0787bbd529123407",
+      "bytes": 6071
+    },
+    {
+      "path": "preview/data.js",
+      "role": "offline_preview_code",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "52970d9c185f445370d680954d5ece35b70952527fe60c2a3a6713808d5c0018",
+      "bytes": 18106
+    },
+    {
+      "path": "preview/renderer.js",
+      "role": "offline_preview_code",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "585dcf8bba6010748d37588f577e89bfc7dd9054738693cca5c0a8b12844d3c2",
+      "bytes": 22803
+    },
+    {
+      "path": "preview/workshop.css",
+      "role": "offline_preview_code",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "ef1a8b264c18b0584c75a98271c75cce69fdf67ddc4e117377d62558ac35af62",
+      "bytes": 5832
+    },
+    {
+      "path": "preview-standalone.html",
+      "role": "offline_preview_code",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "1f31261edd46eec7914aefb44bd9819b65d6d09826214fa82a7c97490487bc41",
+      "bytes": 2035100
+    },
+    {
+      "path": "requirements-dev.txt",
+      "role": "documentation",
+      "status": "PROPOSAL",
+      "sha256": "478306735a18a37a8f1985d256d683d651fbc3b07fca362b7fecbbbd81f124b7",
+      "bytes": 105
+    },
+    {
+      "path": "tests/capture_previews.py",
+      "role": "offline_test",
+      "status": "STATIC_VERIFIED",
+      "sha256": "9fb1004b25b8738630f175ceaa6bc561e0149886945c3beeca633c4d12f01955",
+      "bytes": 9355
+    },
+    {
+      "path": "tests/test_assets.py",
+      "role": "offline_test",
+      "status": "STATIC_VERIFIED",
+      "sha256": "f29b2db3831aaef91e371a58e4c7e46736c07ad24993412b2a962f6510ff88ca",
+      "bytes": 6197
+    },
+    {
+      "path": "tests/test_geometry.js",
+      "role": "offline_test",
+      "status": "STATIC_VERIFIED",
+      "sha256": "3c468398db79df14bd47a7d070c60d0d23d0d199d45adc7df8e1a9a7ace9b225",
+      "bytes": 6069
+    },
+    {
+      "path": "tools/build_assets.py",
+      "role": "rebuild_or_package_tool",
+      "status": "STATIC_VERIFIED",
+      "sha256": "ab35b974aca430f7d24a4c7788ac283d71ed99e3ff6eb6cc9df9b8a8b44a2237",
+      "bytes": 9328
+    },
+    {
+      "path": "tools/build_identity_board.py",
+      "role": "rebuild_or_package_tool",
+      "status": "STATIC_VERIFIED",
+      "sha256": "f7ca07967dd9f54a7c84fa59ada605c8b1eb4a8f303bf2e1c44b413d4d2cbdbf",
+      "bytes": 2228
+    },
+    {
+      "path": "tools/build_restoration.py",
+      "role": "rebuild_or_package_tool",
+      "status": "STATIC_VERIFIED",
+      "sha256": "c253a609d7d72b7d1d198e058cf9ff9d20abeb78fc55b07b2859618b91f8fed7",
+      "bytes": 1015
+    },
+    {
+      "path": "tools/build_standalone.py",
+      "role": "rebuild_or_package_tool",
+      "status": "STATIC_VERIFIED",
+      "sha256": "367a1cbe9e66f7be18e1af8a2d37c402d401e9aec3d2bb98ec0e9404e5dc2dfe",
+      "bytes": 1123
+    },
+    {
+      "path": "tools/check_package.py",
+      "role": "rebuild_or_package_tool",
+      "status": "STATIC_VERIFIED",
+      "sha256": "17ec6a6c3a8dd6b1592a86d684894cdad27bfd5f6942812dc285c8a5eac45d18",
+      "bytes": 2196
+    },
+    {
+      "path": "tools/embed_data.py",
+      "role": "rebuild_or_package_tool",
+      "status": "STATIC_VERIFIED",
+      "sha256": "30b89014609f16eb9113b299961441186a8a8a165b7ec1da731ed68feb963562",
+      "bytes": 549
+    },
+    {
+      "path": "tools/make_manifest.py",
+      "role": "rebuild_or_package_tool",
+      "status": "STATIC_VERIFIED",
+      "sha256": "12a767f167a2f93f11191f864156e5643d8ab1af015cdd59835efb7e6085bca5",
+      "bytes": 7054
+    },
+    {
+      "path": "tools/render_motion.py",
+      "role": "rebuild_or_package_tool",
+      "status": "STATIC_VERIFIED",
+      "sha256": "f7f261c1fc5ffb7f4dcc1e273ee49236c702598e70d0224635ef78692346c648",
+      "bytes": 2873
+    }
+  ],
+  "decisions": [
+    "Retain all eight source palettes and IDs; Steam is a reaction.",
+    "Keep whole selected cells and legacy semantic seams.",
+    "Water remains a non-damaging reagent.",
+    "Use bounded authored motifs; Steam is open scald, never concealment.",
+    "Read per-region heat and optional actor exposure independently.",
+    "Preserve existing projectile strength-size math and all gameplay values.",
+    "Union coincident same-material base opacity without discarding records.",
+    "All new previews are offline, with no Godot/human acceptance claim."
+  ],
+  "proposed_live_targets": [
+    "content/visual/visual_language_v1.json (lead-mapped schema only)",
+    "src/presentation/hex_court_presenter.gd (Water/Fire/Steam presentation only)",
+    "new lead-owned texture folder, e.g. assets/sprites/element_material_v1/"
+  ],
+  "dependencies": {
+    "preview_runtime": "modern browser; all runtime images/data/code embedded in preview-standalone.html or included alongside index.html",
+    "preview_entrypoints": [
+      "preview-standalone.html",
+      "index.html"
+    ],
+    "development": "Python + Pillow; optional Playwright + Chromium and Node. See evidence/verification.json and requirements-dev.txt.",
+    "font_files_included": false,
+    "network_required_for_preview": false
+  },
+  "tests": [
+    {
+      "name": "Input integrity / preserved source",
+      "status": "STATIC_VERIFIED",
+      "result": "PASS",
+      "records": 63,
+      "source_files_changed": 0,
+      "evidence": [
+        "evidence/input-integrity.json"
+      ]
+    },
+    {
+      "name": "Python pixel/asset/data tests",
+      "status": "STATIC_VERIFIED",
+      "result": "PASS",
+      "tests": 18,
+      "evidence": [
+        "evidence/asset-tests.txt"
+      ]
+    },
+    {
+      "name": "Node geometry/semantic tests",
+      "status": "STATIC_VERIFIED",
+      "result": "PASS",
+      "tests": 26,
+      "evidence": [
+        "evidence/geometry-tests.txt"
+      ]
+    },
+    {
+      "name": "Python and JavaScript syntax",
+      "status": "STATIC_VERIFIED",
+      "result": "PASS",
+      "method": "ast.parse all .py; node --check preview/*.js",
+      "evidence": []
+    },
+    {
+      "name": "Chromium offline component rendering",
+      "status": "STATIC_VERIFIED",
+      "result": "PASS",
+      "state_combinations": 432,
+      "checks_passed": 13,
+      "console_errors": 0,
+      "remote_requests": 0,
+      "evidence": [
+        "evidence/browser-checks.json"
+      ]
+    },
+    {
+      "name": "Normal/reduced raster support masks",
+      "status": "STATIC_VERIFIED",
+      "result": "PASS",
+      "comparisons": 27,
+      "evidence": [
+        "evidence/browser-checks.json"
+      ]
+    },
+    {
+      "name": "Opaque actor pixels above mixed ground materials",
+      "status": "STATIC_VERIFIED",
+      "result": "PASS",
+      "comparisons": 48,
+      "scope": "Before own aim/projectile overlays; three source base-sheet sizes x eight facings x two modes",
+      "evidence": [
+        "evidence/browser-checks.json"
+      ]
+    },
+    {
+      "name": "Package inventory / file hashes / local links",
+      "status": "STATIC_VERIFIED",
+      "result": "PASS",
+      "evidence": [
+        "evidence/package-check.json"
+      ]
+    },
+    {
+      "name": "Direct file-URL browser navigation",
+      "status": "NOT_RUN",
+      "result": "BLOCKED_BY_ENVIRONMENT",
+      "alternative": "Self-contained HTML fed to Chromium using Playwright set_content",
+      "evidence": [
+        "evidence/file-url-blocked.txt"
+      ]
+    },
+    {
+      "name": "Animated lifecycle reference export",
+      "status": "OFFLINE_PREVIEW",
+      "result": "GENERATED",
+      "files": 2,
+      "frames_per_file": 96,
+      "duration_ms": 6400,
+      "evidence": [
+        "evidence/motion-preview.json"
+      ]
+    },
+    {
+      "name": "Godot import / integration / actual gameplay capture",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "name": "Full gate / physics / protocol / network",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "name": "Rendered performance / GPU allocation / human review",
+      "status": "NOT_RUN",
+      "evidence": []
+    }
+  ],
+  "risks": [
+    "Godot import/UV sampling/caller layer mapping are unverified.",
+    "Saved camera transform is missing; native paintover uses a documented 0.75x fit.",
+    "Actor exposure/eligibility is an optional unbound read-only proposal; no new network fields.",
+    "No runtime performance or paid-workload equivalence claim.",
+    "Grounded base-sprite directions are not the full travel/aim animation matrix.",
+    "Same-material coincident fill opacity is unioned; per-record motifs/seams remain and need real dense-capture review.",
+    "Image-generator exploration is rejected; never integrate it."
+  ],
+  "runtime_verification": "NOT_RUN",
+  "godot_verification": "NOT_RUN",
+  "human_acceptance": "NOT_RUN",
+  "source_changes": {
+    "packet_files_changed": 0,
+    "live_repo_files_changed": 0,
+    "commits": 0,
+    "pushes": 0,
+    "checkpoint_promotions": 0
+  },
+  "hash_policy": "Every regular payload file is listed except manifest.json itself; no self-hash. ZIP SHA-256 is external."
+}

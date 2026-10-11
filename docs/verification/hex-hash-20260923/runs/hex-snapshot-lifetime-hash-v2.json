@@ -1,0 +1,2534 @@
+{
+	"active_workload_ticks": 40,
+	"assertions": 671,
+	"authority_hash": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+	"engine": "4.7.1-stable (official)",
+	"failures": 0,
+	"hex_authority_hash": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+	"iterations": 32,
+	"iterations_completed": 32,
+	"lifetime": {
+		"final_tracked_release": {
+			"memory_after_release": {
+				"peak_available": true,
+				"peak_bytes": 156444897,
+				"static_available": true,
+				"static_bytes": 67658870
+			},
+			"prediction_hex_id": -9223371837155572111,
+			"prediction_hex_released": true,
+			"replica_hex_id": -9223371837944101239,
+			"replica_hex_released": true,
+			"replica_id": -9223371837340121501,
+			"replica_released": true
+		},
+		"inclusive_stage_us": {
+			"capture": {
+				"inclusive_us": {
+					"max": 435382,
+					"p50": 383143,
+					"p95": 426223,
+					"p99": 435382,
+					"samples": 32
+				},
+				"samples": [
+					400671,
+					403819,
+					385813,
+					386475,
+					377015,
+					391906,
+					386059,
+					377944,
+					375915,
+					376359,
+					380155,
+					435382,
+					401215,
+					381295,
+					379279,
+					377893,
+					385346,
+					402481,
+					382187,
+					380417,
+					378481,
+					378758,
+					424700,
+					389906,
+					415898,
+					422335,
+					385913,
+					382550,
+					383143,
+					426223,
+					381887,
+					378976
+				]
+			},
+			"prediction_bind": {
+				"inclusive_us": {
+					"max": 142156,
+					"p50": 94926,
+					"p95": 107451,
+					"p99": 142156,
+					"samples": 32
+				},
+				"samples": [
+					93071,
+					99167,
+					97557,
+					94695,
+					92351,
+					100106,
+					92698,
+					92023,
+					93677,
+					97797,
+					99282,
+					142156,
+					97157,
+					96374,
+					93175,
+					97774,
+					107451,
+					92751,
+					92620,
+					94926,
+					91712,
+					98128,
+					91253,
+					93156,
+					96311,
+					98390,
+					90635,
+					96838,
+					105682,
+					95154,
+					92056,
+					93288
+				]
+			},
+			"prepare": {
+				"inclusive_us": {
+					"max": 309548,
+					"p50": 252200,
+					"p95": 299967,
+					"p99": 309548,
+					"samples": 32
+				},
+				"samples": [
+					262505,
+					257840,
+					252702,
+					263335,
+					245191,
+					249203,
+					246627,
+					246857,
+					254458,
+					252200,
+					252800,
+					289723,
+					248952,
+					250425,
+					252330,
+					256862,
+					248623,
+					259148,
+					250055,
+					250047,
+					257683,
+					250812,
+					279992,
+					257997,
+					309548,
+					249480,
+					250020,
+					249779,
+					246944,
+					299967,
+					245884,
+					261510
+				]
+			}
+		},
+		"known_retained_topology_fields": {
+			"claim_limit": "These three named fields are not a count of all live or unreachable worlds.",
+			"count": 3,
+			"expected_each_cells": 2766,
+			"names": [
+				"template",
+				"current_replica",
+				"current_prediction_authority"
+			]
+		},
+		"rows": [
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 400671,
+					"prediction_bind": 93071,
+					"prepare": 262505
+				},
+				"iteration": 0,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371927786092971,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371928574622154,
+					"replica_world_id": -9223371927970642348,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 117003218,
+						"static_available": true,
+						"static_bytes": 67365587
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 127888017,
+						"static_available": true,
+						"static_bytes": 123897138
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 124007679,
+						"static_available": true,
+						"static_bytes": 123912715
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 117003218,
+						"static_available": true,
+						"static_bytes": 95701663
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 117003218,
+						"static_available": true,
+						"static_bytes": 95702323
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 117003218,
+						"static_available": true,
+						"static_bytes": 67351310
+					}
+				},
+				"superseded_release": {
+					"had_previous": false,
+					"prediction_hex_id": 0,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": 0,
+					"replica_hex_released_before_bind": true,
+					"replica_id": 0,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 403819,
+					"prediction_bind": 99167,
+					"prepare": 257840
+				},
+				"iteration": 1,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371924732639660,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371925521168769,
+					"replica_world_id": -9223371924917188980,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 155878705,
+						"static_available": true,
+						"static_bytes": 123913419
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156158025,
+						"static_available": true,
+						"static_bytes": 123906862
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156158025,
+						"static_available": true,
+						"static_bytes": 123923775
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 155878705,
+						"static_available": true,
+						"static_bytes": 152249495
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156158025,
+						"static_available": true,
+						"static_bytes": 123923347
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 127888017,
+						"static_available": true,
+						"static_bytes": 123899142
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371927786092971,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371928574622154,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371927970642348,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 385813,
+					"prediction_bind": 97557,
+					"prepare": 252702
+				},
+				"iteration": 2,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371921813404020,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371922601933247,
+					"replica_world_id": -9223371921997953453,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156158025,
+						"static_available": true,
+						"static_bytes": 123922919
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156167525,
+						"static_available": true,
+						"static_bytes": 123916362
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156167525,
+						"static_available": true,
+						"static_bytes": 123933275
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156158025,
+						"static_available": true,
+						"static_bytes": 152258995
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156167525,
+						"static_available": true,
+						"static_bytes": 123932847
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156158025,
+						"static_available": true,
+						"static_bytes": 123908642
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371924732639660,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371925521168769,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371924917188980,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 386475,
+					"prediction_bind": 94695,
+					"prepare": 263335
+				},
+				"iteration": 3,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371918894168493,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371919682697599,
+					"replica_world_id": -9223371919078717815,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156167525,
+						"static_available": true,
+						"static_bytes": 123932467
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156177073,
+						"static_available": true,
+						"static_bytes": 123925910
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156177073,
+						"static_available": true,
+						"static_bytes": 123942823
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156167525,
+						"static_available": true,
+						"static_bytes": 152268543
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156177073,
+						"static_available": true,
+						"static_bytes": 123942395
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156167525,
+						"static_available": true,
+						"static_bytes": 123918190
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371921813404020,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371922601933247,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371921997953453,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 377015,
+					"prediction_bind": 92351,
+					"prepare": 245191
+				},
+				"iteration": 4,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371915974932855,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371916763462083,
+					"replica_world_id": -9223371916159482288,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156177073,
+						"static_available": true,
+						"static_bytes": 123942063
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156186669,
+						"static_available": true,
+						"static_bytes": 123935506
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156186669,
+						"static_available": true,
+						"static_bytes": 123952419
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156177073,
+						"static_available": true,
+						"static_bytes": 152278139
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156186669,
+						"static_available": true,
+						"static_bytes": 123951991
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156177073,
+						"static_available": true,
+						"static_bytes": 123927786
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371918894168493,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371919682697599,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371919078717815,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 391906,
+					"prediction_bind": 100106,
+					"prepare": 249203
+				},
+				"iteration": 5,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371913055697328,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371913844226429,
+					"replica_world_id": -9223371913240246646,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156186669,
+						"static_available": true,
+						"static_bytes": 123951563
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156196169,
+						"static_available": true,
+						"static_bytes": 123945006
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156196169,
+						"static_available": true,
+						"static_bytes": 123961919
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156186669,
+						"static_available": true,
+						"static_bytes": 152287639
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156196169,
+						"static_available": true,
+						"static_bytes": 123961491
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156186669,
+						"static_available": true,
+						"static_bytes": 123937286
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371915974932855,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371916763462083,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371916159482288,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 386059,
+					"prediction_bind": 92698,
+					"prepare": 246627
+				},
+				"iteration": 6,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371910136461686,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371910924990917,
+					"replica_world_id": -9223371910321011118,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156196169,
+						"static_available": true,
+						"static_bytes": 123961207
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156205813,
+						"static_available": true,
+						"static_bytes": 123954650
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156205813,
+						"static_available": true,
+						"static_bytes": 123971563
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156196169,
+						"static_available": true,
+						"static_bytes": 152297283
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156205813,
+						"static_available": true,
+						"static_bytes": 123971135
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156196169,
+						"static_available": true,
+						"static_bytes": 123946930
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371913055697328,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371913844226429,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371913240246646,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 377944,
+					"prediction_bind": 92023,
+					"prepare": 246857
+				},
+				"iteration": 7,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371907217226158,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371908005755259,
+					"replica_world_id": -9223371907401775477,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156205813,
+						"static_available": true,
+						"static_bytes": 123970707
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156215313,
+						"static_available": true,
+						"static_bytes": 123964150
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156215313,
+						"static_available": true,
+						"static_bytes": 123981063
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156205813,
+						"static_available": true,
+						"static_bytes": 152306783
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156215313,
+						"static_available": true,
+						"static_bytes": 123980635
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156205813,
+						"static_available": true,
+						"static_bytes": 123956430
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371910136461686,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371910924990917,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371910321011118,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 375915,
+					"prediction_bind": 93677,
+					"prepare": 254458
+				},
+				"iteration": 8,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371904297990517,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371905086519751,
+					"replica_world_id": -9223371904482539984,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156215313,
+						"static_available": true,
+						"static_bytes": 123980207
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156224813,
+						"static_available": true,
+						"static_bytes": 123973650
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156224813,
+						"static_available": true,
+						"static_bytes": 123990563
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156215313,
+						"static_available": true,
+						"static_bytes": 152316283
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156224813,
+						"static_available": true,
+						"static_bytes": 123990135
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156215313,
+						"static_available": true,
+						"static_bytes": 123965930
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371907217226158,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371908005755259,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371907401775477,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 376359,
+					"prediction_bind": 97797,
+					"prepare": 252200
+				},
+				"iteration": 9,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371901378755024,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371902167284089,
+					"replica_world_id": -9223371901563304341,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156224813,
+						"static_available": true,
+						"static_bytes": 123989899
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156234505,
+						"static_available": true,
+						"static_bytes": 123983342
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156234505,
+						"static_available": true,
+						"static_bytes": 124000255
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156224813,
+						"static_available": true,
+						"static_bytes": 152325975
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156234505,
+						"static_available": true,
+						"static_bytes": 123999827
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156224813,
+						"static_available": true,
+						"static_bytes": 123975622
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371904297990517,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371905086519751,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371904482539984,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 380155,
+					"prediction_bind": 99282,
+					"prepare": 252800
+				},
+				"iteration": 10,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371898459519381,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371899248048572,
+					"replica_world_id": -9223371898644068761,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156234505,
+						"static_available": true,
+						"static_bytes": 123999399
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156244005,
+						"static_available": true,
+						"static_bytes": 123992842
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156244005,
+						"static_available": true,
+						"static_bytes": 124009755
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156234505,
+						"static_available": true,
+						"static_bytes": 152335475
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156244005,
+						"static_available": true,
+						"static_bytes": 124009327
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156234505,
+						"static_available": true,
+						"static_bytes": 123985122
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371901378755024,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371902167284089,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371901563304341,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 435382,
+					"prediction_bind": 142156,
+					"prepare": 289723
+				},
+				"iteration": 11,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371895540283801,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371896328812936,
+					"replica_world_id": -9223371895724833214,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156244005,
+						"static_available": true,
+						"static_bytes": 124008899
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156253505,
+						"static_available": true,
+						"static_bytes": 124002342
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156253505,
+						"static_available": true,
+						"static_bytes": 124019255
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156244005,
+						"static_available": true,
+						"static_bytes": 152344975
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156253505,
+						"static_available": true,
+						"static_bytes": 124018827
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156244005,
+						"static_available": true,
+						"static_bytes": 123994622
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371898459519381,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371899248048572,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371898644068761,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 401215,
+					"prediction_bind": 97157,
+					"prepare": 248952
+				},
+				"iteration": 12,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371892621048254,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371893409577380,
+					"replica_world_id": -9223371892805597571,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156253505,
+						"static_available": true,
+						"static_bytes": 124018399
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156263005,
+						"static_available": true,
+						"static_bytes": 124011842
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156263005,
+						"static_available": true,
+						"static_bytes": 124028755
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156253505,
+						"static_available": true,
+						"static_bytes": 152354475
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156263005,
+						"static_available": true,
+						"static_bytes": 124028327
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156253505,
+						"static_available": true,
+						"static_bytes": 124004122
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371895540283801,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371896328812936,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371895724833214,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 381295,
+					"prediction_bind": 96374,
+					"prepare": 250425
+				},
+				"iteration": 13,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371889701812611,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371890490341812,
+					"replica_world_id": -9223371889886362025,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156263005,
+						"static_available": true,
+						"static_bytes": 124028187
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156272793,
+						"static_available": true,
+						"static_bytes": 124021630
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156272793,
+						"static_available": true,
+						"static_bytes": 124038543
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156263005,
+						"static_available": true,
+						"static_bytes": 152364263
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156272793,
+						"static_available": true,
+						"static_bytes": 124038115
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156263005,
+						"static_available": true,
+						"static_bytes": 124013910
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371892621048254,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371893409577380,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371892805597571,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 379279,
+					"prediction_bind": 93175,
+					"prepare": 252330
+				},
+				"iteration": 14,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371886782577065,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371887571106192,
+					"replica_world_id": -9223371886967126461,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156272793,
+						"static_available": true,
+						"static_bytes": 124037687
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156282293,
+						"static_available": true,
+						"static_bytes": 124031130
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156282293,
+						"static_available": true,
+						"static_bytes": 124048043
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156272793,
+						"static_available": true,
+						"static_bytes": 152373763
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156282293,
+						"static_available": true,
+						"static_bytes": 124047615
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156272793,
+						"static_available": true,
+						"static_bytes": 124023410
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371889701812611,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371890490341812,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371889886362025,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 377893,
+					"prediction_bind": 97774,
+					"prepare": 256862
+				},
+				"iteration": 15,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371883863341501,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371884651870620,
+					"replica_world_id": -9223371884047890818,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156282293,
+						"static_available": true,
+						"static_bytes": 124047187
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156291793,
+						"static_available": true,
+						"static_bytes": 124040630
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156291793,
+						"static_available": true,
+						"static_bytes": 124057543
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156282293,
+						"static_available": true,
+						"static_bytes": 152383263
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156291793,
+						"static_available": true,
+						"static_bytes": 124057115
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156282293,
+						"static_available": true,
+						"static_bytes": 124032910
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371886782577065,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371887571106192,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371886967126461,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 385346,
+					"prediction_bind": 107451,
+					"prepare": 248623
+				},
+				"iteration": 16,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371880944105858,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371881732635090,
+					"replica_world_id": -9223371881128655305,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156291793,
+						"static_available": true,
+						"static_bytes": 124056687
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156301293,
+						"static_available": true,
+						"static_bytes": 124050130
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156301293,
+						"static_available": true,
+						"static_bytes": 124067043
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156291793,
+						"static_available": true,
+						"static_bytes": 152392763
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156301293,
+						"static_available": true,
+						"static_bytes": 124066615
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156291793,
+						"static_available": true,
+						"static_bytes": 124042410
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371883863341501,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371884651870620,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371884047890818,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 402481,
+					"prediction_bind": 92751,
+					"prepare": 259148
+				},
+				"iteration": 17,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371878024870345,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371878813399430,
+					"replica_world_id": -9223371878209419648,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156301293,
+						"static_available": true,
+						"static_bytes": 124066187
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156310793,
+						"static_available": true,
+						"static_bytes": 124059630
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156310793,
+						"static_available": true,
+						"static_bytes": 124076543
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156301293,
+						"static_available": true,
+						"static_bytes": 152402263
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156310793,
+						"static_available": true,
+						"static_bytes": 124076115
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156301293,
+						"static_available": true,
+						"static_bytes": 124051910
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371880944105858,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371881732635090,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371881128655305,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 382187,
+					"prediction_bind": 92620,
+					"prepare": 250055
+				},
+				"iteration": 18,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371875105634688,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371875894163878,
+					"replica_world_id": -9223371875290184128,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156310793,
+						"static_available": true,
+						"static_bytes": 124075687
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156320293,
+						"static_available": true,
+						"static_bytes": 124069130
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156320293,
+						"static_available": true,
+						"static_bytes": 124086043
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156310793,
+						"static_available": true,
+						"static_bytes": 152411763
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156320293,
+						"static_available": true,
+						"static_bytes": 124085615
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156310793,
+						"static_available": true,
+						"static_bytes": 124061410
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371878024870345,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371878813399430,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371878209419648,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 380417,
+					"prediction_bind": 94926,
+					"prepare": 250047
+				},
+				"iteration": 19,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371872186399168,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371872974928306,
+					"replica_world_id": -9223371872370948478,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156320293,
+						"static_available": true,
+						"static_bytes": 124085619
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156330225,
+						"static_available": true,
+						"static_bytes": 124079062
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156330225,
+						"static_available": true,
+						"static_bytes": 124095975
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156320293,
+						"static_available": true,
+						"static_bytes": 152421695
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156330225,
+						"static_available": true,
+						"static_bytes": 124095547
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156320293,
+						"static_available": true,
+						"static_bytes": 124071342
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371875105634688,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371875894163878,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371875290184128,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 378481,
+					"prediction_bind": 91712,
+					"prepare": 257683
+				},
+				"iteration": 20,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371869267163518,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371870055692690,
+					"replica_world_id": -9223371869451712964,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156330225,
+						"static_available": true,
+						"static_bytes": 124095119
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156339725,
+						"static_available": true,
+						"static_bytes": 124088562
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156339725,
+						"static_available": true,
+						"static_bytes": 124105475
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156330225,
+						"static_available": true,
+						"static_bytes": 152431195
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156339725,
+						"static_available": true,
+						"static_bytes": 124105047
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156330225,
+						"static_available": true,
+						"static_bytes": 124080842
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371872186399168,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371872974928306,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371872370948478,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 378758,
+					"prediction_bind": 98128,
+					"prepare": 250812
+				},
+				"iteration": 21,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371866347928004,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371867136457114,
+					"replica_world_id": -9223371866532477308,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156339725,
+						"static_available": true,
+						"static_bytes": 124104619
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156349225,
+						"static_available": true,
+						"static_bytes": 124098062
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156349225,
+						"static_available": true,
+						"static_bytes": 124114975
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156339725,
+						"static_available": true,
+						"static_bytes": 152440695
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156349225,
+						"static_available": true,
+						"static_bytes": 124114547
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156339725,
+						"static_available": true,
+						"static_bytes": 124090342
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371869267163518,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371870055692690,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371869451712964,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 424700,
+					"prediction_bind": 91253,
+					"prepare": 279992
+				},
+				"iteration": 22,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371863428692348,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371864217221582,
+					"replica_world_id": -9223371863613241798,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156349225,
+						"static_available": true,
+						"static_bytes": 124114119
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156358725,
+						"static_available": true,
+						"static_bytes": 124107562
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156358725,
+						"static_available": true,
+						"static_bytes": 124124475
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156349225,
+						"static_available": true,
+						"static_bytes": 152450195
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156358725,
+						"static_available": true,
+						"static_bytes": 124124047
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156349225,
+						"static_available": true,
+						"static_bytes": 124099842
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371866347928004,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371867136457114,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371866532477308,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 389906,
+					"prediction_bind": 93156,
+					"prepare": 257997
+				},
+				"iteration": 23,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371860509456838,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371861297985924,
+					"replica_world_id": -9223371860694006138,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156358725,
+						"static_available": true,
+						"static_bytes": 124123619
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156368225,
+						"static_available": true,
+						"static_bytes": 124117062
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156368225,
+						"static_available": true,
+						"static_bytes": 124133975
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156358725,
+						"static_available": true,
+						"static_bytes": 152459695
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156368225,
+						"static_available": true,
+						"static_bytes": 124133547
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156358725,
+						"static_available": true,
+						"static_bytes": 124109342
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371863428692348,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371864217221582,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371863613241798,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 415898,
+					"prediction_bind": 96311,
+					"prepare": 309548
+				},
+				"iteration": 24,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371857590221178,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371858378750376,
+					"replica_world_id": -9223371857774770632,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156368225,
+						"static_available": true,
+						"static_bytes": 124133119
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156377725,
+						"static_available": true,
+						"static_bytes": 124126562
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156377725,
+						"static_available": true,
+						"static_bytes": 124143475
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156368225,
+						"static_available": true,
+						"static_bytes": 152469195
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156377725,
+						"static_available": true,
+						"static_bytes": 124143047
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156368225,
+						"static_available": true,
+						"static_bytes": 124118842
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371860509456838,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371861297985924,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371860694006138,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 422335,
+					"prediction_bind": 98390,
+					"prepare": 249480
+				},
+				"iteration": 25,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371854670985672,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371855459514831,
+					"replica_world_id": -9223371854855534968,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156377725,
+						"static_available": true,
+						"static_bytes": 124142619
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156387225,
+						"static_available": true,
+						"static_bytes": 124136062
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156387225,
+						"static_available": true,
+						"static_bytes": 124152975
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156377725,
+						"static_available": true,
+						"static_bytes": 152478695
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156387225,
+						"static_available": true,
+						"static_bytes": 124152547
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156377725,
+						"static_available": true,
+						"static_bytes": 124128342
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371857590221178,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371858378750376,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371857774770632,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 385913,
+					"prediction_bind": 90635,
+					"prepare": 250020
+				},
+				"iteration": 26,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371851751750008,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371852540279188,
+					"replica_world_id": -9223371851936299451,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156387225,
+						"static_available": true,
+						"static_bytes": 124152119
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156396725,
+						"static_available": true,
+						"static_bytes": 124145562
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156396725,
+						"static_available": true,
+						"static_bytes": 124162475
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156387225,
+						"static_available": true,
+						"static_bytes": 152488195
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156396725,
+						"static_available": true,
+						"static_bytes": 124162047
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156387225,
+						"static_available": true,
+						"static_bytes": 124137842
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371854670985672,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371855459514831,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371854855534968,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 382550,
+					"prediction_bind": 96838,
+					"prepare": 249779
+				},
+				"iteration": 27,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371848832514491,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371849621043627,
+					"replica_world_id": -9223371849017063817,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156396725,
+						"static_available": true,
+						"static_bytes": 124161619
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156406225,
+						"static_available": true,
+						"static_bytes": 124155062
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156406225,
+						"static_available": true,
+						"static_bytes": 124171975
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156396725,
+						"static_available": true,
+						"static_bytes": 152497695
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156406225,
+						"static_available": true,
+						"static_bytes": 124171547
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156396725,
+						"static_available": true,
+						"static_bytes": 124147342
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371851751750008,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371852540279188,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371851936299451,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 383143,
+					"prediction_bind": 105682,
+					"prepare": 246944
+				},
+				"iteration": 28,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371845913278857,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371846701808044,
+					"replica_world_id": -9223371846097828259,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156406225,
+						"static_available": true,
+						"static_bytes": 124171791
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156416397,
+						"static_available": true,
+						"static_bytes": 124165234
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156416397,
+						"static_available": true,
+						"static_bytes": 124182147
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156406225,
+						"static_available": true,
+						"static_bytes": 152507867
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156416397,
+						"static_available": true,
+						"static_bytes": 124181719
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156406225,
+						"static_available": true,
+						"static_bytes": 124157514
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371848832514491,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371849621043627,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371849017063817,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 426223,
+					"prediction_bind": 95154,
+					"prepare": 299967
+				},
+				"iteration": 29,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371842994043299,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371843782572404,
+					"replica_world_id": -9223371843178592693,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156416397,
+						"static_available": true,
+						"static_bytes": 124181291
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156425897,
+						"static_available": true,
+						"static_bytes": 124174734
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156425897,
+						"static_available": true,
+						"static_bytes": 124191647
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156416397,
+						"static_available": true,
+						"static_bytes": 152517367
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156425897,
+						"static_available": true,
+						"static_bytes": 124191219
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156416397,
+						"static_available": true,
+						"static_bytes": 124167014
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371845913278857,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371846701808044,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371846097828259,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 381887,
+					"prediction_bind": 92056,
+					"prepare": 245884
+				},
+				"iteration": 30,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371840074807733,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371840863336877,
+					"replica_world_id": -9223371840259357071,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156425897,
+						"static_available": true,
+						"static_bytes": 124190791
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156435397,
+						"static_available": true,
+						"static_bytes": 124184234
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156435397,
+						"static_available": true,
+						"static_bytes": 124201147
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156425897,
+						"static_available": true,
+						"static_bytes": 152526867
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156435397,
+						"static_available": true,
+						"static_bytes": 124200719
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156425897,
+						"static_available": true,
+						"static_bytes": 124176514
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371842994043299,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371843782572404,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371843178592693,
+					"replica_released_before_bind": true
+				}
+			},
+			{
+				"hashes": {
+					"prediction_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"replica_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+					"source_hex": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+					"source_world": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce"
+				},
+				"inclusive_us": {
+					"capture": 378976,
+					"prediction_bind": 93288,
+					"prepare": 261510
+				},
+				"iteration": 31,
+				"known_retained": {
+					"prediction_cells": 2766,
+					"prediction_hex_id": -9223371837155572111,
+					"replica_cells": 2766,
+					"replica_hex_id": -9223371837944101239,
+					"replica_world_id": -9223371837340121501,
+					"template_cells": 2766,
+					"template_hex_id": -9223371975282391523,
+					"template_world_id": -9223371975534049783
+				},
+				"memory": {
+					"after_capture": {
+						"peak_available": true,
+						"peak_bytes": 156435397,
+						"static_available": true,
+						"static_bytes": 124200291
+					},
+					"after_helper_scope": {
+						"peak_available": true,
+						"peak_bytes": 156444897,
+						"static_available": true,
+						"static_bytes": 124193734
+					},
+					"after_prediction_bind": {
+						"peak_available": true,
+						"peak_bytes": 156444897,
+						"static_available": true,
+						"static_bytes": 124210647
+					},
+					"after_prepare": {
+						"peak_available": true,
+						"peak_bytes": 156435397,
+						"static_available": true,
+						"static_bytes": 152536367
+					},
+					"after_replica_replace_before_bind": {
+						"peak_available": true,
+						"peak_bytes": 156444897,
+						"static_available": true,
+						"static_bytes": 124210219
+					},
+					"before_capture": {
+						"peak_available": true,
+						"peak_bytes": 156435397,
+						"static_available": true,
+						"static_bytes": 124186014
+					}
+				},
+				"superseded_release": {
+					"had_previous": true,
+					"prediction_hex_id": -9223371840074807733,
+					"prediction_hex_released_after_bind": true,
+					"replica_hex_id": -9223371840863336877,
+					"replica_hex_released_before_bind": true,
+					"replica_id": -9223371840259357071,
+					"replica_released_before_bind": true
+				}
+			}
+		]
+	},
+	"memory_reporting": "Every memory observation calls OS.get_static_memory_usage and OS.get_static_memory_peak_usage outside timers. A nonpositive value is reported as null with the matching availability flag false; it is not presented as zero measured usage. Replacement follows production order: install the prepared replica and verify the superseded replica releases before prediction bind; then bind and verify the superseded prediction authority releases. after_helper_scope additionally observes release of call-local snapshot/byte/weak-reference structures. The retained baseline snapshot/byte buffer and growing 32-row receipt arrays are diagnostic observer overhead included in static memory.",
+	"process_memory_bytes": {
+		"end": {
+			"peak_available": true,
+			"peak_bytes": 156444897,
+			"static_available": true,
+			"static_bytes": 67666026
+		},
+		"start": {
+			"peak_available": true,
+			"peak_bytes": 117003218,
+			"static_available": true,
+			"static_bytes": 67347610
+		}
+	},
+	"profile_version": "hex-snapshot-lifetime-v1",
+	"retention_limit": "Known retained cardinalities describe only the explicitly held template/source, current replica, and current prediction authority. Weak references cover only explicitly tracked prepared/replaced replicas and prediction authorities. Capture's internal validation candidate is not exposed for weak tracking. Static-memory changes or slopes do not prove a leak, liveness, reachability, allocator retention, or cause.",
+	"schema_version": 1,
+	"scope": "Single-process isolated repeat diagnostic of actual HexWorldSnapshot.capture/prepare and ClientPrediction.bind_hex_world calls on one unchanged legal 2,766-cell, eight-actor, 29-active/49-stored authority. The frozen source also serves as the trusted template, so host capture and client-style replacement are intentionally combined in one process; memory levels are not a role-separated network heap. It is not the application scheduler, actual 60 Hz snapshot cadence, sockets, the 300-second network lifecycle, rendered performance, multiplayer capacity, allocation attribution, or acceptance.",
+	"seed": 906190,
+	"snapshot_variant_bytes": 7908,
+	"snapshot_wire_bytes": 7908,
+	"source_sha256": {
+		"content/abilities/foundation_abilities_v1.json": "4505c483682a20b996b986f1ca2469b49baaefdc572b9f922c32dcbb03d310dc",
+		"content/champions/foundation_champions_v1.json": "23a1f624a9de6c2bf88dc76578a69b23613465707605528e2988e209abba458a",
+		"content/maps/sanctum_campus_g2_v1.json": "496c96c80168dd6e4053e03ece86b8a8f010a44c24c5fca7eaebe8cd13b51cea",
+		"src/net/client_prediction.gd": "706696e60cfa2ee43bed7afbfa64d27a94c07a26fb82e36de79454fae47fa126",
+		"src/net/hex_chemistry_snapshot.gd": "722cdc67a124645f1656b14fc602158fd50e72459f349f4780ef85625e7ed4f1",
+		"src/net/hex_snapshot_wire_packing.gd": "d3d5cfb801811244eca8113174e931820266835f2733329368454a32849ed07b",
+		"src/net/hex_world_snapshot.gd": "5d1f1e68e9998b170b41cba6873de0b3870bd9abc5931a2147c7db7f53217fa3",
+		"src/sim/core/sim_world.gd": "2a6340d3d12d25c1c06b786c1e6ce8d96f8032ed427dbf431e1ec175b3191baa",
+		"src/sim/hex/hex_chemistry_world.gd": "7582964d1c889f1ceaf5114ff6600eb3ead842318e4cf6db95aed1d82985cb7b",
+		"tests/performance/profile_hex_snapshot_lifetime.gd": "62a1af0111f6a64af824f940bf4036eeec315f2d4b83686302a79c28d7c927d1",
+		"tests/performance/profile_unified_wellspring.gd": "7f524c49f7104f7a549c964f759248c0b1d8abff8da1d12e19a0c7ae728ee6b9"
+	},
+	"timing_semantics": "Each inclusive stage timer surrounds one complete named production call. Equality, byte/hash/ownership checks, weak-release checks, memory sampling, fixture work, and the one reversible independence mutation are outside stage timers. Every iteration captures and reconstructs the same frozen legally admitted source; no fictitious paid admissions are added.",
+	"topology_cells": 2766,
+	"warmup_ticks": 120,
+	"workload": {
+		"actors": 8,
+		"metrics": {
+			"admitted": 8,
+			"deposited": 30,
+			"exposure_queries": 120,
+			"matter_consumed": 2400,
+			"matter_expired": 0,
+			"matter_paid": 4800,
+			"modifiers": 0,
+			"reactions": 2,
+			"refused": 0,
+			"requested": 8
+		},
+		"occupancy": {
+			"active_cells": 29,
+			"product_quantity": 2400,
+			"source_quantity": 2400
+		},
+		"stored_material_cells": 49
+	},
+	"workload_version": "unified-wellspring-profile-v1/dense-crucible-first-40",
+	"world_tick": 160
+}

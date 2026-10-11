@@ -6,6 +6,7 @@ func run() -> int:
 	_test_sector_selection_and_allowed_cells()
 	_test_canonical_membership_and_sweep()
 	_test_traversal_bounds_match_old_sweep_oracle()
+	_test_local_traversal_sparse_and_translated()
 	_test_whole_cell_contacts()
 	return finish("hex-selection")
 
@@ -13,20 +14,20 @@ func run() -> int:
 func _test_positive_area_disk_selection() -> void:
 	var center_tiny := HexFootprint.selected_cells(HexFootprint.disk(Vector2i.ZERO, 1), Vector2i.ZERO)
 	equal(center_tiny, [Vector2i.ZERO], "one-unit disk selects its containing hex without nearest-cell expansion")
-	var face := Vector2i(24_000, 0)
+	var face := Vector2i(12_000, 0)
 	equal(
 		HexFootprint.selected_cells(HexFootprint.disk(face, 1), Vector2i.ZERO),
 		[Vector2i.ZERO, Vector2i(1, 0)],
 		"positive half-disks on both sides of a face select both whole cells")
-	var vertex := Vector2i(24_000, 13_856)
+	var vertex := Vector2i(12_000, 6_928)
 	equal(
 		HexFootprint.selected_cells(HexFootprint.disk(vertex, 1), Vector2i.ZERO),
 		[Vector2i.ZERO, Vector2i(0, 1), Vector2i(1, 0)],
 		"a tiny disk at a vertex selects exactly the three positive-area owners")
-	var tangent := HexFootprint.selected_cells(HexFootprint.disk(Vector2i(34_000, 0), 10_000), Vector2i.ZERO)
+	var tangent := HexFootprint.selected_cells(HexFootprint.disk(Vector2i(22_000, 0), 10_000), Vector2i.ZERO)
 	check(not tangent.has(Vector2i.ZERO), "exact disk-to-face tangency does not create a whole cell")
 	check(tangent.has(Vector2i(1, 0)), "the same disk selects the cell containing positive area")
-	var zero_point := Vector2i(0, -27_712)
+	var zero_point := Vector2i(0, -13_856)
 	equal(
 		HexFootprint.selected_cells(HexFootprint.disk(zero_point, 0), Vector2i.ZERO),
 		[Vector2i(0, -1)],
@@ -38,7 +39,7 @@ func _test_positive_area_disk_selection() -> void:
 
 
 func _test_sector_selection_and_allowed_cells() -> void:
-	var face := Vector2i(24_000, 0)
+	var face := Vector2i(12_000, 0)
 	var outward := HexFootprint.sector(face, Vector2i(1_000, 0), 10_000, 500_000)
 	var selected := HexFootprint.selected_cells(outward, Vector2i.ZERO)
 	check(selected.has(Vector2i(1, 0)), "sector with an apex on a face selects the cell containing its positive wedge")
@@ -56,14 +57,14 @@ func _test_sector_selection_and_allowed_cells() -> void:
 
 
 # These expectations come directly from the authored face x = origin.x +
-# 24_000. The 3-4-5 aims make one cone side exactly vertical or put the left
+# 12_000. The 3-4-5 aims make one cone side exactly vertical or put the left
 # face normal strictly inside the cone; no production selection helper is used
 # to derive the expected cells.
 func _test_translated_rotated_sector_boundaries() -> void:
 	var grid_origin := Vector2i(2_000_000, -1_500_000)
 	var left := Vector2i.ZERO
 	var right := Vector2i(1, 0)
-	var face_start := grid_origin + Vector2i(24_000, 0)
+	var face_start := grid_origin + Vector2i(12_000, 0)
 	# aim=(600,800), cos=4/5: upper side is the +Y ray on the shared
 	# vertical face and the cone interior is wholly on the right side.
 	var side_tangent := HexFootprint.sector(face_start, Vector2i(600, 800), 10_000, 640_000)
@@ -77,40 +78,40 @@ func _test_translated_rotated_sector_boundaries() -> void:
 	# The rotated aim leaves the direct -X radius strictly inside this wider
 	# cone. A 10,000 radius from x=34,000 is terminal-arc tangent to the face;
 	# adding one unit crosses it with positive area.
-	var arc_tangent := HexFootprint.sector(grid_origin + Vector2i(34_000, 0), Vector2i(-800, 600), 10_000, 500_000)
+	var arc_tangent := HexFootprint.sector(grid_origin + Vector2i(22_000, 0), Vector2i(-800, 600), 10_000, 500_000)
 	check(not HexFootprint.selected_cells(arc_tangent, grid_origin).has(left), "far-translated rotated terminal-arc tangency does not select the left cell")
-	var arc_overlap := HexFootprint.sector(grid_origin + Vector2i(34_000, 0), Vector2i(-800, 600), 10_001, 500_000)
+	var arc_overlap := HexFootprint.sector(grid_origin + Vector2i(22_000, 0), Vector2i(-800, 600), 10_001, 500_000)
 	check(HexFootprint.selected_cells(arc_overlap, grid_origin).has(left), "one-unit terminal-arc penetration selects the left cell")
 	# Independent exact-integer sliver: sqrt(aim^2-threshold)=199, so the lower
 	# cone ray has direction (960399,-398000). At the bottom cell vertex the
 	# strict side cross is only +9, while radius squared is still strictly below
 	# 70,000 squared. That proves positive area despite a ~1e-10 clipped triangle.
-	var sub_float_area := HexFootprint.sector(Vector2i(-56_970, 51_321), Vector2i(1_000, -199), 70_000, 1_000_000)
+	var sub_float_area := HexFootprint.sector(Vector2i(-56_970, 37_465), Vector2i(1_000, -199), 70_000, 1_000_000)
 	check(HexFootprint.selected_cells(sub_float_area, Vector2i.ZERO).has(Vector2i.ZERO), "exact strict vertex retains a positive sector sliver below the former Float64 area cutoff")
 	# Independent exact radial cap: squared distance from the sector origin to
 	# the upper-right edge is 1732^2 / 2999956 = 1 - 132/2999956. The closest
 	# point lies strictly inside the cone, so this sub-.001 margin is real area.
-	var sub_float_radius := HexFootprint.sector(Vector2i(10_502, -21_650), Vector2i(-500, 866), 1, 820_000)
+	var sub_float_radius := HexFootprint.sector(Vector2i(10_502, -7_794), Vector2i(-500, 866), 1, 820_000)
 	check(HexFootprint.selected_cells(sub_float_radius, Vector2i.ZERO).has(Vector2i.ZERO), "exact strict edge distance retains a positive radius-one sector cap")
 
 
 func _test_canonical_membership_and_sweep() -> void:
 	var left := {Vector2i.ZERO: 1}
 	var right := {Vector2i(1, 0): 1}
-	var face := Vector2i(24_000, 0)
+	var face := Vector2i(12_000, 0)
 	check(HexFootprint.contains_selected(left, Vector2i.ZERO, face), "shared face belongs to its canonical selected owner")
 	check(not HexFootprint.contains_selected(right, Vector2i.ZERO, face), "noncanonical neighbor cannot claim the shared face")
 	check(HexFootprint.contains_selected(right, Vector2i.ZERO, face + Vector2i(1, 0)), "one fixed unit across the face belongs to the right selected cell")
 	equal(HexFootprint.traversed_selected_cells(right, Vector2i.ZERO, face, face), [], "stationary noncanonical face returns no traversed selected cell")
 	equal(HexFootprint.traversed_selected_cells(left, Vector2i.ZERO, face, face), [Vector2i.ZERO], "stationary canonical face resolves directly to its selected owner")
-	equal(HexFootprint.traversed_selected_cells(right, Vector2i.ZERO, Vector2i.ZERO, Vector2i(48_000, 0)), [Vector2i(1, 0)], "one segment sweep reports the crossed selected cell")
-	equal(HexFootprint.traversed_selected_cells(right, Vector2i.ZERO, Vector2i(24_000, -10_000), Vector2i(24_000, 10_000)), [], "boundary-only traversal excludes the noncanonical selected neighbor")
-	var crossing := HexFootprint.selected_segment_interval(right, Vector2i.ZERO, Vector2i.ZERO, Vector2i(48_000, 0))
+	equal(HexFootprint.traversed_selected_cells(right, Vector2i.ZERO, Vector2i.ZERO, Vector2i(24_000, 0)), [Vector2i(1, 0)], "one segment sweep reports the crossed selected cell")
+	equal(HexFootprint.traversed_selected_cells(right, Vector2i.ZERO, Vector2i(12_000, -10_000), Vector2i(12_000, 10_000)), [], "boundary-only traversal excludes the noncanonical selected neighbor")
+	var crossing := HexFootprint.selected_segment_interval(right, Vector2i.ZERO, Vector2i.ZERO, Vector2i(24_000, 0))
 	check(bool(crossing.get("hit", false)), "continuous segment finds the first selected whole-cell traversal")
 	check(absf(float(crossing.get("low", 0.0)) - 0.5) <= 1.0e-12, "whole-cell traversal retains the exact face entry parameter")
 	equal(crossing.get("cell", Vector2i.ZERO), Vector2i(1, 0), "entry reports the traversed selected cell")
-	equal(crossing.get("point", Vector2i.ZERO), Vector2i(24_001, 0), "open face entry quantizes one fixed unit into its canonical selected owner")
-	var boundary_only := HexFootprint.selected_segment_interval(right, Vector2i.ZERO, Vector2i(24_000, -10_000), Vector2i(24_000, 10_000))
+	equal(crossing.get("point", Vector2i.ZERO), Vector2i(12_001, 0), "open face entry quantizes one fixed unit into its canonical selected owner")
+	var boundary_only := HexFootprint.selected_segment_interval(right, Vector2i.ZERO, Vector2i(12_000, -10_000), Vector2i(12_000, 10_000))
 	check(not bool(boundary_only.get("hit", false)), "a segment along a shared face is rejected for the noncanonical neighbor")
 	check(not bool(HexFootprint.selected_segment_interval(right, Vector2i.ZERO, face, face).get("hit", false)), "stationary shared-face contact follows canonical ownership")
 	check(bool(HexFootprint.selected_segment_interval(left, Vector2i.ZERO, face, face).get("hit", false)), "stationary shared-face contact remains eligible for the canonical owner")
@@ -119,16 +120,16 @@ func _test_canonical_membership_and_sweep() -> void:
 func _test_whole_cell_contacts() -> void:
 	var left := {Vector2i.ZERO: 1}
 	var right := {Vector2i(1, 0): 1}
-	var tangent_shape := HexFootprint.disk(Vector2i(34_000, 0), 10_000)
-	var tangent := HexFootprint.contact_shape_selected(tangent_shape, left, Vector2i.ZERO, Vector2i(34_000, 0))
+	var tangent_shape := HexFootprint.disk(Vector2i(22_000, 0), 10_000)
+	var tangent := HexFootprint.contact_shape_selected(tangent_shape, left, Vector2i.ZERO, Vector2i(22_000, 0))
 	check(not tangent.is_empty(), "continuous shape contact retains exact tangency with a selected whole cell")
-	equal(tangent.get("point", Vector2i.ZERO), Vector2i(24_000, 0), "tangent contact reports the continuous face witness")
+	equal(tangent.get("point", Vector2i.ZERO), Vector2i(12_000, 0), "tangent contact reports the continuous face witness")
 	equal(tangent.get("cell", Vector2i(9, 9)), Vector2i.ZERO, "tangent face witness names its canonical selected owner")
 	equal(HexFootprint.shared_selected_contact(left, right, Vector2i.ZERO, Vector2i.ZERO), {}, "different whole cells have no persistent same-cell chemistry")
-	var shared := HexFootprint.shared_selected_contact(right, {Vector2i(1, 0): 2}, Vector2i.ZERO, Vector2i(24_000, 0))
+	var shared := HexFootprint.shared_selected_contact(right, {Vector2i(1, 0): 2}, Vector2i.ZERO, Vector2i(12_000, 0))
 	check(not shared.is_empty(), "matching selected cells produce a persistent chemistry witness")
 	equal(shared.get("cell", Vector2i.ZERO), Vector2i(1, 0), "same-cell chemistry reports the shared cell")
-	equal(shared.get("point", Vector2i.ZERO), Vector2i(24_001, 0), "same-cell boundary preference moves by one unit into the canonical shared owner")
+	equal(shared.get("point", Vector2i.ZERO), Vector2i(12_001, 0), "same-cell boundary preference moves by one unit into the canonical shared owner")
 
 
 func _test_traversal_bounds_match_old_sweep_oracle() -> void:
@@ -140,11 +141,11 @@ func _test_traversal_bounds_match_old_sweep_oracle() -> void:
 	var cases: Array[Array] = [
 		[grid_origin + Vector2i(-2_000, 1_000), grid_origin + Vector2i(3_000, -1_000)],
 		[grid_origin + Vector2i(-900_000, 0), grid_origin + Vector2i(900_000, 0)],
-		[grid_origin + Vector2i(24_000, -120_000), grid_origin + Vector2i(24_000, 120_000)],
+		[grid_origin + Vector2i(12_000, -120_000), grid_origin + Vector2i(12_000, 120_000)],
 		[grid_origin + Vector2i(-480_000, -410_000), grid_origin + Vector2i(510_000, 390_000)],
-		[grid_origin + Vector2i(-24_000, -13_856), grid_origin + Vector2i(168_000, -13_856)],
+		[grid_origin + Vector2i(-12_000, -6_928), grid_origin + Vector2i(168_000, -6_928)],
 		[grid_origin + Vector2i(-1_200_000, -800_000), grid_origin + Vector2i(-900_000, -600_000)],
-		[grid_origin + Vector2i(24_000, 13_856), grid_origin + Vector2i(24_000, 13_856)],
+		[grid_origin + Vector2i(12_000, 6_928), grid_origin + Vector2i(12_000, 6_928)],
 	]
 	for case_index: int in range(cases.size()):
 		var start: Vector2i = cases[case_index][0]
@@ -182,3 +183,19 @@ func _old_sweep_canonical_oracle(stored_cells: Dictionary, grid_origin: Vector2i
 			result.append(cell)
 	result.sort_custom(HexGrid._cell_less)
 	return result
+
+
+func _test_local_traversal_sparse_and_translated() -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 9282026
+	var stored := {}
+	for cell: Vector2i in HexGrid.disk(Vector2i.ZERO,12):
+		stored[cell] = 0 if (cell.x+cell.y)%5 == 0 else 1
+	for origin: Vector2i in [Vector2i.ZERO,Vector2i(-275_003,340_007),Vector2i(2_000_000,-1_500_000)]:
+		for index: int in 100:
+			var start := origin+Vector2i(rng.randi_range(-200_000,200_000),rng.randi_range(-200_000,200_000))
+			var reach := 3000 if index%2 == 0 else 250_000
+			var end := start+Vector2i(rng.randi_range(-reach,reach),rng.randi_range(-reach,reach))
+			var expected := _old_sweep_canonical_oracle(stored,origin,start,end)
+			equal(HexFootprint.traversed_selected_cells(stored,origin,start,end),expected,"local/fallback discovery equals independent sweep with holes and translated coordinates")
+			equal(HexFootprint.traversed_selected_cells(stored,origin,end,start),expected,"short and long paths retain reversal symmetry")

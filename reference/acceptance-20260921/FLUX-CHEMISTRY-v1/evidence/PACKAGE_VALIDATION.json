@@ -1,0 +1,32 @@
+{
+  "status": "STATIC_VERIFIED",
+  "checks": [
+    {
+      "name": "manifest output paths/bytes/SHA-256",
+      "status": "PASS",
+      "output_count": 15
+    },
+    {
+      "name": "six-or-fewer experiments; variables, costs, rollback and honest NOT_RUN results",
+      "status": "PASS",
+      "experiment_count": 6,
+      "deterministic_cases": 29,
+      "human_drills": 7
+    },
+    {
+      "name": "source-reference bounds and bundled range coverage",
+      "status": "PASS",
+      "reference_occurrences": 355
+    },
+    {
+      "name": "original source ZIP and input records; exact source excerpts",
+      "status": "PASS",
+      "record_count": 63
+    }
+  ],
+  "game_tests": "NOT_RUN",
+  "experiments": "NOT_RUN",
+  "human_drills": "NOT_RUN",
+  "command": "python tools/verify_package.py --source-zip /mnt/data/FLUX-SOURCE-PACKET.zip",
+  "scope_notice": "Package and source integrity only. All Godot experiments, deterministic cases, human drills, networking and performance tests remain NOT_RUN."
+}

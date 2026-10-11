@@ -1,0 +1,54 @@
+{
+  "id": "grace_reava",
+  "display_name": "Grace Riva",
+  "race": "sylph",
+  "status": "source_ready_with_motion_gap",
+  "generation_tool": "built-in image_gen",
+  "attempts": 2,
+  "generated_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-3caf-7f02-8030-e4d35e2365b4\\exec-b5470c99-8ea6-4ccc-913f-01f5df8de5c0.png",
+  "prior_generated_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-3caf-7f02-8030-e4d35e2365b4\\exec-13e593ef-ea70-492c-be79-e1c813b3b1bc.png",
+  "reference_paths": [
+    "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/grace_reava-detail.png",
+    "C:/Users/sende/Pictures/styleref1.png",
+    "C:/Users/sende/Projects/hex/art_batches/pixel_body_pilot_v1/source/s-wayne.png"
+  ],
+  "observed_columns": 8,
+  "observed_rows": 4,
+  "dimensions": [1774, 887],
+  "alpha_check": {
+    "format": "Format32bppArgb",
+    "corner_alpha": 0,
+    "top_middle_gutter_alpha": 0,
+    "bottom_right_alpha": 0
+  },
+  "source_row_mapping": {
+    "idle": 0,
+    "walk_left_contact": 1,
+    "walk_right_contact": 2,
+    "cast": 3
+  },
+  "directions": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "inspection": {
+    "transparent_background": "RGBA confirmed; tested gutter and corner alpha=0",
+    "directions": "Eight distinct view angles; NE/N/NW have no frontal eyes.",
+    "contacts": "Correction visibly swaps front/back contacts and some arm poses, but profile/diagonal foot swaps remain subtle or unresolved. Do not claim all-direction final walk acceptance.",
+    "whole_bodies": "32 complete bodies; wings intact, with generous gutters.",
+    "cast": "Hands-forward row, empty hands. Back-view hands partially occluded by wings."
+  },
+  "visual_issues": [
+    "Cyan/green exterior edge speckle requires lead's authorized deterministic alpha cleanup.",
+    "Walk foot alternation in profiles/diagonals still not unequivocal after two attempts."
+  ],
+  "prompt": "Use case: stylized-concept. Asset: fixed-pixel game sprite atlas on genuinely transparent RGBA.\nReferences: image 1 is exact character identity and clothing; image 2 is retro pixel style only (ignore its old names); image 3 is compact common-head/body proportions and readable charming finish only, NOT its row count.\nMake exactly 32 whole-body sprites in exactly 8 equal columns by 4 equal rows. Generous empty transparent gutters, identical size and baseline, feet/hair/appendages fully intact in each cell. Coarse clean pixel clusters, crisp limited-palette outlines, compact modest charming proportions matching image 3; no painterly smoothing.\nEVERY row column order: S front, SE front/right45, E right profile, NE back/right45, N straight back, NW back/left45, W left profile, SW front/left45. NE/N/NW show the back of the head with NO frontal eyes. Torso and feet rotate with head. Eight unmistakably distinct directions.\nRows only: 0 idle standing; 1 walk contact with LEFT foot forward and RIGHT arm forward; 2 opposite walk contact RIGHT foot forward and LEFT arm forward, genuinely alternating feet not duplicated poses; 3 planted stance, BOTH EMPTY hands forward casting, no magic. Never add a fifth row.\nMaintain exact face, costume, anatomy and palette in all32 frames. No staves, weapons, held objects, ground shadows, scenery, text, labels, grid lines, sparkles or baked spells. Wide transparent canvas.\nSubject: Grace Riva, small sylph: short teal bob hair, pointed ears, light skin, dark teal and gold tunic with cream sleeves, brown-gold boots, four pale cyan insect wings with distinct gold/cyan veins. Keep four wings coherently attached to back and complete in all directions. Use exact image1 design.",
+  "correction_prompt": "Use case: identity-preserve. Image1 is the exact 8-column x4-row transparent RGBA sprite sheet to correct; Image2 is identity reference. Preserve its pixel art, identity, scale, positions, directions, wings and costume. Change ONLY row2, the THIRD row from the top: it must become a visibly OPPOSITE WALK CONTACT to the second row. Put the other foot forward and swing the opposite arm forward; make near/far legs swap their forward/back positions, including E/W profiles. In front/back views swap which boot is lower/forward and which arm is raised. Do not merely translate or duplicate the pose. All eight directions S SE E NE N NW W SW remain. Keep rows0,1,3 unchanged. Exactly8 columns4 rows with intact whole bodies and generous gutters. Background truly transparent; remove stray exterior cyan/green fringe pixels only. No props, effects, shadows, labels or extra rows.",
+  "runtime_imports_or_tests": "NOT_RUN; source art only"
+}

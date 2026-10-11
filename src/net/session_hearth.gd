@@ -83,8 +83,10 @@ func returning_count() -> int:
 	return result
 
 
-func all_connected_ready() -> bool:
+func all_connected_ready(required_count: int = 0) -> bool:
 	if connected_count() < MIN_PLAYERS_TO_START:
+		return false
+	if required_count != 0 and (required_count not in [4, 6] or connected_count() != required_count or returning_count() > 0):
 		return false
 	for entity_id: int in presence_by_entity:
 		if int(presence_by_entity[entity_id]) == STATUS_CONNECTED and not bool(ready_by_entity.get(entity_id, false)):
@@ -101,14 +103,14 @@ func connected_entity_ids() -> Array[int]:
 	return result
 
 
-func start_countdown(requester_entity_id: int, world_tick: int, duration_ticks: int) -> bool:
+func start_countdown(requester_entity_id: int, world_tick: int, duration_ticks: int, required_count: int = 0) -> bool:
 	if (
 		requester_entity_id != SessionCharter.HOST_ENTITY_ID
 		or world_tick < 0
 		or duration_ticks < 1
 		or duration_ticks > MAX_COUNTDOWN_TICKS
 		or countdown_end_tick >= 0
-		or not all_connected_ready()
+		or not all_connected_ready(required_count)
 	):
 		return false
 	countdown_end_tick = world_tick + duration_ticks

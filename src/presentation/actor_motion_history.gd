@@ -7,8 +7,8 @@ extends RefCounted
 const MAX_TRACKS: int = 8
 const SNAP_DISTANCE_PIXELS: float = 72.0
 const MAX_GAIT_SAMPLE_SECONDS: float = 0.1
-const MAX_GAIT_CYCLES_PER_SECOND: float = 5.0
-const MAX_WALK_GAIT_CYCLES_PER_SECOND: float = 3.0
+const MAX_GAIT_CYCLES_PER_SECOND: float = 2.5
+const MAX_WALK_GAIT_CYCLES_PER_SECOND: float = 2.0
 
 class Track:
 	extends RefCounted
@@ -26,6 +26,9 @@ class GaitTrack:
 	var alive := true
 	var spawn_protection_ticks := 0
 	var ground_locomotion := false
+	var wall_locomotion := false
+	var wall_travel := Vector2i.ZERO
+	var wall_surface_id := 0
 	var rebase := false
 
 var tracks: Dictionary[int, Track] = {}
@@ -62,6 +65,8 @@ func capture_gaits(states: Array[PlayerState], points: Dictionary, heights: Dict
 		if motion_state == null or motion_state.entity_id != state.entity_id:
 			motion_state = state
 		var moving := state.health > 0 and _ground_locomotion(motion_state)
+		var on_wall := state.health > 0 and motion_state.wall_skim_ticks > 0 \
+			and motion_state.control_state in [PlayerState.ControlState.FREE, PlayerState.ControlState.SLOWED]
 		var delta := maxf(0.0, delta_seconds) if is_finite(delta_seconds) else 0.0
 		var distance := track.point.distance_to(point)
 		var speed := Vector2(motion_state.velocity_x, motion_state.velocity_y).length() / float(SimConfig.FIXED_SCALE)
@@ -69,20 +74,34 @@ func capture_gaits(states: Array[PlayerState], points: Dictionary, heights: Dict
 		# The small tolerance accommodates adjacent snapshot rounding, not warps.
 		var plausible_distance := minf(SNAP_DISTANCE_PIXELS, speed * delta * 2.0 + 2.0)
 		var discontinuity := new_identity or track.rebase or delta <= 0.0 or delta > MAX_GAIT_SAMPLE_SECONDS or distance > plausible_distance
-		if new_identity:
+		if new_identity or (on_wall and not track.wall_locomotion):
 			track.phase = 0.0
-		elif not discontinuity and moving and track.ground_locomotion and speed > 0.0:
+		elif not discontinuity and ((moving and track.ground_locomotion) or (on_wall and track.wall_locomotion)) and speed > 0.0:
 			var stride := MinimalChampionMotion.locomotion_stride_pixels(float(heights.get(state.entity_id, 68.0)))
 			# Extreme retained momentum cannot flicker the two contact poses.
-			var sprinting := motion_state.sprinting or motion_state.movement_mode == PlayerState.MovementMode.SPRINT
+			var sprinting := on_wall or motion_state.sprinting or motion_state.movement_mode == PlayerState.MovementMode.SPRINT
 			var cadence_limit := MAX_GAIT_CYCLES_PER_SECOND if sprinting else MAX_WALK_GAIT_CYCLES_PER_SECOND
 			var cycle_delta := minf(distance / stride, cadence_limit * delta)
 			track.phase = fposmod(track.phase + cycle_delta, 1.0)
+		# A blocked wall contact holds its last support pose and tangent. Cursor
+		# motion cannot spin the attached body, and timer age is not foot travel.
+		if on_wall:
+			if new_identity or not track.wall_locomotion or track.wall_surface_id != motion_state.wall_skim_surface_id or track.wall_travel == Vector2i.ZERO:
+				track.wall_travel = Vector2i(motion_state.wall_skim_x, motion_state.wall_skim_y)
+				if track.wall_travel == Vector2i.ZERO:
+					track.wall_travel = Vector2i(-motion_state.wall_y, motion_state.wall_x)
+			elif not discontinuity and distance > 0.01:
+				var travelled := point - track.point
+				track.wall_travel = EightDirectionResolver.FIXED_VECTORS[EightDirectionResolver.classify_index(roundi(travelled.x * 1000.0), roundi(travelled.y * 1000.0))]
+		else:
+			track.wall_travel = Vector2i.ZERO
 		track.point = point
 		track.champion_wire_id = state.champion_wire_id
 		track.alive = state.health > 0
 		track.spawn_protection_ticks = state.spawn_protection_ticks
 		track.ground_locomotion = moving
+		track.wall_locomotion = on_wall
+		track.wall_surface_id = motion_state.wall_skim_surface_id if on_wall else 0
 		track.rebase = false
 		gait_tracks[state.entity_id] = track
 	for entity_id: int in gait_tracks.keys():
@@ -95,6 +114,11 @@ func gait_phase(entity_id: int) -> float:
 	return track.phase if track != null else 0.0
 
 
+func wall_travel(entity_id: int) -> Vector2i:
+	var track: GaitTrack = gait_tracks.get(entity_id)
+	return track.wall_travel if track != null and track.wall_locomotion else Vector2i.ZERO
+
+
 func rebase_gait(entity_id: int) -> void:
 	var track: GaitTrack = gait_tracks.get(entity_id)
 	if track != null:
@@ -102,9 +126,12 @@ func rebase_gait(entity_id: int) -> void:
 
 
 static func _ground_locomotion(state: PlayerState) -> bool:
+	# Idle is still the same ground plane. Keep its anchor eligible so a real
+	# first step (or sub-threshold coast) is not lost at the next visual sample.
+	# The caller still requires both actual displacement and positive speed.
 	return state.health > 0 and not state.is_airborne() and not state.is_rolling() \
 		and state.control_state in [PlayerState.ControlState.FREE, PlayerState.ControlState.SLOWED] \
-		and state.movement_mode in [PlayerState.MovementMode.WALK, PlayerState.MovementMode.SPRINT, PlayerState.MovementMode.SLOWED]
+		and state.movement_mode in [PlayerState.MovementMode.IDLE, PlayerState.MovementMode.WALK, PlayerState.MovementMode.SPRINT, PlayerState.MovementMode.SLOWED]
 
 
 func capture(states: Array[PlayerState]) -> void:

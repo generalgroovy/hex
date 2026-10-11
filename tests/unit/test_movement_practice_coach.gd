@@ -13,6 +13,8 @@ func run() -> int:
 	check(bounds.has_area(), "southern movement-loop bounds come from validated map content")
 	_test_admission()
 	_test_context_and_bindings()
+	_test_wheel_only_wallrun_guidance()
+	_test_air_dodge_hints()
 	_test_source_and_fit()
 	return finish("movement-practice-coach")
 
@@ -64,87 +66,180 @@ func _test_admission() -> void:
 func _test_context_and_bindings() -> void:
 	var state := _state()
 	var preferences := PlayerPreferences.new()
-	preferences.keyboard_bindings[&"technique"] = KEY_J
 	preferences.keyboard_bindings[&"jump"] = KEY_K
 	preferences.keyboard_bindings[&"sprint"] = KEY_L
-	var grounded := Coach.sample(state, preferences, bounds)
-	equal(grounded.kind, "grounded", "ordinary ground state teaches the walking bypass first")
-	check(_text(grounded).contains("Walk around walls") and _text(grounded).contains("L") and _text(grounded).contains("J"), "ground hint follows rebound Sprint/Technique")
-	state.stamina = 0
-	check(_text(Coach.sample(state, preferences, bounds)).contains("ordinary movement is free"), "empty Stamina preserves the ordinary bypass")
-	state.stamina = state.stamina_maximum
+	var view := Coach.sample(state, preferences, bounds)
+	equal(view.kind, "grounded", "ground hint teaches ordinary movement")
+	check(_text(view).contains("L") and _text(view).contains("release K"), "ground hint follows sprint and release-jump bindings")
+	check(not _text(view).contains("wallrun"), "ground hint cannot offer grounded wallrun")
+	state.jumpsquat_active = true
+	view = Coach.sample(state, preferences, bounds)
+	equal(view.kind, "jumpsquat", "anticipation has a specific release hint")
+	check(_text(view).contains("Still grounded"), "anticipation does not imply low-profile avoidance")
+	state.jumpsquat_active = false
 	state.wall_skim_ticks = 30
-	state.hop_stage = 1
-	var wall := Coach.sample(state, preferences, bounds)
-	equal(wall.kind, "wallrun", "live wallrun takes precedence over generic airborne state")
-	check(_text(wall).contains("Fresh K + away") and _text(wall).contains("do not refill"), "wall hint teaches a deliberate kick without resetting air budgets")
-	state.hop_stage = 2
-	check(not _text(Coach.sample(state, preferences, bounds)).contains("wall kick"), "spent kick stage cannot promise another wall kick")
-	check(_text(Coach.sample(state, preferences, bounds)).contains("J again"), "spent wall kick offers a real detachment instead")
+	view = Coach.sample(state, preferences, bounds)
+	equal(view.kind, "wallrun", "actual wallrun wins over ordinary air")
+	check(_text(view).contains("Release K") and _text(view).contains("no immunity"), "release walljump and wall vulnerability are explicit")
 	state.wall_skim_ticks = 0
-	state.air_height = 20_000
+	state.air_height = 20000
 	state.hop_ticks = 30
-	state.air_redirects_remaining = 1
-	state.air_velocity_x = 200_000
-	var air := Coach.sample(state, preferences, bounds)
-	equal(air.kind, "airborne", "real height drives the airborne hint")
-	check(_text(air).contains("B neutral: zero-cost fast fall") and _text(air).contains("+move: paid dodge"), "air hint teaches neutral and directional Evade with the active binding")
-	check(_text(air).contains("J + new direction") and _text(air).contains("hold K"), "air turn and fresh held Float use active bindings")
-	state.hop_stage = 1
-	state.wall_memory_ticks = 4
-	state.wall_contact_id = 115
-	check(_text(Coach.sample(state, preferences, bounds)).contains("fresh K + away") and not _text(Coach.sample(state, preferences, bounds)).contains("Float"), "remembered first-stage wall contact does not mislabel outward Jump as Float")
-	state.wall_memory_ticks = 0
-	state.hop_stage = 2
-	state.air_redirects_remaining = 0
-	state.float_used = true
-	air = Coach.sample(state, preferences, bounds)
-	check(_text(air).contains("B neutral: zero-cost fast fall") and _text(air).contains("Steer freely") and _text(air).contains("until landing"), "spent air budgets retain free steering and truthful neutral fast fall")
-	state.air_redirects_remaining = 1
-	state.movement_chain_count = 4
-	state.movement_chain_reset_ticks = 10
-	state.stamina = MovementSystem._movement_action_cost(state, MovementTuning.AIR_REDIRECT_COST) - 1
-	check(not _text(Coach.sample(state, preferences, bounds)).contains("paid turn"), "insufficient current chain-adjusted Stamina does not advertise a paid turn")
-	state.stamina += 1
-	check(_text(Coach.sample(state, preferences, bounds)).contains("paid turn"), "turn hint follows the real chain-adjusted cost boundary")
+	view = Coach.sample(state, preferences, bounds)
+	check(_text(view).contains("one paid double jump") and not _text(view).contains("flight"), "ordinary races get double jump, not Float")
+	state.double_jump_used = true
+	check(_text(Coach.sample(state, preferences, bounds)).contains("spent air budgets"), "used extra jump remains spent")
+	state.flight_capable = true
+	view = Coach.sample(state, preferences, bounds)
+	check(_text(view).contains("Press again + hold K") and _text(view).contains("finite time"), "capable race sees held finite flight")
 	state.air_floating = true
 	state.float_ticks = 30
-	var floating := Coach.sample(state, preferences, bounds)
-	equal(floating.kind, "float", "actual active Float is distinct from ordinary airborne state")
-	check(_text(floating).contains("Hold K") and _text(floating).contains("paid height + protection") and _text(floating).contains("Neutral B") and _text(floating).contains("no protection"), "Float and neutral fast fall state their actual protection boundary")
-	var saved_evade_key := int(preferences.keyboard_bindings.get(&"evade", 0))
-	var saved_evade_mouse := int(preferences.mouse_bindings.get(&"evade", 0))
-	preferences.keyboard_bindings[&"evade"] = 0
-	preferences.mouse_bindings[&"evade"] = 0
-	var slide_only := _text(Coach.sample(state, preferences, bounds))
-	check(slide_only.contains("Fresh C") and not slide_only.contains("Neutral UNBOUND"), "Float hint selects the bound Slide alias when Evade is unbound")
-	preferences.keyboard_bindings[&"evade"] = saved_evade_key
-	preferences.mouse_bindings[&"evade"] = saved_evade_mouse
-	var saved_slide_key := int(preferences.keyboard_bindings.get(&"slide", 0))
-	var saved_slide_mouse := int(preferences.mouse_bindings.get(&"slide", 0))
-	preferences.keyboard_bindings[&"slide"] = 0
-	preferences.mouse_bindings[&"slide"] = 0
-	var evade_only := _text(Coach.sample(state, preferences, bounds))
-	check(evade_only.contains("Neutral B") and not evade_only.contains("fresh UNBOUND"), "Float hint selects the bound neutral Evade alias when Slide is unbound")
-	preferences.keyboard_bindings[&"slide"] = saved_slide_key
-	preferences.mouse_bindings[&"slide"] = saved_slide_mouse
-	state.movement_commitment_ticks = 1
-	equal(Coach.sample(state, preferences, bounds).kind, "commitment", "opening commitment does not imply immediate transition readiness")
-	state.control_state = PlayerState.ControlState.STUNNED
-	equal(Coach.sample(state, preferences, bounds).kind, "control", "external control takes priority over action instructions")
-	state = _state()
-	state.air_height = 20_000
+	view = Coach.sample(state, preferences, bounds)
+	equal(view.kind, "flight", "paid flight is its own context")
+	check(_text(view).contains("No immunity"), "flight never advertises universal protection")
+	state.air_floating = false
+	state.wall_memory_ticks = 4
+	state.wall_contact_id = 115
+	check(_text(Coach.sample(state, preferences, bounds)).contains("along wall") and _text(Coach.sample(state, preferences, bounds)).contains("Release: walljump"), "near wall teaches hold-along then release")
+	state.wall_memory_ticks = 0
 	preferences.mouse_bindings[&"jump"] = MOUSE_BUTTON_WHEEL_UP
-	check(_text(Coach.sample(state, preferences, bounds, ControlBindingEditor.DEVICE_MOUSE)).contains("hold K"), "mouse activity retains the current held keyboard binding")
+	check(_text(Coach.sample(state, preferences, bounds, ControlBindingEditor.DEVICE_MOUSE)).contains("Press again + hold K"), "mouse input retains keyboard hold binding")
 	preferences.keyboard_bindings[&"jump"] = 0
-	check(_text(Coach.sample(state, preferences, bounds, ControlBindingEditor.DEVICE_MOUSE)).contains("Wheel is a pulse"), "wheel mapping is not falsely described as a sustained Float input")
-	check(_text(Coach.sample(state, preferences, bounds)).contains("Wheel is a pulse"), "keyboard-unbound setup also sees the mouse wheel limitation")
+	check(_text(Coach.sample(state, preferences, bounds)).contains("Wheel is a pulse"), "wheel cannot promise sustained flight")
 	preferences.mouse_bindings[&"jump"] = MOUSE_BUTTON_MIDDLE
-	check(_text(Coach.sample(state, preferences, bounds)).contains("hold MIDDLE BUTTON"), "an actual mouse hold binding is the keyboard-unbound fallback")
+	check(_text(Coach.sample(state, preferences, bounds)).contains("MIDDLE BUTTON"), "mouse fallback is a real hold input")
 	preferences.mouse_bindings[&"jump"] = 0
-	check(_text(Coach.sample(state, preferences, bounds)).contains("UNBOUND"), "missing Jump never falls back to an invented default")
-	var controller := Coach.sample(state, preferences, bounds, ControlBindingEditor.DEVICE_CONTROLLER)
-	check(_text(controller).contains("SOUTH / A") and not _text(controller).contains("UNBOUND"), "controller uses its own bindings rather than keyboard state")
+	check(_text(Coach.sample(state, preferences, bounds)).contains("UNBOUND"), "missing Jump is explicit")
+	check(_text(Coach.sample(state, preferences, bounds, ControlBindingEditor.DEVICE_CONTROLLER)).contains("SOUTH / A"), "controller follows its own binding")
+	state.movement_commitment_ticks = 1
+	equal(Coach.sample(state, preferences, bounds).kind, "commitment", "commitment does not promise another action")
+	state.control_state = PlayerState.ControlState.STUNNED
+	equal(Coach.sample(state, preferences, bounds).kind, "control", "forced control takes priority")
+
+
+func _test_wheel_only_wallrun_guidance() -> void:
+	var state := _state()
+	state.air_height = 20_000
+	state.hop_ticks = 30
+	state.wall_memory_ticks = 4
+	state.wall_contact_id = 115
+	var world := SimWorld.new(120, 933)
+	world.players[0] = state
+	var preferences := PlayerPreferences.new()
+	preferences.keyboard_bindings[&"jump"] = 0
+	for wheel: int in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN, MOUSE_BUTTON_WHEEL_LEFT, MOUSE_BUTTON_WHEEL_RIGHT]:
+		preferences.mouse_bindings[&"jump"] = wheel
+		for flight_capable: bool in [false, true]:
+			state.flight_capable = flight_capable
+			for device: int in [ControlBindingEditor.DEVICE_KEYBOARD, ControlBindingEditor.DEVICE_MOUSE]:
+				var before := world.state_hash()
+				var saved := preferences.to_dictionary().duplicate(true)
+				var view := Coach.sample(state, preferences, bounds, device)
+				equal(view.kind, "airborne", "wheel wallrun regression reaches the wall-contact airborne branch")
+				equal(view.lines[1], "Wallrun needs held Jump; bind a button at Controls.", "wall contact cannot overwrite a wheel-only hold limitation")
+				check(not _text(view).contains("Hold WHEEL") and not _text(view).contains("Release: walljump"), "pulse-only bindings do not promise held entry or held release")
+				check(ThemeDB.fallback_font.get_string_size(view.lines[1], HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x <= 412, "wheel recovery guidance fits the unchanged compact card")
+				equal(world.state_hash(), before, "wheel guidance changes no paid action, timing or air budget")
+				equal(preferences.to_dictionary(), saved, "wheel guidance never silently binds a hold button")
+	# A keyboard binding remains usable even when the latest event was a wheel.
+	preferences.keyboard_bindings[&"jump"] = KEY_K
+	for device: int in [ControlBindingEditor.DEVICE_KEYBOARD, ControlBindingEditor.DEVICE_MOUSE]:
+		equal(Coach.sample(state, preferences, bounds, device).lines[1], "Hold K + along wall: wallrun. Release: walljump.", "keyboard plus wheel retains the real held keyboard instruction")
+	preferences.keyboard_bindings[&"jump"] = 0
+	preferences.mouse_bindings[&"jump"] = MOUSE_BUTTON_MIDDLE
+	check(_text(Coach.sample(state, preferences, bounds)).contains("Hold MIDDLE BUTTON + along wall"), "holdable mouse fallback still offers wallrun")
+	preferences.mouse_bindings[&"jump"] = MOUSE_BUTTON_WHEEL_UP
+	check(_text(Coach.sample(state, preferences, bounds, ControlBindingEditor.DEVICE_CONTROLLER)).contains("Hold SOUTH / A + along wall"), "controller hold does not inherit another device's wheel limitation")
+	preferences.controller_bindings[&"jump"] = PlayerPreferences.unbound_controller_binding()
+	check(_text(Coach.sample(state, preferences, bounds, ControlBindingEditor.DEVICE_CONTROLLER)).contains("UNBOUND"), "unbound controller does not borrow mouse wheel or invent a hold")
+	preferences.mouse_bindings[&"jump"] = 0
+	check(_text(Coach.sample(state, preferences, bounds)).contains("UNBOUND"), "fully unbound Jump retains its existing recovery advice")
+	preferences.mouse_bindings[&"jump"] = MOUSE_BUTTON_WHEEL_UP
+	state.wall_memory_ticks = 0
+	state.flight_capable = false
+	check(_text(Coach.sample(state, preferences, bounds)).contains("Fresh WHEEL UP: one paid double jump"), "ordinary wheel tap remains a legal fresh double-jump hint away from walls")
+	state.flight_capable = true
+	check(_text(Coach.sample(state, preferences, bounds)).contains("Wheel is a pulse"), "flight wheel limitation remains intact away from walls")
+	state.wall_memory_ticks = 4
+	state.movement_commitment_ticks = 1
+	equal(Coach.sample(state, preferences, bounds).kind, "commitment", "opening commitment still precedes wallrun instruction")
+	state.control_state = PlayerState.ControlState.STUNNED
+	equal(Coach.sample(state, preferences, bounds).kind, "control", "forced control still precedes wheel recovery guidance")
+
+
+func _test_air_dodge_hints() -> void:
+	var cases: Array[Dictionary] = [
+		{"name": "ready", "used": false, "chain": 0, "reset": 0, "offset": 1, "status": "paid"},
+		{"name": "base equality", "used": false, "chain": 0, "reset": 0, "offset": 0, "status": "paid"},
+		{"name": "base underfunded", "used": false, "chain": 0, "reset": 0, "offset": -1, "status": "needs"},
+		{"name": "empty Stamina", "used": false, "chain": 0, "reset": 0, "offset": -MovementTuning.AIR_DODGE_COST, "status": "needs"},
+		{"name": "spent", "used": true, "chain": 0, "reset": 0, "offset": 1, "status": "spent"},
+		{"name": "spent before affordability", "used": true, "chain": 0, "reset": 0, "offset": -1, "status": "spent"},
+		{"name": "chain equality", "used": false, "chain": 2, "reset": 10, "offset": 0, "status": "paid"},
+		{"name": "chain underfunded", "used": false, "chain": 2, "reset": 10, "offset": -1, "status": "needs"},
+		{"name": "capped chain equality", "used": false, "chain": MovementTuning.MOVEMENT_CHAIN_MAXIMUM_STEPS + 3, "reset": 10, "offset": 0, "status": "paid"},
+		{"name": "capped chain underfunded", "used": false, "chain": MovementTuning.MOVEMENT_CHAIN_MAXIMUM_STEPS + 3, "reset": 10, "offset": -1, "status": "needs"},
+		{"name": "expired chain equality", "used": false, "chain": MovementTuning.MOVEMENT_CHAIN_MAXIMUM_STEPS, "reset": 0, "offset": 0, "status": "paid"},
+	]
+	var bindings: Array[Dictionary] = [
+		{"name": "default keyboard", "device": ControlBindingEditor.DEVICE_KEYBOARD, "label": "B"},
+		{"name": "custom keyboard", "device": ControlBindingEditor.DEVICE_KEYBOARD, "key": KEY_K, "label": "K"},
+		{"name": "keyboard before mouse", "device": ControlBindingEditor.DEVICE_MOUSE, "key": KEY_K, "mouse": MOUSE_BUTTON_MIDDLE, "label": "K"},
+		{"name": "mouse fallback", "device": ControlBindingEditor.DEVICE_KEYBOARD, "key": 0, "mouse": MOUSE_BUTTON_MIDDLE, "label": "MIDDLE BUTTON"},
+		{"name": "wheel pulse", "device": ControlBindingEditor.DEVICE_MOUSE, "key": 0, "mouse": MOUSE_BUTTON_WHEEL_DOWN, "label": "WHEEL DOWN"},
+		{"name": "default controller", "device": ControlBindingEditor.DEVICE_CONTROLLER, "label": "LEFT TRIGGER +"},
+		{"name": "custom controller button", "device": ControlBindingEditor.DEVICE_CONTROLLER, "controller": {"kind": "button", "index": JOY_BUTTON_RIGHT_SHOULDER, "direction": 0}, "label": "R SHOULDER"},
+		{"name": "custom controller axis", "device": ControlBindingEditor.DEVICE_CONTROLLER, "controller": {"kind": "axis", "index": JOY_AXIS_TRIGGER_RIGHT, "direction": 1}, "label": "RIGHT TRIGGER +"},
+		{"name": "unbound keyboard and mouse", "device": ControlBindingEditor.DEVICE_KEYBOARD, "key": 0, "mouse": 0, "label": "UNBOUND"},
+		{"name": "unbound controller", "device": ControlBindingEditor.DEVICE_CONTROLLER, "controller": PlayerPreferences.unbound_controller_binding(), "label": "UNBOUND"},
+	]
+	var world := SimWorld.new(120, 931)
+	for binding: Dictionary in bindings:
+		var preferences := PlayerPreferences.new()
+		if binding.has("key"):
+			preferences.keyboard_bindings[&"evade"] = int(binding.key)
+		if binding.has("mouse"):
+			preferences.mouse_bindings[&"evade"] = int(binding.mouse)
+		if binding.has("controller"):
+			preferences.controller_bindings[&"evade"] = binding.controller.duplicate(true)
+		var saved := preferences.to_dictionary().duplicate(true)
+		for scenario: Dictionary in cases:
+			var state := _state()
+			state.air_height = 20_000
+			state.hop_ticks = 30
+			state.double_jump_used = true
+			state.air_dodge_used = bool(scenario.used)
+			state.movement_chain_count = int(scenario.chain)
+			state.movement_chain_reset_ticks = int(scenario.reset)
+			var cost := MovementSystem._movement_action_cost(state, MovementTuning.AIR_DODGE_COST)
+			state.stamina = cost + int(scenario.offset)
+			world.players[0] = state
+			var before := world.state_hash()
+			var view := Coach.sample(state, preferences, bounds, int(binding.device))
+			var context := "%s / %s" % [binding.name, scenario.name]
+			equal(view.kind, "airborne", context + ": tests the ordinary airborne branch")
+			equal(view.lines.size(), 2, context + ": retains the two-line card")
+			var line := String(view.lines[0])
+			if String(binding.label) == "UNBOUND":
+				equal(line, "Evade UNBOUND; set it at Controls for fast fall/dodge.", context + ": unbound input never borrows another device or claims an action")
+			else:
+				check(line.begins_with(String(binding.label) + " neutral: free fast fall;"), context + ": actual bound neutral input remains zero-cost")
+				match String(scenario.status):
+					"paid":
+						check(line.ends_with("+move: paid dodge."), context + ": unused affordable dodge retains directional instruction")
+					"spent":
+						check(line.ends_with("dodge spent until landing."), context + ": only landing restores the spent opportunity")
+						check(not line.contains("paid dodge") and not line.contains("needs"), context + ": spent budget wins over resource amount")
+					"needs":
+						check(line.ends_with("dodge needs " + MovementGuideModel._units(cost) + " Stamina."), context + ": displays current authoritative chain-adjusted cost")
+						check(not line.contains("paid dodge"), context + ": cannot advertise an unaffordable paid action")
+			for visible_line: String in view.lines:
+				check(ThemeDB.fallback_font.get_string_size(visible_line, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x <= 412, context + ": real-font line fits existing 412px width: " + visible_line)
+			equal(world.state_hash(), before, context + ": sampling leaves authority unchanged")
+			equal(preferences.to_dictionary(), saved, context + ": sampling preserves customized bindings")
+			state.movement_commitment_ticks = 1
+			equal(Coach.sample(state, preferences, bounds, int(binding.device)).kind, "commitment", context + ": commitment takes precedence over availability")
+			state.control_state = PlayerState.ControlState.STUNNED
+			equal(Coach.sample(state, preferences, bounds, int(binding.device)).kind, "control", context + ": forced control takes precedence over availability")
 
 
 func _test_source_and_fit() -> void:
@@ -164,6 +259,9 @@ func _test_source_and_fit() -> void:
 			state.air_floating = false
 			state.air_height = 0
 			state.float_used = false
+			state.flight_capable = false
+			state.double_jump_used = false
+			state.jumpsquat_active = false
 			state.hop_ticks = 0
 			state.air_redirects_remaining = 0
 			match context:
@@ -171,6 +269,7 @@ func _test_source_and_fit() -> void:
 				2: state.air_height = 20_000
 				3:
 					state.air_height = 20_000
+					state.flight_capable = true
 					state.air_floating = true
 					state.float_ticks = 20
 				4: state.control_state = PlayerState.ControlState.ROOTED
@@ -192,6 +291,7 @@ func _test_source_and_fit() -> void:
 			equal(world.state_hash(), before, "sampling never mutates simulation or air budgets")
 			equal(preferences.to_dictionary(), saved, "sampling never rewrites bindings or preferences")
 	var guide := MovementGuideModel.entry_by_id("wall_run", preferences)
-	check(String(guide.execution).contains("along its face") and String(guide.timing_note).contains("does not refill"), "compact wall instruction retains full guide's execution and finite budget caveat")
+	check(String(guide.execution).contains("along its face"), "wall guide requires along-face movement")
+	check(String(guide.timing_note).contains("refills no air budget"), "wall guide explicitly preserves spent air budgets")
 	guide = MovementGuideModel.entry_by_id("double_jump", preferences)
-	check(String(guide.execution).contains("release and press") and String(guide.execution).contains("current height"), "compact Float instruction is grounded in the production guide")
+	check(String(guide.execution).contains("double jump") and String(guide.execution).contains("hold"), "compact extra-air instruction matches production guide")

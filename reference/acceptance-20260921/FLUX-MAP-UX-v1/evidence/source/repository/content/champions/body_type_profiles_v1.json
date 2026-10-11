@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "id": "body-type-profiles-v1-equal-budget",
+  "authority": "simulation bounds and player-facing role contract; body type never grants automatic damage",
+  "shared_rules": {
+    "competitive_budget": 100,
+    "collision_radius_policy": "shared_foundation_radius",
+    "hurt_radius_policy": "fixed_body_profile_independent_of_animation",
+    "visual_template_order": ["small", "middle", "large"],
+    "visual_template_height_pixels": {"small": 58, "middle": 68, "large": 76},
+    "visual_size_authority": "presentation_only_no_hidden_reach_evasion_or_damage",
+    "universal_movement": ["walk", "sprint", "jump", "double_jump", "slide", "slide_jump", "roll", "air_dodge", "wave_dash", "wall_kick", "fast_fall", "wall_skim"]
+  },
+  "profiles": {
+    "small": {
+      "hurt_radius": 17000,
+      "role": "skirmisher",
+      "strengths": ["ground_speed", "flux_recovery", "small_visual_silhouette"],
+      "tradeoffs": ["health_reserve", "stamina_reserve"],
+      "stat_bounds": {
+        "health_maximum": [82000, 98000],
+        "health_recovery_per_second": [1800, 2800],
+        "flux_maximum": [116600, 132000],
+        "flux_recovery_per_second": [21000, 27000],
+        "stamina_maximum": [610000, 640000],
+        "stamina_recovery_per_second": [25000, 33000],
+        "movement_speed_ratio": [1030, 1100]
+      }
+    },
+    "middle": {
+      "hurt_radius": 18000,
+      "role": "adapter",
+      "strengths": ["resource_balance", "route_flexibility", "stable_recovery"],
+      "tradeoffs": ["no_extreme_stat", "moderate_commitment"],
+      "stat_bounds": {
+        "health_maximum": [100000, 118000],
+        "health_recovery_per_second": [1400, 2200],
+        "flux_maximum": [107800, 123200],
+        "flux_recovery_per_second": [17000, 23000],
+        "stamina_maximum": [645000, 680000],
+        "stamina_recovery_per_second": [27000, 35000],
+        "movement_speed_ratio": [950, 1020]
+      }
+    },
+    "large": {
+      "hurt_radius": 19000,
+      "role": "anchor",
+      "strengths": ["health_reserve", "stamina_reserve", "lane_presence"],
+      "tradeoffs": ["ground_speed", "flux_recovery"],
+      "stat_bounds": {
+        "health_maximum": [124000, 145000],
+        "health_recovery_per_second": [900, 1700],
+        "flux_maximum": [96800, 114400],
+        "flux_recovery_per_second": [14000, 19000],
+        "stamina_maximum": [685000, 715000],
+        "stamina_recovery_per_second": [29000, 37000],
+        "movement_speed_ratio": [880, 940]
+      }
+    }
+  }
+}

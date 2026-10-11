@@ -70,8 +70,10 @@ static func discharge_due(rows: PackedInt32Array, tick: int) -> bool:
 			return true
 	return false
 
-static func apply_discharge(rows: PackedInt32Array, state: PlayerState, tick: int, collision: CollisionWorld) -> bool:
-	if rows.size() % ROW_WIDTH != 0 or state == null or state.health <= 0 or state.spawn_protection_ticks > 0 or state.air_height > 0 or state.is_airborne():
+static func apply_discharge(rows: PackedInt32Array, state: PlayerState, tick: int, collision: CollisionWorld, config: SimConfig = null) -> bool:
+	if rows.size() % ROW_WIDTH != 0 or state == null or state.health <= 0 or state.spawn_protection_ticks > 0 or MovementSystem.avoids_ground_effects(state):
+		return false
+	if MovementSystem.is_combat_intangible(state, config if config != null else SimConfig.new(120)):
 		return false
 	var point := Vector2i(state.position_x, state.position_y)
 	for index: int in range(0, rows.size(), ROW_WIDTH):

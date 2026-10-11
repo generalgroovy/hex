@@ -65,17 +65,9 @@ static func protection_ratio(state: PlayerState, config: SimConfig) -> float:
 		return 1.0
 	if not MovementSystem.is_combat_intangible(state, config):
 		return 0.0
-	if state.air_floating:
-		return 1.0
 	var total := 0
 	var remaining := 0
-	if state.hop_ticks > 0 and state.air_dodge_ticks <= 0:
-		total = config.milliseconds_to_ticks(MovementTuning.JUMP_INVULNERABILITY_MS)
-		remaining = state.jump_protection_ticks
-	elif state.slide_ticks > 0:
-		total = config.milliseconds_to_ticks(MovementTuning.SLIDE_INVULNERABILITY_MS)
-		remaining = total - (config.milliseconds_to_ticks(MovementTuning.SLIDE_COOLDOWN_MS) - state.slide_cooldown_ticks)
-	elif state.air_dodge_ticks > 0:
+	if state.air_dodge_ticks > 0:
 		var duration := MovementTuning.ROLL_DURATION_MS if state.is_rolling() else MovementTuning.AIR_DODGE_DURATION_MS
 		var protection := MovementTuning.ROLL_INVULNERABILITY_MS if state.is_rolling() else MovementTuning.AIR_DODGE_INVULNERABILITY_MS
 		total = config.milliseconds_to_ticks(protection)
@@ -87,12 +79,37 @@ static func takeoff_contract(state: PlayerState, config: SimConfig, reduced: boo
 	var result := {"active": false, "phase": 0.0, "radius": 0.0, "opacity": 0.0}
 	# This short brass floor accent is not a protection boundary. It is sampled
 	# from the accepted takeoff opening, never a repeating animation clock.
-	if state == null or config == null or state.health <= 0 or state.air_floating or state.air_height <= 0 or state.air_vertical_velocity <= 0 or state.jump_protection_ticks <= 0 or state.air_dodge_ticks > 0 or state.wall_skim_ticks > 0:
+	if state == null or config == null or state.health <= 0 or state.air_floating or state.air_height <= 0 or state.air_vertical_velocity <= 0 or state.movement_commitment_ticks <= 0 or state.air_dodge_ticks > 0 or state.wall_skim_ticks > 0:
 		return result
-	var total := config.milliseconds_to_ticks(MovementTuning.JUMP_INVULNERABILITY_MS)
-	var phase := clampf(1.0 - float(state.jump_protection_ticks) / float(maxi(1, total)), 0.0, 1.0)
+	if state.hop_mode not in [PlayerState.MovementMode.HOP, PlayerState.MovementMode.SLIDE_JUMP, PlayerState.MovementMode.DOUBLE_JUMP, PlayerState.MovementMode.WALL_KICK]:
+		return result
+	var total := config.milliseconds_to_ticks(MovementTuning.HOP_COMMITMENT_MS)
+	var phase := clampf(1.0 - float(state.movement_commitment_ticks) / float(maxi(1, total)), 0.0, 1.0)
 	result["active"] = true
+	result["age"] = maxi(0, total - state.movement_commitment_ticks)
 	result["phase"] = phase
 	result["radius"] = lerpf(9.0, 18.0 if reduced else 27.0, phase)
 	result["opacity"] = (0.48 if reduced else 0.76) * (1.0 - phase * 0.8)
+	return result
+
+
+static func squat_depth(state: PlayerState, config: SimConfig) -> int:
+	if state == null or config == null or not state.jumpsquat_active or state.health <= 0:
+		return 0
+	var phase := clampf(float(state.jumpsquat_ticks) / float(maxi(1, config.milliseconds_to_ticks(180))), 0.0, 1.0)
+	return 1 + roundi(4.0 * smoothstep(0.0, 1.0, phase))
+
+
+static func height_contract(state: PlayerState, config: SimConfig) -> Dictionary:
+	var result := {"active": false, "above": false, "flight": false, "budget": 0.0}
+	if state == null or config == null or state.health <= 0:
+		return result
+	var above := MovementSystem.avoids_ground_effects(state)
+	var below := MovementSystem.is_low_profile(state)
+	result["active"] = above or below
+	result["above"] = above
+	result["flight"] = above and state.air_floating and state.flight_capable and state.float_ticks > 0 and state.stamina > 0
+	if bool(result["flight"]):
+		var total := maxi(1, config.milliseconds_to_ticks(state.float_max_duration_ms))
+		result["budget"] = clampf(float(state.float_ticks) / float(total), 0.0, 1.0)
 	return result

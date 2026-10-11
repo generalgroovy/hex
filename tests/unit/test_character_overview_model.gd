@@ -23,6 +23,10 @@ func run() -> int:
 	check(model.is_read_only(), "projection is immutable")
 	check((model["rows"] as Array).is_read_only(), "row order is immutable")
 	var seen: Dictionary = {}
+	var race_perks := {}
+	var character_perks := {}
+	var flying_ids: Array[String] = ["grace_reava", "spai_si", "ha_rekt", "juul_i_yaina", "faab_i_yaina"]
+	var flight_limits := {"small": 2400, "middle": 2100, "large": 1800}
 	var previous_race := ""
 	for row: Dictionary in model["rows"]:
 		var race_id := String(row["race_id"])
@@ -48,6 +52,27 @@ func run() -> int:
 			equal(playable, not champions.champion(champion_id).is_empty(), "only actual promoted catalog entries are selectable")
 			if playable:
 				var source := champions.champion(champion_id)
+				var expected_perks: Dictionary = Overview.Perks.describe(int(source["wire_id"]))
+				equal(entry["identity_perks"], expected_perks, "both displayed perks are exact runtime policy descriptions: " + champion_id)
+				check((entry["identity_perks"] as Dictionary).is_read_only(), "perk projection cannot mutate through the UI")
+				for scope: String in ["race", "character"]:
+					var perk: Dictionary = entry["identity_perks"][scope]
+					check(perk.is_read_only() and (perk["effects"] as Dictionary).is_read_only(), "nested perk rules are frozen copies")
+					check(not is_same(perk, expected_perks[scope]), "freezing UI descriptions never freezes the runtime catalog")
+					var detail := " ".join(Overview.perk_detail_paragraphs(entry))
+					for field: String in ["name", "summary", "window", "counter"]:
+						check(detail.contains(String(perk[field])), "full perk guidance preserves %s for %s" % [field, champion_id])
+					race_perks[String(entry.identity_perks.race.id)] = true
+					character_perks[String(entry.identity_perks.character.id)] = true
+				equal(Overview.perk_summaries(entry).size(), 2, "every champion exposes exactly one race and one character perk")
+				var can_fly := champion_id in flying_ids
+				equal(entry["air_action"], "flight" if can_fly else "double_jump", champion_id + " discloses its actual race-gated air action")
+				equal(entry["flight_duration_ms"], int(flight_limits[String(entry["body_type"])]) if can_fly else 0, champion_id + " only exposes its usable size-specific flight limit")
+				var actor := PlayerState.new()
+				check(champions.apply_to_player(actor, champion_id), champion_id + " capability fixture applies actual gameplay authority")
+				equal(String(entry["air_action"]) == "flight", actor.flight_capable, "overview air action matches the configured player")
+				if actor.flight_capable:
+					equal(entry["flight_duration_ms"], actor.float_max_duration_ms, "displayed flight allowance matches the configured player")
 				equal(entry["stats"], source["stats"], "all seven displayed stats derive exactly from playable authority")
 				equal(entry["affinities"], source["affinities"], "playable affinities derive from playable authority")
 				equal(entry["foundation_kit"], source["foundation_kit"], "starting spells remain actual catalog references")
@@ -62,6 +87,8 @@ func run() -> int:
 				equal(entry["wire_id"], source["wire_id"], "selector integration retains the real wire identity")
 				check(not String(entry["playstyle"]).is_empty(), "actual playable role is available")
 			else:
+				equal(entry["air_action"], "", "planned identities never claim accepted movement capabilities")
+				equal(entry["flight_duration_ms"], 0, "planned identities never claim an active flight allowance")
 				check((entry["stats"] as Dictionary).is_empty(), "planned stats are not fabricated")
 				check((entry["foundation_kit"] as Dictionary).is_empty(), "planned kit is not fabricated")
 				check((entry["body_profile"] as Dictionary).is_empty(), "planned body does not pretend to have accepted stats")
@@ -69,6 +96,15 @@ func run() -> int:
 				equal(entry["affinity_status"], "planned", "planned affinities cannot be mistaken for active bonuses")
 	for champion_id: String in roster.ordered_ids:
 		check(seen.has(champion_id), "no canonical champion is omitted")
+	equal(race_perks.size(), 21, "all twenty-one racial perk identities reach the presentation")
+	equal(character_perks.size(), 30, "all thirty individual perk identities reach the presentation")
+	var common_details := " ".join(Overview.perk_detail_paragraphs(model.entries_by_id.oh_tipi))
+	check(common_details.contains("between %.0f%% and %.0f%%" % [float(Overview.Perks.MIN_RATIO) / 10.0, float(Overview.Perks.MAX_RATIO) / 10.0]), "shared perk limits derive from the runtime policy")
+	check(common_details.contains("before Flux payment") and common_details.contains("when the paid startup releases"), "details distinguish startup admission from release-time cooldown")
+	check(common_details.contains("own cooldown across slot changes") and common_details.contains("does not lock other ready spells"), "details preserve per-spell cooldown ownership without inventing a global cast lock")
+	check(common_details.contains("normal waits and action restrictions") and common_details.contains("does not cancel those waits"), "details never promise recovery during its normal delay")
+	equal(Overview.perk_summaries({"stats_available": false, "identity_perks": model.entries_by_id.oh_tipi.identity_perks}), [], "unavailable entries cannot advertise playable perks")
+	equal(Overview.perk_detail_paragraphs({}), [], "missing optional data never fabricates perk details")
 	equal(String(model["entries_by_id"]["nico_lai"]["display_name"]), "Waka Aren Si", "compatibility ID displays current identity")
 	equal(String(model["entries_by_id"]["donnok"]["display_name"]), "Don Doko Don", "second compatibility ID displays current identity")
 	equal(String(model["entries_by_id"]["grimm_bow"]["reserved_future_affinity"]), "chaos", "future element reservation is separate from active affinities")

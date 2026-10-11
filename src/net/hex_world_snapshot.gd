@@ -7,10 +7,17 @@ const WirePacking = preload("res://src/net/hex_snapshot_wire_packing.gd")
 const HexWorld = preload("res://src/sim/hex/hex_chemistry_world.gd")
 const ReactionWorld = preload("res://src/sim/world/reaction_movement_world.gd")
 const DynamicCollision = preload("res://src/sim/hex/hex_collision_world.gd")
+const ConcreteWorld = preload("res://src/sim/core/sim_world.gd")
+const ConcretePlayer = preload("res://src/sim/entities/player_state.gd")
+const ConcreteProjectile = preload("res://src/sim/combat/projectile_state.gd")
+const ConcreteConfig = preload("res://src/sim/core/sim_config.gd")
+const ConcreteTransitionPolicy = preload("res://src/sim/core/action_transition_policy.gd")
+const ConcreteCollision = preload("res://src/sim/world/collision_world.gd")
+const SpellStateCodec = preload("res://src/net/expanded_spell_state_codec.gd")
 
-const SCHEMA_VERSION := 3
+const SCHEMA_VERSION := 5
 const RESERVED_EPOCH := 0
-const MAX_RAW_BYTES := 32_768
+const MAX_RAW_BYTES := 65_536
 const MAX_HEX_UNCOMPRESSED_BYTES := 524_288
 const MAX_PLAYERS := 8
 const MAX_TARGETS := 4
@@ -20,9 +27,11 @@ const MAX_ID := 0x7fffffff
 const MAX_TICK := 0x7fffffff
 const MAX_TIMER_TICKS := 1_000_000
 const MAX_ABSOLUTE_POSITION := 100_000_000
-const PLAYER_SCALAR_COUNT := 136
-const PLAYER_VALUE_COUNT := 160
-const PROJECTILE_ROW_SIZE := 30
+const PLAYER_SCALAR_COUNT := 142
+const PLAYER_BASE_VALUE_COUNT := 166
+const PLAYER_VALUE_COUNT := PLAYER_BASE_VALUE_COUNT + SpellStateCodec.STATUS_SIZE
+const PROJECTILE_BASE_ROW_SIZE := 30
+const PROJECTILE_ROW_SIZE := PROJECTILE_BASE_ROW_SIZE + SpellStateCodec.DELIVERY_SIZE
 const MASK_LOW_BITS := 31
 const MASK_LOW_MAX := 0x7fffffff
 const MASK_HIGH_MAX := 31
@@ -64,9 +73,10 @@ const PLAYER_SCALAR_FIELDS: Array[StringName] = [
 	&"wall_skim_lockout_id", &"wall_skim_lockout_ticks", &"landing_ticks", &"landing_intensity", &"impact_recovery_ticks",
 	&"sprinting", &"control_state", &"control_ticks", &"control_x", &"control_y", &"control_speed", &"slow_ratio",
 	&"training_respawn_ticks", &"training_spawn_x", &"training_spawn_y",
+	&"flight_capable", &"jumpsquat_active", &"jumpsquat_ticks", &"double_jump_used", &"wallrun_armed", &"crouching",
 ]
 
-const PLAYER_BOOL_INDICES: Array[int] = [16, 51, 61, 62, 63, 67, 68, 69, 70, 95, 126]
+const PLAYER_BOOL_INDICES: Array[int] = [16, 51, 61, 62, 63, 67, 68, 69, 70, 95, 126, 136, 137, 139, 140, 141]
 const PLAYER_DIRECTION_INDICES: Array[int] = [10, 11, 12, 13, 19, 20, 81, 82, 88, 89, 93, 94, 97, 98, 101, 102, 105, 106, 108, 109, 111, 112, 118, 119, 129, 130]
 
 
@@ -76,22 +86,40 @@ static func capture(world: SimWorld) -> Dictionary:
 	# The complete outer prepare() below validates this deterministic chemistry
 	# encoding in trusted topology, so do not pay for the nested chemistry-only
 	# reconstruction here. Incoming paths still use the public strict validators.
-	var detached := ChemistrySnapshot._capture_for_outer_roundtrip(world.hex_court)
+	# Admit topology once only for the concrete, synchronous production path.
+	# Extensible worlds/actors keep the original fully revalidating roundtrip;
+	# virtual canonical_values/state_hash methods must not bridge this admission.
+	var reuse_eligible := _producer_reuse_eligible(world)
+	var producer: ChemistrySnapshot.ProducerRoundtrip = null
+	var detached: Dictionary
+	if reuse_eligible:
+		producer = ChemistrySnapshot.ProducerRoundtrip.new(world.hex_court)
+		detached = producer.snapshot()
+	else:
+		detached = ChemistrySnapshot._capture_for_outer_roundtrip(world.hex_court)
 	if detached.is_empty():
 		return {}
-	# The producer just computed this from live chemistry. No mutation or re-entry
-	# occurs before the outer canonical bytes are assembled below.
+	# Reuse this only on the proven callback-free path. Fallback actors/worlds
+	# keep their virtual full hash after all live capture callbacks have run.
 	var verified_hex_hash: String = String(detached.authority_hash)
-	var packed_hex := WirePacking.pack(detached, world.hex_court.cells.size())
+	var packed_hex := WirePacking.pack(detached, _topology_cell_count(world.hex_court))
 	if packed_hex.is_empty():
 		return {}
 
 	var player_values := PackedInt32Array()
+	var captured_players: Array[PlayerState] = []
 	var ordered_players: Array[PlayerState] = world.players.duplicate()
 	ordered_players.sort_custom(func(left: PlayerState, right: PlayerState) -> bool: return left.entity_id < right.entity_id)
 	for state: PlayerState in ordered_players:
 		var values := state.canonical_values()
-		if values.size() != PLAYER_VALUE_COUNT or not _valid_player_values(values):
+		if reuse_eligible:
+			# Strict row admission already owns this fresh detached actor. Keep it
+			# only inside this synchronous capture instead of decoding our packed
+			# copy again below; live actors and extension callbacks are never reused.
+			var admitted := _decode_valid_player_values(values)
+			if admitted == null: return {}
+			captured_players.append(admitted)
+		elif values.size() != PLAYER_VALUE_COUNT or not _valid_player_values(values):
 			return {}
 		player_values.append_array(PackedInt32Array(Array(values)))
 
@@ -127,7 +155,7 @@ static func capture(world: SimWorld) -> Dictionary:
 		"map_id": world.map_id,
 		"map_hash": world.map_hash,
 		"transition_hash": world.transition_policy.content_hash,
-		"state_hash": world._state_hash_with_verified_hex_hash(verified_hex_hash),
+		"state_hash": world._state_hash_with_verified_hex_hash(verified_hex_hash) if reuse_eligible else world.state_hash(),
 		"players": player_values,
 		"projectiles": projectile_values,
 		"projectile_grazes": graze_values,
@@ -135,16 +163,44 @@ static func capture(world: SimWorld) -> Dictionary:
 		"deposits": PackedInt32Array(),
 		"reactions": PackedInt32Array(),
 		"dynamic_physics": PackedInt32Array(),
-		"hex": _compress_hex(packed_hex),
+		"hex": {},
 	}
+	if reuse_eligible:
+		# This packed value and its decoded rows are local to this one synchronous
+		# capture. Strictly reconstruct before compression: serializing, inflating,
+		# and parsing our own freshly packed bytes adds no authority proof here.
+		# The deep admission above excludes callbacks throughout this branch.
+		if not _trusted_world_valid(world): return {}
+		if not _outer_lanes_header_valid(snapshot, world) or not _validate_actor_set(captured_players): return {}
+		var decoded_projectiles: Variant = _decode_projectiles(projectile_values, graze_values)
+		if decoded_projectiles == null: return {}
+		var actors := {"players": captured_players, "projectiles": decoded_projectiles}
+		var decoded := WirePacking.strict_decode(packed_hex, _topology_cell_count(world.hex_court))
+		if decoded.is_empty(): return {}
+		if _reconstruct_world(snapshot, world, decoded, actors, producer) == null: return {}
+		# Do not use _compress_hex: strict_decode already proved every packed
+		# grammar check using the actual local cell count, not the global maximum.
+		# Keep both real serialized bounds, including padding and final compression.
+		var raw := var_to_bytes(packed_hex)
+		if raw.is_empty() or raw.size() > MAX_HEX_UNCOMPRESSED_BYTES: return {}
+		var compressed := raw.compress(FileAccess.COMPRESSION_DEFLATE)
+		if compressed.is_empty(): return {}
+		snapshot.hex = {"schema": SCHEMA_VERSION, "size": raw.size(), "bytes": compressed}
+		var size := byte_size(snapshot)
+		if size < 0 or size > MAX_RAW_BYTES: return {}
+		return snapshot
+	# Extensible/opaque sources retain the original compression -> strict byte
+	# preparation -> final live-source comparison, in the same callback order.
+	snapshot.hex = _compress_hex(packed_hex)
 	if snapshot.hex.is_empty():
 		return {}
-	var prepared := prepare(snapshot, world)
-	# prepare() already reconstructs the complete world and verifies its hash
-	# against snapshot.state_hash. This synchronous producer has no mutation or
-	# re-entry point after that captured hash, so repeating both full hashes here
-	# adds no malformed-state rejection.
-	return snapshot if prepared != null else {}
+	var prepared := _prepare_core(snapshot, world, producer)
+	if prepared == null: return {}
+	# Only admitted concrete receivers and object-free authority can omit the
+	# live-source recheck. In fallback, even collision.obstacle_view() can mutate
+	# source authority while detached preparation is in progress.
+	if not reuse_eligible and prepared.state_hash() != world.state_hash(): return {}
+	return snapshot
 
 
 # Transport-only validation. It proves the exact v2 envelope and typed lane
@@ -170,12 +226,20 @@ static func validate_wire_structure(snapshot: Dictionary) -> bool:
 	if _decode_players(players).is_empty() or _decode_projectiles(projectiles, snapshot.projectile_grazes) == null:
 		return false
 	var packed_hex := _decompress_hex(snapshot.hex)
-	return not packed_hex.is_empty() and WirePacking.validate_structure(packed_hex)
+	# Strict decompression already validates the complete packed grammar.
+	return not packed_hex.is_empty()
 
 
-# The returned world owns decoded mutable authority and a fresh copy of the
-# trusted immutable worldbone. No remote geometry or topology is applied.
+# The returned world owns decoded mutable authority; admitted immutable local
+# geometry may be shared. No remote geometry or topology is applied.
 static func prepare(snapshot: Dictionary, trusted_world: SimWorld) -> SimWorld:
+	# Untrusted/public entry retains every dynamic validation. Only immutable
+	# local geometry is admitted already; mutable geometry is validated fresh.
+	# No caller-supplied alleged-trusted context is accepted.
+	return _prepare_core(snapshot, trusted_world, null)
+
+
+static func _prepare_core(snapshot: Dictionary, trusted_world: SimWorld, producer: ChemistrySnapshot.ProducerRoundtrip) -> SimWorld:
 	# Decode each transport lane once. validate_wire_structure() remains the
 	# transport-only public entry point; repeating it here previously serialized,
 	# decompressed, and decoded the same snapshot twice before reconstruction.
@@ -184,40 +248,71 @@ static func prepare(snapshot: Dictionary, trusted_world: SimWorld) -> SimWorld:
 	var size := byte_size(snapshot)
 	if size < 0 or size > MAX_RAW_BYTES:
 		return null
+	var actors := _decode_outer_lanes(snapshot, trusted_world)
+	if actors.is_empty(): return null
+	var cell_count := _topology_cell_count(trusted_world.hex_court)
+	var packed_hex := _inflate_hex(snapshot.hex)
+	if packed_hex.is_empty():
+		return null
+	# Keep every strict packed check, retaining each decoded sparse/variable lane
+	# instead of reconstructing and discarding it in a preliminary validator.
+	var detached := WirePacking.strict_decode(packed_hex, cell_count)
+	if detached.is_empty():
+		return null
+	return _reconstruct_world(snapshot, trusted_world, detached, actors, producer)
+
+
+# Internal shared lane decoder, not a snapshot admission API. Public preparation
+# checks the exact envelope/serialized bound before entering; owned capture
+# constructs that envelope itself and checks the real bound after compression.
+static func _decode_outer_lanes(snapshot: Dictionary, trusted_world: SimWorld) -> Dictionary:
+	if not _outer_lanes_header_valid(snapshot, trusted_world): return {}
+	var decoded_players: Array[PlayerState] = _decode_players(snapshot.players)
+	if decoded_players.is_empty() or not _validate_actor_set(decoded_players):
+		return {}
+	var decoded_projectiles: Variant = _decode_projectiles(snapshot.projectiles, snapshot.projectile_grazes)
+	if decoded_projectiles == null:
+		return {}
+	return {"players": decoded_players, "projectiles": decoded_projectiles}
+
+
+# Shared framing checks only: public preparation still decodes every actor row;
+# capture retains only its own strictly admitted actors, never a trusted input.
+static func _outer_lanes_header_valid(snapshot: Dictionary, trusted_world: SimWorld) -> bool:
 	var header: PackedInt64Array = snapshot.header
 	if header.size() != 8 or header[0] != SimConfig.PROTOCOL_VERSION or not _in_range(header[1], 0, MAX_TICK) \
 		or header[7] != maxi(0, header[1] - 1):
-		return null
+		return false
 	for index: int in range(3, 7):
 		if not _in_range(header[index], 1, MAX_ID):
-			return null
+			return false
 	if String(snapshot.map_id) != trusted_world.map_id or String(snapshot.map_hash) != trusted_world.map_hash \
 		or String(snapshot.transition_hash) != trusted_world.transition_policy.content_hash:
-		return null
+		return false
 	if not _hash_valid(String(snapshot.state_hash)):
-		return null
+		return false
 	var player_values: PackedInt32Array = snapshot.players
 	var projectile_values: PackedInt32Array = snapshot.projectiles
 	if player_values.is_empty() or player_values.size() % PLAYER_VALUE_COUNT != 0 or player_values.size() / PLAYER_VALUE_COUNT > MAX_ACTORS \
 		or projectile_values.size() % PROJECTILE_ROW_SIZE != 0 or projectile_values.size() / PROJECTILE_ROW_SIZE > MAX_PROJECTILES:
-		return null
-	var decoded_players: Array[PlayerState] = _decode_players(player_values)
-	if decoded_players.is_empty() or not _validate_actor_set(decoded_players):
-		return null
-	var decoded_projectiles: Variant = _decode_projectiles(projectile_values, snapshot.projectile_grazes)
-	if decoded_projectiles == null:
-		return null
+		return false
+	return true
 
-	var packed_hex := _decompress_hex(snapshot.hex, trusted_world.hex_court.cells.size())
-	if packed_hex.is_empty():
-		return null
-	var detached := WirePacking.unpack(packed_hex, trusted_world.hex_court.cells.size())
-	if detached.is_empty():
-		return null
+
+# Both adapters supply newly decoded local rows. This stage still performs the
+# entire chemistry semantic/conservation/hash proof and all cross-world checks;
+# it never accepts an alleged-trusted dictionary in place of those validations.
+static func _reconstruct_world(snapshot: Dictionary, trusted_world: SimWorld, detached: Dictionary,
+		actors: Dictionary, producer: ChemistrySnapshot.ProducerRoundtrip) -> SimWorld:
+	var header: PackedInt64Array = snapshot.header
 	# _prepare() already creates a fresh authority world from trusted topology,
 	# validates every detached relation, and verifies the authority hash. Calling
 	# restore() here used to allocate a second 1,493-cell blank and copy the first.
-	var decoded_hex: HexChemistryWorld = ChemistrySnapshot._prepare(detached, trusted_world.hex_court)
+	var decoded_hex: HexChemistryWorld
+	if producer == null:
+		decoded_hex = ChemistrySnapshot._prepare(detached, trusted_world.hex_court)
+	else:
+		decoded_hex = producer.consume(detached, trusted_world.hex_court)
 	if decoded_hex == null or decoded_hex.current_tick != header[7]:
 		return null
 	# The former blank+restore path advanced a fresh target from revision 0 to 1.
@@ -242,8 +337,8 @@ static func prepare(snapshot: Dictionary, trusted_world: SimWorld) -> SimWorld:
 	prepared.next_deposit_id = header[5]
 	prepared.next_reaction_id = header[6]
 	prepared.hex_court = decoded_hex
-	prepared.players = decoded_players
-	prepared.projectiles = decoded_projectiles
+	prepared.players = actors.players
+	prepared.projectiles = actors.projectiles
 	prepared.fields = []
 	prepared.deposits = []
 	prepared.reactions = []
@@ -256,6 +351,54 @@ static func prepare(snapshot: Dictionary, trusted_world: SimWorld) -> SimWorld:
 	if prepared._state_hash_with_verified_hex_hash(String(detached.authority_hash)) != String(snapshot.state_hash):
 		return null
 	return prepared
+
+
+static func _producer_reuse_eligible(world: SimWorld) -> bool:
+	if world.get_script() != ConcreteWorld or world.hex_court.get_script() != HexWorld: return false
+	# SimWorld.is_valid() calls config.is_valid() again during outer prepare.
+	# A subclass may mutate authority there even with concrete world/actors.
+	if world.config.get_script() != ConcreteConfig or world.transition_policy.get_script() != ConcreteTransitionPolicy: return false
+	for actor: PlayerState in world.players:
+		if actor.get_script() != ConcretePlayer: return false
+	for projectile: ProjectileState in world.projectiles:
+		if projectile.get_script() != ConcreteProjectile: return false
+	# _clone_base_collision invokes the base view while preparing the detached
+	# roundtrip. Reject extension receivers before calling any virtual view or
+	# reading obstacle properties with potentially customized getters.
+	if world.collision == null: return false
+	var base: CollisionWorld = world.collision
+	if base.get_script() == DynamicCollision:
+		base = (base as HexCollisionWorld).base_world
+	elif base.get_script() != ConcreteCollision:
+		return false
+	if base == null or base.get_script() != ConcreteCollision: return false
+	for obstacle: CollisionWorld.Obstacle in base.obstacle_view():
+		if obstacle == null or obstacle.get_script() != ConcreteCollision.Obstacle: return false
+	# Concrete methods may still stringify opaque Object keys/values in mutable
+	# authority. This is a stateless admission scan, never a cached validation;
+	# malformed/opaque data keeps the full fallback and all existing refusal checks.
+	for lane: Variant in [world.hex_court.casts, world.hex_court.products, world.hex_court.pending,
+		world.hex_court.sources, world.hex_court.exposure, world.hex_court.flow_carry, world.hex_court.metrics]:
+		if not _callback_free_authority(lane): return false
+	for cell: Variant in world.hex_court.dynamic_cell_keys():
+		if typeof(cell) != TYPE_VECTOR2I or not _callback_free_authority(world.hex_court.cell_record_value(cell)): return false
+	return true
+
+
+static func _callback_free_authority(value: Variant, depth: int = 0) -> bool:
+	# The depth guard also makes cyclic caller-owned containers decline reuse.
+	# Packed arrays contain only primitive values and require no interpreted scan.
+	if depth >= 64: return false
+	match typeof(value):
+		TYPE_OBJECT, TYPE_CALLABLE, TYPE_SIGNAL:
+			return false
+		TYPE_DICTIONARY:
+			for key: Variant in value:
+				if not _callback_free_authority(key, depth + 1) or not _callback_free_authority(value[key], depth + 1): return false
+		TYPE_ARRAY:
+			for item: Variant in value:
+				if not _callback_free_authority(item, depth + 1): return false
+	return true
 
 
 static func restore(snapshot: Dictionary, target: SimWorld) -> bool:
@@ -300,6 +443,13 @@ static func _compress_hex(packed: Dictionary) -> Dictionary:
 
 
 static func _decompress_hex(envelope: Dictionary, cell_count: int = -1) -> Dictionary:
+	var packed := _inflate_hex(envelope)
+	return packed if not packed.is_empty() and WirePacking.validate_structure(packed, cell_count) else {}
+
+
+# Envelope-only internal stage. The caller must follow with strict_decode or
+# validate_structure; this helper never accepts chemistry authority by itself.
+static func _inflate_hex(envelope: Dictionary) -> Dictionary:
 	if envelope.size() != 3 or not envelope.has("schema") or not envelope.has("size") or not envelope.has("bytes") \
 		or typeof(envelope.schema) != TYPE_INT or int(envelope.schema) != SCHEMA_VERSION \
 		or typeof(envelope["size"]) != TYPE_INT or not _in_range(int(envelope["size"]), 1, MAX_HEX_UNCOMPRESSED_BYTES) \
@@ -311,8 +461,7 @@ static func _decompress_hex(envelope: Dictionary, cell_count: int = -1) -> Dicti
 	var value: Variant = bytes_to_var(raw)
 	if not value is Dictionary:
 		return {}
-	var packed: Dictionary = value
-	return packed if WirePacking.validate_structure(packed, cell_count) else {}
+	return value
 
 
 static func _clone_base_collision(source: CollisionWorld) -> CollisionWorld:
@@ -342,6 +491,9 @@ static func _capture_projectile(shot: ProjectileState, ledger: Dictionary) -> Pa
 		shot.reaction_strength, shot.range_subunit,
 		int(ledger.initial_strength), int(ledger.remaining_strength),
 	])
+	var delivery := SpellStateCodec.capture_delivery(shot)
+	if delivery.is_empty(): return PackedInt32Array()
+	row.append_array(PackedInt64Array(Array(delivery)))
 	for number: int in row:
 		if number < -0x80000000 or number > 0x7fffffff:
 			return PackedInt32Array()
@@ -355,14 +507,8 @@ static func _decode_players(values: PackedInt32Array) -> Array[PlayerState]:
 		return result
 	for offset: int in range(0, values.size(), PLAYER_VALUE_COUNT):
 		var row := PackedInt64Array(Array(values.slice(offset, offset + PLAYER_VALUE_COUNT)))
-		if not _valid_player_values(row):
-			return []
-		var state := PlayerState.new(row[0])
-		for index: int in PLAYER_SCALAR_COUNT:
-			state.set(PLAYER_SCALAR_FIELDS[index], bool(row[index]) if index in PLAYER_BOOL_INDICES else row[index])
-		state.spell_wire_ids = PackedInt32Array(Array(row.slice(PLAYER_SCALAR_COUNT, PLAYER_SCALAR_COUNT + PlayerState.SPELL_SLOT_COUNT)))
-		state.spell_cooldown_ticks = PackedInt32Array(Array(row.slice(PLAYER_SCALAR_COUNT + PlayerState.SPELL_SLOT_COUNT, PLAYER_VALUE_COUNT)))
-		if state.canonical_values() != row:
+		var state := _decode_valid_player_values(row)
+		if state == null:
 			return []
 		result.append(state)
 	return result
@@ -394,6 +540,7 @@ static func _decode_projectiles(rows: PackedInt32Array, grazes: PackedInt32Array
 		shot.range_subunit = row[27]
 		shot.initial_strength = row[28]
 		shot.remaining_strength = row[29]
+		if not SpellStateCodec.restore_delivery(shot, row.slice(PROJECTILE_BASE_ROW_SIZE)): return null
 		shot.grazed_entity_ids = grazes_by_id[row[0]]
 		result.append(shot)
 	if seen_ids.size() != grazes_by_id.size():
@@ -426,69 +573,84 @@ static func _decode_grazes(values: PackedInt32Array) -> Variant:
 
 
 static func _valid_player_values(values: PackedInt64Array) -> bool:
+	return _decode_valid_player_values(values) != null
+
+
+# One strict row admission owns the fresh concrete actor it has already checked.
+# Callers asking only for validity retain the boolean contract; decode keeps the
+# same actor instead of repeating its construction, assignments and canonical
+# comparison. No mutable input, persistent cache or caller-supplied trust flag.
+static func _decode_valid_player_values(values: PackedInt64Array) -> PlayerState:
 	if values.size() != PLAYER_VALUE_COUNT or values[0] <= 0 or values[0] > MAX_ID or values[1] <= 0 or values[1] > 10_000:
-		return false
+		return null
 	if values[2] not in [PlayerState.ActorKind.CHAMPION, PlayerState.ActorKind.TRAINING_TARGET] or values[3] < 0 or values[3] > 4096:
-		return false
+		return null
 	for value: int in values:
 		if value < -MAX_ID or value > MAX_ID:
-			return false
+			return null
 	for index: int in PLAYER_BOOL_INDICES:
 		if values[index] not in [0, 1]:
-			return false
+			return null
 	for index: int in PLAYER_DIRECTION_INDICES:
 		if values[index] < -1000 or values[index] > 1000:
-			return false
+			return null
+	if values[138] < 0 or values[138] > (MovementTuning.JUMPSQUAT_CHARGE_MS * 120 + 999) / 1000:
+		return null
 	for index: int in [4, 5, 134, 135]:
 		if absi(values[index]) > MAX_ABSOLUTE_POSITION:
-			return false
+			return null
 	if (values[21] == -1) != (values[22] == -1) or values[21] < -1 or values[22] < -1 \
 		or values[21] > MAX_ABSOLUTE_POSITION or values[22] > MAX_ABSOLUTE_POSITION:
-		return false
+		return null
 	if absi(values[6]) >= SimConfig.TICK_RATE or absi(values[7]) >= SimConfig.TICK_RATE \
 		or absi(values[8]) > 10_000_000 or absi(values[9]) > 10_000_000:
-		return false
+		return null
 	for index: int in [34, 40, 46]:
 		if absi(values[index]) >= SimConfig.TICK_RATE:
-			return false
+			return null
 	if absi(values[66]) >= 2 * SimConfig.TICK_RATE:
-		return false
+		return null
 	if values[14] <= 0 or values[14] > 100_000 or values[15] < 0 or values[15] >= PlayerState.MovementMode.size() \
 		or values[86] < 0 or values[86] >= PlayerState.MovementMode.size() or values[127] < 0 or values[127] >= PlayerState.ControlState.size():
-		return false
+		return null
 	for pair: Vector2i in [Vector2i(31, 33), Vector2i(37, 39), Vector2i(42, 45)]:
 		if values[pair.x] < 0 or values[pair.x] > 1_000_000 or values[pair.y] < 0 or values[pair.y] > values[pair.x]:
-			return false
+			return null
 	for index: int in [32, 38, 43]:
 		if values[index] < 0 or values[index] > 1_000_000:
-			return false
+			return null
 	for index: int in PLAYER_SCALAR_COUNT:
 		if String(PLAYER_SCALAR_FIELDS[index]).ends_with("_ticks") and (values[index] < 0 or values[index] > MAX_TIMER_TICKS):
-			return false
+			return null
 	# Production practice targets are deliberately stationary; champions still require positive movement.
 	if values[44] < 0 or (values[44] == 0 and values[2] != PlayerState.ActorKind.TRAINING_TARGET) or values[44] > 5000 or values[132] <= 0 or values[132] > 1000 \
 		or values[64] < 0 or values[64] > MAX_ABSOLUTE_POSITION or values[85] < 0 or values[85] > 2 or values[90] < 0 or values[90] > 2 \
 		or values[124] < 0 or values[124] > 1000 or values[131] < 0 or values[131] > 10_000_000:
-		return false
+		return null
 	if values[72] not in [MovementTuning.FLOAT_SMALL_DURATION_MS, MovementTuning.FLOAT_MIDDLE_DURATION_MS, MovementTuning.FLOAT_LARGE_DURATION_MS]:
-		return false
+		return null
 	if values[17] != 0 and not CombatTuning.is_runtime_wire_id(values[17]):
-		return false
-	for index: int in range(PLAYER_SCALAR_COUNT + PlayerState.SPELL_SLOT_COUNT, PLAYER_VALUE_COUNT):
+		return null
+	for index: int in range(PLAYER_SCALAR_COUNT + PlayerState.SPELL_SLOT_COUNT, PLAYER_BASE_VALUE_COUNT):
 		if values[index] < 0 or values[index] > MAX_TIMER_TICKS:
-			return false
+			return null
 	var state := PlayerState.new(values[0])
 	for index: int in PLAYER_SCALAR_COUNT:
 		state.set(PLAYER_SCALAR_FIELDS[index], bool(values[index]) if index in PLAYER_BOOL_INDICES else values[index])
 	state.spell_wire_ids = PackedInt32Array(Array(values.slice(PLAYER_SCALAR_COUNT, PLAYER_SCALAR_COUNT + PlayerState.SPELL_SLOT_COUNT)))
-	state.spell_cooldown_ticks = PackedInt32Array(Array(values.slice(PLAYER_SCALAR_COUNT + PlayerState.SPELL_SLOT_COUNT, PLAYER_VALUE_COUNT)))
-	return state.has_valid_spell_slots() and state.canonical_values() == values
+	state.spell_cooldown_ticks = PackedInt32Array(Array(values.slice(PLAYER_SCALAR_COUNT + PlayerState.SPELL_SLOT_COUNT, PLAYER_BASE_VALUE_COUNT)))
+	var status := values.slice(PLAYER_BASE_VALUE_COUNT)
+	if not SpellStateCodec.valid_status_values(status): return null
+	state.spell_status_values = PackedInt32Array(Array(status))
+	return state if state.has_valid_spell_slots() and state.canonical_values() == values else null
 
 
 static func _valid_projectile_row(row: PackedInt32Array) -> bool:
 	if row.size() != PROJECTILE_ROW_SIZE or row[0] <= 0 or row[1] <= 0 or row[2] <= 0 or row[22] <= 0:
 		return false
-	if not CombatTuning.is_runtime_wire_id(row[3]) or row[4] < 1 or row[4] > 8:
+	if not CombatTuning.is_runtime_wire_id(row[3]) or not ElementRules.is_active_wire(row[4]):
+		return false
+	if int(CombatTuning.projectile_definition(row[3]).get("element_wire_id", 0)) != row[4]:
 		return false
 	for index: int in [5, 6, 7, 8]:
 		if absi(row[index]) > MAX_ABSOLUTE_POSITION:
@@ -508,6 +670,7 @@ static func _valid_projectile_row(row: PackedInt32Array) -> bool:
 		return false
 	if row[24] < 0 or row[25] < 0 or row[25] > MASK_HIGH_MAX or row[26] < 1 or row[26] > 15:
 		return false
+	if not SpellStateCodec.valid_delivery(row.slice(PROJECTILE_BASE_ROW_SIZE), row[3]): return false
 	return row[27] >= 0 and row[27] < ProjectileState.RANGE_SUBUNITS and row[28] >= 1 and row[28] <= 15 and row[29] >= 0 and row[29] <= row[28]
 
 
@@ -607,6 +770,8 @@ static func _validate_relations(world: SimWorld) -> bool:
 
 static func _blank_trusted_hex(trusted: HexChemistryWorld) -> HexChemistryWorld:
 	var result := HexWorld.new()
+	if ChemistrySnapshot._owned_immutable_topology(trusted) != null:
+		return result if trusted.blank_cell_storage_to(result) else null
 	var cells: Array[Vector2i] = []
 	for key: Variant in trusted.cells:
 		if not key is Vector2i:
@@ -618,6 +783,12 @@ static func _blank_trusted_hex(trusted: HexChemistryWorld) -> HexChemistryWorld:
 		for property_name: String in ["terrain", "elevation", "structure"]:
 			result.cells[cell][property_name] = trusted.cells[cell][property_name]
 	return result
+
+
+static func _topology_cell_count(world: HexChemistryWorld) -> int:
+	# Keep subclass compatibility exact: virtual accessors cannot conceal a
+	# malformed mutable topology from the legacy validation route.
+	return world.cell_count() if world.get_script() == HexWorld else world.cells.size()
 
 
 static func _trusted_world_valid(world: SimWorld) -> bool:

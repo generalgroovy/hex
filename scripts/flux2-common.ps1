@@ -49,17 +49,55 @@ function Assert-FluxGodotVersion([string]$GodotBin) {
     return $actual
 }
 
+function Initialize-FluxWindowObservation {
+    if ('FluxWindowObservationNative' -as [type]) { return }
+    Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+public static class FluxWindowObservationNative {
+    [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
+    [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr window, out uint processId);
+    [DllImport("user32.dll")] [return: MarshalAs(UnmanagedType.Bool)] public static extern bool IsWindowVisible(IntPtr window);
+    [DllImport("user32.dll")] [return: MarshalAs(UnmanagedType.Bool)] public static extern bool IsIconic(IntPtr window);
+}
+'@
+}
+
+function Get-FluxWindowObservation([Diagnostics.Process]$Process, [long]$ElapsedMilliseconds) {
+    $sample = [ordered]@{ elapsed_ms = $ElapsedMilliseconds; foreground_process_matches = $null; main_window_available = $null; main_window_visible = $null; main_window_minimized = $null; error = $null }
+    try {
+        $Process.Refresh()
+        if ($Process.HasExited) { $sample.error = 'Process exited before this observation.'; return $sample }
+        $foreground = [FluxWindowObservationNative]::GetForegroundWindow()
+        if ($foreground -ne [IntPtr]::Zero) {
+            [uint32]$foregroundProcessId = 0
+            $threadId = [FluxWindowObservationNative]::GetWindowThreadProcessId($foreground, [ref]$foregroundProcessId)
+            if ($threadId -ne 0) { $sample.foreground_process_matches = $foregroundProcessId -eq $Process.Id }
+        }
+        $mainWindow = $Process.MainWindowHandle
+        $sample.main_window_available = $mainWindow -ne [IntPtr]::Zero
+        if ($mainWindow -ne [IntPtr]::Zero) {
+            $sample.main_window_visible = [FluxWindowObservationNative]::IsWindowVisible($mainWindow)
+            $sample.main_window_minimized = [FluxWindowObservationNative]::IsIconic($mainWindow)
+        }
+    } catch { $sample.error = $_.Exception.Message }
+    return $sample
+}
+
 function Invoke-FluxGodotChecked {
     param(
         [string]$GodotBin,
         [string[]]$Arguments,
         [string]$LogPath,
         [switch]$RejectWarnings,
-        [ValidateRange(1, 900)][int]$TimeoutSeconds = 180
+        [ValidateRange(1, 1800)][int]$TimeoutSeconds = 180,
+        [switch]$VisibleWindow,
+        [Collections.Generic.List[object]]$WindowObservations = $null
     )
     $lease = Enter-FluxEngineRun 'checked-engine'
     $process = $null
     try {
+    if ($null -ne $WindowObservations) { Initialize-FluxWindowObservation }
     $errorPath = "$LogPath.err"
     foreach ($path in @($LogPath, $errorPath)) {
         if (Test-Path -LiteralPath $path) { Remove-Item -LiteralPath $path -Force }
@@ -67,10 +105,17 @@ function Invoke-FluxGodotChecked {
     # Start-Process joins ArgumentList values into one command line on Windows.
     # Quote every value so clones living below a path with spaces remain valid.
     $quotedArguments = $Arguments | ForEach-Object { '"' + $_.Replace('"', '\"') + '"' }
-    $process = Start-FluxOwnedProcess @{FilePath=$GodotBin; ArgumentList=$quotedArguments; RedirectStandardOutput=$LogPath; RedirectStandardError=$errorPath; WindowStyle='Hidden'}
+    $process = Start-FluxOwnedProcess @{FilePath=$GodotBin; ArgumentList=$quotedArguments; RedirectStandardOutput=$LogPath; RedirectStandardError=$errorPath; WindowStyle=$(if ($VisibleWindow) { 'Normal' } else { 'Hidden' })}
+    $observationWatch = if ($null -ne $WindowObservations) { [Diagnostics.Stopwatch]::StartNew() } else { $null }
+    $nextObservationMs = 0L
     # Failed test scripts may never exit their own loops. Bound this owned child.
     $deadline = [DateTime]::UtcNow.AddSeconds($TimeoutSeconds)
-    while (-not $process.WaitForExit(250) -and [DateTime]::UtcNow -lt $deadline) { }
+    while (-not $process.WaitForExit(250) -and [DateTime]::UtcNow -lt $deadline) {
+        if ($null -ne $WindowObservations -and $observationWatch.ElapsedMilliseconds -ge $nextObservationMs) {
+            $WindowObservations.Add((Get-FluxWindowObservation $process $observationWatch.ElapsedMilliseconds))
+            $nextObservationMs = $observationWatch.ElapsedMilliseconds + 500L
+        }
+    }
     if (-not $process.HasExited) {
         $process.Kill()
         $process.WaitForExit()

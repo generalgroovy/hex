@@ -8,12 +8,38 @@ const FIRE_RAPID := 180
 
 
 func run() -> int:
+	_test_live_play_has_no_trails()
 	_test_cumulative_allocation_and_terminal_remainder()
 	_test_split_branches_share_one_allowance()
 	_test_refusals_are_atomic_and_rapid_is_trail_free()
 	_test_parts_expire_independently()
 	_test_owner_and_global_caps_preserve_paid_capacity()
 	return finish("hex-trail-emitter")
+
+
+func _test_live_play_has_no_trails() -> void:
+	# Historical direct-emitter fixtures below retain save/ledger compatibility.
+	# This checks actual live paid inputs, where the emitter is no longer called.
+	for wire: int in [FIRE_BOLT, FIRE_HEAVY, FIRE_RAPID]:
+		var world := _world()
+		var actor := world.player()
+		actor.position_x = 600_000
+		actor.position_y = 480_000
+		actor.spawn_protection_ticks = 0
+		check(actor.place_proven_spell(0, wire), "live trail-free cast equips")
+		var saw_flight := false
+		var saw_terminal := false
+		for frame: int in 160:
+			var command := SimCommand.new(world.tick, 1, 0, 0, 0, SimCommand.PRESSED_SPELL_1 if frame == 0 else 0, 1000, 0, 760_000, 480_000)
+			check(world.step([command]), "live trail-free paid tick remains valid")
+			saw_flight = saw_flight or not world.projectiles.is_empty()
+			for record: Dictionary in world.hex_court.casts.values():
+				equal(int(record.get("trail_spent", 0)), 0, "no flight payload is diverted to residue")
+				for part: Dictionary in record.ground_parts.values():
+					check(not bool(part.get("trail", false)), "live ground parts are impact-only")
+					saw_terminal = true
+			check(world.hex_court.conservation_valid(), "retired trail emission cannot mint or lose matter")
+		check(saw_flight and saw_terminal, "Bolt, Heavy and Rapid retain both flight and actual impact fields")
 
 
 func _test_cumulative_allocation_and_terminal_remainder() -> void:

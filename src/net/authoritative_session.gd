@@ -98,7 +98,13 @@ func register_peers(events: Array[Dictionary]) -> int:
 			names_by_entity[entity_id] = safe_name
 			last_processed_input_sequence_by_entity[entity_id] = -1
 			existing_state.last_event = "farflow_return"
-			_apply_charter_team(existing_state)
+			# The live round owns participant teams; resuming is not a new
+			# admission. Hearth travellers and waiting observers use the charter.
+			var round_owns_team := session_round != null \
+				and session_round.phase in [SessionRound.Phase.ACTIVE, SessionRound.Phase.RESULT] \
+				and session_round.is_participant(entity_id)
+			if not round_owns_team:
+				_apply_charter_team(existing_state)
 			hearth.connect_entity(entity_id)
 			registered += 1
 			continue
@@ -132,6 +138,10 @@ func register_peers(events: Array[Dictionary]) -> int:
 func set_charter(requested_charter_id: String) -> bool:
 	if world == null or not SessionCharter.is_valid_id(requested_charter_id):
 		return false
+	if session_round != null and session_round.phase != SessionRound.Phase.HEARTH:
+		return false
+	if hearth != null:
+		hearth.cancel_countdown()
 	charter_id = requested_charter_id
 	for state: PlayerState in world.players:
 		_apply_charter_team(state)
@@ -174,6 +184,18 @@ func remove_peers(events: Array[Dictionary]) -> int:
 		for index: int in range(world.players.size() - 1, -1, -1):
 			var state: PlayerState = world.players[index]
 			if state.entity_id == entity_id and state.actor_kind == PlayerState.ActorKind.CHAMPION:
+				if world.hex_court != null:
+					world.hex_court.retire_owner_material(entity_id)
+					for shot_index: int in range(world.projectiles.size() - 1, -1, -1):
+						var shot: ProjectileState = world.projectiles[shot_index]
+						if shot.owner_id == entity_id:
+							world.projectiles.remove_at(shot_index)
+						else:
+							var graze_index := shot.grazed_entity_ids.find(entity_id)
+							if graze_index >= 0:
+								shot.grazed_entity_ids.remove_at(graze_index)
+					if world.collision is HexCollisionWorld:
+						world.collision.set_hex_surfaces(world.hex_court, world.tick)
 				world.players.remove_at(index)
 				removed += 1
 				break
@@ -212,7 +234,7 @@ func commands_for_tick(local_command: SimCommand) -> Array[SimCommand]:
 		0 if host_input_locked else local_command.move_x,
 		0 if host_input_locked else local_command.move_y,
 		0 if host_input_locked else local_command.held_actions,
-		0 if host_input_locked else local_command.pressed_actions,
+		SimCommand.PRESSED_CANCEL_MOVEMENT if host_input_locked else local_command.pressed_actions,
 		local_command.aim_x,
 		local_command.aim_y,
 		local_command.aim_target_x,
@@ -234,7 +256,7 @@ func commands_for_tick(local_command: SimCommand) -> Array[SimCommand]:
 			0 if stale else int(packet.get("move_x", 0)),
 			0 if stale else int(packet.get("move_y", 0)),
 			0 if stale else int(packet.get("held", 0)),
-			0 if stale else int(packet.get("pressed", 0)),
+			SimCommand.PRESSED_CANCEL_MOVEMENT if stale else int(packet.get("pressed", 0)),
 			state.aim_x if stale else int(packet.get("aim_x", state.aim_x)),
 			state.aim_y if stale else int(packet.get("aim_y", state.aim_y)),
 			-1 if stale else int(packet.get("aim_target_x", -1)),
@@ -258,7 +280,7 @@ func _round_input_locked(entity_id: int) -> bool:
 	# Every nonparticipant remains an inert next-gathering observer. During the
 	# result, participants are frozen as well. This is host authority, not a
 	# cooperative client convention.
-	return not session_round.scores_by_entity.has(entity_id) or session_round.phase == SessionRound.Phase.RESULT
+	return not session_round.is_participant(entity_id) or session_round.phase == SessionRound.Phase.RESULT
 
 
 func input_locked(entity_id: int) -> bool:
@@ -293,32 +315,7 @@ func capture_envelope() -> Dictionary:
 	var authority := HexSnapshot.capture(world)
 	if authority.is_empty():
 		return {}
-	var names: Array = []
-	var champions: Array[PlayerState] = []
-	for state: PlayerState in world.players:
-		if state.actor_kind == PlayerState.ActorKind.CHAMPION:
-			champions.append(state)
-	champions.sort_custom(func(left: PlayerState, right: PlayerState) -> bool: return left.entity_id < right.entity_id)
-	for state: PlayerState in champions:
-		var safe_name := SessionSnapshot._safe_name(String(names_by_entity.get(state.entity_id, "Traveller %d" % state.entity_id)))
-		var safe_event := SessionSnapshot._safe_event_name(state.last_event)
-		if safe_name.is_empty():
-			return {}
-		names.append([state.entity_id, safe_name, safe_event])
-	var events: Array[PackedInt64Array] = []
-	var first_event_index := maxi(0, pending_combat_events.size() - SessionSnapshot.MAX_EVENTS)
-	for index: int in range(first_event_index, pending_combat_events.size()):
-		var encoded := SessionSnapshot.encode_event(pending_combat_events[index])
-		if encoded.is_empty():
-			return {}
-		events.append(encoded)
-	var session := WorldEnvelope.make_hex_session(
-		names,
-		events,
-		hearth.capture(world.tick, SessionCharter.maximum_players(charter_id)),
-		session_round.capture(world),
-		PackedInt32Array([0, 0, pending_combat_event_overflow_count, 0]),
-	)
+	var session := AuthoritativeSession._capture_hex_session_metadata(self)
 	if session.is_empty():
 		return {}
 	var envelope := WorldEnvelope.wrap_hex(authority, session, world_epoch)
@@ -328,18 +325,51 @@ func capture_envelope() -> Dictionary:
 	return envelope
 
 
+# Static extraction preserves the public capture's authority-before-metadata
+# order without introducing a new virtual hook between those stages. This is
+# only session data, never authority admission or a reusable validation token.
+static func _capture_hex_session_metadata(source: AuthoritativeSession) -> Dictionary:
+	var names: Array = []
+	var champions: Array[PlayerState] = []
+	for state: PlayerState in source.world.players:
+		if state.actor_kind == PlayerState.ActorKind.CHAMPION:
+			champions.append(state)
+	champions.sort_custom(func(left: PlayerState, right: PlayerState) -> bool: return left.entity_id < right.entity_id)
+	for state: PlayerState in champions:
+		var safe_name := SessionSnapshot._safe_name(String(source.names_by_entity.get(state.entity_id, "Traveller %d" % state.entity_id)))
+		var safe_event := SessionSnapshot._safe_event_name(state.last_event)
+		if safe_name.is_empty():
+			return {}
+		names.append([state.entity_id, safe_name, safe_event])
+	var events: Array[PackedInt64Array] = []
+	var first_event_index := maxi(0, source.pending_combat_events.size() - SessionSnapshot.MAX_EVENTS)
+	for index: int in range(first_event_index, source.pending_combat_events.size()):
+		var encoded := SessionSnapshot.encode_event(source.pending_combat_events[index])
+		if encoded.is_empty():
+			return {}
+		events.append(encoded)
+	return WorldEnvelope.make_hex_session(
+		names,
+		events,
+		source.hearth.capture(source.world.tick, SessionCharter.maximum_players(source.charter_id)),
+		source.session_round.capture(source.world),
+		PackedInt32Array([0, 0, source.pending_combat_event_overflow_count, 0]),
+	)
+
+
 func toggle_ready(entity_id: int) -> bool:
 	return hearth.toggle_ready(entity_id) if hearth != null else false
 
 
 func can_start_practice() -> bool:
-	return hearth != null and hearth.all_connected_ready()
+	return hearth != null and session_round != null and session_round.phase == SessionRound.Phase.HEARTH \
+		and hearth.all_connected_ready(SessionCharter.required_players(charter_id))
 
 
 func start_practice_countdown(entity_id: int) -> bool:
-	if hearth == null or world == null:
+	if hearth == null or world == null or not can_start_practice():
 		return false
-	return hearth.start_countdown(entity_id, world.tick, world.config.milliseconds_to_ticks(3000))
+	return hearth.start_countdown(entity_id, world.tick, world.config.milliseconds_to_ticks(3000), SessionCharter.required_players(charter_id))
 
 
 func practice_countdown_active() -> bool:
@@ -358,7 +388,10 @@ func clear_practice_start() -> void:
 func begin_round(arena_definition: Dictionary) -> bool:
 	if session_round == null or hearth == null or world == null:
 		return false
-	return session_round.begin(world, hearth.connected_entity_ids(), arena_definition)
+	var required_count := SessionCharter.required_players(charter_id)
+	if required_count > 0 and (hearth.connected_count() != required_count or hearth.returning_count() > 0):
+		return false
+	return session_round.begin(world, hearth.connected_entity_ids(), arena_definition, SessionCharter.round_mode(charter_id))
 
 
 func advance_round(events: Array[Dictionary]) -> Array[Dictionary]:
@@ -426,7 +459,7 @@ func replace_world(new_world: SimWorld, spawn_pixels: Vector2i) -> bool:
 		return _fail(candidate.last_error if not candidate.last_error.is_empty() else "Replacement roster could not bind")
 	for old_state: PlayerState in old_champions:
 		var replacement: PlayerState = candidate.world.player(old_state.entity_id)
-		if replacement == null or replacement == old_state or not _restore_persistent_champion(old_state, replacement, champion_catalog):
+		if replacement == null or replacement == old_state or not _restore_persistent_champion(old_state, replacement, champion_catalog, not session_round.team_scoring()):
 			return _fail("Replacement roster could not restore champion %d" % old_state.entity_id)
 	# A world transition closes the active/result instance while retaining the
 	# monotonic round identity for the next begin().
@@ -474,9 +507,10 @@ func _replacement_world_valid(new_world: SimWorld) -> bool:
 	return true
 
 
-static func _restore_persistent_champion(source: PlayerState, target: PlayerState, catalog: ChampionCatalog) -> bool:
+static func _restore_persistent_champion(source: PlayerState, target: PlayerState, catalog: ChampionCatalog, restore_source_team: bool = true) -> bool:
 	if source == null or target == null or source.actor_kind != PlayerState.ActorKind.CHAMPION or source.entity_id != target.entity_id:
 		return false
+	var assigned_hearth_team := target.team_id
 	var champion_id := catalog.champion_id_from_wire(source.champion_wire_id)
 	if champion_id.is_empty() or not catalog.apply_to_player(target, champion_id):
 		return false
@@ -493,7 +527,10 @@ static func _restore_persistent_champion(source: PlayerState, target: PlayerStat
 		return false
 	var reset_position := Vector2i(target.position_x, target.position_y)
 	target.reset_for_spawn(reset_position)
-	target.team_id = source.team_id
+	# Match teams belong to the completed round, not persistent champion data.
+	# Candidate.bind() already assigned the next Hearth's charter-owned teams;
+	# keep those for team-round returns while preserving the legacy FFA path.
+	target.team_id = source.team_id if restore_source_team else assigned_hearth_team
 	return true
 
 

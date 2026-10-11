@@ -1,0 +1,263 @@
+{
+  "schema_version": 1,
+  "status": "STATIC_VERIFIED",
+  "meaning": "Literal-row extraction plus explicitly encoded, source-inspected overrides; not Godot execution.",
+  "units": {
+    "world_units_per_pixel": 1000,
+    "ticks_per_second": 120,
+    "health_units_per_hp": 1000,
+    "ratios_denominator": 1000
+  },
+  "reactions": [
+    {
+      "name": "Flood",
+      "wire_id": 316,
+      "internal_id": "flood",
+      "input_elements": [
+        "water",
+        "water"
+      ],
+      "selection_kind": "disk",
+      "formation_ticks": 24,
+      "active_ticks": 360,
+      "decay_ticks": 60,
+      "selection_radius_world_units": 64000,
+      "selection_reach_world_units": null,
+      "outer_radius_world_units": null,
+      "inner_radius_world_units": null,
+      "anchor_motion_world_units_per_second": 0,
+      "source_status": "SOURCE_DERIVED_NOT_RUNTIME_TESTED",
+      "references": [
+        "P:L33-L73",
+        "P:L120-L194",
+        "P:L197-L282",
+        "W:L600-L642"
+      ]
+    },
+    {
+      "name": "Rampart",
+      "wire_id": 301,
+      "internal_id": "fortify",
+      "input_elements": [
+        "earth",
+        "earth"
+      ],
+      "selection_kind": "disk",
+      "formation_ticks": 22,
+      "active_ticks": 375,
+      "decay_ticks": 48,
+      "selection_radius_world_units": 34000,
+      "selection_reach_world_units": null,
+      "outer_radius_world_units": null,
+      "inner_radius_world_units": null,
+      "anchor_motion_world_units_per_second": 0,
+      "source_status": "SOURCE_DERIVED_NOT_RUNTIME_TESTED",
+      "references": [
+        "P:L33-L73",
+        "P:L120-L194",
+        "P:L197-L282",
+        "W:L600-L642"
+      ]
+    },
+    {
+      "name": "Conflagration",
+      "wire_id": 309,
+      "internal_id": "conflagration",
+      "input_elements": [
+        "fire",
+        "fire"
+      ],
+      "selection_kind": "disk",
+      "formation_ticks": 24,
+      "active_ticks": 360,
+      "decay_ticks": 60,
+      "selection_radius_world_units": 64000,
+      "selection_reach_world_units": null,
+      "outer_radius_world_units": null,
+      "inner_radius_world_units": null,
+      "anchor_motion_world_units_per_second": 0,
+      "source_status": "SOURCE_DERIVED_NOT_RUNTIME_TESTED",
+      "references": [
+        "P:L33-L73",
+        "P:L120-L194",
+        "P:L197-L282",
+        "W:L600-L642"
+      ]
+    },
+    {
+      "name": "Vortex",
+      "wire_id": 322,
+      "internal_id": "vortex",
+      "input_elements": [
+        "wind",
+        "wind"
+      ],
+      "selection_kind": "annulus",
+      "formation_ticks": 48,
+      "active_ticks": 330,
+      "decay_ticks": 48,
+      "selection_radius_world_units": null,
+      "selection_reach_world_units": null,
+      "outer_radius_world_units": 90000,
+      "inner_radius_world_units": 30000,
+      "anchor_motion_world_units_per_second": 0,
+      "source_status": "SOURCE_DERIVED_NOT_RUNTIME_TESTED",
+      "references": [
+        "P:L33-L73",
+        "P:L120-L194",
+        "P:L197-L282",
+        "W:L600-L642"
+      ]
+    },
+    {
+      "name": "Mud",
+      "wire_id": 303,
+      "internal_id": "mud",
+      "input_elements": [
+        "water",
+        "earth"
+      ],
+      "selection_kind": "disk",
+      "formation_ticks": 24,
+      "active_ticks": 390,
+      "decay_ticks": 42,
+      "selection_radius_world_units": 77500,
+      "selection_reach_world_units": null,
+      "outer_radius_world_units": null,
+      "inner_radius_world_units": null,
+      "anchor_motion_world_units_per_second": 0,
+      "source_status": "SOURCE_DERIVED_NOT_RUNTIME_TESTED",
+      "references": [
+        "P:L33-L73",
+        "P:L120-L194",
+        "P:L197-L282",
+        "W:L600-L642"
+      ]
+    },
+    {
+      "name": "Steam",
+      "wire_id": 310,
+      "internal_id": "steam",
+      "input_elements": [
+        "water",
+        "fire"
+      ],
+      "selection_kind": "disk",
+      "formation_ticks": 24,
+      "active_ticks": 360,
+      "decay_ticks": 60,
+      "selection_radius_world_units": 64000,
+      "selection_reach_world_units": null,
+      "outer_radius_world_units": null,
+      "inner_radius_world_units": null,
+      "anchor_motion_world_units_per_second": 0,
+      "source_status": "SOURCE_DERIVED_NOT_RUNTIME_TESTED",
+      "references": [
+        "P:L33-L73",
+        "P:L120-L194",
+        "P:L197-L282",
+        "W:L600-L642"
+      ]
+    },
+    {
+      "name": "Mistcurrent",
+      "wire_id": 317,
+      "internal_id": "mistcurrent",
+      "input_elements": [
+        "water",
+        "wind"
+      ],
+      "selection_kind": "sector",
+      "formation_ticks": 27,
+      "active_ticks": 330,
+      "decay_ticks": 48,
+      "selection_radius_world_units": null,
+      "selection_reach_world_units": 200000,
+      "outer_radius_world_units": null,
+      "inner_radius_world_units": null,
+      "anchor_motion_world_units_per_second": 0,
+      "source_status": "SOURCE_DERIVED_NOT_RUNTIME_TESTED",
+      "references": [
+        "P:L33-L73",
+        "P:L120-L194",
+        "P:L197-L282",
+        "W:L600-L642"
+      ]
+    },
+    {
+      "name": "Magma",
+      "wire_id": 302,
+      "internal_id": "magma",
+      "input_elements": [
+        "earth",
+        "fire"
+      ],
+      "selection_kind": "sector",
+      "formation_ticks": 42,
+      "active_ticks": 330,
+      "decay_ticks": 60,
+      "selection_radius_world_units": null,
+      "selection_reach_world_units": 100000,
+      "outer_radius_world_units": null,
+      "inner_radius_world_units": null,
+      "anchor_motion_world_units_per_second": 30000,
+      "source_status": "SOURCE_DERIVED_NOT_RUNTIME_TESTED",
+      "references": [
+        "P:L33-L73",
+        "P:L120-L194",
+        "P:L197-L282",
+        "W:L600-L642"
+      ]
+    },
+    {
+      "name": "Dustfront",
+      "wire_id": 304,
+      "internal_id": "dustfront",
+      "input_elements": [
+        "earth",
+        "wind"
+      ],
+      "selection_kind": "sector",
+      "formation_ticks": 30,
+      "active_ticks": 270,
+      "decay_ticks": 42,
+      "selection_radius_world_units": null,
+      "selection_reach_world_units": 150000,
+      "outer_radius_world_units": null,
+      "inner_radius_world_units": null,
+      "anchor_motion_world_units_per_second": 0,
+      "source_status": "SOURCE_DERIVED_NOT_RUNTIME_TESTED",
+      "references": [
+        "P:L33-L73",
+        "P:L120-L194",
+        "P:L197-L282",
+        "W:L600-L642"
+      ]
+    },
+    {
+      "name": "Firestorm",
+      "wire_id": 311,
+      "internal_id": "firestorm",
+      "input_elements": [
+        "fire",
+        "wind"
+      ],
+      "selection_kind": "sector",
+      "formation_ticks": 42,
+      "active_ticks": 270,
+      "decay_ticks": 42,
+      "selection_radius_world_units": null,
+      "selection_reach_world_units": 162500,
+      "outer_radius_world_units": null,
+      "inner_radius_world_units": null,
+      "anchor_motion_world_units_per_second": 68000,
+      "source_status": "SOURCE_DERIVED_NOT_RUNTIME_TESTED",
+      "references": [
+        "P:L33-L73",
+        "P:L120-L194",
+        "P:L197-L282",
+        "W:L600-L642"
+      ]
+    }
+  ]
+}

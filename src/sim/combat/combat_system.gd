@@ -1,6 +1,7 @@
 class_name CombatSystem
 extends RefCounted
 @warning_ignore_start("integer_division")
+const Perks = preload("res://src/sim/entities/identity_perk_policy.gd")
 
 
 static func step_player(
@@ -28,8 +29,8 @@ static func step_player(
 	var requested_wire_id := requested_spell_wire_id
 	if requested_spell_slot == 0 and command.has_pressed(SimCommand.PRESSED_ACTIVE_1):
 		requested_wire_id = state.active_1_wire_id
-	var held_slot := command.first_held_spell_slot()
-	var repeating_slot := not pressed_cast_intent and held_slot > 0 and bool(CombatTuning.cast_definition(state.spell_wire_id(held_slot)).get("repeat_while_held", false))
+	var held_slot := 0 if pressed_cast_intent else _first_held_repeating_slot(state, command)
+	var repeating_slot := held_slot > 0
 	if repeating_slot:
 		requested_spell_slot = held_slot
 		requested_wire_id = state.spell_wire_id(held_slot)
@@ -69,14 +70,20 @@ static func step_player(
 		if pressed_cast_intent:
 			_refuse_cast(state, requested_wire_id, requested_spell_slot, "cooldown", events)
 		return null
-	var definition := CombatTuning.cast_definition(requested_wire_id)
+	var definition := CombatTuning.cast_definition_view(requested_wire_id)
 	if definition.is_empty():
 		_refuse_cast(state, requested_wire_id, requested_spell_slot, "kit", events)
+		return null
+	if admission_policy == null and String(definition.get("family", "")) in ["mantle", "fuse", "split", "rebound"]:
+		_refuse_cast(state, requested_wire_id, requested_spell_slot, "requires_hex_authority", events)
 		return null
 	if admission_policy != null:
 		var reason: String = admission_policy.admission_reason(requested_wire_id)
 		if not reason.is_empty():
-			_refuse_cast(state, requested_wire_id, requested_spell_slot, reason, events)
+			# Held capacity retries follow the ordinary silent capacity/Flux gates.
+			# Preparation, unsupported delivery and extension errors stay explicit.
+			if pressed_cast_intent or reason != "hex_capacity":
+				_refuse_cast(state, requested_wire_id, requested_spell_slot, reason, events)
 			return null
 	var required_capacity := cast_capacity_requirement(requested_wire_id)
 	if (available_projectiles >= 0 and required_capacity.x > available_projectiles) \
@@ -85,23 +92,39 @@ static func step_player(
 			_refuse_cast(state, requested_wire_id, requested_spell_slot, "capacity", events)
 		return null
 	if admission_policy != null and not admission_policy.reserve_cast(state.entity_id, requested_wire_id):
-		_refuse_cast(state, requested_wire_id, requested_spell_slot, "hex_capacity", events)
+		# Preserve the existing failure taxonomy without requerying the policy.
+		if pressed_cast_intent:
+			_refuse_cast(state, requested_wire_id, requested_spell_slot, "hex_capacity", events)
 		return null
+	var admission_startup_ms := Perks.scale(state, "spell_startup_ratio", int(definition["startup_ms"]))
+	admission_startup_ms = maxi(1,admission_startup_ms*SpellStatusPolicy.startup_ratio(state)/1000)
 	if not PlayerResourcesSystem.spend_flux(state, int(definition["flux_cost"]), config):
 		if admission_policy != null:
 			admission_policy.cancel_pending(state.entity_id)
 		if pressed_cast_intent:
 			_refuse_cast(state, requested_wire_id, requested_spell_slot, "flux", events)
 		return null
-	_begin_cast(state, requested_wire_id, int(definition["startup_ms"]), config, command)
+	_begin_cast(state, requested_wire_id, admission_startup_ms, config, command)
 	if admission_policy != null:
 		admission_policy.commit_payment(state.entity_id)
 	events.append({"type": "cast_started", "entity_id": state.entity_id, "wire_id": requested_wire_id})
 	return null
 
 
+static func _first_held_repeating_slot(state: PlayerState, command: SimCommand) -> int:
+	if (command.held_actions & SimCommand.SPELL_ACTION_MASK) == 0:
+		return 0
+	# Single-press families and empty positions do not own held intent. Among
+	# repeating positions, the lowest slot keeps deterministic priority even
+	# when its ordinary cooldown/resource/capacity gate refuses admission.
+	for index: int in range(SimCommand.SPELL_HELD_BITS.size()):
+		if command.has_held(SimCommand.SPELL_HELD_BITS[index]) and bool(CombatTuning.cast_definition_view(state.spell_wire_id(index + 1)).get("repeat_while_held", false)):
+			return index + 1
+	return 0
+
+
 static func cast_capacity_requirement(wire_id: int) -> Vector2i:
-	var definition := CombatTuning.cast_definition(wire_id)
+	var definition := CombatTuning.cast_definition_view(wire_id)
 	match String(definition.get("shape", "")):
 		"projectile":
 			return Vector2i((definition.get("projectile_rotations", [Vector2i(1000, 0)]) as Array).size(), 0)
@@ -220,7 +243,7 @@ static func advance_projectiles(
 			var hit_radius: int = target.radius + projectile.radius
 			var fraction := ContinuousContact.circle_toi(travel_start, Vector2i(projectile.position_x, projectile.position_y), Vector2i(target.position_x, target.position_y), hit_radius)
 			if fraction >= 0.0:
-				if MovementSystem.is_combat_intangible(target, config) or target.air_height >= MovementTuning.GROUND_PROJECTILE_CLEARANCE_HEIGHT:
+				if MovementSystem.is_combat_intangible(target, config) or MovementSystem.avoids_ordinary_projectiles(target):
 					target.last_event = "evaded_projectile"
 					continue
 				if fraction < earliest_fraction and (wall_contact.is_empty() or fraction < 1.0):
@@ -233,7 +256,9 @@ static func advance_projectiles(
 			projectile.position_x = center.x
 			projectile.position_y = center.y
 			terminal_point = ContinuousContact.circle_contact(travel_start, swept_end, earliest_fraction, Vector2i(target.position_x, target.position_y), target.radius)
+			var health_before := target.health
 			PlayerResourcesSystem.damage(target, projectile.damage, config)
+			SpellStatusPolicy.apply_hit(target,projectile.source_wire_id,projectile.source_cast_id,projectile.owner_id,projectile.team_id,health_before-target.health,config,SimCommand._normalized_direction(projectile.velocity_x,projectile.velocity_y))
 			if target.health > 0 and projectile.hit_control_duration_ms > 0:
 				MovementSystem.apply_control_state(
 					target,
@@ -251,7 +276,7 @@ static func advance_projectiles(
 				"source_wire_id": projectile.source_wire_id,
 				"owner_id": projectile.owner_id,
 				"target_id": target.entity_id,
-				"damage": projectile.damage,
+				"damage": health_before - target.health,
 				"contact_position": terminal_point,
 			})
 			if target.actor_kind == PlayerState.ActorKind.CHAMPION and target.health == 0:
@@ -327,18 +352,19 @@ static func _explode_projectile(projectile: ProjectileState, ordered_players: Ar
 		return
 	var origin: Vector2i = impact_point if impact_point is Vector2i else Vector2i(projectile.position_x, projectile.position_y)
 	for target: PlayerState in ordered_players:
-		if target.entity_id in [excluded_id, projectile.owner_id] or target.team_id == projectile.team_id or target.health <= 0 or target.spawn_protection_ticks > 0 or MovementSystem.is_combat_intangible(target, config):
+		if target.entity_id in [excluded_id, projectile.owner_id] or target.team_id == projectile.team_id or target.health <= 0 or target.spawn_protection_ticks > 0 or MovementSystem.is_combat_intangible(target, config) or MovementSystem.avoids_ground_effects(target):
 			continue
 		var point := Vector2i(target.position_x, target.position_y)
 		var reach := radius + target.radius
 		if (point - origin).length_squared() > reach * reach or not blast_clear_line(origin, point, world, reactions, tick, config):
 			continue
-		# Height alone evades low bullets, not area explosions. Paid protection
-		# still works; direct-hit victims were already damaged and are excluded.
+		# This terminal blast occupies the ground layer. Low profile is exposed;
+		# height clearance and paid dodge protection are independent escapes.
+		var health_before := target.health
 		PlayerResourcesSystem.damage(target, damage, config)
 		events.append({"type":"projectile_hit", "projectile_id":projectile.entity_id,
 			"source_wire_id":projectile.source_wire_id, "owner_id":projectile.owner_id,
-			"target_id":target.entity_id, "damage":damage})
+			"target_id":target.entity_id, "damage":health_before - target.health})
 		if target.actor_kind == PlayerState.ActorKind.CHAMPION and target.health == 0:
 			events.append({"type":"champion_defeated", "projectile_id":projectile.entity_id,
 				"owner_id":projectile.owner_id, "target_id":target.entity_id})
@@ -367,6 +393,7 @@ static func _emit_terminal(projectile: ProjectileState, events: Array[Dictionary
 
 
 static func _begin_cast(state: PlayerState, wire_id: int, startup_ms: int, config: SimConfig, command: SimCommand = null) -> void:
+	# Caller samples perks before payment. This fixed timer cannot be retimed by moving.
 	state.pending_cast_wire_id = wire_id
 	state.pending_cast_ticks = config.milliseconds_to_ticks(startup_ms)
 	state.pending_cast_aim_x = state.aim_x
@@ -390,7 +417,7 @@ static func _release_cast(
 		state.pending_cast_wire_id = 0
 		state.pending_cast_ticks = 0
 		return null
-	if not state.set_spell_cooldown(wire_id, config.milliseconds_to_ticks(int(definition["cooldown_ms"]))):
+	if not state.set_spell_cooldown(wire_id, config.milliseconds_to_ticks(Perks.scale(state, "spell_cooldown_ratio", int(definition["cooldown_ms"])))):
 		state.pending_cast_wire_id = 0
 		state.pending_cast_ticks = 0
 		return null
@@ -428,6 +455,7 @@ static func _release_projectiles(
 	var spawn_distance: int = MovementTuning.PLAYER_RADIUS + radius + CombatTuning.PROJECTILE_SPAWN_CLEARANCE
 	if locked_distance >= 0:
 		spawn_distance = mini(spawn_distance, locked_distance)
+	if String(definition.get("family","")) == "mantle": spawn_distance = 0
 	var directions: Array[Vector2i] = []
 	var spawn_positions: Array[Vector2i] = []
 	for rotation_value: Variant in rotations:
@@ -441,8 +469,16 @@ static func _release_projectiles(
 		spawn_positions.append(spawn_position)
 	state.pending_cast_wire_id = 0
 	state.pending_cast_ticks = 0
+	var release_origin := Vector2i(state.position_x, state.position_y)
 	for spawn_position: Vector2i in spawn_positions:
-		if not world.can_occupy(spawn_position, radius):
+		# A clear muzzle endpoint can be beyond a thin wall inside the spawn
+		# clearance. Require line of sight before creating the projectile there.
+		# This is a center-line check, not a full-radius sweep from inside the
+		# caster: Heavy is wider than actor clearance and must still fire away
+		# from an adjacent wall. Spawn occupancy and subsequent flight keep their
+		# existing full-radius collision and tangency semantics.
+		var clearance := MovementTuning.PLAYER_RADIUS if String(definition.get("family","")) == "mantle" else radius
+		if not world.can_occupy(spawn_position, clearance) or not ContinuousContact.wall_contact(release_origin, spawn_position, 0, world).is_empty():
 			events.append({"type": "cast_blocked", "entity_id": state.entity_id, "wire_id": wire_id})
 			state.last_event = "cast_blocked_%d" % wire_id
 			return []
@@ -467,12 +503,13 @@ static func _release_projectiles(
 			int(definition["hit_control_duration_ms"]),
 			int(definition["hit_control_speed"]),
 			int(definition["hit_control_slow_ratio"]),
-			0,
+			int(definition.get("remaining_bounces",0)),
 		)
 		projectile.source_cast_id = first_projectile_id
 		projectile.reaction_strength = int(definition["reaction_strength"])
 		projectile.material_strength = 1000 / maxi(1, directions.size())
 		projectile.remaining_distance = maxi(0, locked_distance - spawn_distance) if locked_distance >= 0 else -1
+		HexExpandedDelivery.initialize(projectile,config)
 		projectiles.append(projectile)
 		events.append({
 			"type": "projectile_spawned",
@@ -575,6 +612,7 @@ static func advance_fields(
 				or target.spawn_protection_ticks > 0
 				or MovementSystem.is_combat_intangible(target, config)
 				or field.has_affected(target.entity_id)
+				or MovementSystem.avoids_ground_effects(target)
 			):
 				continue
 			var offset := Vector2i(target.position_x - field.position_x, target.position_y - field.position_y)
@@ -703,6 +741,7 @@ static func resolve_instant_casts(
 		if not reactions.is_empty() and _resolve_chemistry_beam(owner, wire_id, definition, origin, endpoint, players, config, world, resolved_events, reactions, current_tick):
 			continue
 		var target: PlayerState = _first_beam_target(owner, origin, endpoint, int(definition["radius"]), players, config)
+		var health_before := target.health if target != null else 0
 		if target != null:
 			endpoint = Vector2i(target.position_x, target.position_y)
 			PlayerResourcesSystem.damage(target, int(definition["damage"]), config)
@@ -723,7 +762,7 @@ static func resolve_instant_casts(
 			"target_id": target.entity_id if target != null else 0,
 			"end_x": endpoint.x,
 			"end_y": endpoint.y,
-			"damage": int(definition["damage"]) if target != null else 0,
+			"damage": health_before - target.health if target != null else 0,
 		})
 		if target != null and target.actor_kind == PlayerState.ActorKind.CHAMPION and target.health == 0:
 			resolved_events.append({
@@ -769,17 +808,19 @@ static func _resolve_spray(
 			continue
 		var distance := SimCommand._integer_square_root(distance_squared)
 		var target_direction := SimCommand._normalized_direction(offset.x, offset.y)
-		var clear_endpoint := _beam_clear_endpoint(origin, target_direction, distance, int(definition["radius"]), world)
+		var clear_endpoint := spray_clear_endpoint(origin, target_direction, distance, int(definition["radius"]), world)
 		var remaining := Vector2i(target.position_x, target.position_y) - clear_endpoint
 		var hit_radius: int = target.radius + int(definition["radius"])
 		if remaining.length_squared() > hit_radius * hit_radius:
 			continue
 		if _spray_cover_intercepts(origin, Vector2i(target.position_x,target.position_y), int(definition["damage"]), reactions, current_tick, config):
 			continue
-		if MovementSystem.is_combat_intangible(target, config):
+		if MovementSystem.is_combat_intangible(target, config) or MovementSystem.avoids_ordinary_projectiles(target):
 			target.last_event = "evaded_spray"
 			continue
+		var health_before := target.health
 		PlayerResourcesSystem.damage(target, int(definition["damage"]), config)
+		SpellStatusPolicy.apply_hit(target,wire_id,int(definition.get("source_cast_id",0)),owner.entity_id,owner.team_id,health_before-target.health,config,target_direction)
 		if target.health > 0 and int(definition["hit_control_duration_ms"]) > 0:
 			MovementSystem.apply_control_state(
 				target,
@@ -795,7 +836,7 @@ static func _resolve_spray(
 			"owner_id": owner.entity_id,
 			"source_wire_id": wire_id,
 			"target_id": target.entity_id,
-			"damage": int(definition["damage"]),
+			"damage": health_before - target.health,
 		})
 		hit_count += 1
 		if target.actor_kind == PlayerState.ActorKind.CHAMPION and target.health == 0:
@@ -837,8 +878,9 @@ static func _resolve_chemistry_beam(owner: PlayerState, wire_id: int, definition
 		var actual_damage := 0
 		if target != null:
 			ray_end = Vector2i(target.position_x,target.position_y)
+			var health_before := target.health
 			if PlayerResourcesSystem.damage(target,int(ray["damage"]),config):
-				actual_damage = int(ray["damage"])
+				actual_damage = health_before - target.health
 			if actual_damage > 0 and target.health > 0 and int(definition["hit_control_duration_ms"]) > 0:
 				MovementSystem.apply_control_state(target,int(definition["hit_control_state"]),int(definition["hit_control_duration_ms"]),direction,int(definition["hit_control_speed"]),config,int(definition["hit_control_slow_ratio"]))
 		events.append({"type":"beam_fired","owner_id":owner.entity_id,"source_wire_id":wire_id,"target_id":target.entity_id if target != null else 0,"origin_x":ray_origin.x,"origin_y":ray_origin.y,"end_x":ray_end.x,"end_y":ray_end.y,"damage":actual_damage})
@@ -858,6 +900,15 @@ static func _spray_cover_intercepts(origin: Vector2i,endpoint: Vector2i,damage: 
 			result.decay_tick = mini(result.decay_tick,tick)
 		return true
 	return false
+
+
+# Spray's physical radius and shot-cover policy are shared by actor rays and
+# cached presentation spokes. One analytic query replaces distance sampling;
+# the legacy beam path below deliberately retains its established behavior.
+static func spray_clear_endpoint(origin: Vector2i, direction: Vector2i, maximum_range: int, radius: int, world: CollisionWorld) -> Vector2i:
+	var endpoint := origin + ElementChemistrySystem.scaled(direction, maximum_range)
+	var wall := ContinuousContact.wall_contact(origin, endpoint, radius, world)
+	return endpoint if wall.is_empty() else Vector2i(wall.center)
 
 
 static func _beam_clear_endpoint(
@@ -916,7 +967,7 @@ static func _first_beam_target(
 		var hit_radius: int = target.radius + beam_radius
 		if separation.length_squared() > hit_radius * hit_radius:
 			continue
-		if MovementSystem.is_combat_intangible(target, config):
+		if MovementSystem.is_combat_intangible(target, config) or MovementSystem.avoids_ordinary_projectiles(target):
 			target.last_event = "evaded_beam"
 			continue
 		best = target

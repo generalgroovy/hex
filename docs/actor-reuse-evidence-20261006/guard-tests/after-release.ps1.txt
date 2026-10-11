@@ -1,0 +1,2 @@
+. 'C:\Users\sende\Projects\hex\scripts\flux2-common.ps1'
+try { $lease = Enter-FluxEngineRun 'contender'; Exit-FluxEngineRun $lease; exit 0 } catch { Write-Output $_.Exception.Message; exit 23 }

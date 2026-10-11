@@ -61,6 +61,7 @@ func _transport(runtime_source_hash: String = TEST_RUNTIME_SOURCE_HASH) -> Sessi
 
 func _test_validation_fails_closed() -> void:
 	var transport := _transport()
+	equal(SimConfig.PROTOCOL_VERSION, 60, "expanded elemental status and delivery prediction requires protocol60")
 	equal(SessionTransport.MAX_PLAYERS, 8, "public session cap is eight players")
 	check(SessionCharter.catalog_hash().length() == 64, "session charter catalog contributes a bounded compatibility identity")
 	equal(_signature().length(), 64, "compatibility identity is a SHA-256 digest")
@@ -93,7 +94,7 @@ func _test_validation_fails_closed() -> void:
 		"snapshot_boundary_wall_ids":SessionSnapshot.WORLD_BOUNDARY_WALL_IDS,
 	})
 	check(_signature() != consolidation_q_signature, "otherwise matching consolidation peers cannot join with old neutral-airborne-Q semantics")
-	check(_signature(120, SimConfig.PROTOCOL_VERSION - 1) != _signature(), "the retained protocol48 portable cannot share protocol49 compatibility")
+	check(_signature(120, SimConfig.PROTOCOL_VERSION - 1) != _signature(), "the retained protocol56 portable cannot share protocol57 round compatibility")
 	check(SessionTransport.compatibility_signature(SimConfig.PROTOCOL_VERSION, 120, "a".repeat(64), "b".repeat(64), "c".repeat(64), "d".repeat(64), "e".repeat(64), TEST_RUNTIME_SOURCE_HASH) != _signature(), "reaction definitions contribute to Farflow compatibility")
 	check(not transport.start_host(80, _signature()), "privileged production host port is rejected")
 	check(transport.last_error.contains("1024"), "invalid host port has an actionable error")
@@ -121,7 +122,11 @@ func _test_validation_fails_closed() -> void:
 	check(SessionTransport._valid_request_packet({"sequence": 0, "action": SessionTransport.REQUEST_EMOTE, "value": 0}), "known typed interaction request validates")
 	check(SessionTransport._valid_request_packet({"sequence": 1, "action": SessionTransport.REQUEST_READY_TOGGLE, "value": 0}), "typed Hearth readiness request validates")
 	check(SessionTransport._valid_request_packet({"sequence": 2, "action": SessionTransport.REQUEST_PRACTICE_START, "value": 0}), "typed Hearth start request validates")
-	check(SessionTransport._valid_request_packet({"sequence": 3, "action": SessionTransport.REQUEST_SPELL_EQUIP, "value": 768}), "typed final Spell Loom request validates")
+	equal(SessionTransport.MAX_SPELL_EQUIP_VALUE, 6144, "twelve slots retain a bounded512-entry wire library each")
+	for value: int in [1, 768, 769, 6144]:
+		check(SessionTransport._valid_request_packet({"sequence": 3, "action": SessionTransport.REQUEST_SPELL_EQUIP, "value": value}), "original and expanded bounded Spell Loom requests validate")
+	for value: Variant in [0, -1, 6145, "6144", 6144.0, true]:
+		check(not SessionTransport._valid_request_packet({"sequence": 3, "action": SessionTransport.REQUEST_SPELL_EQUIP, "value": value}), "out-of-bound or coerced expanded Loom value refuses before transport")
 	check(SessionTransport._valid_request_packet({"sequence": 4, "action": SessionTransport.REQUEST_IMPACT_PRACTICE, "value": 0}), "typed Momentum Chime request validates")
 	equal(SessionTransport.REQUEST_CHAMPION_SELECT, 8, "exact champion selection has a stable distinct wire action")
 	for value: int in [1, 5, 27, 4096]:
@@ -151,7 +156,7 @@ func _test_validation_fails_closed() -> void:
 
 
 func _test_runtime_identity_handshake_contract() -> void:
-	equal(SimConfig.PROTOCOL_VERSION, 55, "48px hex authority owns the explicit protocol55 boundary")
+	equal(SimConfig.PROTOCOL_VERSION, 60, "504 spells and appended elemental lanes own the explicit protocol60 boundary")
 	var local := _transport()
 	equal(local.runtime_source_sha256, TEST_RUNTIME_SOURCE_HASH, "configured transport exposes the full validated local source identity")
 	equal(local.build_id, "p%d-%s" % [SimConfig.PROTOCOL_VERSION, TEST_RUNTIME_SOURCE_HASH.left(12)], "configured transport exposes only the derived short display identity")
@@ -564,7 +569,7 @@ func _test_enet_loopback_handshake_and_input() -> void:
 	check(_poll_until(host, client, func() -> bool: return not host.incoming_requests.is_empty()), "host receives Momentum Chime intent through reliable ENet")
 	var impact_requests := host.take_requests()
 	equal(int(impact_requests[0].get("action", 0)) if not impact_requests.is_empty() else 0, SessionTransport.REQUEST_IMPACT_PRACTICE, "Momentum Chime action survives trusted request stamping")
-	check(not client.send_request(8, SessionTransport.REQUEST_SPELL_EQUIP, 769), "out-of-range Spell Loom value fails before transport")
+	check(not client.send_request(8, SessionTransport.REQUEST_SPELL_EQUIP, 6145), "value beyond the expanded Loom bound fails before transport and preserves sequence8")
 	check(client.send_request(8, SessionTransport.REQUEST_CHAMPION_SELECT, 27), "client sends exact champion identity, not a cycle offset")
 	check(_poll_until(host, client, func() -> bool: return not host.incoming_requests.is_empty()), "host receives exact champion selection through reliable ENet")
 	var champion_requests := host.take_requests()
@@ -579,6 +584,15 @@ func _test_enet_loopback_handshake_and_input() -> void:
 		client.poll()
 		OS.delay_msec(1)
 	check(host.take_requests().is_empty(), "exact selection replay is discarded before application")
+	for request_case: Vector2i in [Vector2i(9, 769), Vector2i(10, 6144)]:
+		check(client.send_request(request_case.x, SessionTransport.REQUEST_SPELL_EQUIP, request_case.y), "expanded bounded library value traverses a new monotonic request")
+		check(_poll_until(host, client, func() -> bool: return not host.incoming_requests.is_empty()), "host receives each expanded request independently")
+		var expanded_requests := host.take_requests()
+		equal(expanded_requests.size(), 1, "expanded request cannot contaminate the next interaction")
+		if not expanded_requests.is_empty():
+			equal(int(expanded_requests[0].action), SessionTransport.REQUEST_SPELL_EQUIP, "expanded value retains the equip action")
+			equal(int(expanded_requests[0].value), request_case.y, "expanded request retains its exact bounded value")
+			equal(int(expanded_requests[0].sequence), request_case.x, "expanded request retains its independent monotonic sequence")
 
 	var incompatible := _transport()
 	check(incompatible.start_join("127.0.0.1", host.bound_port, _signature(60), "Old Build"), "incompatible client reaches handshake boundary")
@@ -699,14 +713,32 @@ func _test_enet_loopback_handshake_and_input() -> void:
 	var unpacked_snapshot := SessionTransport._snapshot_from_wire_packet(snapshot_packet)
 	equal(int(unpacked_snapshot.get("tick", -1)), source.tick, "compressed snapshot wire envelope round-trips exactly")
 	check(SessionTransport._snapshot_from_wire_packet({"raw_size": SessionTransport.MAX_SNAPSHOT_UNCOMPRESSED_BYTES + 1, "payload": PackedByteArray([1])}).is_empty(), "oversized snapshot expansion fails closed")
+	# Maximum-valid codec lanes, independent of the duration of an actual hit.
+	var status_potencies := [80, 1000, 120, 80, 1000, 1000]
+	for channel: int in 6:
+		var lane := [600, status_potencies[channel], 2400 if channel == 1 else 0, 12 if channel == 1 else 0,
+			0x7fffffff - channel, 10000, MixtureCatalog.wire_for(63, "bolt"), 0x7fffffff - channel * 7919]
+		for index: int in 8: guest.spell_status_values[channel * 8 + index] = int(lane[index])
 	var reconciliation := ClientPrediction.capture_packet(guest, source.tick, 17)
-	check(var_to_bytes({"kind": SessionTransport.PACKET_RECONCILIATION, "reconciliation": reconciliation}).size() <= SessionTransport.ENET_MTU_BYTES, "movement reconciliation stays within its own ENet MTU")
+	check(ClientPrediction.validate_packet(reconciliation), "dense statuses are valid before actual ENet sending")
+	var reconciliation_packets := SessionTransport._snapshot_wire_packets(reconciliation, true, host.world_epoch)
+	check(not reconciliation_packets.is_empty(), "actual send_reconciliation packing admits the complete expanded actor")
+	equal(SessionTransport.ENET_MTU_BYTES, 1392, "expanded actor preserves the original datagram MTU")
+	for wire_packet: Dictionary in reconciliation_packets:
+		check(var_to_bytes(wire_packet).size() <= 1392, "every actual reconciliation wire datagram remains inside the unchanged MTU")
+		equal(int(wire_packet.world_epoch), host.world_epoch, "actual wire metadata retains the authoritative world epoch")
 	check(host.send_reconciliation(client.local_peer_id, reconciliation), "host sends scoped movement authority on a separate ordered channel")
 	check(_poll_until(host, client, func() -> bool: return not client.incoming_reconciliations.is_empty()), "client receives movement reconciliation through ENet")
 	var reconciliations := client.take_reconciliations()
 	equal(reconciliations.size(), 1, "client drains one newest reconciliation")
 	if not reconciliations.is_empty():
 		equal(int(reconciliations[0].get("sequence", -1)), 17, "input acknowledgement survives reconciliation transport")
+		equal(host.world_epoch, 0, "this original loopback exercises the explicit epoch-zero compatibility view")
+		equal(client.world_epoch, host.world_epoch, "decoded authority remains bound to the accepted transport epoch")
+		equal(reconciliations[0], reconciliation, "epoch-zero view omits only transport metadata and preserves complete dense status and movement authority")
+		var restored := ClientPrediction.restore_state(reconciliations[0].values)
+		check(restored != null, "real ENet expanded values restore a prediction actor")
+		if restored != null: equal(restored.spell_status_values, guest.spell_status_values, "all48 maximum-valid status values survive actual ENet and actor restoration")
 	var wrong_state := PlayerState.new(3)
 	check(not host.send_reconciliation(client.local_peer_id, ClientPrediction.capture_packet(wrong_state, source.tick, 17)), "host refuses reconciliation for another entity")
 	check(host.broadcast_snapshot(snapshot), "host broadcasts a validated authoritative snapshot")
@@ -723,7 +755,7 @@ func _test_enet_loopback_handshake_and_input() -> void:
 	source.tick += 1
 	for index: int in range(1, 80):
 		source.projectiles.append(ProjectileState.new(
-			1000 + index, 2, 2, CombatTuning.RILLSHOT_WIRE_ID, 2,
+			1000 + index, 2, 2, CombatTuning.RILLSHOT_WIRE_ID, 3,
 			Vector2i(300_000 + index * 7919, 200_000 + index * 6151),
 			Vector2i(480_000 - index * 187, index * 157), 12_000, 9_000, 90 + index,
 		))

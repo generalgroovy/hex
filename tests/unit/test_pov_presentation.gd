@@ -25,6 +25,9 @@ func run() -> int:
 	_test_character_cue_anchor_uses_rendered_position()
 	_test_spectator_focus_regates_cues()
 	_test_missing_observer_fails_closed()
+	_test_spray_opaque_pillar_draw_view()
+	_test_spray_chemical_interior_and_policy()
+	_test_spray_observer_recheck_and_timing()
 	return finish("pov-presentation")
 
 
@@ -150,8 +153,19 @@ func _test_hex_pillar_visibility() -> void:
 		equal(screen_polygons[0].size(), 6, "screen-space pillar retains all six physical faces")
 		var fixed_polygon: Array = collision.hex_occluders()[0]
 		for index: int in range(6):
-			var expected := Vector2(fixed_polygon[index]) / SimConfig.FIXED_SCALE - Vector2(900, 900)
+			var expected := Vector2(fixed_polygon[index]) / SimConfig.FIXED_SCALE * PlayerCameraRig.ZOOM + (-Vector2(900, 900) * PlayerCameraRig.ZOOM).round()
 			check(screen_polygons[0][index].is_equal_approx(expected), "mask converts each exact fixed-point Hex vertex")
+	for zoom_percent: int in [50, 75, 100]:
+		node.player_preferences.set_camera_zoom_percent(zoom_percent)
+		var camera := Vector2(900.37, 901.81)
+		var zoom := PlayerCameraRig.ZOOM
+		var translation := (-camera * zoom).round()
+		var polygons: Array[PackedVector2Array] = node._pov_hex_occluder_polygons(camera)
+		for index: int in 6:
+			var exact_vertex: Vector2 = Vector2(collision.hex_occluders()[0][index]) / 1000.0
+			check(polygons[0][index].is_equal_approx(exact_vertex * zoom + translation), "fractional camera mask remains fixed75% for every legacy saved zoom")
+		var building_polygons: Array[PackedVector2Array] = node._pov_building_surface_polygons(camera)
+		equal(building_polygons.size(), 0, "low geometry remains absent at every zoom")
 	check(collision.configure_hexes(pillar_origin, topology, []), "pillar destruction or expiry clears physical cover")
 	check(node._chemistry_actor_visible(target), "pillar removal restores actor visibility")
 	node.free()
@@ -306,6 +320,199 @@ func _test_missing_observer_fails_closed() -> void:
 	check(not node._pov_point_visible(Vector2(target.position_x, target.position_y) / SimConfig.FIXED_SCALE), "point visibility fails closed without a living observer")
 	check(not node._chemistry_actor_visible(target), "actor visibility fails closed without a living observer")
 	check(not node._combat_cue_visible({"position": Vector2(target.position_x, target.position_y) / SimConfig.FIXED_SCALE}), "combat cues fail closed without a living observer")
+	node.free()
+
+
+func _configure_spray_visibility(node: Node2D) -> bool:
+	if not node.configure_fixture(): return false
+	_set_actor_point(node.world.player(), OBSERVER_POINT)
+	node.current_position = OBSERVER_POINT
+	node.previous_position = OBSERVER_POINT
+	node.campus_layout.data["buildings"] = []
+	node.world.collision = CollisionWorld.new(3_000_000, 2_300_000)
+	node.world.hex_court = HexCourt.new()
+	return node.world.hex_court.configure_geometry(Vector2i(1_000_000,1_000_000),HexGrid.disk(Vector2i.ZERO,12))
+
+
+func _ingested_spray(node: Node2D, owner_id: int, endpoint: Vector2) -> Dictionary:
+	node.combat_cues.clear()
+	var events: Array[Dictionary] = [{"type":"spray_fired","owner_id":owner_id,"source_wire_id":CombatTuning.TIDELINE_WIRE_ID,
+		"end_x":roundi(endpoint.x*1000.0),"end_y":roundi(endpoint.y*1000.0),"range":280_000,"hit_count":0}]
+	node._ingest_combat_cues(events)
+	for cue: Dictionary in node.combat_cues:
+		if cue.get("kind") == "spray": return cue
+	return {}
+
+
+func _test_spray_opaque_pillar_draw_view() -> void:
+	var node := Harness.new()
+	check(_configure_spray_visibility(node), "Spray view uses actual Bootstrap ingestion and POV helpers")
+	var collision := HexCollisionWorld.new(node.world.collision)
+	check(collision.configure_hexes(Vector2i(1_080_000,1_000_000),HexGrid.disk(Vector2i.ZERO,1),[Vector2i.ZERO]), "actual six-face opaque center pillar enters collision and POV")
+	node.world.collision = collision
+	var cue := _ingested_spray(node,1,OBSERVER_POINT + Vector2(280,0))
+	check(not cue.is_empty(), "real Spray event creates prepared physical spokes")
+	if cue.is_empty(): node.free(); return
+	cue.label = "SPRAY" # Explicit label negative, independent of wording policy.
+	check(not node._pov_point_visible(cue.position) and not node._pov_point_visible(cue.end), "fixture reproduces BOTH hidden full-center endpoint gates")
+	var before := var_to_bytes(cue)
+	var authority := node.world.state_hash()
+	var view := node._spray_cue_draw_view(cue)
+	check(not view.is_empty() and node._combat_cue_visible(cue), "opaque center pillar does not suppress genuinely visible clear flanks")
+	if view.is_empty(): node.free(); return
+	check(view.spray_visible_indices.has(0) and view.spray_visible_indices.has(4), "both outer physical spokes remain visible around actual opaque Hex geometry")
+	check(view.spray_geometry.endpoints[2].distance_to(OBSERVER_POINT) < 80.0, "center spoke still ends on the near side of the true pillar")
+	equal(view.label, "", "hidden center anchor cannot acquire a floating Spray label")
+	check(not view.spray_chemical_broadphase and int(view.spray_visibility_probes) <= 5, "ordinary opaque cover uses only bounded endpoint probes and the final world mask")
+	for reduced: bool in [false,true]:
+		node.requested_capture_reduced_effects = reduced
+		var mode_view := node._spray_cue_draw_view(cue)
+		equal(mode_view.spray_geometry,view.spray_geometry,"Normal/Reduced consume the same observer-filtered physical geometry")
+		var rays: Array = HexCourtPresenter.SPRAY_CUE_REDUCED_RAYS if reduced else HexCourtPresenter.SPRAY_CUE_RAYS
+		check(0 in rays and 4 in rays,"both existing mode subsets retain the two admitted flanks")
+	# A new observer-only side shadow hides one whole spoke without rewriting
+	# the admission-time physical cache or exposing it via a filled fan.
+	# The current outer ray is 45 degrees: x + y = 2000. This rectangle
+	# intersects its interior while leaving the opposite lower ray clear.
+	node.campus_layout.data["buildings"] = [{"bounds":[1130,850,35,38],"occlusion_policy":"los_cutaway"}]
+	check(not node._pov_point_visible(cue.spray_geometry.endpoints[0]), "observer-only side blocker intersects the actual upper spoke sightline")
+	check(node._pov_point_visible(cue.spray_geometry.endpoints[4]), "observer-only side blocker leaves the actual lower spoke sightline clear")
+	var side_view := node._spray_cue_draw_view(cue)
+	check(not side_view.is_empty(), "one hidden side cannot remove the opposite visible flank")
+	if not side_view.is_empty():
+		equal(side_view.spray_geometry.endpoints[0],OBSERVER_POINT,"hidden upper spoke collapses to the existing no-draw sentinel")
+		check(side_view.spray_visible_indices.has(4),"opposite lower spoke remains independently visible")
+	equal(var_to_bytes(cue),before,"draw views never mutate retained event/cache geometry or label")
+	equal(node.world.state_hash(),authority,"visibility and mode changes never change authority")
+	var hidden := PlayerState.new(2)
+	_set_actor_point(hidden,OBSERVER_POINT + Vector2(280,0))
+	node.world.players.append(hidden)
+	node.actor_motion_history.capture(node.world.players)
+	var hidden_source := cue.duplicate(true)
+	hidden_source.visibility_source_id = 2
+	check(node._spray_cue_draw_view(hidden_source).is_empty(),"visible prepared spokes cannot reveal a genuinely opaque-hidden source actor")
+	for patch: Dictionary in [{"spray_geometry":{}},{"start":Vector2(INF,0)}]:
+		var invalid := cue.duplicate(true)
+		invalid.merge(patch,true)
+		check(node._spray_cue_draw_view(invalid).is_empty(),"invalid prepared geometry fails closed")
+	node.world.player().health = 0
+	check(node._spray_cue_draw_view(cue).is_empty(),"dead or missing observer cannot retain a Spray view")
+	node.free()
+
+
+func _concealing_spray_product(node: Node2D, wire: int = 315) -> Dictionary:
+	# Unit-only existing product fixture, not paid-formation/native evidence.
+	# One real whole hex is placed between observer and a remote spoke interior.
+	var cell := Vector2i(2,5)
+	var product := {"recipe_wire_id":wire,"active_tick":0,"decay_tick":600,"expiry_tick":700,
+		"quantity":600,"coverage":{cell:1},"cells":{cell:600}}
+	node.world.hex_court.products[1] = product
+	return product
+
+
+func _remote_spray(node: Node2D) -> Dictionary:
+	var caster := PlayerState.new(2)
+	_set_actor_point(caster,OBSERVER_POINT + Vector2(0,200))
+	node.world.players.append(caster)
+	node.actor_motion_history.capture(node.world.players)
+	return _ingested_spray(node,2,OBSERVER_POINT + Vector2(280,200))
+
+
+func _test_spray_chemical_interior_and_policy() -> void:
+	var node := Harness.new()
+	check(_configure_spray_visibility(node),"chemical Spray view fixture configures")
+	var cue := _remote_spray(node)
+	var baseline := node._spray_cue_draw_view(cue)
+	check(not baseline.is_empty() and not baseline.spray_chemical_broadphase,"ordinary remote Spray needs no chemical broadphase")
+	var product := _concealing_spray_product(node)
+	check(HexProductEffects._active(product,0) and HexProductEffects._concealing(product,315,0,node.world.config),"Cinderveil fixture uses the actual active concealment contract")
+	check(node._pov_point_visible(cue.start) and node._pov_point_visible(cue.end),"remote source and center endpoint are both independently visible")
+	check(not node._pov_point_visible(OBSERVER_POINT + Vector2(208,200)),"the same remote center spoke has a genuinely concealed interior")
+	var before := var_to_bytes(cue)
+	var product_before := var_to_bytes(product)
+	var view := node._spray_cue_draw_view(cue)
+	check(view.is_empty(),"conservative overlapping visibility-triangle bounds reject the fan instead of bridging concealed interiors")
+	# The lower spoke is geometrically clear, but its triangle AABB includes this
+	# near product. That bounded false positive is intentional privacy policy.
+	check(node._pov_point_visible(cue.spray_geometry.endpoints[4]),"rejection explicitly accepts conservative near-field false positives")
+	var bounds: Array[Rect2] = node._spray_concealment_bounds()
+	var stats := {"probes":0,"box_checks":0}
+	check(not node._spray_spoke_visible(cue.start,cue.end,OBSERVER_POINT,bounds,stats),"whole-spoke chemical broadphase rejects actual concealed interior")
+	equal(int(stats.probes),1,"chemical decision performs one endpoint probe, no length-dependent samples")
+	equal(int(stats.box_checks),1,"one active product needs at most one box comparison per spoke")
+	var grazing: Array[Rect2] = [Rect2(1280.0,1200.0,0.0001,0.0001)]
+	stats = {"probes":0,"box_checks":0}
+	check(not node._spray_spoke_visible(cue.start,cue.end,OBSERVER_POINT,grazing,stats),"closed AABB tangency rejects even a sub-pixel grazing bound without sample gaps")
+	equal(var_to_bytes(cue),before,"chemical filtering leaves cached physical geometry unchanged")
+	equal(var_to_bytes(product),product_before,"chemical visibility cannot mutate product state")
+	# Steam no longer conceals in unified Hex policy; do not duplicate a stale
+	# legacy recipe list in presentation or allocate concealment bounds for it.
+	product.recipe_wire_id = HexProductEffects.STEAM
+	var steam_view := node._spray_cue_draw_view(cue)
+	check(not steam_view.is_empty() and not steam_view.spray_chemical_broadphase,"visible unified Steam follows the current effect contract")
+	product.recipe_wire_id = 326
+	node.world.tick = node.world.config.milliseconds_to_ticks(300)
+	var off_band := node._spray_cue_draw_view(cue)
+	check(not off_band.is_empty() and not off_band.spray_chemical_broadphase,"inactive Shadowdraft concealment band does not trigger broadphase")
+	node.world.tick = 0
+	product.recipe_wire_id = 315
+	product.decay_tick = 0
+	check(not node._spray_cue_draw_view(cue).spray_chemical_broadphase,"decayed concealment cannot retain stale masking cost")
+	product.decay_tick = 600
+	var local_cue := _ingested_spray(node,1,OBSERVER_POINT + Vector2(280,0))
+	var local_view := node._spray_cue_draw_view(local_cue)
+	check(not local_view.is_empty() and not local_view.spray_chemical_broadphase,"exact observer-origin cue uses valid endpoint-prefix fast path even with active chemistry")
+	# Active but unrelated far coverage must not suppress remote Spray globally.
+	product.coverage = {Vector2i(-8,-3):1}
+	product.cells = {Vector2i(-8,-3):600}
+	var far_view := node._spray_cue_draw_view(cue)
+	check(not far_view.is_empty() and far_view.spray_chemical_broadphase,"far active concealer permits actual clear remote spokes")
+	if not far_view.is_empty():
+		equal(far_view.spray_visible_indices,PackedInt32Array([0,1,2,3,4]),"unrelated far product does not hide any of the five clear rays")
+		check(int(far_view.spray_visibility_probes) <= 5 and int(far_view.spray_chemical_box_checks) <= 5*HexChemistryWorld.MAX_PRODUCTS,"work is bounded by five rays and finite active products, never pixel length")
+	stats = {"probes":0,"box_checks":0}
+	check(not node._spray_spoke_visible(OBSERVER_POINT,OBSERVER_POINT+Vector2(381,0),OBSERVER_POINT,[],stats),"over-budget geometry fails closed before any point query")
+	equal(int(stats.probes),0,"invalid length cannot allocate any spoke visibility queries")
+	node.free()
+
+
+func _test_spray_observer_recheck_and_timing() -> void:
+	var node := SpectatorHarness.new()
+	check(_configure_spray_visibility(node),"Spray observer/timing fixture configures")
+	var cue := _remote_spray(node)
+	var before := var_to_bytes(cue)
+	var timings: Array[Dictionary] = []
+	# Small repeated-view diagnostic, deliberately no timing pass/fail threshold.
+	# It measures helper CPU on the current host, not gameplay frame acceptance.
+	for mode: String in ["ordinary","near-active-concealment","far-active-concealment"]:
+		if mode != "ordinary":
+			var product := _concealing_spray_product(node)
+			if mode == "far-active-concealment":
+				product.coverage = {Vector2i(-8,-3):1}
+				product.cells = {Vector2i(-8,-3):600}
+		var began := Time.get_ticks_usec()
+		var probes := 0
+		var admitted := 0
+		for _iteration: int in range(20):
+			var view := node._spray_cue_draw_view(cue)
+			equal(view.is_empty(),mode == "near-active-concealment","repeated chemical broadphase preserves near fail-closed and far positive controls")
+			if not view.is_empty(): admitted += 1
+			probes += int(view.get("spray_visibility_probes",0))
+		timings.append({"mode":mode,"iterations":20,"elapsed_usec":Time.get_ticks_usec()-began,"admitted_views":admitted,"admitted_view_spoke_point_probes":probes})
+	print("DIAGNOSTIC Spray POV repeated-view timing (not performance acceptance): ",JSON.stringify(timings))
+	var distant := PlayerState.new(3)
+	_set_actor_point(distant,Vector2(2500,1000))
+	node.world.players.append(distant)
+	node.actor_motion_history.capture(node.world.players)
+	node.world.player().health = 0
+	node.follow_id = 2
+	var caster_view := node._spray_cue_draw_view(cue)
+	check(not caster_view.is_empty() and not caster_view.spray_chemical_broadphase,"following the rendered caster immediately enables observer-origin fast path")
+	node.follow_id = 3
+	check(node._spray_cue_draw_view(cue).is_empty(),"retained Spray is re-gated when the spectator moves beyond source visibility")
+	node.follow_id = 2
+	check(not node._spray_cue_draw_view(cue).is_empty(),"returning to the source re-admits current visible spokes without a stale observer cache")
+	equal(var_to_bytes(cue),before,"repeated and changed-observer views never mutate retained cue geometry")
 	node.free()
 
 

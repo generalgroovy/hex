@@ -3,10 +3,11 @@ extends RefCounted
 
 
 const World = preload("res://src/sim/hex/hex_chemistry_world.gd")
-const CAST_ROW_SIZE := 33
-const PRODUCT_ROW_SIZE := 28
-const MAX_TOPOLOGY_CELLS := 4_096
-const MAX_SELECTED_CELLS := 127
+const CAST_ROW_SIZE := 34
+const PRODUCT_ROW_SIZE := 32
+const CHEMISTRY_SCHEMA_VERSION := 5
+const MAX_TOPOLOGY_CELLS := World.MAX_CELLS
+const MAX_SELECTED_CELLS := HexCastParts.MAX_SELECTED_CELLS
 const MAX_CASTS := 64
 const MAX_PRODUCTS := 32
 const MAX_CAST_ALLOCATION_ROWS := MAX_CASTS * World.MATTER_PER_CAST
@@ -68,6 +69,26 @@ static func pack(detached: Dictionary, cell_count: int) -> Dictionary:
 	}
 
 
+# Exact composition of validate_structure(packed, cell_count) and unpack, but
+# without decoding five variable/sparse lanes only to discard and decode them
+# again. Keep unpack's public grammar unchanged. The cheap fixed shape check is
+# deliberately repeated there; no caller-supplied trusted flag is introduced.
+static func strict_decode(packed: Dictionary, cell_count: int) -> Dictionary:
+	if not _shape_valid(packed) or cell_count < 1 or cell_count > MAX_TOPOLOGY_CELLS:
+		return {}
+	if int(packed.schema) != CHEMISTRY_SCHEMA_VERSION or (packed.header as PackedInt32Array).size() != 5:
+		return {}
+	var header: PackedInt32Array = packed.header
+	if (packed.cast_ids as PackedInt32Array).size() > MAX_CASTS \
+		or (packed.product_ids as PackedInt32Array).size() > MAX_PRODUCTS \
+		or header[0] < 0 or header[1] not in [0, 1] \
+		or header[2] <= 0 or header[3] <= 0 or header[4] <= 0:
+		return {}
+	# Row widths, ID agreement, sparse bounds and variable framing are checked
+	# while producing independently owned rows by the existing single decoder.
+	return unpack(packed, cell_count)
+
+
 static func unpack(packed: Dictionary, cell_count: int) -> Dictionary:
 	if not _shape_valid(packed) or cell_count < 1 or cell_count > MAX_TOPOLOGY_CELLS:
 		return {}
@@ -115,7 +136,7 @@ static func byte_size(value: Variant) -> int:
 static func validate_structure(value: Dictionary, cell_count: int = -1) -> bool:
 	if not _shape_valid(value) or (cell_count != -1 and (cell_count < 1 or cell_count > MAX_TOPOLOGY_CELLS)):
 		return false
-	if int(value.schema) != 3 or (value.header as PackedInt32Array).size() != 5:
+	if int(value.schema) != CHEMISTRY_SCHEMA_VERSION or (value.header as PackedInt32Array).size() != 5:
 		return false
 	var cast_ids: PackedInt32Array = value.cast_ids
 	var product_ids: PackedInt32Array = value.product_ids
@@ -190,10 +211,10 @@ static func _i32(value: Variant, exact_size: int = -1) -> Variant:
 
 
 static func _pack_sparse_plane(value: Variant, ids: PackedInt32Array, cell_count: int, maximum_rows: int) -> Variant:
-	if typeof(value) != TYPE_PACKED_INT64_ARRAY:
+	if typeof(value) != TYPE_PACKED_INT64_ARRAY or cell_count < 1 or cell_count > MAX_TOPOLOGY_CELLS or ids.size() > MAX_U16 + 1:
 		return null
 	var sparse: PackedInt64Array = value
-	if sparse.size() % 3 != 0 or sparse.size() / 3 > maximum_rows:
+	if sparse.size() % 3 != 0 or sparse.size() / 3 > maximum_rows or sparse.size() / 3 > MAX_U16:
 		return null
 	var id_indices := {}
 	for index: int in ids.size():
@@ -225,7 +246,7 @@ static func _pack_sparse_plane(value: Variant, ids: PackedInt32Array, cell_count
 
 
 static func _unpack_sparse_plane(value: Variant, ids: PackedInt32Array, cell_count: int, maximum_rows: int) -> Variant:
-	if typeof(value) != TYPE_PACKED_BYTE_ARRAY:
+	if typeof(value) != TYPE_PACKED_BYTE_ARRAY or cell_count < 1 or cell_count > MAX_TOPOLOGY_CELLS or ids.size() > MAX_U16 + 1:
 		return null
 	var plane: PackedByteArray = value
 	if plane.size() < 2:

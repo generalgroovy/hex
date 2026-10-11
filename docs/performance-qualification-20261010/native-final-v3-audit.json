@@ -1,0 +1,2193 @@
+{
+  "schema": "hex-native-independent-audit-v1",
+  "status": "passed",
+  "audited_utc": "2026-10-10T03:33:14.752909+00:00",
+  "checks": 38316,
+  "errors": [],
+  "scope": "Independent Python recomputation from saved raw intervals and callback samples; no engine rerun, source edits or package acceptance.",
+  "input_sha256": {
+    ".godot\\smooth-native-final-v3\\metrics.json": "075dc3706ca652754af68b5ce5f196b7d2bb029f24cf8edc05e67f1cf2c0a42b",
+    ".godot\\smooth-native-final-v3\\summary.json": "08b3980f8dc5028586553dd05d76f48a871d79f6d6124698991794b74f5b5630",
+    ".godot\\smooth-native-final-v3\\engine.log": "965c25c9382ad8ffc5fffcf4299961917987c9ac8176cdb24b68cd0d122ff20c",
+    ".godot\\smooth-native-final-v3\\engine.log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".godot\\smooth-native-final-v3\\runtime-identity.input.json": "579b8662a7b37fa2165ffa0f3a568b4693fd231765677b2daef6541ad0219c6b",
+    "docs\\performance-qualification-20261010\\native-final-v3.json": "08b3980f8dc5028586553dd05d76f48a871d79f6d6124698991794b74f5b5630",
+    ".godot\\audit-native-final-v3.py": "e1cf5285b4e64a74933ff4e1cd29133fe88178bb11669f7486fc0a8fc163e928"
+  },
+  "inputs_unchanged": true,
+  "wrapper_status_observed": "measured",
+  "wrapper_numeric_exit_code": null,
+  "wrapper_scope": "Not exposed by the shared checked-engine runner; clean launcher return, exact completion marker, complete receipt and empty stderr are required.",
+  "engine_completion_markers": [
+    "HEX_GAMEPLAY_PROFILE_COMPLETE C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-native-final-v3\\metrics.json"
+  ],
+  "identity": {
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate.",
+    "build_id": "p60-be3efd332e1a",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "protocol_version": 60.0,
+    "record_count": 3390.0,
+    "runtime_source_sha256": "be3efd332e1a9cc584a4cdc4e983c2ce9e5de84ed5a179a0d1152f5ef8237e33",
+    "schema_version": 1.0,
+    "scope_id": "production-runtime-source-v1",
+    "snapshot_schema": 24.0,
+    "status": "candidate_generated_not_promoted"
+  },
+  "source_observed_records": 298,
+  "source_observed_digest_recomputed": "d618efa5d9995b9eff0d3ffaf1ace4dcf48e90c4b64e826e0cdfcdbf1e57ce3a",
+  "current_source_mismatches": [],
+  "counts": {
+    "ordered_rows": 25,
+    "warm_rows": 18,
+    "raw_frame_intervals": 15055,
+    "actual_draw_callbacks": 15087,
+    "independently_recomputed_raw_metric_distributions": 250
+  },
+  "rows": [
+    {
+      "index": 0,
+      "quality": "low",
+      "label": "startup_arrival",
+      "temperature": "cold_process_cache",
+      "wall_seconds": 0.408449,
+      "frame_interval_ms": {
+        "count": 10,
+        "mean": 31.1373,
+        "p50": 16.532,
+        "p95": 118.915,
+        "p99": 118.915,
+        "max": 118.915,
+        "threshold_counts": {
+          "over_20ms": 3,
+          "over_33_3ms": 2,
+          "over_50ms": 2,
+          "over_100ms": 1
+        }
+      },
+      "process_mean_ms": 9.539272727272728,
+      "draw_mean_ms": 5.6585833333333335,
+      "court_mean_ms": 0.04625,
+      "ticks_advanced": 15,
+      "ticks_per_wall_second": 36.7242911599735,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 8,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 1,
+      "quality": "low",
+      "label": "hearth_idle",
+      "temperature": "warm",
+      "wall_seconds": 10.024695,
+      "frame_interval_ms": {
+        "count": 577,
+        "mean": 17.34505719237435,
+        "p50": 16.971,
+        "p95": 19.768,
+        "p99": 25.244,
+        "max": 28.448,
+        "threshold_counts": {
+          "over_20ms": 22,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 2.553311418685121,
+      "draw_mean_ms": 6.539337370242214,
+      "court_mean_ms": 0.04159342560553633,
+      "ticks_advanced": 1203,
+      "ticks_per_wall_second": 120.003650983895,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 2,
+      "quality": "low",
+      "label": "garden_entry_arrival",
+      "temperature": "travel_process_cache_state_recorded",
+      "wall_seconds": 0.497873,
+      "frame_interval_ms": {
+        "count": 17,
+        "mean": 25.344352941176474,
+        "p50": 16.512,
+        "p95": 176.776,
+        "p99": 176.776,
+        "max": 176.776,
+        "threshold_counts": {
+          "over_20ms": 2,
+          "over_33_3ms": 1,
+          "over_50ms": 1,
+          "over_100ms": 1
+        }
+      },
+      "process_mean_ms": 12.09911111111111,
+      "draw_mean_ms": 4.9714210526315785,
+      "court_mean_ms": 0.04175,
+      "ticks_advanced": 14,
+      "ticks_per_wall_second": 28.1196208671689,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 15,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 3,
+      "quality": "low",
+      "label": "garden_entry",
+      "temperature": "warm",
+      "wall_seconds": 10.029774,
+      "frame_interval_ms": {
+        "count": 574,
+        "mean": 17.44191114982578,
+        "p50": 16.782,
+        "p95": 22.51,
+        "p99": 24.678,
+        "max": 27.821,
+        "threshold_counts": {
+          "over_20ms": 63,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 3.2573460869565216,
+      "draw_mean_ms": 6.601358260869565,
+      "court_mean_ms": 0.03645217391304348,
+      "ticks_advanced": 1204,
+      "ticks_per_wall_second": 120.042585206805,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 4,
+      "quality": "low",
+      "label": "garden_middle_arrival",
+      "temperature": "travel_process_cache_state_recorded",
+      "wall_seconds": 0.294306,
+      "frame_interval_ms": {
+        "count": 2,
+        "mean": 111.92,
+        "p50": 52.727,
+        "p95": 171.113,
+        "p99": 171.113,
+        "max": 171.113,
+        "threshold_counts": {
+          "over_20ms": 2,
+          "over_33_3ms": 2,
+          "over_50ms": 2,
+          "over_100ms": 1
+        }
+      },
+      "process_mean_ms": 45.83133333333333,
+      "draw_mean_ms": 27.038999999999998,
+      "court_mean_ms": 0.04825,
+      "ticks_advanced": 22,
+      "ticks_per_wall_second": 74.752128736757,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 5,
+      "quality": "low",
+      "label": "garden_middle",
+      "temperature": "warm",
+      "wall_seconds": 10.030412,
+      "frame_interval_ms": {
+        "count": 559,
+        "mean": 17.913155635062612,
+        "p50": 16.934,
+        "p95": 23.418,
+        "p99": 31.275,
+        "max": 45.267,
+        "threshold_counts": {
+          "over_20ms": 77,
+          "over_33_3ms": 4,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 3.488732142857143,
+      "draw_mean_ms": 7.068630357142857,
+      "court_mean_ms": 0.03974821428571429,
+      "ticks_advanced": 1204,
+      "ticks_per_wall_second": 120.034949710939,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 6,
+      "quality": "low",
+      "label": "paid_fire_bolt",
+      "temperature": "warm",
+      "wall_seconds": 10.030372,
+      "frame_interval_ms": {
+        "count": 438,
+        "mean": 22.85580593607306,
+        "p50": 21.179,
+        "p95": 33.242,
+        "p99": 51.388,
+        "max": 55.314,
+        "threshold_counts": {
+          "over_20ms": 324,
+          "over_33_3ms": 21,
+          "over_50ms": 7,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 5.502314350797267,
+      "draw_mean_ms": 7.817170842824601,
+      "court_mean_ms": 0.07410933940774488,
+      "ticks_advanced": 1204,
+      "ticks_per_wall_second": 120.035428396873,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 29
+    },
+    {
+      "index": 7,
+      "quality": "low",
+      "label": "paid_all_six_mantle",
+      "temperature": "warm",
+      "wall_seconds": 10.03,
+      "frame_interval_ms": {
+        "count": 355,
+        "mean": 28.172909859154927,
+        "p50": 27.193,
+        "p95": 36.246,
+        "p99": 44.014,
+        "max": 47.362,
+        "threshold_counts": {
+          "over_20ms": 354,
+          "over_33_3ms": 27,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 5.605963483146067,
+      "draw_mean_ms": 12.553789325842697,
+      "court_mean_ms": 4.935022471910112,
+      "ticks_advanced": 1203,
+      "ticks_per_wall_second": 119.940179461615,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 33
+    },
+    {
+      "index": 8,
+      "quality": "low",
+      "label": "movement_boundary",
+      "temperature": "warm",
+      "wall_seconds": 10.032532,
+      "frame_interval_ms": {
+        "count": 550,
+        "mean": 18.20921818181818,
+        "p50": 17.7,
+        "p95": 23.011,
+        "p99": 27.72,
+        "max": 38.482,
+        "threshold_counts": {
+          "over_20ms": 51,
+          "over_33_3ms": 1,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 2.8396715063520874,
+      "draw_mean_ms": 7.092671506352087,
+      "court_mean_ms": 0.0422032667876588,
+      "ticks_advanced": 1204,
+      "ticks_per_wall_second": 120.009584818668,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 9,
+      "quality": "low",
+      "label": "range_paid_fire",
+      "temperature": "warm",
+      "wall_seconds": 10.03025,
+      "frame_interval_ms": {
+        "count": 581,
+        "mean": 17.23424612736661,
+        "p50": 17.113,
+        "p95": 18.912,
+        "p99": 20.75,
+        "max": 23.733,
+        "threshold_counts": {
+          "over_20ms": 7,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 2.588487972508591,
+      "draw_mean_ms": 7.728896907216495,
+      "court_mean_ms": 2.80746735395189,
+      "ticks_advanced": 1204,
+      "ticks_per_wall_second": 120.036888412552,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 10,
+      "quality": "low",
+      "label": "paid_fire_bolt_close",
+      "temperature": "warm",
+      "wall_seconds": 10.035009,
+      "frame_interval_ms": {
+        "count": 389,
+        "mean": 25.750966580976865,
+        "p50": 24.2,
+        "p95": 39.507,
+        "p99": 43.101,
+        "max": 45.991,
+        "threshold_counts": {
+          "over_20ms": 231,
+          "over_33_3ms": 94,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 4.175648717948718,
+      "draw_mean_ms": 11.22384871794872,
+      "court_mean_ms": 4.161935897435898,
+      "ticks_advanced": 1203,
+      "ticks_per_wall_second": 119.880311019153,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 30
+    },
+    {
+      "index": 11,
+      "quality": "low",
+      "label": "garden_middle_arrival",
+      "temperature": "travel_process_cache_state_recorded",
+      "wall_seconds": 0.427896,
+      "frame_interval_ms": {
+        "count": 14,
+        "mean": 25.736285714285714,
+        "p50": 16.655,
+        "p95": 159.504,
+        "p99": 159.504,
+        "max": 159.504,
+        "threshold_counts": {
+          "over_20ms": 2,
+          "over_33_3ms": 1,
+          "over_50ms": 1,
+          "over_100ms": 1
+        }
+      },
+      "process_mean_ms": 14.592,
+      "draw_mean_ms": 5.2306875,
+      "court_mean_ms": 0.035750000000000004,
+      "ticks_advanced": 15,
+      "ticks_per_wall_second": 35.0552470693813,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 12,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 12,
+      "quality": "low",
+      "label": "garden_soak",
+      "temperature": "warm",
+      "wall_seconds": 60.022047,
+      "frame_interval_ms": {
+        "count": 3430,
+        "mean": 17.494166180758018,
+        "p50": 16.759,
+        "p95": 22.796,
+        "p99": 28.572,
+        "max": 42.156,
+        "threshold_counts": {
+          "over_20ms": 317,
+          "over_33_3ms": 11,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 3.3229661906149808,
+      "draw_mean_ms": 6.930683765665987,
+      "court_mean_ms": 0.03710929758088021,
+      "ticks_advanced": 7203,
+      "ticks_per_wall_second": 120.005903830637,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 13,
+      "quality": "standard",
+      "label": "hearth_idle",
+      "temperature": "warm",
+      "wall_seconds": 10.031457,
+      "frame_interval_ms": {
+        "count": 581,
+        "mean": 17.23411703958692,
+        "p50": 17.029,
+        "p95": 19.095,
+        "p99": 20.362,
+        "max": 22.81,
+        "threshold_counts": {
+          "over_20ms": 12,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 2.539121993127148,
+      "draw_mean_ms": 6.669936426116839,
+      "court_mean_ms": 0.042293814432989685,
+      "ticks_advanced": 1208,
+      "ticks_per_wall_second": 120.421191059285,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 14,
+      "quality": "standard",
+      "label": "garden_entry_arrival",
+      "temperature": "travel_process_cache_state_recorded",
+      "wall_seconds": 0.367127,
+      "frame_interval_ms": {
+        "count": 11,
+        "mean": 27.79790909090909,
+        "p50": 16.659,
+        "p95": 154.371,
+        "p99": 154.371,
+        "max": 154.371,
+        "threshold_counts": {
+          "over_20ms": 2,
+          "over_33_3ms": 1,
+          "over_50ms": 1,
+          "over_100ms": 1
+        }
+      },
+      "process_mean_ms": 16.881416666666667,
+      "draw_mean_ms": 5.9350000000000005,
+      "court_mean_ms": 0.0375,
+      "ticks_advanced": 15,
+      "ticks_per_wall_second": 40.857795803632,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 9,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 15,
+      "quality": "standard",
+      "label": "garden_entry",
+      "temperature": "warm",
+      "wall_seconds": 10.030007,
+      "frame_interval_ms": {
+        "count": 564,
+        "mean": 17.7552890070922,
+        "p50": 16.893,
+        "p95": 22.946,
+        "p99": 30.865,
+        "max": 35.61,
+        "threshold_counts": {
+          "over_20ms": 75,
+          "over_33_3ms": 3,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 3.3324938053097344,
+      "draw_mean_ms": 6.954109734513275,
+      "court_mean_ms": 0.03918938053097345,
+      "ticks_advanced": 1204,
+      "ticks_per_wall_second": 120.039796582395,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 16,
+      "quality": "standard",
+      "label": "garden_middle_arrival",
+      "temperature": "travel_process_cache_state_recorded",
+      "wall_seconds": 0.231688,
+      "frame_interval_ms": {
+        "count": 2,
+        "mean": 84.88050000000001,
+        "p50": 29.634,
+        "p95": 140.127,
+        "p99": 140.127,
+        "max": 140.127,
+        "threshold_counts": {
+          "over_20ms": 2,
+          "over_33_3ms": 1,
+          "over_50ms": 1,
+          "over_100ms": 1
+        }
+      },
+      "process_mean_ms": 39.608000000000004,
+      "draw_mean_ms": 18.86425,
+      "court_mean_ms": 0.03775,
+      "ticks_advanced": 18,
+      "ticks_per_wall_second": 77.6906874762612,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 17,
+      "quality": "standard",
+      "label": "garden_middle",
+      "temperature": "warm",
+      "wall_seconds": 10.023958,
+      "frame_interval_ms": {
+        "count": 583,
+        "mean": 17.164886792452833,
+        "p50": 16.723,
+        "p95": 20.639,
+        "p99": 24.143,
+        "max": 25.192,
+        "threshold_counts": {
+          "over_20ms": 37,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 3.218946917808219,
+      "draw_mean_ms": 6.81526198630137,
+      "court_mean_ms": 0.03676541095890411,
+      "ticks_advanced": 1204,
+      "ticks_per_wall_second": 120.11223510713,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 18,
+      "quality": "standard",
+      "label": "paid_fire_bolt",
+      "temperature": "warm",
+      "wall_seconds": 10.039242,
+      "frame_interval_ms": {
+        "count": 479,
+        "mean": 20.917910229645095,
+        "p50": 21.028,
+        "p95": 23.251,
+        "p99": 24.207,
+        "max": 27.058,
+        "threshold_counts": {
+          "over_20ms": 354,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 4.657195833333334,
+      "draw_mean_ms": 7.40643125,
+      "court_mean_ms": 0.07067916666666667,
+      "ticks_advanced": 1205,
+      "ticks_per_wall_second": 120.028982267785,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 29
+    },
+    {
+      "index": 19,
+      "quality": "standard",
+      "label": "paid_all_six_mantle",
+      "temperature": "warm",
+      "wall_seconds": 10.039867,
+      "frame_interval_ms": {
+        "count": 363,
+        "mean": 27.580955922865016,
+        "p50": 27.842,
+        "p95": 33.354,
+        "p99": 38.644,
+        "max": 41.788,
+        "threshold_counts": {
+          "over_20ms": 355,
+          "over_33_3ms": 20,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 5.267274725274725,
+      "draw_mean_ms": 12.19110989010989,
+      "court_mean_ms": 4.8440082417582415,
+      "ticks_advanced": 1204,
+      "ticks_per_wall_second": 119.921907332039,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 33
+    },
+    {
+      "index": 20,
+      "quality": "standard",
+      "label": "movement_boundary",
+      "temperature": "warm",
+      "wall_seconds": 10.020336,
+      "frame_interval_ms": {
+        "count": 550,
+        "mean": 18.185743636363636,
+        "p50": 17.724,
+        "p95": 23.321,
+        "p99": 27.556,
+        "max": 30.001,
+        "threshold_counts": {
+          "over_20ms": 48,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 2.833083484573503,
+      "draw_mean_ms": 7.096949183303085,
+      "court_mean_ms": 0.04188203266787659,
+      "ticks_advanced": 1203,
+      "ticks_per_wall_second": 120.055854414463,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 21,
+      "quality": "standard",
+      "label": "range_paid_fire",
+      "temperature": "warm",
+      "wall_seconds": 10.035649,
+      "frame_interval_ms": {
+        "count": 527,
+        "mean": 19.00812523719165,
+        "p50": 17.763,
+        "p95": 28.597,
+        "p99": 32.572,
+        "max": 41.019,
+        "threshold_counts": {
+          "over_20ms": 92,
+          "over_33_3ms": 5,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 3.153892045454546,
+      "draw_mean_ms": 8.418378787878787,
+      "court_mean_ms": 3.026248106060606,
+      "ticks_advanced": 1204,
+      "ticks_per_wall_second": 119.972310709552,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 22,
+      "quality": "standard",
+      "label": "paid_fire_bolt_close",
+      "temperature": "warm",
+      "wall_seconds": 10.034663,
+      "frame_interval_ms": {
+        "count": 403,
+        "mean": 24.85667245657568,
+        "p50": 20.91,
+        "p95": 39.206,
+        "p99": 42.669,
+        "max": 47.973,
+        "threshold_counts": {
+          "over_20ms": 209,
+          "over_33_3ms": 95,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 3.9802673267326734,
+      "draw_mean_ms": 10.819472772277228,
+      "court_mean_ms": 3.9357648514851484,
+      "ticks_advanced": 1204,
+      "ticks_per_wall_second": 119.98409911723,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 30
+    },
+    {
+      "index": 23,
+      "quality": "standard",
+      "label": "garden_middle_arrival",
+      "temperature": "travel_process_cache_state_recorded",
+      "wall_seconds": 0.414227,
+      "frame_interval_ms": {
+        "count": 14,
+        "mean": 25.5055,
+        "p50": 16.643,
+        "p95": 157.242,
+        "p99": 157.242,
+        "max": 157.242,
+        "threshold_counts": {
+          "over_20ms": 2,
+          "over_33_3ms": 1,
+          "over_50ms": 1,
+          "over_100ms": 1
+        }
+      },
+      "process_mean_ms": 14.366266666666666,
+      "draw_mean_ms": 4.6118749999999995,
+      "court_mean_ms": 0.0395,
+      "ticks_advanced": 12,
+      "ticks_per_wall_second": 28.9696229362161,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 12,
+      "max_paid_cells": 0
+    },
+    {
+      "index": 24,
+      "quality": "standard",
+      "label": "garden_soak",
+      "temperature": "warm",
+      "wall_seconds": 60.018778,
+      "frame_interval_ms": {
+        "count": 3482,
+        "mean": 17.232147903503733,
+        "p50": 16.719,
+        "p95": 20.29,
+        "p99": 24.973,
+        "max": 44.52,
+        "threshold_counts": {
+          "over_20ms": 191,
+          "over_33_3ms": 9,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_mean_ms": 3.220662360034453,
+      "draw_mean_ms": 6.878783232845248,
+      "court_mean_ms": 0.036386448463967845,
+      "ticks_advanced": 7212,
+      "ticks_per_wall_second": 120.162393176349,
+      "unfocused_frames": 0,
+      "dropped_accumulator_seconds": 0.0,
+      "clamped_delta_seconds": 0.0,
+      "terrain_loading_frames": 0,
+      "max_paid_cells": 0
+    }
+  ],
+  "close_fire": [
+    {
+      "quality": "low",
+      "cast_attempt_ticks": [
+        132,
+        164,
+        196,
+        228,
+        260,
+        292,
+        324,
+        356,
+        388,
+        420,
+        452,
+        484
+      ],
+      "admitted": 12,
+      "matter_paid": 7200,
+      "max_regions": 150,
+      "max_products": 6,
+      "empty_draw_fraction": 0.47692307692307695,
+      "empty": {
+        "draws": 186,
+        "court_elapsed_ms": {
+          "count": 186,
+          "mean": 0.0473494623655914,
+          "p50": 0.044,
+          "p95": 0.072,
+          "p99": 0.104,
+          "max": 0.262,
+          "threshold_counts": {
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "draw_elapsed_ms": {
+          "count": 186,
+          "mean": 7.160951612903225,
+          "p50": 6.813,
+          "p95": 8.977,
+          "p99": 14.329,
+          "max": 14.393,
+          "threshold_counts": {
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "process_elapsed_ms": {
+          "count": 186,
+          "mean": 3.0181612903225807,
+          "p50": 2.487,
+          "p95": 5.301,
+          "p99": 11.416,
+          "max": 12.714,
+          "threshold_counts": {
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "following_process_start_interval_ms": {
+          "count": 185,
+          "mean": 18.927345945945948,
+          "p50": 17.592,
+          "p95": 22.479,
+          "p99": 45.29,
+          "max": 45.991,
+          "threshold_counts": {
+            "over_20ms": 27,
+            "over_33_3ms": 6,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        }
+      },
+      "occupied": {
+        "draws": 204,
+        "court_elapsed_ms": {
+          "count": 204,
+          "mean": 7.913470588235294,
+          "p50": 7.661,
+          "p95": 13.348,
+          "p99": 13.716,
+          "max": 14.113,
+          "threshold_counts": {
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "draw_elapsed_ms": {
+          "count": 204,
+          "mean": 14.928254901960784,
+          "p50": 14.654,
+          "p95": 20.214,
+          "p99": 20.679,
+          "max": 20.832,
+          "threshold_counts": {
+            "over_20ms": 18,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "process_elapsed_ms": {
+          "count": 204,
+          "mean": 5.231004901960785,
+          "p50": 5.058,
+          "p95": 7.826,
+          "p99": 8.893,
+          "max": 9.129,
+          "threshold_counts": {
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "following_process_start_interval_ms": {
+          "count": 204,
+          "mean": 31.93905392156863,
+          "p50": 32.285,
+          "p95": 39.717,
+          "p99": 41.944,
+          "max": 43.101,
+          "threshold_counts": {
+            "over_20ms": 204,
+            "over_33_3ms": 88,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        }
+      },
+      "peak150": {
+        "draws": 27,
+        "court_elapsed_ms": {
+          "count": 27,
+          "mean": 13.046888888888889,
+          "p50": 13.294,
+          "p95": 13.858,
+          "p99": 14.113,
+          "max": 14.113,
+          "threshold_counts": {
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "draw_elapsed_ms": {
+          "count": 27,
+          "mean": 19.838703703703704,
+          "p50": 20.055,
+          "p95": 20.687,
+          "p99": 20.832,
+          "max": 20.832,
+          "threshold_counts": {
+            "over_20ms": 15,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "process_elapsed_ms": {
+          "count": 27,
+          "mean": 5.34862962962963,
+          "p50": 5.228,
+          "p95": 6.495,
+          "p99": 7.826,
+          "max": 7.826,
+          "threshold_counts": {
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "following_process_start_interval_ms": {
+          "count": 27,
+          "mean": 38.28592592592593,
+          "p50": 38.669,
+          "p95": 41.944,
+          "p99": 43.101,
+          "max": 43.101,
+          "threshold_counts": {
+            "over_20ms": 27,
+            "over_33_3ms": 27,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        }
+      },
+      "peak150_phase_signatures": [
+        "{\"conflagration/active\": 125, \"conflagration/decaying\": 25}",
+        "{\"conflagration/active\": 125, \"conflagration/forming\": 25}",
+        "{\"conflagration/active\": 150}"
+      ],
+      "normalized_elapsed_work": {
+        "draws": 390,
+        "prepared_regions": 16351,
+        "conflagration_regions": 16000,
+        "mirror_us_per_conflagration_region": 56.4678125,
+        "fire_mark_us_per_call": 16.33520885572748,
+        "prepare_region_us_per_call": 12.740199376184943,
+        "bundle_us_per_accepted_region": 33.78337716347624,
+        "court_us_per_accepted_region": 99.2694636413675,
+        "frame_interval_ms": {
+          "count": 389,
+          "mean": 25.750966580976865,
+          "p50": 24.2,
+          "p95": 39.507,
+          "p99": 43.101,
+          "max": 45.991,
+          "threshold_counts": {
+            "over_20ms": 231,
+            "over_33_3ms": 94,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "draw_elapsed_ms": {
+          "count": 390,
+          "mean": 11.22384871794872,
+          "p50": 10.083,
+          "p95": 19.88,
+          "p99": 20.636,
+          "max": 20.832,
+          "threshold_counts": {
+            "over_20ms": 18,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "process_elapsed_ms": {
+          "count": 390,
+          "mean": 4.175648717948718,
+          "p50": 3.556,
+          "p95": 7.748,
+          "p99": 9.84,
+          "max": 12.714,
+          "threshold_counts": {
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "cache_before": {
+          "geometry": {
+            "builds": 19,
+            "cells": 497,
+            "courts": 9,
+            "hits": 4116
+          },
+          "outline": {
+            "batches": 60,
+            "fallbacks": 0,
+            "hits": 13716,
+            "meshes": 60,
+            "uploads": 60
+          },
+          "surface": {
+            "geometry_builds": 26,
+            "geometry_entries": 26,
+            "geometry_hits": 0,
+            "mesh_entries": 26,
+            "mesh_hits": 10691,
+            "mesh_uploads": 26,
+            "sequences": 264,
+            "template_builds": 26,
+            "template_hits": 0,
+            "texture_bytes": 2703360,
+            "textures": 660,
+            "translated_draws": 10717,
+            "triangle_fallback_draws": 0
+          }
+        }
+      }
+    },
+    {
+      "quality": "standard",
+      "cast_attempt_ticks": [
+        130,
+        162,
+        194,
+        226,
+        258,
+        290,
+        322,
+        354,
+        386,
+        418,
+        450,
+        482
+      ],
+      "admitted": 12,
+      "matter_paid": 7200,
+      "max_regions": 150,
+      "max_products": 6,
+      "empty_draw_fraction": 0.5024752475247525,
+      "empty": {
+        "draws": 203,
+        "court_elapsed_ms": {
+          "count": 203,
+          "mean": 0.05327093596059113,
+          "p50": 0.043,
+          "p95": 0.063,
+          "p99": 0.092,
+          "max": 1.832,
+          "threshold_counts": {
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "draw_elapsed_ms": {
+          "count": 203,
+          "mean": 6.70343842364532,
+          "p50": 6.581,
+          "p95": 7.758,
+          "p99": 8.268,
+          "max": 8.947,
+          "threshold_counts": {
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "process_elapsed_ms": {
+          "count": 203,
+          "mean": 2.6107635467980295,
+          "p50": 2.401,
+          "p95": 3.648,
+          "p99": 4.535,
+          "max": 5.278,
+          "threshold_counts": {
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "following_process_start_interval_ms": {
+          "count": 202,
+          "mean": 17.417148514851487,
+          "p50": 17.105,
+          "p95": 19.916,
+          "p99": 20.76,
+          "max": 20.91,
+          "threshold_counts": {
+            "over_20ms": 8,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        }
+      },
+      "occupied": {
+        "draws": 201,
+        "court_elapsed_ms": {
+          "count": 201,
+          "mean": 7.856890547263681,
+          "p50": 7.8,
+          "p95": 13.195,
+          "p99": 13.445,
+          "max": 13.873,
+          "threshold_counts": {
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "draw_elapsed_ms": {
+          "count": 201,
+          "mean": 14.976462686567164,
+          "p50": 14.722,
+          "p95": 19.841,
+          "p99": 20.34,
+          "max": 20.652,
+          "threshold_counts": {
+            "over_20ms": 8,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "process_elapsed_ms": {
+          "count": 201,
+          "mean": 5.363398009950248,
+          "p50": 4.873,
+          "p95": 8.243,
+          "p99": 11.309,
+          "max": 13.898,
+          "threshold_counts": {
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "following_process_start_interval_ms": {
+          "count": 201,
+          "mean": 32.33320895522388,
+          "p50": 32.528,
+          "p95": 40.651,
+          "p99": 47.04,
+          "max": 47.973,
+          "threshold_counts": {
+            "over_20ms": 201,
+            "over_33_3ms": 95,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        }
+      },
+      "peak150": {
+        "draws": 27,
+        "court_elapsed_ms": {
+          "count": 27,
+          "mean": 12.858037037037036,
+          "p50": 13.076,
+          "p95": 13.517,
+          "p99": 13.873,
+          "max": 13.873,
+          "threshold_counts": {
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "draw_elapsed_ms": {
+          "count": 27,
+          "mean": 19.528037037037034,
+          "p50": 19.566,
+          "p95": 20.245,
+          "p99": 20.549,
+          "max": 20.549,
+          "threshold_counts": {
+            "over_20ms": 6,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "process_elapsed_ms": {
+          "count": 27,
+          "mean": 5.394814814814815,
+          "p50": 5.29,
+          "p95": 6.319,
+          "p99": 9.288,
+          "max": 9.288,
+          "threshold_counts": {
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "following_process_start_interval_ms": {
+          "count": 27,
+          "mean": 37.87555555555556,
+          "p50": 38.632,
+          "p95": 41.405,
+          "p99": 42.454,
+          "max": 42.454,
+          "threshold_counts": {
+            "over_20ms": 27,
+            "over_33_3ms": 27,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        }
+      },
+      "peak150_phase_signatures": [
+        "{\"conflagration/active\": 125, \"conflagration/decaying\": 25}",
+        "{\"conflagration/active\": 125, \"conflagration/forming\": 25}",
+        "{\"conflagration/active\": 150}"
+      ],
+      "normalized_elapsed_work": {
+        "draws": 404,
+        "prepared_regions": 16213,
+        "conflagration_regions": 15875,
+        "mirror_us_per_conflagration_region": 55.859464566929134,
+        "fire_mark_us_per_call": 16.16967865293283,
+        "prepare_region_us_per_call": 12.610929501017702,
+        "bundle_us_per_accepted_region": 33.231357552581265,
+        "court_us_per_accepted_region": 98.0724727070869,
+        "frame_interval_ms": {
+          "count": 403,
+          "mean": 24.85667245657568,
+          "p50": 20.91,
+          "p95": 39.206,
+          "p99": 42.669,
+          "max": 47.973,
+          "threshold_counts": {
+            "over_20ms": 209,
+            "over_33_3ms": 95,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "draw_elapsed_ms": {
+          "count": 404,
+          "mean": 10.819472772277228,
+          "p50": 8.539,
+          "p95": 19.39,
+          "p99": 20.212,
+          "max": 20.652,
+          "threshold_counts": {
+            "over_20ms": 8,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "process_elapsed_ms": {
+          "count": 404,
+          "mean": 3.9802673267326734,
+          "p50": 3.423,
+          "p95": 7.578,
+          "p99": 9.62,
+          "max": 13.898,
+          "threshold_counts": {
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0,
+            "over_100ms": 0
+          }
+        },
+        "cache_before": {
+          "geometry": {
+            "builds": 51,
+            "cells": 994,
+            "courts": 18,
+            "hits": 12118
+          },
+          "outline": {
+            "batches": 85,
+            "fallbacks": 0,
+            "hits": 37373,
+            "meshes": 85,
+            "uploads": 85
+          },
+          "surface": {
+            "geometry_builds": 26,
+            "geometry_entries": 26,
+            "geometry_hits": 0,
+            "mesh_entries": 26,
+            "mesh_hits": 21605,
+            "mesh_uploads": 26,
+            "sequences": 264,
+            "template_builds": 26,
+            "template_hits": 0,
+            "texture_bytes": 2703360,
+            "textures": 660,
+            "translated_draws": 21631,
+            "triangle_fallback_draws": 0
+          }
+        }
+      }
+    }
+  ],
+  "close_fire_normalized_comparison": [
+    {
+      "input": ".godot/smooth-close-fire-profile-v1/metrics.json",
+      "sha256": "dc10eeab8a9901ff7d1810b54ea33b3bf1bcc3b09fa4b8a6ade9f6aec8528741",
+      "build_id": "p60-d649c4d1d99c",
+      "quality": "low",
+      "draws": 306,
+      "prepared_regions": 10624,
+      "conflagration_regions": 10325,
+      "mirror_us_per_conflagration_region": 121.4609200968523,
+      "fire_mark_us_per_call": 43.52899096385542,
+      "prepare_region_us_per_call": 15.109375,
+      "bundle_us_per_accepted_region": 36.347609186746986,
+      "court_us_per_accepted_region": 167.30064006024097,
+      "frame_interval_ms": {
+        "count": 305,
+        "mean": 32.798098360655736,
+        "p50": 21.273,
+        "p95": 70.701,
+        "p99": 109.032,
+        "max": 248.546,
+        "threshold_counts": {
+          "over_20ms": 156,
+          "over_33_3ms": 107,
+          "over_50ms": 54,
+          "over_100ms": 4
+        }
+      },
+      "draw_elapsed_ms": {
+        "count": 306,
+        "mean": 12.708735294117647,
+        "p50": 8.03,
+        "p95": 28.635,
+        "p99": 36.068,
+        "max": 90.064,
+        "threshold_counts": {
+          "over_20ms": 55,
+          "over_33_3ms": 7,
+          "over_50ms": 2,
+          "over_100ms": 0
+        }
+      },
+      "process_elapsed_ms": {
+        "count": 306,
+        "mean": 4.829062091503268,
+        "p50": 3.337,
+        "p95": 11.312,
+        "p99": 20.077,
+        "max": 22.207,
+        "threshold_counts": {
+          "over_20ms": 4,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "cache_before": {
+        "geometry": {
+          "builds": 2,
+          "cells": 0,
+          "courts": 2,
+          "hits": 53
+        },
+        "outline": {
+          "batches": 0,
+          "fallbacks": 0,
+          "hits": 0,
+          "meshes": 0,
+          "uploads": 0
+        },
+        "surface": {
+          "geometry_builds": 0,
+          "geometry_entries": 0,
+          "geometry_hits": 0,
+          "mesh_entries": 0,
+          "mesh_hits": 0,
+          "mesh_uploads": 0,
+          "sequences": 264,
+          "template_builds": 0,
+          "template_hits": 0,
+          "texture_bytes": 2703360,
+          "textures": 660,
+          "translated_draws": 0,
+          "triangle_fallback_draws": 0
+        }
+      }
+    },
+    {
+      "input": ".godot/smooth-close-fire-profile-v2/metrics.json",
+      "sha256": "74317d9ee9b463c49a7956ea3664170134af9abc5be73954d0b39fa7e692d23d",
+      "build_id": "p60-6980b3dcafec",
+      "quality": "low",
+      "draws": 368,
+      "prepared_regions": 14401,
+      "conflagration_regions": 14050,
+      "mirror_us_per_conflagration_region": 61.10846975088968,
+      "fire_mark_us_per_call": 18.628914658704257,
+      "prepare_region_us_per_call": 15.805916255815568,
+      "bundle_us_per_accepted_region": 38.8247343934449,
+      "court_us_per_accepted_region": 110.2024859384765,
+      "frame_interval_ms": {
+        "count": 367,
+        "mean": 27.272637602179834,
+        "p50": 25.632,
+        "p95": 48.506,
+        "p99": 81.769,
+        "max": 106.734,
+        "threshold_counts": {
+          "over_20ms": 209,
+          "over_33_3ms": 99,
+          "over_50ms": 16,
+          "over_100ms": 1
+        }
+      },
+      "draw_elapsed_ms": {
+        "count": 368,
+        "mean": 11.675548913043478,
+        "p50": 10.423,
+        "p95": 21.961,
+        "p99": 36.097,
+        "max": 46.083,
+        "threshold_counts": {
+          "over_20ms": 29,
+          "over_33_3ms": 5,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_elapsed_ms": {
+        "count": 368,
+        "mean": 4.57525,
+        "p50": 3.473,
+        "p95": 10.366,
+        "p99": 17.055,
+        "max": 24.305,
+        "threshold_counts": {
+          "over_20ms": 1,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "cache_before": {
+        "geometry": {
+          "builds": 2,
+          "cells": 0,
+          "courts": 2,
+          "hits": 33
+        },
+        "outline": {
+          "batches": 0,
+          "fallbacks": 0,
+          "hits": 0,
+          "meshes": 0,
+          "uploads": 0
+        },
+        "surface": {
+          "geometry_builds": 0,
+          "geometry_entries": 0,
+          "geometry_hits": 0,
+          "mesh_entries": 0,
+          "mesh_hits": 0,
+          "mesh_uploads": 0,
+          "sequences": 264,
+          "template_builds": 0,
+          "template_hits": 0,
+          "texture_bytes": 2703360,
+          "textures": 660,
+          "translated_draws": 0,
+          "triangle_fallback_draws": 0
+        }
+      }
+    },
+    {
+      "input": ".godot/smooth-native-final-v3/metrics.json",
+      "sha256": "075dc3706ca652754af68b5ce5f196b7d2bb029f24cf8edc05e67f1cf2c0a42b",
+      "build_id": "p60-be3efd332e1a",
+      "quality": "low",
+      "draws": 390,
+      "prepared_regions": 16351,
+      "conflagration_regions": 16000,
+      "mirror_us_per_conflagration_region": 56.4678125,
+      "fire_mark_us_per_call": 16.33520885572748,
+      "prepare_region_us_per_call": 12.740199376184943,
+      "bundle_us_per_accepted_region": 33.78337716347624,
+      "court_us_per_accepted_region": 99.2694636413675,
+      "frame_interval_ms": {
+        "count": 389,
+        "mean": 25.750966580976865,
+        "p50": 24.2,
+        "p95": 39.507,
+        "p99": 43.101,
+        "max": 45.991,
+        "threshold_counts": {
+          "over_20ms": 231,
+          "over_33_3ms": 94,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "draw_elapsed_ms": {
+        "count": 390,
+        "mean": 11.22384871794872,
+        "p50": 10.083,
+        "p95": 19.88,
+        "p99": 20.636,
+        "max": 20.832,
+        "threshold_counts": {
+          "over_20ms": 18,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_elapsed_ms": {
+        "count": 390,
+        "mean": 4.175648717948718,
+        "p50": 3.556,
+        "p95": 7.748,
+        "p99": 9.84,
+        "max": 12.714,
+        "threshold_counts": {
+          "over_20ms": 0,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "cache_before": {
+        "geometry": {
+          "builds": 19,
+          "cells": 497,
+          "courts": 9,
+          "hits": 4116
+        },
+        "outline": {
+          "batches": 60,
+          "fallbacks": 0,
+          "hits": 13716,
+          "meshes": 60,
+          "uploads": 60
+        },
+        "surface": {
+          "geometry_builds": 26,
+          "geometry_entries": 26,
+          "geometry_hits": 0,
+          "mesh_entries": 26,
+          "mesh_hits": 10691,
+          "mesh_uploads": 26,
+          "sequences": 264,
+          "template_builds": 26,
+          "template_hits": 0,
+          "texture_bytes": 2703360,
+          "textures": 660,
+          "translated_draws": 10717,
+          "triangle_fallback_draws": 0
+        }
+      }
+    },
+    {
+      "input": ".godot/smooth-native-final-v3/metrics.json",
+      "sha256": "075dc3706ca652754af68b5ce5f196b7d2bb029f24cf8edc05e67f1cf2c0a42b",
+      "build_id": "p60-be3efd332e1a",
+      "quality": "standard",
+      "draws": 404,
+      "prepared_regions": 16213,
+      "conflagration_regions": 15875,
+      "mirror_us_per_conflagration_region": 55.859464566929134,
+      "fire_mark_us_per_call": 16.16967865293283,
+      "prepare_region_us_per_call": 12.610929501017702,
+      "bundle_us_per_accepted_region": 33.231357552581265,
+      "court_us_per_accepted_region": 98.0724727070869,
+      "frame_interval_ms": {
+        "count": 403,
+        "mean": 24.85667245657568,
+        "p50": 20.91,
+        "p95": 39.206,
+        "p99": 42.669,
+        "max": 47.973,
+        "threshold_counts": {
+          "over_20ms": 209,
+          "over_33_3ms": 95,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "draw_elapsed_ms": {
+        "count": 404,
+        "mean": 10.819472772277228,
+        "p50": 8.539,
+        "p95": 19.39,
+        "p99": 20.212,
+        "max": 20.652,
+        "threshold_counts": {
+          "over_20ms": 8,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "process_elapsed_ms": {
+        "count": 404,
+        "mean": 3.9802673267326734,
+        "p50": 3.423,
+        "p95": 7.578,
+        "p99": 9.62,
+        "max": 13.898,
+        "threshold_counts": {
+          "over_20ms": 0,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "cache_before": {
+        "geometry": {
+          "builds": 51,
+          "cells": 994,
+          "courts": 18,
+          "hits": 12118
+        },
+        "outline": {
+          "batches": 85,
+          "fallbacks": 0,
+          "hits": 37373,
+          "meshes": 85,
+          "uploads": 85
+        },
+        "surface": {
+          "geometry_builds": 26,
+          "geometry_entries": 26,
+          "geometry_hits": 0,
+          "mesh_entries": 26,
+          "mesh_hits": 21605,
+          "mesh_uploads": 26,
+          "sequences": 264,
+          "template_builds": 26,
+          "template_hits": 0,
+          "texture_bytes": 2703360,
+          "textures": 660,
+          "translated_draws": 21631,
+          "triangle_fallback_draws": 0
+        }
+      }
+    }
+  ],
+  "mantle_callback_comparison": [
+    {
+      "input": ".godot/smooth-native-final-v2/metrics.json",
+      "sha256": "293e00d617b3180940b5fafe639697a91fd86636714bce6b75fb3a0e492130cc",
+      "build_id": "p60-d649c4d1d99c",
+      "quality": "low",
+      "frame_interval_ms": {
+        "count": 314,
+        "mean": 31.93361464968153,
+        "p50": 31.9,
+        "p95": 41.382,
+        "p99": 49.974,
+        "max": 75.703,
+        "threshold_counts": {
+          "over_20ms": 306,
+          "over_33_3ms": 134,
+          "over_50ms": 3,
+          "over_100ms": 0
+        }
+      },
+      "court_elapsed_ms": {
+        "count": 315,
+        "mean": 6.055803174603175,
+        "p50": 5.739,
+        "p95": 9.831,
+        "p99": 10.377,
+        "max": 15.913,
+        "threshold_counts": {
+          "over_20ms": 0,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "component_us_per_draw": {
+        "bundle": 1611.2444444444445,
+        "geometry": 92.60952380952381,
+        "surface": 861.1936507936508
+      },
+      "scope": "Elapsed inclusive components; per draw normalization is not per region and workloads were sequential."
+    },
+    {
+      "input": ".godot/smooth-native-final-v2/metrics.json",
+      "sha256": "293e00d617b3180940b5fafe639697a91fd86636714bce6b75fb3a0e492130cc",
+      "build_id": "p60-d649c4d1d99c",
+      "quality": "standard",
+      "frame_interval_ms": {
+        "count": 274,
+        "mean": 36.5753905109489,
+        "p50": 38.383,
+        "p95": 50.781,
+        "p99": 51.519,
+        "max": 53.021,
+        "threshold_counts": {
+          "over_20ms": 268,
+          "over_33_3ms": 186,
+          "over_50ms": 19,
+          "over_100ms": 0
+        }
+      },
+      "court_elapsed_ms": {
+        "count": 275,
+        "mean": 7.5382654545454555,
+        "p50": 7.899,
+        "p95": 12.458,
+        "p99": 13.013,
+        "max": 13.118,
+        "threshold_counts": {
+          "over_20ms": 0,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "component_us_per_draw": {
+        "bundle": 1522.9745454545455,
+        "geometry": 89.61090909090909,
+        "surface": 2513.64
+      },
+      "scope": "Elapsed inclusive components; per draw normalization is not per region and workloads were sequential."
+    },
+    {
+      "input": ".godot/smooth-mantle-profile-v2/metrics.json",
+      "sha256": "f0344a633d214e29a86e5f87ac66b4fc3dc3709a1d474be2ab13ddd40361f479",
+      "build_id": "p60-6980b3dcafec",
+      "quality": "low",
+      "frame_interval_ms": {
+        "count": 320,
+        "mean": 31.2532375,
+        "p50": 32.206,
+        "p95": 38.34,
+        "p99": 40.38,
+        "max": 42.135,
+        "threshold_counts": {
+          "over_20ms": 314,
+          "over_33_3ms": 116,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "court_elapsed_ms": {
+        "count": 321,
+        "mean": 5.891239875389408,
+        "p50": 5.807,
+        "p95": 9.147,
+        "p99": 9.845,
+        "max": 10.552,
+        "threshold_counts": {
+          "over_20ms": 0,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "component_us_per_draw": {
+        "bundle": 1670.4922118380061,
+        "geometry": 92.64174454828661,
+        "surface": 866.6386292834891
+      },
+      "scope": "Elapsed inclusive components; per draw normalization is not per region and workloads were sequential."
+    },
+    {
+      "input": ".godot/smooth-mantle-profile-v2/metrics.json",
+      "sha256": "f0344a633d214e29a86e5f87ac66b4fc3dc3709a1d474be2ab13ddd40361f479",
+      "build_id": "p60-6980b3dcafec",
+      "quality": "standard",
+      "frame_interval_ms": {
+        "count": 241,
+        "mean": 41.65101244813278,
+        "p50": 39.451,
+        "p95": 63.063,
+        "p99": 98.194,
+        "max": 135.796,
+        "threshold_counts": {
+          "over_20ms": 234,
+          "over_33_3ms": 196,
+          "over_50ms": 43,
+          "over_100ms": 2
+        }
+      },
+      "court_elapsed_ms": {
+        "count": 242,
+        "mean": 8.294198347107438,
+        "p50": 8.133,
+        "p95": 13.461,
+        "p99": 22.195,
+        "max": 35.264,
+        "threshold_counts": {
+          "over_20ms": 3,
+          "over_33_3ms": 1,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "component_us_per_draw": {
+        "bundle": 1693.0330578512396,
+        "geometry": 97.18181818181819,
+        "surface": 2900.5206611570247
+      },
+      "scope": "Elapsed inclusive components; per draw normalization is not per region and workloads were sequential."
+    },
+    {
+      "input": ".godot/smooth-native-final-v3/metrics.json",
+      "sha256": "075dc3706ca652754af68b5ce5f196b7d2bb029f24cf8edc05e67f1cf2c0a42b",
+      "build_id": "p60-be3efd332e1a",
+      "quality": "low",
+      "frame_interval_ms": {
+        "count": 355,
+        "mean": 28.172909859154927,
+        "p50": 27.193,
+        "p95": 36.246,
+        "p99": 44.014,
+        "max": 47.362,
+        "threshold_counts": {
+          "over_20ms": 354,
+          "over_33_3ms": 27,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "court_elapsed_ms": {
+        "count": 356,
+        "mean": 4.935022471910112,
+        "p50": 5.032,
+        "p95": 7.614,
+        "p99": 8.585,
+        "max": 14.832,
+        "threshold_counts": {
+          "over_20ms": 0,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "component_us_per_draw": {
+        "bundle": 1684.5786516853932,
+        "geometry": 94.28370786516854,
+        "surface": 783.0898876404494
+      },
+      "scope": "Elapsed inclusive components; per draw normalization is not per region and workloads were sequential."
+    },
+    {
+      "input": ".godot/smooth-native-final-v3/metrics.json",
+      "sha256": "075dc3706ca652754af68b5ce5f196b7d2bb029f24cf8edc05e67f1cf2c0a42b",
+      "build_id": "p60-be3efd332e1a",
+      "quality": "standard",
+      "frame_interval_ms": {
+        "count": 363,
+        "mean": 27.580955922865016,
+        "p50": 27.842,
+        "p95": 33.354,
+        "p99": 38.644,
+        "max": 41.788,
+        "threshold_counts": {
+          "over_20ms": 355,
+          "over_33_3ms": 20,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "court_elapsed_ms": {
+        "count": 364,
+        "mean": 4.8440082417582415,
+        "p50": 5.132,
+        "p95": 7.239,
+        "p99": 7.563,
+        "max": 7.874,
+        "threshold_counts": {
+          "over_20ms": 0,
+          "over_33_3ms": 0,
+          "over_50ms": 0,
+          "over_100ms": 0
+        }
+      },
+      "component_us_per_draw": {
+        "bundle": 1589.2747252747254,
+        "geometry": 87.56318681318682,
+        "surface": 961.9615384615385
+      },
+      "scope": "Elapsed inclusive components; per draw normalization is not per region and workloads were sequential."
+    }
+  ],
+  "far_fire_low_long_frames": {
+    "count": 438,
+    "mean": 22.85580593607306,
+    "p50": 21.179,
+    "p95": 33.242,
+    "p99": 51.388,
+    "max": 55.314,
+    "threshold_counts": {
+      "over_20ms": 324,
+      "over_33_3ms": 21,
+      "over_50ms": 7,
+      "over_100ms": 0
+    }
+  },
+  "screenshots": [
+    {
+      "row": 1,
+      "path": ".godot\\smooth-native-final-v3\\metrics-low-hearth_idle.png",
+      "bytes": 829037,
+      "sha256": "a029729733d11cd5f6f8f0f8541cead21f504b87a1565beaa9b1c9a04693fc03",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 3,
+      "path": ".godot\\smooth-native-final-v3\\metrics-low-garden_entry.png",
+      "bytes": 592608,
+      "sha256": "14770e1f938e8437fc0441b8d0f635807892a2558dedfed2609bc11044ae67bf",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 5,
+      "path": ".godot\\smooth-native-final-v3\\metrics-low-garden_middle.png",
+      "bytes": 574784,
+      "sha256": "88c135c168a6f5126d506a866a0f591dfdccf0e53e5c464f323281bebf507cd3",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 6,
+      "path": ".godot\\smooth-native-final-v3\\metrics-low-paid_fire_bolt.png",
+      "bytes": 829726,
+      "sha256": "4d0479b700ce86c5c9911de87ac3919078ee1f9d4be53d446462cb3a5041e015",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 7,
+      "path": ".godot\\smooth-native-final-v3\\metrics-low-paid_all_six_mantle.png",
+      "bytes": 848364,
+      "sha256": "dc92c7dd0ff9a99905489ca2fd9793515c9649b6e7378405900bda57bffa0f54",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 8,
+      "path": ".godot\\smooth-native-final-v3\\metrics-low-movement_boundary.png",
+      "bytes": 790176,
+      "sha256": "fcb7ee96175a4e584448d9cad1610c12f6521fbe878b2763241fd8ac8b6cd57e",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 9,
+      "path": ".godot\\smooth-native-final-v3\\metrics-low-range_paid_fire.png",
+      "bytes": 89963,
+      "sha256": "2ec1e1f4b3fccdc6dd1992c9d1583489d10fffdd4e724a76607c836196bdc1ae",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 10,
+      "path": ".godot\\smooth-native-final-v3\\metrics-low-paid_fire_bolt_close.png",
+      "bytes": 827624,
+      "sha256": "5e26b69e308c4963d1bf0b4363364b6d174a06a3a569847a3de36585999051db",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 12,
+      "path": ".godot\\smooth-native-final-v3\\metrics-low-garden_soak.png",
+      "bytes": 576101,
+      "sha256": "fd124aa57f2cef18d39f6d58437bfc1d20df6f457d534f560dad73a80f6a933c",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 13,
+      "path": ".godot\\smooth-native-final-v3\\metrics-standard-hearth_idle.png",
+      "bytes": 829134,
+      "sha256": "920a47580e46f1e9b77396b7405260cef7e431998d2ad702899bee3073e928b1",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 15,
+      "path": ".godot\\smooth-native-final-v3\\metrics-standard-garden_entry.png",
+      "bytes": 592634,
+      "sha256": "fc6ae80b930d9c7db620eb4b110589cf0fb200621a18b4c949c624f33a93874f",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 17,
+      "path": ".godot\\smooth-native-final-v3\\metrics-standard-garden_middle.png",
+      "bytes": 575627,
+      "sha256": "2e5420e76bac88e24dffa64455638872064a695830c7f64ccfcd75f4ded430f4",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 18,
+      "path": ".godot\\smooth-native-final-v3\\metrics-standard-paid_fire_bolt.png",
+      "bytes": 829680,
+      "sha256": "85005368ffe6c8b2fee492dcb8704faaf6e2badb3f9c8d5e09397c6d90dfd9ba",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 19,
+      "path": ".godot\\smooth-native-final-v3\\metrics-standard-paid_all_six_mantle.png",
+      "bytes": 848618,
+      "sha256": "13c49bbf9bc0a4eb9a4436587c3f6491400f2e3c55fb63a169acf949caf7f96a",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 20,
+      "path": ".godot\\smooth-native-final-v3\\metrics-standard-movement_boundary.png",
+      "bytes": 792467,
+      "sha256": "e75efb11266381677059af1b1fab81c819771b0d713278e29478b369a28cd20b",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 21,
+      "path": ".godot\\smooth-native-final-v3\\metrics-standard-range_paid_fire.png",
+      "bytes": 89963,
+      "sha256": "2ec1e1f4b3fccdc6dd1992c9d1583489d10fffdd4e724a76607c836196bdc1ae",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 22,
+      "path": ".godot\\smooth-native-final-v3\\metrics-standard-paid_fire_bolt_close.png",
+      "bytes": 827624,
+      "sha256": "5e26b69e308c4963d1bf0b4363364b6d174a06a3a569847a3de36585999051db",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "row": 24,
+      "path": ".godot\\smooth-native-final-v3\\metrics-standard-garden_soak.png",
+      "bytes": 576101,
+      "sha256": "fd124aa57f2cef18d39f6d58437bfc1d20df6f457d534f560dad73a80f6a933c",
+      "dimensions": [
+        1280,
+        720
+      ]
+    }
+  ],
+  "proof_boundaries": [
+    "Observed wrapper status is measured with final canonical identity checked by the wrapper; this audit independently verifies raw-byte recorded and current source snapshots, not the canonical serializer.",
+    "Frame intervals measure process starts; callback timers are elapsed and may include scheduling or driver waits. None measures GPU execution, scanout or input-to-photon latency.",
+    "The matrix is sequential Low then Standard with ordinary background load. Final close-Fire runs follow other cases and reuse resident renderer caches; isolated10-second baselines started with empty outline/native surface caches. Differences are not controlled speedup ratios.",
+    "Close Fire has12 finite paid casts with no refill. Whole-run averages include the explicitly counted empty-field frames before contact and after expiry;150-region and occupied groups expose that limitation.",
+    "Low close Fire mean25.750967ms/p9539.507ms has no interval above50ms in this sample but does not meet sustained60FPS. Far Fire Low has7 intervals above50ms and must not be described as universally smooth.",
+    "Per-region normalization uses accepted prepared records; mirror denominator is Conflagration records, nested fire-mark denominator is actual fire-mark calls. Inclusive categories overlap and are never summed as independent CPU costs.",
+    "Tick/wall rates are independently recomputed; zero app dropped/clamped counters alone would not prove120Hz wall-clock progress. Cold/travel rows intentionally pause local control and are kept separate.",
+    "PNG existence, signature, dimensions and stable bytes are witnesses only; this audit does not add visual inspection, human feel acceptance, multiplayer or exported-package verification.",
+    "Full observer retains timing dictionaries and samples, so process memory growth includes the observer. Source snapshots cannot detect edit-then-restore between their endpoints."
+  ]
+}

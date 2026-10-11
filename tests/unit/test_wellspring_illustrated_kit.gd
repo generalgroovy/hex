@@ -9,9 +9,28 @@ func run() -> int:
 	check(not kit.configure(null), "illustrated campus refuses missing geometry")
 	check(kit.configure(layout), "illustrated campus validates: " + kit.last_error)
 	check(kit.content_hash.length() == 64, "presentation has a bounded content identity")
-	equal(kit.ground.get_size(), Vector2(layout.canvas_size), "terrain matches the authoritative map envelope")
-	equal(kit.cached_terrain_builds, 1, "terrain is composed once at setup")
+	check(kit.ground_ready() and kit.ground == null, "large terrain is ready without a full-world texture")
+	equal(kit.ground_chunks.size(), 0, "setup allocates no offscreen native chunks")
+	check(kit.prepare_ground_view(Rect2(1024, 512, 1024, 1024)), "actual local floor prepares bounded visible chunks")
+	equal(kit.cached_terrain_builds, 0, "large world never composes a full-world native raster")
+	check(kit.hex_terrain != null and kit.hex_terrain.cell_count == 0, "live baked floor allocates no authoring lattice during setup or loading")
+	var reference := kit.HexTerrain.new()
+	var reference_rect := Rect2i(1024, 512, 512, 512)
+	var reference_image: Image = reference.compose_region(reference_rect, func(point: Vector2) -> String: return kit.pixel_family(kit.surface_at(point)), kit.ground_style, kit.floor_finish_at, kit.ground_surface_sources())
+	check(reference_image != null and reference.cell_count > 100, "independent original composer retains the actual symbol-sized chemistry lattice")
+	if reference_image != null:
+		equal(kit.ground_chunk(Vector2i(2, 1)).get_image().get_data(), reference_image.get_data(), "prepared floor is byte-identical to the original material/finish lattice")
+	check(reference.stamp_count <= kit.HexTerrain.MAX_STAMPS and reference.stamp_bytes <= kit.HexTerrain.MAX_STAMP_BYTES, "authoring raster retains bounded material/finish stamps")
+	check(kit.ground_cache_bytes <= kit.GROUND_CACHE_MAX_BYTES, "native ground residency stays inside its explicit byte budget")
+	equal(reference.authored_tile_count, kit.HexTerrain.MAX_AUTHORED_TILES, "prepared campus still derives from all nine admitted native stone/soil finishes")
+	equal(reference.authored_tile_bytes, kit.HexTerrain.MAX_AUTHORED_BYTES, "independent authoring finish variants retain exactly576KiB")
+	equal(kit.hex_terrain.authored_tile_bytes, 0, "live prepared terrain needs no duplicate576KiB authoring variants")
+	check(reference.stamp_bytes + reference.authored_tile_bytes <= kit.HexTerrain.MAX_STAMP_BYTES, "native authoring artwork and organic stamps share the existing16MiB transient budget")
+	equal(kit.roof_skins.size() + kit.practice_skins.size(), layout.buildings_by_id.size(), "each existing structure receives a cached skin without collision changes")
+	_test_practice_masonry(kit, layout)
+	_test_slate_roofs(kit, layout)
 	_test_ground_style(kit)
+	_test_floor_inlays(kit, layout)
 	equal(kit.tiles.size(), 16, "sixteen reusable material tiles load")
 	equal(kit.PROP_IDS.size(), 16, "sixteen reusable props load")
 	equal(kit.decorations.size(), 0, "non-worldbone decoration is withheld from the live campus")
@@ -35,11 +54,16 @@ func run() -> int:
 	var fading_label := kit.station_label_opacity(Vector2(400, 400), Vector2(800, 400))
 	check(fading_label > 0.0 and fading_label < 1.0, "station title fades continuously across the relevance band")
 	check(kit.surface_at(Vector2(1536, 900)) in [0, 1], "source court reads as stone")
+	for sample: Vector2 in [Vector2(1536, 900), Vector2(224, 1380), Vector2(2100, 1900)]:
+		var cell := WellspringIllustratedKit.HexTerrain.cell_at(sample)
+		var center := WellspringIllustratedKit.HexTerrain.center_pixels(cell)
+		for offset: Vector2 in [Vector2.ZERO, Vector2(5, 0), Vector2(0, 5), Vector2(-5, -5)]:
+			equal(kit.surface_at(center + offset), kit.surface_at(center), "all samples inside one canonical hex share the same material")
 	equal(kit.surface_at(Vector2(10, 10)), 8, "outer shore reads as water")
 	for point: Vector2 in [Vector2(256, 2080), Vector2(848, 2080), Vector2(1120, 2080), Vector2(1888, 2080)]:
 		check(kit.surface_at(point) != 8, "the live southern walk is land, not a hardcoded old shoreline")
 	equal(kit.surface_at(Vector2(1536, layout.canvas_size.y - 32)), 8, "the new bottom boundary retains its quiet shoreline")
-	check(layout.canvas_size.x / 32 <= 128 and layout.canvas_size.y / 32 <= 128, "the complete enlarged terrain stays within the tile composer's128x128 cap")
+	check(layout.canvas_size.x <= kit.LARGE_WORLD_MAX.x and layout.canvas_size.y <= kit.LARGE_WORLD_MAX.y, "expanded world stays inside explicit region-rendering bounds")
 	# Transparent borders prohibit paper/checkerboard backing in live cutouts.
 	var props := kit.props.get_image()
 	for index: int in range(16):
@@ -53,10 +77,232 @@ func run() -> int:
 					occupied += 1
 		check(occupied < 128 * 128 * 0.78, "prop %d contains a cutout, not an opaque preview card" % index)
 	equal(CanonicalContent.sha256(layout.data), original, "terrain preparation never mutates gameplay content")
-	equal(kit.cached_terrain_builds, 1, "inspection does not rebuild the floor")
-	print("ILLUSTRATED_SETUP: %d ms; %d props; one terrain texture" % [kit.ground_generation_ms, kit.decorations.size()])
+	equal(kit.cached_terrain_builds, 0, "inspection cannot create a full-world raster")
+	print("ILLUSTRATED_SETUP: %d ms; %d props; bounded native terrain regions; %d authored bytes; %d native copies" % [kit.ground_generation_ms, kit.decorations.size(), kit.hex_terrain.authored_tile_bytes, kit.hex_terrain.authored_copy_count])
 	_test_renderer_binding(layout)
+	_test_visible_world_culling(layout)
 	return finish("wellspring-illustrated-kit")
+
+
+func _test_floor_inlays(kit: WellspringIllustratedKit, layout: SanctumCampusLayout) -> void:
+	var before := CanonicalContent.sha256(layout.data)
+	var paths_before := kit.paths.duplicate(true)
+	var texture := kit.ground
+	var builds := kit.cached_terrain_builds
+	var palettes := {}
+	var source_bytes := {}
+	for family: String in kit.HexTerrain.FAMILIES:
+		var tile := kit.ground_style.tile_image("map.terrain.%s.fill_v1" % family) as Image
+		palettes[family] = kit.HexTerrain._material_palette(tile)
+		source_bytes[family] = tile.get_data()
+	var tones: Array[Color] = kit.HexTerrain.finish_tones(palettes)
+	var authored_sources := kit.ground_surface_sources()
+	var authored_bytes := {}
+	var authored_tiles := {}
+	for key: String in authored_sources:
+		var family := key.get_slice(":", 0)
+		var kind := int(key.get_slice(":", 1))
+		var base: Color = kit.HexTerrain.terrain_tone(palettes[family][0], family) if kind == kit.HexTerrain.Finish.ORIGINAL else tones[kind]
+		authored_bytes[key] = (authored_sources[key] as Image).get_data()
+		authored_tiles[key] = kit.HexTerrain.prepare_authored_tile(authored_sources[key], base)
+	var examples := [
+		[Vector2(1536, 960), 0, kit.HexTerrain.Finish.COMMONS],
+		[Vector2(1472, 1328), 2, kit.HexTerrain.Finish.CHEMISTRY],
+		[Vector2(2640, 1120), 0, kit.HexTerrain.Finish.DUEL],
+		[Vector2(1360, 1888), 0, kit.HexTerrain.Finish.CHAIN],
+		[Vector2(1184, 720), 0, kit.HexTerrain.Finish.INSET],
+		[Vector2(1360, 1180), 2, kit.HexTerrain.Finish.INSET],
+		[Vector2(2208, 1280), 0, kit.HexTerrain.Finish.INSET],
+		[Vector2(1184, 1872), 0, kit.HexTerrain.Finish.INSET],
+		[Vector2(1536, 832), 0, kit.HexTerrain.Finish.ROUTE],
+		[Vector2(1536, 1408), 2, kit.HexTerrain.Finish.ROUTE],
+		[Vector2(1008, 832), 1, kit.HexTerrain.Finish.ROUTE],
+		# The actual sparring zigzag and chain drill are not circulation ribbons.
+		[Vector2(2544, 1216), 0, kit.HexTerrain.Finish.DUEL],
+		[Vector2(1360, 1792), 0, kit.HexTerrain.Finish.CHAIN],
+	]
+	for entry: Array in examples:
+		var point: Vector2 = entry[0]
+		var surface: int = kit.surface_at(point)
+		equal(surface, int(entry[1]), "inlays preserve the existing authored surface classification at " + str(point))
+		var family: String = kit.pixel_family(surface)
+		var expected: int = int(entry[2])
+		equal(kit.floor_finish_at(point, family), expected, "native court/ribbon/inset selection matches its real campus location " + str(point))
+		var cell := kit.HexTerrain.cell_at(point)
+		var center := kit.HexTerrain.center_pixels(cell)
+		for offset: Vector2 in [Vector2.ZERO, Vector2(5, 0), Vector2(-5, 0), Vector2(0, 5), Vector2(0, -5)]:
+			equal(kit.floor_finish_at(center + offset, family), expected, "the entire canonical hex shares one finish at an inlay boundary")
+		var authored: Image = authored_tiles[kit.HexTerrain.surface_key(family, expected)]
+		var sample := Vector2i(center.floor())
+		var source_point := Vector2i(1 + sample.x % 126, 1 + sample.y % 126) if family == "earth" else Vector2i(sample.x % 128, sample.y % 128)
+		var chunk_id := Vector2i(sample.x / kit.GROUND_CHUNK_SIZE, sample.y / kit.GROUND_CHUNK_SIZE)
+		var chunk: Texture2D = kit.ground_chunk(chunk_id)
+		check(chunk != null, "inlay sample has an actual bounded native region")
+		if chunk != null:
+			equal(chunk.get_image().get_pixelv(sample - chunk_id * kit.GROUND_CHUNK_SIZE), authored.get_pixelv(source_point), "live chunk contains its classified native texture, excluding only proven soil sheet-divider ink")
+	for point: Vector2 in [Vector2(1280, 832), Vector2(1808, 832), Vector2(1896, 832), Vector2(1280, 1408), Vector2(1808, 1408)]:
+		equal(kit.floor_finish_at(point, kit.pixel_family(kit.surface_at(point))), kit.HexTerrain.Finish.ROUTE, "existing broad crossing stays continuous through court and inset boundaries")
+	for family: String in ["grass", "water", "worldbone"]:
+		equal(kit.floor_finish_at(Vector2(1536, 832), family), kit.HexTerrain.Finish.ORIGINAL, "floor inlays cannot override garden, shore or worldbone material families")
+	var room := WellspringIllustratedKit.new()
+	room.campus = layout
+	# Isolate the court bounds from route precedence without editing the live kit.
+	for entry: Array in [[Vector2(1536, 588), kit.HexTerrain.Finish.ORIGINAL], [Vector2(1536, 616), kit.HexTerrain.Finish.INSET], [Vector2(1536, 680), kit.HexTerrain.Finish.COMMONS], [Vector2(1536, 1104), kit.HexTerrain.Finish.ORIGINAL]]:
+		equal(room.floor_finish_at(entry[0], "paving"), int(entry[1]), "source finish stays inside its existing court/floor intersection, with a flat24px inset")
+	room.paths.append({"points": PackedVector2Array([Vector2(1400, 960), Vector2(1680, 960)]), "width": 160.0, "advanced": true})
+	room.paths.append({"points": PackedVector2Array([Vector2(1400, 960), Vector2(1680, 960)]), "width": 64.0, "advanced": false})
+	equal(room.floor_finish_at(Vector2(1536, 960), "paving"), kit.HexTerrain.Finish.COMMONS, "advanced and narrow training paths never acquire a misleading main-walk ribbon")
+	check(kit.ground == null and kit.ground_overview == null, "native inlay inspection never allocates a whole-world image or overview")
+	check(kit.ground_cache_bytes <= kit.GROUND_CACHE_MAX_BYTES and kit.ground_chunks.size() <= kit.GROUND_CACHE_LIMIT, "native inlays retain the explicit chunk byte and count bounds")
+	equal(kit.hex_terrain.stamp_bytes, kit.hex_terrain.stamp_count * kit.HexTerrain.STAMP_SIZE.x * kit.HexTerrain.STAMP_SIZE.y * 4, "live setup reports its exact transient stamp allocation")
+	equal(kit.ground, texture, "finish inspection keeps the same cached terrain texture")
+	equal(kit.cached_terrain_builds, builds, "finish sampling does not rebuild terrain")
+	equal(CanonicalContent.sha256(layout.data), before, "floor finishes cannot mutate routes, stations, colliders, LOS or any map content")
+	equal(kit.paths, paths_before, "route ribbons do not rewrite even the presentation's prepared paths")
+	for family: String in kit.HexTerrain.FAMILIES:
+		equal((kit.ground_style.tile_image("map.terrain.%s.fill_v1" % family) as Image).get_data(), source_bytes[family], "court inspection preserves every admitted source image")
+	for key: String in authored_sources:
+		equal((authored_sources[key] as Image).get_data(), authored_bytes[key], "live floor inspection preserves every original v3 stone/soil source image")
+	var source := FileAccess.get_file_as_string("res://src/presentation/wellspring_illustrated_kit.gd").replace("\r", "")
+	var draw_source := source.get_slice("func draw_ground(", 1).get_slice("\n\nfunc ", 0)
+	check(draw_source.contains("ground_chunk_ids(visible_world_rect)") and draw_source.contains("ground_chunks[id]") and not draw_source.contains("prepare_ground_view"), "large render path reads only prepared visible native regions without blocking")
+	check(not draw_source.contains("floor_finish_at") and not draw_source.contains("compose_region") and not draw_source.contains("Image.create"), "ground draw itself performs no per-cell image work")
+
+
+func _test_practice_masonry(kit: WellspringIllustratedKit, layout: SanctumCampusLayout) -> void:
+	var original := CanonicalContent.sha256(layout.data)
+	var count := 0
+	var bytes := 0
+	var families := {}
+	for building: Dictionary in layout.buildings_by_id.values():
+		if String(building.get("style", "")) != "practice_wall": continue
+		count += 1
+		var bounds := SanctumCampusLayout._parse_bounds(building["bounds"])
+		var family := kit.WallSkin.family_for(bounds, layout.data.get("activity_areas", []), layout.data.get("districts", []))
+		families[family] = true
+		var expected := kit.WallSkin.compose(bounds, family)
+		var skin: Texture2D = kit.practice_skins[int(building["id"])]
+		var actual := skin.get_image()
+		equal(actual.get_size(), bounds.size, "wall art fits exact collision rectangle, no decorative overhang")
+		equal(actual.get_used_rect(), Rect2i(Vector2i.ZERO, bounds.size), "wall has continuous readable silhouette through corners")
+		equal(actual.get_data(), expected.get_data(), "masonry recompilation produces identical pixels")
+		check(skin == kit.practice_skins[int(building["id"])], "wall cache lookup returns the same admitted texture")
+		var opaque := true
+		var allowed := true
+		var palette: Array[Color] = []
+		for code: String in kit.WallSkin.PALETTES[family]: palette.append(Color(code))
+		for y: int in bounds.size.y:
+			for x: int in bounds.size.x:
+				var pixel := actual.get_pixel(x, y)
+				opaque = opaque and pixel.a == 1.0
+				allowed = allowed and pixel in palette
+		check(opaque, "solid collision cannot look like a traversable hole")
+		check(allowed, "pixel wall uses only its eight opaque room colors; no antialiasing or chemistry glow")
+		bytes += actual.get_data().size()
+	equal(kit.practice_skins.size(), count, "one prepared texture per real practice obstacle")
+	equal(kit.practice_skin_bytes, bytes, "wall allocation is reported exactly")
+	check(bytes <= kit.PRACTICE_CACHE_MAX_BYTES, "all49-building campus masonry remains within explicit3MiB bound")
+	equal(bytes, 2_248_960, "41 actual practice footprints account for exact decoded masonry allocation")
+	equal(families.size(), 6, "original three rooms and coastal, foundry and observatory architecture retain separate real-cover identities")
+	for invalid: Rect2i in [Rect2i(0, 0, 0, 28), Rect2i(0, 0, 15, 28), Rect2i(0, 0, 1025, 28)]:
+		check(kit.WallSkin.compose(invalid, "slate") == null, "unbounded or too-small wall footprint refuses raster allocation")
+	check(kit.WallSkin.compose(Rect2i(0, 0, 28, 28), "fire") == null, "masonry never invents an elemental wall")
+	for family: String in kit.WallSkin.PALETTES:
+		var smallest := kit.WallSkin.compose(Rect2i(0, 0, 16, 16), family)
+		var ink := Color(kit.WallSkin.PALETTES[family][0])
+		for index: int in 16:
+			check(smallest.get_pixel(index, 0) == ink and smallest.get_pixel(index, 15) == ink and smallest.get_pixel(0, index) == ink and smallest.get_pixel(15, index) == ink, "smallest valid skin keeps complete collision rim without clipped decoration")
+	equal(CanonicalContent.sha256(layout.data), original, "wall raster and room materials cannot mutate collision/gameplay")
+
+
+func _test_slate_roofs(kit: WellspringIllustratedKit, layout: SanctumCampusLayout) -> void:
+	var original := CanonicalContent.sha256(layout.data)
+	var slate := kit.tiles[10]
+	var source_bytes := slate.get_data()
+	var count := 0
+	var bytes := 0
+	for building: Dictionary in layout.buildings_by_id.values():
+		var id := int(building["id"])
+		if String(building.get("style", "")) == "practice_wall":
+			check(not kit.roof_skins.has(id), "practice obstacles retain their existing masonry, not roof art")
+			continue
+		count += 1
+		var bounds := Rect2(SanctumCampusLayout._parse_bounds(building["bounds"]))
+		var facade_height := minf(float(kit.data["camera"]["maximum_facade_pixels"]), bounds.size.y * 0.42)
+		var size := Vector2i(Vector2(bounds.size.x, bounds.size.y - facade_height).ceil())
+		var skin: Texture2D = kit.roof_skins[id]
+		var actual := skin.get_image()
+		var expected := kit.compose_roof_skin(size, slate)
+		equal(actual.get_size(), size, "roof cache covers only the original roof rectangle, rounded up for edge cropping")
+		equal(actual.get_used_rect(), Rect2i(Vector2i.ZERO, size), "roof silhouette stays continuous and opaque through every corner")
+		equal(actual.get_data(), expected.get_data(), "roof composition is deterministic")
+		var exact_copy := true
+		for y: int in size.y:
+			for x: int in size.x:
+				exact_copy = exact_copy and actual.get_pixel(x, y) == slate.get_pixel(x % 128, y % 128)
+		check(exact_copy, "all roof pixels are unscaled approved slate, including partial repeat edges")
+		for _access: int in 3:
+			check(skin == kit.roof_skins[id], "repeated presentation lookup reuses the admitted texture")
+		bytes += actual.get_data().size()
+	equal(count, 8, "only the eight existing service buildings receive slate roofs")
+	equal(kit.cached_roof_builds, count, "each roof is composed exactly once during configuration")
+	equal(kit.roof_skin_bytes, bytes, "roof cache reports exact decoded allocation")
+	check(bytes < 1024 * 1024, "all current slate roofs remain below one MiB decoded")
+	equal(slate.get_data(), source_bytes, "roof tiling never edits the validated source atlas")
+	for invalid: Vector2i in [Vector2i.ZERO, Vector2i(-1, 64), Vector2i(1025, 1), Vector2i(512, 512)]:
+		check(kit.compose_roof_skin(invalid, slate) == null, "invalid or over-budget roof sizes refuse allocation")
+	check(kit.compose_roof_skin(Vector2i(32, 32), null) == null, "missing slate is not replaced with invented art")
+	var source: String = String(kit.get_script().source_code).replace("\r", "")
+	var draw_source := source.get_slice("func draw_building(", 1).get_slice("\n\nstatic func ", 0)
+	check(draw_source.contains("roof_skins.get("), "actual building draw reads the prepared roof cache")
+	check(draw_source.contains("Rect2(Vector2.ZERO, roof.size)"), "fractional facade split crops the texture without changing the roof silhouette")
+	for forbidden: String in ["compose_roof_skin", "Image.create", "ImageTexture.create", "cached_roof_builds +=", "architecture_inlays"]:
+		check(not draw_source.contains(forbidden), "building redraw cannot regenerate roof art or restore hex outlines: " + forbidden)
+	equal(kit.cached_roof_builds, count, "inspection and repeated lookups do not build extra roof textures")
+	equal(CanonicalContent.sha256(layout.data), original, "roof preparation cannot change footprints, LOS, stations or route authority")
+
+
+func _test_visible_world_culling(layout: SanctumCampusLayout) -> void:
+	var before := CanonicalContent.sha256(layout.data)
+	var viewport := Rect2(1000, 500, 1280, 720)
+	check(SanctumCampusRenderer.visible_in_world_rect(Rect2(-9000, -9000, 10, 10), Rect2()), "empty view preserves complete-map captures and backdrop drawing")
+	check(SanctumCampusRenderer.visible_in_world_rect(Rect2(1100, 600, 40, 40), viewport), "visible object survives conservative world-view rejection")
+	check(not SanctumCampusRenderer.visible_in_world_rect(Rect2(10, 10, 40, 40), viewport), "distant object is rejected before submitting its individual draw commands")
+	check(SanctumCampusRenderer.visible_in_world_rect(Rect2(960, 600, 40, 40), viewport), "edge-touching artwork is retained to avoid one-pixel camera pops")
+	var building := {"bounds": [1200, 400, 160, 60]}
+	var building_bounds := SanctumCampusRenderer.building_visual_bounds(building)
+	check(building_bounds.encloses(Rect2(1200, 400, 160, 60)), "render bounds always contain authority footprint")
+	check(SanctumCampusRenderer.visible_in_world_rect(building_bounds, Rect2(1200, 485, 100, 60)), "building planter/shadow edge can appear even when collision rectangle is offscreen")
+	var station := {"position": [1200, 700], "command": "configure_spells"}
+	var station_bounds := SanctumCampusRenderer.station_visual_bounds(station)
+	check(station_bounds.encloses(WellspringServiceBuildings.door_threshold(station).grow(1)), "flat approach and its thin outline are included without an invented hut footprint")
+	check(station_bounds.has_point(Vector2(1280, 724)), "directory title width and bottom baseline are included")
+	check(station_bounds.size.y<=70,"directory bounds contain two compact label lines and approach; existing roofs use separate building bounds")
+	var station_label := WellspringServiceBuildings.service_label_rect(station)
+	check(station_bounds.encloses(station_label.grow(1)), "both purpose and identity lines remain inside conservative directory culling bounds")
+	equal(station_bounds.end.y, 749.0, "two-line directory keeps ten pixels of lower culling allowance beyond its label")
+	check(SanctumCampusRenderer.visible_in_world_rect(station_bounds, Rect2(1190, station_label.end.y - 1.0, 20, 1)), "the final visible pixel of the identity label cannot be culled at the viewport edge")
+	check(SanctumCampusRenderer.visible_in_world_rect(station_bounds, Rect2(1190, 679, 20, 1)), "the door-connected outline survives the first visible pixel at the viewport edge")
+	check(SanctumCampusRenderer.visible_in_world_rect(station_bounds, Rect2(1160, 680, 80, 4)), "partially entering threshold/label survives edge culling")
+	check(not SanctumCampusRenderer.visible_in_world_rect(station_bounds, Rect2(1160, 620, 80, 20)), "removed hut roof no longer keeps a distant directory marker drawable")
+	var group_bounds := {}
+	for entry: Dictionary in layout.data.get("stations", []):
+		var actual_bounds := SanctumCampusRenderer.station_visual_bounds(entry)
+		var point := Vector2(SanctumCampusLayout._parse_point(entry["position"]))
+		check(actual_bounds.encloses(WellspringServiceBuildings.door_threshold(entry).grow(1)), "all grouped door approaches and their outlines survive render culling")
+		var actual_label := WellspringServiceBuildings.service_label_rect(entry)
+		check(actual_bounds.encloses(actual_label.grow(1)), "every grouped purpose and identity label fits its render extent")
+		equal(actual_bounds.end.y, point.y + 49.0, "all grouped two-line labels retain the same conservative lower extent")
+		check(SanctumCampusRenderer.visible_in_world_rect(actual_bounds, Rect2(point.x - 10.0, actual_label.end.y - 1.0, 20, 1)), "every grouped identity label survives bottom-edge viewport entry")
+		var group := String(entry["service_group"])
+		if group_bounds.has(group): equal(actual_bounds,group_bounds[group],"one directory uses one render extent regardless of action count")
+		else: group_bounds[group]=actual_bounds
+	equal(group_bounds.size(),4,"twelve commands produce only four shared directory marker bounds")
+	for retired: int in range(201, 213):
+		check(not layout.buildings_by_id.has(retired), "large-map rendering never restores a scrapped directory hut")
+	for entry: Dictionary in layout.data.get("buildings", []):
+		check(SanctumCampusRenderer.visible_in_world_rect(SanctumCampusRenderer.building_visual_bounds(entry), Rect2()), "full-map rendering includes every building without special-case IDs")
+	equal(CanonicalContent.sha256(layout.data), before, "view calculations cannot change layout or interaction authority")
 
 
 func _test_ground_style(kit: WellspringIllustratedKit) -> void:
@@ -102,7 +348,7 @@ func _test_renderer_binding(layout: SanctumCampusLayout) -> void:
 	check(renderer.configure(language), "current campus initializes its actual presentation dependencies")
 	check(renderer.configure_campus(layout), "current campus requires the illustrated map: " + renderer.last_error)
 	check(renderer.illustrated_kit.content_hash.length() == 64, "current campus exposes its active map-art identity")
-	equal(renderer.illustrated_kit.ground.get_size(), Vector2(layout.canvas_size), "current campus ground covers the authoritative envelope")
+	check(renderer.illustrated_kit.ground_ready() and renderer.illustrated_kit.campus.canvas_size == layout.canvas_size, "region renderer binds the exact authoritative world envelope")
 	check(renderer.natural_kit != null, "actor-contact and receiving-shadow support remains available")
 	_test_floor_guides(renderer, layout, language)
 	for property: Dictionary in renderer.get_property_list():
@@ -111,8 +357,12 @@ func _test_renderer_binding(layout: SanctumCampusLayout) -> void:
 	for retired_dependency: String in ["WellspringArchitectureKit", "WellspringWayfinding", "_draw_district_identity", "configure_wayfinding"]:
 		check(not renderer_source.contains(retired_dependency), "current campus has no dependency on retired startup seam " + retired_dependency)
 	var content_before := CanonicalContent.sha256(layout.data)
+	var previous_roof: WeakRef = weakref(renderer.illustrated_kit.roof_skins[104])
 	check(not renderer.configure_campus(null), "missing map refuses even after a previous successful setup")
 	check(renderer.illustrated_kit.ground == null and renderer.illustrated_kit.content_hash.is_empty(), "failed reconfiguration exposes no stale successful map")
+	check(renderer.illustrated_kit.practice_skins.is_empty() and renderer.illustrated_kit.practice_skin_bytes == 0, "failed reconfiguration releases stale wall art")
+	check(renderer.illustrated_kit.roof_skins.is_empty() and renderer.illustrated_kit.roof_skin_bytes == 0 and renderer.illustrated_kit.cached_roof_builds == 0, "failed reconfiguration releases stale roof textures and counters")
+	check(previous_roof.get_ref() == null, "reload drops its ownership of the old roof texture instead of retaining a stale cache")
 	renderer.draw(null, layout, 120)
 	# A genuinely failed active library load must not select historical map art.
 	var saved_library := PixelMapLibrary.default_library()
@@ -125,6 +375,8 @@ func _test_renderer_binding(layout: SanctumCampusLayout) -> void:
 	equal(renderer.last_error, missing_library.last_error, "active pack failure reaches the startup diagnostic unchanged")
 	check(renderer.illustrated_kit.ground == null, "failed active pack leaves nothing drawable")
 	check(renderer.configure_campus(layout), "restored validated pack permits explicit reconfiguration")
+	equal(renderer.illustrated_kit.roof_skins.size(), 8, "recovery repopulates only the current eight roof textures")
+	equal(renderer.illustrated_kit.cached_roof_builds, 8, "recovery counts only its current setup, not released roof builds")
 	check(renderer.last_error.is_empty(), "successful recovery clears the previous diagnostic")
 	equal(CanonicalContent.sha256(layout.data), content_before, "startup failures and recovery cannot alter gameplay content")
 	check(not renderer.configure(null), "invalid language refuses a previously configured renderer")
@@ -148,8 +400,8 @@ func _test_floor_guides(renderer: SanctumCampusRenderer, layout: SanctumCampusLa
 		check(activity_labels.has(activity_id), "route stage %d resolves an actual campus activity" % (index + 1))
 		if activity_labels.has(activity_id):
 			check(stage_label.contains(activity_labels[activity_id]), "route stage %d names its actual campus activity" % (index + 1))
-	equal(renderer.floor_mark_count, 16, "four emblems and twelve bounded route arrows include chemistry and configuration wayfinding")
-	equal(renderer.floor_labels.size(), 16, "seven activity titles and nine short hints include chemistry and configuration routes")
+	equal(renderer.floor_mark_count, 18, "four emblems, twelve route arrows and two validated experiment-link arrows remain bounded")
+	equal(renderer.floor_labels.size(), 34, "twenty-four actual activity titles and ten existing short hints cover the expanded campus")
 	equal(renderer.floor_guide_builds, 1, "floor vectors compile once when the campus binds")
 	check(renderer.floor_guide_hash.length() == 64, "presentation descriptor has a separate content identity")
 	check(renderer.floor_ink.size() > 0 and renderer.floor_trim.size() > 0, "both neutral-pigment batches contain actual geometry")
@@ -162,12 +414,31 @@ func _test_floor_guides(renderer: SanctumCampusRenderer, layout: SanctumCampusLa
 		check(String(label.text).length() <= 28 and float(label.opacity) <= 0.68, "floor text remains bounded and visually subordinate")
 		if String(label.text) == "2 MOVEMENT GARDEN":
 			equal(label.anchor, Vector2(224, 448), "garden title clears the inherited Lodge facade instead of sitting beneath it")
+	var practice_titles: Array[String] = []
+	for label: Dictionary in renderer.floor_labels:
+		practice_titles.append(String(label.text))
+	for title: String in SanctumCampusRenderer.PRACTICE_TITLES.values():
+		check(title in practice_titles, "real practice areas clearly display their distinct purpose: "+title)
+	check("OPEN PRACTICE" in practice_titles,"the clear new passage visibly points toward experimentation")
+	check("ELEMENT GARDEN" in practice_titles, "the new physical garden has an explicit floor title at its arrival forecourt")
+	for title: String in ["SPRINT / SLIDE STRAIGHT", "OPTIONAL WALL CHAIN", "OPEN SPELL COURT"]:
+		check(title in practice_titles, "larger southern playground visibly names each real training space: " + title)
+	var old_workshop := SanctumCampusLayout.new()
+	old_workshop.data = layout.data.duplicate(true)
+	for building: Dictionary in old_workshop.data["buildings"]:
+		if int(building["id"]) == 106: building["bounds"][2] = 384
+	check(old_workshop.validate(),"old Workshop remains a valid map authority positive control")
+	var blocked_link := SanctumCampusRenderer.new()
+	check(blocked_link.configure(language),"blocked shortcut fixture has valid visual language")
+	check(not blocked_link.prepare_floor_guides(old_workshop,descriptor),"a restored blocker cannot leave a false visual experiment shortcut")
+	check(blocked_link.floor_ink.is_empty() and blocked_link.floor_labels.is_empty(),"blocked shortcut refuses incomplete floor guidance")
 	var marker_ids: Array[String] = []
 	for marker: Dictionary in descriptor.markers:
 		marker_ids.append(String(marker.id))
 	check("south-ordinary-bypass" in marker_ids and "wall-line-start" in marker_ids and "south-return" in marker_ids, "south loop distinguishes the ordinary bypass, optional wall line and return")
 	var renderer_source: String = renderer.get_script().source_code
-	check(renderer_source.count("canvas.draw_multiline(") == 2, "two batched native floor-line calls replace many individual border/radial calls")
+	var area_source := renderer_source.get_slice("func _draw_activity_areas(", 1).get_slice("\n\nstatic func ", 0)
+	check(area_source.count("canvas.draw_multiline(") == 2, "two visible floor batches remain separate from flat landmark wayfinding")
 	check(not renderer_source.contains("ImageTexture.create") and not renderer_source.contains("Image.create"), "floor guides generate no new raster textures")
 	var mutations: Array[Callable] = [
 		func(data: Dictionary) -> void: data["authority"] = "simulation",

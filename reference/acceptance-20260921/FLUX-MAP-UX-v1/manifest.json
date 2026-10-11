@@ -1,0 +1,920 @@
+{
+  "schema_version": 1,
+  "task_id": "MAP_UX",
+  "status": "PROPOSAL",
+  "input_packet_id": "flux-delegation-20260920",
+  "input_manifest_sha256": "b0a9d9a54f575d6e4f056cdf0b35988ba843779d30bb0deaed130744b44175d1",
+  "input_packet_sha256": "844e314277b3df5d6eccb44ec37b1f6a705b55abfb6c2101fc1fbadb939fc45f",
+  "input_files_read": [
+    {
+      "path": "00-START-HERE.md",
+      "sha256": "249af9b37978e0c8eaeefaab1c08cdf9742fef3d3cc2e51cb06e0a884e3d0323",
+      "bytes": 3526,
+      "read_scope": "read assignment/provenance boundaries"
+    },
+    {
+      "path": "01-SHARED-CONTRACT.md",
+      "sha256": "af1ba3bca2c2f0c1ebe34a623202fbc02374046397f1c7cd23ef79df61ba0928",
+      "bytes": 4674,
+      "read_scope": "read shared invariants"
+    },
+    {
+      "path": "08-CHAT-MAP-UX.md",
+      "sha256": "c2fa6dcfe52556e71bfa0430339efa5d3d76848ffaeeaad6300e84546b36eee9",
+      "bytes": 2787,
+      "read_scope": "read full assignment"
+    },
+    {
+      "path": "10-HANDOFF-SCHEMA.json",
+      "sha256": "48bce1abe18670f1c1e706d7791945fe0c46317270089d05136ca1fb31c652de",
+      "bytes": 911,
+      "read_scope": "read full schema"
+    },
+    {
+      "path": "11-AUDIT-SNAPSHOT.md",
+      "sha256": "acc2e1c384fd13fbaa63cf9b8dde7c5002114273802bcb247d56b301473393a2",
+      "bytes": 4267,
+      "read_scope": "read full audit context and limitations"
+    },
+    {
+      "path": "INPUT_MANIFEST.json",
+      "sha256": "b0a9d9a54f575d6e4f056cdf0b35988ba843779d30bb0deaed130744b44175d1",
+      "bytes": 15498,
+      "read_scope": "read full structured manifest; verify all 63 records"
+    },
+    {
+      "path": "repository/content/maps/sanctum_campus_g2_v1.json",
+      "sha256": "496c96c80168dd6e4053e03ece86b8a8f010a44c24c5fca7eaebe8cd13b51cea",
+      "bytes": 15972,
+      "read_scope": "read and process entire campus JSON; preserve all baseline fields not in explicit patch"
+    },
+    {
+      "path": "repository/src/content/sanctum_campus_layout.gd",
+      "sha256": "5e32375bcb6b4a1149535df20dd8e973d801e1d5986a7b303c4f5fbfd2184797",
+      "bytes": 35458,
+      "read_scope": "inspect schema, route/anchor/practice validation and collision/elevation constructor; cited sections in SOURCE_REFERENCES"
+    },
+    {
+      "path": "repository/src/sim/hex/hex_grid.gd",
+      "sha256": "086ad20e6ec1de4229076ba331435e839fccdfc09d8e1af9d0fadd0aa208b1d0",
+      "bytes": 11177,
+      "read_scope": "inspect integer vertices, owner transform and geometric helpers"
+    },
+    {
+      "path": "repository/src/sim/hex/hex_world_definition.gd",
+      "sha256": "e15d75d48ddedc6bc891400f508ae43d892742c151e54bb5b93aef68dfa23f18",
+      "bytes": 4748,
+      "read_scope": "read topology bounds and obstacle-clearance eligibility"
+    },
+    {
+      "path": "repository/src/sim/hex/hex_footprint.gd",
+      "sha256": "74403370caa2c9f1331a7db849ffe8c45ed677de4fd9d389a02af6b3dda7b987",
+      "bytes": 76742,
+      "read_scope": "inspect selected-coverage and disk/polygon selection sections; not an independent audit of every solver"
+    },
+    {
+      "path": "repository/src/sim/hex/hex_recipe_policy.gd",
+      "sha256": "2962b47e4a90a896b266988ece34d320e3c8fcf5ae507a17fed640f90b11a2e0",
+      "bytes": 15513,
+      "read_scope": "read effective first-four definitions and overrides; names/IDs for full matrix"
+    },
+    {
+      "path": "repository/src/sim/hex/hex_chemistry_world.gd",
+      "sha256": "ce04cda6ab82f369af04dcbdf0a81f4b1f3c5199b8d769f3fa9e7c0d4e0a6d8e",
+      "bytes": 49930,
+      "read_scope": "inspect caps, source/selection semantics, paid material and root movement/exposure adapters; not complete dependency execution"
+    },
+    {
+      "path": "repository/src/sim/hex/hex_product_effects.gd",
+      "sha256": "6c2f4f1a02a00cada569f73056f2df290f167558fc3723f08d40c7674217d9a9",
+      "bytes": 20775,
+      "read_scope": "inspect first-four pre-movement, active-phase and damage/ownership adapters; not every later-four effect audited"
+    },
+    {
+      "path": "repository/src/sim/core/sim_config.gd",
+      "sha256": "a34108c94e174c2986250cdba07582a8bc21be5adce84a19cb68f74f36cb15eb",
+      "bytes": 1276,
+      "read_scope": "read tick/fixed-unit conversion"
+    },
+    {
+      "path": "repository/README.md",
+      "sha256": "16b062cf1ddeb8a757bacb93fdba5a3984ac0d845688d74b85b7292b64ec5fae",
+      "bytes": 36931,
+      "read_scope": "inspect current controls, Spell Loom and chemistry sections; source drift review"
+    },
+    {
+      "path": "repository/docs/PLAYER-CONTROLS-AND-POV.md",
+      "sha256": "106cb0afb4afce18405c4828a5e96f8650ce32f7c13a71bf96b0dced31978c65",
+      "bytes": 23743,
+      "read_scope": "read older control/view reference and identify conflicts"
+    },
+    {
+      "path": "repository/SPECIFICATION.md",
+      "sha256": "26760a1c8fb3a758217251d6d5682e1a073355cb47eb5f3c8361470876f99333",
+      "bytes": 67200,
+      "read_scope": "inspect shared movement/body/whole-hex/control requirements and source identity; not every historical paragraph treated as current"
+    },
+    {
+      "path": "repository/.agent/OVERHAUL-IMPLEMENTATION.md",
+      "sha256": "7c06bd6c1196461098d780c492ddbc17c058ff9f2ad150e0ffd56af2cd7aec33",
+      "bytes": 50267,
+      "read_scope": "selected heading/queue/context inspection only, not a full queue audit"
+    },
+    {
+      "path": "repository/content/maps/wellspring_hub_v2.json",
+      "sha256": "0f234b9c7a4b5c5ba60b517249724c060013dd9d520b20f8632cc2a816619bfc",
+      "bytes": 560,
+      "read_scope": "parse/inspect future hub metadata and district descriptions; not geometry authority"
+    },
+    {
+      "path": "repository/content/reactions/first_eight_element_reactions_v1.json",
+      "sha256": "4431e33377773874f24037dd8382772903622c38bc2c79e6ed525e5124662cbc",
+      "bytes": 17247,
+      "read_scope": "parse all 36 names/IDs; inspect thematic drift; generic catalog effects not used as effective rules"
+    },
+    {
+      "path": "repository/content/visual/visual_language_v1.json",
+      "sha256": "8c7592f50e849ab409951a480a10c965a85ced528b2e7c1ff363574f27db27d1",
+      "bytes": 7712,
+      "read_scope": "inspect visual integration contract and body-height drift"
+    },
+    {
+      "path": "repository/content/visual/burst_projectile_runtime_v3.json",
+      "sha256": "9657f7599a3af634f06e65814e1b9b1aef6c073baa40d186f8984a95ef26649a",
+      "bytes": 4178,
+      "read_scope": "inspect projectile metadata as visual context; texture dependencies not present"
+    },
+    {
+      "path": "repository/content/champions/body_type_profiles_v1.json",
+      "sha256": "e3f386409159a431e43648efec8b8762c9424217208db683b02a07acf350ad13",
+      "bytes": 2506,
+      "read_scope": "inspect fixed body/hurt/stamina role bounds and older authored-height metadata"
+    },
+    {
+      "path": "repository/assets/sprites/wireframe_motion_v2/manifest.json",
+      "sha256": "d4ed859f8405fc8f8053109b29579916845bc9c770cc216eafc8781184a68387",
+      "bytes": 4309,
+      "read_scope": "read active baked display size, cell/pivot/direction contract"
+    },
+    {
+      "path": "repository/src/presentation/wireframe_body_presenter.gd",
+      "sha256": "71bd3150e7fce05df02797f036c30d6d187aaec6b528b1649ae09d574cb9ce70",
+      "bytes": 8411,
+      "read_scope": "inspect manifest validation, baked size and region/pivot handling"
+    },
+    {
+      "path": "repository/docs/current-checkpoint.json",
+      "sha256": "d1bfaae39dfcb415ce91587237056e6a21aa85b688cc0dbea187a8f5484c8e9f",
+      "bytes": 3329,
+      "read_scope": "parse checkpoint metadata; reported status limitations cross-referenced to audit, not executed"
+    },
+    {
+      "path": "repository/docs/evidence/global-hex-20260920/global-hex-profile-global-v2.json",
+      "sha256": "432073b76c52be54d3d208500dfeec84d140694e3a682bc52614b195f480d379",
+      "bytes": 7575,
+      "read_scope": "inspect recorded dense-crucible timing/load metrics; historical only"
+    },
+    {
+      "path": "repository/docs/evidence/global-hex-20260920/network.json",
+      "sha256": "0658cd7779697537645205d9184fdb222dc4eda0d3caf94750db0ac2da240b22",
+      "bytes": 1671,
+      "read_scope": "inspect historical network watchdog/lifecycle result; not rerun"
+    },
+    {
+      "path": "references/hex-campus-concept.png",
+      "sha256": "48a3c60f2825d044dd78d68c7c3dedd7bd2ff363640692f32ea723141ced4582",
+      "bytes": 2482443,
+      "read_scope": "visually inspect as inspiration only; no measurement"
+    },
+    {
+      "path": "references/hex-world-map-concept.png",
+      "sha256": "5e35e5cc800056c435048c5f6d6aab56f7db7c0f14419d8bf688d6285f71fa40",
+      "bytes": 3016605,
+      "read_scope": "visually inspect as inspiration only; no measurement"
+    },
+    {
+      "path": "repository/assets/sprites/wireframe_motion_v2/small-base.png",
+      "sha256": "b3802e81da9cff00ae043f7265872e3f2087f1af1e881a55a172106dd07bad66",
+      "bytes": 63748,
+      "read_scope": "decode source image, crop one unscaled base-frame region and visually inspect in native composition; no animation sequence acceptance"
+    },
+    {
+      "path": "repository/assets/sprites/wireframe_motion_v2/middle-base.png",
+      "sha256": "c887c14bb65ff3a90f1ea92e79e92ff34f2139df89e6c124f56b0bd8ff5695ff",
+      "bytes": 67983,
+      "read_scope": "decode source image, crop one unscaled base-frame region and visually inspect in native composition; no animation sequence acceptance"
+    },
+    {
+      "path": "repository/assets/sprites/wireframe_motion_v2/large-base.png",
+      "sha256": "ffe87ab9e595fec61ef0869df897bb6a966c2b03cbcf4ef532aee9b0fd8fb97a",
+      "bytes": 72837,
+      "read_scope": "decode source image, crop one unscaled base-frame region and visually inspect in native composition; no animation sequence acceptance"
+    },
+    {
+      "path": "repository/docs/evidence/global-hex-20260920/native/01-before-free-casts-1280x720.png",
+      "sha256": "d0fb61b44fd3d768a63576596ffbd901bad8cc0e02abab6cb5a73cee4a9a9b54",
+      "bytes": 151328,
+      "read_scope": "visually inspect actual historical native capture; no camera transform or runtime sequence inferred"
+    },
+    {
+      "path": "repository/docs/evidence/global-hex-20260920/native/02-water-away-from-dummy-1280x720.png",
+      "sha256": "5921a321688a646662e2450e52b4ce90f4df0abca635844e310b823ee286d6f3",
+      "bytes": 155605,
+      "read_scope": "visually inspect actual historical native capture; no camera transform or runtime sequence inferred"
+    },
+    {
+      "path": "repository/docs/evidence/global-hex-20260920/native/03-steam-normal-1280x720.png",
+      "sha256": "620a9c77b17d9a1a6bb69d294e63f6b66f07d97d8c3e1c6db0b7dca58265555f",
+      "bytes": 158256,
+      "read_scope": "visually inspect actual historical native capture; no camera transform or runtime sequence inferred"
+    },
+    {
+      "path": "repository/docs/evidence/global-hex-20260920/native/04-steam-reduced-1280x720.png",
+      "sha256": "bd7aba036ff6d548b21642aee7c5327591b372fbad5745fc62626d5f5e226441",
+      "bytes": 157281,
+      "read_scope": "visually inspect actual historical native capture; no camera transform or runtime sequence inferred"
+    }
+  ],
+  "source_identity_as_reported": "p53-cb264f9358a4",
+  "source_identity_independently_recomputed": false,
+  "outputs": [
+    {
+      "path": "ACCEPTANCE.md",
+      "role": "design_specification_or_handoff",
+      "status": "PROPOSAL",
+      "sha256": "ee1f3c1525d82e16c3763e2bdff797a66d9338ab575d81cd31ea0645ca3ae362",
+      "bytes": 14335
+    },
+    {
+      "path": "HANDOFF.md",
+      "role": "design_specification_or_handoff",
+      "status": "PROPOSAL",
+      "sha256": "3e9fdf43ffe0126d23e5e30bb672b16eaf8cc3b23e59ea72e152905373aef534",
+      "bytes": 4515
+    },
+    {
+      "path": "HEX_LAYOUT.json",
+      "role": "design_specification_or_handoff",
+      "status": "PROPOSAL",
+      "sha256": "50f2de2ed0aa59cbdc6025e09c1efdc2e9f1506e7cced0b6dfe17e7c9d4c266c",
+      "bytes": 59365
+    },
+    {
+      "path": "INTEGRATION.md",
+      "role": "design_specification_or_handoff",
+      "status": "PROPOSAL",
+      "sha256": "f987bf5ba6141ff34209e5028168baac4b14ecbca037b65ff1a9c7c2c751cf27",
+      "bytes": 9611
+    },
+    {
+      "path": "LAYOUT.md",
+      "role": "design_specification_or_handoff",
+      "status": "PROPOSAL",
+      "sha256": "d364cdae05aefd8282d7f29e63bd059caabd1e767a4d88edc7645b0b4d4f2efa",
+      "bytes": 14486
+    },
+    {
+      "path": "README.md",
+      "role": "design_specification_or_handoff",
+      "status": "PROPOSAL",
+      "sha256": "53ecaabf917d70ff4b65aca1f1e0328ec59baa1b8d8170591612a82bae99c478",
+      "bytes": 1913
+    },
+    {
+      "path": "SOURCE_REFERENCES.md",
+      "role": "design_specification_or_handoff",
+      "status": "PROPOSAL",
+      "sha256": "5c809f3df5ef1718d54422b239909f9ee78250f83de5a27e94ae8c4878ec9617",
+      "bytes": 7014
+    },
+    {
+      "path": "UX_TABLES.md",
+      "role": "design_specification_or_handoff",
+      "status": "PROPOSAL",
+      "sha256": "ddfe654f8a6c2381ba3573d3e93c79153ef519188a3bca0505bec79b40d88c76",
+      "bytes": 18895
+    },
+    {
+      "path": "artifacts/01-current-campus.png",
+      "role": "actual_visual_design_artifact",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "028ba9863a13aa532d1561680a02bdf0ea451076c08ced04c68bd81a27c03165",
+      "bytes": 209781
+    },
+    {
+      "path": "artifacts/01-current-campus.svg",
+      "role": "actual_visual_design_artifact",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "73d3d8f542e25b302a2cf8394ee5954799099a409f34f0e6fb5790edea6ba6bb",
+      "bytes": 27520
+    },
+    {
+      "path": "artifacts/02-courtyard-pilot.png",
+      "role": "actual_visual_design_artifact",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "059eb1d3f81a3ff30b84205dd00db1245ee9d6ab7b3c6461aec145a436024cf4",
+      "bytes": 264698
+    },
+    {
+      "path": "artifacts/02-courtyard-pilot.svg",
+      "role": "actual_visual_design_artifact",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "eb268ca792b9939ee99da61d1961a841011737b52dfecbcf2ee24035cd869d3f",
+      "bytes": 40508
+    },
+    {
+      "path": "artifacts/03-current-capture-annotated.png",
+      "role": "annotated_original_gameplay_capture",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "302ddf768001dcbe7588ae5c48ed519f266b850e3cd261322eaf49653870be88",
+      "bytes": 244366
+    },
+    {
+      "path": "artifacts/04-native-normal-1280x720.png",
+      "role": "native_scale_offline_composition",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "425fd826560af3c5893198dd5e44be52a59a5f71aaa7d1480d73cb98a451a3a2",
+      "bytes": 61149
+    },
+    {
+      "path": "artifacts/04-native-reduced-1280x720.png",
+      "role": "native_scale_offline_composition",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "213e6d0f722306dc77317ac6130517b612d92c3a61a88772fcd5d3dd22de29aa",
+      "bytes": 60723
+    },
+    {
+      "path": "artifacts/05-reusable-kit.png",
+      "role": "actual_visual_design_artifact",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "be9c7e2ee8566d8718f64cec569a8effba9c774f953744504c87ef5bcdba3c8c",
+      "bytes": 88723
+    },
+    {
+      "path": "artifacts/05-reusable-kit.svg",
+      "role": "actual_visual_design_artifact",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "489194f5c713e3eb183075eb23f7ae176416f98c62639b9198436e5c74183e29",
+      "bytes": 14257
+    },
+    {
+      "path": "artifacts/06-modular-expansion.png",
+      "role": "future_module_diagram",
+      "status": "SCHEMATIC",
+      "sha256": "427ffd8a115becbca6682e23a60055d3a8badcc4ae8bd2ff46edf70a73487a39",
+      "bytes": 125818
+    },
+    {
+      "path": "artifacts/06-modular-expansion.svg",
+      "role": "future_module_diagram",
+      "status": "SCHEMATIC",
+      "sha256": "bc82f8f39c8bf5b999a56abb58415520d82a31aca99f83df0ff4f0991268d51b",
+      "bytes": 7803
+    },
+    {
+      "path": "artifacts/07-ui-reference-1280x720.png",
+      "role": "actual_visual_design_artifact",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "d47d8a6efbb27961283c608f1551ba685c7ec196cd4f587077ced90009eba8c2",
+      "bytes": 149062
+    },
+    {
+      "path": "data/chemistry_reference.json",
+      "role": "source_derived_data",
+      "status": "STATIC_VERIFIED",
+      "sha256": "e77eb2d55aa7267e602e91aeffec2f7f1bc5b32de625ad3769bbf2c0d4e97611",
+      "bytes": 4934
+    },
+    {
+      "path": "data/eligible_current.json",
+      "role": "source_derived_data",
+      "status": "STATIC_VERIFIED",
+      "sha256": "f9b80ae8d497587928fbcfa5ec3dc2754776fd57152716faef14d671327cdd40",
+      "bytes": 47582
+    },
+    {
+      "path": "data/eligible_pilot.json",
+      "role": "source_derived_data",
+      "status": "STATIC_VERIFIED",
+      "sha256": "bee4d4292fdd3a084adf2d9f559d52c36138d0688193af95db69acf51705e274",
+      "bytes": 47584
+    },
+    {
+      "path": "data/native_composition.json",
+      "role": "declared_synthetic_camera_and_fixture",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "7ddff2f2f2dbdafd9715819707859bc98129128f5123ba4e054dc3c7dfb2a0c1",
+      "bytes": 3918
+    },
+    {
+      "path": "data/reaction_names.json",
+      "role": "source_derived_data",
+      "status": "STATIC_VERIFIED",
+      "sha256": "26bf785ad488992f008ccc94f0f81478f0705fd87df35c24a20a206f5a7b73b0",
+      "bytes": 3567
+    },
+    {
+      "path": "data/station_copy.json",
+      "role": "design_specification_or_handoff",
+      "status": "PROPOSAL",
+      "sha256": "b90d1ad8115c6eea40711a4866ac6d52071904833f012d1a983251266790e850",
+      "bytes": 2218
+    },
+    {
+      "path": "evidence/01-before-free-casts-1280x720.png",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "d0fb61b44fd3d768a63576596ffbd901bad8cc0e02abab6cb5a73cee4a9a9b54",
+      "bytes": 151328
+    },
+    {
+      "path": "evidence/02-water-away-from-dummy-1280x720.png",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "5921a321688a646662e2450e52b4ce90f4df0abca635844e310b823ee286d6f3",
+      "bytes": 155605
+    },
+    {
+      "path": "evidence/03-steam-normal-1280x720.png",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "620a9c77b17d9a1a6bb69d294e63f6b66f07d97d8c3e1c6db0b7dca58265555f",
+      "bytes": 158256
+    },
+    {
+      "path": "evidence/04-steam-reduced-1280x720.png",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "bd7aba036ff6d548b21642aee7c5327591b372fbad5745fc62626d5f5e226441",
+      "bytes": 157281
+    },
+    {
+      "path": "evidence/browser_checks.json",
+      "role": "executed_offline_check_report",
+      "status": "STATIC_VERIFIED",
+      "sha256": "8c9b79c374d2659b9cd1e914c7b4569483d1faa275e0dd951577f78d847ec451",
+      "bytes": 3031
+    },
+    {
+      "path": "evidence/input_integrity.json",
+      "role": "executed_offline_check_report",
+      "status": "STATIC_VERIFIED",
+      "sha256": "8998116602b0c380ca55d8aa4202d38a35e4def4c011d8dd0b1b10425046e0d6",
+      "bytes": 13740
+    },
+    {
+      "path": "evidence/package_checks.json",
+      "role": "executed_offline_check_report",
+      "status": "STATIC_VERIFIED",
+      "sha256": "8c9adb3cedd0e728da211a8f431e39becffca6dc633503e5f13a4662d1f12cf1",
+      "bytes": 22602
+    },
+    {
+      "path": "evidence/rejected_v0_campus.json",
+      "role": "rejected_draft_evidence",
+      "status": "REJECTED",
+      "sha256": "be7492b7a4a25229fc5f5ab3e0d7adfe946fe0307037d26fa91a1a85d00e107f",
+      "bytes": 27510
+    },
+    {
+      "path": "evidence/rejected_v0_static_geometry_checks.json",
+      "role": "rejected_draft_evidence",
+      "status": "REJECTED",
+      "sha256": "28242ec24fb04957ea1e4ba3cb6bd015a3d054607caf83a80e99d8349d8cb89f",
+      "bytes": 52042
+    },
+    {
+      "path": "evidence/source/00-START-HERE.md",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "249af9b37978e0c8eaeefaab1c08cdf9742fef3d3cc2e51cb06e0a884e3d0323",
+      "bytes": 3526
+    },
+    {
+      "path": "evidence/source/01-SHARED-CONTRACT.md",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "af1ba3bca2c2f0c1ebe34a623202fbc02374046397f1c7cd23ef79df61ba0928",
+      "bytes": 4674
+    },
+    {
+      "path": "evidence/source/08-CHAT-MAP-UX.md",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "c2fa6dcfe52556e71bfa0430339efa5d3d76848ffaeeaad6300e84546b36eee9",
+      "bytes": 2787
+    },
+    {
+      "path": "evidence/source/10-HANDOFF-SCHEMA.json",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "48bce1abe18670f1c1e706d7791945fe0c46317270089d05136ca1fb31c652de",
+      "bytes": 911
+    },
+    {
+      "path": "evidence/source/11-AUDIT-SNAPSHOT.md",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "acc2e1c384fd13fbaa63cf9b8dde7c5002114273802bcb247d56b301473393a2",
+      "bytes": 4267
+    },
+    {
+      "path": "evidence/source/INPUT_MANIFEST.json",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "b0a9d9a54f575d6e4f056cdf0b35988ba843779d30bb0deaed130744b44175d1",
+      "bytes": 15498
+    },
+    {
+      "path": "evidence/source/references/hex-campus-concept.png",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "48a3c60f2825d044dd78d68c7c3dedd7bd2ff363640692f32ea723141ced4582",
+      "bytes": 2482443
+    },
+    {
+      "path": "evidence/source/references/hex-world-map-concept.png",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "5e35e5cc800056c435048c5f6d6aab56f7db7c0f14419d8bf688d6285f71fa40",
+      "bytes": 3016605
+    },
+    {
+      "path": "evidence/source/repository/README.md",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "16b062cf1ddeb8a757bacb93fdba5a3984ac0d845688d74b85b7292b64ec5fae",
+      "bytes": 36931
+    },
+    {
+      "path": "evidence/source/repository/SPECIFICATION.md",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "26760a1c8fb3a758217251d6d5682e1a073355cb47eb5f3c8361470876f99333",
+      "bytes": 67200
+    },
+    {
+      "path": "evidence/source/repository/assets/sprites/wireframe_motion_v2/large-base.png",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "ffe87ab9e595fec61ef0869df897bb6a966c2b03cbcf4ef532aee9b0fd8fb97a",
+      "bytes": 72837
+    },
+    {
+      "path": "evidence/source/repository/assets/sprites/wireframe_motion_v2/manifest.json",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "d4ed859f8405fc8f8053109b29579916845bc9c770cc216eafc8781184a68387",
+      "bytes": 4309
+    },
+    {
+      "path": "evidence/source/repository/assets/sprites/wireframe_motion_v2/middle-base.png",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "c887c14bb65ff3a90f1ea92e79e92ff34f2139df89e6c124f56b0bd8ff5695ff",
+      "bytes": 67983
+    },
+    {
+      "path": "evidence/source/repository/assets/sprites/wireframe_motion_v2/small-base.png",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "b3802e81da9cff00ae043f7265872e3f2087f1af1e881a55a172106dd07bad66",
+      "bytes": 63748
+    },
+    {
+      "path": "evidence/source/repository/content/champions/body_type_profiles_v1.json",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "e3f386409159a431e43648efec8b8762c9424217208db683b02a07acf350ad13",
+      "bytes": 2506
+    },
+    {
+      "path": "evidence/source/repository/content/maps/sanctum_campus_g2_v1.json",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "496c96c80168dd6e4053e03ece86b8a8f010a44c24c5fca7eaebe8cd13b51cea",
+      "bytes": 15972
+    },
+    {
+      "path": "evidence/source/repository/content/maps/wellspring_hub_v2.json",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "0f234b9c7a4b5c5ba60b517249724c060013dd9d520b20f8632cc2a816619bfc",
+      "bytes": 560
+    },
+    {
+      "path": "evidence/source/repository/content/reactions/first_eight_element_reactions_v1.json",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "4431e33377773874f24037dd8382772903622c38bc2c79e6ed525e5124662cbc",
+      "bytes": 17247
+    },
+    {
+      "path": "evidence/source/repository/content/visual/visual_language_v1.json",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "8c7592f50e849ab409951a480a10c965a85ced528b2e7c1ff363574f27db27d1",
+      "bytes": 7712
+    },
+    {
+      "path": "evidence/source/repository/docs/PLAYER-CONTROLS-AND-POV.md",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "106cb0afb4afce18405c4828a5e96f8650ce32f7c13a71bf96b0dced31978c65",
+      "bytes": 23743
+    },
+    {
+      "path": "evidence/source/repository/docs/current-checkpoint.json",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "d1bfaae39dfcb415ce91587237056e6a21aa85b688cc0dbea187a8f5484c8e9f",
+      "bytes": 3329
+    },
+    {
+      "path": "evidence/source/repository/docs/evidence/global-hex-20260920/global-hex-profile-global-v2.json",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "432073b76c52be54d3d208500dfeec84d140694e3a682bc52614b195f480d379",
+      "bytes": 7575
+    },
+    {
+      "path": "evidence/source/repository/docs/evidence/global-hex-20260920/network.json",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "0658cd7779697537645205d9184fdb222dc4eda0d3caf94750db0ac2da240b22",
+      "bytes": 1671
+    },
+    {
+      "path": "evidence/source/repository/src/content/sanctum_campus_layout.gd",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "5e32375bcb6b4a1149535df20dd8e973d801e1d5986a7b303c4f5fbfd2184797",
+      "bytes": 35458
+    },
+    {
+      "path": "evidence/source/repository/src/presentation/wireframe_body_presenter.gd",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "71bd3150e7fce05df02797f036c30d6d187aaec6b528b1649ae09d574cb9ce70",
+      "bytes": 8411
+    },
+    {
+      "path": "evidence/source/repository/src/sim/core/sim_config.gd",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "a34108c94e174c2986250cdba07582a8bc21be5adce84a19cb68f74f36cb15eb",
+      "bytes": 1276
+    },
+    {
+      "path": "evidence/source/repository/src/sim/hex/hex_chemistry_world.gd",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "ce04cda6ab82f369af04dcbdf0a81f4b1f3c5199b8d769f3fa9e7c0d4e0a6d8e",
+      "bytes": 49930
+    },
+    {
+      "path": "evidence/source/repository/src/sim/hex/hex_footprint.gd",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "74403370caa2c9f1331a7db849ffe8c45ed677de4fd9d389a02af6b3dda7b987",
+      "bytes": 76742
+    },
+    {
+      "path": "evidence/source/repository/src/sim/hex/hex_grid.gd",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "086ad20e6ec1de4229076ba331435e839fccdfc09d8e1af9d0fadd0aa208b1d0",
+      "bytes": 11177
+    },
+    {
+      "path": "evidence/source/repository/src/sim/hex/hex_product_effects.gd",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "6c2f4f1a02a00cada569f73056f2df290f167558fc3723f08d40c7674217d9a9",
+      "bytes": 20775
+    },
+    {
+      "path": "evidence/source/repository/src/sim/hex/hex_recipe_policy.gd",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "2962b47e4a90a896b266988ece34d320e3c8fcf5ae507a17fed640f90b11a2e0",
+      "bytes": 15513
+    },
+    {
+      "path": "evidence/source/repository/src/sim/hex/hex_world_definition.gd",
+      "role": "source_evidence",
+      "status": "SOURCE_SNAPSHOT",
+      "sha256": "e15d75d48ddedc6bc891400f508ae43d892742c151e54bb5b93aef68dfa23f18",
+      "bytes": 4748
+    },
+    {
+      "path": "evidence/static_geometry_checks.json",
+      "role": "executed_offline_check_report",
+      "status": "STATIC_VERIFIED",
+      "sha256": "ae69521f402d5968c838aaa91fe7cd22ab3f48cc9d652a32cb8081335270ac8f",
+      "bytes": 52036
+    },
+    {
+      "path": "pilot/campus_candidate.json",
+      "role": "reversible_source_gated_map_candidate",
+      "status": "PROPOSAL",
+      "sha256": "d3c51e293923c342d206fc8edd9e5fac6adc244027902668d02acf079548fb52",
+      "bytes": 27510
+    },
+    {
+      "path": "pilot/campus_patch.json",
+      "role": "reversible_source_gated_map_candidate",
+      "status": "PROPOSAL",
+      "sha256": "2755ddfa53ff2eecc5513e10bbb9cf4c46094681f7f62e44a9ab2c002eedc66d",
+      "bytes": 1665
+    },
+    {
+      "path": "pilot/campus_rollback.json",
+      "role": "reversible_source_gated_map_candidate",
+      "status": "PROPOSAL",
+      "sha256": "942d2edefc07d43d1d1568b97c8b172e1a8157e4aa20491f222fa24b41d024f1",
+      "bytes": 933
+    },
+    {
+      "path": "pilot/patch_contract.json",
+      "role": "reversible_source_gated_map_candidate",
+      "status": "PROPOSAL",
+      "sha256": "ef7b97da9fa317061219b8d86167df6b132b0b923e5e1364b9d98dcb8f1869df",
+      "bytes": 742
+    },
+    {
+      "path": "preview/index.html",
+      "role": "self_contained_ui_design_preview",
+      "status": "OFFLINE_PREVIEW",
+      "sha256": "28b06289b7279238bee7fdf2baf9006381fd9d569a4d45044a4be925c91b029f",
+      "bytes": 21436
+    },
+    {
+      "path": "tools/apply_pilot.py",
+      "role": "optional_offline_tool",
+      "status": "OFFLINE_TOOL",
+      "sha256": "d681b8b49a8bfd69a04e8345620111dc43e5b168072106eecd41aa67c9ef811c",
+      "bytes": 1892
+    },
+    {
+      "path": "tools/build_data.py",
+      "role": "optional_offline_tool",
+      "status": "OFFLINE_TOOL",
+      "sha256": "c4eb8e264e8c74996363c409ff721e505232db6f7c91d51e87c9e595d5296e62",
+      "bytes": 17305
+    },
+    {
+      "path": "tools/build_preview.py",
+      "role": "optional_offline_tool",
+      "status": "OFFLINE_TOOL",
+      "sha256": "afcda84a2cc5a9a7aa779b29fa420de54388782ffbff0428ffacbd909f2b7332",
+      "bytes": 16787
+    },
+    {
+      "path": "tools/check_preview.py",
+      "role": "optional_offline_tool",
+      "status": "OFFLINE_TOOL",
+      "sha256": "cdac73a32ea2e8939c4d2e40ed99795a7c89ed020528a50c1e0fe77d9bba564f",
+      "bytes": 5042
+    },
+    {
+      "path": "tools/geometry.py",
+      "role": "optional_offline_tool",
+      "status": "OFFLINE_TOOL",
+      "sha256": "e0687947cb8ad162fad1d233cc582a0abd708e47dfdaffdaf41b9899a8c3a480",
+      "bytes": 3847
+    },
+    {
+      "path": "tools/render_visuals.py",
+      "role": "optional_offline_tool",
+      "status": "OFFLINE_TOOL",
+      "sha256": "3eb977670c222705295893a2ea5a0d490956720714b7adf8fb530243c8f65b36",
+      "bytes": 24671
+    },
+    {
+      "path": "tools/validate_geometry.py",
+      "role": "optional_offline_tool",
+      "status": "OFFLINE_TOOL",
+      "sha256": "6e24f13d4e3ba2462fa04e158f4eda906bbf9477ea6a30120a8c8a13c8791329",
+      "bytes": 5896
+    },
+    {
+      "path": "tools/validate_package.py",
+      "role": "optional_offline_tool",
+      "status": "OFFLINE_TOOL",
+      "sha256": "2c1d3a3cd1a3220505e2e4988a2d638c6f4292e6f08a9c0648f55063619c1e20",
+      "bytes": 4458
+    },
+    {
+      "path": "tools/verify_manifest.py",
+      "role": "optional_offline_tool",
+      "status": "OFFLINE_TOOL",
+      "sha256": "b63286cb3225be7ed2df3d76f9ff7c8320c6effa86f293688b8e2a09e64cf5a9",
+      "bytes": 1026
+    }
+  ],
+  "proposed_live_targets": [
+    {
+      "path": "content/maps/sanctum_campus_g2_v1.json",
+      "operation": "separate source-hash-gated candidate; nine patch operations",
+      "status": "NOT_INTEGRATED"
+    },
+    {
+      "path": null,
+      "owner_to_resolve": "campus renderer / station presentation / F4 reference / input and session UI owners",
+      "operation": "presentation and remote-management proposals only; entry-point dependencies absent",
+      "status": "MISSING_RUNTIME_INPUTS"
+    }
+  ],
+  "decisions": [
+    "Reuse current three-district campus and crucible; no added acreage.",
+    "Keep continuous eight-direction movement and independent aim with whole selected hex chemistry.",
+    "Two 72x72 immutable, non-vaultable practice walls at (1216,1216) and (1768,1216); preserve ordinary routes and all gameplay anchors.",
+    "Use functional station objects and one reference; remote Company tab requires authority/proximity review.",
+    "No sanctuary, free ingredients, tuning increase, actor/stat/hurtbox/clearance change or automatic simulation decoration.",
+    "Treat future module placement as schematic; enforce measured budget and lifecycle gates before new acreage."
+  ],
+  "tests": [
+    {
+      "name": "63 input-manifest byte/hash checks",
+      "status": "PASS",
+      "scope": "source bytes only",
+      "evidence": [
+        "evidence/input_integrity.json"
+      ]
+    },
+    {
+      "name": "247 offline lattice, AABB, route, anchor and patch checks",
+      "status": "PASS",
+      "scope": "independent offline geometry assumptions, not Godot CollisionWorld",
+      "evidence": [
+        "evidence/static_geometry_checks.json"
+      ]
+    },
+    {
+      "name": "28 in-memory Chromium UI checks",
+      "status": "PASS",
+      "scope": "local HTML mocked behavior and embedded PNGs; no game networking",
+      "evidence": [
+        "evidence/browser_checks.json"
+      ]
+    },
+    {
+      "name": "179 package, source-pointer and guarded-tool checks",
+      "status": "PASS",
+      "scope": "local files, source copies and safe separate candidate creation",
+      "evidence": [
+        "evidence/package_checks.json"
+      ]
+    },
+    {
+      "name": "Direct packaged file/loopback browser launch",
+      "status": "NOT_RUN",
+      "reason": "browser administrator blocked both URL schemes in this environment; checked in-memory instead",
+      "evidence": [
+        "evidence/browser_checks.json"
+      ]
+    },
+    {
+      "name": "Godot integration and actual collision/route validator",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "name": "Human traversal, first-session and moving readability",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "name": "Physical two-PC / 4-player / 8-player lifecycle",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "name": "Sustained rendered and authority performance",
+      "status": "NOT_RUN",
+      "evidence": []
+    }
+  ],
+  "missing_inputs": [
+    "Unseen first-four chemistry-review result; no cross-chat approval assumed.",
+    "Complete current live checkout, bootable project, build/export and refreshed source identity.",
+    "CollisionWorld, complete movement/combat tuning, HexStructures and source dependency closure.",
+    "Actual campus renderer, input-action/profile resolver, UI focus/controller navigation and station/session/roster handlers.",
+    "Current personal control profile/loadout, current camera transform and capture sequence.",
+    "New two-PC/network/load/human evidence and declared target hardware.",
+    "Approved remote-command semantics, reset isolation and any proposed sanctuary policy.",
+    "Future module world placements, collision/height traversal, streaming/culling and measured budgets."
+  ],
+  "risks": [
+    "Historical timing and network failures remain unresolved by this map design.",
+    "Offline Euclidean AABB distances do not establish the missing runtime collision contact norm.",
+    "New obstacles change static topology/content identity; all peers and fixtures require synchronized regeneration/review.",
+    "Temporary structures or combined paid hazards can obstruct an escape and need actual counterplay tests.",
+    "Menus, spawn and station surroundings have no new immunity; harassment tests remain mandatory.",
+    "Native stills use an illustrative Magma coverage set and cannot establish actual formation/expiry or animation readability.",
+    "Old control, Spray and body-height metadata conflict with newer runtime contracts; bind UI to actual runtime data."
+  ],
+  "human_acceptance": "PENDING",
+  "instructions": "All output paths are safe relative paths; every supplied output except this manifest is inventoried. Verify with tools/verify_manifest.py. No output here claims an accepted Godot implementation."
+}

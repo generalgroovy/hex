@@ -19,18 +19,18 @@ func _test_runtime_default(catalog: AbilityCatalog) -> void:
 	check(loadout.load_from_file(LOADOUT_PATH, catalog), "foundation loadout validates: %s" % loadout.last_error)
 	equal(loadout.active_points, 9, "three affinity-aligned actives fit within the standard thirteen-point budget")
 	equal(loadout.spell_slot_ids, [
-		"arc-primary", "thunder-shell", "spark-stream", "spark-shower",
+		"cinderbolt", "cinder-shell", "ember-stream", "ember-sweep",
 		"dawn-needle", "dawn-shell", "glint-stream", "radiant-veil",
 		"", "", "", "",
 	], "authored loadout exposes all twelve positions without compaction")
 	equal(loadout.spell_slot_wire_ids, PackedInt32Array([
-		101, 187, 188, 167,
+		145, 179, 180, 154,
 		173, 191, 192, 174,
 		0, 0, 0, 0,
 	]), "runtime projection preserves each exact authored position")
 	check(loadout.disabled_spell_slots.is_empty(), "new foundation loadout authors only admitted spell IDs")
 	equal(loadout.spell_slot_entry(1), {
-		"position": 1, "ability_id": "arc-primary", "wire_id": 101,
+		"position": 1, "ability_id": "cinderbolt", "wire_id": 145,
 		"runtime_status": "playable", "enabled": true,
 	}, "enabled slot entry is directly describable")
 	equal(loadout.spell_slot_entry(9), {
@@ -43,7 +43,7 @@ func _test_runtime_default(catalog: AbilityCatalog) -> void:
 func _test_known_disabled_slots_are_preserved(catalog: AbilityCatalog) -> void:
 	var authored: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(LOADOUT_PATH))
 	authored["spell_slots"] = [
-		"arc-primary", "vector-lance", "thunder-shell", "cinder-fan",
+		"cinderbolt", "vector-lance", "cinder-shell", "cinder-fan",
 		"", "", "", "",
 		"", "", "", "phase-step",
 	]
@@ -52,7 +52,7 @@ func _test_known_disabled_slots_are_preserved(catalog: AbilityCatalog) -> void:
 	check(loadout.validate(catalog), "known retired authored IDs remain inspectable: %s" % loadout.last_error)
 	equal(loadout.spell_slot_ids, authored["spell_slots"], "known disabled authored IDs remain in their original positions")
 	equal(loadout.spell_slot_wire_ids, PackedInt32Array([
-		101, 0, 187, 0,
+		145, 0, 179, 0,
 		0, 0, 0, 0,
 		0, 0, 0, 0,
 	]), "disabled slots become in-place zeroes without substitution or compaction")
@@ -65,7 +65,7 @@ func _test_known_disabled_slots_are_preserved(catalog: AbilityCatalog) -> void:
 		"position": 2, "ability_id": "vector-lance", "wire_id": 0,
 		"runtime_status": "catalog_only", "enabled": false,
 	}, "known disabled slot is explicitly describable as unavailable")
-	equal(loadout.spell_slot_entry(3).get("wire_id"), 187, "later admitted entries do not slide into a disabled position")
+	equal(loadout.spell_slot_entry(3).get("wire_id"), 179, "later admitted entries do not slide into a disabled position")
 
 
 func _test_unknown_and_disabled_active_fail_closed(catalog: AbilityCatalog) -> void:

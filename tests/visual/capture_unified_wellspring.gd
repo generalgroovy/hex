@@ -42,7 +42,9 @@ func _run() -> void:
 	if DisplayServer.get_name() == "headless":
 		_fail("unified Wellspring capture requires a visible rendering display")
 		return
-	if not output.begins_with("res://.godot/unified-wellspring-") or ".." in output or DirAccess.dir_exists_absolute(output):
+	# Absolute contained outputs let the same external probe review a frozen PCK.
+	var valid_output := output.begins_with("res://.godot/unified-wellspring-") or (output.is_absolute_path() and output.replace("\\", "/").contains("/.godot/unified-wellspring-"))
+	if not valid_output or ".." in output or DirAccess.dir_exists_absolute(output):
 		_fail("fresh contained unified Wellspring output is required")
 		return
 	if DirAccess.make_dir_recursive_absolute(output) != OK:

@@ -69,8 +69,8 @@ class FeedbackSheet:
 		combat_cues.clear()
 		world.players.resize(1)
 		var family := "beam" if kind == "beam_fired" else ("field" if kind == "field_triggered" else "spray")
-		for index: int in range(8):
-			var element := AbilityCatalog.FIRST_EIGHT_ELEMENTS[index]
+		for index: int in range(AbilityCatalog.DISPLAY_ELEMENT_IDS.size()):
+			var element := AbilityCatalog.DISPLAY_ELEMENT_IDS[index]
 			var ability := ability_catalog.ability(ability_catalog.spell_id_at(element, family))
 			var center := Vector2(170 + (index % 4) * 312, 235 + floori(float(index) / 4.0) * 265)
 			var target := PlayerState.new(index + 2)
@@ -88,8 +88,8 @@ class FeedbackSheet:
 		draw_rect(Rect2(Vector2.ZERO, SIZE), Color("202b2b"))
 		text_at(Vector2(24, 34), "FLUX / TRUTHFUL COMBAT FEEDBACK / " + ("REDUCED" if _reduced_effects_enabled() else "NORMAL"), 21)
 		text_at(Vector2(24, 61), event_kind + " · actual production hook/draw path · original11px labels at100%zoom · 4/120s after contact", 15)
-		for index: int in range(8):
-			var element := AbilityCatalog.FIRST_EIGHT_ELEMENTS[index]
+		for index: int in range(AbilityCatalog.DISPLAY_ELEMENT_IDS.size()):
+			var element := AbilityCatalog.DISPLAY_ELEMENT_IDS[index]
 			var corner := Vector2(22 + (index % 4) * 312, 88 + floori(float(index) / 4.0) * 265)
 			draw_rect(Rect2(corner, Vector2(300, 247)), Color("162222"))
 			text_at(corner + Vector2(16, 28), element.to_upper(), 15, visual_language.element_color(element, "bright"))

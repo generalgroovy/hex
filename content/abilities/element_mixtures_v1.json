@@ -1,0 +1,1522 @@
+{
+  "schema_version": 1,
+  "id": "element-mixtures-v1",
+  "status": "candidate",
+  "mixtures": [
+    {
+      "id": "mixture_01",
+      "element_mask": 1,
+      "display_name": "Earth",
+      "elements": [
+        "earth"
+      ],
+      "representative_element_wire_id": 1,
+      "reaction_wire_id": 301,
+      "purpose": "An eruption hit raises a breakable pillar for cover or a wallrun approach.",
+      "counter": "Break its 32 Health, go around, or wait; trapped occupants can escape.",
+      "status_duration_ms": 1000,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_02",
+      "element_mask": 2,
+      "display_name": "Fire",
+      "elements": [
+        "fire"
+      ],
+      "representative_element_wire_id": 2,
+      "reaction_wire_id": 309,
+      "purpose": "Repeated ground burn punishes enemies who stay in its disk.",
+      "counter": "Leave or jump during the warning; landing in active fire is dangerous.",
+      "status_duration_ms": 1000,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_03",
+      "element_mask": 3,
+      "display_name": "Magma",
+      "elements": [
+        "fire",
+        "earth"
+      ],
+      "representative_element_wire_id": 2,
+      "reaction_wire_id": 302,
+      "purpose": "Ground damage pulses and slower walking deny a wedge of space.",
+      "counter": "Leave or jump before the next pulse; the slow ends outside.",
+      "status_duration_ms": 920,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_04",
+      "element_mask": 4,
+      "display_name": "Water",
+      "elements": [
+        "water"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 316,
+      "purpose": "One ground freezing hit; walking slows to 75% and physical shots to 65%.",
+      "counter": "Slide, jump, or leave; air movement and slide speed stay unchanged.",
+      "status_duration_ms": 1000,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_05",
+      "element_mask": 5,
+      "display_name": "Quagmire",
+      "elements": [
+        "water",
+        "earth"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 303,
+      "purpose": "Weaker ground acceleration and braking; damage starts after 350 ms inside.",
+      "counter": "Jump or leave before 350 ms; traction returns immediately outside.",
+      "status_duration_ms": 920,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_06",
+      "element_mask": 6,
+      "display_name": "Steam",
+      "elements": [
+        "water",
+        "fire"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 310,
+      "purpose": "Scald pulses grow with exposure, then stop growing at a fixed limit.",
+      "counter": "Exit to cool down, or weaken the steam with a fresh paid Water cast.",
+      "status_duration_ms": 920,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_07",
+      "element_mask": 7,
+      "display_name": "Caldera",
+      "elements": [
+        "water",
+        "fire",
+        "earth"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 407,
+      "purpose": "Ground burst once in the disk after warning. Weaker traction, one ground shove, slower walking and shots.",
+      "counter": "Leave during the warning or jump; the burst cannot repeat.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_08",
+      "element_mask": 8,
+      "display_name": "Air",
+      "elements": [
+        "wind"
+      ],
+      "representative_element_wire_id": 4,
+      "reaction_wire_id": 322,
+      "purpose": "Rotating ground flow and damage pulses surround a safe center.",
+      "counter": "Use the center opening, jump, or leave between pulses.",
+      "status_duration_ms": 1000,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_09",
+      "element_mask": 9,
+      "display_name": "Sandblast",
+      "elements": [
+        "wind",
+        "earth"
+      ],
+      "representative_element_wire_id": 4,
+      "reaction_wire_id": 304,
+      "purpose": "One ground hit shoves each enemy 14 px sideways.",
+      "counter": "Jump or leave during formation; solid cover stops the shove.",
+      "status_duration_ms": 920,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_10",
+      "element_mask": 10,
+      "display_name": "Arcstorm",
+      "elements": [
+        "fire",
+        "wind"
+      ],
+      "representative_element_wire_id": 2,
+      "reaction_wire_id": 311,
+      "purpose": "A warned electrical line bursts once; one separate paid Fire source can extend it.",
+      "counter": "Leave the line before activation or consume its optional Fire link.",
+      "status_duration_ms": 920,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_11",
+      "element_mask": 11,
+      "display_name": "Cinder Cyclone",
+      "elements": [
+        "fire",
+        "wind",
+        "earth"
+      ],
+      "representative_element_wire_id": 2,
+      "reaction_wire_id": 411,
+      "purpose": "Ground burst once in the lane after warning. Weaker traction, one ground shove, forward ground flow.",
+      "counter": "Leave during the warning or jump; the burst cannot repeat.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_12",
+      "element_mask": 12,
+      "display_name": "Hailcurrent",
+      "elements": [
+        "water",
+        "wind"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 317,
+      "purpose": "A narrow hail lane pulses damage and pushes grounded actors forward.",
+      "counter": "Leave sideways; jumping avoids both the ground current and hail.",
+      "status_duration_ms": 920,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_13",
+      "element_mask": 13,
+      "display_name": "Silt Surge",
+      "elements": [
+        "water",
+        "wind",
+        "earth"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 413,
+      "purpose": "Ground damage pulses along the lane. Weaker traction, slower walking and shots, forward ground flow.",
+      "counter": "Jump or leave the lane; movement effects end on exit.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_14",
+      "element_mask": 14,
+      "display_name": "Thunderhead",
+      "elements": [
+        "water",
+        "fire",
+        "wind"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 414,
+      "purpose": "Burst once in the lane after warning. One ground shove, slower walking and shots, forward ground flow.",
+      "counter": "Leave during the warning; the burst cannot repeat.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_15",
+      "element_mask": 15,
+      "display_name": "Tempest Forge",
+      "elements": [
+        "water",
+        "fire",
+        "wind",
+        "earth"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 415,
+      "purpose": "Ground burst once in the lane after warning. Weaker traction, one ground shove, slower walking and shots, forward ground flow.",
+      "counter": "Leave during the warning or jump; the burst cannot repeat.",
+      "status_duration_ms": 760,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_16",
+      "element_mask": 16,
+      "display_name": "Light",
+      "elements": [
+        "light"
+      ],
+      "representative_element_wire_id": 7,
+      "reaction_wire_id": 334,
+      "purpose": "Regular searing pulses reveal occupants and also hit airborne actors.",
+      "counter": "Leave between 600 ms pulses; jumping alone does not escape.",
+      "status_duration_ms": 1000,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_17",
+      "element_mask": 17,
+      "display_name": "Crystal Prism",
+      "elements": [
+        "earth",
+        "light"
+      ],
+      "representative_element_wire_id": 1,
+      "reaction_wire_id": 307,
+      "purpose": "One contact hit; a breakable reflection plane banks existing paid shots.",
+      "counter": "Change approach or break its 18 Health with Spray; shots keep their owner.",
+      "status_duration_ms": 920,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_18",
+      "element_mask": 18,
+      "display_name": "Solar Flare",
+      "elements": [
+        "fire",
+        "light"
+      ],
+      "representative_element_wire_id": 2,
+      "reaction_wire_id": 314,
+      "purpose": "One radial flash damages and reveals targets for 700 ms.",
+      "counter": "Leave the forming disk; its burst cannot repeat.",
+      "status_duration_ms": 920,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_19",
+      "element_mask": 19,
+      "display_name": "Sunforge",
+      "elements": [
+        "fire",
+        "earth",
+        "light"
+      ],
+      "representative_element_wire_id": 2,
+      "reaction_wire_id": 419,
+      "purpose": "Burst once in the disk after warning. Weaker traction, one ground shove, reveal.",
+      "counter": "Leave during the warning; the burst cannot repeat.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_20",
+      "element_mask": 20,
+      "display_name": "Mirrorwater",
+      "elements": [
+        "water",
+        "light"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 320,
+      "purpose": "Moving across the mirror reveals you and triggers damage on each pulse.",
+      "counter": "Stand still between pulses after the entry reveal, or leave the disk.",
+      "status_duration_ms": 920,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_21",
+      "element_mask": 21,
+      "display_name": "Geode Spring",
+      "elements": [
+        "water",
+        "earth",
+        "light"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 421,
+      "purpose": "The disk pulses damage only while you move. Weaker traction, slower walking and shots, reveal.",
+      "counter": "Stand still between pulses or leave; jumping does not hide you.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_22",
+      "element_mask": 22,
+      "display_name": "Scalding Halo",
+      "elements": [
+        "water",
+        "fire",
+        "light"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 422,
+      "purpose": "Burst once in the disk after warning. One ground shove, slower walking and shots, reveal.",
+      "counter": "Leave during the warning; the burst cannot repeat.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_23",
+      "element_mask": 23,
+      "display_name": "Opaline Furnace",
+      "elements": [
+        "water",
+        "fire",
+        "earth",
+        "light"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 423,
+      "purpose": "Burst once in the disk after warning. Weaker traction, one ground shove, slower walking and shots, reveal.",
+      "counter": "Leave during the warning; the burst cannot repeat.",
+      "status_duration_ms": 760,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_24",
+      "element_mask": 24,
+      "display_name": "Lightbend",
+      "elements": [
+        "wind",
+        "light"
+      ],
+      "representative_element_wire_id": 4,
+      "reaction_wire_id": 325,
+      "purpose": "One contact flash; paid Light shots bend 15 degrees for a new attack angle.",
+      "counter": "Change the Light approach angle or leave the redirected firing lane.",
+      "status_duration_ms": 920,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_25",
+      "element_mask": 25,
+      "display_name": "Prism Gale",
+      "elements": [
+        "wind",
+        "earth",
+        "light"
+      ],
+      "representative_element_wire_id": 4,
+      "reaction_wire_id": 425,
+      "purpose": "The lane pulses damage only while you move. Weaker traction, forward ground flow, reveal.",
+      "counter": "Stand still between pulses or leave; jumping does not hide you.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_26",
+      "element_mask": 26,
+      "display_name": "Corona Arc",
+      "elements": [
+        "fire",
+        "wind",
+        "light"
+      ],
+      "representative_element_wire_id": 2,
+      "reaction_wire_id": 426,
+      "purpose": "Burst once in the lane after warning. One ground shove, forward ground flow, reveal.",
+      "counter": "Leave during the warning; the burst cannot repeat.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_27",
+      "element_mask": 27,
+      "display_name": "Daybreak Engine",
+      "elements": [
+        "fire",
+        "wind",
+        "earth",
+        "light"
+      ],
+      "representative_element_wire_id": 2,
+      "reaction_wire_id": 427,
+      "purpose": "Burst once in the lane after warning. Weaker traction, one ground shove, forward ground flow, reveal.",
+      "counter": "Leave during the warning; the burst cannot repeat.",
+      "status_duration_ms": 760,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_28",
+      "element_mask": 28,
+      "display_name": "Aurora Current",
+      "elements": [
+        "water",
+        "wind",
+        "light"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 428,
+      "purpose": "The lane pulses damage only while you move. Slower walking and shots, forward ground flow, reveal.",
+      "counter": "Stand still between pulses or leave; jumping does not hide you.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_29",
+      "element_mask": 29,
+      "display_name": "Glacial Cathedral",
+      "elements": [
+        "water",
+        "wind",
+        "earth",
+        "light"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 429,
+      "purpose": "The lane pulses damage only while you move. Weaker traction, slower walking and shots, forward ground flow, reveal.",
+      "counter": "Stand still between pulses or leave; jumping does not hide you.",
+      "status_duration_ms": 760,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_30",
+      "element_mask": 30,
+      "display_name": "Stormglass",
+      "elements": [
+        "water",
+        "fire",
+        "wind",
+        "light"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 430,
+      "purpose": "Burst once in the lane after warning. One ground shove, slower walking and shots, forward ground flow, reveal.",
+      "counter": "Leave during the warning; the burst cannot repeat.",
+      "status_duration_ms": 760,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_31",
+      "element_mask": 31,
+      "display_name": "Prismatic Monsoon",
+      "elements": [
+        "water",
+        "fire",
+        "wind",
+        "earth",
+        "light"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 431,
+      "purpose": "Burst once in the lane after warning. Weaker traction, one ground shove, slower walking and shots, forward ground flow, reveal.",
+      "counter": "Leave during the warning; the burst cannot repeat.",
+      "status_duration_ms": 680,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_32",
+      "element_mask": 32,
+      "display_name": "Dark",
+      "elements": [
+        "dark"
+      ],
+      "representative_element_wire_id": 8,
+      "reaction_wire_id": 336,
+      "purpose": "A concealing disk starts damage after 1 s inside; pulses grow from 2 to 6 Health.",
+      "counter": "Move to reveal occupants or exit before 1 s; leaving resets exposure.",
+      "status_duration_ms": 1000,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_33",
+      "element_mask": 33,
+      "display_name": "Blightsoil",
+      "elements": [
+        "earth",
+        "dark"
+      ],
+      "representative_element_wire_id": 1,
+      "reaction_wire_id": 308,
+      "purpose": "Ground pulses block Health, Flux and Stamina recovery while occupied.",
+      "counter": "Jump or leave the soil; normal recovery waits still apply afterwards.",
+      "status_duration_ms": 920,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_34",
+      "element_mask": 34,
+      "display_name": "Backdraft",
+      "elements": [
+        "fire",
+        "dark"
+      ],
+      "representative_element_wire_id": 2,
+      "reaction_wire_id": 315,
+      "purpose": "A concealing fuse turns transparent for its final 600 ms, then bursts once.",
+      "counter": "Leave during that visible warning; it deals no damage before detonation.",
+      "status_duration_ms": 920,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_35",
+      "element_mask": 35,
+      "display_name": "Ashen Mire",
+      "elements": [
+        "fire",
+        "earth",
+        "dark"
+      ],
+      "representative_element_wire_id": 2,
+      "reaction_wire_id": 435,
+      "purpose": "Ground burst once in the disk after warning. Weaker traction, one ground shove, concealment.",
+      "counter": "Leave during the warning or jump; the burst cannot repeat.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_36",
+      "element_mask": 36,
+      "display_name": "Black Ice",
+      "elements": [
+        "water",
+        "dark"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 321,
+      "purpose": "Entry briefly slows; the first grounded exit fractures the ice for one hit.",
+      "counter": "Jump out to avoid the fracture; each actor can be hit only once.",
+      "status_duration_ms": 920,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_37",
+      "element_mask": 37,
+      "display_name": "Gravefrost",
+      "elements": [
+        "water",
+        "earth",
+        "dark"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 437,
+      "purpose": "Ground damage pulses after 1 s inside the disk. Weaker traction, slower walking and shots, concealment.",
+      "counter": "Leave before 1 s; moving reveals you; jumping avoids damage.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_38",
+      "element_mask": 38,
+      "display_name": "Night Boil",
+      "elements": [
+        "water",
+        "fire",
+        "dark"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 438,
+      "purpose": "Burst once in the disk after warning. One ground shove, slower walking and shots, concealment.",
+      "counter": "Leave during the warning; the burst cannot repeat.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_39",
+      "element_mask": 39,
+      "display_name": "Volcanic Undertow",
+      "elements": [
+        "water",
+        "fire",
+        "earth",
+        "dark"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 439,
+      "purpose": "Ground burst once in the disk after warning. Weaker traction, one ground shove, slower walking and shots, concealment.",
+      "counter": "Leave during the warning or jump; the burst cannot repeat.",
+      "status_duration_ms": 760,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_40",
+      "element_mask": 40,
+      "display_name": "Shadowdraft",
+      "elements": [
+        "wind",
+        "dark"
+      ],
+      "representative_element_wire_id": 4,
+      "reaction_wire_id": 326,
+      "purpose": "A fixed lane alternates 300 ms of concealing damage and 300 ms of clear safety.",
+      "counter": "Cross during the transparent interval or leave sideways.",
+      "status_duration_ms": 920,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_41",
+      "element_mask": 41,
+      "display_name": "Burial Gale",
+      "elements": [
+        "wind",
+        "earth",
+        "dark"
+      ],
+      "representative_element_wire_id": 4,
+      "reaction_wire_id": 441,
+      "purpose": "Ground damage pulses after 1 s inside the lane. Weaker traction, forward ground flow, concealment.",
+      "counter": "Leave before 1 s; moving reveals you; jumping avoids damage.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_42",
+      "element_mask": 42,
+      "display_name": "Black Thunder",
+      "elements": [
+        "fire",
+        "wind",
+        "dark"
+      ],
+      "representative_element_wire_id": 2,
+      "reaction_wire_id": 442,
+      "purpose": "Burst once in the lane after warning. One ground shove, forward ground flow, concealment.",
+      "counter": "Leave during the warning; the burst cannot repeat.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_43",
+      "element_mask": 43,
+      "display_name": "Funeral Storm",
+      "elements": [
+        "fire",
+        "wind",
+        "earth",
+        "dark"
+      ],
+      "representative_element_wire_id": 2,
+      "reaction_wire_id": 443,
+      "purpose": "Ground burst once in the lane after warning. Weaker traction, one ground shove, forward ground flow, concealment.",
+      "counter": "Leave during the warning or jump; the burst cannot repeat.",
+      "status_duration_ms": 760,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_44",
+      "element_mask": 44,
+      "display_name": "Sleet Veil",
+      "elements": [
+        "water",
+        "wind",
+        "dark"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 444,
+      "purpose": "Damage pulses after 1 s inside the lane. Slower walking and shots, forward ground flow, concealment.",
+      "counter": "Leave before 1 s; moving reveals you.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_45",
+      "element_mask": 45,
+      "display_name": "Winter Sepulcher",
+      "elements": [
+        "water",
+        "wind",
+        "earth",
+        "dark"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 445,
+      "purpose": "Ground damage pulses after 1 s inside the lane. Weaker traction, slower walking and shots, forward ground flow, concealment.",
+      "counter": "Leave before 1 s; moving reveals you; jumping avoids damage.",
+      "status_duration_ms": 760,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_46",
+      "element_mask": 46,
+      "display_name": "Night Tempest",
+      "elements": [
+        "water",
+        "fire",
+        "wind",
+        "dark"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 446,
+      "purpose": "Burst once in the lane after warning. One ground shove, slower walking and shots, forward ground flow, concealment.",
+      "counter": "Leave during the warning; the burst cannot repeat.",
+      "status_duration_ms": 760,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_47",
+      "element_mask": 47,
+      "display_name": "Abyssal Tempest",
+      "elements": [
+        "water",
+        "fire",
+        "wind",
+        "earth",
+        "dark"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 447,
+      "purpose": "Ground burst once in the lane after warning. Weaker traction, one ground shove, slower walking and shots, forward ground flow, concealment.",
+      "counter": "Leave during the warning or jump; the burst cannot repeat.",
+      "status_duration_ms": 680,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_48",
+      "element_mask": 48,
+      "display_name": "Penumbra",
+      "elements": [
+        "light",
+        "dark"
+      ],
+      "representative_element_wire_id": 7,
+      "reaction_wire_id": 335,
+      "purpose": "One damaging, revealing ring entry per actor; the center is safe.",
+      "counter": "Avoid the ring or shelter inside; repeated crossings cannot repeat the hit.",
+      "status_duration_ms": 920,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_49",
+      "element_mask": 49,
+      "display_name": "Obsidian Crown",
+      "elements": [
+        "earth",
+        "light",
+        "dark"
+      ],
+      "representative_element_wire_id": 1,
+      "reaction_wire_id": 449,
+      "purpose": "One ring hit per foe. Weaker traction, reveal, blocked recovery.",
+      "counter": "Use the safe center; jumping avoids ground effects, not the ring hit.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_50",
+      "element_mask": 50,
+      "display_name": "Eclipse Flare",
+      "elements": [
+        "fire",
+        "light",
+        "dark"
+      ],
+      "representative_element_wire_id": 2,
+      "reaction_wire_id": 450,
+      "purpose": "One ring hit per foe. One ground shove, reveal, blocked recovery.",
+      "counter": "Use the safe center; jumping avoids ground effects, not the ring hit.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_51",
+      "element_mask": 51,
+      "display_name": "Eclipse Crucible",
+      "elements": [
+        "fire",
+        "earth",
+        "light",
+        "dark"
+      ],
+      "representative_element_wire_id": 2,
+      "reaction_wire_id": 451,
+      "purpose": "One ring hit per foe. Weaker traction, one ground shove, reveal, blocked recovery.",
+      "counter": "Use the safe center; jumping avoids ground effects, not the ring hit.",
+      "status_duration_ms": 760,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_52",
+      "element_mask": 52,
+      "display_name": "Dusk Mirror",
+      "elements": [
+        "water",
+        "light",
+        "dark"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 452,
+      "purpose": "One ring hit per foe. Slower walking and shots, reveal, blocked recovery.",
+      "counter": "Use the safe center; jumping avoids ground effects, not the ring hit.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_53",
+      "element_mask": 53,
+      "display_name": "Onyx Tide",
+      "elements": [
+        "water",
+        "earth",
+        "light",
+        "dark"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 453,
+      "purpose": "One ring hit per foe. Weaker traction, slower walking and shots, reveal, blocked recovery.",
+      "counter": "Use the safe center; jumping avoids ground effects, not the ring hit.",
+      "status_duration_ms": 760,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_54",
+      "element_mask": 54,
+      "display_name": "Eventide Cauldron",
+      "elements": [
+        "water",
+        "fire",
+        "light",
+        "dark"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 454,
+      "purpose": "One ring hit per foe. One ground shove, slower walking and shots, reveal, blocked recovery.",
+      "counter": "Use the safe center; jumping avoids ground effects, not the ring hit.",
+      "status_duration_ms": 760,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_55",
+      "element_mask": 55,
+      "display_name": "Eventide Forge",
+      "elements": [
+        "water",
+        "fire",
+        "earth",
+        "light",
+        "dark"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 455,
+      "purpose": "One ring hit per foe. Weaker traction, one ground shove, slower walking and shots, reveal, blocked recovery.",
+      "counter": "Use the safe center; jumping avoids ground effects, not the ring hit.",
+      "status_duration_ms": 680,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_56",
+      "element_mask": 56,
+      "display_name": "Twilight Gyre",
+      "elements": [
+        "wind",
+        "light",
+        "dark"
+      ],
+      "representative_element_wire_id": 4,
+      "reaction_wire_id": 456,
+      "purpose": "One ring hit per foe. Forward ground flow, reveal, blocked recovery.",
+      "counter": "Use the safe center; jumping avoids ground effects, not the ring hit.",
+      "status_duration_ms": 840,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_57",
+      "element_mask": 57,
+      "display_name": "Twilight Bastion",
+      "elements": [
+        "wind",
+        "earth",
+        "light",
+        "dark"
+      ],
+      "representative_element_wire_id": 4,
+      "reaction_wire_id": 457,
+      "purpose": "One ring hit per foe. Weaker traction, forward ground flow, reveal, blocked recovery.",
+      "counter": "Use the safe center; jumping avoids ground effects, not the ring hit.",
+      "status_duration_ms": 760,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_58",
+      "element_mask": 58,
+      "display_name": "Corona Eclipse",
+      "elements": [
+        "fire",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "representative_element_wire_id": 2,
+      "reaction_wire_id": 458,
+      "purpose": "One ring hit per foe. One ground shove, forward ground flow, reveal, blocked recovery.",
+      "counter": "Use the safe center; jumping avoids ground effects, not the ring hit.",
+      "status_duration_ms": 760,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_59",
+      "element_mask": 59,
+      "display_name": "Eclipse Engine",
+      "elements": [
+        "fire",
+        "wind",
+        "earth",
+        "light",
+        "dark"
+      ],
+      "representative_element_wire_id": 2,
+      "reaction_wire_id": 459,
+      "purpose": "One ring hit per foe. Weaker traction, one ground shove, forward ground flow, reveal, blocked recovery.",
+      "counter": "Use the safe center; jumping avoids ground effects, not the ring hit.",
+      "status_duration_ms": 680,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_60",
+      "element_mask": 60,
+      "display_name": "Moonless Aurora",
+      "elements": [
+        "water",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 460,
+      "purpose": "One ring hit per foe. Slower walking and shots, forward ground flow, reveal, blocked recovery.",
+      "counter": "Use the safe center; jumping avoids ground effects, not the ring hit.",
+      "status_duration_ms": 760,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_61",
+      "element_mask": 61,
+      "display_name": "Obsidian Aurora",
+      "elements": [
+        "water",
+        "wind",
+        "earth",
+        "light",
+        "dark"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 461,
+      "purpose": "One ring hit per foe. Weaker traction, slower walking and shots, forward ground flow, reveal, blocked recovery.",
+      "counter": "Use the safe center; jumping avoids ground effects, not the ring hit.",
+      "status_duration_ms": 680,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_62",
+      "element_mask": 62,
+      "display_name": "Celestial Tempest",
+      "elements": [
+        "water",
+        "fire",
+        "wind",
+        "light",
+        "dark"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 462,
+      "purpose": "One ring hit per foe. One ground shove, slower walking and shots, forward ground flow, reveal, blocked recovery.",
+      "counter": "Use the safe center; jumping avoids ground effects, not the ring hit.",
+      "status_duration_ms": 680,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    },
+    {
+      "id": "mixture_63",
+      "element_mask": 63,
+      "display_name": "Convergence",
+      "elements": [
+        "water",
+        "fire",
+        "wind",
+        "earth",
+        "light",
+        "dark"
+      ],
+      "representative_element_wire_id": 3,
+      "reaction_wire_id": 463,
+      "purpose": "One ring hit per foe. Weaker traction, one ground shove, slower walking and shots, forward ground flow, reveal, blocked recovery.",
+      "counter": "Use the safe center; jumping avoids ground effects, not the ring hit.",
+      "status_duration_ms": 600,
+      "status_potencies": [
+        80,
+        1000,
+        120,
+        80,
+        1000,
+        1000
+      ],
+      "reference": "https://www.paradoxinteractive.com/games/magicka-2/about"
+    }
+  ]
+}

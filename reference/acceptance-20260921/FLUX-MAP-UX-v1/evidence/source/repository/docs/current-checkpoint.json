@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "current": {
+    "checkpoint_id": "overnight-p48-20260913",
+    "kind": "current_portable",
+    "build_directory": "exports/windows-overnight-p48-20260913",
+    "evidence_directory": "docs/evidence/windows-overnight-p48-20260913",
+    "payloads": [
+      {
+        "path": "exports/windows-overnight-p48-20260913/windows/flux2.exe",
+        "bytes": 109071360,
+        "sha256": "04baf75cc1d69dd93eb709533ecab4fd7770bb8a530645717017a06a9d9809fc",
+        "role": "game"
+      },
+      {
+        "path": "exports/windows-overnight-p48-20260913/windows/flux2.pck",
+        "bytes": 67248700,
+        "sha256": "ddce9451e871096ca02190deb9092cba71db96bd8d732cd2181fd7c5cd452083",
+        "role": "pack"
+      },
+      {
+        "path": "exports/windows-overnight-p48-20260913/release/FLUX2-Windows-x86_64.zip",
+        "bytes": 97760657,
+        "sha256": "5e49c599f026453917e3eb8201456e86089e9fe0d794efe3b9bcebe1385c041f",
+        "role": "portable"
+      }
+    ],
+    "evidence": [
+      {
+        "path": "docs/evidence/windows-overnight-p48-20260913/checkpoint.json",
+        "bytes": 2768,
+        "sha256": "49d8e63826990d048128351137432efaa3c581c8fbaac30b9bc30e326077ee4e",
+        "role": "checkpoint"
+      },
+      {
+        "path": "docs/evidence/windows-overnight-p48-20260913/inputs/full-receipt.json",
+        "bytes": 13062,
+        "sha256": "29a2cf4d961d3245f48039111e49a7d0ce079c6ec6dcf06b4b1cee3156c624e1",
+        "role": "full"
+      },
+      {
+        "path": "docs/evidence/windows-overnight-p48-20260913/inputs/capture/capture-receipt.json",
+        "bytes": 747047,
+        "sha256": "b45e679c5ee5fd03c287494ce9fa6688e586b71e1a0404eab900be32e56e0334",
+        "role": "capture"
+      },
+      {
+        "path": "docs/evidence/windows-overnight-p48-20260913/raw-boot.log",
+        "bytes": 913,
+        "sha256": "057c4bfa51c4ff41ad6eb17b70ac579a0e2e1cb6b20f180f494e99625b31b15d",
+        "role": "boot_log"
+      },
+      {
+        "path": "docs/evidence/windows-overnight-p48-20260913/raw-boot.log.err",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "role": "boot_stderr"
+      }
+    ]
+  },
+  "historical_installer": {
+    "checkpoint_id": "qv-followup-p47-20260909",
+    "kind": "historical_installer",
+    "build_directory": "exports/windows-followup-p47-20260909",
+    "evidence_directory": "docs/evidence/template-delivery-v1/delivery",
+    "payloads": [
+      {
+        "path": "exports/windows-followup-p47-20260909/release/FLUX.exe",
+        "bytes": 96787968,
+        "sha256": "4bd03fd6ee50d7161b445bc03e2c8e99477b366a44b63f8fadba084ce31b5121",
+        "role": "installer"
+      }
+    ],
+    "evidence": [
+      {
+        "path": "docs/evidence/template-delivery-v1/delivery/installer-journey-receipt.json",
+        "bytes": 6594,
+        "sha256": "6ff13a83092ed3b0206406e495872948be258dcc3709d108d7c9a7a2391bf738",
+        "role": "installer_journey"
+      }
+    ]
+  },
+  "boundaries": {
+    "publication": "not_published",
+    "human_acceptance": "pending",
+    "two_pc_acceptance": "pending",
+    "sustained_rendered_120fps": "not_certified",
+    "current_installer": "not_attempted_prior_policy_block"
+  }
+}

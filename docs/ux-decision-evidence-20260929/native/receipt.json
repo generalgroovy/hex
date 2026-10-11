@@ -1,0 +1,241 @@
+{
+	"checks": [
+		{
+			"message": "Interact opens parent directory for spell-loom",
+			"passed": true
+		},
+		{
+			"message": "actual Academy directory opens Spell Loom",
+			"passed": true
+		},
+		{
+			"message": "native Down follows element rows",
+			"passed": true
+		},
+		{
+			"message": "native PageDown filters library",
+			"passed": true
+		},
+		{
+			"message": "native Tab/Right selects adjacent target slot",
+			"passed": true
+		},
+		{
+			"message": "native PageUp restores all elements",
+			"passed": true
+		},
+		{
+			"message": "loom-swap saves native frame",
+			"passed": true
+		},
+		{
+			"message": "loom-swap rendering leaves authority unchanged",
+			"passed": true
+		},
+		{
+			"message": "native confirm applies exact previewed swap",
+			"passed": true
+		},
+		{
+			"message": "same-slot confirmation sends/saves nothing",
+			"passed": true
+		},
+		{
+			"message": "loom-no-op saves native frame",
+			"passed": true
+		},
+		{
+			"message": "loom-no-op rendering leaves authority unchanged",
+			"passed": true
+		},
+		{
+			"message": "loom-heavy saves native frame",
+			"passed": true
+		},
+		{
+			"message": "loom-heavy rendering leaves authority unchanged",
+			"passed": true
+		},
+		{
+			"message": "paid-test Heavy is deliberately equipped",
+			"passed": true
+		},
+		{
+			"message": "closing Loom returns to Academy",
+			"passed": true
+		},
+		{
+			"message": "configured slot still starts real paid Heavy cast",
+			"passed": true
+		},
+		{
+			"message": "hud-rebound saves native frame",
+			"passed": true
+		},
+		{
+			"message": "hud-rebound rendering leaves authority unchanged",
+			"passed": true
+		},
+		{
+			"message": "Interact opens parent directory for champion-loom",
+			"passed": true
+		},
+		{
+			"message": "Gallery opens through normal game route",
+			"passed": true
+		},
+		{
+			"message": "native card click cannot change identity or reset weave",
+			"passed": true
+		},
+		{
+			"message": "gallery-overview saves native frame",
+			"passed": true
+		},
+		{
+			"message": "gallery-overview rendering leaves authority unchanged",
+			"passed": true
+		},
+		{
+			"message": "gallery-details saves native frame",
+			"passed": true
+		},
+		{
+			"message": "gallery-details rendering leaves authority unchanged",
+			"passed": true
+		},
+		{
+			"message": "explicit native Attune commits selected character",
+			"passed": true
+		},
+		{
+			"message": "Interact opens parent directory for session-hearth",
+			"passed": true
+		},
+		{
+			"message": "offline Ready stays in its directory without an illegal action",
+			"passed": true
+		},
+		{
+			"message": "disabled reason survives a fresh availability and pointer update",
+			"passed": true
+		},
+		{
+			"message": "service-refusal saves native frame",
+			"passed": true
+		},
+		{
+			"message": "service-refusal rendering leaves authority unchanged",
+			"passed": true
+		},
+		{
+			"message": "loom-1600x900 saves native frame",
+			"passed": true
+		},
+		{
+			"message": "loom-1600x900 rendering leaves authority unchanged",
+			"passed": true
+		},
+		{
+			"message": "original weave remains a complete twelve-slot fixture",
+			"passed": true
+		}
+	],
+	"failures": [],
+	"fixture": "station positions and inspected selection are arranged; UI events, assignment, attunement and paid cast use production paths",
+	"frames": [
+		{
+			"authority_hash": "81be563dd0f843bd5e5de8e6d961a236aa849fec8b2653f4f7d9a0f1a7b50782",
+			"image": "loom-swap.png",
+			"label": "loom-swap",
+			"size": [
+				1280,
+				720
+			]
+		},
+		{
+			"authority_hash": "e1a5a197e282ff26fb395af6250808c65ac6da8e3f5ca04c73dd3031ee8fcc74",
+			"image": "loom-no-op.png",
+			"label": "loom-no-op",
+			"size": [
+				1280,
+				720
+			]
+		},
+		{
+			"authority_hash": "e1a5a197e282ff26fb395af6250808c65ac6da8e3f5ca04c73dd3031ee8fcc74",
+			"image": "loom-heavy.png",
+			"label": "loom-heavy",
+			"size": [
+				1280,
+				720
+			]
+		},
+		{
+			"authority_hash": "b9acae513e628f972412f17a0931aeab69d9a0c98f869df40c1816b73ab6618a",
+			"image": "hud-rebound.png",
+			"label": "hud-rebound",
+			"size": [
+				1280,
+				720
+			]
+		},
+		{
+			"authority_hash": "09c7d11fd952d9837f0eb7a14e98f5d41e7e1294e3ce5b1ba82e5a3780729699",
+			"image": "gallery-overview.png",
+			"label": "gallery-overview",
+			"size": [
+				1280,
+				720
+			]
+		},
+		{
+			"authority_hash": "09c7d11fd952d9837f0eb7a14e98f5d41e7e1294e3ce5b1ba82e5a3780729699",
+			"image": "gallery-details.png",
+			"label": "gallery-details",
+			"size": [
+				1280,
+				720
+			]
+		},
+		{
+			"authority_hash": "38434d709045c064fbe6b3a716d8157a22ba0662517cc91df197f17ce164a3c3",
+			"image": "service-refusal.png",
+			"label": "service-refusal",
+			"size": [
+				1280,
+				720
+			]
+		},
+		{
+			"authority_hash": "38434d709045c064fbe6b3a716d8157a22ba0662517cc91df197f17ce164a3c3",
+			"image": "loom-1600x900.png",
+			"label": "loom-1600x900",
+			"size": [
+				1600,
+				900
+			]
+		}
+	],
+	"not_run": [
+		"physical controller",
+		"remote networking",
+		"human usability",
+		"rendered FPS"
+	],
+	"passed": true,
+	"runtime_identity": {
+		"authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate.",
+		"build_id": "p56-0b255a686e79",
+		"canonical_encoding": "utf8-lf-tagged-length-v1",
+		"engine_identity": "4.7.1.stable.official.a13da4feb",
+		"protocol_version": 56.0,
+		"record_count": 2944.0,
+		"runtime_source_sha256": "0b255a686e79e52ec7c41d9374c3354a6c0475816b0068c62f144fcbb4752a4b",
+		"schema_version": 1.0,
+		"scope_id": "production-runtime-source-v1",
+		"snapshot_schema": 22.0,
+		"status": "candidate_generated_not_promoted"
+	},
+	"user_data": "C:/Users/sende/Projects/hex/.godot/hex-probe-ux-v3/Godot/app_userdata/FLUX 2"
+}

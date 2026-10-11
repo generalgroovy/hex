@@ -1,0 +1,2782 @@
+{
+	"assertions": 2798,
+	"baseline": "Frozen E8 complete world and chemistry codecs. Chemistry hash calls explicitly use the unchanged pre-E9 _state_hash_bytes plus SHA256; no candidate streaming hash is used by the baseline codec. Shared unchanged simulation, wire, compression and collision primitives are not independently reimplemented.",
+	"cold_geometry": {
+		"first_new_topology_hash": {
+			"samples_us": [
+				42052,
+				46216,
+				43246
+			],
+			"statistics_us": {
+				"max": 46216,
+				"p50": 43246,
+				"p95": 46216,
+				"p99": 46216,
+				"samples": 3
+			}
+		},
+		"memory_after": {
+			"process_global_peak_bytes": 134275959,
+			"static_bytes": 44586475
+		},
+		"memory_before": {
+			"process_global_peak_bytes": 134275959,
+			"static_bytes": 42238918
+		},
+		"old_hash": {
+			"samples_us": [
+				10697,
+				7798,
+				7942
+			],
+			"statistics_us": {
+				"max": 10697,
+				"p50": 7942,
+				"p95": 10697,
+				"p99": 10697,
+				"samples": 3
+			}
+		},
+		"samples": 3,
+		"scope": "Three newly configured topology identities, not cold engine processes. Preceding whole-byte hash then first streaming hash then warm streaming hash; fixed order and not a tail estimate. Includes new cache construction; one bounded cached topology retained.",
+		"warm_same_topology_hash": {
+			"samples_us": [
+				4518,
+				3957,
+				4203
+			],
+			"statistics_us": {
+				"max": 4518,
+				"p50": 4203,
+				"p95": 4518,
+				"p99": 4518,
+				"samples": 3
+			}
+		}
+	},
+	"correctness": "Exact canonical bytes/hash, encoded chemistry dictionary bytes, complete world snapshot bytes, restored full authority hash/collision geometry, and 16 identical paid-state continuation steps per case. Existing independent legacy replay twin retains exact input traces.",
+	"diagnostic_status": "PASS",
+	"engine": "4.7.1-stable (official)",
+	"failures": 0,
+	"limits": "Inclusive operations overlap; never sum them. Seven pairs are diagnostic, not sustained p95/p99, FPS, throughput, physical network or capacity acceptance. Memory observations are global and include both arms; no arm-attributed memory saving.",
+	"pairs": 7,
+	"performance_acceptance": "NOT_ESTABLISHED",
+	"profile_version": "snapshot-canonical-v2",
+	"receipt_complete": true,
+	"records": [
+		{
+			"active_ramparts": 0,
+			"actors": 8,
+			"case": "empty",
+			"continuation_steps": 16,
+			"memory_after": {
+				"process_global_peak_bytes": 134275959,
+				"static_bytes": 69449532
+			},
+			"memory_before": {
+				"process_global_peak_bytes": 134275959,
+				"static_bytes": 68987104
+			},
+			"paid_metrics": {
+				"admitted": 0,
+				"deposited": 0,
+				"exposure_queries": 0,
+				"matter_consumed": 0,
+				"matter_expired": 0,
+				"matter_paid": 0,
+				"modifiers": 0,
+				"reactions": 0,
+				"refused": 0,
+				"requested": 0
+			},
+			"snapshot_bytes": 6412,
+			"snapshot_sha256": "a0fde203092cfee603035c9e426fbdd7176bd8e3b3106fac679c9b65aeefeeeb",
+			"source_unchanged": true,
+			"stages": {
+				"chemistry_encode": {
+					"candidate": {
+						"samples_us": [
+							4505,
+							4185,
+							4713,
+							5725,
+							4411,
+							4960,
+							4583
+						],
+						"statistics_us": {
+							"max": 5725,
+							"p50": 4583,
+							"p95": 5725,
+							"p99": 5725,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							8531,
+							9226,
+							8764,
+							10835,
+							7952,
+							9384,
+							8946
+						],
+						"statistics_us": {
+							"max": 10835,
+							"p50": 8946,
+							"p95": 10835,
+							"p99": 10835,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 4505,
+								"frozen": 8531
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 4185,
+								"frozen": 9226
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 4713,
+								"frozen": 8764
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 5725,
+								"frozen": 10835
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 4411,
+								"frozen": 7952
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 4960,
+								"frozen": 9384
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 4583,
+								"frozen": 8946
+							}
+						}
+					]
+				},
+				"chemistry_hash": {
+					"candidate": {
+						"samples_us": [
+							4259,
+							4210,
+							4247,
+							4374,
+							4370,
+							4156,
+							4258
+						],
+						"statistics_us": {
+							"max": 4374,
+							"p50": 4258,
+							"p95": 4374,
+							"p99": 4374,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							8164,
+							8429,
+							7938,
+							7632,
+							8174,
+							8074,
+							8612
+						],
+						"statistics_us": {
+							"max": 8612,
+							"p50": 8164,
+							"p95": 8612,
+							"p99": 8612,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 4259,
+								"frozen": 8164
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 4210,
+								"frozen": 8429
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 4247,
+								"frozen": 7938
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 4374,
+								"frozen": 7632
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 4370,
+								"frozen": 8174
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 4156,
+								"frozen": 8074
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 4258,
+								"frozen": 8612
+							}
+						}
+					]
+				},
+				"chemistry_prepare": {
+					"candidate": {
+						"samples_us": [
+							4890,
+							4891,
+							5034,
+							4910,
+							4836,
+							4515,
+							4510
+						],
+						"statistics_us": {
+							"max": 5034,
+							"p50": 4890,
+							"p95": 5034,
+							"p99": 5034,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							10812,
+							8870,
+							7885,
+							8050,
+							7682,
+							7916,
+							9033
+						],
+						"statistics_us": {
+							"max": 10812,
+							"p50": 8050,
+							"p95": 10812,
+							"p99": 10812,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 4890,
+								"frozen": 10812
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 4891,
+								"frozen": 8870
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 5034,
+								"frozen": 7885
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 4910,
+								"frozen": 8050
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 4836,
+								"frozen": 7682
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 4515,
+								"frozen": 7916
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 4510,
+								"frozen": 9033
+							}
+						}
+					]
+				},
+				"world_capture": {
+					"candidate": {
+						"samples_us": [
+							18867,
+							18902,
+							19793,
+							17963,
+							17853,
+							18375,
+							18789
+						],
+						"statistics_us": {
+							"max": 19793,
+							"p50": 18789,
+							"p95": 19793,
+							"p99": 19793,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							25235,
+							26597,
+							26510,
+							27372,
+							27004,
+							26195,
+							27235
+						],
+						"statistics_us": {
+							"max": 27372,
+							"p50": 26597,
+							"p95": 27372,
+							"p99": 27372,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 18867,
+								"frozen": 25235
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 18902,
+								"frozen": 26597
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 19793,
+								"frozen": 26510
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 17963,
+								"frozen": 27372
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 17853,
+								"frozen": 27004
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 18375,
+								"frozen": 26195
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 18789,
+								"frozen": 27235
+							}
+						}
+					]
+				},
+				"world_prepare": {
+					"candidate": {
+						"samples_us": [
+							13170,
+							10951,
+							11831,
+							11141,
+							10974,
+							12117,
+							10433
+						],
+						"statistics_us": {
+							"max": 13170,
+							"p50": 11141,
+							"p95": 13170,
+							"p99": 13170,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							16982,
+							15081,
+							15210,
+							16687,
+							15375,
+							15201,
+							14452
+						],
+						"statistics_us": {
+							"max": 16982,
+							"p50": 15210,
+							"p95": 16982,
+							"p99": 16982,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 13170,
+								"frozen": 16982
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 10951,
+								"frozen": 15081
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 11831,
+								"frozen": 15210
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 11141,
+								"frozen": 16687
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 10974,
+								"frozen": 15375
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 12117,
+								"frozen": 15201
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 10433,
+								"frozen": 14452
+							}
+						}
+					]
+				}
+			},
+			"state_hash": "37f33e0b4a5cb1f243c64e290c52ca6ad557742f6a221aa79cdae22475e29074",
+			"topology_cells": 11337,
+			"trace_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+		},
+		{
+			"active_ramparts": 0,
+			"actors": 8,
+			"case": "distributed-paid40",
+			"continuation_steps": 16,
+			"memory_after": {
+				"process_global_peak_bytes": 134275959,
+				"static_bytes": 70617654
+			},
+			"memory_before": {
+				"process_global_peak_bytes": 134275959,
+				"static_bytes": 69572758
+			},
+			"paid_metrics": {
+				"admitted": 7,
+				"deposited": 1,
+				"exposure_queries": 0,
+				"matter_consumed": 0,
+				"matter_expired": 600,
+				"matter_paid": 4200,
+				"modifiers": 0,
+				"reactions": 0,
+				"refused": 0,
+				"requested": 7
+			},
+			"snapshot_bytes": 8080,
+			"snapshot_sha256": "5d498f2a229db5e0f0ac6bff320c38aaf9cb3695391e55fd4143406ca8dd73a8",
+			"source_unchanged": true,
+			"stages": {
+				"chemistry_encode": {
+					"candidate": {
+						"samples_us": [
+							22487,
+							23373,
+							23554,
+							22701,
+							23518,
+							22951,
+							23356
+						],
+						"statistics_us": {
+							"max": 23554,
+							"p50": 23356,
+							"p95": 23554,
+							"p99": 23554,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							27588,
+							27519,
+							28164,
+							27982,
+							27409,
+							28871,
+							29895
+						],
+						"statistics_us": {
+							"max": 29895,
+							"p50": 27982,
+							"p95": 29895,
+							"p99": 29895,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 22487,
+								"frozen": 27588
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 23373,
+								"frozen": 27519
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 23554,
+								"frozen": 28164
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 22701,
+								"frozen": 27982
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 23518,
+								"frozen": 27409
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 22951,
+								"frozen": 28871
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 23356,
+								"frozen": 29895
+							}
+						}
+					]
+				},
+				"chemistry_hash": {
+					"candidate": {
+						"samples_us": [
+							19266,
+							20247,
+							19221,
+							19579,
+							20780,
+							20027,
+							19957
+						],
+						"statistics_us": {
+							"max": 20780,
+							"p50": 19957,
+							"p95": 20780,
+							"p99": 20780,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							23412,
+							24585,
+							24641,
+							24589,
+							24649,
+							22884,
+							23968
+						],
+						"statistics_us": {
+							"max": 24649,
+							"p50": 24585,
+							"p95": 24649,
+							"p99": 24649,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 19266,
+								"frozen": 23412
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 20247,
+								"frozen": 24585
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 19221,
+								"frozen": 24641
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 19579,
+								"frozen": 24589
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 20780,
+								"frozen": 24649
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 20027,
+								"frozen": 22884
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 19957,
+								"frozen": 23968
+							}
+						}
+					]
+				},
+				"chemistry_prepare": {
+					"candidate": {
+						"samples_us": [
+							30882,
+							31317,
+							37959,
+							35754,
+							29519,
+							28820,
+							29253
+						],
+						"statistics_us": {
+							"max": 37959,
+							"p50": 30882,
+							"p95": 37959,
+							"p99": 37959,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							34919,
+							36114,
+							36187,
+							37144,
+							34183,
+							33887,
+							34671
+						],
+						"statistics_us": {
+							"max": 37144,
+							"p50": 34919,
+							"p95": 37144,
+							"p99": 37144,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 30882,
+								"frozen": 34919
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 31317,
+								"frozen": 36114
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 37959,
+								"frozen": 36187
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 35754,
+								"frozen": 37144
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 29519,
+								"frozen": 34183
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 28820,
+								"frozen": 33887
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 29253,
+								"frozen": 34671
+							}
+						}
+					]
+				},
+				"world_capture": {
+					"candidate": {
+						"samples_us": [
+							67029,
+							69177,
+							69291,
+							73985,
+							71100,
+							70514,
+							70223
+						],
+						"statistics_us": {
+							"max": 73985,
+							"p50": 70223,
+							"p95": 73985,
+							"p99": 73985,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							71465,
+							72241,
+							72164,
+							72933,
+							76187,
+							73482,
+							78794
+						],
+						"statistics_us": {
+							"max": 78794,
+							"p50": 72933,
+							"p95": 78794,
+							"p99": 78794,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 67029,
+								"frozen": 71465
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 69177,
+								"frozen": 72241
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 69291,
+								"frozen": 72164
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 73985,
+								"frozen": 72933
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 71100,
+								"frozen": 76187
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 70514,
+								"frozen": 73482
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 70223,
+								"frozen": 78794
+							}
+						}
+					]
+				},
+				"world_prepare": {
+					"candidate": {
+						"samples_us": [
+							36938,
+							38186,
+							40015,
+							35497,
+							40003,
+							36466,
+							36535
+						],
+						"statistics_us": {
+							"max": 40015,
+							"p50": 36938,
+							"p95": 40015,
+							"p99": 40015,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							42499,
+							41006,
+							41018,
+							39619,
+							41916,
+							41375,
+							40796
+						],
+						"statistics_us": {
+							"max": 42499,
+							"p50": 41018,
+							"p95": 42499,
+							"p99": 42499,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 36938,
+								"frozen": 42499
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 38186,
+								"frozen": 41006
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 40015,
+								"frozen": 41018
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 35497,
+								"frozen": 39619
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 40003,
+								"frozen": 41916
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 36466,
+								"frozen": 41375
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 36535,
+								"frozen": 40796
+							}
+						}
+					]
+				}
+			},
+			"state_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+			"topology_cells": 11337,
+			"trace_sha256": "8640631a3af909b7272874ebfce57a19476e9c7c2201f504739be83ed6ea15f1"
+		},
+		{
+			"active_ramparts": 0,
+			"actors": 8,
+			"case": "dense-paid40",
+			"continuation_steps": 16,
+			"memory_after": {
+				"process_global_peak_bytes": 134275959,
+				"static_bytes": 69940399
+			},
+			"memory_before": {
+				"process_global_peak_bytes": 134275959,
+				"static_bytes": 69293567
+			},
+			"paid_metrics": {
+				"admitted": 8,
+				"deposited": 1,
+				"exposure_queries": 0,
+				"matter_consumed": 0,
+				"matter_expired": 0,
+				"matter_paid": 4800,
+				"modifiers": 0,
+				"reactions": 0,
+				"refused": 0,
+				"requested": 8
+			},
+			"snapshot_bytes": 7788,
+			"snapshot_sha256": "44955191d63b1434d9a1958a11627ea8f844b4fa3392ff83403a2853090c6da9",
+			"source_unchanged": true,
+			"stages": {
+				"chemistry_encode": {
+					"candidate": {
+						"samples_us": [
+							12242,
+							9417,
+							11716,
+							10032,
+							9728,
+							11014,
+							9383
+						],
+						"statistics_us": {
+							"max": 12242,
+							"p50": 10032,
+							"p95": 12242,
+							"p99": 12242,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							18687,
+							15551,
+							16480,
+							15738,
+							16595,
+							16930,
+							15984
+						],
+						"statistics_us": {
+							"max": 18687,
+							"p50": 16480,
+							"p95": 18687,
+							"p99": 18687,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 12242,
+								"frozen": 18687
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 9417,
+								"frozen": 15551
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 11716,
+								"frozen": 16480
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 10032,
+								"frozen": 15738
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 9728,
+								"frozen": 16595
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 11014,
+								"frozen": 16930
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 9383,
+								"frozen": 15984
+							}
+						}
+					]
+				},
+				"chemistry_hash": {
+					"candidate": {
+						"samples_us": [
+							8623,
+							8681,
+							9065,
+							8148,
+							9049,
+							8226,
+							10494
+						],
+						"statistics_us": {
+							"max": 10494,
+							"p50": 8681,
+							"p95": 10494,
+							"p99": 10494,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							13024,
+							13023,
+							13585,
+							14316,
+							13586,
+							14043,
+							14557
+						],
+						"statistics_us": {
+							"max": 14557,
+							"p50": 13586,
+							"p95": 14557,
+							"p99": 14557,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 8623,
+								"frozen": 13024
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 8681,
+								"frozen": 13023
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 9065,
+								"frozen": 13585
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 8148,
+								"frozen": 14316
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 9049,
+								"frozen": 13586
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 8226,
+								"frozen": 14043
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 10494,
+								"frozen": 14557
+							}
+						}
+					]
+				},
+				"chemistry_prepare": {
+					"candidate": {
+						"samples_us": [
+							11302,
+							10675,
+							22172,
+							20155,
+							16602,
+							15942,
+							14051
+						],
+						"statistics_us": {
+							"max": 22172,
+							"p50": 15942,
+							"p95": 22172,
+							"p99": 22172,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							18258,
+							18047,
+							32058,
+							21848,
+							21181,
+							26071,
+							22776
+						],
+						"statistics_us": {
+							"max": 32058,
+							"p50": 21848,
+							"p95": 32058,
+							"p99": 32058,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 11302,
+								"frozen": 18258
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 10675,
+								"frozen": 18047
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 22172,
+								"frozen": 32058
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 20155,
+								"frozen": 21848
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 16602,
+								"frozen": 21181
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 15942,
+								"frozen": 26071
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 14051,
+								"frozen": 22776
+							}
+						}
+					]
+				},
+				"world_capture": {
+					"candidate": {
+						"samples_us": [
+							41795,
+							40854,
+							48641,
+							43375,
+							46775,
+							43082,
+							43289
+						],
+						"statistics_us": {
+							"max": 48641,
+							"p50": 43289,
+							"p95": 48641,
+							"p99": 48641,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							52891,
+							63785,
+							52155,
+							52185,
+							53170,
+							49108,
+							54291
+						],
+						"statistics_us": {
+							"max": 63785,
+							"p50": 52891,
+							"p95": 63785,
+							"p99": 63785,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 41795,
+								"frozen": 52891
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 40854,
+								"frozen": 63785
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 48641,
+								"frozen": 52155
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 43375,
+								"frozen": 52185
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 46775,
+								"frozen": 53170
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 43082,
+								"frozen": 49108
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 43289,
+								"frozen": 54291
+							}
+						}
+					]
+				},
+				"world_prepare": {
+					"candidate": {
+						"samples_us": [
+							24183,
+							20195,
+							21756,
+							21677,
+							25363,
+							20554,
+							18619
+						],
+						"statistics_us": {
+							"max": 25363,
+							"p50": 21677,
+							"p95": 25363,
+							"p99": 25363,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							26534,
+							27364,
+							25780,
+							30037,
+							28185,
+							30507,
+							24654
+						],
+						"statistics_us": {
+							"max": 30507,
+							"p50": 27364,
+							"p95": 30507,
+							"p99": 30507,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 24183,
+								"frozen": 26534
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 20195,
+								"frozen": 27364
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 21756,
+								"frozen": 25780
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 21677,
+								"frozen": 30037
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 25363,
+								"frozen": 28185
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 20554,
+								"frozen": 30507
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 18619,
+								"frozen": 24654
+							}
+						}
+					]
+				}
+			},
+			"state_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+			"topology_cells": 11337,
+			"trace_sha256": "5f376354a15b6fd2d90f12555327786c8bf3d54023f4d6b36a035705e52e2831"
+		},
+		{
+			"active_ramparts": 1,
+			"actors": 8,
+			"case": "active-rampart",
+			"continuation_steps": 16,
+			"memory_after": {
+				"process_global_peak_bytes": 134275959,
+				"static_bytes": 69970259
+			},
+			"memory_before": {
+				"process_global_peak_bytes": 134275959,
+				"static_bytes": 69342671
+			},
+			"paid_metrics": {
+				"admitted": 8,
+				"deposited": 1,
+				"exposure_queries": 176,
+				"matter_consumed": 1200,
+				"matter_expired": 0,
+				"matter_paid": 4800,
+				"modifiers": 0,
+				"reactions": 1,
+				"refused": 0,
+				"requested": 8
+			},
+			"snapshot_bytes": 7620,
+			"snapshot_sha256": "f02a18b9b2031f65d57bbf3de8dd9207d56612b417440c36c2c51cfe9b673b1f",
+			"source_unchanged": true,
+			"stages": {
+				"chemistry_encode": {
+					"candidate": {
+						"samples_us": [
+							8470,
+							7811,
+							7703,
+							8296,
+							10207,
+							8436,
+							8408
+						],
+						"statistics_us": {
+							"max": 10207,
+							"p50": 8408,
+							"p95": 10207,
+							"p99": 10207,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							13355,
+							14353,
+							14610,
+							15560,
+							17159,
+							15328,
+							13428
+						],
+						"statistics_us": {
+							"max": 17159,
+							"p50": 14610,
+							"p95": 17159,
+							"p99": 17159,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 8470,
+								"frozen": 13355
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 7811,
+								"frozen": 14353
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 7703,
+								"frozen": 14610
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 8296,
+								"frozen": 15560
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 10207,
+								"frozen": 17159
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 8436,
+								"frozen": 15328
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 8408,
+								"frozen": 13428
+							}
+						}
+					]
+				},
+				"chemistry_hash": {
+					"candidate": {
+						"samples_us": [
+							8460,
+							7835,
+							7159,
+							7316,
+							8108,
+							8602,
+							7433
+						],
+						"statistics_us": {
+							"max": 8602,
+							"p50": 7835,
+							"p95": 8602,
+							"p99": 8602,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							13029,
+							11994,
+							13310,
+							12501,
+							13236,
+							12215,
+							13875
+						],
+						"statistics_us": {
+							"max": 13875,
+							"p50": 13029,
+							"p95": 13875,
+							"p99": 13875,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 8460,
+								"frozen": 13029
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 7835,
+								"frozen": 11994
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 7159,
+								"frozen": 13310
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 7316,
+								"frozen": 12501
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 8108,
+								"frozen": 13236
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 8602,
+								"frozen": 12215
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 7433,
+								"frozen": 13875
+							}
+						}
+					]
+				},
+				"chemistry_prepare": {
+					"candidate": {
+						"samples_us": [
+							9632,
+							10139,
+							10105,
+							9956,
+							9492,
+							9498,
+							9095
+						],
+						"statistics_us": {
+							"max": 10139,
+							"p50": 9632,
+							"p95": 10139,
+							"p99": 10139,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							14447,
+							15638,
+							14558,
+							14716,
+							14478,
+							16326,
+							15496
+						],
+						"statistics_us": {
+							"max": 16326,
+							"p50": 14716,
+							"p95": 16326,
+							"p99": 16326,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 9632,
+								"frozen": 14447
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 10139,
+								"frozen": 15638
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 10105,
+								"frozen": 14558
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 9956,
+								"frozen": 14716
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 9492,
+								"frozen": 14478
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 9498,
+								"frozen": 16326
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 9095,
+								"frozen": 15496
+							}
+						}
+					]
+				},
+				"world_capture": {
+					"candidate": {
+						"samples_us": [
+							29942,
+							29615,
+							31586,
+							31108,
+							29423,
+							32932,
+							30906
+						],
+						"statistics_us": {
+							"max": 32932,
+							"p50": 30906,
+							"p95": 32932,
+							"p99": 32932,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							38418,
+							40283,
+							37191,
+							38600,
+							38445,
+							39345,
+							40331
+						],
+						"statistics_us": {
+							"max": 40331,
+							"p50": 38600,
+							"p95": 40331,
+							"p99": 40331,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 29942,
+								"frozen": 38418
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 29615,
+								"frozen": 40283
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 31586,
+								"frozen": 37191
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 31108,
+								"frozen": 38600
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 29423,
+								"frozen": 38445
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 32932,
+								"frozen": 39345
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 30906,
+								"frozen": 40331
+							}
+						}
+					]
+				},
+				"world_prepare": {
+					"candidate": {
+						"samples_us": [
+							16862,
+							17682,
+							17088,
+							19504,
+							15977,
+							16270,
+							15965
+						],
+						"statistics_us": {
+							"max": 19504,
+							"p50": 16862,
+							"p95": 19504,
+							"p99": 19504,
+							"samples": 7
+						}
+					},
+					"frozen": {
+						"samples_us": [
+							23093,
+							22016,
+							23728,
+							21518,
+							21219,
+							21657,
+							21027
+						],
+						"statistics_us": {
+							"max": 23728,
+							"p50": 21657,
+							"p95": 23728,
+							"p99": 23728,
+							"samples": 7
+						}
+					},
+					"pairs": [
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 16862,
+								"frozen": 23093
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 17682,
+								"frozen": 22016
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 17088,
+								"frozen": 23728
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 19504,
+								"frozen": 21518
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 15977,
+								"frozen": 21219
+							}
+						},
+						{
+							"order": [
+								"frozen",
+								"candidate"
+							],
+							"samples_us": {
+								"candidate": 16270,
+								"frozen": 21657
+							}
+						},
+						{
+							"order": [
+								"candidate",
+								"frozen"
+							],
+							"samples_us": {
+								"candidate": 15965,
+								"frozen": 21027
+							}
+						}
+					]
+				}
+			},
+			"state_hash": "35605b6239a955514c7f9de2ea09226aca35a2a7e9ac2254eb156d3e040ec018",
+			"topology_cells": 11337,
+			"trace_sha256": "eec4f93f32e381cf8f3437518fbbed49ec13e7f3a8d7927d8598bda76c59ced9"
+		}
+	],
+	"scope": "Same sealed 11337-cell source with eight real champions; empty, ordinary distributed/dense paid40 and paid active Rampart fixtures. Seven alternating case-counterbalanced pairs. Full capture and public incoming preparation use fresh destination authority per call. Fixtures and equivalence checks outside timers; immutable topology caches are warm. Not a cold process benchmark.",
+	"source_sha256_after": {
+		"content/abilities/foundation_abilities_v1.json": "720c16ce73f11ae9e723f43e31f39d1d700bc7a583619cd418ec3408b16f52bc",
+		"content/champions/foundation_champions_v1.json": "23a1f624a9de6c2bf88dc76578a69b23613465707605528e2988e209abba458a",
+		"content/maps/sanctum_campus_g2_v1.json": "a1d17e155000ebbdf36cb033823a2b42b1c8e31f844444da347fbac400b3c817",
+		"project.godot": "17c68ea0840a04e489f72c64de92f0d0738251695be584b0c560ddd844caf5ab",
+		"src/app/bootstrap.gd": "e8bb7be0dba0445bfcd62dd240894117aa36101978962ef808361410db8472ab",
+		"src/app/champion_attunement.gd": "712fea9f1d7d769e8b567c28a7d8692c636c66e80d1e0b08cff8688d0b0b4df4",
+		"src/app/character_overview_model.gd": "2173a25cdd3bd8535b0a0ed41bd7dcbbbb4a86fcfcbc9167dca752a403224b2c",
+		"src/app/character_selection_model.gd": "3a19f169e78cdb2d5cb428e5e3b7632ad5801ef01d8b4cd21fc8b870de502100",
+		"src/app/character_weave_coordinator.gd": "0ba53f78214c4ee28d84a4f5653840fb384517c21e84b4e76ebaf07e9fa45d41",
+		"src/app/character_weave_library.gd": "6941798fd4ed2a471edd57f110c26fe863245980a40d1f9dc67fc93478c15428",
+		"src/app/character_weave_policy.gd": "eb5a5aef9efb58aa42e42bbd2440aad3ac0cf5e8a873d7231df285e828b9b919",
+		"src/app/control_binding_editor.gd": "db22f339189e01c91d6a87f752a3d7fcb0204816575c7fb81819126aa198afbe",
+		"src/app/hex_playground_demo.gd": "10b089dab3f3ff8143a9b6cd5588c463aa3ac79b8b08cd57a84e625fe60b5e8c",
+		"src/app/input_router.gd": "f23c49a092da9676ade189c5148f116722b116a0459fa56fb8d35df6e38dae3b",
+		"src/app/interception_showcase.gd": "98dcc384afba7e42f24d5f8e1c1723b34a2c57ec5802a6637840fde8d2c87e79",
+		"src/app/player_preferences.gd": "5dcb0022a41ff5c3d7793da87ffc9572376439b3dc1ce4b156f643ccf2401575",
+		"src/app/runtime_content_summary.gd": "eba559acf7afa821feea5aba6c631af7c058623ef9ceb0798eebd8a990c7ed78",
+		"src/app/sanctum_station_model.gd": "fec45772839d1a8ab5e57ff9897dc2cafc5a8c9218e8a9924308b2378d45b0bb",
+		"src/app/spectator_focus.gd": "3c026b7221da9e4f2b3ef38dfc32b8358f430b0f060c41a35e923c73a0bb784d",
+		"src/app/spell_loom_editor.gd": "858e48f1c55156579cedd19559149f908d7faca18cdad5b6e13d957181ec9ca2",
+		"src/app/ui_grid_navigation.gd": "2f85e9c37fe4bf93e068e732e07a8f3e2d9674f4eab1b858328fe0c21c2ebeec",
+		"src/app/wellspring_service_directory.gd": "9652666af9d0fbc348568a3c8fe408b1968f2e6092f10502f17ab8a2c0087848",
+		"src/content/ability_catalog.gd": "afcbdfc216db7a0add1452215798030d829d8bac7a513b67f4059d9f07b88b9c",
+		"src/content/body_type_profile_catalog.gd": "5a4b06f1911500624cddd6e31e4d89ab57ff260e5e340fb3845e42a7194989e0",
+		"src/content/canonical_content.gd": "0acfb4e7da0fa7078a2447c13cea0d86981f048e2bc2832ee9c5da451da9dd8e",
+		"src/content/champion_catalog.gd": "e6a4d7bbbb451fdb510bf1f77d8884bfddd14a50aea201ad48e2a5ba6825be79",
+		"src/content/champion_roster_plan.gd": "6743eeeaeec0cfb26e8c8abe5e07f7c851e8a148818793576bc0ba0249ec7afb",
+		"src/content/character_starter_kit.gd": "95014a3c00827c42409274a315266cd041610c291b6f29dc1110ef57037adf1f",
+		"src/content/environment_kit_manifest.gd": "54126c0ab2c8d7648cd3d2d479ccb7e3acb34dc85a859b48881df76f87076e97",
+		"src/content/hub_definition.gd": "2403991ca08e9544679c5c68e1f552dfb5c957f2a73b3663056ae348b13338f2",
+		"src/content/image_asset_inspector.gd": "ffd64987bf15d8a71fe5dbdfcdc912b2dfa3814ebdd409fa9085d36907ac809a",
+		"src/content/loadout_definition.gd": "99212b23f267e672e08e9da68173ea9c3cd3f79b42475defce9ce52fafb8566a",
+		"src/content/material_registry.gd": "11de0b32a30cb3ca527d2fc732e7f88b7e6c701c895a718980be14ad16271b29",
+		"src/content/material_yard_definition.gd": "80e2837e6ad3daf9097ccb01527e1421eeee8fa1b7ac27b9d193da3aa10bf1ab",
+		"src/content/reaction_catalog.gd": "ea77cf64f8cf173ac1613770f3bb0a9d334eff7c7cdde4fbf77a6b7abfeaeb29",
+		"src/content/runtime_build_identity.gd": "68cbd2cb431da0c1f9e22ba3db90b1ddf32e465d53aa1b13da8fd4dc5b1e655f",
+		"src/content/sanctum_campus_layout.gd": "a0cbad5bace6ce52df61119016846d2e56b0b154a1f9d5344ccc12eaf8a97ad5",
+		"src/content/sanctum_runtime_kit.gd": "1452a2ef283ab337bcabf38d2bb24025ef3843bbbeff1f1e75f3977430be5322",
+		"src/content/wellspring_environment_kit.gd": "cd757ca31b36e245bda96238c897b951ac850ba9e115441bee964b468ef7830c",
+		"src/net/authoritative_session.gd": "1b6511639f9660fe623803a6e3fdb0415b3927ed46a9e0ad63463e049ce83298",
+		"src/net/client_prediction.gd": "97e67c6b046dae28441c34ab155f6d155dcc73cf8b864832028ff47b8f77187d",
+		"src/net/hex_chemistry_snapshot.gd": "d4fc2ea041d3523bc2e606d8e7464fdb394d374374f733b037a2013f470f04f1",
+		"src/net/hex_snapshot_wire_packing.gd": "ca062a108b794cec3b5f822f882168370149ecc95e585fbca284a75713c7e17a",
+		"src/net/hex_world_snapshot.gd": "4c72a7df6a98c18ae687192b04f3ae280ad533600f2db780faed68e2314297f8",
+		"src/net/lan_lobby.gd": "cac8f97ad5e875b4d89abc3ee2b2bf4b31744c569fd67a5f222243ed0cec572d",
+		"src/net/reconciliation_order_buffer.gd": "f14a19b6fb3a09aec5b326ff2d1b1b1c23c0185d649eb7a7ec016c37e1dac462",
+		"src/net/session_charter.gd": "e4ee475d8f5183390710a9bdb7bc8fb8879fee664395b71e12140ae61ddb085e",
+		"src/net/session_event_inbox.gd": "3474a1e72a364426dc3693306612d3d93fe6b8c7d5a96d01258a6ebdcefd2b82",
+		"src/net/session_hearth.gd": "d8989b6482580300671734192f542895d4ff78996b64f41e2ab45788e8c71a4a",
+		"src/net/session_request_policy.gd": "a756f178ef5bc77531d0d21b9f4f8b1f8b6298f71a112c5c75db9eb900cbf0c4",
+		"src/net/session_round.gd": "90342666044e23ebba8d45515a05a5fff6e4e8208acaf32bc8d6a7685fd501a8",
+		"src/net/session_snapshot.gd": "d325f4bf32bf2b7e0fd79fc641b74ed6a352347892f4e5572aeb01eb1e0f309f",
+		"src/net/session_steward.gd": "c2ee2d8fe558db2622c16c4ca0b8e67420ba4a8a119d10a8f430caab860c367f",
+		"src/net/session_transport.gd": "df116a791bce05edd2c6d0169a0255e0a8f4aa124a82b59f9efc96bd824ce03a",
+		"src/net/world_snapshot_envelope.gd": "aa3b2dcff36b25293d9e7287aeadb7b31a03795f0a2bb43e6c76432c77949d48",
+		"src/presentation/actor_motion_history.gd": "fb36f6583431bc40f3c5e750ef80b33fb91e7c8acda6ea8caf4f8b2d3b363bf8",
+		"src/presentation/aim_reticle_presenter.gd": "21fed10b6c01756e51065a9f5ba77cd16d425968d027426871dafdce1ec6995d",
+		"src/presentation/burst_projectile_presenter.gd": "446d7ade0765d93f2200fc2d9488ba844c5197cfb24859ff452c834ca67b1b41",
+		"src/presentation/cartoon_champion_presenter.gd": "591cea3ed35e6355979ebe7509b65c206fcce035332048b55a982b446623495a",
+		"src/presentation/character_selection_grid.gd": "e77b0eb95264f23f101ccf42de8e2850cc44a4274eec34b213e89fcac776716d",
+		"src/presentation/character_viewport_policy.gd": "26bcc318fcfad89bd37b0776f0ee142df14ddf4111fc830964b86a91402189db",
+		"src/presentation/chemistry_guide_model.gd": "ecb91e3995a99b04b86476cf080de43f655b5cc1a567e93ac713349c6d5b5b11",
+		"src/presentation/chemistry_practice_coach.gd": "f1803ae665e75b524ca825b73076636fc2f1643a8a19bf1dcca057b566c4d6ee",
+		"src/presentation/combat_feedback_model.gd": "ae35c0b84a2515fce608582b5f3578320170eaf0950ccada300aab3d0cdf7382",
+		"src/presentation/compact_combat_hud.gd": "fdcb24a11fc158b73d5e63a08117c67a84884bac75677bd23bc10537fa7def98",
+		"src/presentation/complete_visual_catalog.gd": "15af870669f51d8eacbaca37e8f780bff0286e7d5501966356a986de3271a8de",
+		"src/presentation/complete_visual_gallery.gd": "b3002492f6fbdcc266470152f14182bc93afef7e370497c3a9f6907b2d54cacb",
+		"src/presentation/eight_direction_resolver.gd": "de6b2bf98748bbede0e48269c3e634b939f082fbbd9b2e6384f470c5f9da37f2",
+		"src/presentation/element_audio.gd": "d08a9a992830fc9569f861e213bb70af9797d7c3fbe393a3db7005fd31c4ec01",
+		"src/presentation/element_chemistry_presenter.gd": "07da0e968432b885165d2c66f071377ea7f241b5944e505501980b6c73964870",
+		"src/presentation/element_glyph_renderer.gd": "11af970ab80d80ec9bfb5108c1334386b0a671f96d7ca8640fc47160d29dc849",
+		"src/presentation/foundation_spell_presenter.gd": "2bd44d27fbf1c2aaf300d932ad204bfc5d0af33eab9e03eb99d7fb57421ed4cd",
+		"src/presentation/fullbody_cast_presenter.gd": "481208425ceec8c046126d5bdfa0cea0acd55c94ec1214cdbefc3cd055af9239",
+		"src/presentation/heavy_blast_presenter.gd": "1ed784aba999a697d52f709b5b62a85bf65603455f72f3ec7a9a86bccea07ab8",
+		"src/presentation/hex_combat_label.gd": "12c76741871d7e31d142f4a6e7240d88c84b482136bb7609ee87bd635fd1d6b2",
+		"src/presentation/hex_court_presenter.gd": "11172285bffb66c37e81cb3a3019eba6ab01626a5384f82d0864019971c971d3",
+		"src/presentation/hex_environment_layout.gd": "4c6ed485b9f726aefc4a2fd4f20bd28f2cb6fec8fd40ad48dfcce429eded549c",
+		"src/presentation/hex_playground_panel.gd": "e6887c379aa12492299a3503bc9e5a3c2932d606c486ee56ee1b5bf5775e5942",
+		"src/presentation/hex_water_material_presenter.gd": "487e0b674476f6fb125ee97a2b7136d8236c3f58b8cabf85d0b62f49c9bbc8c2",
+		"src/presentation/interception_feedback.gd": "3e5c624a5fbff55b4e5bf07670d21a0848b53dca107869e2211b5457a4a64929",
+		"src/presentation/interception_practice_card.gd": "43cb3662c84983895b62e3f30a180fcb71b656f82180586e4e01ddedccf8c3d7",
+		"src/presentation/jump_presentation.gd": "0b34756959a99d226e96601d36af799ef4fb0e885e88d3c0ba37b560d5fa0c02",
+		"src/presentation/landing_presentation.gd": "0e9b32ee088d26d4c30367d0f635b6a534a8a0cd1029e6eae26cfe877b532b7e",
+		"src/presentation/minimal_champion_motion.gd": "f1650539cceaed4e978174b9e228979291fde671e9030b206c845d33d3d228f3",
+		"src/presentation/movement_guide_model.gd": "c801e1ec50c9f52bfd646f16554e17a145079bbbef8193b0445919712ba6d456",
+		"src/presentation/movement_practice_coach.gd": "a3116dd18aa0bfa381457a0314b173babc68614a46510891db82478a2c3a9b1b",
+		"src/presentation/movement_practice_trace.gd": "16bfb7a64ec9f724961006cb10112733e7dc1a3eb1c03b87d87edda3af724126",
+		"src/presentation/natural_map_kit.gd": "e17bdc3ee15d4317cb2ade22a6ae77663962ec0da76597d45b5f3377fedf3aa5",
+		"src/presentation/pixel_action_bank.gd": "dcc2b267f4fb02aea0ae13440609eee870bff96e6c13456f86dfde5697567364",
+		"src/presentation/pixel_effect_geometry.gd": "defeccb1b22a63f9d059b3a732aee8571cf7e9fcea4c9d552b9423c7b16f3930",
+		"src/presentation/pixel_flipbook_presenter.gd": "6b6817c0329441a55343c7791354b7ca2371007e15b2bad6d04ec9eac8c138f8",
+		"src/presentation/pixel_magic_library.gd": "5c49b74fee791a1309d4952c2122c9a71bb7054e55b60a7f5b5ceeb7d82d4f03",
+		"src/presentation/pixel_map_library.gd": "02b2d41e082bee3fd2d037939cadbe8f6db556e6aa6a780eaacc9c7370366882",
+		"src/presentation/pixel_movement_effects.gd": "55fdf0326852abaf2689abfa9281d87ee87a78f22ab7b5f18605a9e693c65bfe",
+		"src/presentation/pixel_presentation.gd": "e0eb9564015374be10d9fd8b2c107c36884d21b7922a6f0ac0377adf390591f1",
+		"src/presentation/pixel_primitives.gd": "091ebf6905700f64b5ae80a961be648f8c278c706e37d85bb6624dfab97ff700",
+		"src/presentation/pixel_spell_effects.gd": "fc59298f24596042e482fd2ea3ed8d38d6e268758bbd10085b79e1e7999260bb",
+		"src/presentation/player_camera_rig.gd": "be42761fdf47be6cf2f8e0b913b76bd64c4ae0bb5856f93c2a6cfddadd603598",
+		"src/presentation/player_compendium.gd": "7858f89dd82900deb87aebb6b758111d2bcbd45e94ab84d3eac8bbc3d5553213",
+		"src/presentation/pov_terrain_backdrop.gd": "85376d18da34018b0b4a56eec1fa5feb9f822659bbedd59d9ebd77ecdc6c9630",
+		"src/presentation/practice_coach_card.gd": "01dec6db3626eb2b8b318cbd01037734f706d8e1ce3170e434ed065023bdfc77",
+		"src/presentation/practice_wall_skin.gd": "376795b3e8d525d66769be3618979174aaf8cf58682bd2e2a544ff5e162c00b7",
+		"src/presentation/projectile_presentation_motion.gd": "8dea9dea68ebce00021e76d94eb65c8681e34621aa4b9f314e3949aeccc2c556",
+		"src/presentation/retro_material_marks.gd": "09ab9a67a4a0d661b14725b9e5b777e7d46c2aa73c2bedd19c27711a088735b4",
+		"src/presentation/sanctum_campus_renderer.gd": "6378df232c8fda8ed0a5cf4fdb1e0c68d3f1820d52e421aaf800e732f76692d1",
+		"src/presentation/sight_occlusion.gd": "48d6a7c8f23aff0a22bf24ff11fafa99a966dc02efa97aa1a62b295d8f56c047",
+		"src/presentation/skeleton_animation_library.gd": "547c3db74b0161529a37b203f6a0ade1aede313e43dfbd31317985582ee0d7e9",
+		"src/presentation/spell_animation_skeleton_library.gd": "a30fa17efe5e5188949cb0bc53df27c80835e35ca92126004955beac927fbb95",
+		"src/presentation/spell_delivery_direction_contract.gd": "78ec19ce7b77b433744eee29231851ef715ec6fc3d2b010d9722841835b60731",
+		"src/presentation/spell_loom_presenter.gd": "b76e56ecbd532ad8821422cd264503a9ce529b18382f9d7f99de498db5f6fdf7",
+		"src/presentation/visual_accessibility_filter.gd": "328ed835a2300b6148e39936bf89ea8c50719ca0d10b676b28e124bd677cf275",
+		"src/presentation/visual_asset_gallery.gd": "ae92cb23b995673efd78b9767f5b242356a6b99e2db3692a383e9fd356728865",
+		"src/presentation/visual_asset_registry.gd": "b33616c4d5f84288abb5b625d985ce0301168ee4368b31d42f6d510f6db53df2",
+		"src/presentation/visual_language.gd": "4f514d120639a034b4640d9aa7ec56bd3350d07404ced8e71e9c8c45f61bd820",
+		"src/presentation/visual_specimen.gd": "27fcf01ac3183f4a788a9a54a1f8d9722af0a38b04e22f567f2dadc0a9e4754b",
+		"src/presentation/wellspring_architecture_kit.gd": "645cc5a685c109d595192f264fffe2f349e1f780d51a76ba9ead2d9effe3a6f7",
+		"src/presentation/wellspring_character_sprite.gd": "b0c48c790cb299441ad8367bf9dc7664c02fc78582bd852a200ff1ba13932c17",
+		"src/presentation/wellspring_district_view.gd": "a6bc3c910d3d9d6e3fcfc3cbb1b146e172803642e18c2f0eab25ef74109c1569",
+		"src/presentation/wellspring_illustrated_kit.gd": "e7f9ff979b7e9adcc629c4a6319af565472386519f58450bdd9747f34c5dd62c",
+		"src/presentation/wellspring_interaction_presenter.gd": "55e4127e4f4a6163f39f722703c51fe4b7fe19fc088a24f1b5d751e5d89fb7f2",
+		"src/presentation/wellspring_service_buildings.gd": "b2d3d365c352dcebd6a678acd5e994f97cf0a86539a01c65c297ea8939e7d903",
+		"src/presentation/wellspring_visual_catalog.gd": "311ed3fb5d5d1dacf3969d738d11a6329eac8813eb2314d734ecd23415132518",
+		"src/presentation/wellspring_wayfinding.gd": "c0e1c443eb958e9f446fed3a6b2e400ea283dbd286d3e41075440f96f3632f6a",
+		"src/presentation/wireframe_body_presenter.gd": "b67dd330500d29b0a3f65df314543141c3aedf6921f0b16cc3d7b91097cfc950",
+		"src/sim/chemistry/capacitor_field_policy.gd": "677d1065e18d524a7b5e5f05e6ff27c3c456e373a4624146a4c2affda21c4d43",
+		"src/sim/chemistry/element_chemistry_system.gd": "de173e737321a45274f9a59f1bd4165fb8f2bc1ab28c500203232e8e37cf818a",
+		"src/sim/chemistry/element_deposit_state.gd": "3cfb32cf6d04a7a4b252ca7c8bb68861a492fc23a3044c548e59df5014943394",
+		"src/sim/chemistry/element_reaction_state.gd": "a0ec8c94d3f20f3e1e7dc2f8200084548f8db60502e3fcbc975d30387d34eb92",
+		"src/sim/chemistry/frostway_field_policy.gd": "cad2360964ecbcc09a85113f020a12b1e3a5006e9fe2c8ab5a8719e1865a99f4",
+		"src/sim/chemistry/reaction_definition_table.gd": "b930bfac90582dfd4cb52c1d1ed4ebd519cd77a01aab5220d3e726ac7c7bed78",
+		"src/sim/combat/combat_definition_table.gd": "aa1332c283c28536079292e660fe5d2a998d127f390997651828a72662495d83",
+		"src/sim/combat/combat_system.gd": "9dd42a2a06218b7deaa6819877ee7c66e852d757f7a9c5985356d21c9fc8f8db",
+		"src/sim/combat/combat_tuning.gd": "1abd32b257fe274712f9f89f50cb3e248dca7abf946abe87606c9029f76ffb92",
+		"src/sim/combat/continuous_contact.gd": "c4f0c35485e7deca4bfc732afaeddd323b625d310e8088a8e6d510546f8965fe",
+		"src/sim/combat/field_state.gd": "1921cca91aa39faf08a8d84ceba0a37945b918c9c61859363b88cead7135dbd5",
+		"src/sim/combat/interception_practice.gd": "cc3a3d8bfd0f622b6bf40de0a8be1dab138ccdc724d0341b0d66f851de49240b",
+		"src/sim/combat/projectile_contact_order.gd": "08fb68eda08503f343e3dd908841e577fb574a82e9c5a3d5271e769544635e0b",
+		"src/sim/combat/projectile_state.gd": "883d2d4057fbc11685b7b40ce41e3c64ea3e1eb6f12004968a554b79f5dd6345",
+		"src/sim/combat/spray_contact_geometry.gd": "dbccf6708463d849de7c7b390d6e47f2bebac6226f633cdac9ad252a9ef8a00a",
+		"src/sim/combat/spray_interception.gd": "2d3cefe75560bd8f938c915fa1733f5aa2efd66b6c9ee6023313817e7344df3b",
+		"src/sim/combat/strength_budget.gd": "c206c16de173eb768d9439ef379ff93d5f71cdf9c4bb3848168eb4bec9622ce8",
+		"src/sim/combat/training_target_system.gd": "fc6dc3970c078a922afc9fd6c3bd505ea4eaa37e83cab631386e83df594c92f4",
+		"src/sim/core/action_transition_policy.gd": "d19c37dc7c091a21b2b1c52dd0109648d2808bfaf3bd5d9fc52e2e5d9f9bf9ba",
+		"src/sim/core/canonical_bytes.gd": "11de76f54bd1f420fe925d2683dcdaeca1ef59d253810cbbfc42f5ff12250d2a",
+		"src/sim/core/sim_command.gd": "1f3232ed44aae4aa4b4b0d5b49585799fde3c613c009b434f17914b9792b263f",
+		"src/sim/core/sim_config.gd": "fda49c1066a34b299a27bab00cd0277acf0079e73f7e203f5d07018a524c1f47",
+		"src/sim/core/sim_world.gd": "502b5e0bbc84a4d13e2ba1fbc8f18e09acc9c6a07947073fffb97043c5445289",
+		"src/sim/entities/player_resources_system.gd": "6bfd286db169bb69747790aca0c91c1f0760055b879058964323fb86348f6d7c",
+		"src/sim/entities/player_state.gd": "5b932a45a83b0adcae2b6e5f1f0c4770d0e0ee557bf2b242f550c70792b3c2f7",
+		"src/sim/entities/player_tuning.gd": "9d444df43f0254fbeaf925adf445d79380d8b1c6dce30d751d0d16275b46587b",
+		"src/sim/entities/resource_recovery.gd": "c43d050b84819e20dfa4550cbac4ac5e5bb993e9e1073b9ad160222f18615d3b",
+		"src/sim/hex/hex_canonical_state.gd": "95c4597344f1c85d6efccebc793c4ea9d4d320483a5eb20dc61f32a8353b9c23",
+		"src/sim/hex/hex_cast_parts.gd": "3a1bb8f7fe8b3bb05e752caed48dafc2f65cb84b0076da47903817a508602047",
+		"src/sim/hex/hex_cell_topology.gd": "c7f3a32b957f12b4b94828e7ed3fbabb62c569fbdc27a251fbbb59c4c68e03ff",
+		"src/sim/hex/hex_chemistry_world.gd": "aa9efa1458f75513a1c5fe99e04351bfcc2231f73d9c671901bdf8b673723e69",
+		"src/sim/hex/hex_collision_world.gd": "d6e7eb26fde51a07a46f1374eb9a6d8f5c2274508c8ab2dc3f7acc3fbcb131aa",
+		"src/sim/hex/hex_contact_workset.gd": "6b545be93a34064bf00bf0c8330533d90cedb7b6bfa39ef26c05dddea801465b",
+		"src/sim/hex/hex_convex_geometry.gd": "214c9a70c8421761dcba5f2edd984e69142834eb20e9c8223acc830519fd9168",
+		"src/sim/hex/hex_court.gd": "c577334fc6f520d2694e8139b4130f25a73110c8da0374db342a2079006efddf",
+		"src/sim/hex/hex_court_practice.gd": "2ce55472e69e3aaa09f79df507a5ddbc9a2b15afe7bd7dd73841e4ed7b63c46f",
+		"src/sim/hex/hex_footprint.gd": "07e2fefe0b41ddc6d49708fe30023b6091f20384e5815d6383f839328f88351d",
+		"src/sim/hex/hex_grid.gd": "9c5bd3245091cfd8c17a2bb8770a832c0ccc5152f3270bc5a2b528f5462b2def",
+		"src/sim/hex/hex_product_effects.gd": "598933dd652e6b3961d506fab2ebcf4426f63b028ece9618f33e40c103ffbb57",
+		"src/sim/hex/hex_projectile_combat.gd": "ba0f80546663dd9c2db99d2996e65fc2b6572fc0179da2405d0c82a6e67b001b",
+		"src/sim/hex/hex_recipe_policy.gd": "b82516ddd4253fee7ddacf6eebf855ef29ee6215b64f83c90b3ce3ac4bc6e800",
+		"src/sim/hex/hex_trail_emitter.gd": "ae6533249ce5d7b575be33b544a16746f3bf23c3cff93be40631e950aed2908d",
+		"src/sim/hex/hex_world_definition.gd": "e15d75d48ddedc6bc891400f508ae43d892742c151e54bb5b93aef68dfa23f18",
+		"src/sim/materials/material_grid.gd": "b85cdd30e47f96a98b945f9a2b477ea1bbbb1572f746c82c30f4fe524f693959",
+		"src/sim/movement/movement_system.gd": "c0bc179b0e51fe9a82efdb95f5397924c536236356f3f137cbb856dc576ccd6e",
+		"src/sim/movement/movement_tuning.gd": "a29d2276b73da001e99cf8ce0b24470f228332f966959d79497e3ec497d203e3",
+		"src/sim/movement/surface_motion_policy.gd": "b74f39aeb9bc87a7633524dac0793d63501f14b633e1d8e2da41d8e2aec67c0c",
+		"src/sim/replay/replay_data.gd": "730f0c81a3d78c4d7ce6dfc7850b2be1126319a951647aad7c3e0aa247aa6a14",
+		"src/sim/world/collision_world.gd": "28425207bf7aa1eb35518c5a17131417909514f99eceefe6fd80e26f8d7c86e7",
+		"src/sim/world/reaction_movement_world.gd": "4f7b5c9483b97a455915159ec206d6f2c8d34047069148b486c161a0a798ac3e",
+		"tests/performance/profile_collision_topology.gd": "01cc5ba22720fff0429b054d6526958db84dc44907d3097b4716eef1e08c2544",
+		"tests/performance/profile_sealed_topology.gd": "1005068217dce74ccb97a2721ded1d53cab0659d0a2619a92b0607e78eec3239",
+		"tests/performance/profile_snapshot_canonical.gd": "db1417816143963dde2d628ff1634bf989a84d45d18bed7db47e0fcaccb3c80d",
+		"tests/performance/profile_unified_wellspring.gd": "1c9e4f4f00553e44e94a6485bba0c92f6f2f06ac52f91ff16562784b2069a90a",
+		"tests/support/hex_canonical_pre_e9.gd": "48d5471984bf1461ae2e8067c1dc2f49680dfb2208a64634ebb791dcd5bcb36f",
+		"tests/support/hex_chemistry_snapshot_pre_e9.gd": "7fa24de7568649fcceaa7c92e8da2710557b9094da2e0b37ee7d559a0936677e",
+		"tests/support/hex_collision_pre_e7.gd": "730034a5956071a21f9dae3830f7e9950a4227a104264bf57a24ca18a601a07f",
+		"tests/support/hex_producer_topology_legacy_oracle.gd": "9233c90c502a59f145932d6838363f1db2411b74fb1c844994ca8cf53aeb974c",
+		"tests/support/hex_stable_cells_candidate.gd": "4dde73bf6ceb9354d740669a46253983c2e6166624cb4f27005c943d593f7ffa",
+		"tests/support/hex_world_snapshot_pre_e7e8.gd": "d85b4eeff2acdab082b0bccbed34477b1950f07de91ca0a78c918d50c9b21392",
+		"tests/support/hex_world_snapshot_pre_e9.gd": "a56624f10c6a6ad7c449e1d5949e6535cba0d1b9b61840ffd9131fbd0a1d9523"
+	},
+	"source_sha256_before": {
+		"content/abilities/foundation_abilities_v1.json": "720c16ce73f11ae9e723f43e31f39d1d700bc7a583619cd418ec3408b16f52bc",
+		"content/champions/foundation_champions_v1.json": "23a1f624a9de6c2bf88dc76578a69b23613465707605528e2988e209abba458a",
+		"content/maps/sanctum_campus_g2_v1.json": "a1d17e155000ebbdf36cb033823a2b42b1c8e31f844444da347fbac400b3c817",
+		"project.godot": "17c68ea0840a04e489f72c64de92f0d0738251695be584b0c560ddd844caf5ab",
+		"src/app/bootstrap.gd": "e8bb7be0dba0445bfcd62dd240894117aa36101978962ef808361410db8472ab",
+		"src/app/champion_attunement.gd": "712fea9f1d7d769e8b567c28a7d8692c636c66e80d1e0b08cff8688d0b0b4df4",
+		"src/app/character_overview_model.gd": "2173a25cdd3bd8535b0a0ed41bd7dcbbbb4a86fcfcbc9167dca752a403224b2c",
+		"src/app/character_selection_model.gd": "3a19f169e78cdb2d5cb428e5e3b7632ad5801ef01d8b4cd21fc8b870de502100",
+		"src/app/character_weave_coordinator.gd": "0ba53f78214c4ee28d84a4f5653840fb384517c21e84b4e76ebaf07e9fa45d41",
+		"src/app/character_weave_library.gd": "6941798fd4ed2a471edd57f110c26fe863245980a40d1f9dc67fc93478c15428",
+		"src/app/character_weave_policy.gd": "eb5a5aef9efb58aa42e42bbd2440aad3ac0cf5e8a873d7231df285e828b9b919",
+		"src/app/control_binding_editor.gd": "db22f339189e01c91d6a87f752a3d7fcb0204816575c7fb81819126aa198afbe",
+		"src/app/hex_playground_demo.gd": "10b089dab3f3ff8143a9b6cd5588c463aa3ac79b8b08cd57a84e625fe60b5e8c",
+		"src/app/input_router.gd": "f23c49a092da9676ade189c5148f116722b116a0459fa56fb8d35df6e38dae3b",
+		"src/app/interception_showcase.gd": "98dcc384afba7e42f24d5f8e1c1723b34a2c57ec5802a6637840fde8d2c87e79",
+		"src/app/player_preferences.gd": "5dcb0022a41ff5c3d7793da87ffc9572376439b3dc1ce4b156f643ccf2401575",
+		"src/app/runtime_content_summary.gd": "eba559acf7afa821feea5aba6c631af7c058623ef9ceb0798eebd8a990c7ed78",
+		"src/app/sanctum_station_model.gd": "fec45772839d1a8ab5e57ff9897dc2cafc5a8c9218e8a9924308b2378d45b0bb",
+		"src/app/spectator_focus.gd": "3c026b7221da9e4f2b3ef38dfc32b8358f430b0f060c41a35e923c73a0bb784d",
+		"src/app/spell_loom_editor.gd": "858e48f1c55156579cedd19559149f908d7faca18cdad5b6e13d957181ec9ca2",
+		"src/app/ui_grid_navigation.gd": "2f85e9c37fe4bf93e068e732e07a8f3e2d9674f4eab1b858328fe0c21c2ebeec",
+		"src/app/wellspring_service_directory.gd": "9652666af9d0fbc348568a3c8fe408b1968f2e6092f10502f17ab8a2c0087848",
+		"src/content/ability_catalog.gd": "afcbdfc216db7a0add1452215798030d829d8bac7a513b67f4059d9f07b88b9c",
+		"src/content/body_type_profile_catalog.gd": "5a4b06f1911500624cddd6e31e4d89ab57ff260e5e340fb3845e42a7194989e0",
+		"src/content/canonical_content.gd": "0acfb4e7da0fa7078a2447c13cea0d86981f048e2bc2832ee9c5da451da9dd8e",
+		"src/content/champion_catalog.gd": "e6a4d7bbbb451fdb510bf1f77d8884bfddd14a50aea201ad48e2a5ba6825be79",
+		"src/content/champion_roster_plan.gd": "6743eeeaeec0cfb26e8c8abe5e07f7c851e8a148818793576bc0ba0249ec7afb",
+		"src/content/character_starter_kit.gd": "95014a3c00827c42409274a315266cd041610c291b6f29dc1110ef57037adf1f",
+		"src/content/environment_kit_manifest.gd": "54126c0ab2c8d7648cd3d2d479ccb7e3acb34dc85a859b48881df76f87076e97",
+		"src/content/hub_definition.gd": "2403991ca08e9544679c5c68e1f552dfb5c957f2a73b3663056ae348b13338f2",
+		"src/content/image_asset_inspector.gd": "ffd64987bf15d8a71fe5dbdfcdc912b2dfa3814ebdd409fa9085d36907ac809a",
+		"src/content/loadout_definition.gd": "99212b23f267e672e08e9da68173ea9c3cd3f79b42475defce9ce52fafb8566a",
+		"src/content/material_registry.gd": "11de0b32a30cb3ca527d2fc732e7f88b7e6c701c895a718980be14ad16271b29",
+		"src/content/material_yard_definition.gd": "80e2837e6ad3daf9097ccb01527e1421eeee8fa1b7ac27b9d193da3aa10bf1ab",
+		"src/content/reaction_catalog.gd": "ea77cf64f8cf173ac1613770f3bb0a9d334eff7c7cdde4fbf77a6b7abfeaeb29",
+		"src/content/runtime_build_identity.gd": "68cbd2cb431da0c1f9e22ba3db90b1ddf32e465d53aa1b13da8fd4dc5b1e655f",
+		"src/content/sanctum_campus_layout.gd": "a0cbad5bace6ce52df61119016846d2e56b0b154a1f9d5344ccc12eaf8a97ad5",
+		"src/content/sanctum_runtime_kit.gd": "1452a2ef283ab337bcabf38d2bb24025ef3843bbbeff1f1e75f3977430be5322",
+		"src/content/wellspring_environment_kit.gd": "cd757ca31b36e245bda96238c897b951ac850ba9e115441bee964b468ef7830c",
+		"src/net/authoritative_session.gd": "1b6511639f9660fe623803a6e3fdb0415b3927ed46a9e0ad63463e049ce83298",
+		"src/net/client_prediction.gd": "97e67c6b046dae28441c34ab155f6d155dcc73cf8b864832028ff47b8f77187d",
+		"src/net/hex_chemistry_snapshot.gd": "d4fc2ea041d3523bc2e606d8e7464fdb394d374374f733b037a2013f470f04f1",
+		"src/net/hex_snapshot_wire_packing.gd": "ca062a108b794cec3b5f822f882168370149ecc95e585fbca284a75713c7e17a",
+		"src/net/hex_world_snapshot.gd": "4c72a7df6a98c18ae687192b04f3ae280ad533600f2db780faed68e2314297f8",
+		"src/net/lan_lobby.gd": "cac8f97ad5e875b4d89abc3ee2b2bf4b31744c569fd67a5f222243ed0cec572d",
+		"src/net/reconciliation_order_buffer.gd": "f14a19b6fb3a09aec5b326ff2d1b1b1c23c0185d649eb7a7ec016c37e1dac462",
+		"src/net/session_charter.gd": "e4ee475d8f5183390710a9bdb7bc8fb8879fee664395b71e12140ae61ddb085e",
+		"src/net/session_event_inbox.gd": "3474a1e72a364426dc3693306612d3d93fe6b8c7d5a96d01258a6ebdcefd2b82",
+		"src/net/session_hearth.gd": "d8989b6482580300671734192f542895d4ff78996b64f41e2ab45788e8c71a4a",
+		"src/net/session_request_policy.gd": "a756f178ef5bc77531d0d21b9f4f8b1f8b6298f71a112c5c75db9eb900cbf0c4",
+		"src/net/session_round.gd": "90342666044e23ebba8d45515a05a5fff6e4e8208acaf32bc8d6a7685fd501a8",
+		"src/net/session_snapshot.gd": "d325f4bf32bf2b7e0fd79fc641b74ed6a352347892f4e5572aeb01eb1e0f309f",
+		"src/net/session_steward.gd": "c2ee2d8fe558db2622c16c4ca0b8e67420ba4a8a119d10a8f430caab860c367f",
+		"src/net/session_transport.gd": "df116a791bce05edd2c6d0169a0255e0a8f4aa124a82b59f9efc96bd824ce03a",
+		"src/net/world_snapshot_envelope.gd": "aa3b2dcff36b25293d9e7287aeadb7b31a03795f0a2bb43e6c76432c77949d48",
+		"src/presentation/actor_motion_history.gd": "fb36f6583431bc40f3c5e750ef80b33fb91e7c8acda6ea8caf4f8b2d3b363bf8",
+		"src/presentation/aim_reticle_presenter.gd": "21fed10b6c01756e51065a9f5ba77cd16d425968d027426871dafdce1ec6995d",
+		"src/presentation/burst_projectile_presenter.gd": "446d7ade0765d93f2200fc2d9488ba844c5197cfb24859ff452c834ca67b1b41",
+		"src/presentation/cartoon_champion_presenter.gd": "591cea3ed35e6355979ebe7509b65c206fcce035332048b55a982b446623495a",
+		"src/presentation/character_selection_grid.gd": "e77b0eb95264f23f101ccf42de8e2850cc44a4274eec34b213e89fcac776716d",
+		"src/presentation/character_viewport_policy.gd": "26bcc318fcfad89bd37b0776f0ee142df14ddf4111fc830964b86a91402189db",
+		"src/presentation/chemistry_guide_model.gd": "ecb91e3995a99b04b86476cf080de43f655b5cc1a567e93ac713349c6d5b5b11",
+		"src/presentation/chemistry_practice_coach.gd": "f1803ae665e75b524ca825b73076636fc2f1643a8a19bf1dcca057b566c4d6ee",
+		"src/presentation/combat_feedback_model.gd": "ae35c0b84a2515fce608582b5f3578320170eaf0950ccada300aab3d0cdf7382",
+		"src/presentation/compact_combat_hud.gd": "fdcb24a11fc158b73d5e63a08117c67a84884bac75677bd23bc10537fa7def98",
+		"src/presentation/complete_visual_catalog.gd": "15af870669f51d8eacbaca37e8f780bff0286e7d5501966356a986de3271a8de",
+		"src/presentation/complete_visual_gallery.gd": "b3002492f6fbdcc266470152f14182bc93afef7e370497c3a9f6907b2d54cacb",
+		"src/presentation/eight_direction_resolver.gd": "de6b2bf98748bbede0e48269c3e634b939f082fbbd9b2e6384f470c5f9da37f2",
+		"src/presentation/element_audio.gd": "d08a9a992830fc9569f861e213bb70af9797d7c3fbe393a3db7005fd31c4ec01",
+		"src/presentation/element_chemistry_presenter.gd": "07da0e968432b885165d2c66f071377ea7f241b5944e505501980b6c73964870",
+		"src/presentation/element_glyph_renderer.gd": "11af970ab80d80ec9bfb5108c1334386b0a671f96d7ca8640fc47160d29dc849",
+		"src/presentation/foundation_spell_presenter.gd": "2bd44d27fbf1c2aaf300d932ad204bfc5d0af33eab9e03eb99d7fb57421ed4cd",
+		"src/presentation/fullbody_cast_presenter.gd": "481208425ceec8c046126d5bdfa0cea0acd55c94ec1214cdbefc3cd055af9239",
+		"src/presentation/heavy_blast_presenter.gd": "1ed784aba999a697d52f709b5b62a85bf65603455f72f3ec7a9a86bccea07ab8",
+		"src/presentation/hex_combat_label.gd": "12c76741871d7e31d142f4a6e7240d88c84b482136bb7609ee87bd635fd1d6b2",
+		"src/presentation/hex_court_presenter.gd": "11172285bffb66c37e81cb3a3019eba6ab01626a5384f82d0864019971c971d3",
+		"src/presentation/hex_environment_layout.gd": "4c6ed485b9f726aefc4a2fd4f20bd28f2cb6fec8fd40ad48dfcce429eded549c",
+		"src/presentation/hex_playground_panel.gd": "e6887c379aa12492299a3503bc9e5a3c2932d606c486ee56ee1b5bf5775e5942",
+		"src/presentation/hex_water_material_presenter.gd": "487e0b674476f6fb125ee97a2b7136d8236c3f58b8cabf85d0b62f49c9bbc8c2",
+		"src/presentation/interception_feedback.gd": "3e5c624a5fbff55b4e5bf07670d21a0848b53dca107869e2211b5457a4a64929",
+		"src/presentation/interception_practice_card.gd": "43cb3662c84983895b62e3f30a180fcb71b656f82180586e4e01ddedccf8c3d7",
+		"src/presentation/jump_presentation.gd": "0b34756959a99d226e96601d36af799ef4fb0e885e88d3c0ba37b560d5fa0c02",
+		"src/presentation/landing_presentation.gd": "0e9b32ee088d26d4c30367d0f635b6a534a8a0cd1029e6eae26cfe877b532b7e",
+		"src/presentation/minimal_champion_motion.gd": "f1650539cceaed4e978174b9e228979291fde671e9030b206c845d33d3d228f3",
+		"src/presentation/movement_guide_model.gd": "c801e1ec50c9f52bfd646f16554e17a145079bbbef8193b0445919712ba6d456",
+		"src/presentation/movement_practice_coach.gd": "a3116dd18aa0bfa381457a0314b173babc68614a46510891db82478a2c3a9b1b",
+		"src/presentation/movement_practice_trace.gd": "16bfb7a64ec9f724961006cb10112733e7dc1a3eb1c03b87d87edda3af724126",
+		"src/presentation/natural_map_kit.gd": "e17bdc3ee15d4317cb2ade22a6ae77663962ec0da76597d45b5f3377fedf3aa5",
+		"src/presentation/pixel_action_bank.gd": "dcc2b267f4fb02aea0ae13440609eee870bff96e6c13456f86dfde5697567364",
+		"src/presentation/pixel_effect_geometry.gd": "defeccb1b22a63f9d059b3a732aee8571cf7e9fcea4c9d552b9423c7b16f3930",
+		"src/presentation/pixel_flipbook_presenter.gd": "6b6817c0329441a55343c7791354b7ca2371007e15b2bad6d04ec9eac8c138f8",
+		"src/presentation/pixel_magic_library.gd": "5c49b74fee791a1309d4952c2122c9a71bb7054e55b60a7f5b5ceeb7d82d4f03",
+		"src/presentation/pixel_map_library.gd": "02b2d41e082bee3fd2d037939cadbe8f6db556e6aa6a780eaacc9c7370366882",
+		"src/presentation/pixel_movement_effects.gd": "55fdf0326852abaf2689abfa9281d87ee87a78f22ab7b5f18605a9e693c65bfe",
+		"src/presentation/pixel_presentation.gd": "e0eb9564015374be10d9fd8b2c107c36884d21b7922a6f0ac0377adf390591f1",
+		"src/presentation/pixel_primitives.gd": "091ebf6905700f64b5ae80a961be648f8c278c706e37d85bb6624dfab97ff700",
+		"src/presentation/pixel_spell_effects.gd": "fc59298f24596042e482fd2ea3ed8d38d6e268758bbd10085b79e1e7999260bb",
+		"src/presentation/player_camera_rig.gd": "be42761fdf47be6cf2f8e0b913b76bd64c4ae0bb5856f93c2a6cfddadd603598",
+		"src/presentation/player_compendium.gd": "7858f89dd82900deb87aebb6b758111d2bcbd45e94ab84d3eac8bbc3d5553213",
+		"src/presentation/pov_terrain_backdrop.gd": "85376d18da34018b0b4a56eec1fa5feb9f822659bbedd59d9ebd77ecdc6c9630",
+		"src/presentation/practice_coach_card.gd": "01dec6db3626eb2b8b318cbd01037734f706d8e1ce3170e434ed065023bdfc77",
+		"src/presentation/practice_wall_skin.gd": "376795b3e8d525d66769be3618979174aaf8cf58682bd2e2a544ff5e162c00b7",
+		"src/presentation/projectile_presentation_motion.gd": "8dea9dea68ebce00021e76d94eb65c8681e34621aa4b9f314e3949aeccc2c556",
+		"src/presentation/retro_material_marks.gd": "09ab9a67a4a0d661b14725b9e5b777e7d46c2aa73c2bedd19c27711a088735b4",
+		"src/presentation/sanctum_campus_renderer.gd": "6378df232c8fda8ed0a5cf4fdb1e0c68d3f1820d52e421aaf800e732f76692d1",
+		"src/presentation/sight_occlusion.gd": "48d6a7c8f23aff0a22bf24ff11fafa99a966dc02efa97aa1a62b295d8f56c047",
+		"src/presentation/skeleton_animation_library.gd": "547c3db74b0161529a37b203f6a0ade1aede313e43dfbd31317985582ee0d7e9",
+		"src/presentation/spell_animation_skeleton_library.gd": "a30fa17efe5e5188949cb0bc53df27c80835e35ca92126004955beac927fbb95",
+		"src/presentation/spell_delivery_direction_contract.gd": "78ec19ce7b77b433744eee29231851ef715ec6fc3d2b010d9722841835b60731",
+		"src/presentation/spell_loom_presenter.gd": "b76e56ecbd532ad8821422cd264503a9ce529b18382f9d7f99de498db5f6fdf7",
+		"src/presentation/visual_accessibility_filter.gd": "328ed835a2300b6148e39936bf89ea8c50719ca0d10b676b28e124bd677cf275",
+		"src/presentation/visual_asset_gallery.gd": "ae92cb23b995673efd78b9767f5b242356a6b99e2db3692a383e9fd356728865",
+		"src/presentation/visual_asset_registry.gd": "b33616c4d5f84288abb5b625d985ce0301168ee4368b31d42f6d510f6db53df2",
+		"src/presentation/visual_language.gd": "4f514d120639a034b4640d9aa7ec56bd3350d07404ced8e71e9c8c45f61bd820",
+		"src/presentation/visual_specimen.gd": "27fcf01ac3183f4a788a9a54a1f8d9722af0a38b04e22f567f2dadc0a9e4754b",
+		"src/presentation/wellspring_architecture_kit.gd": "645cc5a685c109d595192f264fffe2f349e1f780d51a76ba9ead2d9effe3a6f7",
+		"src/presentation/wellspring_character_sprite.gd": "b0c48c790cb299441ad8367bf9dc7664c02fc78582bd852a200ff1ba13932c17",
+		"src/presentation/wellspring_district_view.gd": "a6bc3c910d3d9d6e3fcfc3cbb1b146e172803642e18c2f0eab25ef74109c1569",
+		"src/presentation/wellspring_illustrated_kit.gd": "e7f9ff979b7e9adcc629c4a6319af565472386519f58450bdd9747f34c5dd62c",
+		"src/presentation/wellspring_interaction_presenter.gd": "55e4127e4f4a6163f39f722703c51fe4b7fe19fc088a24f1b5d751e5d89fb7f2",
+		"src/presentation/wellspring_service_buildings.gd": "b2d3d365c352dcebd6a678acd5e994f97cf0a86539a01c65c297ea8939e7d903",
+		"src/presentation/wellspring_visual_catalog.gd": "311ed3fb5d5d1dacf3969d738d11a6329eac8813eb2314d734ecd23415132518",
+		"src/presentation/wellspring_wayfinding.gd": "c0e1c443eb958e9f446fed3a6b2e400ea283dbd286d3e41075440f96f3632f6a",
+		"src/presentation/wireframe_body_presenter.gd": "b67dd330500d29b0a3f65df314543141c3aedf6921f0b16cc3d7b91097cfc950",
+		"src/sim/chemistry/capacitor_field_policy.gd": "677d1065e18d524a7b5e5f05e6ff27c3c456e373a4624146a4c2affda21c4d43",
+		"src/sim/chemistry/element_chemistry_system.gd": "de173e737321a45274f9a59f1bd4165fb8f2bc1ab28c500203232e8e37cf818a",
+		"src/sim/chemistry/element_deposit_state.gd": "3cfb32cf6d04a7a4b252ca7c8bb68861a492fc23a3044c548e59df5014943394",
+		"src/sim/chemistry/element_reaction_state.gd": "a0ec8c94d3f20f3e1e7dc2f8200084548f8db60502e3fcbc975d30387d34eb92",
+		"src/sim/chemistry/frostway_field_policy.gd": "cad2360964ecbcc09a85113f020a12b1e3a5006e9fe2c8ab5a8719e1865a99f4",
+		"src/sim/chemistry/reaction_definition_table.gd": "b930bfac90582dfd4cb52c1d1ed4ebd519cd77a01aab5220d3e726ac7c7bed78",
+		"src/sim/combat/combat_definition_table.gd": "aa1332c283c28536079292e660fe5d2a998d127f390997651828a72662495d83",
+		"src/sim/combat/combat_system.gd": "9dd42a2a06218b7deaa6819877ee7c66e852d757f7a9c5985356d21c9fc8f8db",
+		"src/sim/combat/combat_tuning.gd": "1abd32b257fe274712f9f89f50cb3e248dca7abf946abe87606c9029f76ffb92",
+		"src/sim/combat/continuous_contact.gd": "c4f0c35485e7deca4bfc732afaeddd323b625d310e8088a8e6d510546f8965fe",
+		"src/sim/combat/field_state.gd": "1921cca91aa39faf08a8d84ceba0a37945b918c9c61859363b88cead7135dbd5",
+		"src/sim/combat/interception_practice.gd": "cc3a3d8bfd0f622b6bf40de0a8be1dab138ccdc724d0341b0d66f851de49240b",
+		"src/sim/combat/projectile_contact_order.gd": "08fb68eda08503f343e3dd908841e577fb574a82e9c5a3d5271e769544635e0b",
+		"src/sim/combat/projectile_state.gd": "883d2d4057fbc11685b7b40ce41e3c64ea3e1eb6f12004968a554b79f5dd6345",
+		"src/sim/combat/spray_contact_geometry.gd": "dbccf6708463d849de7c7b390d6e47f2bebac6226f633cdac9ad252a9ef8a00a",
+		"src/sim/combat/spray_interception.gd": "2d3cefe75560bd8f938c915fa1733f5aa2efd66b6c9ee6023313817e7344df3b",
+		"src/sim/combat/strength_budget.gd": "c206c16de173eb768d9439ef379ff93d5f71cdf9c4bb3848168eb4bec9622ce8",
+		"src/sim/combat/training_target_system.gd": "fc6dc3970c078a922afc9fd6c3bd505ea4eaa37e83cab631386e83df594c92f4",
+		"src/sim/core/action_transition_policy.gd": "d19c37dc7c091a21b2b1c52dd0109648d2808bfaf3bd5d9fc52e2e5d9f9bf9ba",
+		"src/sim/core/canonical_bytes.gd": "11de76f54bd1f420fe925d2683dcdaeca1ef59d253810cbbfc42f5ff12250d2a",
+		"src/sim/core/sim_command.gd": "1f3232ed44aae4aa4b4b0d5b49585799fde3c613c009b434f17914b9792b263f",
+		"src/sim/core/sim_config.gd": "fda49c1066a34b299a27bab00cd0277acf0079e73f7e203f5d07018a524c1f47",
+		"src/sim/core/sim_world.gd": "502b5e0bbc84a4d13e2ba1fbc8f18e09acc9c6a07947073fffb97043c5445289",
+		"src/sim/entities/player_resources_system.gd": "6bfd286db169bb69747790aca0c91c1f0760055b879058964323fb86348f6d7c",
+		"src/sim/entities/player_state.gd": "5b932a45a83b0adcae2b6e5f1f0c4770d0e0ee557bf2b242f550c70792b3c2f7",
+		"src/sim/entities/player_tuning.gd": "9d444df43f0254fbeaf925adf445d79380d8b1c6dce30d751d0d16275b46587b",
+		"src/sim/entities/resource_recovery.gd": "c43d050b84819e20dfa4550cbac4ac5e5bb993e9e1073b9ad160222f18615d3b",
+		"src/sim/hex/hex_canonical_state.gd": "95c4597344f1c85d6efccebc793c4ea9d4d320483a5eb20dc61f32a8353b9c23",
+		"src/sim/hex/hex_cast_parts.gd": "3a1bb8f7fe8b3bb05e752caed48dafc2f65cb84b0076da47903817a508602047",
+		"src/sim/hex/hex_cell_topology.gd": "c7f3a32b957f12b4b94828e7ed3fbabb62c569fbdc27a251fbbb59c4c68e03ff",
+		"src/sim/hex/hex_chemistry_world.gd": "aa9efa1458f75513a1c5fe99e04351bfcc2231f73d9c671901bdf8b673723e69",
+		"src/sim/hex/hex_collision_world.gd": "d6e7eb26fde51a07a46f1374eb9a6d8f5c2274508c8ab2dc3f7acc3fbcb131aa",
+		"src/sim/hex/hex_contact_workset.gd": "6b545be93a34064bf00bf0c8330533d90cedb7b6bfa39ef26c05dddea801465b",
+		"src/sim/hex/hex_convex_geometry.gd": "214c9a70c8421761dcba5f2edd984e69142834eb20e9c8223acc830519fd9168",
+		"src/sim/hex/hex_court.gd": "c577334fc6f520d2694e8139b4130f25a73110c8da0374db342a2079006efddf",
+		"src/sim/hex/hex_court_practice.gd": "2ce55472e69e3aaa09f79df507a5ddbc9a2b15afe7bd7dd73841e4ed7b63c46f",
+		"src/sim/hex/hex_footprint.gd": "07e2fefe0b41ddc6d49708fe30023b6091f20384e5815d6383f839328f88351d",
+		"src/sim/hex/hex_grid.gd": "9c5bd3245091cfd8c17a2bb8770a832c0ccc5152f3270bc5a2b528f5462b2def",
+		"src/sim/hex/hex_product_effects.gd": "598933dd652e6b3961d506fab2ebcf4426f63b028ece9618f33e40c103ffbb57",
+		"src/sim/hex/hex_projectile_combat.gd": "ba0f80546663dd9c2db99d2996e65fc2b6572fc0179da2405d0c82a6e67b001b",
+		"src/sim/hex/hex_recipe_policy.gd": "b82516ddd4253fee7ddacf6eebf855ef29ee6215b64f83c90b3ce3ac4bc6e800",
+		"src/sim/hex/hex_trail_emitter.gd": "ae6533249ce5d7b575be33b544a16746f3bf23c3cff93be40631e950aed2908d",
+		"src/sim/hex/hex_world_definition.gd": "e15d75d48ddedc6bc891400f508ae43d892742c151e54bb5b93aef68dfa23f18",
+		"src/sim/materials/material_grid.gd": "b85cdd30e47f96a98b945f9a2b477ea1bbbb1572f746c82c30f4fe524f693959",
+		"src/sim/movement/movement_system.gd": "c0bc179b0e51fe9a82efdb95f5397924c536236356f3f137cbb856dc576ccd6e",
+		"src/sim/movement/movement_tuning.gd": "a29d2276b73da001e99cf8ce0b24470f228332f966959d79497e3ec497d203e3",
+		"src/sim/movement/surface_motion_policy.gd": "b74f39aeb9bc87a7633524dac0793d63501f14b633e1d8e2da41d8e2aec67c0c",
+		"src/sim/replay/replay_data.gd": "730f0c81a3d78c4d7ce6dfc7850b2be1126319a951647aad7c3e0aa247aa6a14",
+		"src/sim/world/collision_world.gd": "28425207bf7aa1eb35518c5a17131417909514f99eceefe6fd80e26f8d7c86e7",
+		"src/sim/world/reaction_movement_world.gd": "4f7b5c9483b97a455915159ec206d6f2c8d34047069148b486c161a0a798ac3e",
+		"tests/performance/profile_collision_topology.gd": "01cc5ba22720fff0429b054d6526958db84dc44907d3097b4716eef1e08c2544",
+		"tests/performance/profile_sealed_topology.gd": "1005068217dce74ccb97a2721ded1d53cab0659d0a2619a92b0607e78eec3239",
+		"tests/performance/profile_snapshot_canonical.gd": "db1417816143963dde2d628ff1634bf989a84d45d18bed7db47e0fcaccb3c80d",
+		"tests/performance/profile_unified_wellspring.gd": "1c9e4f4f00553e44e94a6485bba0c92f6f2f06ac52f91ff16562784b2069a90a",
+		"tests/support/hex_canonical_pre_e9.gd": "48d5471984bf1461ae2e8067c1dc2f49680dfb2208a64634ebb791dcd5bcb36f",
+		"tests/support/hex_chemistry_snapshot_pre_e9.gd": "7fa24de7568649fcceaa7c92e8da2710557b9094da2e0b37ee7d559a0936677e",
+		"tests/support/hex_collision_pre_e7.gd": "730034a5956071a21f9dae3830f7e9950a4227a104264bf57a24ca18a601a07f",
+		"tests/support/hex_producer_topology_legacy_oracle.gd": "9233c90c502a59f145932d6838363f1db2411b74fb1c844994ca8cf53aeb974c",
+		"tests/support/hex_stable_cells_candidate.gd": "4dde73bf6ceb9354d740669a46253983c2e6166624cb4f27005c943d593f7ffa",
+		"tests/support/hex_world_snapshot_pre_e7e8.gd": "d85b4eeff2acdab082b0bccbed34477b1950f07de91ca0a78c918d50c9b21392",
+		"tests/support/hex_world_snapshot_pre_e9.gd": "a56624f10c6a6ad7c449e1d5949e6535cba0d1b9b61840ffd9131fbd0a1d9523"
+	},
+	"sources_unchanged": true,
+	"topology_cells": 11337
+}

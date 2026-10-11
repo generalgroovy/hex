@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "character_id": "fluup",
+  "display_name": "Fluup",
+  "ancestry": "orc",
+  "body_type": "large",
+  "standing_native_target_px": 68,
+  "date": "2026-10-04",
+  "repository": "C:/Users/sende/Projects/hex",
+  "repository_head_at_authoring": "1559a566e33255c59337c5963f1c3c685d757f1f",
+  "selection_evidence": "art_batches/pixel_actions_v2/review/scale-audit-20261004/receipt.json",
+  "repair_intent": "Preserve approved neutral skull, shoulder, chest and limb mass across jump poses; existing action bank had nearly equal front idle/fall height but visibly reduced anatomical mass",
+  "generation_mode": "built-in image_gen",
+  "tool": "image_gen.imagegen",
+  "transparent_background_requested": true,
+  "generation_calls": 1,
+  "corrective_calls": 0,
+  "source_status": "SOURCE_CANDIDATE_PENDING_LEAD_REVIEW",
+  "source_file": "art_batches/pixel_actions_v2/source/fluup/source.png",
+  "prompt_file": "art_batches/pixel_actions_v2/prompts/fluup.md",
+  "assembly_file": "art_batches/pixel_actions_v2/source/fluup/assembly.json",
+  "assembly_sha256": "c309a5a0b4a3d103fffb4608d9df075d2c3f03712d0e4c5e2c314185e147ac99",
+  "generated_original": "C:/Users/sende/.codex/generated_images/01a106a3-1c20-75d1-bb18-92725dded5ca/exec-811b4429-10db-4726-9435-453c76e36104.png",
+  "original_sha256": "8d02a977a13c707f9fed4670f9c34eec24e8f5c489fee2a64f434449046f68d1",
+  "source_sha256": "8d02a977a13c707f9fed4670f9c34eec24e8f5c489fee2a64f434449046f68d1",
+  "original_preserved_unchanged": true,
+  "copy_method": "PowerShell Copy-Item, source and destination SHA256 verified equal",
+  "byte_length": 1823755,
+  "width": 1586,
+  "height": 992,
+  "pixel_format": "Format32bppArgb",
+  "alpha_pixels": {
+    "transparent": 909204,
+    "partial": 663072,
+    "opaque": 1036
+  },
+  "requested_grid": {
+    "columns": 8,
+    "rows": 5,
+    "sprites": 40,
+    "directions": ["S", "SE", "E", "NE", "N", "NW", "W", "SW"],
+    "rows_top_to_bottom": ["neutral_calibration", "jumpsquat", "rise", "fall_feet_ready", "compressed_landing"],
+    "calibration_source_row": 0,
+    "source_rows": [1, 2, 3, 4],
+    "common_scale_only": true
+  },
+  "reference_roles": [
+    {
+      "path": "C:/Users/sende/Projects/hex/assets/sprites/pixel_cast_v1/fluup.png",
+      "sha256": "c1fd221ef7b7cc8c3bc7e4ea82954581d050cfb078f8f2f9fb071d44da821920",
+      "role": "Primary approved runtime first-row neutral skull/hair/jaw, shoulders, torso, limbs, costume, palette and eight headings"
+    },
+    {
+      "path": "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/fluup-detail.png",
+      "sha256": "d16144b501dea8362a1bfcb895d9f18ca16a9a89b33c62b5dd4a45c417656a9b",
+      "role": "Costume and profile/rear detail support, subordinate to primary proportions"
+    },
+    {
+      "path": "C:/Users/sende/Pictures/styleref1.png",
+      "sha256": "c0fb63c912718d64ca061ccd85817869ffc3348a3c81a910962df57066279fd4",
+      "role": "Retro pixel style only, not names, anatomy, roster, weapons, effects or spells"
+    }
+  ],
+  "source_visual_review": {
+    "scope": "Qualitative source-size inspection of generated original against current approved neutral atlas; no native assembly",
+    "complete_grid": true,
+    "visible_heading_order": "S, SE, E, NE, N, NW, W, SW in every row; profiles and rear quarters remain distinct, no gross facing swap observed",
+    "head_body_continuity": "Broad skull/hair/jaw, thick green arms, wide steel pauldrons, broad chest and heavy boots appear consistent across neutral and action rows; exact native mass matching NOT_RUN",
+    "actions": "Upright neutral; softly lowered planted anticipation; bent-knee tucked rise; opened feet-ready fall; distinctly deeper planted landing",
+    "identity": "Green tusked orc with short black spiky hair, large spiked silver pauldrons, brown cross-straps/bracers/loincloth, gold belt buckle, silver kneecaps and heavy boots",
+    "extremities": "No obvious clipped hair, pauldron spikes, fingers or boots; far-side hands and limbs naturally overlap in profiles and rear quarters",
+    "empty_hands_no_effects": true,
+    "gross_defect_requiring_correction": false,
+    "image_cleanup_or_transforms_performed": false
+  },
+  "known_limits": [
+    "Actual generated dimensions are 1586 by 992, not the approximately requested 2048 by 1280.",
+    "Source contains extensive partial alpha. Original remains unchanged; deterministic alpha cleanup, hidden-RGB removal, registration and downsampling belong to the integration lead.",
+    "Anticipation is subtler than landing and still requires a native-scale comparison.",
+    "Some far-side hands, feet and facial details are naturally occluded in side and rear-quarter poses.",
+    "Source-size visual observations do not establish native body-volume, skull-size or rendered idle-to-jump acceptance.",
+    "Four authored action keys plus neutral calibration are not full animation cycles or independent aiming/casting poses."
+  ],
+  "not_run": [
+    "native-scale assembly",
+    "assembled-native-pixel-board review",
+    "integration-lead acceptance",
+    "runtime integration",
+    "Godot import",
+    "rendered idle-to-jump continuity",
+    "animation timing",
+    "full animation-cycle testing",
+    "human acceptance"
+  ],
+  "human_accepted": false,
+  "ownership": "Only pixel_actions_v2 source/fluup/source.png, receipt.json, assembly.json and prompts/fluup.md were written for the repair; runtime, existing originals and shared builders untouched",
+  "source_completed": true
+}

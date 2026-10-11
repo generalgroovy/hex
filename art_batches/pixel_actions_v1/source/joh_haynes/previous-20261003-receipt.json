@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "character": {
+    "id": "joh_haynes",
+    "display_name": "Joh Haynes",
+    "ancestry": "orc",
+    "body_type": "large",
+    "canonical_roster": "content/champions/foundation_champions_v1.json"
+  },
+  "provenance": {
+    "date": "2026-10-03",
+    "method": "built-in image_gen",
+    "initial_generation_calls": 1,
+    "corrective_generation_calls": 0,
+    "original_path": "C:/Users/sende/.codex/generated_images/01a100df-ae3e-7183-8e96-dadb23c98de1/exec-ee2e0e17-3f6f-4832-a251-a22c78ba7601.png",
+    "source_path": "art_batches/pixel_actions_v1/source/joh_haynes/source.png",
+    "copy_method": "PowerShell Copy-Item; untouched generated original",
+    "original_sha256": "D19B21202C7AC0C168A5B18F2859E46E7F20AEA5B18B05196F19368FDA6D2A1E",
+    "saved_sha256": "D19B21202C7AC0C168A5B18F2859E46E7F20AEA5B18B05196F19368FDA6D2A1E",
+    "byte_identical_copy_verified": true,
+    "exact_prompt_path": "art_batches/pixel_actions_v1/prompts/joh_haynes.md",
+    "references": [
+      {
+        "path": "C:/Users/sende/Projects/hex/assets/sprites/pixel_cast_v1/joh_haynes.png",
+        "role": "primary current runtime identity and proportions",
+        "sha256": "C89A81007EA36EF3E11745C3BA05645580F19C2FAACC5AA464BA363720BB9465"
+      },
+      {
+        "path": "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/joh_haynes-detail.png",
+        "role": "supporting costume detail and back/profile anatomy",
+        "sha256": "B97D8621DA81D60039467196E1C1E8DF04B37AC8E273B8B3D55BCC1958F4F2ED"
+      },
+      {
+        "path": "C:/Users/sende/Pictures/styleref1.png",
+        "role": "retro style only; labels, ancestry, other identities and effects ignored",
+        "sha256": "C0FB63C912718D64CA061CCD85817869FFC3348A3C81A910962DF57066279FD4"
+      }
+    ]
+  },
+  "image": {
+    "width": 1774,
+    "height": 887,
+    "pixel_format": "Format32bppArgb",
+    "has_transparency": true,
+    "alpha_counts": {
+      "transparent": 1060158,
+      "partial": 510432,
+      "opaque": 2948
+    },
+    "original_alpha_preserved": true,
+    "columns": 8,
+    "rows": 4,
+    "pose_count": 32,
+    "headings": [
+      "S",
+      "SE",
+      "E",
+      "NE",
+      "N",
+      "NW",
+      "W",
+      "SW"
+    ],
+    "pose_rows": [
+      "jumpsquat_anticipation",
+      "rising_tucked_jump",
+      "descending_feet_ready",
+      "deep_compressed_landing"
+    ]
+  },
+  "review": {
+    "status": "SOURCE_CANDIDATE_REVIEWED",
+    "scope": "Generated original at source size only; no native-scale or runtime acceptance.",
+    "observations": [
+      "All 32 full-body sprites are complete with transparent gutters; no gross grid or cropping defect observed.",
+      "All eight headings occur in each row. NE/N/NW present actual back torso armor, rear panels and ponytail, not erased front faces.",
+      "Olive skin, black beard and tied-back hair, bronze-gold riveted armor, round belt buckle, dark-green tabard and brown boots retain Joh Haynes identity distinct from Fluup.",
+      "Empty hands, no weapons, baked effects, text, grid marks, ground shadows or environment observed.",
+      "Rise row uses clearly bent/tucked legs with balancing arms; descent row extends boots farther down with hands readied for landing.",
+      "Bottom row has visibly deeper knee/pelvis compression and forward torso lean than first-row anticipation.",
+      "Head/body scale is broadly consistent by source-size inspection; exact native-scale skull, body-volume and silhouette continuity require lead review.",
+      "The generated PNG contains substantial partial alpha. No alpha cleanup, registration, crop, resizing or image manipulation was performed."
+    ],
+    "limitations": [
+      "Side/rear arms and legs naturally overlap in some views, and descent feet are slightly staggered.",
+      "Row 1 remains a fairly mild squat compared with the deep bottom-row landing.",
+      "Numerical pose-height targets were prompting guidance and were not measured or proven at native game scale.",
+      "Four authored key poses are not completed animation cycles or independent casting animations.",
+      "Lead-owned alpha thresholding, hidden-RGB cleanup, registration and downsampling are pending."
+    ],
+    "acceptance": {
+      "source_size_visual_review": "PASS_WITH_LIMITATIONS",
+      "native_scale": "NOT_RUN",
+      "runtime": "NOT_RUN",
+      "human": "NOT_RUN",
+      "godot_import": "NOT_RUN",
+      "rendered_transition": "NOT_RUN"
+    }
+  },
+  "ownership": {
+    "runtime_assets_modified": false,
+    "shared_files_modified": false,
+    "engine_or_import_run": false,
+    "commit_or_push": false
+  },
+  "completion_marker": "COMPLETE_SOURCE_TICKET"
+}

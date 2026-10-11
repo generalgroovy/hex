@@ -183,6 +183,38 @@ foreach ($coverageIdentity in $coverageActive.effective_identities) {
     Assert-Coverage ($coverageIdentity.sprint_path -ceq "res://assets/sprites/wireframe_motion_v2/$($coverageIdentity.body_type)-sprint.png" -and $coverageIdentity.sprint_path -cne $coverageIdentity.locomotion_path) 'Every identity explicitly reports its same-size separate sprint page.'
 }
 $coverageCases.Add('current source-default wireframe and preserved legacy provenance')
+# The old direct default and the new known-flag adapter are both explicit
+# source bindings. All mutations stay in memory; no startup or asset is edited.
+$coverageGuardedStart = $coverageBootstrapSource.IndexOf('var pixel_body_pilot := OS.get_cmdline_user_args().has("--pixel-body-pilot")')
+$coverageGuardedEnd = $coverageBootstrapSource.IndexOf('if fullbody_requested:', $coverageGuardedStart)
+Assert-Coverage ($coverageGuardedStart -ge 0 -and $coverageGuardedEnd -gt $coverageGuardedStart) 'Current fixture contains the complete guarded startup block.'
+$coverageLegacyBootstrap = $coverageBootstrapSource.Substring(0, $coverageGuardedStart) + "if not cartoon_champion_presenter.configure(visual_language):`n`t`treturn`n`t" + $coverageBootstrapSource.Substring($coverageGuardedEnd)
+$coverageLegacyBinding = Audit-Active -Bootstrap $coverageLegacyBootstrap
+Assert-Coverage $coverageLegacyBinding.source_validation_passed 'Preserved direct eager default remains a recognized source binding.'
+Assert-Coverage ($coverageLegacyBinding.effective_template_count -eq 30) 'Legacy binding preserves all thirty size-mapped default identities.'
+$coverageCases.Add('preserved direct eager startup binding')
+foreach ($coverageMutation in @(
+    @('unconditional Fullbody default', 'var fullbody_requested := OS.get_cmdline_user_args().has("--fullbody-art") or pixel_body_pilot or pixel_cast', 'var fullbody_requested := true'),
+    @('unrecognized Fullbody flag', 'OS.get_cmdline_user_args().has("--pixel-cast")', 'OS.get_cmdline_user_args().has("--other-art")'),
+    @('inverted default and opt-in branches', 'if fullbody_requested else cartoon_champion_presenter.configure(visual_language)', 'if not fullbody_requested else cartoon_champion_presenter.configure(visual_language)'),
+    @('metadata-only call with wrong flags', 'configure_fullbody_startup(visual_language, pixel_body_pilot, pixel_cast)', 'configure_fullbody_startup(visual_language, false, false)'),
+    @('unchecked startup readiness', 'if not characters_ready:', 'if false:'),
+    @('startup failure no longer exits', 'get_tree().quit(1)', 'get_tree().quit(0)')
+)) {
+    $coverageMutatedBootstrap = $coverageBootstrapSource.Replace($coverageMutation[1], $coverageMutation[2])
+    Assert-Coverage ($coverageMutatedBootstrap -cne $coverageBootstrapSource) "Binding tamper actually changes source: $($coverageMutation[0])"
+    Reject-Active $coverageMutation[0] 'wireframe_source_binding' -Bootstrap $coverageMutatedBootstrap
+}
+foreach ($coverageMutation in @(
+    @('eager metadata-only default', 'metadata_only: bool = false', 'metadata_only: bool = true'),
+    @('eager branch skips body pages', '_configure_validated(visual_language, path) and', '_configure_validated(visual_language, path, true) and'),
+    @('Fullbody candidate bypasses metadata validation', 'if not candidate._configure_validated(visual_language, path, true):', 'if false:'),
+    @('Fullbody candidate loads unbounded banks', 'candidate.enable_fullbody_art(use_pixel_pilot, use_full_cast, true)', 'candidate.enable_fullbody_art(use_pixel_pilot, use_full_cast, false)')
+)) {
+    $coverageMutatedPresenter = $coveragePresenterSource.Replace($coverageMutation[1], $coverageMutation[2])
+    Assert-Coverage ($coverageMutatedPresenter -cne $coveragePresenterSource) "Presenter tamper actually changes source: $($coverageMutation[0])"
+    Reject-Active $coverageMutation[0] 'wireframe_source_binding' -Presenter $coverageMutatedPresenter
+}
 foreach ($coverageField in @('schema_version','cell','directions','base_rows')) {
     $coverageBad = Copy-Descriptor $coverageManifest
     switch ($coverageField) {

@@ -66,7 +66,7 @@ func _test_truthful_combat_feedback() -> void:
 	var catalog := AbilityCatalog.new()
 	check(catalog.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "combat feedback reads the current validated catalog")
 	var original_catalog := catalog.data.duplicate(true)
-	for element: String in AbilityCatalog.FIRST_EIGHT_ELEMENTS:
+	for element: String in AbilityCatalog.DISPLAY_ELEMENT_IDS:
 		for family: String in ["bolt", "heavy", "rapid", "spray"]:
 			var ability := catalog.ability(catalog.spell_id_at(element, family))
 			var wire_id := int(ability.wire_id)
@@ -81,8 +81,8 @@ func _test_truthful_combat_feedback() -> void:
 					match kind:
 						"projectile_hit": expected = "-3.125"
 						"beam_fired": expected += " · HIT" if hit > 0 else ""
-						"spray_fired": expected += " ×%d" % hit
-						"spray_hit": expected += " · -3.125"
+						"spray_fired": expected = ""
+						"spray_hit": expected = "-3.125"
 						"field_triggered": expected += " · CONTACT"
 					equal(feedback.label, expected, "feedback identifies the actual " + element + " " + family)
 					equal(feedback.element, element, "feedback color cannot borrow a different element")
@@ -96,7 +96,7 @@ func _test_truthful_combat_feedback() -> void:
 		var expected: String = {0: "HIT", 1: "-0.001", 125: "-0.125", 1000: "-1", 3125: "-3.125", 18000: "-18"}[amount]
 		equal(Feedback.describe(event, catalog).label, expected, "carried damage preserves exact milli-unit precision")
 	equal(Feedback.describe({"type": "beam_fired", "source_wire_id": 143, "target_id": 2, "damage": 0}, catalog), {"label": "BEAM · HIT", "element": ""}, "retired Beam event cannot borrow a live spell identity")
-	equal(Feedback.describe({"type": "spray_hit", "source_wire_id": 141, "damage": 14000}, catalog).label, "TIDELINE · -14", "special Tideline keeps identity and reported damage without claiming Launch")
+	equal(Feedback.describe({"type": "spray_hit", "source_wire_id": 141, "damage": 14000}, catalog), {"label": "-14", "element": "water"}, "Tideline keeps reported damage and element without repeating its name or claiming Launch")
 	equal(Feedback.describe({"type": "field_triggered", "source_wire_id": 144}, catalog), {"label": "FIELD · CONTACT", "element": ""}, "retired Field event cannot borrow live identity or imply Slow")
 	equal(Feedback.describe({"type": "beam_fired", "source_wire_id": 99999, "target_id": 1}, catalog), {"label": "BEAM · HIT", "element": ""}, "unknown identity stays neutral without inventing a spell")
 	equal(Feedback.describe({"type": "beam_fired", "source_wire_id": 141, "target_id": 1}, catalog), {"label": "BEAM · HIT", "element": ""}, "mismatched spell family cannot borrow identity or color")
@@ -110,7 +110,16 @@ func _test_truthful_combat_feedback() -> void:
 
 func _test_pixel_family_weight_and_field_identity() -> void:
 	var spell_source := FileAccess.get_file_as_string("res://src/presentation/pixel_spell_effects.gd")
-	check(not spell_source.contains("draw_polyline("), "Field and Spray do not draw separate range-circle or cone outlines")
+	# The original Field/Spray material paths have no separate outline. The same
+	# file now intentionally draws bounded Fuse/Mantle warnings and delivery marks;
+	# those expanded paths are covered by element-delivery-presentation.
+	for method: String in ["spray", "field"]:
+		var start := spell_source.find("\nfunc " + method + "(")
+		check(start >= 0, "the original material method is present before inspecting its drawing contract")
+		if start < 0: continue
+		var end := spell_source.find("\nfunc ", start + 1)
+		var body := spell_source.substr(start, end - start if end >= 0 else spell_source.length() - start)
+		check(not body.contains("draw_polyline("), "original " + method + " does not draw a separate range-circle or cone outline")
 	var pixels := PixelSpellEffects.new()
 	for reduced: bool in [false, true]:
 		pixels.library.begin_frame(reduced)

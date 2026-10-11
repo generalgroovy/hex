@@ -1,6 +1,8 @@
 class_name ElementReactionState
 extends RefCounted
 
+const RecipePolicy = preload("res://src/sim/hex/hex_recipe_policy.gd")
+
 const MAX_RADIUS: int = 125_000
 const MAX_LENGTH: int = 325_000
 
@@ -45,6 +47,17 @@ func active(tick: int) -> bool:
 	return tick >= active_tick and tick < decay_tick
 
 func validate() -> bool:
+	return _validate(false)
+
+
+# Explicit archive tooling only. Live/network admission always calls validate().
+func validate_archive() -> bool:
+	return _validate(true)
+
+
+func _validate(archive: bool) -> bool:
+	# This two-source legacy container cannot represent finite higher-order pools.
+	if not archive and (recipe_wire_id > 336 or RecipePolicy.runtime_definition(recipe_wire_id).is_empty()): return false
 	if entity_id <= 0 or entity_id >= 2_000_000_000 or recipe_wire_id < 301 or recipe_wire_id > 336 or owner_id <= 0 or owner_id > 10000 or team_id <= 0 or team_id > 256 or source_a <= 0 or source_b <= 0 or source_a >= 2_000_000_000 or source_b >= 2_000_000_000 or source_a == source_b:
 		return false
 	for coordinate: int in [position_x,position_y,origin_x,origin_y,endpoint_x,endpoint_y]:

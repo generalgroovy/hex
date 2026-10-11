@@ -1,0 +1,21 @@
+{
+  "status": "FAILED_TIMEOUT",
+  "build_id": "p56-a15adfd5d74b",
+  "transport": "same-export localhost ENet",
+  "port": 24963,
+  "deadline_seconds": 120,
+  "observed": [
+    "guest connected as entity 2",
+    "shared emote",
+    "guest readiness",
+    "authoritative movement confirmed at sequence 204",
+    "host countdown and first round began",
+    "late guest connected as entity 3 and followed entity 1"
+  ],
+  "not_completed": ["Hearth handoff", "second-round participation", "complete rematch/reconnect/steward lifecycle"],
+  "stderr_bytes": {"host": 0, "guest": 0, "late_guest": 0},
+  "profile_isolation": ".godot/engineering-network-v1/isolated-roaming",
+  "owned_process_cleanup": "smoke-farflow.ps1 finally block",
+  "logs": ["network-host.log", "network-guest.log", "network-late-guest.log"],
+  "scope": "No internet, relay or physical two-PC acceptance. Capture/send traces remain hundreds of milliseconds. Functional component observations are not a passing lifecycle or cadence result."
+}

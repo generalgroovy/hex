@@ -4,7 +4,8 @@ extends RefCounted
 
 const BENCH := Vector2i(1_504_000, 1_440_000)
 const TARGET := Vector2i(1_504_000, 1_344_000)
-const ELEMENT_IDS: Array[String] = ["water", "earth", "fire", "wind"]
+const ElementRules = preload("res://src/content/element_rules.gd")
+const ELEMENT_IDS = ElementRules.IDS
 const MATTER_PER_CAST := 600
 const CANCEL_TIMEOUT_TICKS := 240
 
@@ -26,9 +27,13 @@ var _recipe_wire_id: int = 0
 var _start_tick: int = 0
 var _deadline_tick: int = 0
 var _issued_tick: int = -1
-var _issued_paid_before: int = 0
+var _issued_cast_floor: int = 0
 var _issued_index: int = -1
-var _paid_casts: int = 0
+var _paid_receipts: Array[Dictionary] = []
+var _observed_product: Dictionary = {}
+var _terminal_result: Dictionary = {}
+var _result_world: SimWorld = null
+var _result_actor: PlayerState = null
 var _saved_wires := PackedInt32Array()
 var _saved_cooldowns := PackedInt32Array()
 var _saved_primary_wire: int = 0
@@ -44,6 +49,7 @@ func begin(world: SimWorld, actor_id: int, element_a: Variant, element_b: Varian
 	if is_active():
 		_status = "Paid demo is already running."
 		return false
+	dismiss_result()
 	var first_id := _element_id(element_a)
 	var second_id := _element_id(element_b)
 	if world == null or not world.is_valid() or world.hex_court == null:
@@ -51,7 +57,7 @@ func begin(world: SimWorld, actor_id: int, element_a: Variant, element_b: Varian
 	if not bool(world.hex_court.chemistry_enabled) or not world.fields.is_empty() or not world.deposits.is_empty() or not world.reactions.is_empty():
 		return _refuse_begin("the world is not a clear whole-hex practice authority")
 	if catalog == null or first_id.is_empty() or second_id.is_empty():
-		return _refuse_begin("choose two of Water, Earth, Fire, or Air")
+		return _refuse_begin("choose two of Water, Fire, Air, Earth, Light, or Dark")
 	var actor := world.player(actor_id)
 	if actor == null:
 		return _refuse_begin("the selected actor is unavailable")
@@ -116,7 +122,8 @@ func begin(world: SimWorld, actor_id: int, element_a: Variant, element_b: Varian
 	_deadline_tick = world.tick + maxi(actor.spell_cooldown_for_wire(first_wire), actor.spell_cooldown_for_wire(second_wire)) \
 		+ actor.cast_recovery_ticks + _cast_window_ticks(world, first_cast) + _cast_window_ticks(world, second_cast) \
 		+ CANCEL_TIMEOUT_TICKS
-	_paid_casts = 0
+	_paid_receipts.clear()
+	_observed_product.clear()
 	_phase = PHASE_READY_FIRST
 	_status = "Paid demo ready: %s Bolt, then %s Bolt, at the experiment target." % [_display_name(first_id), _display_name(second_id)]
 	return true
@@ -128,6 +135,7 @@ func command(world: SimWorld) -> SimCommand:
 	if world == null or world != _world:
 		_abort("Paid demo stopped because the simulation world changed.")
 		return null
+	_refresh_receipts()
 	var actor := world.player(_actor_id)
 	if actor == null:
 		_abort("Paid demo stopped because the actor left the world.")
@@ -146,7 +154,6 @@ func command(world: SimWorld) -> SimCommand:
 			_status = "Paid demo: waiting for the first Bolt's real cooldown and recovery."
 		PHASE_WAIT_FIRST_ACCEPT:
 			if _cast_was_paid(world):
-				_paid_casts = 1
 				_phase = PHASE_WAIT_FIRST_TERMINAL
 				_status = "Paid demo: first Bolt paid; waiting for its owned flight to land and recover."
 			elif world.tick > _issued_tick:
@@ -158,7 +165,6 @@ func command(world: SimWorld) -> SimCommand:
 			_status = "Paid demo: first Bolt is resolving; both real cooldowns and recovery must be ready before the second."
 		PHASE_WAIT_SECOND_ACCEPT:
 			if _cast_was_paid(world):
-				_paid_casts = 2
 				_phase = PHASE_WAIT_SECOND_TERMINAL
 				_status = "Paid demo: second Bolt paid; waiting for the reaction at the target."
 			elif world.tick > _issued_tick:
@@ -166,7 +172,7 @@ func command(world: SimWorld) -> SimCommand:
 				return null
 		PHASE_WAIT_SECOND_TERMINAL:
 			if _cast_settled(world, actor, _wires[1]):
-				var product := _matching_product(world)
+				var product := _observed_product
 				if product.is_empty():
 					_abort("Paid demo stopped: both paid sources resolved, but the selected reaction did not form.")
 					return null
@@ -178,7 +184,7 @@ func command(world: SimWorld) -> SimCommand:
 		PHASE_CANCEL_DRAIN:
 			var draining_wire := int(_wires[_issued_index]) if _issued_index >= 0 and _issued_index < _wires.size() else 0
 			if draining_wire > 0 and _cast_settled(world, actor, draining_wire):
-				_complete("Paid demo canceled after the already-paid Bolt finished; no payment was rolled back.")
+				_complete("Paid demo canceled after the already-paid Bolt finished; no payment was rolled back.", "canceled")
 				return null
 			_status = "Canceling paid demo after the already-paid Bolt finishes."
 	return _neutral_command(world)
@@ -190,6 +196,7 @@ func cancel(world: SimWorld) -> void:
 	if world == null or world != _world:
 		_abort("Paid demo canceled because the simulation world changed.")
 		return
+	_refresh_receipts()
 	var actor := world.player(_actor_id)
 	if actor == null:
 		_abort("Paid demo canceled because the actor left the world.")
@@ -199,7 +206,7 @@ func cancel(world: SimWorld) -> void:
 		_deadline_tick = maxi(_deadline_tick, world.tick + CANCEL_TIMEOUT_TICKS)
 		_status = "Canceling paid demo after the already-paid Bolt finishes."
 		return
-	_complete("Paid demo canceled before another paid cast was issued.")
+	_complete("Paid demo canceled before another paid cast was issued.", "canceled")
 
 
 func is_active() -> bool:
@@ -214,10 +221,37 @@ func recipe_wire_id() -> int:
 	return _recipe_wire_id
 
 
+func has_terminal_result() -> bool:
+	return not _terminal_result.is_empty()
+
+
+# A detached, single-run receipt; no progression/history or live world records.
+func terminal_result() -> Dictionary:
+	return _terminal_result.duplicate(true)
+
+
+func dismiss_result() -> void:
+	_terminal_result.clear()
+	_result_world = null
+	_result_actor = null
+
+
+# The application supplies modal/session/round/spectator eligibility. The model
+# also protects against a replaced world or actor with a reused entity ID.
+func validate_result(world: SimWorld, actor_id: int, eligible: bool = true) -> bool:
+	if not has_terminal_result():
+		return false
+	if not eligible or world == null or world != _result_world or _result_actor == null \
+		or actor_id != int(_terminal_result.actor_id) or world.player(actor_id) != _result_actor:
+		dismiss_result()
+		return false
+	return true
+
+
 func _issue(world: SimWorld, cast_index: int, next_phase: int) -> SimCommand:
 	_phase = next_phase
 	_issued_tick = world.tick
-	_issued_paid_before = int(world.hex_court.metrics.get("matter_paid", 0))
+	_issued_cast_floor = world.hex_court.next_cast_id
 	_issued_index = cast_index
 	_status = "Paid demo: casting %s Bolt through the ordinary paid slot." % _display_name(_elements[cast_index])
 	return _target_command(world, int(_slot_indices[cast_index]))
@@ -236,7 +270,43 @@ func _target_command(world: SimWorld, pressed_slot_index: int) -> SimCommand:
 
 
 func _cast_was_paid(world: SimWorld) -> bool:
-	return int(world.hex_court.metrics.get("matter_paid", 0)) == _issued_paid_before + MATTER_PER_CAST
+	_refresh_receipts()
+	return world == _world and _issued_index >= 0 and _paid_receipts.size() > _issued_index
+
+
+func _refresh_receipts() -> void:
+	if _world == null or _world.hex_court == null:
+		return
+	# Admission belongs to this actor, wire and issued command, not the world's
+	# aggregate payment counter (other people may cast in shared practice).
+	if _issued_index >= 0 and _paid_receipts.size() == _issued_index:
+		for record: Dictionary in _world.hex_court.casts.values():
+			if int(record.id) >= _issued_cast_floor and int(record.owner) == _actor_id \
+				and int(record.wire) == int(_wires[_issued_index]) and bool(record.paid):
+				_paid_receipts.append({"cast_id": int(record.id), "source_id": int(record.source),
+					"wire_id": int(record.wire), "matter": int(record.budget),
+					"flux": int(CombatTuning.cast_definition(int(record.wire)).get("flux_cost", 0))})
+				break
+		# A same-tick defeat can expire the paid startup before the next poll.
+		# cast_started is emitted only after payment, unlike cast intent/refusal.
+		if _paid_receipts.size() == _issued_index and _world.tick == _issued_tick + 1:
+			for event: Dictionary in _world.combat_events:
+				if String(event.get("type", "")) == "cast_started" and int(event.get("entity_id", 0)) == _actor_id \
+					and int(event.get("wire_id", 0)) == int(_wires[_issued_index]):
+					_paid_receipts.append({"cast_id": 0, "source_id": 0, "wire_id": int(_wires[_issued_index]),
+						"matter": MATTER_PER_CAST, "flux": int(CombatTuning.cast_definition(int(_wires[_issued_index])).get("flux_cost", 0))})
+					break
+	for receipt: Dictionary in _paid_receipts:
+		var record: Dictionary = _world.hex_court.casts.get(int(receipt.cast_id), {})
+		if not record.is_empty() and int(record.source) > 0:
+			receipt.source_id = int(record.source)
+	var product := _matching_product(_world)
+	if not product.is_empty():
+		_observed_product = {"id": int(product.id), "recipe_wire_id": int(product.recipe_wire_id),
+			"name": String(HexRecipePolicy.definition(int(product.recipe_wire_id)).get("name", "reaction")),
+			"quantity": int(product.quantity), "cell_count": (product.cells as Dictionary).size(),
+			"position": product.get("position", TARGET), "source_ids": (product.source_ids as Array).duplicate(),
+			"observed_tick": _world.tick}
 
 
 func _cast_settled(world: SimWorld, actor: PlayerState, wire_id: int) -> bool:
@@ -247,29 +317,50 @@ func _cast_settled(world: SimWorld, actor: PlayerState, wire_id: int) -> bool:
 
 
 func _matching_product(world: SimWorld) -> Dictionary:
+	if _paid_receipts.size() != 2:
+		return {}
+	var first_source := int(_paid_receipts[0].source_id)
+	var second_source := int(_paid_receipts[1].source_id)
+	if first_source <= 0 or second_source <= 0 or first_source == second_source:
+		return {}
 	for product: Dictionary in world.hex_court.products.values():
 		var sources: Array = product.get("source_ids", [])
 		if int(product.get("recipe_wire_id", 0)) == _recipe_wire_id \
 			and int(product.get("quantity", 0)) == MATTER_PER_CAST * 2 \
-			and sources.size() == 2 and int(sources[0]) != int(sources[1]):
+			and sources.size() == 2 and first_source in sources and second_source in sources:
 			return product
 	return {}
 
 
-func _complete(message: String) -> void:
+func _complete(message: String, outcome: String = "complete") -> void:
+	_finish(message, outcome)
+
+
+func _finish(message: String, outcome: String) -> void:
+	if not is_active():
+		return
+	_refresh_receipts()
 	var actor := _world.player(_actor_id) if _world != null else null
 	if actor != null:
 		_restore_loadout(actor, _world.tick)
+	var paid_matter := 0
+	var paid_flux := 0
+	for receipt: Dictionary in _paid_receipts:
+		paid_matter += int(receipt.matter)
+		paid_flux += int(receipt.flux)
+	_result_world = _world
+	_result_actor = actor
+	_terminal_result = {"outcome": outcome, "message": message, "actor_id": _actor_id,
+		"recipe_wire_id": _recipe_wire_id, "elements": _elements.duplicate(), "wires": _wires.duplicate(),
+		"target": TARGET, "paid_casts": _paid_receipts.size(), "paid_matter": paid_matter, "paid_flux": paid_flux,
+		"observed_product": _observed_product.duplicate(true), "weave_restored": actor != null,
+		"finished_tick": _world.tick if _world != null else _start_tick}
 	_status = message
 	_clear_run()
 
 
 func _abort(message: String) -> void:
-	var actor := _world.player(_actor_id) if _world != null else null
-	if actor != null:
-		_restore_loadout(actor, _world.tick)
-	_status = message
-	_clear_run()
+	_finish(message, "aborted")
 
 
 func _restore_loadout(actor: PlayerState, current_tick: int) -> void:
@@ -307,9 +398,10 @@ func _clear_run() -> void:
 	_wires = PackedInt32Array()
 	_slot_indices = PackedInt32Array()
 	_issued_tick = -1
-	_issued_paid_before = 0
+	_issued_cast_floor = 0
 	_issued_index = -1
-	_paid_casts = 0
+	_paid_receipts.clear()
+	_observed_product.clear()
 	_saved_wires = PackedInt32Array()
 	_saved_cooldowns = PackedInt32Array()
 

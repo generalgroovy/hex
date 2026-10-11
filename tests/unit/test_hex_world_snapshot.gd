@@ -3,14 +3,22 @@ extends FluxTestSuite
 
 const Snapshot = preload("res://src/net/hex_world_snapshot.gd")
 const ChemistrySnapshot = preload("res://src/net/hex_chemistry_snapshot.gd")
+# Its player validator, row decoder and actor-set validator are byte-identical
+# to the preceding implementation. Keep the oracle independent of the helper.
+const FrozenPlayers = preload("res://tests/support/expanded_world_snapshot_reference.gd")
 const ABILITY_PATH := "res://content/abilities/foundation_abilities_v1.json"
 
 
 func run() -> int:
+	equal(Snapshot.SCHEMA_VERSION, 5, "checkpoint-one movement owns hex-world snapshot schema5")
+	equal(Snapshot.PLAYER_SCALAR_COUNT, 142, "six checkpoint-one scalar fields append to the existing136")
+	equal(Snapshot.PLAYER_VALUE_COUNT, 214, "actor row retains142scalars and24spell values, then appends48status lanes")
+	equal(Snapshot.PLAYER_SCALAR_FIELDS.slice(136), [&"flight_capable", &"jumpsquat_active", &"jumpsquat_ticks", &"double_jump_used", &"wallrun_armed", &"crouching"], "checkpoint-one fields retain the declared append-only canonical order")
 	var catalog := AbilityCatalog.new()
 	check(catalog.load_from_file(ABILITY_PATH), "world snapshot fixtures load the production ability catalog: %s" % catalog.last_error)
 	if not catalog.last_error.is_empty():
 		return finish("hex-world-snapshot")
+	_test_checked_player_decode()
 	_test_production_wellspring_targets()
 	_test_paid_sequence_round_trip(catalog)
 	_test_corruptions_reject_atomically(catalog)
@@ -20,6 +28,126 @@ func run() -> int:
 	_test_split_flight_bijection(catalog)
 	_test_saturated_authority(catalog)
 	return finish("hex-world-snapshot")
+
+
+func _test_checked_player_decode() -> void:
+	var actor := PlayerState.new(1)
+	var baseline := actor.canonical_values()
+	check(FrozenPlayers._valid_player_values(baseline), "player decode baseline is independently valid")
+	_check_player_row_equivalence(baseline, "baseline champion")
+	for size: int in [0, 1, Snapshot.PLAYER_VALUE_COUNT - 1, Snapshot.PLAYER_VALUE_COUNT + 1]:
+		var wrong_length := baseline.duplicate()
+		wrong_length.resize(size)
+		_check_player_row_equivalence(wrong_length, "player row length %d" % size)
+		check(not Snapshot._valid_player_values(wrong_length), "noncanonical player row length rejects")
+	# Every scalar, bool, direction, timer, kit, weave and cooldown lane crosses
+	# both global integer bounds and representative signed/positive boundaries.
+	# Include 64-bit inputs before narrowing: capture's validator owns that guard.
+	for index: int in Snapshot.PLAYER_VALUE_COUNT:
+		for value: int in [-0x80000000, -100_000_001, -1001, -1, 0, 1, 2, 1000, 1001, 1_000_000, 1_000_001, 100_000_001, 0x7fffffff, 0x80000000]:
+			var changed := baseline.duplicate()
+			changed[index] = value
+			_check_player_row_equivalence(changed, "player lane %d value %d" % [index, value])
+	for index: int in Snapshot.PLAYER_BOOL_INDICES:
+		var bad_bool := baseline.duplicate()
+		bad_bool[index] = 2
+		check(not Snapshot._valid_player_values(bad_bool), "each malformed boolean rejects at lane %d" % index)
+	for index: int in Snapshot.PLAYER_DIRECTION_INDICES:
+		for value: int in [-1001, 1001]:
+			var bad_direction := baseline.duplicate()
+			bad_direction[index] = value
+			check(not Snapshot._valid_player_values(bad_direction), "each out-of-range direction rejects at lane %d" % index)
+	for index: int in range(Snapshot.PLAYER_SCALAR_COUNT + PlayerState.SPELL_SLOT_COUNT, Snapshot.PLAYER_VALUE_COUNT):
+		for value: int in [-1, Snapshot.MAX_TIMER_TICKS + 1]:
+			var bad_cooldown := baseline.duplicate()
+			bad_cooldown[index] = value
+			check(not Snapshot._valid_player_values(bad_cooldown), "each malformed slot cooldown rejects at lane %d" % index)
+	var duplicate_spell := baseline.duplicate()
+	duplicate_spell[Snapshot.PLAYER_SCALAR_COUNT + 1] = duplicate_spell[Snapshot.PLAYER_SCALAR_COUNT]
+	_check_player_row_equivalence(duplicate_spell, "duplicate equipped spell")
+	check(not Snapshot._valid_player_values(duplicate_spell), "duplicate equipped spell still rejects after scalar admission")
+	var duplicate_kit := baseline.duplicate()
+	duplicate_kit[29] = duplicate_kit[28]
+	_check_player_row_equivalence(duplicate_kit, "duplicate kit spell")
+	check(not Snapshot._valid_player_values(duplicate_kit), "duplicate kit aliases still reject")
+	var distinct_cooldowns := baseline.duplicate()
+	distinct_cooldowns[24] = 7
+	distinct_cooldowns[Snapshot.PLAYER_SCALAR_COUNT + PlayerState.SPELL_SLOT_COUNT] = 19
+	_check_player_row_equivalence(distinct_cooldowns, "distinct scalar and slot cooldown lanes")
+	check(Snapshot._valid_player_values(distinct_cooldowns), "decode preserves independently stored scalar and slot values without normalization")
+
+	var actor_rows := PackedInt32Array()
+	for entity_id: int in range(1, Snapshot.MAX_ACTORS + 1):
+		var next := PlayerState.new(entity_id)
+		if entity_id > Snapshot.MAX_PLAYERS:
+			next.actor_kind = PlayerState.ActorKind.TRAINING_TARGET
+			next.movement_speed_ratio = 0
+		actor_rows.append_array(PackedInt32Array(Array(next.canonical_values())))
+		_check_player_stream_equivalence(actor_rows, "%d complete actors" % entity_id)
+	equal(Snapshot._decode_players(actor_rows).size(), Snapshot.MAX_ACTORS, "one checked state per complete actor row is returned")
+	check(Snapshot._validate_actor_set(Snapshot._decode_players(actor_rows)), "eight champions and four stationary targets keep the legal actor set")
+	var extra_actor := actor_rows.duplicate()
+	extra_actor.append_array(PackedInt32Array(Array(baseline)))
+	_check_player_stream_equivalence(extra_actor, "actor count above maximum")
+	check(Snapshot._decode_players(extra_actor).is_empty(), "actor count guard rejects the whole stream")
+	var partial_actor := actor_rows.duplicate()
+	partial_actor.resize(partial_actor.size() - 1)
+	_check_player_stream_equivalence(partial_actor, "truncated final actor")
+	check(Snapshot._decode_players(partial_actor).is_empty(), "truncated final row cannot expose a valid prefix")
+	var bad_last := actor_rows.duplicate()
+	bad_last[(Snapshot.MAX_ACTORS - 1) * Snapshot.PLAYER_VALUE_COUNT + 16] = 2
+	_check_player_stream_equivalence(bad_last, "malformed final actor")
+	check(Snapshot._decode_players(bad_last).is_empty(), "failed last admission discards all earlier decoded actors")
+	var duplicate_actor := actor_rows.duplicate()
+	duplicate_actor[Snapshot.PLAYER_VALUE_COUNT] = duplicate_actor[0]
+	_check_player_stream_equivalence(duplicate_actor, "duplicate actor identity")
+	check(not Snapshot._validate_actor_set(Snapshot._decode_players(duplicate_actor)), "duplicate identities still fail the separate actor-set validator")
+	var target_cast := actor_rows.duplicate()
+	target_cast[Snapshot.MAX_PLAYERS * Snapshot.PLAYER_VALUE_COUNT + 17] = int(baseline[28])
+	_check_player_stream_equivalence(target_cast, "training target with pending cast")
+	check(not Snapshot._validate_actor_set(Snapshot._decode_players(target_cast)), "pending target cast remains an actor-set rejection")
+
+	var first := Snapshot._decode_players(actor_rows)
+	var second := Snapshot._decode_players(actor_rows)
+	check(first.size() == Snapshot.MAX_ACTORS and second.size() == Snapshot.MAX_ACTORS, "ownership fixture decodes all actors twice")
+	if first.size() != Snapshot.MAX_ACTORS or second.size() != Snapshot.MAX_ACTORS:
+		return
+	var original_second := second[0].canonical_values()
+	check(first[0] != second[0] and first[0] != first[1], "each row and each decode owns a distinct mutable actor")
+	first[0].position_x += 123
+	first[0].spell_wire_ids[0] = 0
+	first[0].spell_cooldown_ticks[0] += 19
+	equal(second[0].canonical_values(), original_second, "actor and packed spell mutations cannot escape one decode")
+	equal(PackedInt64Array(Array(actor_rows.slice(0, Snapshot.PLAYER_VALUE_COUNT))), original_second, "decoded actor mutation cannot alter input lanes")
+	actor_rows[4] += 456
+	equal(second[0].canonical_values(), original_second, "later input mutation cannot change admitted actor state")
+
+
+func _check_player_row_equivalence(row: PackedInt64Array, label: String) -> void:
+	var original := row.duplicate()
+	var preceding := FrozenPlayers._valid_player_values(row)
+	equal(Snapshot._valid_player_values(row), preceding, label + " retains schema-adapted predecessor admission")
+	var checked := Snapshot._decode_valid_player_values(row)
+	equal(checked != null, preceding, label + " checked decode has the same admission")
+	if checked != null:
+		equal(checked.canonical_values(), row, label + " checked actor preserves every canonical lane")
+	equal(row, original, label + " leaves caller-owned row unchanged")
+	for value: int in row:
+		if value < -0x80000000 or value > 0x7fffffff:
+			return # This is the 64-bit capture boundary, not a narrowed wire row.
+	_check_player_stream_equivalence(PackedInt32Array(Array(row)), label)
+
+
+func _check_player_stream_equivalence(values: PackedInt32Array, label: String) -> void:
+	var original := values.duplicate()
+	var preceding: Array[PlayerState] = FrozenPlayers._decode_players(values)
+	var decoded: Array[PlayerState] = Snapshot._decode_players(values)
+	equal(decoded.size(), preceding.size(), label + " retains frozen row-count/refusal semantics")
+	if decoded.size() == preceding.size():
+		for index: int in decoded.size():
+			equal(decoded[index].canonical_values(), preceding[index].canonical_values(), label + " retains exact decoded actor %d" % index)
+		equal(Snapshot._validate_actor_set(decoded), FrozenPlayers._validate_actor_set(preceding), label + " retains actor-set admission")
+	equal(values, original, label + " leaves packed input unchanged")
 
 
 func _test_split_flight_bijection(catalog: AbilityCatalog) -> void:
@@ -60,10 +188,10 @@ func _test_paid_sequence_round_trip(catalog: AbilityCatalog) -> void:
 	if snapshot.is_empty():
 		return
 	_check_chemistry_outer_capture_equivalence(original, "ordinary paid authority")
-	check(Snapshot.byte_size(snapshot) > 0 and Snapshot.byte_size(snapshot) <= Snapshot.MAX_RAW_BYTES, "complete world capture fits the unchanged 32768-byte raw guard")
+	check(Snapshot.byte_size(snapshot) > 0 and Snapshot.byte_size(snapshot) <= Snapshot.MAX_RAW_BYTES, "complete world capture fits the current 65536-byte raw guard")
 	check(Snapshot.validate_wire_structure(snapshot), "transport validator accepts the exact typed v2 envelope without topology")
 	equal(int(snapshot.epoch), 0, "schema reserves epoch zero until a real reset epoch exists")
-	equal((snapshot.players as PackedInt32Array).size(), Snapshot.PLAYER_VALUE_COUNT, "solo fixture carries all 136 scalar, 12 spell, and 12 cooldown values")
+	equal((snapshot.players as PackedInt32Array).size(), Snapshot.PLAYER_VALUE_COUNT, "solo fixture carries all142scalar,12spell,and12cooldown values")
 	equal((snapshot.projectiles as PackedInt32Array).size() % Snapshot.PROJECTILE_ROW_SIZE, 0, "every flight carries one complete mutable projectile row")
 
 	var trusted := SimWorld.new()
@@ -155,7 +283,7 @@ func _test_corruptions_reject_atomically(catalog: AbilityCatalog) -> void:
 	oversized_bytes.resize(Snapshot.MAX_RAW_BYTES)
 	oversized.hex = {"schema": Snapshot.SCHEMA_VERSION, "size": 1, "bytes": oversized_bytes}
 	check(Snapshot.byte_size(oversized) > Snapshot.MAX_RAW_BYTES, "oversized corruption actually crosses the unchanged raw-byte limit")
-	_rejects_without_mutation(oversized, catalog, "raw payload above 32768 bytes")
+	_rejects_without_mutation(oversized, catalog, "raw payload above the current 65536-byte guard")
 
 
 func _test_trusted_map_and_reserved_epoch(catalog: AbilityCatalog) -> void:
@@ -216,8 +344,8 @@ func _test_legal_actor_boundary_and_packet_size(catalog: AbilityCatalog) -> void
 		return
 	equal((snapshot.players as PackedInt32Array).size(), Snapshot.MAX_ACTORS * Snapshot.PLAYER_VALUE_COUNT, "all twelve complete actor states are present")
 	var packet_bytes := Snapshot.byte_size(snapshot)
-	equal(Snapshot.MAX_RAW_BYTES, 32_768, "world codec retains the unchanged raw transport boundary")
-	check(packet_bytes > 0 and packet_bytes <= Snapshot.MAX_RAW_BYTES, "maximum legal actor fixture reports a raw packet within 32768 bytes: %d" % packet_bytes)
+	equal(Snapshot.MAX_RAW_BYTES, 65_536, "expanded statuses and delivery rows use a bounded64KiB transport boundary")
+	check(packet_bytes > 0 and packet_bytes <= Snapshot.MAX_RAW_BYTES, "maximum legal actor fixture reports a raw packet within 65536 bytes: %d" % packet_bytes)
 	equal(packet_bytes, var_to_bytes(snapshot).size(), "wire bound includes actual Variant headers and padding")
 
 func _test_source_location_and_seed(catalog: AbilityCatalog) -> void:
@@ -272,9 +400,21 @@ func _test_saturated_authority(catalog: AbilityCatalog) -> void:
 			world.players.append(actor)
 		var ordered: Array = world.hex_court.cells.keys()
 		ordered.sort_custom(HexGrid._cell_less)
-		var wire := int(catalog.ability(catalog.spell_id_at("water", "rapid")).wire_id)
+		var separated: Array[Vector2i] = []
+		for cell: Vector2i in ordered:
+			if separated.all(func(other: Vector2i) -> bool: return HexGrid.distance(cell,other) >= 3): separated.append(cell)
+		check(separated.size() >= 32, "saturated ground fields have32 independently separated anchors")
+		# Northward Hailcurrent lanes have distinct southern entry cells in this
+		# north-to-south order; each actor can visit all31 without stacked flow.
+		separated.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+			var pa := HexGrid.center(a)
+			var pb := HexGrid.center(b)
+			return pa.y < pb.y if pa.y != pb.y else pa.x < pb.x)
+		var water_wire := int(catalog.ability(catalog.spell_id_at("water", "rapid")).wire_id)
+		var air_wire := int(catalog.ability(catalog.spell_id_at("wind", "rapid")).wire_id)
 		var count := 63 if mode == "products" else 32
 		for index: int in count:
+			var wire := air_wire if mode == "products" and index < 62 and index % 2 == 1 else water_wire
 			var owner := index % 8 + 1
 			check(world.hex_court.reserve_cast(owner, wire), "legal%s envelope reserves source%d" % [mode, index])
 			world.hex_court.commit_payment(owner)
@@ -282,10 +422,10 @@ func _test_saturated_authority(catalog: AbilityCatalog) -> void:
 			world.next_projectile_id += 1
 			world.hex_court.bind_release(owner, source_id, Vector2i(640_000, 480_000), Vector2i(0, -1000))
 			if mode == "ground":
-				world.hex_court.deposit_terminal({"source_cast_id": source_id, "source_wire_id": wire, "reaction_strength": 1, "position": world.hex_court.origin + HexGrid.center(ordered[index]), "direction": Vector2i(0, -1000)}, 0)
+				world.hex_court.deposit_terminal({"source_cast_id": source_id, "source_wire_id": wire, "reaction_strength": 1, "position": world.hex_court.origin + HexGrid.center(separated[index]), "direction": Vector2i(0, -1000)}, 0)
 			elif mode == "products" and index < 62:
 				if index % 2 == 1:
-					check(bool(world.hex_court.resolve_contact(source_id - 1, source_id, Vector2i(640_000, 480_000), 0).accepted), "paired paid sources form finite product")
+					check(bool(world.hex_court.resolve_contact(source_id - 1, source_id, world.hex_court.origin + HexGrid.center(separated[index / 2]), 0).accepted), "paired paid Water/Air sources form finite Hailcurrent")
 					world.hex_court.sync_flights(world.players, world.projectiles)
 			else:
 				var shot := ProjectileState.new(source_id, owner, owner, wire, 3, Vector2i(150_000, 150_000), Vector2i(1000, 0), 3000, 1000, 400)
@@ -299,12 +439,38 @@ func _test_saturated_authority(catalog: AbilityCatalog) -> void:
 		equal(world.hex_court.reserved_products(), 32, "%s fixture reaches the combined admission boundary exactly" % mode)
 		world.tick = 1
 		if mode == "products":
-			for actor: PlayerState in world.players:
-				actor.position_x = 640_000
-				actor.position_y = 480_000
-				actor.training_spawn_x = 640_000
-				actor.training_spawn_y = 480_000
-			for unused: int in 24: check(world.step([]), "dense products advance to active flow through the production simulation")
+			var active_tick := 0
+			for product: Dictionary in world.hex_court.products.values(): active_tick = maxi(active_tick, int(product.active_tick))
+			while world.tick < active_tick: check(world.step([]), "dense products finish the actual Hailcurrent warning")
+			var earlier_coverage := {}
+			var visited := 0
+			for product: Dictionary in world.hex_court.products.values():
+				equal(int(product.recipe_wire_id), 317, "carry saturation uses live Water/Air317 rather than non-pushing Frostway316")
+				var candidate_cells: Array = product.coverage.keys()
+				candidate_cells.sort_custom(HexGrid._cell_less)
+				var entry := Vector2i.ZERO
+				var has_exclusive_entry := false
+				for cell: Vector2i in candidate_cells:
+					if not earlier_coverage.has(cell):
+						entry = world.hex_court.origin + HexGrid.center(cell)
+						has_exclusive_entry = true
+						break
+				check(has_exclusive_entry, "each paid lane has a real entry outside all earlier flow products")
+				if not has_exclusive_entry: continue
+				for actor: PlayerState in world.players:
+					actor.position_x = entry.x
+					actor.position_y = entry.y
+					actor.velocity_x = 0
+					actor.velocity_y = 0
+					actor.spawn_protection_ticks = 0
+					actor.training_spawn_x = entry.x
+					actor.training_spawn_y = entry.y
+				check(world.step([]), "all12 actors traverse one real current through the production simulation")
+				visited += 1
+				for actor: PlayerState in world.players:
+					check(world.hex_court.flow_carry.has("%d:%d" % [int(product.id), actor.entity_id]), "current contact creates an actual bounded actor/product carry")
+				for cell: Vector2i in product.coverage: earlier_coverage[cell] = true
+				equal(world.hex_court.flow_carry.size(), visited * 12, "one eligible flow per actor accumulates exactly12 new carry keys per visited lane")
 			equal(world.hex_court.flow_carry.size(), 31 * 12, "dense active packet includes every product and actor flow remainder")
 		check(world.hex_court.conservation_valid(), "%s saturated fixture preserves all paid matter" % mode)
 		if mode == "products":
@@ -313,7 +479,7 @@ func _test_saturated_authority(catalog: AbilityCatalog) -> void:
 		check(not snapshot.is_empty(), "%s saturated source authority captures without omission" % mode)
 		if snapshot.is_empty(): continue
 		var packet_bytes := var_to_bytes(snapshot).size()
-		check(packet_bytes <= Snapshot.MAX_RAW_BYTES, "%s saturated authority respects raw32768bytes" % mode)
+		check(packet_bytes <= Snapshot.MAX_RAW_BYTES, "%s saturated authority respects the current 65536-byte raw guard" % mode)
 		print("HEX WORLD PACKET: mode=%s bytes=%d actors=%d flights=%d casts=%d products=%d reserved=%d" % [mode, packet_bytes, world.players.size(), world.projectiles.size(), world.hex_court.casts.size(), world.hex_court.products.size(), world.hex_court.reserved_products()])
 		var restored := Snapshot.prepare(snapshot, world)
 		check(restored != null, "%s full-capacity packet restores" % mode)

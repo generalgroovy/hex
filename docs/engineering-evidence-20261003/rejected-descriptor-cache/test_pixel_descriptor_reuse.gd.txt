@@ -1,0 +1,176 @@
+extends FluxTestSuite
+## Exact descriptors and ownership, not rendered/native or capacity acceptance.
+
+const Pixels = preload("res://src/presentation/pixel_flipbook_presenter.gd")
+const Actions = preload("res://src/presentation/pixel_action_bank.gd")
+const Reference = preload("res://tests/support/pixel_descriptor_reference.gd")
+const CATALOG := "res://content/champions/foundation_champions_v1.json"
+const GROUND_ACTIONS := ["idle", "walk", "sprint", "cast", "rooted"]
+const ACTION_ALIASES := ["jumpsquat", "jump", "double_jump", "walljump", "slide_jump", "fall", "fast_fall", "land"]
+var compared := 0
+
+
+func run() -> int:
+	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CATALOG))
+	var ids: Array = []
+	for champion: Dictionary in catalog.champions: ids.append(champion.id)
+	ids.sort()
+	var bank := Pixels.new()
+	check(bank.configure(ids, true), "live fixed banks admit before descriptor oracle: " + bank.last_error)
+	check(bank.action_bank != null, "optional current action bank actually admitted")
+	if bank.entries.is_empty() or bank.action_bank == null: return finish("pixel-descriptor-reuse")
+	equal(ids.size(), 30, "all thirty live identities participate")
+	equal(bank.descriptor_template_count(), ids.size() * 136, "ground table is exactly the finite physical pose domain")
+	equal(bank.action_bank.descriptor_template_count(), ids.size() * 32, "action aliases share four physical rows per heading")
+	_ground_matrix(bank, ids)
+	_action_matrix(bank, ids)
+	_phase_edges(bank, ids[0])
+	_invalid_queries(bank, ids[0])
+	_mutation_and_interleaving(bank, ids[0])
+	var pilot := Pixels.new()
+	check(pilot.configure(ids, false), "historical pilot remains independently admitted")
+	if not pilot.entries.is_empty():
+		equal(pilot.descriptor_template_count(), pilot.entries.size() * 168, "pilot keeps its own finite six-row domain")
+		_ground_matrix(pilot, pilot.entries.keys())
+		_mutation_and_interleaving(pilot, pilot.entries.keys()[0])
+	_admission_lifecycle()
+	equal(bank.descriptor_template_count(), ids.size() * 136, "phase/travel/cast/reentry queries never grow ground storage")
+	equal(bank.action_bank.descriptor_template_count(), ids.size() * 32, "phase/travel/cast/reentry queries never grow action storage")
+	# Expected loop counts catch helpers that aborted rather than completed.
+	equal(compared, 159019, "all complete reference cases executed, no empty partial pass")
+	return finish("pixel-descriptor-reuse")
+
+
+func _ground_matrix(bank: RefCounted, ids: Array) -> void:
+	for id: String in ids:
+		for action: String in GROUND_ACTIONS:
+			for aim: int in 8:
+				for travel: int in 8:
+					for step: int in 4:
+						for cast_case: int in 3:
+							var casting := cast_case > 0
+							var weight := 0.375 if cast_case == 2 else 0.0
+							var reduced := (aim + travel + step + cast_case) % 2 == 0
+							_compare(bank, id, action, aim, travel, float(step) / 4.0, casting, weight, reduced)
+
+
+func _action_matrix(bank: RefCounted, ids: Array) -> void:
+	for id: String in ids:
+		for action: String in ACTION_ALIASES:
+			for aim: int in 8:
+				for travel: int in 8:
+					for casting: bool in [false, true]:
+						var phase := -2.25 if (aim + travel) % 2 == 0 else 3.125
+						_compare(bank, id, action, aim, travel, phase, casting, 1.0, casting)
+
+
+func _phase_edges(bank: RefCounted, id: String) -> void:
+	for action: String in ["walk", "sprint"]:
+		for aim: int in 8:
+			for travel: int in 8:
+				for phase: float in [-2.0, -0.25, -0.000001, 0.0, 0.249999, 0.25, 0.499999, 0.5, 0.749999, 0.75, 1.0, 2.5]:
+					_compare(bank, id, action, aim, travel, phase, true, 1.0, false)
+	# The compact neutral row is reused at two distinct logical beats, but
+	# those beats must still disclose different sample_phase metadata.
+	var first: Dictionary = bank.frame(id, "walk", 0, 0, 0.25, false, 0.0, false)
+	var second: Dictionary = bank.frame(id, "walk", 0, 0, 0.75, false, 0.0, false)
+	equal(first.components, second.components, "reused neutral pixels are exactly equal")
+	check(first.sample_phase != second.sample_phase and first.motion_phase != second.motion_phase, "descriptor reuse never erases live gait phase")
+
+
+func _invalid_queries(bank: RefCounted, id: String) -> void:
+	for action: String in ["walk", "jump"]:
+		for phase: float in [NAN, INF, -INF]:
+			_compare(bank, id, action, 0, 0, phase, false, 0.0, false)
+		for weight: float in [NAN, INF, -INF, -0.01, 1.01]:
+			_compare(bank, id, action, 0, 0, 0.25, true, weight, false)
+		for facing: int in [-1, 8]:
+			_compare(bank, id, action, facing, 0, 0.25, false, 0.0, false)
+			_compare(bank, id, action, 0, facing, 0.25, false, 0.0, false)
+		_compare(bank, "missing", action, 0, 0, 0.25, false, 0.0, false)
+	for action: String in ["slide", "roll", "air_dodge", "wallrun", "fly", "hit", "stunned", "defeated", "unknown"]:
+		_compare(bank, id, action, 0, 0, 0.25, false, 0.0, false)
+
+
+func _compare(bank: RefCounted, id: String, action: String, aim: int, travel: int, phase: float, casting: bool, weight: float, reduced: bool) -> void:
+	var expected := Reference.ground_frame(bank, id, action, aim, travel, phase, casting, weight, reduced)
+	var actual: Dictionary = bank.frame(id, action, aim, travel, phase, casting, weight, reduced)
+	compared += 1
+	var same := Reference.same_descriptor(actual, expected)
+	check(same, "complete descriptor retains exact keys/types/regions/texture/live values")
+	if not same:
+		print("DESCRIPTOR_ORACLE_MISMATCH ", [id, action, aim, travel, phase, casting, weight, reduced])
+
+
+func _mutation_and_interleaving(bank: RefCounted, id: String) -> void:
+	var actions: Array = ["walk", "idle", "cast", "jump"] if bank.action_bank != null else ["walk", "idle", "cast"]
+	for action: String in actions:
+		var held: Dictionary = bank.frame(id, action, 3, 6, 0.75, true, 1.0, false)
+		var expected := held.duplicate(true)
+		for index: int in 16:
+			var other: Dictionary = bank.frame(id, action, index % 8, (index * 3) % 8, float(index) / 7.0, index % 2 == 0, 0.25, true)
+			other.components[0].source_region = Rect2()
+			other.components[0].texture = null
+			other.components.append({"source_region": Rect2(1, 2, 3, 4)})
+			other.motion_phase = -999.0
+			other.clear()
+		check(Reference.same_descriptor(held, expected), "other actors and observers cannot mutate a retained descriptor")
+		var later: Dictionary = bank.frame(id, action, 3, 6, 0.75, true, 1.0, false)
+		check(Reference.same_descriptor(later, expected), "offscreen gap/reentry reproduces fresh scalars without stale history")
+		held.components.clear()
+		held.clear()
+		check(Reference.same_descriptor(bank.frame(id, action, 3, 6, 0.75, true, 1.0, false), expected), "returned top-level/array/component mutations never reach templates")
+
+
+func _admission_lifecycle() -> void:
+	var image := Image.create(1024, 512, false, Image.FORMAT_RGBA8)
+	image.fill(Color(0.3, 0.5, 0.7, 1.0))
+	var texture := ImageTexture.create_from_image(image)
+	var digest := _rgba_hash(image)
+	var ground := {"id": Pixels.CAST_MANIFEST_ID, "schema_version": 1, "cell": [128,128], "pivot": [64,104],
+		"directions": Pixels.DIRECTIONS.duplicate(), "rows": Pixels.CAST_ROWS.duplicate(),
+		"characters": [{"id":"one", "body":"small", "atlas":"one.png", "rgba_sha256":digest, "waist_y":78, "display_height":58}]}
+	var action := {"id":"hex-pixel-actions-v1", "schema_version":1, "cell":[128,128], "pivot":[64,104],
+		"directions": Actions.DIRECTIONS.duplicate(), "rows": Actions.ROWS.duplicate(),
+		"characters":[{"id":"one", "body":"small", "atlas":"one.png", "rgba_sha256":digest}]}
+	var bank := Pixels.new()
+	var actions := Actions.new()
+	for waist: int in [78, 93, 1, 127]:
+		ground.characters[0].waist_y = waist
+		check(bank.admit_manifest(ground, ["one"], {"one.png":texture}), "ground re-admission publishes a complete bounded domain")
+		equal(bank.descriptor_template_count(), 136, "re-admission replaces rather than appends templates")
+		_compare(bank, "one", "walk", 2, 5, 0.75, true, 0.5, false)
+		equal(bank.frame("one", "idle", 0, 0, 0.0, false, 0.0, false).components[0].destination_region.position.y, float(waist), "new admitted waist cannot reuse old geometry")
+		check(actions.admit(action, bank.entries, {"one.png":texture}), "action re-admission succeeds independently")
+		equal(actions.descriptor_template_count(), 32, "action templates replace old storage")
+		bank.action_bank = actions
+		_compare(bank, "one", "jump", 7, 2, 0.375, true, 1.0, false)
+		check(not actions.admit(action, bank.entries, {}), "failed action re-admission clears prior drawable state")
+		equal(actions.descriptor_template_count(), 0, "failed action admission discards all templates")
+		check(bank.frame("one", "jump", 0, 0, 0.5, false, 0.0, false).is_empty(), "old action descriptors are unreachable after failed admission")
+		check(not bank.admit_manifest(ground, ["one"], {}), "failed ground re-admission clears prior state")
+		equal(bank.descriptor_template_count(), 0, "failed ground admission discards all templates")
+		check(bank.action_bank == null and bank.entries.is_empty(), "failed ground admission also revokes optional action bank")
+		check(bank.frame("one", "idle", 0, 0, 0.0, false, 0.0, false).is_empty(), "failed ground bank returns fallback, not a cached stale frame")
+	# Replacing a valid texture also replaces every borrowed resource reference.
+	image.fill(Color(0.8, 0.2, 0.1, 1.0))
+	var replacement := ImageTexture.create_from_image(image)
+	ground.characters[0].rgba_sha256 = _rgba_hash(image)
+	check(bank.admit_manifest(ground, ["one"], {"one.png":replacement}), "replacement immutable atlas admits")
+	var fresh: Dictionary = bank.frame("one", "idle", 0, 0, 0.0, false, 0.0, false)
+	check(fresh.texture == replacement and fresh.components[0].texture == replacement and fresh.texture != texture, "replacement templates retain no stale old atlas")
+	action.characters[0].rgba_sha256 = _rgba_hash(image)
+	action.characters[0].body = "middle"
+	check(actions.admit(action, {"one":{"body":"middle"}}, {"one.png":replacement}), "replacement action atlas and parent body admit together")
+	var fresh_action: Dictionary = actions.frame("one", "jump", 2, 7, 0.625, true)
+	check(Reference.same_descriptor(fresh_action, Reference.action_frame(actions, "one", "jump", 2, 7, 0.625, true)), "action re-admission replaces complete descriptors exactly")
+	check(fresh_action.texture == replacement and fresh_action.components[0].texture == replacement and fresh_action.texture != texture, "replacement action templates retain no stale atlas")
+	check(fresh_action.body_type == "middle" and fresh_action.display_height == 63, "replacement action templates retain no stale body metadata")
+	equal(actions.descriptor_template_count(), 32, "replacement action admission does not append cached poses")
+
+
+func _rgba_hash(image: Image) -> String:
+	var hash := HashingContext.new()
+	hash.start(HashingContext.HASH_SHA256)
+	hash.update(image.get_data())
+	return hash.finish().hex_encode()

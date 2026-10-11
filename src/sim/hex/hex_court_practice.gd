@@ -1,7 +1,7 @@
 class_name HexCourtPractice
 extends RefCounted
 
-const LOADOUT := [["water", "bolt"], ["fire", "bolt"], ["water", "heavy"], ["fire", "heavy"], ["water", "rapid"], ["fire", "rapid"], ["water", "spray"], ["fire", "spray"], ["earth", "bolt"], ["wind", "bolt"], ["ice", "bolt"], ["charge", "bolt"]]
+const LOADOUT := [["water", "bolt"], ["fire", "bolt"], ["water", "heavy"], ["fire", "heavy"], ["water", "rapid"], ["fire", "rapid"], ["water", "spray"], ["fire", "spray"], ["earth", "bolt"], ["wind", "bolt"], ["light", "bolt"], ["dark", "bolt"]]
 
 static func configure(world: SimWorld, catalog: AbilityCatalog, with_target: bool = true) -> bool:
 	if world == null or catalog == null or world.player() == null or not world.projectiles.is_empty() or not world.deposits.is_empty() or not world.reactions.is_empty() or not world.fields.is_empty():
@@ -17,7 +17,7 @@ static func configure(world: SimWorld, catalog: AbilityCatalog, with_target: boo
 	world.hex_court = HexCourt.new()
 	world.hex_court.chemistry_enabled = true
 	world.map_id = "hex-court-v1"
-	world.map_hash = "pointy48;radius6;water-fire-steam;solo-v1"
+	world.map_hash = "pointy24;radius12;six-elements;solo-v2"
 	world.collision = CollisionWorld.new(1_280_000, 960_000)
 	world.reaction_movement = ReactionMovementWorld.new(world.collision)
 	world.players = [actor]

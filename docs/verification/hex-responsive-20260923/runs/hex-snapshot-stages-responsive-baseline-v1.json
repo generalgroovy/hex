@@ -1,0 +1,193 @@
+{
+	"active_workload_ticks": 40,
+	"assertions": 332,
+	"authority_hash": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+	"engine": "4.7.1-stable (official)",
+	"failures": 0,
+	"hex_authority_hash": "f77fec6a943ef75ca80596dd92b5ab50c4c455063a031e7fddbf45396c572c76",
+	"profile_version": "hex-snapshot-stages-v1",
+	"schema_version": 1,
+	"scope": "Headless isolated inclusive stage timings on the genuine 2766-cell campus after the existing eight-champion dense-crucible warmup and first 40 paid workload ticks. No sockets, rendering, capacity override, gameplay mutation, or performance acceptance.",
+	"seed": 906190,
+	"source_sha256": {
+		"src/net/client_prediction.gd": "706696e60cfa2ee43bed7afbfa64d27a94c07a26fb82e36de79454fae47fa126",
+		"src/net/hex_chemistry_snapshot.gd": "5624b2f71e6b6e13e799c13e09f17a7abbff641da830d8bb77709fa9f7f1504c",
+		"src/net/hex_snapshot_wire_packing.gd": "d3d5cfb801811244eca8113174e931820266835f2733329368454a32849ed07b",
+		"src/net/hex_world_snapshot.gd": "5d1f1e68e9998b170b41cba6873de0b3870bd9abc5931a2147c7db7f53217fa3",
+		"src/sim/core/sim_world.gd": "2a6340d3d12d25c1c06b786c1e6ce8d96f8032ed427dbf431e1ec175b3191baa",
+		"src/sim/hex/hex_chemistry_world.gd": "b87e2cafa243646395db58a0ad7071806be129eca1eb12de647e16aed7fd27cd",
+		"tests/performance/profile_hex_snapshot_stages.gd": "d849cd3464359fa9e40f24c5bc8f81cb9e0f3d5077cf7e9a997381343043143f",
+		"tests/performance/profile_unified_wellspring.gd": "7f524c49f7104f7a549c964f759248c0b1d8abff8da1d12e19a0c7ae728ee6b9"
+	},
+	"stage_repetitions": 5,
+	"stages": {
+		"blank_world": {
+			"inclusive_us": {
+				"max": 227271,
+				"p50": 100472,
+				"p95": 227271,
+				"p99": 227271,
+				"samples": 5
+			},
+			"samples": [
+				67420,
+				100472,
+				90071,
+				121053,
+				227271
+			],
+			"stage": "blank_world",
+			"topology_cells": 2766
+		},
+		"chemistry_capture": {
+			"encoded_bytes": 3216,
+			"inclusive_us": {
+				"max": 162131,
+				"p50": 144756,
+				"p95": 162131,
+				"p99": 162131,
+				"samples": 5
+			},
+			"samples": [
+				145357,
+				139637,
+				143920,
+				144756,
+				162131
+			],
+			"stage": "chemistry_capture"
+		},
+		"chemistry_restore": {
+			"inclusive_us": {
+				"max": 624855,
+				"p50": 277381,
+				"p95": 624855,
+				"p99": 624855,
+				"samples": 5
+			},
+			"samples": [
+				624855,
+				277381,
+				297591,
+				273255,
+				269668
+			],
+			"stage": "chemistry_restore"
+		},
+		"prediction_bind": {
+			"inclusive_us": {
+				"max": 132381,
+				"p50": 76002,
+				"p95": 132381,
+				"p99": 132381,
+				"samples": 5
+			},
+			"samples": [
+				74402,
+				132381,
+				89572,
+				76002,
+				73862
+			],
+			"stage": "prediction_bind"
+		},
+		"topology_hash": {
+			"hash": "2c41dd235abc0576b587aeeb8a614f0a9aa8507104df7fdc556428abb721b9de",
+			"inclusive_us": {
+				"max": 9228,
+				"p50": 8435,
+				"p95": 9228,
+				"p99": 9228,
+				"samples": 5
+			},
+			"ordered_cells": 2766,
+			"samples": [
+				8650,
+				8246,
+				9228,
+				8383,
+				8435
+			],
+			"stage": "topology_hash"
+		},
+		"world_capture": {
+			"inclusive_us": {
+				"max": 571758,
+				"p50": 488128,
+				"p95": 571758,
+				"p99": 571758,
+				"samples": 5
+			},
+			"samples": [
+				488128,
+				504865,
+				486264,
+				467923,
+				571758
+			],
+			"stage": "world_capture",
+			"wire_bytes": 7908
+		},
+		"world_hash": {
+			"hash": "6920447054711abf68fce43a66b56814a0b0a9b085e5e6a9b2119a9bf56291ce",
+			"inclusive_us": {
+				"max": 80776,
+				"p50": 75628,
+				"p95": 80776,
+				"p99": 80776,
+				"samples": 5
+			},
+			"samples": [
+				77564,
+				75628,
+				74209,
+				73877,
+				80776
+			],
+			"stage": "world_hash"
+		},
+		"world_prepare": {
+			"inclusive_us": {
+				"max": 463708,
+				"p50": 344384,
+				"p95": 463708,
+				"p99": 463708,
+				"samples": 5
+			},
+			"samples": [
+				339786,
+				302398,
+				463708,
+				344384,
+				352364
+			],
+			"stage": "world_prepare"
+		}
+	},
+	"timing_semantics": "Validation, equality checks, malformed-input checks, fixture setup, warmup, command work, and destination allocation are outside timed regions unless the named production stage itself owns that allocation. Each stage runs five times against one unchanged authority state.",
+	"topology_cells": 2766,
+	"topology_hash": "2c41dd235abc0576b587aeeb8a614f0a9aa8507104df7fdc556428abb721b9de",
+	"warmup_ticks": 120,
+	"workload": {
+		"actors": 8,
+		"metrics": {
+			"admitted": 8,
+			"deposited": 30,
+			"exposure_queries": 120,
+			"matter_consumed": 2400,
+			"matter_expired": 0,
+			"matter_paid": 4800,
+			"modifiers": 0,
+			"reactions": 2,
+			"refused": 0,
+			"requested": 8
+		},
+		"occupancy": {
+			"active_cells": 29,
+			"product_quantity": 2400,
+			"source_quantity": 2400
+		}
+	},
+	"workload_version": "unified-wellspring-profile-v1/dense-crucible-first-40",
+	"world_tick": 160
+}

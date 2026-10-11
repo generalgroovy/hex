@@ -3,6 +3,12 @@ extends FluxTestSuite
 
 const TIDE_SHELL_WIRE_ID: int = 181
 const NIGHT_SHELL_WIRE_ID: int = 193
+const RecipePolicy = preload("res://src/sim/hex/hex_recipe_policy.gd")
+# This legacy two-source lane carries only the21 current core identities.
+# Higher-order funding, contact latches and all63 masks use HexWorldSnapshot.
+const CORE_RECIPE_WIRES: Array[int] = [301,302,303,304,307,308,309,310,311,314,315,316,317,320,321,322,325,326,334,335,336]
+const ELEMENT_BOLT_WIRES: Array[int] = [140,145,163,159,173,142]
+const ORIGINAL_WIRES: Array[int] = [140,181,182,141,145,179,180,154,163,185,186,164,159,183,184,160,173,191,192,174,142,193,194,176]
 
 
 func run() -> int:
@@ -19,7 +25,56 @@ func run() -> int:
 	_test_snapshot_validation_fails_closed()
 	_test_complete_chemistry_envelope()
 	_test_trail_snapshot_limits()
+	_test_expanded_status_delivery_round_trip()
 	return finish("session-snapshot")
+
+
+static func _dense_status_values(salt: int = 0) -> PackedInt32Array:
+	# Maximum-valid codec witness; duration600 is a schema bound, not a hit claim.
+	var result := PackedInt32Array()
+	var potencies := [80, 1000, 120, 80, 1000, 1000]
+	for channel: int in 6:
+		result.append_array(PackedInt32Array([600, potencies[channel], 2400 if channel == 1 else 0, 12 if channel == 1 else 0,
+			0x7fffffff - channel - salt, 10000 - channel, MixtureCatalog.wire_for(63, ["bolt", "heavy", "rapid", "spray", "mantle", "fuse"][channel]), 0x7fffffff - channel * 7919 - salt]))
+	return result
+
+
+func _test_expanded_status_delivery_round_trip() -> void:
+	var source := SimWorld.new(120, 71, CollisionWorld.new(3_000_000, 2_000_000))
+	source.player().champion_wire_id = 1
+	source.player().spell_status_values = _dense_status_values()
+	for family: String in ["mantle", "fuse", "split", "rebound"]:
+		var wire := MixtureCatalog.wire_for(63, family)
+		var definition := CombatTuning.cast_definition(wire)
+		var shot := ProjectileState.new(1000 + source.projectiles.size(), 1, 1, wire, int(definition.element_wire_id), Vector2i(1_000_000, 700_000), Vector2i(300_000, 0), int(definition.radius), int(definition.damage), 180)
+		shot.reaction_strength = int(definition.reaction_strength)
+		shot.delivery_phase = 1 if family == "fuse" else 2 if family == "split" else 0
+		shot.delivery_ticks = 72 if family == "fuse" else 0
+		shot.delivery_damage_remaining = int(definition.damage) if family in ["mantle", "fuse"] else 0
+		if family in ["mantle", "fuse", "split"]:
+			for contact: int in range(1, 13): shot.contact_entity_ids.append(contact)
+		source.projectiles.append(shot)
+	var snapshot := SessionSnapshot.capture(source, {1: "Expanded Host"})
+	check(SessionSnapshot.validate(snapshot), "all new delivery states and maximum-valid status channels validate in the expanded codec")
+	var replica := SimWorld.new(120, 71, CollisionWorld.new(3_000_000, 2_000_000))
+	check(SessionSnapshot.apply_to_world(snapshot, replica), "complete expanded actor and four delivery states restore atomically")
+	equal(replica.player().spell_status_values, source.player().spell_status_values, "all48 statuses preserve clocks, potency, pool, pulse and attribution")
+	equal(replica.projectiles.size(), 4, "no expanded delivery is omitted from the snapshot")
+	for index: int in mini(source.projectiles.size(), replica.projectiles.size()):
+		for property: StringName in [&"source_wire_id", &"delivery_phase", &"delivery_ticks", &"delivery_damage_remaining", &"contact_entity_ids"]:
+			equal(replica.projectiles[index].get(property), source.projectiles[index].get(property), "expanded projectile preserves %s including the full12-contact bound" % property)
+	for scenario: String in ["old_schema", "old_player_prefix", "old_projectile_prefix", "overlong_status", "invalid_delivery_phase"]:
+		var malformed := snapshot.duplicate(true)
+		match scenario:
+			"old_schema": malformed.schema = 23
+			"old_player_prefix": malformed.players[0][3] = (malformed.players[0][3] as PackedInt32Array).slice(0,115)
+			"old_projectile_prefix": malformed.projectiles = (malformed.projectiles as PackedInt32Array).slice(0,18)
+			"overlong_status": malformed.players[0][3][115] = 601
+			"invalid_delivery_phase": malformed.projectiles[18] = 3
+		var before := replica.state_hash()
+		check(not SessionSnapshot.validate(malformed), "incomplete or malformed expansion refuses: " + scenario)
+		check(not SessionSnapshot.apply_to_world(malformed, replica), "expanded rejection remains atomic: " + scenario)
+		equal(replica.state_hash(), before, "rejected expanded authority leaves every actor and delivery unchanged")
 
 
 func _test_boundary_impacts() -> void:
@@ -28,7 +83,7 @@ func _test_boundary_impacts() -> void:
 		world.player().champion_wire_id = 1
 		var start := Vector2i(2_998_000, 1_000_000) if axis == 0 else Vector2i(1_500_000, 1_998_000)
 		var velocity := Vector2i(600_000, 0) if axis == 0 else Vector2i(0, 600_000)
-		var projectile := ProjectileState.new(1000, 1, 1, CombatTuning.RILLSHOT_WIRE_ID, 2, start, velocity, 1000, 1000, 120)
+		var projectile := ProjectileState.new(1000, 1, 1, CombatTuning.RILLSHOT_WIRE_ID, 3, start, velocity, 1000, 1000, 120)
 		world.projectiles.append(projectile)
 		check(world.step([]), "production boundary collision advances")
 		var impacts := 0
@@ -82,7 +137,7 @@ func _test_hex_clash_event_round_trip() -> void:
 
 
 func _test_snapshot_round_trip() -> void:
-	equal(SessionSnapshot.SCHEMA_VERSION, 21, "remote hex-clash feedback owns the explicit snapshot schema21 boundary")
+	equal(SessionSnapshot.SCHEMA_VERSION, 24, "appended elemental statuses and delivery state own the explicit schema24 boundary")
 	var source := SimWorld.new(120, 7, CollisionWorld.new(3_000_000, 2_000_000))
 	var host: PlayerState = source.player()
 	host.champion_wire_id = 1
@@ -161,7 +216,8 @@ func _test_snapshot_round_trip() -> void:
 
 
 func _test_movement_presentation_round_trip() -> void:
-	equal(SessionSnapshot.PLAYER_VALUE_COUNT, 74 + SessionSnapshot.MOVEMENT_PRESENTATION_FIELDS.size(), "movement extension has an exact fixed packet shape")
+	equal(SessionSnapshot.PLAYER_BASE_VALUE_COUNT, 74 + SessionSnapshot.MOVEMENT_PRESENTATION_FIELDS.size(), "the original movement fields retain their exact published prefix")
+	equal(SessionSnapshot.PLAYER_VALUE_COUNT, 163, "six eight-value status channels append to the unchanged115-value player prefix")
 	var source := SimWorld.new(120, 61, CollisionWorld.new(3_000_000, 2_000_000))
 	var actor := source.player()
 	actor.champion_wire_id = 1
@@ -175,7 +231,7 @@ func _test_movement_presentation_round_trip() -> void:
 			value = 1
 		elif property_name in [&"movement_action_speed", &"hop_speed"]:
 			value = 456_000
-		elif property_name in [&"air_dodge_used", &"jump_held_last_tick", &"air_floating", &"float_used"]:
+		elif property_name in [&"air_dodge_used", &"jump_held_last_tick", &"air_floating", &"float_used", &"flight_capable", &"jumpsquat_active", &"double_jump_used", &"wallrun_armed", &"crouching"]:
 			value = 1
 		elif property_name == &"float_max_duration_ms":
 			value = MovementTuning.FLOAT_MIDDLE_DURATION_MS
@@ -203,7 +259,7 @@ func _test_projectile_and_event_round_trip() -> void:
 	source.player().champion_wire_id = 1
 	source.player().last_event = "cast_release_140"
 	var projectile := ProjectileState.new(
-		1000, 1, 1, CombatTuning.RILLSHOT_WIRE_ID, 2,
+		1000, 1, 1, CombatTuning.RILLSHOT_WIRE_ID, 3,
 		Vector2i(1_000_000, 700_000), Vector2i(480_000, 0),
 		12_000, 9_000, 90,
 	)
@@ -252,6 +308,38 @@ func _test_projectile_and_event_round_trip() -> void:
 		equal(String(replica.combat_events[6].get("type", "")), "spray_hit", "spray target cue decodes distinctly")
 		equal(int(replica.combat_events[6].get("damage", 0)), int(CombatTuning.cast_definition(CombatTuning.TIDELINE_WIRE_ID)["damage"]), "spray hit damage round-trips")
 	equal(replica.player().last_event, "cast_release_140", "readable cast event round-trips")
+	for invalid_element: int in [1, 2, 4, 5, 6, 7, 8, 999]:
+		var malformed := snapshot.duplicate(true)
+		malformed.projectiles[3] = invalid_element
+		check(not SessionSnapshot.validate(malformed), "projectile refuses retired or mismatched ingredient identity")
+		var before := replica.state_hash()
+		check(not SessionSnapshot.apply_to_world(malformed, replica), "invalid projectile identity cannot apply")
+		equal(replica.state_hash(), before, "identity rejection leaves the replica unchanged")
+	for retired_spell: int in AbilityCatalog.RETIRED_ABILITY_WIRES.values():
+		var malformed := snapshot.duplicate(true)
+		malformed.projectiles[2] = retired_spell
+		check(not SessionSnapshot.validate(malformed), "retired spell cannot enter through the older snapshot lane")
+	var physical_count := 0
+	var spray_count := 0
+	var original_physical_count := 0
+	var original_spray_count := 0
+	equal(Array(CombatTuning.runtime_wire_ids().slice(0,24)), ORIGINAL_WIRES, "original24 snapshot identities retain exact wire order")
+	for wire: int in CombatTuning.runtime_wire_ids():
+		var definition := CombatTuning.cast_definition(wire)
+		var candidate := snapshot.duplicate(true)
+		candidate.projectiles[2] = wire
+		candidate.projectiles[3] = int(definition.element_wire_id)
+		var physical := String(definition.shape) == "projectile"
+		equal(SessionSnapshot.validate(candidate), physical, "physical lane admits only live projectile families with their actual element")
+		if physical: physical_count += 1
+		else: spray_count += 1
+		if wire in ORIGINAL_WIRES:
+			if physical: original_physical_count += 1
+			else: original_spray_count += 1
+	equal(original_physical_count, 18, "original six Bolt, Heavy and Rapid definitions retain positive lane controls")
+	equal(original_spray_count, 6, "original six Spray definitions retain negative physical-lane controls")
+	equal(physical_count, 441, "all63 mixtures times seven physical families have positive lane controls")
+	equal(spray_count, 63, "all63 instantaneous Sprays remain forbidden in physical projectile rows")
 
 
 func _test_reaction_strength_round_trip_and_validation() -> void:
@@ -259,7 +347,7 @@ func _test_reaction_strength_round_trip_and_validation() -> void:
 	source.tick = 100
 	source.player().champion_wire_id = 1
 	var projectile := ProjectileState.new(
-		7001, 1, 1, CombatTuning.RILLSHOT_WIRE_ID, 2,
+		7001, 1, 1, CombatTuning.RILLSHOT_WIRE_ID, 3,
 		Vector2i(1_000_000, 700_000), Vector2i(480_000, 0),
 		12_000, 9_000, 90,
 	)
@@ -276,9 +364,11 @@ func _test_reaction_strength_round_trip_and_validation() -> void:
 	source.deposits.append(deposit)
 	var snapshot := SessionSnapshot.capture(source, {1: "Host"})
 	check(SessionSnapshot.validate(snapshot), "same-cast projectile/deposit strength validates with spent projectile material")
-	equal(snapshot["schema"], 21, "cast provenance shares the current bounded snapshot schema")
+	equal(snapshot["schema"], 24, "cast provenance retains its prefix within the expanded bounded snapshot schema")
 	var projectile_values: PackedInt32Array = snapshot["projectiles"]
-	equal(projectile_values.size(), 18, "projectile row appends exactly one cast-strength value")
+	equal(SessionSnapshot.PROJECTILE_BASE_VALUE_COUNT, 18, "projectile provenance retains the exact original18-value prefix")
+	equal(projectile_values.size(), 34, "projectile row appends exactly sixteen bounded delivery values")
+	equal(projectile_values.slice(18), PackedInt32Array([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]), "ordinary original Bolt has neutral delivery extension")
 	equal(projectile_values[15], 0, "optical mask low slot retains its published index")
 	equal(projectile_values[16], 0, "optical mask high slot retains its published index")
 	equal(projectile_values[17], 15, "projectile cast strength occupies appended index17")
@@ -364,7 +454,7 @@ func _test_maximum_envelope_fits_transport() -> void:
 			1 + index % SessionSnapshot.MAX_PLAYERS,
 			1,
 			CombatTuning.RILLSHOT_WIRE_ID,
-			2,
+			3,
 			Vector2i(500_000 + index * 7919, 500_000 + index * 6151),
 			Vector2i(480_000 - index * 187, index * 157),
 			12_000,
@@ -383,8 +473,10 @@ func _test_maximum_envelope_fits_transport() -> void:
 		target.health_maximum = 80_000
 		target.health = 40_000
 		world.players.append(target)
+	for actor: PlayerState in world.players:
+		actor.spell_status_values = _dense_status_values(actor.entity_id)
 	var snapshot := SessionSnapshot.capture(world, names_by_entity, events)
-	check(SessionSnapshot.validate(snapshot), "maximum four-delivery snapshot envelope validates")
+	check(SessionSnapshot.validate(snapshot), "original maximum threat envelope plus dense champion/target statuses validates")
 	var packets := SessionTransport._snapshot_wire_packets(snapshot)
 	check(packets.size() > 1 and packets.size() <= SessionTransport.MAX_SNAPSHOT_FRAGMENTS, "varied maximum threat load uses a bounded complete fragment set")
 	var receiver := SessionTransport.new()
@@ -406,10 +498,10 @@ func _chemistry_deposit(index: int) -> ElementDepositState:
 	var deposit := ElementDepositState.new()
 	deposit.entity_id = 3000 + index
 	deposit.source_cast_id = 1000 + index
-	deposit.source_wire_id = CombatTuning.RILLSHOT_WIRE_ID
+	deposit.source_wire_id = ELEMENT_BOLT_WIRES[index % ELEMENT_BOLT_WIRES.size()]
 	deposit.owner_id = 1 + index % 8
 	deposit.team_id = 1 + index % 8
-	deposit.element_wire_id = 1 + index % 8
+	deposit.element_wire_id = ElementRules.WIRE_IDS[index % ElementRules.WIRE_IDS.size()]
 	deposit.position_x = 300_000 + index * 7919
 	deposit.position_y = 400_000 + index * 6151
 	deposit.created_tick = 100
@@ -421,7 +513,7 @@ func _chemistry_deposit(index: int) -> ElementDepositState:
 func _chemistry_reaction(index: int) -> ElementReactionState:
 	var reaction := ElementReactionState.new()
 	reaction.entity_id = 4000 + index
-	reaction.recipe_wire_id = 301 + index % 36
+	reaction.recipe_wire_id = CORE_RECIPE_WIRES[index % CORE_RECIPE_WIRES.size()]
 	reaction.owner_id = 1 + index % 8
 	reaction.team_id = 1 + index % 8
 	reaction.position_x = 500_000 + index * 3571
@@ -459,6 +551,7 @@ func _test_complete_chemistry_envelope() -> void:
 			actor.champion_wire_id = 1
 			names[actor.entity_id] = "T".repeat(SessionTransport.MAX_PLAYER_NAME_LENGTH)
 			actor.float_used = true
+			actor.flight_capable = true
 			actor.air_floating = true
 			actor.air_height = 20_000
 			actor.float_ticks = 100
@@ -468,7 +561,7 @@ func _test_complete_chemistry_envelope() -> void:
 			actor.pending_cast_target_x = 3_000_000
 			actor.pending_cast_target_y = 2_000_000
 		for index: int in range(128 - deposit_count):
-			var projectile := ProjectileState.new(1000 + index, 1 + index % 8, 1, CombatTuning.RILLSHOT_WIRE_ID, 2, Vector2i(300000 + index * 7919, 500000 + index * 6151), Vector2i(480000 - index * 187, index * 157), 12000, 9000, 500)
+			var projectile := ProjectileState.new(1000 + index, 1 + index % 8, 1, CombatTuning.RILLSHOT_WIRE_ID, 3, Vector2i(300000 + index * 7919, 500000 + index * 6151), Vector2i(480000 - index * 187, index * 157), 12000, 9000, 500)
 			projectile.remaining_distance = 1_000_000 + index
 			projectile.source_cast_id = 1000 + index
 			projectile.material_strength = 1 + index % 1000
@@ -534,17 +627,28 @@ func _test_complete_chemistry_envelope() -> void:
 		world.deposits.append(_chemistry_deposit(200))
 		check(SessionSnapshot.capture(world, names).is_empty(), "over-admitted source refuses a whole snapshot instead of hiding a threat")
 		receiver.stop()
-	for recipe_wire: int in range(301, 337):
+	for recipe_wire: int in CORE_RECIPE_WIRES:
 		var world := SimWorld.new(120, 3)
 		world.player().champion_wire_id = 1
 		var reaction := _chemistry_reaction(0)
 		reaction.recipe_wire_id = recipe_wire
 		world.reactions.append(reaction)
 		var snapshot := SessionSnapshot.capture(world, {})
-		check(SessionSnapshot.validate(snapshot), "each of36 recipe identities is admitted without promoting unsupported values")
+		check(SessionSnapshot.validate(snapshot), "each of21 core recipe identities is admitted without promoting unsupported values")
 		var replica := SimWorld.new(120, 3)
 		check(SessionSnapshot.apply_to_world(snapshot, replica), "each reaction identity restores for remote presentation")
-		equal(replica.reactions[0].recipe_wire_id, recipe_wire, "all36 reaction identities survive replication")
+		equal(replica.reactions[0].recipe_wire_id, recipe_wire, "all21 core reaction identities survive replication")
+	for retired_wire: int in range(301, 337):
+		if retired_wire in CORE_RECIPE_WIRES: continue
+		var retired := _chemistry_reaction(0)
+		retired.recipe_wire_id = retired_wire
+		check(not retired.validate(), "retired recipe is refused by current network state")
+		check(retired.validate_archive(), "retired recipe remains inspectable only through explicit archive validation")
+	for higher_wire: int in RecipePolicy.active_wire_ids():
+		if higher_wire <= 336: continue
+		var higher := _chemistry_reaction(0)
+		higher.recipe_wire_id = higher_wire
+		check(not higher.validate(), "higher-order product cannot enter a two-source lane without funding provenance")
 
 
 func _snapshot_trail(index: int, owner: int) -> ElementDepositState:
@@ -573,7 +677,7 @@ func _test_trail_snapshot_limits() -> void:
 	equal(world.state_hash(), before, "role-cap capture leaves canonical source state untouched")
 	if boundary.is_empty():
 		return
-	equal(boundary["schema"], 21, "trail role caps share the current snapshot schema")
+	equal(boundary["schema"], 24, "trail role caps retain their rules inside the expanded snapshot schema")
 	equal(boundary["deposits"][0].size(), 15, "trail role retains its footprint while cast strength is appended")
 	var replica := SimWorld.new(120, 119)
 	check(SessionSnapshot.apply_to_world(boundary, replica), "exact-boundary trails restore as a presentation replica")
@@ -636,7 +740,7 @@ func _fragment_fixture(tick: int = 10) -> Dictionary:
 	world.tick = tick
 	for index: int in range(80):
 		world.projectiles.append(ProjectileState.new(
-			1000 + index, 1, 1, CombatTuning.RILLSHOT_WIRE_ID, 2,
+			1000 + index, 1, 1, CombatTuning.RILLSHOT_WIRE_ID, 3,
 			Vector2i(500_000 + index * 7919, 500_000 + index * 6151),
 			Vector2i(480_000 - index * 187, index * 157), 12_000, 9_000, 90 + index,
 		))

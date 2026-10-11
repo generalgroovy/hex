@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "scope": "Synthetic process identity and real isolated PowerShell child ownership tests, not gameplay",
+  "identity_checks": 12,
+  "total_checks": 25,
+  "command": "scripts/test-engine-guard.ps1",
+  "raw_evidence": ".godot/guard-tests/ec7b3bc220f64577b149ed774e7d07e8",
+  "regression": "A departed game PID reused by a differently named protected process must not block engine admission; matching or unknown names remain fail closed when identity cannot be established.",
+  "checks_include": ["no protected property access after readable name mismatch", "matching names require start and path identity", "cross-process checkout exclusion", "nested ownership", "abandoned owner and surviving child", "cancellation closes owned child", "unrelated child preserved", "lock release"],
+  "system_processes_stopped": false
+}

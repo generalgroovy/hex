@@ -1,16 +1,41 @@
 class_name WellspringIllustratedKit
 extends RefCounted
 
-# One cached terrain texture plus shared object atlases. Map data remains the
+# Bounded terrain regions plus shared object atlases. Map data remains the
 # only authority for walkability, walls, targets and station commands.
 const PATH := "res://content/visual/wellspring_illustrated_v1.json"
 const MapLibrary = preload("res://src/presentation/pixel_map_library.gd")
 const GroundStyle = preload("res://art_batches/wellspring_style_v2/ground_style.gd")
+const HexTerrain = preload("res://src/presentation/hex_environment_layout.gd")
+const WallSkin = preload("res://src/presentation/practice_wall_skin.gd")
+const ROOF_SKIN_VERSION := "slate-roofs-1"
+const ROOF_CACHE_MAX_BYTES := 1024 * 1024
+const PRACTICE_CACHE_MAX_BYTES := 3 * 1024 * 1024
+const GROUND_CHUNK_SIZE := 512
+const GROUND_CACHE_LIMIT := 24 # Explicit synchronous tooling cache, not a viewport limit.
+const GROUND_MAX_RESIDENT := 132
+const TerrainStream = preload("res://src/presentation/wellspring_terrain_stream.gd")
+const GROUND_SAMPLER_VERSION := "authored-regions-2"
+const GROUND_CACHE_MAX_BYTES := 6144 * 5376 * 4
+const OVERVIEW_SCALE := 4
+const LARGE_WORLD_MAX := Vector2i(6144, 5376)
+const DistrictStyle = preload("res://src/presentation/wellspring_district_style.gd")
+const COMMONS_FLOOR := Rect2(1148, 568, 776, 568)
+const FLOOR_INSET := 24.0
+const FLOOR_RIBBON_HALF_WIDTH := 24.0
 const PROP_IDS := ["oak", "small_tree", "flowers", "ferns", "wall_horizontal", "wall_vertical", "rocks", "planter", "fountain", "lectern", "target", "bell", "doorway", "bench", "lantern", "banner"]
 var data: Dictionary = {}
 var content_hash := ""
 var last_error := ""
 var ground: Texture2D
+var ground_chunks: Dictionary[Vector2i, Texture2D] = {}
+var ground_chunk_order: Array[Vector2i] = []
+var ground_cache_bytes := 0
+var ground_chunk_builds := 0
+var ground_chunk_hits := 0
+var ground_overview: Texture2D
+var terrain_stream: RefCounted
+var bake_signature := ""
 var surfaces: Texture2D
 var props: Texture2D
 var tiles: Array[Image] = []
@@ -22,12 +47,145 @@ var cached_terrain_builds := 0
 var ground_generation_ms := 0
 var pixel_map: RefCounted
 var ground_style: RefCounted
+var hex_terrain: RefCounted
+var roof_skins: Dictionary[int, Texture2D] = {}
+var roof_skin_bytes := 0
+var cached_roof_builds := 0
+var practice_skins: Dictionary[int, Texture2D] = {}
+var practice_skin_bytes := 0
 
 
-func configure(layout: SanctumCampusLayout, path: String = PATH) -> bool:
+class GroundRegionSampler:
+	extends RefCounted
+	# Short-lived broadphase only. Preserve original callback precedence and
+	# exact segment distance tests; no quantized material or new art cache.
+	var owner: RefCounted
+	var sample_bounds: Rect2
+	var land: Rect2
+	var seed_value: int
+	var areas: Array[Dictionary] = []
+	var segments: Array[Dictionary] = []
+	var ribbons: Array[Dictionary] = []
+	var districts: Array[Dictionary] = []
+
+	func _init(kit: RefCounted, region: Rect2i) -> void:
+		owner = kit
+		# compose_region visits off-image centers: one half-extent plus one
+		# floor/ceil pitch on each side. Two pixels conservatively cover float
+		# conversion and cell_at's fixed-point round trip at either boundary.
+		var pad_x := float(HexGrid.HALF_WIDTH + HexGrid.COLUMN_PITCH) / SimConfig.FIXED_SCALE + 2.0
+		var pad_y := float(HexGrid.HALF_HEIGHT + HexGrid.ROW_PITCH) / SimConfig.FIXED_SCALE + 2.0
+		sample_bounds = Rect2(region).grow_individual(pad_x, pad_y, pad_x, pad_y)
+		land = Rect2(64, 128, kit.campus.canvas_size.x - 128, kit.campus.canvas_size.y - 224)
+		seed_value = int(kit.data.get("terrain", {}).get("seed", 0))
+		for area: Dictionary in kit.campus.data.get("activity_areas", []):
+			var room := Rect2(SanctumCampusLayout._parse_bounds(area["bounds"]))
+			if room.intersects(sample_bounds, true):
+				areas.append({"id": String(area["id"]), "room": room})
+		for route: Dictionary in kit.paths:
+			var points: PackedVector2Array = route["points"]
+			var width := float(route["width"])
+			var advanced := bool(route["advanced"])
+			for index: int in range(points.size() - 1):
+				var envelope := Rect2(points[index], Vector2.ZERO).expand(points[index + 1]).grow(maxf(width * 0.5, FLOOR_RIBBON_HALF_WIDTH))
+				if not envelope.intersects(sample_bounds, true): continue
+				var segment := {"a": points[index], "b": points[index + 1], "half_width": width * 0.5, "advanced": advanced}
+				segments.append(segment)
+				if not advanced and width >= 160.0: ribbons.append(segment)
+		for district: Dictionary in kit.campus.data.get("districts", []):
+			var bounds := Rect2(SanctumCampusLayout._parse_bounds(district["bounds"]))
+			if bounds.intersects(sample_bounds, true):
+				districts.append({"bounds": bounds, "environment": String(district.get("environment", ""))})
+
+	func material_at(point: Vector2) -> String:
+		return WellspringIllustratedKit.pixel_family(surface_at(point))
+
+	func surface_at(point: Vector2) -> int:
+		var cell := HexTerrain.cell_at(point)
+		point = HexTerrain.center_pixels(cell)
+		# Safe for incidental out-of-region callers; compositor centers remain
+		# inside the prepared envelope, verified independently by the suite.
+		if not sample_bounds.has_point(point): return owner.surface_at(point)
+		var seed := absi(cell.x * 173 + cell.y * 389 + seed_value)
+		if not land.has_point(point): return 8
+		var edge := minf(minf(point.x - land.position.x, land.end.x - point.x), minf(point.y - land.position.y, land.end.y - point.y))
+		if edge < 28 + (seed % 3) * 8: return 14 if edge > 14 else 8
+		if COMMONS_FLOOR.has_point(point): return 0
+		for area: Dictionary in areas:
+			var room: Rect2 = area.room
+			if not room.grow(-16).has_point(point): continue
+			match String(area.id):
+				"chain-courtyard": return 0
+				"open-laboratory": return 1 if room.grow(-48).has_point(point) else 0
+				"cover-garden":
+					var inset := point - room.position
+					if int(inset.x) % 224 < 64 and int(inset.y) % 192 < 64: return 4
+					return 0
+		for area: Dictionary in areas:
+			if String(area.id) in ["pattern-range", "duel-court", "crucible"] and (area.room as Rect2).grow(-16).has_point(point):
+				return 2 if String(area.id) == "crucible" else 0
+		for segment: Dictionary in segments:
+			var distance := point.distance_to(Geometry2D.get_closest_point_to_segment(point, segment.a, segment.b))
+			if distance <= float(segment.half_width):
+				return 13 if bool(segment.advanced) else (2 if distance > float(segment.half_width) - 18 else 1)
+		for district: Dictionary in districts:
+			if not (district.bounds as Rect2).has_point(point): continue
+			match String(district.environment):
+				"coast", "observatory": return 0
+				"foundry": return 6
+		return 5 if seed % 5 == 0 else 4
+
+	func finish_at(point: Vector2, material: String) -> int:
+		point = HexTerrain.center_pixels(HexTerrain.cell_at(point))
+		if not sample_bounds.has_point(point): return owner.floor_finish_at(point, material)
+		if material not in ["paving", "earth"]: return HexTerrain.Finish.ORIGINAL
+		for segment: Dictionary in ribbons:
+			if point.distance_to(Geometry2D.get_closest_point_to_segment(point, segment.a, segment.b)) <= FLOOR_RIBBON_HALF_WIDTH:
+				return HexTerrain.Finish.ROUTE
+		if material != "paving": return HexTerrain.Finish.ORIGINAL
+		for area: Dictionary in areas:
+			var finish: int = HexTerrain.Finish.ORIGINAL
+			match String(area.id):
+				"source-court": finish = HexTerrain.Finish.COMMONS
+				"crucible": finish = HexTerrain.Finish.CHEMISTRY
+				"duel-court": finish = HexTerrain.Finish.DUEL
+				"chain-courtyard": finish = HexTerrain.Finish.CHAIN
+				_: continue
+			var room: Rect2 = area.room
+			if finish == HexTerrain.Finish.COMMONS: room = room.intersection(COMMONS_FLOOR)
+			if not room.grow(-FLOOR_INSET).has_point(point): continue
+			return finish if room.grow(-2.0 * FLOOR_INSET).has_point(point) else HexTerrain.Finish.INSET
+		for district: Dictionary in districts:
+			if not (district.bounds as Rect2).has_point(point): continue
+			if String(district.environment) == "coast": return HexTerrain.Finish.DUEL
+			if String(district.environment) == "observatory": return HexTerrain.Finish.COMMONS
+		return HexTerrain.Finish.ORIGINAL
+
+
+func ground_region_sampler(region: Rect2i) -> GroundRegionSampler:
+	return GroundRegionSampler.new(self, region)
+
+
+func configure(layout: SanctumCampusLayout, path: String = PATH, use_prebaked: bool = true) -> bool:
+	if terrain_stream != null and not terrain_stream.pending.is_empty():
+		last_error = "Drain or finish the current terrain stream before reconfiguration"
+		return false
 	last_error = ""
+	content_hash = ""
 	ground = null
+	terrain_stream = null
+	bake_signature = ""
+	ground_overview = null
+	ground_chunks.clear()
+	ground_chunk_order.clear()
+	ground_cache_bytes = 0
+	ground_chunk_builds = 0
+	ground_chunk_hits = 0
 	ground_style = null
+	hex_terrain = null
+	_clear_roof_skins()
+	practice_skins.clear()
+	practice_skin_bytes = 0
 	tiles.clear()
 	water_tiles.clear()
 	paths.clear()
@@ -91,28 +249,140 @@ func configure(layout: SanctumCampusLayout, path: String = PATH) -> bool:
 		return _fail(ground_style.last_error)
 	if not _compile_ground():
 		return _fail("Warm terrain composition failed; historical ground is not a fallback")
+	for building: Dictionary in campus.buildings_by_id.values():
+		var bounds := Rect2(SanctumCampusLayout._parse_bounds(building["bounds"]))
+		if String(building.get("style", "")) == "practice_wall":
+			var family := WallSkin.family_for(Rect2i(bounds), campus.data.get("activity_areas", []), campus.data.get("districts", []))
+			var skin := WallSkin.compose(Rect2i(bounds), family)
+			if skin == null or practice_skin_bytes + (skin.get_data().size() if skin != null else 0) > PRACTICE_CACHE_MAX_BYTES:
+				ground = null
+				practice_skins.clear()
+				practice_skin_bytes = 0
+				return _fail("Practice masonry requires a bounded worldbone footprint")
+			practice_skins[int(building["id"])] = ImageTexture.create_from_image(skin)
+			practice_skin_bytes += skin.get_data().size()
+		else:
+			bounds.size.y -= minf(float(data["camera"]["maximum_facade_pixels"]), bounds.size.y * 0.42)
+			var size := Vector2i(bounds.size.ceil())
+			if roof_skin_bytes + size.x * size.y * 4 >= ROOF_CACHE_MAX_BYTES:
+				ground = null
+				return _fail("Slate roofs exceed their setup-only texture budget")
+			var skin := compose_roof_skin(size, tiles[10])
+			if skin == null:
+				ground = null
+				return _fail("Slate roofs require bounded footprints and the validated slate tile")
+			roof_skins[int(building["id"])] = ImageTexture.create_from_image(skin)
+			roof_skin_bytes += skin.get_data().size()
+			cached_roof_builds += 1
 	# Decorative cutouts are withheld until each one has an authoritative
 	# worldbone/clearance contract. A visible tree or fountain must never invite
 	# the player to collide with geometry that the simulation does not own.
 	ground_generation_ms = Time.get_ticks_msec() - started
 	# Decoded pixel hashes also work in exported builds where PNGs are remapped.
-	content_hash = (source + layout.content_hash + pixel_map.content_hash + ground_style.content_hash).sha256_text()
+	content_hash = (source + layout.content_hash + pixel_map.content_hash + ground_style.content_hash + HexTerrain.VERSION + WallSkin.VERSION + ROOF_SKIN_VERSION).sha256_text()
+	bake_signature = CanonicalContent.sha256({"map": CanonicalContent.sha256(layout.data), "art": source.sha256_text(), "base": pixel_map.content_hash, "style": ground_style.content_hash, "composer": HexTerrain.VERSION, "sampler": GROUND_SAMPLER_VERSION, "baker": TerrainStream.VERSION})
+	if ground == null and use_prebaked:
+		if not ResourceLoader.exists(TerrainStream.MANIFEST): return _fail("Prepared campus terrain is missing; run scripts/bake_wellspring_terrain.gd")
+		var manifest := load(TerrainStream.MANIFEST) as Resource
+		if manifest == null: return _fail("Prepared campus terrain manifest could not load")
+		var stream := TerrainStream.new()
+		if not stream.configure(manifest.get("descriptor"), bake_signature, campus.canvas_size): return _fail(stream.last_error)
+		terrain_stream = stream
+		ground_chunks = stream.textures
+		ground_chunk_order = stream.order
 	return true
 
 
+static func compose_roof_skin(size: Vector2i, slate: Image) -> Image:
+	# Copy the admitted tile at 1px scale, once at setup. No new art, filtering,
+	# overhang or material authority; partial edge tiles are cropped, not stretched.
+	if size.x < 1 or size.y < 1 or size.x > 1024 or size.y > 1024 or size.x * size.y * 4 >= ROOF_CACHE_MAX_BYTES:
+		return null
+	if slate == null or slate.get_size() != Vector2i(128, 128) or slate.get_format() != Image.FORMAT_RGBA8:
+		return null
+	var image := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
+	for y: int in range(0, size.y, 128):
+		for x: int in range(0, size.x, 128):
+			var portion := Vector2i(mini(128, size.x - x), mini(128, size.y - y))
+			image.blit_rect(slate, Rect2i(Vector2i.ZERO, portion), Vector2i(x, y))
+	return image
+
+
+func _clear_roof_skins() -> void:
+	roof_skins.clear()
+	roof_skin_bytes = 0
+	cached_roof_builds = 0
+
+
 func _compile_ground() -> bool:
+	if campus.canvas_size.x > LARGE_WORLD_MAX.x or campus.canvas_size.y > LARGE_WORLD_MAX.y: return false
+	if campus.canvas_size.x > HexTerrain.MAX_CANVAS.x or campus.canvas_size.y > HexTerrain.MAX_CANVAS.y:
+		hex_terrain = HexTerrain.new()
+		# Asset preparation composes native chunks; gameplay loads their exact baked pixels.
+		return true
 	if pixel_map != null:
-		var families: Array[String] = []
-		for y: int in range(0, campus.canvas_size.y, 32):
-			for x: int in range(0, campus.canvas_size.x, 32):
-				families.append(pixel_family(surface_at(Vector2(x + 16, y + 16))))
-		@warning_ignore("integer_division")
-		var composed: Image = ground_style.compose_ground(families, campus.canvas_size.x / 32, campus.canvas_size.y / 32)
+		hex_terrain = HexTerrain.new()
+		var composed: Image = hex_terrain.compose(campus.canvas_size, func(point: Vector2) -> String: return pixel_family(surface_at(point)), ground_style, floor_finish_at, ground_surface_sources())
 		if composed != null:
 			ground = ImageTexture.create_from_image(composed)
 			cached_terrain_builds += 1
 			return true
 	return false
+
+
+func ground_surface_sources() -> Dictionary:
+	# Existing validated v3 stone/soil art, at native scale. Every finish remains
+	# the same walkable material and owns the same exact chemistry cells.
+	return {
+		HexTerrain.surface_key("paving", HexTerrain.Finish.ORIGINAL): tiles[0],
+		HexTerrain.surface_key("paving", HexTerrain.Finish.COMMONS): tiles[1],
+		HexTerrain.surface_key("paving", HexTerrain.Finish.CHEMISTRY): tiles[2],
+		HexTerrain.surface_key("paving", HexTerrain.Finish.DUEL): tiles[3],
+		HexTerrain.surface_key("paving", HexTerrain.Finish.CHAIN): tiles[0],
+		HexTerrain.surface_key("paving", HexTerrain.Finish.INSET): tiles[3],
+		HexTerrain.surface_key("paving", HexTerrain.Finish.ROUTE): tiles[3],
+		HexTerrain.surface_key("earth", HexTerrain.Finish.ORIGINAL): tiles[6],
+		HexTerrain.surface_key("earth", HexTerrain.Finish.ROUTE): tiles[6],
+	}
+
+
+func floor_finish_at(point: Vector2, material: String) -> int:
+	# Called only while composing the cached floor. Preserve surface_at's family
+	# and the actual lattice: no geometry, obstacle or chemistry material changes.
+	point = HexTerrain.center_pixels(HexTerrain.cell_at(point))
+	if material not in ["paving", "earth"]:
+		return HexTerrain.Finish.ORIGINAL
+	# Only broad ordinary circulation gets a ribbon. Narrow wall/chain/cover
+	# drills and the sparring zigzag retain their own existing floor language.
+	# Crossings take precedence so the flat inset never closes a real entrance.
+	for route: Dictionary in paths:
+		if bool(route["advanced"]) or float(route["width"]) < 160.0:
+			continue
+		var points: PackedVector2Array = route["points"]
+		for index: int in range(points.size() - 1):
+			if point.distance_to(Geometry2D.get_closest_point_to_segment(point, points[index], points[index + 1])) <= FLOOR_RIBBON_HALF_WIDTH:
+				return HexTerrain.Finish.ROUTE
+	if material != "paving":
+		return HexTerrain.Finish.ORIGINAL
+	for area: Dictionary in campus.data.get("activity_areas", []):
+		var finish: int = HexTerrain.Finish.ORIGINAL
+		match String(area["id"]):
+			"source-court": finish = HexTerrain.Finish.COMMONS
+			"crucible": finish = HexTerrain.Finish.CHEMISTRY
+			"duel-court": finish = HexTerrain.Finish.DUEL
+			"chain-courtyard": finish = HexTerrain.Finish.CHAIN
+			_: continue
+		var room := Rect2(SanctumCampusLayout._parse_bounds(area["bounds"]))
+		if finish == HexTerrain.Finish.COMMONS:
+			room = room.intersection(COMMONS_FLOOR)
+		if not room.grow(-FLOOR_INSET).has_point(point):
+			continue
+		return finish if room.grow(-2.0 * FLOOR_INSET).has_point(point) else HexTerrain.Finish.INSET
+	for district: Dictionary in campus.data.get("districts", []):
+		if not Rect2(SanctumCampusLayout._parse_bounds(district["bounds"])).has_point(point): continue
+		if String(district.get("environment", "")) == "coast": return HexTerrain.Finish.DUEL
+		if String(district.get("environment", "")) == "observatory": return HexTerrain.Finish.COMMONS
+	return HexTerrain.Finish.ORIGINAL
 
 
 static func pixel_family(material: int) -> String:
@@ -128,7 +398,10 @@ static func pixel_family(material: int) -> String:
 
 
 func surface_at(point: Vector2) -> int:
-	var cell := Vector2i(point / 32)
+	# One material per canonical chemistry hex. Input routes remain authority;
+	# presentation rounds only their visual edge, not their walkable clearance.
+	var cell := HexTerrain.cell_at(point)
+	point = HexTerrain.center_pixels(cell)
 	var seed := absi(cell.x * 173 + cell.y * 389 + int(data["terrain"]["seed"]))
 	# Retain the authored64/128px shore margins inside the current map envelope.
 	# Resizing the campus must not paint playable annex routes as water. This
@@ -139,9 +412,25 @@ func surface_at(point: Vector2) -> int:
 	var edge := minf(minf(point.x - land.position.x, land.end.x - point.x), minf(point.y - land.position.y, land.end.y - point.y))
 	if edge < 28 + (seed % 3) * 8:
 		return 14 if edge > 14 else 8
-	var court := Rect2(1148, 568, 776, 568)
-	if court.has_point(point):
+	if COMMONS_FLOOR.has_point(point):
 		return 0
+	# Reuse the existing autotiles for bounded practice rooms, not decorative
+	# objects with fictitious collision. Grass insets keep the cover garden
+	# distinct from the open experiment floor and compact chain courtyard.
+	for area: Dictionary in campus.data.get("activity_areas", []):
+		var room := Rect2(SanctumCampusLayout._parse_bounds(area["bounds"]))
+		if not room.grow(-16).has_point(point):
+			continue
+		match String(area["id"]):
+			"chain-courtyard":
+				return 0
+			"open-laboratory":
+				return 1 if room.grow(-48).has_point(point) else 0
+			"cover-garden":
+				var inset := point - room.position
+				if int(inset.x) % 224 < 64 and int(inset.y) % 192 < 64:
+					return 4
+				return 0
 	for area: Dictionary in campus.data.get("activity_areas", []):
 		if String(area["id"]) in ["pattern-range", "duel-court", "crucible"] and Rect2(SanctumCampusLayout._parse_bounds(area["bounds"])).grow(-16).has_point(point):
 			return 2 if String(area["id"]) == "crucible" else 0
@@ -151,6 +440,11 @@ func surface_at(point: Vector2) -> int:
 			var distance := point.distance_to(Geometry2D.get_closest_point_to_segment(point, points[index], points[index + 1]))
 			if distance <= float(route["width"]) * 0.5:
 				return 13 if bool(route["advanced"]) else (2 if distance > float(route["width"]) * 0.5 - 18 else 1)
+	for district: Dictionary in campus.data.get("districts", []):
+		if not Rect2(SanctumCampusLayout._parse_bounds(district["bounds"])).has_point(point): continue
+		match String(district.get("environment", "")):
+			"coast", "observatory": return 0
+			"foundry": return 6
 	return 5 if seed % 5 == 0 else 4
 
 
@@ -185,9 +479,131 @@ func _near_service_or_building(point: Vector2) -> bool:
 	return false
 
 
-func draw_ground(canvas: CanvasItem) -> void:
-	canvas.draw_rect(Rect2(-4096, -4096, 12288, 12288), Color("103c45"))
-	canvas.draw_texture(ground, Vector2.ZERO)
+func ground_ready() -> bool:
+	return ground != null or (campus != null and ground_style != null and hex_terrain != null and not content_hash.is_empty())
+
+
+func ground_chunk_ids(visible: Rect2) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	if campus == null or not visible.has_area() or not visible.position.is_finite() or not visible.end.is_finite(): return result
+	var clipped := visible.intersection(Rect2(Vector2.ZERO, Vector2(campus.canvas_size)))
+	if not clipped.has_area(): return result
+	var first := Vector2i(floori(clipped.position.x / GROUND_CHUNK_SIZE), floori(clipped.position.y / GROUND_CHUNK_SIZE))
+	var last := Vector2i(ceili(clipped.end.x / GROUND_CHUNK_SIZE), ceili(clipped.end.y / GROUND_CHUNK_SIZE))
+	for y: int in range(first.y, last.y):
+		for x: int in range(first.x, last.x): result.append(Vector2i(x, y))
+	return result
+
+
+func ground_chunk_rect(id: Vector2i) -> Rect2i:
+	return Rect2i(id * GROUND_CHUNK_SIZE, Vector2i.ONE * GROUND_CHUNK_SIZE).intersection(Rect2i(Vector2i.ZERO, campus.canvas_size))
+
+
+func ground_chunk(id: Vector2i) -> Texture2D:
+	# Explicit synchronous tooling API, never called by live drawing.
+	if terrain_stream != null:
+		var result: Texture2D = terrain_stream.load_immediate(id)
+		_sync_terrain_stats()
+		return result
+	if ground_chunks.has(id):
+		ground_chunk_hits += 1
+		ground_chunk_order.erase(id)
+		ground_chunk_order.append(id)
+		return ground_chunks[id]
+	var region := ground_chunk_rect(id)
+	if not region.has_area(): return null
+	var sampler := ground_region_sampler(region)
+	var image: Image = hex_terrain.compose_region(region, sampler.material_at, ground_style, sampler.finish_at, ground_surface_sources())
+	if image == null:
+		last_error = hex_terrain.last_error
+		return null
+	while ground_chunk_order.size() >= GROUND_CACHE_LIMIT:
+		var expired: Vector2i = ground_chunk_order.pop_front()
+		var texture: Texture2D = ground_chunks[expired]
+		ground_cache_bytes -= int(texture.get_width()) * int(texture.get_height()) * 4
+		ground_chunks.erase(expired)
+	var texture := ImageTexture.create_from_image(image)
+	ground_chunks[id] = texture
+	ground_chunk_order.append(id)
+	ground_cache_bytes += image.get_data().size()
+	ground_chunk_builds += 1
+	return texture
+
+
+func prepare_ground_view(visible: Rect2) -> bool:
+	if ground != null: return true
+	if not ground_ready(): return false
+	var ids := ground_chunk_ids(visible)
+	if ids.size() > GROUND_CACHE_LIMIT: return false
+	for id: Vector2i in ids:
+		if ground_chunk(id) == null: return false
+	return true
+
+
+func request_ground_view(visible: Rect2, upload_budget: int = 2) -> bool:
+	if ground != null: return true
+	if terrain_stream == null: return false
+	terrain_stream.request_view(visible)
+	terrain_stream.pump(upload_budget)
+	_sync_terrain_stats()
+	return terrain_stream.ready_for(visible)
+
+
+func ground_ready_for(visible: Rect2) -> bool:
+	return ground != null or (terrain_stream != null and terrain_stream.ready_for(visible))
+
+
+func suspend_ground() -> bool:
+	if terrain_stream == null: return true
+	var drained: bool = terrain_stream.suspend()
+	_sync_terrain_stats()
+	return drained
+
+
+func finish_ground_shutdown() -> void:
+	if terrain_stream == null: return
+	terrain_stream.finish_shutdown()
+	_sync_terrain_stats()
+
+
+func ground_status() -> Dictionary:
+	return terrain_stream.status() if terrain_stream != null else {"ready": 1 if ground != null else 0, "required": 1, "pending": 0, "error": last_error}
+
+
+func _sync_terrain_stats() -> void:
+	ground_cache_bytes = terrain_stream.cache_bytes
+	ground_chunk_builds = terrain_stream.uploads
+	ground_chunk_hits = terrain_stream.hits
+
+
+func _prepare_ground_overview() -> bool:
+	# Explicit noninteractive overview preparation. No composition, world-size
+	# raster or native-cache churn, even when a capture requests an uncropped map.
+	if ground_overview != null: return true
+	if terrain_stream == null: return false
+	var record: Dictionary = terrain_stream.overview_record
+	var path: String = record.path
+	if not ResourceLoader.exists(path, "Image"): return false
+	var image := ResourceLoader.load(path, "Image", ResourceLoader.CACHE_MODE_IGNORE) as Image
+	if not TerrainStream.valid_image(image, record): return false
+	ground_overview = ImageTexture.create_from_image(image)
+	return true
+
+
+func draw_ground(canvas: CanvasItem, visible_world_rect: Rect2 = Rect2()) -> void:
+	canvas.draw_rect(Rect2(-8192, -8192, 24576, 24576), Color("103c45"))
+	if ground != null:
+		canvas.draw_texture(ground, Vector2.ZERO)
+		return
+	if not ground_ready(): return
+	# Empty means an explicitly prepared overview, never a large-camera fallback.
+	if not visible_world_rect.has_area():
+		if ground_overview != null: canvas.draw_texture_rect(ground_overview, Rect2(Vector2.ZERO, Vector2(campus.canvas_size)), false)
+		return
+	# The caller gates startup/travel until ready. Network authority continues
+	# independently; missing visual preparation can never block a draw callback.
+	for id: Vector2i in ground_chunk_ids(visible_world_rect):
+		if ground_chunks.has(id): canvas.draw_texture(ground_chunks[id], Vector2(id * GROUND_CHUNK_SIZE))
 
 
 func draw_gardens(canvas: CanvasItem, focus: Vector2) -> void:
@@ -237,9 +653,9 @@ func draw_surface(canvas: CanvasItem, bounds: Rect2, material: int, tint: Color 
 func draw_building(canvas: CanvasItem, building: Dictionary, _focus: Vector2) -> void:
 	var bounds := Rect2(SanctumCampusLayout._parse_bounds(building["bounds"]))
 	if String(building.get("style", "")) == "practice_wall":
-		draw_surface(canvas, bounds, 14)
-		canvas.draw_rect(Rect2(bounds.position, Vector2(bounds.size.x, 6)), Color("c0b28c"))
-		canvas.draw_rect(bounds, Color("302d28"), false, 2)
+		var skin: Texture2D = practice_skins.get(int(building["id"]))
+		if skin != null:
+			canvas.draw_texture(skin, bounds.position)
 		return
 	var facade_height := minf(float(data["camera"]["maximum_facade_pixels"]), bounds.size.y * 0.42)
 	var facade := Rect2(bounds.position.x, bounds.end.y - facade_height, bounds.size.x, facade_height)
@@ -253,7 +669,10 @@ func draw_building(canvas: CanvasItem, building: Dictionary, _focus: Vector2) ->
 			canvas.draw_rect(Rect2(x + 17, facade.position.y + 14, 11, 16), Color("b69754"))
 	# Buildings are validated worldbone and actors render above the map layer.
 	# Keep the structure opaque and stable instead of fading on approach.
-	draw_surface(canvas, roof, 10, Color.WHITE)
+	var roof_skin: Texture2D = roof_skins.get(int(building["id"]))
+	if roof_skin != null:
+		# Preserve even fractional facade splits exactly without rescaling pixels.
+		canvas.draw_texture_rect_region(roof_skin, roof, Rect2(Vector2.ZERO, roof.size))
 	canvas.draw_rect(roof, Color(0.20, 0.15, 0.11, 1.0), false, 5)
 	canvas.draw_line(roof.position + Vector2(0, roof.size.y * 0.32), roof.position + Vector2(roof.size.x, roof.size.y * 0.32), Color("aa8650"), 4)
 	canvas.draw_line(Vector2(bounds.position.x, facade.position.y), Vector2(bounds.end.x, facade.position.y), Color("4b3025"), 6)
@@ -312,23 +731,12 @@ static func station_label_opacity(point: Vector2, focus: Vector2) -> float:
 	return 1.0 - smoothstep(280.0, 520.0, distance)
 
 
-func draw_station(canvas: CanvasItem, station: Dictionary, tick: int = 0, reduced_effects: bool = false, focus: Vector2 = Vector2(-1000000, -1000000)) -> void:
+func draw_station(canvas: CanvasItem, station: Dictionary, _tick: int = 0, _reduced_effects: bool = false, focus: Vector2 = Vector2(-1000000, -1000000), draw_title: bool = true) -> void:
 	var point := Vector2(station["position"][0], station["position"][1])
-	var kind := String(station["kind"])
-	var prop := "bell" if kind in ["parting", "training"] else ("banner" if kind == "farflow" else "lectern")
-	var phase := ambient_phase(tick + absi(String(station.get("id", "")).hash()) % 90, 180, reduced_effects)
-	var accent := Color("78ced3") if kind in ["guide", "controls", "farflow"] else (Color("ab83d8") if kind in ["champion", "spell"] else Color("d5ae5b"))
-	canvas.draw_arc(point + Vector2(0, 7), 22.0 + phase * 3.0, 0, TAU, 24, Color(accent, 0.18 + phase * 0.10), 2.0)
-	draw_prop(canvas, prop, point + Vector2(0, 14), 72, Color.WHITE, tick, reduced_effects)
-	var title := String(station["title"])
-	var font := ThemeDB.fallback_font
-	var width := font.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x
-	var label_alpha := station_label_opacity(point, focus)
-	if label_alpha > 0.01:
-		canvas.draw_rect(Rect2(point + Vector2(-width * 0.5 - 6, 20), Vector2(width + 12, 21)), Color(0.14, 0.13, 0.10, 0.82 * label_alpha))
-		canvas.draw_string(font, point + Vector2(-width * 0.5, 35), title, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.91, 0.87, 0.74, label_alpha))
+	WellspringServiceBuildings.draw_service(canvas, station, point.distance_squared_to(focus) < 96.0 * 96.0, draw_title, station_label_opacity(point, focus))
 
 
 func _fail(message: String) -> bool:
 	last_error = message
+	_clear_roof_skins()
 	return false

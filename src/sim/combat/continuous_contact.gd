@@ -73,7 +73,12 @@ static func wall_contact(start: Vector2i, finish: Vector2i, radius: int, world: 
 	var best := {}
 	# Preserve the existing square wall-clearance envelope, but sweep it as one
 	# continuous segment rather than separate X/Y moves. Actor movement is unchanged.
-	for obstacle: CollisionWorld.Obstacle in world.obstacle_view():
+	# Reuse the world's mutation-aware spatial index. Every candidate still goes
+	# through the exact continuous narrow phase and original stable tie-break.
+	var minimum := Vector2i(mini(start.x,finish.x),mini(start.y,finish.y))-Vector2i.ONE*radius
+	var maximum := Vector2i(maxi(start.x,finish.x),maxi(start.y,finish.y))+Vector2i.ONE*radius
+	var candidates := world._candidate_obstacles(minimum,maximum) if radius >= 0 else world.obstacle_view()
+	for obstacle: CollisionWorld.Obstacle in candidates:
 		var low := Vector2i(obstacle.minimum_x, obstacle.minimum_y)
 		var high := Vector2i(obstacle.maximum_x, obstacle.maximum_y)
 		var hit := box_toi(start, finish, low - Vector2i.ONE * radius, high + Vector2i.ONE * radius)

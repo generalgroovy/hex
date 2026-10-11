@@ -1,0 +1,16 @@
+{
+  "status": "REJECTED_NONSHIPPING",
+  "reason": "Full descriptor caching retained about 18.1 MiB of templates without a material production-path speedup;64-object bank rows regressed.",
+  "receipt": "res://.godot/pixel-descriptor-profile-engineering-v1.json",
+  "ground_allocation_delta_bytes": 16057668,
+  "action_allocation_delta_bytes": 2888900,
+  "ground_setup_us": 90017,
+  "action_setup_us": 12426,
+  "walking64_reference_median_us": 10341,
+  "walking64_candidate_median_us": 10276,
+  "jump64_bank_reference_median_us": 1199,
+  "jump64_bank_candidate_median_us": 1331,
+  "sources": "Archived as plain .gd.txt files; content preserved with LF-normalized line endings. Original live-source hashes are in the unchanged v1 receipt. These are source evidence, not runtime scripts.",
+  "replay": "Restore the two bank sources and matching v1 test/profile into an isolated checkout of the receipt source set, retaining original paths. Do not restore this rejected strategy to production.",
+  "authority": "No art assets, simulation state, protocol limits or selected build changed."
+}

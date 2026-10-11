@@ -36,8 +36,10 @@ func _test_repository_language() -> void:
 	equal(character.portrait_source, "south_grounded_occupied_top_third", "portraits use front sprite top third")
 	check(character.preserve_sensible_anatomy and character.preserve_fixed_body_scale and character.forbid_photorealistic_rendering, "sensible proportions are compatible with expressive pixel rendering")
 	var active: Array = language.data.element_availability.active
-	equal(active.size(), AbilityCatalog.FIRST_EIGHT_ELEMENTS.size(), "only current eight elements are active")
-	for element: String in AbilityCatalog.FIRST_EIGHT_ELEMENTS:
+	equal(active,["water","fire","wind","earth","light","dark"],"canonical display order is explicit")
+	equal(language.data.element_availability.derived_effect_styles,{"ice":"water","charge":"fire"},"derived effects retain visual styles without selector identities")
+	equal(active.size(), VisualLanguage.ACTIVE_ELEMENTS.size(), "only current six elements are active")
+	for element: String in VisualLanguage.ACTIVE_ELEMENTS:
 		check(element in active, "active palette includes live element: " + element)
 	for element: String in VisualLanguage.RESERVED_ELEMENT_STYLES:
 		check(element not in active and element in language.elements, "reserved style remains compatible without claiming playability: " + element)

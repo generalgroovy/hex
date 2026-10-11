@@ -1,0 +1,2232 @@
+{
+	"assertions": 3230,
+	"diagnostic_status": "PASS",
+	"engine": "4.7.1-stable (official)",
+	"equivalence": "Frozen E8 world capture on the independently replayed legacy twin, explicit reference session lanes/envelope and frozen packet construction define exact expected bytes. Actual receiver reassembly and public world preparation must restore those bytes and full authority hash. Live world/session and detached stage inputs remain unchanged.",
+	"failures": 0,
+	"limits": "Inclusive stages overlap and must not be summed. Warm diagnostic samples do not establish sustained percentiles, rendered performance, fanout/send costs, physical network, 60Hz publication or eight-player capacity. Memory is process-global. Paired medians describe only these bounded prepared states and final-tick metadata loads.",
+	"pair_arms": [
+		"public",
+		"owned"
+	],
+	"paired_comparison": "Seven alternating case-counterbalanced pairs on the same current source. public is literal session.capture_envelope() followed by SessionTransport._envelope_wire_packets(envelope). owned first executes broadcast_session's concrete-transport/eligibility admission gate, then SessionTransport._capture_session_packets(session), including that factory's own admission; an ineligible source uses the literal public composition. Both include outgoing encoding once per packet with the same concrete encoder and result retention. Preparation excludes host/epoch checks and socket dispatch. No receipt/equivalence/assertion work runs inside these timers. The strict public composition remains the baseline; it is not a historical timing or an old hash implementation.",
+	"paired_outer_admission_included": true,
+	"performance_acceptance": "NOT_ESTABLISHED",
+	"profile_version": "publication-stages-v2",
+	"publication_pairs": 7,
+	"receipt_complete": true,
+	"records": [
+		{
+			"active_ramparts": 0,
+			"actors": 8,
+			"authority_bytes": 6412,
+			"authority_sha256": "a0fde203092cfee603035c9e426fbdd7176bd8e3b3106fac679c9b65aeefeeeb",
+			"case": "empty",
+			"diagnostic_bookkeeping_us": 499200,
+			"envelope_bytes": 7192,
+			"envelope_sha256": "b767d06366a413441bd0544cd692a5d92953f851300be16b1111bd6dfacc0a7d",
+			"inputs_unchanged": true,
+			"memory_after": {
+				"process_global_peak_bytes": 139200429,
+				"static_bytes": 77996095
+			},
+			"memory_before": {
+				"process_global_peak_bytes": 139200429,
+				"static_bytes": 77745169
+			},
+			"overflow_count": 0,
+			"owned_path_eligible": true,
+			"paid_metrics": {
+				"admitted": 0,
+				"deposited": 0,
+				"exposure_queries": 0,
+				"matter_consumed": 0,
+				"matter_expired": 0,
+				"matter_paid": 0,
+				"modifiers": 0,
+				"reactions": 0,
+				"refused": 0,
+				"requested": 0
+			},
+			"paid_steps": 0,
+			"paired_publication": {
+				"diagnostic_bookkeeping_us": 142349,
+				"exact_results": true,
+				"owned": {
+					"samples_us": [
+						18143,
+						17960,
+						17450,
+						17608,
+						18108,
+						17534,
+						17569
+					],
+					"statistics_us": {
+						"max": 18143,
+						"p50": 17608,
+						"p95": 18143,
+						"p99": 18143,
+						"samples": 7
+					}
+				},
+				"pairs": [
+					{
+						"order": [
+							"public",
+							"owned"
+						],
+						"pair": 0,
+						"samples_us": {
+							"owned": 18143,
+							"public": 29129
+						}
+					},
+					{
+						"order": [
+							"owned",
+							"public"
+						],
+						"pair": 1,
+						"samples_us": {
+							"owned": 17960,
+							"public": 24110
+						}
+					},
+					{
+						"order": [
+							"public",
+							"owned"
+						],
+						"pair": 2,
+						"samples_us": {
+							"owned": 17450,
+							"public": 22832
+						}
+					},
+					{
+						"order": [
+							"owned",
+							"public"
+						],
+						"pair": 3,
+						"samples_us": {
+							"owned": 17608,
+							"public": 23277
+						}
+					},
+					{
+						"order": [
+							"public",
+							"owned"
+						],
+						"pair": 4,
+						"samples_us": {
+							"owned": 18108,
+							"public": 23478
+						}
+					},
+					{
+						"order": [
+							"owned",
+							"public"
+						],
+						"pair": 5,
+						"samples_us": {
+							"owned": 17534,
+							"public": 23000
+						}
+					},
+					{
+						"order": [
+							"public",
+							"owned"
+						],
+						"pair": 6,
+						"samples_us": {
+							"owned": 17569,
+							"public": 22902
+						}
+					}
+				],
+				"public": {
+					"samples_us": [
+						29129,
+						24110,
+						22832,
+						23277,
+						23478,
+						23000,
+						22902
+					],
+					"statistics_us": {
+						"max": 29129,
+						"p50": 23277,
+						"p95": 29129,
+						"p99": 29129,
+						"samples": 7
+					}
+				}
+			},
+			"pending_events": 0,
+			"prepared_hash_exact": true,
+			"published_events": 0,
+			"receiver_exact": true,
+			"sample_rows": [
+				{
+					"order": [
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets"
+					],
+					"sample": 0,
+					"samples_us": {
+						"capture_to_encoded_packets": 22906,
+						"envelope_validate": 2982,
+						"session_capture_envelope": 20201,
+						"transport_encode": 30,
+						"transport_packetize": 2989,
+						"world_capture": 17401,
+						"wrap_hex": 3114
+					}
+				},
+				{
+					"order": [
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture"
+					],
+					"sample": 1,
+					"samples_us": {
+						"capture_to_encoded_packets": 25767,
+						"envelope_validate": 3105,
+						"session_capture_envelope": 20434,
+						"transport_encode": 32,
+						"transport_packetize": 3031,
+						"world_capture": 18973,
+						"wrap_hex": 4711
+					}
+				},
+				{
+					"order": [
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope"
+					],
+					"sample": 2,
+					"samples_us": {
+						"capture_to_encoded_packets": 23556,
+						"envelope_validate": 3212,
+						"session_capture_envelope": 21260,
+						"transport_encode": 32,
+						"transport_packetize": 3425,
+						"world_capture": 18045,
+						"wrap_hex": 3117
+					}
+				},
+				{
+					"order": [
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex"
+					],
+					"sample": 3,
+					"samples_us": {
+						"capture_to_encoded_packets": 24161,
+						"envelope_validate": 3038,
+						"session_capture_envelope": 21991,
+						"transport_encode": 32,
+						"transport_packetize": 3685,
+						"world_capture": 17422,
+						"wrap_hex": 3074
+					}
+				},
+				{
+					"order": [
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate"
+					],
+					"sample": 4,
+					"samples_us": {
+						"capture_to_encoded_packets": 24246,
+						"envelope_validate": 2951,
+						"session_capture_envelope": 20714,
+						"transport_encode": 30,
+						"transport_packetize": 3060,
+						"world_capture": 17539,
+						"wrap_hex": 3205
+					}
+				},
+				{
+					"order": [
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize"
+					],
+					"sample": 5,
+					"samples_us": {
+						"capture_to_encoded_packets": 22739,
+						"envelope_validate": 2936,
+						"session_capture_envelope": 19984,
+						"transport_encode": 22,
+						"transport_packetize": 3618,
+						"world_capture": 16971,
+						"wrap_hex": 3220
+					}
+				},
+				{
+					"order": [
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode"
+					],
+					"sample": 6,
+					"samples_us": {
+						"capture_to_encoded_packets": 23164,
+						"envelope_validate": 2939,
+						"session_capture_envelope": 19964,
+						"transport_encode": 42,
+						"transport_packetize": 3881,
+						"world_capture": 16858,
+						"wrap_hex": 3610
+					}
+				}
+			],
+			"session_sha256": "fbc649187f67546d93e5ccf43f9124f69586e0b40c393a3fd10bbb66bbc411c7",
+			"source_unchanged": true,
+			"stages": {
+				"capture_to_encoded_packets": {
+					"samples_us": [
+						22906,
+						25767,
+						23556,
+						24161,
+						24246,
+						22739,
+						23164
+					],
+					"statistics_us": {
+						"max": 25767,
+						"p50": 23556,
+						"p95": 25767,
+						"p99": 25767,
+						"samples": 7
+					}
+				},
+				"envelope_validate": {
+					"samples_us": [
+						2982,
+						3105,
+						3212,
+						3038,
+						2951,
+						2936,
+						2939
+					],
+					"statistics_us": {
+						"max": 3212,
+						"p50": 2982,
+						"p95": 3212,
+						"p99": 3212,
+						"samples": 7
+					}
+				},
+				"session_capture_envelope": {
+					"samples_us": [
+						20201,
+						20434,
+						21260,
+						21991,
+						20714,
+						19984,
+						19964
+					],
+					"statistics_us": {
+						"max": 21991,
+						"p50": 20434,
+						"p95": 21991,
+						"p99": 21991,
+						"samples": 7
+					}
+				},
+				"transport_encode": {
+					"samples_us": [
+						30,
+						32,
+						32,
+						32,
+						30,
+						22,
+						42
+					],
+					"statistics_us": {
+						"max": 42,
+						"p50": 32,
+						"p95": 42,
+						"p99": 42,
+						"samples": 7
+					}
+				},
+				"transport_packetize": {
+					"samples_us": [
+						2989,
+						3031,
+						3425,
+						3685,
+						3060,
+						3618,
+						3881
+					],
+					"statistics_us": {
+						"max": 3881,
+						"p50": 3425,
+						"p95": 3881,
+						"p99": 3881,
+						"samples": 7
+					}
+				},
+				"world_capture": {
+					"samples_us": [
+						17401,
+						18973,
+						18045,
+						17422,
+						17539,
+						16971,
+						16858
+					],
+					"statistics_us": {
+						"max": 18973,
+						"p50": 17422,
+						"p95": 18973,
+						"p99": 18973,
+						"samples": 7
+					}
+				},
+				"wrap_hex": {
+					"samples_us": [
+						3114,
+						4711,
+						3117,
+						3074,
+						3205,
+						3220,
+						3610
+					],
+					"statistics_us": {
+						"max": 4711,
+						"p50": 3205,
+						"p95": 4711,
+						"p99": 4711,
+						"samples": 7
+					}
+				}
+			},
+			"state_hash": "37f33e0b4a5cb1f243c64e290c52ca6ad557742f6a221aa79cdae22475e29074",
+			"tick": 120,
+			"topology_cells": 11337,
+			"trace_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+			"wire": {
+				"packet_bytes": [
+					1324,
+					1204
+				],
+				"packet_count": 2,
+				"packet_sha256": [
+					"a376f61f3e64a4c1b5006600d850d056ece2db5ec6c2497b9c2aabeb9cd5704a",
+					"13d079b1d3b3bed8ec7a49ff84c4d7a50b79684e901abdcd96f4ad53c623c902"
+				],
+				"total_bytes": 2528
+			}
+		},
+		{
+			"active_ramparts": 0,
+			"actors": 8,
+			"authority_bytes": 8080,
+			"authority_sha256": "5d498f2a229db5e0f0ac6bff320c38aaf9cb3695391e55fd4143406ca8dd73a8",
+			"case": "distributed-paid40",
+			"diagnostic_bookkeeping_us": 1801734,
+			"envelope_bytes": 8956,
+			"envelope_sha256": "03c4f4f693c6a3da58d8f75c5811bb9db8fc75f56c6c777c806c4e1ef7ed7d72",
+			"inputs_unchanged": true,
+			"memory_after": {
+				"process_global_peak_bytes": 139200429,
+				"static_bytes": 78856036
+			},
+			"memory_before": {
+				"process_global_peak_bytes": 139200429,
+				"static_bytes": 78311239
+			},
+			"overflow_count": 0,
+			"owned_path_eligible": true,
+			"paid_metrics": {
+				"admitted": 7,
+				"deposited": 1,
+				"exposure_queries": 0,
+				"matter_consumed": 0,
+				"matter_expired": 600,
+				"matter_paid": 4200,
+				"modifiers": 0,
+				"reactions": 0,
+				"refused": 0,
+				"requested": 7
+			},
+			"paid_steps": 40,
+			"paired_publication": {
+				"diagnostic_bookkeeping_us": 513341,
+				"exact_results": true,
+				"owned": {
+					"samples_us": [
+						62511,
+						59871,
+						59444,
+						61823,
+						59948,
+						60165,
+						60603
+					],
+					"statistics_us": {
+						"max": 62511,
+						"p50": 60165,
+						"p95": 62511,
+						"p99": 62511,
+						"samples": 7
+					}
+				},
+				"pairs": [
+					{
+						"order": [
+							"owned",
+							"public"
+						],
+						"pair": 0,
+						"samples_us": {
+							"owned": 62511,
+							"public": 66132
+						}
+					},
+					{
+						"order": [
+							"public",
+							"owned"
+						],
+						"pair": 1,
+						"samples_us": {
+							"owned": 59871,
+							"public": 66506
+						}
+					},
+					{
+						"order": [
+							"owned",
+							"public"
+						],
+						"pair": 2,
+						"samples_us": {
+							"owned": 59444,
+							"public": 66097
+						}
+					},
+					{
+						"order": [
+							"public",
+							"owned"
+						],
+						"pair": 3,
+						"samples_us": {
+							"owned": 61823,
+							"public": 66335
+						}
+					},
+					{
+						"order": [
+							"owned",
+							"public"
+						],
+						"pair": 4,
+						"samples_us": {
+							"owned": 59948,
+							"public": 66139
+						}
+					},
+					{
+						"order": [
+							"public",
+							"owned"
+						],
+						"pair": 5,
+						"samples_us": {
+							"owned": 60165,
+							"public": 66809
+						}
+					},
+					{
+						"order": [
+							"owned",
+							"public"
+						],
+						"pair": 6,
+						"samples_us": {
+							"owned": 60603,
+							"public": 68422
+						}
+					}
+				],
+				"public": {
+					"samples_us": [
+						66132,
+						66506,
+						66097,
+						66335,
+						66139,
+						66809,
+						68422
+					],
+					"statistics_us": {
+						"max": 68422,
+						"p50": 66335,
+						"p95": 68422,
+						"p99": 68422,
+						"samples": 7
+					}
+				}
+			},
+			"pending_events": 1,
+			"prepared_hash_exact": true,
+			"published_events": 1,
+			"receiver_exact": true,
+			"sample_rows": [
+				{
+					"order": [
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture"
+					],
+					"sample": 0,
+					"samples_us": {
+						"capture_to_encoded_packets": 66860,
+						"envelope_validate": 3277,
+						"session_capture_envelope": 64437,
+						"transport_encode": 45,
+						"transport_packetize": 3490,
+						"world_capture": 60535,
+						"wrap_hex": 3262
+					}
+				},
+				{
+					"order": [
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope"
+					],
+					"sample": 1,
+					"samples_us": {
+						"capture_to_encoded_packets": 67358,
+						"envelope_validate": 3256,
+						"session_capture_envelope": 63852,
+						"transport_encode": 43,
+						"transport_packetize": 3456,
+						"world_capture": 60349,
+						"wrap_hex": 3269
+					}
+				},
+				{
+					"order": [
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex"
+					],
+					"sample": 2,
+					"samples_us": {
+						"capture_to_encoded_packets": 67176,
+						"envelope_validate": 3194,
+						"session_capture_envelope": 71046,
+						"transport_encode": 43,
+						"transport_packetize": 3353,
+						"world_capture": 60528,
+						"wrap_hex": 3590
+					}
+				},
+				{
+					"order": [
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate"
+					],
+					"sample": 3,
+					"samples_us": {
+						"capture_to_encoded_packets": 67314,
+						"envelope_validate": 3394,
+						"session_capture_envelope": 63511,
+						"transport_encode": 44,
+						"transport_packetize": 3519,
+						"world_capture": 60534,
+						"wrap_hex": 3288
+					}
+				},
+				{
+					"order": [
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize"
+					],
+					"sample": 4,
+					"samples_us": {
+						"capture_to_encoded_packets": 67785,
+						"envelope_validate": 3259,
+						"session_capture_envelope": 63743,
+						"transport_encode": 31,
+						"transport_packetize": 3472,
+						"world_capture": 65866,
+						"wrap_hex": 3345
+					}
+				},
+				{
+					"order": [
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode"
+					],
+					"sample": 5,
+					"samples_us": {
+						"capture_to_encoded_packets": 67132,
+						"envelope_validate": 3348,
+						"session_capture_envelope": 63662,
+						"transport_encode": 42,
+						"transport_packetize": 3454,
+						"world_capture": 59373,
+						"wrap_hex": 3364
+					}
+				},
+				{
+					"order": [
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets"
+					],
+					"sample": 6,
+					"samples_us": {
+						"capture_to_encoded_packets": 66648,
+						"envelope_validate": 3226,
+						"session_capture_envelope": 63333,
+						"transport_encode": 44,
+						"transport_packetize": 3415,
+						"world_capture": 59980,
+						"wrap_hex": 3305
+					}
+				}
+			],
+			"session_sha256": "2ff4dcf705b92beacdcd874d2fd7de5e4c97353212fb841467c230644fc9bcb0",
+			"source_unchanged": true,
+			"stages": {
+				"capture_to_encoded_packets": {
+					"samples_us": [
+						66860,
+						67358,
+						67176,
+						67314,
+						67785,
+						67132,
+						66648
+					],
+					"statistics_us": {
+						"max": 67785,
+						"p50": 67176,
+						"p95": 67785,
+						"p99": 67785,
+						"samples": 7
+					}
+				},
+				"envelope_validate": {
+					"samples_us": [
+						3277,
+						3256,
+						3194,
+						3394,
+						3259,
+						3348,
+						3226
+					],
+					"statistics_us": {
+						"max": 3394,
+						"p50": 3259,
+						"p95": 3394,
+						"p99": 3394,
+						"samples": 7
+					}
+				},
+				"session_capture_envelope": {
+					"samples_us": [
+						64437,
+						63852,
+						71046,
+						63511,
+						63743,
+						63662,
+						63333
+					],
+					"statistics_us": {
+						"max": 71046,
+						"p50": 63743,
+						"p95": 71046,
+						"p99": 71046,
+						"samples": 7
+					}
+				},
+				"transport_encode": {
+					"samples_us": [
+						45,
+						43,
+						43,
+						44,
+						31,
+						42,
+						44
+					],
+					"statistics_us": {
+						"max": 45,
+						"p50": 43,
+						"p95": 45,
+						"p99": 45,
+						"samples": 7
+					}
+				},
+				"transport_packetize": {
+					"samples_us": [
+						3490,
+						3456,
+						3353,
+						3519,
+						3472,
+						3454,
+						3415
+					],
+					"statistics_us": {
+						"max": 3519,
+						"p50": 3456,
+						"p95": 3519,
+						"p99": 3519,
+						"samples": 7
+					}
+				},
+				"world_capture": {
+					"samples_us": [
+						60535,
+						60349,
+						60528,
+						60534,
+						65866,
+						59373,
+						59980
+					],
+					"statistics_us": {
+						"max": 65866,
+						"p50": 60528,
+						"p95": 65866,
+						"p99": 65866,
+						"samples": 7
+					}
+				},
+				"wrap_hex": {
+					"samples_us": [
+						3262,
+						3269,
+						3590,
+						3288,
+						3345,
+						3364,
+						3305
+					],
+					"statistics_us": {
+						"max": 3590,
+						"p50": 3305,
+						"p95": 3590,
+						"p99": 3590,
+						"samples": 7
+					}
+				}
+			},
+			"state_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+			"tick": 160,
+			"topology_cells": 11337,
+			"trace_sha256": "8640631a3af909b7272874ebfce57a19476e9c7c2201f504739be83ed6ea15f1",
+			"wire": {
+				"packet_bytes": [
+					1324,
+					1324,
+					1324,
+					576
+				],
+				"packet_count": 4,
+				"packet_sha256": [
+					"cfa613ef26a6cb674e315dc58f362c23b7946749e6dc1fe48d1868406511aa9f",
+					"0afe7ef2d9136f6de33c5d6caf2b55d35b3e5eb1537d8462189f24ad09dd4437",
+					"989f349648fa72b0a9419d92e03ffd3994f63bf157fd288f6ec802b6936dcccc",
+					"85099ecdaa5725980b875a9b7d6836b3cf1a09c577a2e059c0629ea76fa80563"
+				],
+				"total_bytes": 4548
+			}
+		},
+		{
+			"active_ramparts": 0,
+			"actors": 8,
+			"authority_bytes": 7788,
+			"authority_sha256": "44955191d63b1434d9a1958a11627ea8f844b4fa3392ff83403a2853090c6da9",
+			"case": "dense-paid40",
+			"diagnostic_bookkeeping_us": 905519,
+			"envelope_bytes": 8632,
+			"envelope_sha256": "d0a0ed5d34dbe6ebefc1b7bc8bef6d11184090ce2fdcb8a0fac1343dbdd0ada7",
+			"inputs_unchanged": true,
+			"memory_after": {
+				"process_global_peak_bytes": 139200429,
+				"static_bytes": 78343126
+			},
+			"memory_before": {
+				"process_global_peak_bytes": 139200429,
+				"static_bytes": 78011196
+			},
+			"overflow_count": 0,
+			"owned_path_eligible": true,
+			"paid_metrics": {
+				"admitted": 8,
+				"deposited": 1,
+				"exposure_queries": 0,
+				"matter_consumed": 0,
+				"matter_expired": 0,
+				"matter_paid": 4800,
+				"modifiers": 0,
+				"reactions": 0,
+				"refused": 0,
+				"requested": 8
+			},
+			"paid_steps": 40,
+			"paired_publication": {
+				"diagnostic_bookkeeping_us": 253203,
+				"exact_results": true,
+				"owned": {
+					"samples_us": [
+						30128,
+						31404,
+						31056,
+						30601,
+						30490,
+						30439,
+						30690
+					],
+					"statistics_us": {
+						"max": 31404,
+						"p50": 30601,
+						"p95": 31404,
+						"p99": 31404,
+						"samples": 7
+					}
+				},
+				"pairs": [
+					{
+						"order": [
+							"public",
+							"owned"
+						],
+						"pair": 0,
+						"samples_us": {
+							"owned": 30128,
+							"public": 35831
+						}
+					},
+					{
+						"order": [
+							"owned",
+							"public"
+						],
+						"pair": 1,
+						"samples_us": {
+							"owned": 31404,
+							"public": 36143
+						}
+					},
+					{
+						"order": [
+							"public",
+							"owned"
+						],
+						"pair": 2,
+						"samples_us": {
+							"owned": 31056,
+							"public": 36572
+						}
+					},
+					{
+						"order": [
+							"owned",
+							"public"
+						],
+						"pair": 3,
+						"samples_us": {
+							"owned": 30601,
+							"public": 36915
+						}
+					},
+					{
+						"order": [
+							"public",
+							"owned"
+						],
+						"pair": 4,
+						"samples_us": {
+							"owned": 30490,
+							"public": 36441
+						}
+					},
+					{
+						"order": [
+							"owned",
+							"public"
+						],
+						"pair": 5,
+						"samples_us": {
+							"owned": 30439,
+							"public": 36434
+						}
+					},
+					{
+						"order": [
+							"public",
+							"owned"
+						],
+						"pair": 6,
+						"samples_us": {
+							"owned": 30690,
+							"public": 36799
+						}
+					}
+				],
+				"public": {
+					"samples_us": [
+						35831,
+						36143,
+						36572,
+						36915,
+						36441,
+						36434,
+						36799
+					],
+					"statistics_us": {
+						"max": 36915,
+						"p50": 36441,
+						"p95": 36915,
+						"p99": 36915,
+						"samples": 7
+					}
+				}
+			},
+			"pending_events": 0,
+			"prepared_hash_exact": true,
+			"published_events": 0,
+			"receiver_exact": true,
+			"sample_rows": [
+				{
+					"order": [
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope"
+					],
+					"sample": 0,
+					"samples_us": {
+						"capture_to_encoded_packets": 40049,
+						"envelope_validate": 4612,
+						"session_capture_envelope": 37697,
+						"transport_encode": 39,
+						"transport_packetize": 3625,
+						"world_capture": 33561,
+						"wrap_hex": 3585
+					}
+				},
+				{
+					"order": [
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex"
+					],
+					"sample": 1,
+					"samples_us": {
+						"capture_to_encoded_packets": 40880,
+						"envelope_validate": 3540,
+						"session_capture_envelope": 35812,
+						"transport_encode": 36,
+						"transport_packetize": 3547,
+						"world_capture": 32686,
+						"wrap_hex": 4850
+					}
+				},
+				{
+					"order": [
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate"
+					],
+					"sample": 2,
+					"samples_us": {
+						"capture_to_encoded_packets": 37243,
+						"envelope_validate": 3175,
+						"session_capture_envelope": 33261,
+						"transport_encode": 35,
+						"transport_packetize": 3267,
+						"world_capture": 30696,
+						"wrap_hex": 3154
+					}
+				},
+				{
+					"order": [
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize"
+					],
+					"sample": 3,
+					"samples_us": {
+						"capture_to_encoded_packets": 36007,
+						"envelope_validate": 3213,
+						"session_capture_envelope": 33796,
+						"transport_encode": 29,
+						"transport_packetize": 3334,
+						"world_capture": 30830,
+						"wrap_hex": 3200
+					}
+				},
+				{
+					"order": [
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode"
+					],
+					"sample": 4,
+					"samples_us": {
+						"capture_to_encoded_packets": 36383,
+						"envelope_validate": 3157,
+						"session_capture_envelope": 33486,
+						"transport_encode": 36,
+						"transport_packetize": 3738,
+						"world_capture": 29730,
+						"wrap_hex": 3173
+					}
+				},
+				{
+					"order": [
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets"
+					],
+					"sample": 5,
+					"samples_us": {
+						"capture_to_encoded_packets": 36806,
+						"envelope_validate": 3476,
+						"session_capture_envelope": 33254,
+						"transport_encode": 39,
+						"transport_packetize": 3274,
+						"world_capture": 29930,
+						"wrap_hex": 3178
+					}
+				},
+				{
+					"order": [
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture"
+					],
+					"sample": 6,
+					"samples_us": {
+						"capture_to_encoded_packets": 37766,
+						"envelope_validate": 3224,
+						"session_capture_envelope": 33368,
+						"transport_encode": 35,
+						"transport_packetize": 3254,
+						"world_capture": 29976,
+						"wrap_hex": 3469
+					}
+				}
+			],
+			"session_sha256": "3c3c4accacf36aca54524f09f66a0a490b16c8a138d7c430370e2cbc184c0977",
+			"source_unchanged": true,
+			"stages": {
+				"capture_to_encoded_packets": {
+					"samples_us": [
+						40049,
+						40880,
+						37243,
+						36007,
+						36383,
+						36806,
+						37766
+					],
+					"statistics_us": {
+						"max": 40880,
+						"p50": 37243,
+						"p95": 40880,
+						"p99": 40880,
+						"samples": 7
+					}
+				},
+				"envelope_validate": {
+					"samples_us": [
+						4612,
+						3540,
+						3175,
+						3213,
+						3157,
+						3476,
+						3224
+					],
+					"statistics_us": {
+						"max": 4612,
+						"p50": 3224,
+						"p95": 4612,
+						"p99": 4612,
+						"samples": 7
+					}
+				},
+				"session_capture_envelope": {
+					"samples_us": [
+						37697,
+						35812,
+						33261,
+						33796,
+						33486,
+						33254,
+						33368
+					],
+					"statistics_us": {
+						"max": 37697,
+						"p50": 33486,
+						"p95": 37697,
+						"p99": 37697,
+						"samples": 7
+					}
+				},
+				"transport_encode": {
+					"samples_us": [
+						39,
+						36,
+						35,
+						29,
+						36,
+						39,
+						35
+					],
+					"statistics_us": {
+						"max": 39,
+						"p50": 36,
+						"p95": 39,
+						"p99": 39,
+						"samples": 7
+					}
+				},
+				"transport_packetize": {
+					"samples_us": [
+						3625,
+						3547,
+						3267,
+						3334,
+						3738,
+						3274,
+						3254
+					],
+					"statistics_us": {
+						"max": 3738,
+						"p50": 3334,
+						"p95": 3738,
+						"p99": 3738,
+						"samples": 7
+					}
+				},
+				"world_capture": {
+					"samples_us": [
+						33561,
+						32686,
+						30696,
+						30830,
+						29730,
+						29930,
+						29976
+					],
+					"statistics_us": {
+						"max": 33561,
+						"p50": 30696,
+						"p95": 33561,
+						"p99": 33561,
+						"samples": 7
+					}
+				},
+				"wrap_hex": {
+					"samples_us": [
+						3585,
+						4850,
+						3154,
+						3200,
+						3173,
+						3178,
+						3469
+					],
+					"statistics_us": {
+						"max": 4850,
+						"p50": 3200,
+						"p95": 4850,
+						"p99": 4850,
+						"samples": 7
+					}
+				}
+			},
+			"state_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+			"tick": 160,
+			"topology_cells": 11337,
+			"trace_sha256": "5f376354a15b6fd2d90f12555327786c8bf3d54023f4d6b36a035705e52e2831",
+			"wire": {
+				"packet_bytes": [
+					1324,
+					1324,
+					1132
+				],
+				"packet_count": 3,
+				"packet_sha256": [
+					"e9e4f86d580c58bdd8dc39e7bddd678d2e65248514a607fb952d79f41df534f3",
+					"185d4caf7b1e4bf0cb6c2bad30b61d1adea2ec69175c6454103f03a7dc7ac811",
+					"f2f96d5f328bc83a67fd13277ec167645f296b5c233b7129ceaa11ba6e426a28"
+				],
+				"total_bytes": 3780
+			}
+		},
+		{
+			"active_ramparts": 1,
+			"actors": 8,
+			"authority_bytes": 7620,
+			"authority_sha256": "f02a18b9b2031f65d57bbf3de8dd9207d56612b417440c36c2c51cfe9b673b1f",
+			"case": "active-rampart",
+			"diagnostic_bookkeeping_us": 875921,
+			"envelope_bytes": 8464,
+			"envelope_sha256": "0f2911aa0dd396949826cd6f553054278dabab7555cca7e97d3a3abe65e3c7f7",
+			"inputs_unchanged": true,
+			"memory_after": {
+				"process_global_peak_bytes": 139200429,
+				"static_bytes": 78365727
+			},
+			"memory_before": {
+				"process_global_peak_bytes": 139200429,
+				"static_bytes": 78032909
+			},
+			"overflow_count": 0,
+			"owned_path_eligible": true,
+			"paid_metrics": {
+				"admitted": 8,
+				"deposited": 1,
+				"exposure_queries": 176,
+				"matter_consumed": 1200,
+				"matter_expired": 0,
+				"matter_paid": 4800,
+				"modifiers": 0,
+				"reactions": 1,
+				"refused": 0,
+				"requested": 8
+			},
+			"paid_steps": 72,
+			"paired_publication": {
+				"diagnostic_bookkeeping_us": 250394,
+				"exact_results": true,
+				"owned": {
+					"samples_us": [
+						27885,
+						27906,
+						27815,
+						28339,
+						29419,
+						28557,
+						31202
+					],
+					"statistics_us": {
+						"max": 31202,
+						"p50": 28339,
+						"p95": 31202,
+						"p99": 31202,
+						"samples": 7
+					}
+				},
+				"pairs": [
+					{
+						"order": [
+							"owned",
+							"public"
+						],
+						"pair": 0,
+						"samples_us": {
+							"owned": 27885,
+							"public": 33352
+						}
+					},
+					{
+						"order": [
+							"public",
+							"owned"
+						],
+						"pair": 1,
+						"samples_us": {
+							"owned": 27906,
+							"public": 33657
+						}
+					},
+					{
+						"order": [
+							"owned",
+							"public"
+						],
+						"pair": 2,
+						"samples_us": {
+							"owned": 27815,
+							"public": 33939
+						}
+					},
+					{
+						"order": [
+							"public",
+							"owned"
+						],
+						"pair": 3,
+						"samples_us": {
+							"owned": 28339,
+							"public": 34328
+						}
+					},
+					{
+						"order": [
+							"owned",
+							"public"
+						],
+						"pair": 4,
+						"samples_us": {
+							"owned": 29419,
+							"public": 34650
+						}
+					},
+					{
+						"order": [
+							"public",
+							"owned"
+						],
+						"pair": 5,
+						"samples_us": {
+							"owned": 28557,
+							"public": 34752
+						}
+					},
+					{
+						"order": [
+							"owned",
+							"public"
+						],
+						"pair": 6,
+						"samples_us": {
+							"owned": 31202,
+							"public": 35878
+						}
+					}
+				],
+				"public": {
+					"samples_us": [
+						33352,
+						33657,
+						33939,
+						34328,
+						34650,
+						34752,
+						35878
+					],
+					"statistics_us": {
+						"max": 35878,
+						"p50": 34328,
+						"p95": 35878,
+						"p99": 35878,
+						"samples": 7
+					}
+				}
+			},
+			"pending_events": 0,
+			"prepared_hash_exact": true,
+			"published_events": 0,
+			"receiver_exact": true,
+			"sample_rows": [
+				{
+					"order": [
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex"
+					],
+					"sample": 0,
+					"samples_us": {
+						"capture_to_encoded_packets": 36288,
+						"envelope_validate": 3204,
+						"session_capture_envelope": 31905,
+						"transport_encode": 41,
+						"transport_packetize": 3241,
+						"world_capture": 27946,
+						"wrap_hex": 3154
+					}
+				},
+				{
+					"order": [
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate"
+					],
+					"sample": 1,
+					"samples_us": {
+						"capture_to_encoded_packets": 34036,
+						"envelope_validate": 3180,
+						"session_capture_envelope": 31481,
+						"transport_encode": 33,
+						"transport_packetize": 3226,
+						"world_capture": 27709,
+						"wrap_hex": 3243
+					}
+				},
+				{
+					"order": [
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize"
+					],
+					"sample": 2,
+					"samples_us": {
+						"capture_to_encoded_packets": 34435,
+						"envelope_validate": 3521,
+						"session_capture_envelope": 31145,
+						"transport_encode": 27,
+						"transport_packetize": 3499,
+						"world_capture": 28051,
+						"wrap_hex": 3410
+					}
+				},
+				{
+					"order": [
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode"
+					],
+					"sample": 3,
+					"samples_us": {
+						"capture_to_encoded_packets": 34260,
+						"envelope_validate": 3210,
+						"session_capture_envelope": 31913,
+						"transport_encode": 37,
+						"transport_packetize": 3350,
+						"world_capture": 27640,
+						"wrap_hex": 3101
+					}
+				},
+				{
+					"order": [
+						"world_capture",
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets"
+					],
+					"sample": 4,
+					"samples_us": {
+						"capture_to_encoded_packets": 33952,
+						"envelope_validate": 3073,
+						"session_capture_envelope": 31036,
+						"transport_encode": 54,
+						"transport_packetize": 3244,
+						"world_capture": 27847,
+						"wrap_hex": 3328
+					}
+				},
+				{
+					"order": [
+						"session_capture_envelope",
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture"
+					],
+					"sample": 5,
+					"samples_us": {
+						"capture_to_encoded_packets": 34905,
+						"envelope_validate": 3164,
+						"session_capture_envelope": 31545,
+						"transport_encode": 35,
+						"transport_packetize": 3281,
+						"world_capture": 27414,
+						"wrap_hex": 3095
+					}
+				},
+				{
+					"order": [
+						"wrap_hex",
+						"envelope_validate",
+						"transport_packetize",
+						"transport_encode",
+						"capture_to_encoded_packets",
+						"world_capture",
+						"session_capture_envelope"
+					],
+					"sample": 6,
+					"samples_us": {
+						"capture_to_encoded_packets": 34814,
+						"envelope_validate": 3073,
+						"session_capture_envelope": 30665,
+						"transport_encode": 40,
+						"transport_packetize": 3240,
+						"world_capture": 27817,
+						"wrap_hex": 3130
+					}
+				}
+			],
+			"session_sha256": "fccfa7f92f6731a9bc845131eecfb3eafc459868082c94521587df472633dd8a",
+			"source_unchanged": true,
+			"stages": {
+				"capture_to_encoded_packets": {
+					"samples_us": [
+						36288,
+						34036,
+						34435,
+						34260,
+						33952,
+						34905,
+						34814
+					],
+					"statistics_us": {
+						"max": 36288,
+						"p50": 34435,
+						"p95": 36288,
+						"p99": 36288,
+						"samples": 7
+					}
+				},
+				"envelope_validate": {
+					"samples_us": [
+						3204,
+						3180,
+						3521,
+						3210,
+						3073,
+						3164,
+						3073
+					],
+					"statistics_us": {
+						"max": 3521,
+						"p50": 3180,
+						"p95": 3521,
+						"p99": 3521,
+						"samples": 7
+					}
+				},
+				"session_capture_envelope": {
+					"samples_us": [
+						31905,
+						31481,
+						31145,
+						31913,
+						31036,
+						31545,
+						30665
+					],
+					"statistics_us": {
+						"max": 31913,
+						"p50": 31481,
+						"p95": 31913,
+						"p99": 31913,
+						"samples": 7
+					}
+				},
+				"transport_encode": {
+					"samples_us": [
+						41,
+						33,
+						27,
+						37,
+						54,
+						35,
+						40
+					],
+					"statistics_us": {
+						"max": 54,
+						"p50": 37,
+						"p95": 54,
+						"p99": 54,
+						"samples": 7
+					}
+				},
+				"transport_packetize": {
+					"samples_us": [
+						3241,
+						3226,
+						3499,
+						3350,
+						3244,
+						3281,
+						3240
+					],
+					"statistics_us": {
+						"max": 3499,
+						"p50": 3244,
+						"p95": 3499,
+						"p99": 3499,
+						"samples": 7
+					}
+				},
+				"world_capture": {
+					"samples_us": [
+						27946,
+						27709,
+						28051,
+						27640,
+						27847,
+						27414,
+						27817
+					],
+					"statistics_us": {
+						"max": 28051,
+						"p50": 27817,
+						"p95": 28051,
+						"p99": 28051,
+						"samples": 7
+					}
+				},
+				"wrap_hex": {
+					"samples_us": [
+						3154,
+						3243,
+						3410,
+						3101,
+						3328,
+						3095,
+						3130
+					],
+					"statistics_us": {
+						"max": 3410,
+						"p50": 3154,
+						"p95": 3410,
+						"p99": 3410,
+						"samples": 7
+					}
+				}
+			},
+			"state_hash": "35605b6239a955514c7f9de2ea09226aca35a2a7e9ac2254eb156d3e040ec018",
+			"tick": 192,
+			"topology_cells": 11337,
+			"trace_sha256": "eec4f93f32e381cf8f3437518fbbed49ec13e7f3a8d7927d8598bda76c59ced9",
+			"wire": {
+				"packet_bytes": [
+					1324,
+					1324,
+					896
+				],
+				"packet_count": 3,
+				"packet_sha256": [
+					"8834cc221f69148b4d8e12fbbc57a336283a6c08d41c8ea9f29fa217ca0ab993",
+					"ab5cecfd5a988f8e07099425a8795cab43a7cd7a2a13d20d178dae73001150b5",
+					"b4348bf9fe46562e30e813f7c80d5a7101b24ae54e497e07ef304b862f8f69f5"
+				],
+				"total_bytes": 3544
+			}
+		}
+	],
+	"samples_per_stage": 7,
+	"scope": "Four actual 11337-cell/eight-champion fixtures inherited unchanged from profile_snapshot_canonical: empty, distributed-paid40, dense-paid40, active Rampart. Seven warm samples per stage in a rotated stage order. Session metadata uses actual final-tick events, eight names and real hearth/round capture; no synthetic queue saturation or accumulated publication history.",
+	"source_sha256_after": {
+		"content/abilities/foundation_abilities_v1.json": "720c16ce73f11ae9e723f43e31f39d1d700bc7a583619cd418ec3408b16f52bc",
+		"content/champions/foundation_champions_v1.json": "23a1f624a9de6c2bf88dc76578a69b23613465707605528e2988e209abba458a",
+		"content/maps/sanctum_campus_g2_v1.json": "a1d17e155000ebbdf36cb033823a2b42b1c8e31f844444da347fbac400b3c817",
+		"project.godot": "17c68ea0840a04e489f72c64de92f0d0738251695be584b0c560ddd844caf5ab",
+		"src/app/bootstrap.gd": "eba029cfd0b1abb1786b9e69d577615b9b14d9c7957457fcb80027cc672e2186",
+		"src/app/champion_attunement.gd": "712fea9f1d7d769e8b567c28a7d8692c636c66e80d1e0b08cff8688d0b0b4df4",
+		"src/app/character_overview_model.gd": "2173a25cdd3bd8535b0a0ed41bd7dcbbbb4a86fcfcbc9167dca752a403224b2c",
+		"src/app/character_selection_model.gd": "e8915544201814ada77969a48be105de7709984b7249deed9f652010dc4434c7",
+		"src/app/character_weave_coordinator.gd": "0ba53f78214c4ee28d84a4f5653840fb384517c21e84b4e76ebaf07e9fa45d41",
+		"src/app/character_weave_library.gd": "6941798fd4ed2a471edd57f110c26fe863245980a40d1f9dc67fc93478c15428",
+		"src/app/character_weave_policy.gd": "eb5a5aef9efb58aa42e42bbd2440aad3ac0cf5e8a873d7231df285e828b9b919",
+		"src/app/control_binding_editor.gd": "db22f339189e01c91d6a87f752a3d7fcb0204816575c7fb81819126aa198afbe",
+		"src/app/hex_playground_demo.gd": "10b089dab3f3ff8143a9b6cd5588c463aa3ac79b8b08cd57a84e625fe60b5e8c",
+		"src/app/input_router.gd": "f23c49a092da9676ade189c5148f116722b116a0459fa56fb8d35df6e38dae3b",
+		"src/app/interception_showcase.gd": "98dcc384afba7e42f24d5f8e1c1723b34a2c57ec5802a6637840fde8d2c87e79",
+		"src/app/player_preferences.gd": "5dcb0022a41ff5c3d7793da87ffc9572376439b3dc1ce4b156f643ccf2401575",
+		"src/app/runtime_content_summary.gd": "eba559acf7afa821feea5aba6c631af7c058623ef9ceb0798eebd8a990c7ed78",
+		"src/app/sanctum_station_model.gd": "fec45772839d1a8ab5e57ff9897dc2cafc5a8c9218e8a9924308b2378d45b0bb",
+		"src/app/spectator_focus.gd": "3c026b7221da9e4f2b3ef38dfc32b8358f430b0f060c41a35e923c73a0bb784d",
+		"src/app/spell_loom_editor.gd": "858e48f1c55156579cedd19559149f908d7faca18cdad5b6e13d957181ec9ca2",
+		"src/app/ui_grid_navigation.gd": "2f85e9c37fe4bf93e068e732e07a8f3e2d9674f4eab1b858328fe0c21c2ebeec",
+		"src/app/wellspring_service_directory.gd": "9652666af9d0fbc348568a3c8fe408b1968f2e6092f10502f17ab8a2c0087848",
+		"src/content/ability_catalog.gd": "afcbdfc216db7a0add1452215798030d829d8bac7a513b67f4059d9f07b88b9c",
+		"src/content/body_type_profile_catalog.gd": "5a4b06f1911500624cddd6e31e4d89ab57ff260e5e340fb3845e42a7194989e0",
+		"src/content/canonical_content.gd": "0acfb4e7da0fa7078a2447c13cea0d86981f048e2bc2832ee9c5da451da9dd8e",
+		"src/content/champion_catalog.gd": "e6a4d7bbbb451fdb510bf1f77d8884bfddd14a50aea201ad48e2a5ba6825be79",
+		"src/content/champion_roster_plan.gd": "6743eeeaeec0cfb26e8c8abe5e07f7c851e8a148818793576bc0ba0249ec7afb",
+		"src/content/character_starter_kit.gd": "95014a3c00827c42409274a315266cd041610c291b6f29dc1110ef57037adf1f",
+		"src/content/environment_kit_manifest.gd": "54126c0ab2c8d7648cd3d2d479ccb7e3acb34dc85a859b48881df76f87076e97",
+		"src/content/hub_definition.gd": "2403991ca08e9544679c5c68e1f552dfb5c957f2a73b3663056ae348b13338f2",
+		"src/content/image_asset_inspector.gd": "ffd64987bf15d8a71fe5dbdfcdc912b2dfa3814ebdd409fa9085d36907ac809a",
+		"src/content/loadout_definition.gd": "99212b23f267e672e08e9da68173ea9c3cd3f79b42475defce9ce52fafb8566a",
+		"src/content/material_registry.gd": "11de0b32a30cb3ca527d2fc732e7f88b7e6c701c895a718980be14ad16271b29",
+		"src/content/material_yard_definition.gd": "80e2837e6ad3daf9097ccb01527e1421eeee8fa1b7ac27b9d193da3aa10bf1ab",
+		"src/content/reaction_catalog.gd": "ea77cf64f8cf173ac1613770f3bb0a9d334eff7c7cdde4fbf77a6b7abfeaeb29",
+		"src/content/runtime_build_identity.gd": "68cbd2cb431da0c1f9e22ba3db90b1ddf32e465d53aa1b13da8fd4dc5b1e655f",
+		"src/content/sanctum_campus_layout.gd": "a0cbad5bace6ce52df61119016846d2e56b0b154a1f9d5344ccc12eaf8a97ad5",
+		"src/content/sanctum_runtime_kit.gd": "1452a2ef283ab337bcabf38d2bb24025ef3843bbbeff1f1e75f3977430be5322",
+		"src/content/wellspring_environment_kit.gd": "cd757ca31b36e245bda96238c897b951ac850ba9e115441bee964b468ef7830c",
+		"src/net/authoritative_session.gd": "0fe70ab3d86fae388aed5dc598e2a869dc1c0b5bc806ee1a5056198ea8764aa3",
+		"src/net/client_prediction.gd": "97e67c6b046dae28441c34ab155f6d155dcc73cf8b864832028ff47b8f77187d",
+		"src/net/hex_chemistry_snapshot.gd": "d4fc2ea041d3523bc2e606d8e7464fdb394d374374f733b037a2013f470f04f1",
+		"src/net/hex_snapshot_wire_packing.gd": "ca062a108b794cec3b5f822f882168370149ecc95e585fbca284a75713c7e17a",
+		"src/net/hex_world_snapshot.gd": "d5e2adb39a2877dc65045e6a67b782a29198a8212368e4b644f9b8940800f3e6",
+		"src/net/lan_lobby.gd": "cac8f97ad5e875b4d89abc3ee2b2bf4b31744c569fd67a5f222243ed0cec572d",
+		"src/net/reconciliation_order_buffer.gd": "f14a19b6fb3a09aec5b326ff2d1b1b1c23c0185d649eb7a7ec016c37e1dac462",
+		"src/net/session_charter.gd": "e4ee475d8f5183390710a9bdb7bc8fb8879fee664395b71e12140ae61ddb085e",
+		"src/net/session_event_inbox.gd": "3474a1e72a364426dc3693306612d3d93fe6b8c7d5a96d01258a6ebdcefd2b82",
+		"src/net/session_hearth.gd": "d8989b6482580300671734192f542895d4ff78996b64f41e2ab45788e8c71a4a",
+		"src/net/session_request_policy.gd": "a756f178ef5bc77531d0d21b9f4f8b1f8b6298f71a112c5c75db9eb900cbf0c4",
+		"src/net/session_round.gd": "90342666044e23ebba8d45515a05a5fff6e4e8208acaf32bc8d6a7685fd501a8",
+		"src/net/session_snapshot.gd": "d325f4bf32bf2b7e0fd79fc641b74ed6a352347892f4e5572aeb01eb1e0f309f",
+		"src/net/session_steward.gd": "c2ee2d8fe558db2622c16c4ca0b8e67420ba4a8a119d10a8f430caab860c367f",
+		"src/net/session_transport.gd": "5340e52afda4208e1465579c3c02e0dd1e13289923153ea92899f2ecf081b136",
+		"src/net/world_snapshot_envelope.gd": "0385254ae2ed351e02e4e9bfa756e10677b601f21bacb1c835d3fa3137bcb8f1",
+		"src/presentation/actor_motion_history.gd": "5204a4c6a5576afc5030c270e26a1b4f3072052a888f1fc5b0e45b6e89aaccb9",
+		"src/presentation/aim_reticle_presenter.gd": "21fed10b6c01756e51065a9f5ba77cd16d425968d027426871dafdce1ec6995d",
+		"src/presentation/burst_projectile_presenter.gd": "446d7ade0765d93f2200fc2d9488ba844c5197cfb24859ff452c834ca67b1b41",
+		"src/presentation/cartoon_champion_presenter.gd": "591cea3ed35e6355979ebe7509b65c206fcce035332048b55a982b446623495a",
+		"src/presentation/character_selection_grid.gd": "f3977452e2f680557e423bb0926c18fa27626b84eb716514f4e5fe24817a1375",
+		"src/presentation/character_viewport_policy.gd": "26bcc318fcfad89bd37b0776f0ee142df14ddf4111fc830964b86a91402189db",
+		"src/presentation/chemistry_guide_model.gd": "ecb91e3995a99b04b86476cf080de43f655b5cc1a567e93ac713349c6d5b5b11",
+		"src/presentation/chemistry_practice_coach.gd": "f1803ae665e75b524ca825b73076636fc2f1643a8a19bf1dcca057b566c4d6ee",
+		"src/presentation/combat_feedback_model.gd": "ae35c0b84a2515fce608582b5f3578320170eaf0950ccada300aab3d0cdf7382",
+		"src/presentation/compact_combat_hud.gd": "0b50153596da2f36038d87e3023d24153c5d546aa83f71535372d9b0871692ae",
+		"src/presentation/complete_visual_catalog.gd": "15af870669f51d8eacbaca37e8f780bff0286e7d5501966356a986de3271a8de",
+		"src/presentation/complete_visual_gallery.gd": "b3002492f6fbdcc266470152f14182bc93afef7e370497c3a9f6907b2d54cacb",
+		"src/presentation/eight_direction_resolver.gd": "de6b2bf98748bbede0e48269c3e634b939f082fbbd9b2e6384f470c5f9da37f2",
+		"src/presentation/element_audio.gd": "d08a9a992830fc9569f861e213bb70af9797d7c3fbe393a3db7005fd31c4ec01",
+		"src/presentation/element_chemistry_presenter.gd": "07da0e968432b885165d2c66f071377ea7f241b5944e505501980b6c73964870",
+		"src/presentation/element_glyph_renderer.gd": "11af970ab80d80ec9bfb5108c1334386b0a671f96d7ca8640fc47160d29dc849",
+		"src/presentation/foundation_spell_presenter.gd": "2bd44d27fbf1c2aaf300d932ad204bfc5d0af33eab9e03eb99d7fb57421ed4cd",
+		"src/presentation/fullbody_cast_presenter.gd": "1252989d9dab123462ad272942d825b84f15ebaff2652d04749f2da87c535539",
+		"src/presentation/heavy_blast_presenter.gd": "1ed784aba999a697d52f709b5b62a85bf65603455f72f3ec7a9a86bccea07ab8",
+		"src/presentation/hex_combat_label.gd": "12c76741871d7e31d142f4a6e7240d88c84b482136bb7609ee87bd635fd1d6b2",
+		"src/presentation/hex_contact_punctuation.gd": "9458d98c9e4a2598210da78cda55fa97a20023bcef2c617a4d0954f21977b441",
+		"src/presentation/hex_court_presenter.gd": "24cbabeea0fcafa277cf40c6f3c98d6d08a065772a245133dd79c19981e2d70c",
+		"src/presentation/hex_environment_layout.gd": "4692f43f753da58e4b12b290b6061523bec3d090722600c9b544607df862d7ae",
+		"src/presentation/hex_material_surface.gd": "0648e739be64d71b383482c6c470ae602efbe92a24ce407a449df34bfc63038a",
+		"src/presentation/hex_playground_panel.gd": "e6887c379aa12492299a3503bc9e5a3c2932d606c486ee56ee1b5bf5775e5942",
+		"src/presentation/hex_water_material_presenter.gd": "487e0b674476f6fb125ee97a2b7136d8236c3f58b8cabf85d0b62f49c9bbc8c2",
+		"src/presentation/interception_feedback.gd": "3e5c624a5fbff55b4e5bf07670d21a0848b53dca107869e2211b5457a4a64929",
+		"src/presentation/interception_practice_card.gd": "43cb3662c84983895b62e3f30a180fcb71b656f82180586e4e01ddedccf8c3d7",
+		"src/presentation/jump_presentation.gd": "0b34756959a99d226e96601d36af799ef4fb0e885e88d3c0ba37b560d5fa0c02",
+		"src/presentation/landing_presentation.gd": "af661178e230b1df4758c55f21a2ccbd3e9bfea691e36ce77c409061842cbb95",
+		"src/presentation/minimal_champion_motion.gd": "f1650539cceaed4e978174b9e228979291fde671e9030b206c845d33d3d228f3",
+		"src/presentation/movement_guide_model.gd": "c801e1ec50c9f52bfd646f16554e17a145079bbbef8193b0445919712ba6d456",
+		"src/presentation/movement_practice_coach.gd": "a3116dd18aa0bfa381457a0314b173babc68614a46510891db82478a2c3a9b1b",
+		"src/presentation/movement_practice_trace.gd": "16bfb7a64ec9f724961006cb10112733e7dc1a3eb1c03b87d87edda3af724126",
+		"src/presentation/natural_map_kit.gd": "e17bdc3ee15d4317cb2ade22a6ae77663962ec0da76597d45b5f3377fedf3aa5",
+		"src/presentation/pixel_action_bank.gd": "dcc2b267f4fb02aea0ae13440609eee870bff96e6c13456f86dfde5697567364",
+		"src/presentation/pixel_effect_geometry.gd": "defeccb1b22a63f9d059b3a732aee8571cf7e9fcea4c9d552b9423c7b16f3930",
+		"src/presentation/pixel_flipbook_presenter.gd": "6b6817c0329441a55343c7791354b7ca2371007e15b2bad6d04ec9eac8c138f8",
+		"src/presentation/pixel_magic_library.gd": "5c49b74fee791a1309d4952c2122c9a71bb7054e55b60a7f5b5ceeb7d82d4f03",
+		"src/presentation/pixel_map_library.gd": "02b2d41e082bee3fd2d037939cadbe8f6db556e6aa6a780eaacc9c7370366882",
+		"src/presentation/pixel_movement_effects.gd": "55fdf0326852abaf2689abfa9281d87ee87a78f22ab7b5f18605a9e693c65bfe",
+		"src/presentation/pixel_presentation.gd": "e0eb9564015374be10d9fd8b2c107c36884d21b7922a6f0ac0377adf390591f1",
+		"src/presentation/pixel_primitives.gd": "091ebf6905700f64b5ae80a961be648f8c278c706e37d85bb6624dfab97ff700",
+		"src/presentation/pixel_spell_effects.gd": "fc59298f24596042e482fd2ea3ed8d38d6e268758bbd10085b79e1e7999260bb",
+		"src/presentation/player_camera_rig.gd": "be42761fdf47be6cf2f8e0b913b76bd64c4ae0bb5856f93c2a6cfddadd603598",
+		"src/presentation/player_compendium.gd": "7858f89dd82900deb87aebb6b758111d2bcbd45e94ab84d3eac8bbc3d5553213",
+		"src/presentation/pov_terrain_backdrop.gd": "a56cbc5672bdf1d49054d278a9445447e0be9bc0db76b67cd03de6c6faa50219",
+		"src/presentation/practice_coach_card.gd": "01dec6db3626eb2b8b318cbd01037734f706d8e1ce3170e434ed065023bdfc77",
+		"src/presentation/practice_wall_skin.gd": "376795b3e8d525d66769be3618979174aaf8cf58682bd2e2a544ff5e162c00b7",
+		"src/presentation/projectile_presentation_motion.gd": "8dea9dea68ebce00021e76d94eb65c8681e34621aa4b9f314e3949aeccc2c556",
+		"src/presentation/retro_material_marks.gd": "09ab9a67a4a0d661b14725b9e5b777e7d46c2aa73c2bedd19c27711a088735b4",
+		"src/presentation/sanctum_campus_renderer.gd": "ac2c5623ad77a5f2c22594cd5c7c27f6e18d939ea1ad4e81d9ebd8a18bf8c88d",
+		"src/presentation/sight_occlusion.gd": "48d6a7c8f23aff0a22bf24ff11fafa99a966dc02efa97aa1a62b295d8f56c047",
+		"src/presentation/skeleton_animation_library.gd": "547c3db74b0161529a37b203f6a0ade1aede313e43dfbd31317985582ee0d7e9",
+		"src/presentation/spell_animation_skeleton_library.gd": "a30fa17efe5e5188949cb0bc53df27c80835e35ca92126004955beac927fbb95",
+		"src/presentation/spell_binding_labels.gd": "d3a31c4353721d518f01eee3599a62453b60811667f2e835b1095f7e594131de",
+		"src/presentation/spell_delivery_direction_contract.gd": "78ec19ce7b77b433744eee29231851ef715ec6fc3d2b010d9722841835b60731",
+		"src/presentation/spell_loom_presenter.gd": "fb74a754943a67c2086ad6235d0cad3d58948b9a15db7513a92341f2cdfceb56",
+		"src/presentation/visual_accessibility_filter.gd": "328ed835a2300b6148e39936bf89ea8c50719ca0d10b676b28e124bd677cf275",
+		"src/presentation/visual_asset_gallery.gd": "ae92cb23b995673efd78b9767f5b242356a6b99e2db3692a383e9fd356728865",
+		"src/presentation/visual_asset_registry.gd": "b33616c4d5f84288abb5b625d985ce0301168ee4368b31d42f6d510f6db53df2",
+		"src/presentation/visual_language.gd": "4f514d120639a034b4640d9aa7ec56bd3350d07404ced8e71e9c8c45f61bd820",
+		"src/presentation/visual_specimen.gd": "27fcf01ac3183f4a788a9a54a1f8d9722af0a38b04e22f567f2dadc0a9e4754b",
+		"src/presentation/wellspring_architecture_kit.gd": "645cc5a685c109d595192f264fffe2f349e1f780d51a76ba9ead2d9effe3a6f7",
+		"src/presentation/wellspring_character_sprite.gd": "b0c48c790cb299441ad8367bf9dc7664c02fc78582bd852a200ff1ba13932c17",
+		"src/presentation/wellspring_district_view.gd": "a6bc3c910d3d9d6e3fcfc3cbb1b146e172803642e18c2f0eab25ef74109c1569",
+		"src/presentation/wellspring_illustrated_kit.gd": "3490b1125c274e88202e7ee38efe4f9e244ea42f761a77121b93f4e1e401d0af",
+		"src/presentation/wellspring_interaction_presenter.gd": "9d3a632bf8e2887ee4306891cf6627246bec8a938993aecc00d7b42d8f22b1f7",
+		"src/presentation/wellspring_service_buildings.gd": "ef562f0960521639ca55cc44c54c85f1b9a87abf2c3424930755a1086b900b13",
+		"src/presentation/wellspring_visual_catalog.gd": "311ed3fb5d5d1dacf3969d738d11a6329eac8813eb2314d734ecd23415132518",
+		"src/presentation/wellspring_wayfinding.gd": "c0e1c443eb958e9f446fed3a6b2e400ea283dbd286d3e41075440f96f3632f6a",
+		"src/presentation/wireframe_body_presenter.gd": "b67dd330500d29b0a3f65df314543141c3aedf6921f0b16cc3d7b91097cfc950",
+		"src/sim/chemistry/capacitor_field_policy.gd": "677d1065e18d524a7b5e5f05e6ff27c3c456e373a4624146a4c2affda21c4d43",
+		"src/sim/chemistry/element_chemistry_system.gd": "de173e737321a45274f9a59f1bd4165fb8f2bc1ab28c500203232e8e37cf818a",
+		"src/sim/chemistry/element_deposit_state.gd": "3cfb32cf6d04a7a4b252ca7c8bb68861a492fc23a3044c548e59df5014943394",
+		"src/sim/chemistry/element_reaction_state.gd": "a0ec8c94d3f20f3e1e7dc2f8200084548f8db60502e3fcbc975d30387d34eb92",
+		"src/sim/chemistry/frostway_field_policy.gd": "cad2360964ecbcc09a85113f020a12b1e3a5006e9fe2c8ab5a8719e1865a99f4",
+		"src/sim/chemistry/reaction_definition_table.gd": "b930bfac90582dfd4cb52c1d1ed4ebd519cd77a01aab5220d3e726ac7c7bed78",
+		"src/sim/combat/combat_definition_table.gd": "aa1332c283c28536079292e660fe5d2a998d127f390997651828a72662495d83",
+		"src/sim/combat/combat_system.gd": "bf2c2083ac528a2189f4b4d925de2b21645c54c54b788aeeafe53e1c5752ae26",
+		"src/sim/combat/combat_tuning.gd": "1abd32b257fe274712f9f89f50cb3e248dca7abf946abe87606c9029f76ffb92",
+		"src/sim/combat/continuous_contact.gd": "c4f0c35485e7deca4bfc732afaeddd323b625d310e8088a8e6d510546f8965fe",
+		"src/sim/combat/field_state.gd": "1921cca91aa39faf08a8d84ceba0a37945b918c9c61859363b88cead7135dbd5",
+		"src/sim/combat/interception_practice.gd": "cc3a3d8bfd0f622b6bf40de0a8be1dab138ccdc724d0341b0d66f851de49240b",
+		"src/sim/combat/projectile_contact_order.gd": "08fb68eda08503f343e3dd908841e577fb574a82e9c5a3d5271e769544635e0b",
+		"src/sim/combat/projectile_state.gd": "883d2d4057fbc11685b7b40ce41e3c64ea3e1eb6f12004968a554b79f5dd6345",
+		"src/sim/combat/spray_contact_geometry.gd": "dbccf6708463d849de7c7b390d6e47f2bebac6226f633cdac9ad252a9ef8a00a",
+		"src/sim/combat/spray_interception.gd": "2d3cefe75560bd8f938c915fa1733f5aa2efd66b6c9ee6023313817e7344df3b",
+		"src/sim/combat/strength_budget.gd": "c206c16de173eb768d9439ef379ff93d5f71cdf9c4bb3848168eb4bec9622ce8",
+		"src/sim/combat/training_target_system.gd": "fc6dc3970c078a922afc9fd6c3bd505ea4eaa37e83cab631386e83df594c92f4",
+		"src/sim/core/action_transition_policy.gd": "d19c37dc7c091a21b2b1c52dd0109648d2808bfaf3bd5d9fc52e2e5d9f9bf9ba",
+		"src/sim/core/canonical_bytes.gd": "11de76f54bd1f420fe925d2683dcdaeca1ef59d253810cbbfc42f5ff12250d2a",
+		"src/sim/core/sim_command.gd": "1f3232ed44aae4aa4b4b0d5b49585799fde3c613c009b434f17914b9792b263f",
+		"src/sim/core/sim_config.gd": "fda49c1066a34b299a27bab00cd0277acf0079e73f7e203f5d07018a524c1f47",
+		"src/sim/core/sim_world.gd": "502b5e0bbc84a4d13e2ba1fbc8f18e09acc9c6a07947073fffb97043c5445289",
+		"src/sim/entities/player_resources_system.gd": "6bfd286db169bb69747790aca0c91c1f0760055b879058964323fb86348f6d7c",
+		"src/sim/entities/player_state.gd": "5b932a45a83b0adcae2b6e5f1f0c4770d0e0ee557bf2b242f550c70792b3c2f7",
+		"src/sim/entities/player_tuning.gd": "9d444df43f0254fbeaf925adf445d79380d8b1c6dce30d751d0d16275b46587b",
+		"src/sim/entities/resource_recovery.gd": "c43d050b84819e20dfa4550cbac4ac5e5bb993e9e1073b9ad160222f18615d3b",
+		"src/sim/hex/hex_canonical_state.gd": "f59aed162a15c824e37971a30b4cdbc274725f7ecb4482c10bbfc8373a6bc6c3",
+		"src/sim/hex/hex_cast_parts.gd": "3a1bb8f7fe8b3bb05e752caed48dafc2f65cb84b0076da47903817a508602047",
+		"src/sim/hex/hex_cell_topology.gd": "c7f3a32b957f12b4b94828e7ed3fbabb62c569fbdc27a251fbbb59c4c68e03ff",
+		"src/sim/hex/hex_chemistry_world.gd": "aa9efa1458f75513a1c5fe99e04351bfcc2231f73d9c671901bdf8b673723e69",
+		"src/sim/hex/hex_collision_world.gd": "d6e7eb26fde51a07a46f1374eb9a6d8f5c2274508c8ab2dc3f7acc3fbcb131aa",
+		"src/sim/hex/hex_contact_workset.gd": "6b545be93a34064bf00bf0c8330533d90cedb7b6bfa39ef26c05dddea801465b",
+		"src/sim/hex/hex_convex_geometry.gd": "214c9a70c8421761dcba5f2edd984e69142834eb20e9c8223acc830519fd9168",
+		"src/sim/hex/hex_court.gd": "c577334fc6f520d2694e8139b4130f25a73110c8da0374db342a2079006efddf",
+		"src/sim/hex/hex_court_practice.gd": "2ce55472e69e3aaa09f79df507a5ddbc9a2b15afe7bd7dd73841e4ed7b63c46f",
+		"src/sim/hex/hex_footprint.gd": "07e2fefe0b41ddc6d49708fe30023b6091f20384e5815d6383f839328f88351d",
+		"src/sim/hex/hex_grid.gd": "9c5bd3245091cfd8c17a2bb8770a832c0ccc5152f3270bc5a2b528f5462b2def",
+		"src/sim/hex/hex_product_effects.gd": "598933dd652e6b3961d506fab2ebcf4426f63b028ece9618f33e40c103ffbb57",
+		"src/sim/hex/hex_projectile_combat.gd": "ba0f80546663dd9c2db99d2996e65fc2b6572fc0179da2405d0c82a6e67b001b",
+		"src/sim/hex/hex_recipe_policy.gd": "b82516ddd4253fee7ddacf6eebf855ef29ee6215b64f83c90b3ce3ac4bc6e800",
+		"src/sim/hex/hex_trail_emitter.gd": "ae6533249ce5d7b575be33b544a16746f3bf23c3cff93be40631e950aed2908d",
+		"src/sim/hex/hex_world_definition.gd": "e15d75d48ddedc6bc891400f508ae43d892742c151e54bb5b93aef68dfa23f18",
+		"src/sim/materials/material_grid.gd": "b85cdd30e47f96a98b945f9a2b477ea1bbbb1572f746c82c30f4fe524f693959",
+		"src/sim/movement/movement_system.gd": "c0bc179b0e51fe9a82efdb95f5397924c536236356f3f137cbb856dc576ccd6e",
+		"src/sim/movement/movement_tuning.gd": "a29d2276b73da001e99cf8ce0b24470f228332f966959d79497e3ec497d203e3",
+		"src/sim/movement/surface_motion_policy.gd": "b74f39aeb9bc87a7633524dac0793d63501f14b633e1d8e2da41d8e2aec67c0c",
+		"src/sim/replay/replay_data.gd": "730f0c81a3d78c4d7ce6dfc7850b2be1126319a951647aad7c3e0aa247aa6a14",
+		"src/sim/world/collision_world.gd": "28425207bf7aa1eb35518c5a17131417909514f99eceefe6fd80e26f8d7c86e7",
+		"src/sim/world/reaction_movement_world.gd": "4f7b5c9483b97a455915159ec206d6f2c8d34047069148b486c161a0a798ac3e",
+		"tests/performance/profile_collision_topology.gd": "01cc5ba22720fff0429b054d6526958db84dc44907d3097b4716eef1e08c2544",
+		"tests/performance/profile_publication_stages.gd": "4e35c156fad82ec1c824289c04802abc5e557a61411a0d8ca3c84ce6498ba327",
+		"tests/performance/profile_sealed_topology.gd": "1005068217dce74ccb97a2721ded1d53cab0659d0a2619a92b0607e78eec3239",
+		"tests/performance/profile_snapshot_canonical.gd": "db1417816143963dde2d628ff1634bf989a84d45d18bed7db47e0fcaccb3c80d",
+		"tests/performance/profile_unified_wellspring.gd": "137e08f381f71643254661f48ca375ebd924c563588bb60a5db1f4606331ed72",
+		"tests/support/hex_canonical_pre_e9.gd": "48d5471984bf1461ae2e8067c1dc2f49680dfb2208a64634ebb791dcd5bcb36f",
+		"tests/support/hex_chemistry_snapshot_pre_e9.gd": "7fa24de7568649fcceaa7c92e8da2710557b9094da2e0b37ee7d559a0936677e",
+		"tests/support/hex_collision_pre_e7.gd": "730034a5956071a21f9dae3830f7e9950a4227a104264bf57a24ca18a601a07f",
+		"tests/support/hex_producer_topology_legacy_oracle.gd": "9233c90c502a59f145932d6838363f1db2411b74fb1c844994ca8cf53aeb974c",
+		"tests/support/hex_stable_cells_candidate.gd": "4dde73bf6ceb9354d740669a46253983c2e6166624cb4f27005c943d593f7ffa",
+		"tests/support/hex_world_snapshot_pre_e7e8.gd": "d85b4eeff2acdab082b0bccbed34477b1950f07de91ca0a78c918d50c9b21392",
+		"tests/support/hex_world_snapshot_pre_e9.gd": "a56624f10c6a6ad7c449e1d5949e6535cba0d1b9b61840ffd9131fbd0a1d9523"
+	},
+	"source_sha256_before": {
+		"content/abilities/foundation_abilities_v1.json": "720c16ce73f11ae9e723f43e31f39d1d700bc7a583619cd418ec3408b16f52bc",
+		"content/champions/foundation_champions_v1.json": "23a1f624a9de6c2bf88dc76578a69b23613465707605528e2988e209abba458a",
+		"content/maps/sanctum_campus_g2_v1.json": "a1d17e155000ebbdf36cb033823a2b42b1c8e31f844444da347fbac400b3c817",
+		"project.godot": "17c68ea0840a04e489f72c64de92f0d0738251695be584b0c560ddd844caf5ab",
+		"src/app/bootstrap.gd": "eba029cfd0b1abb1786b9e69d577615b9b14d9c7957457fcb80027cc672e2186",
+		"src/app/champion_attunement.gd": "712fea9f1d7d769e8b567c28a7d8692c636c66e80d1e0b08cff8688d0b0b4df4",
+		"src/app/character_overview_model.gd": "2173a25cdd3bd8535b0a0ed41bd7dcbbbb4a86fcfcbc9167dca752a403224b2c",
+		"src/app/character_selection_model.gd": "e8915544201814ada77969a48be105de7709984b7249deed9f652010dc4434c7",
+		"src/app/character_weave_coordinator.gd": "0ba53f78214c4ee28d84a4f5653840fb384517c21e84b4e76ebaf07e9fa45d41",
+		"src/app/character_weave_library.gd": "6941798fd4ed2a471edd57f110c26fe863245980a40d1f9dc67fc93478c15428",
+		"src/app/character_weave_policy.gd": "eb5a5aef9efb58aa42e42bbd2440aad3ac0cf5e8a873d7231df285e828b9b919",
+		"src/app/control_binding_editor.gd": "db22f339189e01c91d6a87f752a3d7fcb0204816575c7fb81819126aa198afbe",
+		"src/app/hex_playground_demo.gd": "10b089dab3f3ff8143a9b6cd5588c463aa3ac79b8b08cd57a84e625fe60b5e8c",
+		"src/app/input_router.gd": "f23c49a092da9676ade189c5148f116722b116a0459fa56fb8d35df6e38dae3b",
+		"src/app/interception_showcase.gd": "98dcc384afba7e42f24d5f8e1c1723b34a2c57ec5802a6637840fde8d2c87e79",
+		"src/app/player_preferences.gd": "5dcb0022a41ff5c3d7793da87ffc9572376439b3dc1ce4b156f643ccf2401575",
+		"src/app/runtime_content_summary.gd": "eba559acf7afa821feea5aba6c631af7c058623ef9ceb0798eebd8a990c7ed78",
+		"src/app/sanctum_station_model.gd": "fec45772839d1a8ab5e57ff9897dc2cafc5a8c9218e8a9924308b2378d45b0bb",
+		"src/app/spectator_focus.gd": "3c026b7221da9e4f2b3ef38dfc32b8358f430b0f060c41a35e923c73a0bb784d",
+		"src/app/spell_loom_editor.gd": "858e48f1c55156579cedd19559149f908d7faca18cdad5b6e13d957181ec9ca2",
+		"src/app/ui_grid_navigation.gd": "2f85e9c37fe4bf93e068e732e07a8f3e2d9674f4eab1b858328fe0c21c2ebeec",
+		"src/app/wellspring_service_directory.gd": "9652666af9d0fbc348568a3c8fe408b1968f2e6092f10502f17ab8a2c0087848",
+		"src/content/ability_catalog.gd": "afcbdfc216db7a0add1452215798030d829d8bac7a513b67f4059d9f07b88b9c",
+		"src/content/body_type_profile_catalog.gd": "5a4b06f1911500624cddd6e31e4d89ab57ff260e5e340fb3845e42a7194989e0",
+		"src/content/canonical_content.gd": "0acfb4e7da0fa7078a2447c13cea0d86981f048e2bc2832ee9c5da451da9dd8e",
+		"src/content/champion_catalog.gd": "e6a4d7bbbb451fdb510bf1f77d8884bfddd14a50aea201ad48e2a5ba6825be79",
+		"src/content/champion_roster_plan.gd": "6743eeeaeec0cfb26e8c8abe5e07f7c851e8a148818793576bc0ba0249ec7afb",
+		"src/content/character_starter_kit.gd": "95014a3c00827c42409274a315266cd041610c291b6f29dc1110ef57037adf1f",
+		"src/content/environment_kit_manifest.gd": "54126c0ab2c8d7648cd3d2d479ccb7e3acb34dc85a859b48881df76f87076e97",
+		"src/content/hub_definition.gd": "2403991ca08e9544679c5c68e1f552dfb5c957f2a73b3663056ae348b13338f2",
+		"src/content/image_asset_inspector.gd": "ffd64987bf15d8a71fe5dbdfcdc912b2dfa3814ebdd409fa9085d36907ac809a",
+		"src/content/loadout_definition.gd": "99212b23f267e672e08e9da68173ea9c3cd3f79b42475defce9ce52fafb8566a",
+		"src/content/material_registry.gd": "11de0b32a30cb3ca527d2fc732e7f88b7e6c701c895a718980be14ad16271b29",
+		"src/content/material_yard_definition.gd": "80e2837e6ad3daf9097ccb01527e1421eeee8fa1b7ac27b9d193da3aa10bf1ab",
+		"src/content/reaction_catalog.gd": "ea77cf64f8cf173ac1613770f3bb0a9d334eff7c7cdde4fbf77a6b7abfeaeb29",
+		"src/content/runtime_build_identity.gd": "68cbd2cb431da0c1f9e22ba3db90b1ddf32e465d53aa1b13da8fd4dc5b1e655f",
+		"src/content/sanctum_campus_layout.gd": "a0cbad5bace6ce52df61119016846d2e56b0b154a1f9d5344ccc12eaf8a97ad5",
+		"src/content/sanctum_runtime_kit.gd": "1452a2ef283ab337bcabf38d2bb24025ef3843bbbeff1f1e75f3977430be5322",
+		"src/content/wellspring_environment_kit.gd": "cd757ca31b36e245bda96238c897b951ac850ba9e115441bee964b468ef7830c",
+		"src/net/authoritative_session.gd": "0fe70ab3d86fae388aed5dc598e2a869dc1c0b5bc806ee1a5056198ea8764aa3",
+		"src/net/client_prediction.gd": "97e67c6b046dae28441c34ab155f6d155dcc73cf8b864832028ff47b8f77187d",
+		"src/net/hex_chemistry_snapshot.gd": "d4fc2ea041d3523bc2e606d8e7464fdb394d374374f733b037a2013f470f04f1",
+		"src/net/hex_snapshot_wire_packing.gd": "ca062a108b794cec3b5f822f882168370149ecc95e585fbca284a75713c7e17a",
+		"src/net/hex_world_snapshot.gd": "d5e2adb39a2877dc65045e6a67b782a29198a8212368e4b644f9b8940800f3e6",
+		"src/net/lan_lobby.gd": "cac8f97ad5e875b4d89abc3ee2b2bf4b31744c569fd67a5f222243ed0cec572d",
+		"src/net/reconciliation_order_buffer.gd": "f14a19b6fb3a09aec5b326ff2d1b1b1c23c0185d649eb7a7ec016c37e1dac462",
+		"src/net/session_charter.gd": "e4ee475d8f5183390710a9bdb7bc8fb8879fee664395b71e12140ae61ddb085e",
+		"src/net/session_event_inbox.gd": "3474a1e72a364426dc3693306612d3d93fe6b8c7d5a96d01258a6ebdcefd2b82",
+		"src/net/session_hearth.gd": "d8989b6482580300671734192f542895d4ff78996b64f41e2ab45788e8c71a4a",
+		"src/net/session_request_policy.gd": "a756f178ef5bc77531d0d21b9f4f8b1f8b6298f71a112c5c75db9eb900cbf0c4",
+		"src/net/session_round.gd": "90342666044e23ebba8d45515a05a5fff6e4e8208acaf32bc8d6a7685fd501a8",
+		"src/net/session_snapshot.gd": "d325f4bf32bf2b7e0fd79fc641b74ed6a352347892f4e5572aeb01eb1e0f309f",
+		"src/net/session_steward.gd": "c2ee2d8fe558db2622c16c4ca0b8e67420ba4a8a119d10a8f430caab860c367f",
+		"src/net/session_transport.gd": "5340e52afda4208e1465579c3c02e0dd1e13289923153ea92899f2ecf081b136",
+		"src/net/world_snapshot_envelope.gd": "0385254ae2ed351e02e4e9bfa756e10677b601f21bacb1c835d3fa3137bcb8f1",
+		"src/presentation/actor_motion_history.gd": "5204a4c6a5576afc5030c270e26a1b4f3072052a888f1fc5b0e45b6e89aaccb9",
+		"src/presentation/aim_reticle_presenter.gd": "21fed10b6c01756e51065a9f5ba77cd16d425968d027426871dafdce1ec6995d",
+		"src/presentation/burst_projectile_presenter.gd": "446d7ade0765d93f2200fc2d9488ba844c5197cfb24859ff452c834ca67b1b41",
+		"src/presentation/cartoon_champion_presenter.gd": "591cea3ed35e6355979ebe7509b65c206fcce035332048b55a982b446623495a",
+		"src/presentation/character_selection_grid.gd": "f3977452e2f680557e423bb0926c18fa27626b84eb716514f4e5fe24817a1375",
+		"src/presentation/character_viewport_policy.gd": "26bcc318fcfad89bd37b0776f0ee142df14ddf4111fc830964b86a91402189db",
+		"src/presentation/chemistry_guide_model.gd": "ecb91e3995a99b04b86476cf080de43f655b5cc1a567e93ac713349c6d5b5b11",
+		"src/presentation/chemistry_practice_coach.gd": "f1803ae665e75b524ca825b73076636fc2f1643a8a19bf1dcca057b566c4d6ee",
+		"src/presentation/combat_feedback_model.gd": "ae35c0b84a2515fce608582b5f3578320170eaf0950ccada300aab3d0cdf7382",
+		"src/presentation/compact_combat_hud.gd": "0b50153596da2f36038d87e3023d24153c5d546aa83f71535372d9b0871692ae",
+		"src/presentation/complete_visual_catalog.gd": "15af870669f51d8eacbaca37e8f780bff0286e7d5501966356a986de3271a8de",
+		"src/presentation/complete_visual_gallery.gd": "b3002492f6fbdcc266470152f14182bc93afef7e370497c3a9f6907b2d54cacb",
+		"src/presentation/eight_direction_resolver.gd": "de6b2bf98748bbede0e48269c3e634b939f082fbbd9b2e6384f470c5f9da37f2",
+		"src/presentation/element_audio.gd": "d08a9a992830fc9569f861e213bb70af9797d7c3fbe393a3db7005fd31c4ec01",
+		"src/presentation/element_chemistry_presenter.gd": "07da0e968432b885165d2c66f071377ea7f241b5944e505501980b6c73964870",
+		"src/presentation/element_glyph_renderer.gd": "11af970ab80d80ec9bfb5108c1334386b0a671f96d7ca8640fc47160d29dc849",
+		"src/presentation/foundation_spell_presenter.gd": "2bd44d27fbf1c2aaf300d932ad204bfc5d0af33eab9e03eb99d7fb57421ed4cd",
+		"src/presentation/fullbody_cast_presenter.gd": "1252989d9dab123462ad272942d825b84f15ebaff2652d04749f2da87c535539",
+		"src/presentation/heavy_blast_presenter.gd": "1ed784aba999a697d52f709b5b62a85bf65603455f72f3ec7a9a86bccea07ab8",
+		"src/presentation/hex_combat_label.gd": "12c76741871d7e31d142f4a6e7240d88c84b482136bb7609ee87bd635fd1d6b2",
+		"src/presentation/hex_contact_punctuation.gd": "9458d98c9e4a2598210da78cda55fa97a20023bcef2c617a4d0954f21977b441",
+		"src/presentation/hex_court_presenter.gd": "24cbabeea0fcafa277cf40c6f3c98d6d08a065772a245133dd79c19981e2d70c",
+		"src/presentation/hex_environment_layout.gd": "4692f43f753da58e4b12b290b6061523bec3d090722600c9b544607df862d7ae",
+		"src/presentation/hex_material_surface.gd": "0648e739be64d71b383482c6c470ae602efbe92a24ce407a449df34bfc63038a",
+		"src/presentation/hex_playground_panel.gd": "e6887c379aa12492299a3503bc9e5a3c2932d606c486ee56ee1b5bf5775e5942",
+		"src/presentation/hex_water_material_presenter.gd": "487e0b674476f6fb125ee97a2b7136d8236c3f58b8cabf85d0b62f49c9bbc8c2",
+		"src/presentation/interception_feedback.gd": "3e5c624a5fbff55b4e5bf07670d21a0848b53dca107869e2211b5457a4a64929",
+		"src/presentation/interception_practice_card.gd": "43cb3662c84983895b62e3f30a180fcb71b656f82180586e4e01ddedccf8c3d7",
+		"src/presentation/jump_presentation.gd": "0b34756959a99d226e96601d36af799ef4fb0e885e88d3c0ba37b560d5fa0c02",
+		"src/presentation/landing_presentation.gd": "af661178e230b1df4758c55f21a2ccbd3e9bfea691e36ce77c409061842cbb95",
+		"src/presentation/minimal_champion_motion.gd": "f1650539cceaed4e978174b9e228979291fde671e9030b206c845d33d3d228f3",
+		"src/presentation/movement_guide_model.gd": "c801e1ec50c9f52bfd646f16554e17a145079bbbef8193b0445919712ba6d456",
+		"src/presentation/movement_practice_coach.gd": "a3116dd18aa0bfa381457a0314b173babc68614a46510891db82478a2c3a9b1b",
+		"src/presentation/movement_practice_trace.gd": "16bfb7a64ec9f724961006cb10112733e7dc1a3eb1c03b87d87edda3af724126",
+		"src/presentation/natural_map_kit.gd": "e17bdc3ee15d4317cb2ade22a6ae77663962ec0da76597d45b5f3377fedf3aa5",
+		"src/presentation/pixel_action_bank.gd": "dcc2b267f4fb02aea0ae13440609eee870bff96e6c13456f86dfde5697567364",
+		"src/presentation/pixel_effect_geometry.gd": "defeccb1b22a63f9d059b3a732aee8571cf7e9fcea4c9d552b9423c7b16f3930",
+		"src/presentation/pixel_flipbook_presenter.gd": "6b6817c0329441a55343c7791354b7ca2371007e15b2bad6d04ec9eac8c138f8",
+		"src/presentation/pixel_magic_library.gd": "5c49b74fee791a1309d4952c2122c9a71bb7054e55b60a7f5b5ceeb7d82d4f03",
+		"src/presentation/pixel_map_library.gd": "02b2d41e082bee3fd2d037939cadbe8f6db556e6aa6a780eaacc9c7370366882",
+		"src/presentation/pixel_movement_effects.gd": "55fdf0326852abaf2689abfa9281d87ee87a78f22ab7b5f18605a9e693c65bfe",
+		"src/presentation/pixel_presentation.gd": "e0eb9564015374be10d9fd8b2c107c36884d21b7922a6f0ac0377adf390591f1",
+		"src/presentation/pixel_primitives.gd": "091ebf6905700f64b5ae80a961be648f8c278c706e37d85bb6624dfab97ff700",
+		"src/presentation/pixel_spell_effects.gd": "fc59298f24596042e482fd2ea3ed8d38d6e268758bbd10085b79e1e7999260bb",
+		"src/presentation/player_camera_rig.gd": "be42761fdf47be6cf2f8e0b913b76bd64c4ae0bb5856f93c2a6cfddadd603598",
+		"src/presentation/player_compendium.gd": "7858f89dd82900deb87aebb6b758111d2bcbd45e94ab84d3eac8bbc3d5553213",
+		"src/presentation/pov_terrain_backdrop.gd": "a56cbc5672bdf1d49054d278a9445447e0be9bc0db76b67cd03de6c6faa50219",
+		"src/presentation/practice_coach_card.gd": "01dec6db3626eb2b8b318cbd01037734f706d8e1ce3170e434ed065023bdfc77",
+		"src/presentation/practice_wall_skin.gd": "376795b3e8d525d66769be3618979174aaf8cf58682bd2e2a544ff5e162c00b7",
+		"src/presentation/projectile_presentation_motion.gd": "8dea9dea68ebce00021e76d94eb65c8681e34621aa4b9f314e3949aeccc2c556",
+		"src/presentation/retro_material_marks.gd": "09ab9a67a4a0d661b14725b9e5b777e7d46c2aa73c2bedd19c27711a088735b4",
+		"src/presentation/sanctum_campus_renderer.gd": "ac2c5623ad77a5f2c22594cd5c7c27f6e18d939ea1ad4e81d9ebd8a18bf8c88d",
+		"src/presentation/sight_occlusion.gd": "48d6a7c8f23aff0a22bf24ff11fafa99a966dc02efa97aa1a62b295d8f56c047",
+		"src/presentation/skeleton_animation_library.gd": "547c3db74b0161529a37b203f6a0ade1aede313e43dfbd31317985582ee0d7e9",
+		"src/presentation/spell_animation_skeleton_library.gd": "a30fa17efe5e5188949cb0bc53df27c80835e35ca92126004955beac927fbb95",
+		"src/presentation/spell_binding_labels.gd": "d3a31c4353721d518f01eee3599a62453b60811667f2e835b1095f7e594131de",
+		"src/presentation/spell_delivery_direction_contract.gd": "78ec19ce7b77b433744eee29231851ef715ec6fc3d2b010d9722841835b60731",
+		"src/presentation/spell_loom_presenter.gd": "fb74a754943a67c2086ad6235d0cad3d58948b9a15db7513a92341f2cdfceb56",
+		"src/presentation/visual_accessibility_filter.gd": "328ed835a2300b6148e39936bf89ea8c50719ca0d10b676b28e124bd677cf275",
+		"src/presentation/visual_asset_gallery.gd": "ae92cb23b995673efd78b9767f5b242356a6b99e2db3692a383e9fd356728865",
+		"src/presentation/visual_asset_registry.gd": "b33616c4d5f84288abb5b625d985ce0301168ee4368b31d42f6d510f6db53df2",
+		"src/presentation/visual_language.gd": "4f514d120639a034b4640d9aa7ec56bd3350d07404ced8e71e9c8c45f61bd820",
+		"src/presentation/visual_specimen.gd": "27fcf01ac3183f4a788a9a54a1f8d9722af0a38b04e22f567f2dadc0a9e4754b",
+		"src/presentation/wellspring_architecture_kit.gd": "645cc5a685c109d595192f264fffe2f349e1f780d51a76ba9ead2d9effe3a6f7",
+		"src/presentation/wellspring_character_sprite.gd": "b0c48c790cb299441ad8367bf9dc7664c02fc78582bd852a200ff1ba13932c17",
+		"src/presentation/wellspring_district_view.gd": "a6bc3c910d3d9d6e3fcfc3cbb1b146e172803642e18c2f0eab25ef74109c1569",
+		"src/presentation/wellspring_illustrated_kit.gd": "3490b1125c274e88202e7ee38efe4f9e244ea42f761a77121b93f4e1e401d0af",
+		"src/presentation/wellspring_interaction_presenter.gd": "9d3a632bf8e2887ee4306891cf6627246bec8a938993aecc00d7b42d8f22b1f7",
+		"src/presentation/wellspring_service_buildings.gd": "ef562f0960521639ca55cc44c54c85f1b9a87abf2c3424930755a1086b900b13",
+		"src/presentation/wellspring_visual_catalog.gd": "311ed3fb5d5d1dacf3969d738d11a6329eac8813eb2314d734ecd23415132518",
+		"src/presentation/wellspring_wayfinding.gd": "c0e1c443eb958e9f446fed3a6b2e400ea283dbd286d3e41075440f96f3632f6a",
+		"src/presentation/wireframe_body_presenter.gd": "b67dd330500d29b0a3f65df314543141c3aedf6921f0b16cc3d7b91097cfc950",
+		"src/sim/chemistry/capacitor_field_policy.gd": "677d1065e18d524a7b5e5f05e6ff27c3c456e373a4624146a4c2affda21c4d43",
+		"src/sim/chemistry/element_chemistry_system.gd": "de173e737321a45274f9a59f1bd4165fb8f2bc1ab28c500203232e8e37cf818a",
+		"src/sim/chemistry/element_deposit_state.gd": "3cfb32cf6d04a7a4b252ca7c8bb68861a492fc23a3044c548e59df5014943394",
+		"src/sim/chemistry/element_reaction_state.gd": "a0ec8c94d3f20f3e1e7dc2f8200084548f8db60502e3fcbc975d30387d34eb92",
+		"src/sim/chemistry/frostway_field_policy.gd": "cad2360964ecbcc09a85113f020a12b1e3a5006e9fe2c8ab5a8719e1865a99f4",
+		"src/sim/chemistry/reaction_definition_table.gd": "b930bfac90582dfd4cb52c1d1ed4ebd519cd77a01aab5220d3e726ac7c7bed78",
+		"src/sim/combat/combat_definition_table.gd": "aa1332c283c28536079292e660fe5d2a998d127f390997651828a72662495d83",
+		"src/sim/combat/combat_system.gd": "bf2c2083ac528a2189f4b4d925de2b21645c54c54b788aeeafe53e1c5752ae26",
+		"src/sim/combat/combat_tuning.gd": "1abd32b257fe274712f9f89f50cb3e248dca7abf946abe87606c9029f76ffb92",
+		"src/sim/combat/continuous_contact.gd": "c4f0c35485e7deca4bfc732afaeddd323b625d310e8088a8e6d510546f8965fe",
+		"src/sim/combat/field_state.gd": "1921cca91aa39faf08a8d84ceba0a37945b918c9c61859363b88cead7135dbd5",
+		"src/sim/combat/interception_practice.gd": "cc3a3d8bfd0f622b6bf40de0a8be1dab138ccdc724d0341b0d66f851de49240b",
+		"src/sim/combat/projectile_contact_order.gd": "08fb68eda08503f343e3dd908841e577fb574a82e9c5a3d5271e769544635e0b",
+		"src/sim/combat/projectile_state.gd": "883d2d4057fbc11685b7b40ce41e3c64ea3e1eb6f12004968a554b79f5dd6345",
+		"src/sim/combat/spray_contact_geometry.gd": "dbccf6708463d849de7c7b390d6e47f2bebac6226f633cdac9ad252a9ef8a00a",
+		"src/sim/combat/spray_interception.gd": "2d3cefe75560bd8f938c915fa1733f5aa2efd66b6c9ee6023313817e7344df3b",
+		"src/sim/combat/strength_budget.gd": "c206c16de173eb768d9439ef379ff93d5f71cdf9c4bb3848168eb4bec9622ce8",
+		"src/sim/combat/training_target_system.gd": "fc6dc3970c078a922afc9fd6c3bd505ea4eaa37e83cab631386e83df594c92f4",
+		"src/sim/core/action_transition_policy.gd": "d19c37dc7c091a21b2b1c52dd0109648d2808bfaf3bd5d9fc52e2e5d9f9bf9ba",
+		"src/sim/core/canonical_bytes.gd": "11de76f54bd1f420fe925d2683dcdaeca1ef59d253810cbbfc42f5ff12250d2a",
+		"src/sim/core/sim_command.gd": "1f3232ed44aae4aa4b4b0d5b49585799fde3c613c009b434f17914b9792b263f",
+		"src/sim/core/sim_config.gd": "fda49c1066a34b299a27bab00cd0277acf0079e73f7e203f5d07018a524c1f47",
+		"src/sim/core/sim_world.gd": "502b5e0bbc84a4d13e2ba1fbc8f18e09acc9c6a07947073fffb97043c5445289",
+		"src/sim/entities/player_resources_system.gd": "6bfd286db169bb69747790aca0c91c1f0760055b879058964323fb86348f6d7c",
+		"src/sim/entities/player_state.gd": "5b932a45a83b0adcae2b6e5f1f0c4770d0e0ee557bf2b242f550c70792b3c2f7",
+		"src/sim/entities/player_tuning.gd": "9d444df43f0254fbeaf925adf445d79380d8b1c6dce30d751d0d16275b46587b",
+		"src/sim/entities/resource_recovery.gd": "c43d050b84819e20dfa4550cbac4ac5e5bb993e9e1073b9ad160222f18615d3b",
+		"src/sim/hex/hex_canonical_state.gd": "f59aed162a15c824e37971a30b4cdbc274725f7ecb4482c10bbfc8373a6bc6c3",
+		"src/sim/hex/hex_cast_parts.gd": "3a1bb8f7fe8b3bb05e752caed48dafc2f65cb84b0076da47903817a508602047",
+		"src/sim/hex/hex_cell_topology.gd": "c7f3a32b957f12b4b94828e7ed3fbabb62c569fbdc27a251fbbb59c4c68e03ff",
+		"src/sim/hex/hex_chemistry_world.gd": "aa9efa1458f75513a1c5fe99e04351bfcc2231f73d9c671901bdf8b673723e69",
+		"src/sim/hex/hex_collision_world.gd": "d6e7eb26fde51a07a46f1374eb9a6d8f5c2274508c8ab2dc3f7acc3fbcb131aa",
+		"src/sim/hex/hex_contact_workset.gd": "6b545be93a34064bf00bf0c8330533d90cedb7b6bfa39ef26c05dddea801465b",
+		"src/sim/hex/hex_convex_geometry.gd": "214c9a70c8421761dcba5f2edd984e69142834eb20e9c8223acc830519fd9168",
+		"src/sim/hex/hex_court.gd": "c577334fc6f520d2694e8139b4130f25a73110c8da0374db342a2079006efddf",
+		"src/sim/hex/hex_court_practice.gd": "2ce55472e69e3aaa09f79df507a5ddbc9a2b15afe7bd7dd73841e4ed7b63c46f",
+		"src/sim/hex/hex_footprint.gd": "07e2fefe0b41ddc6d49708fe30023b6091f20384e5815d6383f839328f88351d",
+		"src/sim/hex/hex_grid.gd": "9c5bd3245091cfd8c17a2bb8770a832c0ccc5152f3270bc5a2b528f5462b2def",
+		"src/sim/hex/hex_product_effects.gd": "598933dd652e6b3961d506fab2ebcf4426f63b028ece9618f33e40c103ffbb57",
+		"src/sim/hex/hex_projectile_combat.gd": "ba0f80546663dd9c2db99d2996e65fc2b6572fc0179da2405d0c82a6e67b001b",
+		"src/sim/hex/hex_recipe_policy.gd": "b82516ddd4253fee7ddacf6eebf855ef29ee6215b64f83c90b3ce3ac4bc6e800",
+		"src/sim/hex/hex_trail_emitter.gd": "ae6533249ce5d7b575be33b544a16746f3bf23c3cff93be40631e950aed2908d",
+		"src/sim/hex/hex_world_definition.gd": "e15d75d48ddedc6bc891400f508ae43d892742c151e54bb5b93aef68dfa23f18",
+		"src/sim/materials/material_grid.gd": "b85cdd30e47f96a98b945f9a2b477ea1bbbb1572f746c82c30f4fe524f693959",
+		"src/sim/movement/movement_system.gd": "c0bc179b0e51fe9a82efdb95f5397924c536236356f3f137cbb856dc576ccd6e",
+		"src/sim/movement/movement_tuning.gd": "a29d2276b73da001e99cf8ce0b24470f228332f966959d79497e3ec497d203e3",
+		"src/sim/movement/surface_motion_policy.gd": "b74f39aeb9bc87a7633524dac0793d63501f14b633e1d8e2da41d8e2aec67c0c",
+		"src/sim/replay/replay_data.gd": "730f0c81a3d78c4d7ce6dfc7850b2be1126319a951647aad7c3e0aa247aa6a14",
+		"src/sim/world/collision_world.gd": "28425207bf7aa1eb35518c5a17131417909514f99eceefe6fd80e26f8d7c86e7",
+		"src/sim/world/reaction_movement_world.gd": "4f7b5c9483b97a455915159ec206d6f2c8d34047069148b486c161a0a798ac3e",
+		"tests/performance/profile_collision_topology.gd": "01cc5ba22720fff0429b054d6526958db84dc44907d3097b4716eef1e08c2544",
+		"tests/performance/profile_publication_stages.gd": "4e35c156fad82ec1c824289c04802abc5e557a61411a0d8ca3c84ce6498ba327",
+		"tests/performance/profile_sealed_topology.gd": "1005068217dce74ccb97a2721ded1d53cab0659d0a2619a92b0607e78eec3239",
+		"tests/performance/profile_snapshot_canonical.gd": "db1417816143963dde2d628ff1634bf989a84d45d18bed7db47e0fcaccb3c80d",
+		"tests/performance/profile_unified_wellspring.gd": "137e08f381f71643254661f48ca375ebd924c563588bb60a5db1f4606331ed72",
+		"tests/support/hex_canonical_pre_e9.gd": "48d5471984bf1461ae2e8067c1dc2f49680dfb2208a64634ebb791dcd5bcb36f",
+		"tests/support/hex_chemistry_snapshot_pre_e9.gd": "7fa24de7568649fcceaa7c92e8da2710557b9094da2e0b37ee7d559a0936677e",
+		"tests/support/hex_collision_pre_e7.gd": "730034a5956071a21f9dae3830f7e9950a4227a104264bf57a24ca18a601a07f",
+		"tests/support/hex_producer_topology_legacy_oracle.gd": "9233c90c502a59f145932d6838363f1db2411b74fb1c844994ca8cf53aeb974c",
+		"tests/support/hex_stable_cells_candidate.gd": "4dde73bf6ceb9354d740669a46253983c2e6166624cb4f27005c943d593f7ffa",
+		"tests/support/hex_world_snapshot_pre_e7e8.gd": "d85b4eeff2acdab082b0bccbed34477b1950f07de91ca0a78c918d50c9b21392",
+		"tests/support/hex_world_snapshot_pre_e9.gd": "a56624f10c6a6ad7c449e1d5949e6535cba0d1b9b61840ffd9131fbd0a1d9523"
+	},
+	"sources_unchanged": true,
+	"stage_meaning": "world_capture is HexWorldSnapshot.capture. session_capture_envelope includes world capture, metadata and strict wrapping. wrap_hex uses fixed detached inputs. envelope_validate is a fixed-envelope strict check. transport_packetize calls the public envelope packetizer (validation, serialization, compression, fragmentation). transport_encode calls the actual concrete transport encoder once per prepared packet. capture_to_encoded_packets includes public session capture plus packetization plus packet encoding, without sends.",
+	"stage_names": [
+		"world_capture",
+		"session_capture_envelope",
+		"wrap_hex",
+		"envelope_validate",
+		"transport_packetize",
+		"transport_encode",
+		"capture_to_encoded_packets"
+	],
+	"timers": "Only the named operation plus dispatch/return runs inside a stage timer. Assertion, source/input hashes, equivalence checks, sample recording and receipt construction are outside. diagnostic_bookkeeping_us counts per-sample checks/recording only, not fixture setup, oracle creation, warmups or final receipt work."
+}

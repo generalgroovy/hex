@@ -1,0 +1,233 @@
+{
+  "schema_version": 1,
+  "character_id": "spai_si",
+  "directions": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "source_png": "../reference/bodies-03.png",
+  "source_sha256": "fb564f2feed9f8dd0166d8108de9be619fafdde654da8614274add72e424813a",
+  "alpha_threshold": 127,
+  "reference_body_height": 187,
+  "body_parts": {
+    "S": {
+      "rect": [
+        25,
+        11,
+        163,
+        191
+      ],
+      "ground_anchor": [
+        78,
+        189
+      ]
+    },
+    "SE": {
+      "rect": [
+        224,
+        11,
+        165,
+        191
+      ],
+      "ground_anchor": [
+        72,
+        189
+      ]
+    },
+    "E": {
+      "rect": [
+        417,
+        11,
+        116,
+        191
+      ],
+      "ground_anchor": [
+        68,
+        189
+      ]
+    },
+    "NE": {
+      "rect": [
+        599,
+        11,
+        145,
+        189
+      ],
+      "ground_anchor": [
+        62,
+        187
+      ]
+    },
+    "N": {
+      "rect": [
+        788,
+        13,
+        152,
+        188
+      ],
+      "ground_anchor": [
+        75,
+        186
+      ]
+    },
+    "NW": {
+      "rect": [
+        985,
+        11,
+        141,
+        189
+      ],
+      "ground_anchor": [
+        79,
+        187
+      ]
+    },
+    "W": {
+      "rect": [
+        1198,
+        11,
+        121,
+        191
+      ],
+      "ground_anchor": [
+        48,
+        189
+      ]
+    },
+    "SW": {
+      "rect": [
+        1356,
+        12,
+        160,
+        190
+      ],
+      "ground_anchor": [
+        78,
+        188
+      ]
+    }
+  },
+  "measurement_notes": "Alpha127 only, no color key; transparent row/column valleys then actual silhouette bounds with transparent border. One front crown-to-sole height calibrates all eight directions; no per-frame bbox fitting. Ground anchor uses lowest3.5% foot band midpoint. Anatomical crowns/horns are included in initial calibration pending review.",
+  "visual_holds": [
+    "Idle directional candidate only; no walk, run, slide, roll, jump or cast animation authored by this source.",
+    "Exact 45-degree rear quarters require visual review; source may repeat neighboring silhouette.",
+    "Same-size anatomy volume, facing foot registration and crown-inclusive calibration require rendered review before game integration."
+  ],
+  "source_measurements": {
+    "size": [
+      1536,
+      1024
+    ],
+    "alpha_extrema": [
+      0,
+      254
+    ],
+    "row_cuts": [
+      0,
+      203,
+      395,
+      610,
+      815,
+      1024
+    ],
+    "column_cuts": [
+      0,
+      205,
+      402,
+      565,
+      765,
+      962,
+      1161,
+      1337,
+      1536
+    ],
+    "directions": {
+      "S": {
+        "opaque_bounds": [
+          27,
+          13,
+          186,
+          200
+        ],
+        "opaque_pixels": 15367,
+        "foot_band_pixels": 7
+      },
+      "SE": {
+        "opaque_bounds": [
+          226,
+          13,
+          387,
+          200
+        ],
+        "opaque_pixels": 15285,
+        "foot_band_pixels": 7
+      },
+      "E": {
+        "opaque_bounds": [
+          419,
+          13,
+          531,
+          200
+        ],
+        "opaque_pixels": 11888,
+        "foot_band_pixels": 7
+      },
+      "NE": {
+        "opaque_bounds": [
+          601,
+          13,
+          742,
+          198
+        ],
+        "opaque_pixels": 13535,
+        "foot_band_pixels": 6
+      },
+      "N": {
+        "opaque_bounds": [
+          790,
+          15,
+          938,
+          199
+        ],
+        "opaque_pixels": 14533,
+        "foot_band_pixels": 6
+      },
+      "NW": {
+        "opaque_bounds": [
+          987,
+          13,
+          1124,
+          198
+        ],
+        "opaque_pixels": 13455,
+        "foot_band_pixels": 6
+      },
+      "W": {
+        "opaque_bounds": [
+          1200,
+          13,
+          1317,
+          200
+        ],
+        "opaque_pixels": 11857,
+        "foot_band_pixels": 7
+      },
+      "SW": {
+        "opaque_bounds": [
+          1358,
+          14,
+          1514,
+          200
+        ],
+        "opaque_pixels": 15139,
+        "foot_band_pixels": 7
+      }
+    }
+  }
+}

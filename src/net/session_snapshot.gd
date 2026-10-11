@@ -5,8 +5,9 @@ const WORLD_BOUNDARY_WALL_IDS := [-1, -2]
 
 const DepositState = preload("res://src/sim/chemistry/element_deposit_state.gd")
 const ReactionState = preload("res://src/sim/chemistry/element_reaction_state.gd")
+const SpellStateCodec = preload("res://src/net/expanded_spell_state_codec.gd")
 
-const SCHEMA_VERSION: int = 21
+const SCHEMA_VERSION: int = 24
 const MAX_PLAYERS: int = 8
 # Remote movement presentation requires the actual action clocks/contact, not
 # a reconstruction from speed. Local reconciliation carries complete intent.
@@ -22,12 +23,15 @@ const MOVEMENT_PRESENTATION_FIELDS: Array[StringName] = [
 	&"float_used", &"float_ticks", &"float_max_duration_ms",
 	&"chemistry_reveal_ticks", &"chemistry_conceal_ticks", &"chemistry_regen_block_ticks",
 	&"pending_cast_target_x", &"pending_cast_target_y",
+	&"flight_capable", &"jumpsquat_active", &"jumpsquat_ticks", &"double_jump_used", &"wallrun_armed", &"crouching",
 ]
-const PLAYER_VALUE_COUNT: int = 109 # 74 base + 35 validated movement/resource/target values.
-const PROJECTILE_VALUE_COUNT: int = 18 # Int32; optical mask remains split into low31/high5 bits, then strength.
+const PLAYER_BASE_VALUE_COUNT: int = 115
+const PLAYER_VALUE_COUNT: int = PLAYER_BASE_VALUE_COUNT + SpellStateCodec.STATUS_SIZE
+const PROJECTILE_BASE_VALUE_COUNT: int = 18
+const PROJECTILE_VALUE_COUNT: int = PROJECTILE_BASE_VALUE_COUNT + SpellStateCodec.DELIVERY_SIZE
 const FIELD_VALUE_COUNT: int = 7
 const EVENT_VALUE_COUNT: int = 6
-const TARGET_VALUE_COUNT: int = 10
+const TARGET_VALUE_COUNT: int = 10 + SpellStateCodec.STATUS_SIZE
 # Every admitted threat must reach clients. Complete snapshots may use bounded
 # MTU-sized fragments; cast admission uses these same authority limits.
 const MAX_PROJECTILES: int = SimConfig.MAX_ACTIVE_PROJECTILES
@@ -101,6 +105,8 @@ static func capture(
 		player_values.append(_encode_movement_context(state))
 		for property_name: StringName in MOVEMENT_PRESENTATION_FIELDS:
 			player_values.append(int(state.get(property_name)))
+		if not SpellStateCodec.valid_status_values(state.spell_status_values): return {}
+		player_values.append_array(state.spell_status_values)
 		players.append([
 			state.entity_id,
 			_safe_name(String(names_by_entity.get(state.entity_id, "Traveller %d" % state.entity_id))),
@@ -136,6 +142,9 @@ static func capture(
 			projectile.chemistry_interaction_mask >> 31,
 			projectile.reaction_strength,
 		])
+		var delivery := SpellStateCodec.capture_delivery(projectile)
+		if delivery.is_empty(): return {}
+		values.append_array(PackedInt64Array(Array(delivery)))
 		if not _fits_int32(values) or not _valid_projectile_values(PackedInt32Array(Array(values))) or not _accept_cast_strength(cast_strengths, projectile.source_cast_id, projectile.entity_id, projectile.reaction_strength):
 			return {}
 		projectiles.append_array(PackedInt32Array(Array(values)))
@@ -166,13 +175,16 @@ static func capture(
 	var targets: Array[PackedInt64Array] = []
 	for index: int in range(mini(ordered_targets.size(), MAX_TARGETS)):
 		var target: PlayerState = ordered_targets[index]
-		targets.append(PackedInt64Array([
+		var target_values := PackedInt64Array([
 			target.entity_id,
 			target.position_x, target.position_y,
 			target.radius,
 			target.health_maximum, target.health,
 			target.training_respawn_ticks, target.training_spawn_x, target.training_spawn_y, target.spawn_protection_ticks,
-		]))
+		])
+		if not SpellStateCodec.valid_status_values(target.spell_status_values): return {}
+		target_values.append_array(PackedInt64Array(Array(target.spell_status_values)))
+		targets.append(target_values)
 	# Chemistry is persistent harmful state, unlike the lossy cosmetic event lane.
 	# Refuse an over-budget or invalid whole snapshot instead of omitting danger.
 	if world.deposits.size() > MAX_DEPOSITS or world.reactions.size() > MAX_REACTIONS or world.deposits.size() + world.projectiles.size() > MAX_PROJECTILES:
@@ -231,6 +243,8 @@ static func validate(snapshot: Dictionary) -> bool:
 	if players.is_empty() or players.size() > MAX_PLAYERS:
 		return false
 	var seen: Dictionary[int, bool] = {}
+	var teams_by_entity: Dictionary[int, int] = {}
+	var health_by_entity: Dictionary[int, int] = {}
 	var previous_entity_id: int = 0
 	for player_value: Variant in players:
 		if not player_value is Array or player_value.size() != 4:
@@ -253,6 +267,8 @@ static func validate(snapshot: Dictionary) -> bool:
 		var values: PackedInt32Array = values_value
 		if values.size() != PLAYER_VALUE_COUNT or not _valid_player_values(values):
 			return false
+		teams_by_entity[entity_id] = int(values[31])
+		health_by_entity[entity_id] = int(values[12])
 	var projectiles_value: Variant = snapshot.get("projectiles")
 	if typeof(projectiles_value) != TYPE_PACKED_INT32_ARRAY:
 		return false
@@ -346,7 +362,15 @@ static func validate(snapshot: Dictionary) -> bool:
 	var round_state := SessionRound.decoded(round_value)
 	for entry_value: Variant in round_state.get("entries", []):
 		var round_entity_id := int((entry_value as Dictionary).get("entity_id", 0))
+		# Team results retain the original score ledger after a departure. The
+		# same transport ID may later belong to a new, nonparticipating observer.
+		if not bool(entry_value.get("present", true)):
+			if seen.has(round_entity_id) and int(health_by_entity[round_entity_id]) != 0:
+				return false
+			continue
 		if not seen.has(round_entity_id):
+			return false
+		if int(round_state.get("mode", 0)) != SessionRound.Mode.FREE_FOR_ALL and int(teams_by_entity[round_entity_id]) != int(entry_value.team_id):
 			return false
 	return true
 
@@ -402,6 +426,7 @@ static func apply_to_world(snapshot: Dictionary, world: SimWorld) -> bool:
 		target.training_respawn_ticks = values[6]
 		target.training_spawn_x = values[7]
 		target.training_spawn_y = values[8]
+		target.spell_status_values = PackedInt32Array(Array(values.slice(10)))
 		target.spawn_protection_ticks = values[9]
 		target.health_recovery_per_second = 0
 		target.flux_maximum = 0
@@ -511,7 +536,8 @@ static func _apply_values(state: PlayerState, values: PackedInt32Array) -> void:
 	for index: int in range(MOVEMENT_PRESENTATION_FIELDS.size()):
 		var property_name := MOVEMENT_PRESENTATION_FIELDS[index]
 		var value: int = values[74 + index]
-		state.set(property_name, value == 1 if property_name in [&"air_dodge_used", &"jump_held_last_tick", &"air_floating", &"float_used"] else value)
+		state.set(property_name, value == 1 if property_name in [&"air_dodge_used", &"jump_held_last_tick", &"air_floating", &"float_used", &"flight_capable", &"jumpsquat_active", &"double_jump_used", &"wallrun_armed", &"crouching"] else value)
+	state.spell_status_values = values.slice(PLAYER_BASE_VALUE_COUNT)
 	state._sync_legacy_spell_cooldowns()
 
 
@@ -538,6 +564,7 @@ static func _valid_movement_context(encoded: int) -> bool:
 
 
 static func _valid_player_values(values: PackedInt32Array) -> bool:
+	if values.size() != PLAYER_VALUE_COUNT or not SpellStateCodec.valid_status_values(values.slice(PLAYER_BASE_VALUE_COUNT)): return false
 	var target_x: int = values[74 + MOVEMENT_PRESENTATION_FIELDS.find(&"pending_cast_target_x")]
 	var target_y: int = values[74 + MOVEMENT_PRESENTATION_FIELDS.find(&"pending_cast_target_y")]
 	if (target_x == -1) != (target_y == -1):
@@ -558,12 +585,15 @@ static func _valid_player_values(values: PackedInt32Array) -> bool:
 			if value < 0 or value > MovementTuning.AIR_MAX_HEIGHT:
 				return false
 		elif property_name == &"air_vertical_velocity":
-			if value < -MovementTuning.AIR_TERMINAL_FALL_SPEED or value > MovementTuning.JUMP_VERTICAL_SPEED:
+			if value < -MovementTuning.AIR_TERMINAL_FALL_SPEED or value > MovementTuning.CHARGED_JUMP_VERTICAL_SPEED:
+				return false
+		elif property_name == &"jumpsquat_ticks":
+			if value < 0 or value > (MovementTuning.JUMPSQUAT_CHARGE_MS * 120 + 999) / 1000:
 				return false
 		elif property_name == &"air_height_remainder":
 			if absi(value) >= 2 * 120:
 				return false
-		elif property_name in [&"air_dodge_used", &"jump_held_last_tick", &"air_floating", &"float_used"]:
+		elif property_name in [&"air_dodge_used", &"jump_held_last_tick", &"air_floating", &"float_used", &"flight_capable", &"jumpsquat_active", &"double_jump_used", &"wallrun_armed", &"crouching"]:
 			if value not in [0, 1]:
 				return false
 		elif property_name == &"float_max_duration_ms":
@@ -685,10 +715,17 @@ static func _projectile_from_values(values: PackedInt32Array) -> ProjectileState
 	projectile.material_strength = values[14]
 	projectile.chemistry_interaction_mask = values[15] | (int(values[16]) << 31)
 	projectile.reaction_strength = values[17]
+	if not SpellStateCodec.restore_delivery(projectile, values.slice(PROJECTILE_BASE_VALUE_COUNT)): return null
 	return projectile
 
 
 static func _valid_projectile_values(values: PackedInt32Array) -> bool:
+	if values.size() != PROJECTILE_VALUE_COUNT or not SpellStateCodec.valid_delivery(values.slice(PROJECTILE_BASE_VALUE_COUNT), values[2]): return false
+	# The legacy envelope is still a network boundary. It must not admit retired
+	# ingredients or let a live spell claim another element beside the Hex lane.
+	var definition := CombatTuning.cast_definition_view(values[2])
+	if definition.is_empty() or String(definition.get("shape", "")) != "projectile" or not ElementRules.is_active_wire(values[3]) or int(definition.get("element_wire_id", 0)) != values[3]:
+		return false
 	if values[12] < -1 or values[12] > MAX_PROJECTILE_REMAINING_DISTANCE or values[13] < 0 or values[13] > 0x7fffffff:
 		return false
 	# Zero is a canonically spent chemistry payload; the damaging projectile
@@ -749,6 +786,7 @@ static func _valid_field_values(values: PackedInt32Array) -> bool:
 
 
 static func _valid_target_values(values: PackedInt64Array) -> bool:
+	if values.size() != TARGET_VALUE_COUNT or not SpellStateCodec.valid_status_values(values.slice(10)): return false
 	if values[0] <= MAX_PLAYERS or values[0] > 0x7fffffff:
 		return false
 	for index: int in [1, 2, 7, 8]:
@@ -804,11 +842,14 @@ static func encode_event(event: Dictionary) -> PackedInt64Array:
 		"practice_cancelled":
 			return PackedInt64Array([_event_header(17, event_id), int(event.get("entity_id", 0)), int(event.get("reason", 0)), 0, 0, 0])
 		"round_knockout":
-			return PackedInt64Array([_event_header(18, event_id), int(event.get("owner_id", 0)), int(event.get("target_id", 0)), int(event.get("score", 0)), 0, 0])
+			var owner := int(event.get("owner_id", 0))
+			var target := int(event.get("target_id", 0))
+			var scored := bool(event.get("scored", owner > 0 and owner != target))
+			return PackedInt64Array([_event_header(18, event_id), owner, target, int(event.get("score", 0)), int(scored) | (int(event.get("credited_team_id", 0)) << 1), int(event.get("team_score", 0))])
 		"round_respawned":
 			return PackedInt64Array([_event_header(19, event_id), int(event.get("entity_id", 0)), 0, 0, 0, 0])
 		"round_finished":
-			return PackedInt64Array([_event_header(20, event_id), int(event.get("winner_id", 0)), 0, 0, 0, 0])
+			return PackedInt64Array([_event_header(20, event_id), int(event.get("winner_id", 0)), int(event.get("winner_team_id", 0)), int(event.get("result_reason", 0)), 0, 0])
 		"round_returning":
 			return PackedInt64Array([_event_header(21, event_id), SessionCharter.HOST_ENTITY_ID, 0, 0, 0, 0])
 		"beam_fired":
@@ -876,11 +917,11 @@ static func decode_event(values: PackedInt64Array) -> Dictionary:
 		17:
 			result = {"type": "practice_cancelled", "entity_id": values[1], "reason": values[2]}
 		18:
-			result = {"type": "round_knockout", "owner_id": values[1], "target_id": values[2], "score": values[3]}
+			result = {"type": "round_knockout", "owner_id": values[1], "target_id": values[2], "score": values[3], "scored": (values[4] & 1) == 1, "credited_team_id": values[4] >> 1, "team_score": values[5]}
 		19:
 			result = {"type": "round_respawned", "entity_id": values[1]}
 		20:
-			result = {"type": "round_finished", "winner_id": values[1]}
+			result = {"type": "round_finished", "winner_id": values[1], "winner_team_id": values[2], "result_reason": values[3]}
 		21:
 			result = {"type": "round_returning", "entity_id": values[1]}
 		22:
@@ -944,11 +985,19 @@ static func _valid_event_values(values: PackedInt64Array) -> bool:
 	if kind == 9:
 		return values[1] >= 1 and values[1] <= MAX_PLAYERS and values[2] > 0 and values[3] > 0 and values[3] <= 1_000_000
 	if kind == 18:
-		return values[1] >= 1 and values[1] <= MAX_PLAYERS and values[2] >= 1 and values[2] <= MAX_PLAYERS and values[1] != values[2] and values[3] >= 0 and values[3] <= SessionRound.MAX_SCORE_LIMIT
+		var scored := (values[4] & 1) == 1
+		var credited_team := values[4] >> 1
+		return values[1] >= 0 and values[1] <= MAX_PLAYERS and values[2] >= 1 and values[2] <= MAX_PLAYERS \
+			and values[3] >= 0 and values[3] <= SessionRound.MAX_SCORE_LIMIT and values[4] >= 0 and values[4] <= 5 \
+			and values[5] >= 0 and values[5] <= SessionRound.MAX_SCORE_LIMIT \
+			and (not scored or (values[1] > 0 and values[1] != values[2])) \
+			and (scored or credited_team == 0) and (credited_team > 0 or values[5] == 0)
 	if kind == 19:
 		return values[1] >= 1 and values[1] <= MAX_PLAYERS
 	if kind == 20:
-		return values[1] >= 0 and values[1] <= MAX_PLAYERS
+		return values[1] >= 0 and values[1] <= MAX_PLAYERS and values[2] >= 0 and values[2] <= 2 \
+			and (values[2] == 0 or values[1] == 0) and values[3] >= 0 and values[3] <= SessionRound.ResultReason.FORFEIT \
+			and values[4] == 0 and values[5] == 0
 	if kind == 21:
 		return values[1] == SessionCharter.HOST_ENTITY_ID
 	if kind == 22:

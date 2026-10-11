@@ -1,0 +1,467 @@
+{
+  "scope": "October 6 source optimization and rival warning, local candidate; full and package gates recorded separately.",
+  "implementation_review": "Independent read-only cache review found no actionable issue for single-threaded use; does not qualify concurrent static cache use.",
+  "baseline_policy_sha256": "d19c37dc7c091a21b2b1c52dd0109648d2808bfaf3bd5d9fc52e2e5d9f9bf9ba",
+  "candidate_policy_sha256": "a591f723d853d19b57ef73affa16956f1e20d3db650664bd2c0ae56057ffef18",
+  "publication_process_order": [
+    "a1",
+    "b1",
+    "b2",
+    "a2"
+  ],
+  "comparison": [
+    {
+      "case": "empty",
+      "baseline_pooled_median_us": 16599,
+      "candidate_pooled_median_us": 15967,
+      "reduction_percent": 3.8074582806193145,
+      "authority_and_trace_exact": true,
+      "receiver_and_packet_exact": true,
+      "owned_path": true,
+      "rows": [
+        {
+          "run": "a1",
+          "case": "empty",
+          "median_us": 16494,
+          "samples_us": [
+            16884,
+            19473,
+            16427,
+            16468,
+            16452,
+            16602,
+            16494
+          ],
+          "exact": true,
+          "receiver_exact": true,
+          "state_hash": "37f33e0b4a5cb1f243c64e290c52ca6ad557742f6a221aa79cdae22475e29074",
+          "trace_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "owned_path": true,
+          "failures": 0
+        },
+        {
+          "run": "b1",
+          "case": "empty",
+          "median_us": 15963,
+          "samples_us": [
+            15963,
+            16127,
+            15943,
+            15992,
+            16091,
+            15927,
+            15890
+          ],
+          "exact": true,
+          "receiver_exact": true,
+          "state_hash": "37f33e0b4a5cb1f243c64e290c52ca6ad557742f6a221aa79cdae22475e29074",
+          "trace_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "owned_path": true,
+          "failures": 0
+        },
+        {
+          "run": "b2",
+          "case": "empty",
+          "median_us": 15967,
+          "samples_us": [
+            15995,
+            15996,
+            15912,
+            15967,
+            15994,
+            15847,
+            15967
+          ],
+          "exact": true,
+          "receiver_exact": true,
+          "state_hash": "37f33e0b4a5cb1f243c64e290c52ca6ad557742f6a221aa79cdae22475e29074",
+          "trace_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "owned_path": true,
+          "failures": 0
+        },
+        {
+          "run": "a2",
+          "case": "empty",
+          "median_us": 16619,
+          "samples_us": [
+            17224,
+            17221,
+            17010,
+            16596,
+            16506,
+            16588,
+            16619
+          ],
+          "exact": true,
+          "receiver_exact": true,
+          "state_hash": "37f33e0b4a5cb1f243c64e290c52ca6ad557742f6a221aa79cdae22475e29074",
+          "trace_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "owned_path": true,
+          "failures": 0
+        }
+      ]
+    },
+    {
+      "case": "distributed-paid40",
+      "baseline_pooled_median_us": 56609.5,
+      "candidate_pooled_median_us": 54553,
+      "reduction_percent": 3.6327824835054185,
+      "authority_and_trace_exact": true,
+      "receiver_and_packet_exact": true,
+      "owned_path": true,
+      "rows": [
+        {
+          "run": "a1",
+          "case": "distributed-paid40",
+          "median_us": 58897,
+          "samples_us": [
+            56398,
+            68230,
+            58897,
+            58158,
+            73702,
+            99007,
+            57099
+          ],
+          "exact": true,
+          "receiver_exact": true,
+          "state_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+          "trace_sha256": "8640631a3af909b7272874ebfce57a19476e9c7c2201f504739be83ed6ea15f1",
+          "owned_path": true,
+          "failures": 0
+        },
+        {
+          "run": "b1",
+          "case": "distributed-paid40",
+          "median_us": 54495,
+          "samples_us": [
+            54853,
+            54188,
+            54554,
+            55320,
+            54469,
+            54495,
+            54440
+          ],
+          "exact": true,
+          "receiver_exact": true,
+          "state_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+          "trace_sha256": "8640631a3af909b7272874ebfce57a19476e9c7c2201f504739be83ed6ea15f1",
+          "owned_path": true,
+          "failures": 0
+        },
+        {
+          "run": "b2",
+          "case": "distributed-paid40",
+          "median_us": 54567,
+          "samples_us": [
+            54191,
+            54957,
+            54598,
+            54166,
+            54552,
+            55290,
+            54567
+          ],
+          "exact": true,
+          "receiver_exact": true,
+          "state_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+          "trace_sha256": "8640631a3af909b7272874ebfce57a19476e9c7c2201f504739be83ed6ea15f1",
+          "owned_path": true,
+          "failures": 0
+        },
+        {
+          "run": "a2",
+          "case": "distributed-paid40",
+          "median_us": 55724,
+          "samples_us": [
+            56109,
+            55683,
+            55622,
+            55801,
+            56821,
+            55724,
+            55392
+          ],
+          "exact": true,
+          "receiver_exact": true,
+          "state_hash": "beb3c48d069dd0b2a0a9073802a40693301e6ff82a7775400f06d3bcdae049c7",
+          "trace_sha256": "8640631a3af909b7272874ebfce57a19476e9c7c2201f504739be83ed6ea15f1",
+          "owned_path": true,
+          "failures": 0
+        }
+      ]
+    },
+    {
+      "case": "dense-paid40",
+      "baseline_pooled_median_us": 29475,
+      "candidate_pooled_median_us": 29523,
+      "reduction_percent": -0.1628498727735369,
+      "authority_and_trace_exact": true,
+      "receiver_and_packet_exact": true,
+      "owned_path": true,
+      "rows": [
+        {
+          "run": "a1",
+          "case": "dense-paid40",
+          "median_us": 29377,
+          "samples_us": [
+            29328,
+            29421,
+            29271,
+            33521,
+            29162,
+            29616,
+            29377
+          ],
+          "exact": true,
+          "receiver_exact": true,
+          "state_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+          "trace_sha256": "5f376354a15b6fd2d90f12555327786c8bf3d54023f4d6b36a035705e52e2831",
+          "owned_path": true,
+          "failures": 0
+        },
+        {
+          "run": "b1",
+          "case": "dense-paid40",
+          "median_us": 29077,
+          "samples_us": [
+            29077,
+            28816,
+            29387,
+            29385,
+            29047,
+            29072,
+            29615
+          ],
+          "exact": true,
+          "receiver_exact": true,
+          "state_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+          "trace_sha256": "5f376354a15b6fd2d90f12555327786c8bf3d54023f4d6b36a035705e52e2831",
+          "owned_path": true,
+          "failures": 0
+        },
+        {
+          "run": "b2",
+          "case": "dense-paid40",
+          "median_us": 30062,
+          "samples_us": [
+            30347,
+            29431,
+            30062,
+            29882,
+            32198,
+            29679,
+            30501
+          ],
+          "exact": true,
+          "receiver_exact": true,
+          "state_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+          "trace_sha256": "5f376354a15b6fd2d90f12555327786c8bf3d54023f4d6b36a035705e52e2831",
+          "owned_path": true,
+          "failures": 0
+        },
+        {
+          "run": "a2",
+          "case": "dense-paid40",
+          "median_us": 29578,
+          "samples_us": [
+            29358,
+            29578,
+            29529,
+            29282,
+            29818,
+            30017,
+            29734
+          ],
+          "exact": true,
+          "receiver_exact": true,
+          "state_hash": "83ac483f8dbda8de87b9879aca59ae1f238c048f958fb6a12e812404cf7c7a58",
+          "trace_sha256": "5f376354a15b6fd2d90f12555327786c8bf3d54023f4d6b36a035705e52e2831",
+          "owned_path": true,
+          "failures": 0
+        }
+      ]
+    },
+    {
+      "case": "active-rampart",
+      "baseline_pooled_median_us": 27008.5,
+      "candidate_pooled_median_us": 26655.5,
+      "reduction_percent": 1.3069959457207916,
+      "authority_and_trace_exact": true,
+      "receiver_and_packet_exact": true,
+      "owned_path": true,
+      "rows": [
+        {
+          "run": "a1",
+          "case": "active-rampart",
+          "median_us": 26816,
+          "samples_us": [
+            26888,
+            27365,
+            26816,
+            26800,
+            26929,
+            26808,
+            26746
+          ],
+          "exact": true,
+          "receiver_exact": true,
+          "state_hash": "35605b6239a955514c7f9de2ea09226aca35a2a7e9ac2254eb156d3e040ec018",
+          "trace_sha256": "eec4f93f32e381cf8f3437518fbbed49ec13e7f3a8d7927d8598bda76c59ced9",
+          "owned_path": true,
+          "failures": 0
+        },
+        {
+          "run": "b1",
+          "case": "active-rampart",
+          "median_us": 26502,
+          "samples_us": [
+            26401,
+            26452,
+            26502,
+            26663,
+            26192,
+            34394,
+            26789
+          ],
+          "exact": true,
+          "receiver_exact": true,
+          "state_hash": "35605b6239a955514c7f9de2ea09226aca35a2a7e9ac2254eb156d3e040ec018",
+          "trace_sha256": "eec4f93f32e381cf8f3437518fbbed49ec13e7f3a8d7927d8598bda76c59ced9",
+          "owned_path": true,
+          "failures": 0
+        },
+        {
+          "run": "b2",
+          "case": "active-rampart",
+          "median_us": 26665,
+          "samples_us": [
+            26620,
+            26648,
+            26548,
+            26665,
+            27205,
+            27180,
+            27108
+          ],
+          "exact": true,
+          "receiver_exact": true,
+          "state_hash": "35605b6239a955514c7f9de2ea09226aca35a2a7e9ac2254eb156d3e040ec018",
+          "trace_sha256": "eec4f93f32e381cf8f3437518fbbed49ec13e7f3a8d7927d8598bda76c59ced9",
+          "owned_path": true,
+          "failures": 0
+        },
+        {
+          "run": "a2",
+          "case": "active-rampart",
+          "median_us": 27268,
+          "samples_us": [
+            26815,
+            27459,
+            27088,
+            27679,
+            27102,
+            27516,
+            27268
+          ],
+          "exact": true,
+          "receiver_exact": true,
+          "state_hash": "35605b6239a955514c7f9de2ea09226aca35a2a7e9ac2254eb156d3e040ec018",
+          "trace_sha256": "eec4f93f32e381cf8f3437518fbbed49ec13e7f3a8d7927d8598bda76c59ced9",
+          "owned_path": true,
+          "failures": 0
+        }
+      ]
+    }
+  ],
+  "publication_limit": "Four small prepared fixtures, 14 samples per arm. Dense result is effectively unchanged. Not sustained 120Hz, FPS, capacity or sockets. Legacy profiler dependency list omits policy; root verified exact policy SHA when installing original for A2 and restoring candidate after it.",
+  "focused": {
+    "suites": 8,
+    "assertions": 3998,
+    "failures": 0,
+    "stderr_bytes": 0
+  },
+  "native_review": {
+    "reviewer": "independent rival_tell_acceptance worker",
+    "reviewed_frames": 17,
+    "blocking_defects": [],
+    "remaining": [
+      "Clustered ice/fire effects compete with fighter feet and small labels.",
+      "No compact-resolution windup frame in this set.",
+      "No human animation/noticeability/reaction-time or fun acceptance."
+    ],
+    "frames": [
+      {
+        "file": "01-entry.png",
+        "sha256": "1be04119e84c15c725895e90a0a624867300d6910566114cbdeb4a6435bd1792"
+      },
+      {
+        "file": "02-briefing.png",
+        "sha256": "c4e3eb11db26a6ac5dfb72dd0423f68c628264da1a264258c0625e92a0c5e772"
+      },
+      {
+        "file": "03-briefing-compact.png",
+        "sha256": "0f6fc2caeac429b86da3e44cb050a1aea35ae90373ba7d795f8941e0610621f2"
+      },
+      {
+        "file": "04-countdown.png",
+        "sha256": "02abcfa2850659e847aa6e6aaf027d3c54c3b013f0df6ac6bef60406f93cd7a0"
+      },
+      {
+        "file": "05-active-paid-combat.png",
+        "sha256": "931a13fac8b2dcfc258a9fe5a6546f07df2d58877eba1af21a3e93746c1f846d"
+      },
+      {
+        "file": "05-rival-pressure-reduced.png",
+        "sha256": "32e8ea9d5deecb82ec5d1883a149cf8a00de3b11b25f8e7547dc338a4fb0f1a8"
+      },
+      {
+        "file": "05-rival-pressure.png",
+        "sha256": "2c878b1660c9675cbccfeaa169cc32792d71d8b5d2d02eceed56af03f8949a36"
+      },
+      {
+        "file": "05-rival-recover-reduced.png",
+        "sha256": "0ae17f5db33461e3c731131f3ad368c20d26e9d33fa83b8b399549264b53ef06"
+      },
+      {
+        "file": "05-rival-recover.png",
+        "sha256": "ab33f816b789f34bff64351c182c8561824e9dc3f3d2d512efefac8b05c87d18"
+      },
+      {
+        "file": "05-rival-windup-reduced.png",
+        "sha256": "152161c9b73124a82a71b2d2ce0915d9972d5745e1c9b3dd5e60ef9d70bbec77"
+      },
+      {
+        "file": "05-rival-windup.png",
+        "sha256": "152161c9b73124a82a71b2d2ce0915d9972d5745e1c9b3dd5e60ef9d70bbec77"
+      },
+      {
+        "file": "06-real-victory.png",
+        "sha256": "274fbfa721763325f42d6c881f46ca52b88ef78cf716f592a71c1544463e9268"
+      },
+      {
+        "file": "07-victory-compact.png",
+        "sha256": "cb7e443a3162e88f02d6d36f754cd4dcbc71b96f7ac2cb9193bc7b80f2273499"
+      },
+      {
+        "file": "08-left-court.png",
+        "sha256": "e0b39934f06d5e8aee26ebfe6e8236ecf950976be51eb825c6c6ba173658ed34"
+      },
+      {
+        "file": "09-defeated.png",
+        "sha256": "df5f8edd1591e9d3e06893b276473bb02f02d5dbcee482b7948a0aac02828b1b"
+      },
+      {
+        "file": "09-timeout.png",
+        "sha256": "2bbcf07fb9e8f9145fc33ddb79caf0084d49d924ee5e6ad4dd6552cc9b138408"
+      },
+      {
+        "file": "10-return.png",
+        "sha256": "79622a9aa50ab9477c5a8a0747288549c6cd17a883bc874ea535f7247029d5d8"
+      }
+    ]
+  },
+  "human_acceptance": "NOT_RUN",
+  "dense_120hz_acceptance": "NOT_ESTABLISHED"
+}

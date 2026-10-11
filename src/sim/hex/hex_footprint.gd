@@ -22,6 +22,8 @@ const VISUAL_INSET: int = 2
 const PARAMETER_EPSILON: float = 1.0e-12
 const MAX_COMPOSITE_DEPTH: int = 2
 const MAX_COMPOSITE_PRIMITIVES: int = 4
+const POLYGON_CACHE_LIMIT := 4096
+static var _polygon_cache: Dictionary = {} # Immutable derived geometry, never authority.
 
 
 static func disk(center: Vector2i, radius: int) -> Dictionary:
@@ -454,10 +456,52 @@ static func contains_selected(stored_cells: Dictionary, grid_origin: Vector2i, p
 	return _selected_cell_active(stored_cells, owner)
 
 
+# Boolean contact needs neither an ordered traversal nor a witness. Most actor
+# steps end inside a selected cell; answer that in constant work. For crossings,
+# enumerate only centers inside the segment AABB expanded by the exact hex
+# extents. Long/diagonal paths fall back to the bounded stored set, never a huge
+# world rectangle. The existing exact clip/canonical boundary test is retained.
+static func touches_selected(stored_cells: Dictionary, grid_origin: Vector2i, start: Vector2i, end: Vector2i) -> bool:
+	if stored_cells.is_empty() or not _world_point_valid(start) or not _world_point_valid(end):
+		return false
+	if contains_selected(stored_cells, grid_origin, start) or contains_selected(stored_cells, grid_origin, end):
+		return true
+	if start == end:
+		return false
+	var minimum := Vector2i(mini(start.x,end.x),mini(start.y,end.y))-grid_origin
+	var maximum := Vector2i(maxi(start.x,end.x),maxi(start.y,end.y))-grid_origin
+	var first_row := -Grid._floor_div(Grid.HALF_HEIGHT-minimum.y,Grid.ROW_PITCH)
+	var last_row := Grid._floor_div(maximum.y+Grid.HALF_HEIGHT,Grid.ROW_PITCH)
+	var columns := Grid._ceil_div(maximum.x-minimum.x+2*Grid.HALF_WIDTH,Grid.COLUMN_PITCH)+1
+	if (last_row-first_row+1)*columns < stored_cells.size():
+		for r: int in range(first_row,last_row+1):
+			var first_q := -Grid._floor_div(Grid.HALF_WIDTH+Grid.HALF_WIDTH*r-minimum.x,Grid.COLUMN_PITCH)
+			var last_q := Grid._floor_div(maximum.x+Grid.HALF_WIDTH-Grid.HALF_WIDTH*r,Grid.COLUMN_PITCH)
+			for q: int in range(first_q,last_q+1):
+				var cell := Vector2i(q,r)
+				if _selected_cell_active(stored_cells,cell) and _selected_segment_touches_cell(cell,grid_origin,start,end):
+					return true
+	else:
+		for cell: Vector2i in stored_cells:
+			if not _selected_cell_active(stored_cells,cell): continue
+			var center := Grid.center(cell)
+			if center.x+Grid.HALF_WIDTH < minimum.x or center.x-Grid.HALF_WIDTH > maximum.x or center.y+Grid.HALF_HEIGHT < minimum.y or center.y-Grid.HALF_HEIGHT > maximum.y:
+				continue
+			if _selected_segment_touches_cell(cell,grid_origin,start,end): return true
+	return false
+
+
+static func _selected_segment_touches_cell(cell: Vector2i, grid_origin: Vector2i, start: Vector2i, end: Vector2i) -> bool:
+	var interval := _cell_segment_interval(cell,grid_origin,start,end)
+	if not bool(interval.get("hit",false)): return false
+	var midpoint := _segment_scalar_point(start,end,(float(interval.low)+float(interval.high))*0.5)
+	return _scalar_strictly_in_world_cell(midpoint,cell,grid_origin) or _scalar_canonical_owner(midpoint,grid_origin)==cell
+
+
 # Canonical selected cells traversed by one segment. Stored whole-cell fields
-# are explicitly bounded, so scan their positive cells through a conservative
-# authored-hex AABB before the existing exact polygon clip. This avoids the
-# generic sweep's halo construction without truncating to a nearest cell.
+# use the smaller of the local segment AABB and the bounded stored set. A short
+# step in a busy court must not scan every field. Exact clipping and canonical
+# boundary ownership are unchanged; long paths retain the bounded-set fallback.
 static func traversed_selected_cells(stored_cells: Dictionary, grid_origin: Vector2i, start: Vector2i, end: Vector2i) -> Array[Vector2i]:
 	if (
 		stored_cells.is_empty()
@@ -469,28 +513,25 @@ static func traversed_selected_cells(stored_cells: Dictionary, grid_origin: Vect
 		if not contains_selected(stored_cells, grid_origin, start):
 			return []
 		return [Grid.world_to_cell(start - grid_origin)]
-	var minimum_x := mini(start.x, end.x)
-	var maximum_x := maxi(start.x, end.x)
-	var minimum_y := mini(start.y, end.y)
-	var maximum_y := maxi(start.y, end.y)
 	var result: Array[Vector2i] = []
-	for cell: Vector2i in stored_cells:
-		if not _selected_cell_active(stored_cells, cell):
-			continue
-		var cell_center := Grid.center(cell) + grid_origin
-		if (
-			cell_center.x + Grid.HALF_WIDTH < minimum_x
-			or cell_center.x - Grid.HALF_WIDTH > maximum_x
-			or cell_center.y + Grid.HALF_HEIGHT < minimum_y
-			or cell_center.y - Grid.HALF_HEIGHT > maximum_y
-		):
-			continue
-		var interval := _cell_segment_interval(cell, grid_origin, start, end)
-		if not bool(interval.get("hit", false)):
-			continue
-		var midpoint := _segment_scalar_point(start, end, (float(interval.low) + float(interval.high)) * 0.5)
-		if _scalar_strictly_in_world_cell(midpoint, cell, grid_origin) or _scalar_canonical_owner(midpoint, grid_origin) == cell:
-			result.append(cell)
+	var minimum := Vector2i(mini(start.x,end.x),mini(start.y,end.y))-grid_origin
+	var maximum := Vector2i(maxi(start.x,end.x),maxi(start.y,end.y))-grid_origin
+	var first_row := -Grid._floor_div(Grid.HALF_HEIGHT-minimum.y,Grid.ROW_PITCH)
+	var last_row := Grid._floor_div(maximum.y+Grid.HALF_HEIGHT,Grid.ROW_PITCH)
+	var columns := Grid._ceil_div(maximum.x-minimum.x+2*Grid.HALF_WIDTH,Grid.COLUMN_PITCH)+1
+	if (last_row-first_row+1)*columns < stored_cells.size():
+		for r: int in range(first_row,last_row+1):
+			var first_q := -Grid._floor_div(Grid.HALF_WIDTH+Grid.HALF_WIDTH*r-minimum.x,Grid.COLUMN_PITCH)
+			var last_q := Grid._floor_div(maximum.x+Grid.HALF_WIDTH-Grid.HALF_WIDTH*r,Grid.COLUMN_PITCH)
+			for q: int in range(first_q,last_q+1):
+				var cell := Vector2i(q,r)
+				if _selected_cell_active(stored_cells,cell) and _selected_segment_touches_cell(cell,grid_origin,start,end): result.append(cell)
+	else:
+		for cell: Vector2i in stored_cells:
+			if not _selected_cell_active(stored_cells,cell): continue
+			var center := Grid.center(cell)
+			if center.x+Grid.HALF_WIDTH < minimum.x or center.x-Grid.HALF_WIDTH > maximum.x or center.y+Grid.HALF_HEIGHT < minimum.y or center.y-Grid.HALF_HEIGHT > maximum.y: continue
+			if _selected_segment_touches_cell(cell,grid_origin,start,end): result.append(cell)
 	result.sort_custom(Grid._cell_less)
 	return result
 
@@ -515,6 +556,16 @@ static func selected_segment_interval(stored_cells: Dictionary, grid_origin: Vec
 		for key: Variant in stationary_witness:
 			stationary[key] = stationary_witness[key]
 		return stationary
+	# A short flight wholly in one strict convex interior cannot touch another
+	# cell. Most 120 Hz steps satisfy this proof. Boundaries still use the exact
+	# general traversal below, including open faces and canonical vertex ties.
+	var interior_cell := Grid.world_to_cell(start - grid_origin)
+	if Grid._point_strictly_in_cell(start - grid_origin, interior_cell) and Grid._point_strictly_in_cell(end - grid_origin, interior_cell):
+		if not _selected_cell_active(stored_cells, interior_cell): return _empty_interval()
+		var interior := {"hit":true, "low":0.0, "high":1.0, "cell":interior_cell}
+		var witness := _quantized_selected_witness({}, stored_cells, grid_origin, _scalar_point(float(start.x), float(start.y)), interior_cell)
+		for key: Variant in witness: interior[key] = witness[key]
+		return interior
 	var ordered := traversed_selected_cells(stored_cells, grid_origin, start, end)
 	var best := _empty_interval()
 	var best_cell := Vector2i.ZERO
@@ -547,38 +598,99 @@ static func contact_shape_selected(shape: Dictionary, stored_cells: Dictionary, 
 	if not validate(shape) or stored_cells.is_empty() or not _world_point_valid(preferred):
 		return {}
 	var primitives := _primitive_parts(shape)
+	var preferred_point := _scalar_point(float(preferred.x), float(preferred.y))
+	if _scalar_in_all(primitives, preferred_point):
+		var preferred_owner := _scalar_canonical_owner(preferred_point, grid_origin)
+		if _selected_cell_active(stored_cells, preferred_owner):
+			return _quantized_selected_witness(shape, stored_cells, grid_origin, preferred_point, preferred_owner)
 	var candidates := _common_point_candidates(primitives)
-	candidates.append(_scalar_point(float(preferred.x), float(preferred.y)))
+	candidates.append(preferred_point)
 	for primitive: Dictionary in primitives:
 		candidates.append(_closest_point_in_primitive(primitive, preferred))
-	var ordered := _active_selected_cells(stored_cells)
-	for cell: Vector2i in ordered:
+	var best := _nearest_accepted_shape_candidate(candidates, primitives, shape, stored_cells, grid_origin, preferred, {})
+	# Visit nearest conservative cell bounds first. Once a real accepted witness
+	# is closer than the next bound, farther cells cannot improve it. The guard
+	# expands the box, never the authoritative footprint or returned witness.
+	var ordered: Array[Dictionary] = []
+	for cell: Vector2i in stored_cells:
+		if not _selected_cell_active(stored_cells, cell) or not _cell_may_touch_primitives(primitives, cell, grid_origin): continue
+		var center := Grid.center(cell) + grid_origin
+		var dx := maxi(0, absi(center.x - preferred.x) - Grid.HALF_WIDTH - 1)
+		var dy := maxi(0, absi(center.y - preferred.y) - Grid.HALF_HEIGHT - 1)
+		ordered.append({"cell":cell, "distance":float(dx) * float(dx) + float(dy) * float(dy)})
+	ordered.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return float(a.distance) < float(b.distance) if float(a.distance) != float(b.distance) else Grid._cell_less(a.cell, b.cell))
+	for item: Dictionary in ordered:
+		if not best.is_empty() and float(item.distance) > float(best.distance): break
+		var cell: Vector2i = item.cell
 		var polygon := _world_cell_polygon(cell, grid_origin)
 		var center := Grid.center(cell) + grid_origin
-		candidates.append(_scalar_point(float(center.x), float(center.y)))
-		candidates.append(_closest_point_in_polygon(preferred, polygon))
+		candidates = [_scalar_point(float(center.x), float(center.y)), _closest_point_in_polygon(preferred, polygon)]
 		for vertex: Vector2i in polygon:
 			candidates.append(_scalar_point(float(vertex.x), float(vertex.y)))
 		for edge_index: int in range(polygon.size()):
 			var edge_start: Vector2i = polygon[edge_index]
 			var edge_end: Vector2i = polygon[(edge_index + 1) % polygon.size()]
 			var interval := _segment_interval(shape, edge_start, edge_end)
-			if not bool(interval.get("hit", false)):
-				continue
+			if not bool(interval.get("hit", false)): continue
 			candidates.append(_segment_scalar_point(edge_start, edge_end, float(interval.low)))
 			candidates.append(_segment_scalar_point(edge_start, edge_end, float(interval.high)))
 			candidates.append(_segment_scalar_point(edge_start, edge_end, (float(interval.low) + float(interval.high)) * 0.5))
-	_sort_scalar_points_by_preference(candidates, preferred)
+		best = _nearest_accepted_shape_candidate(candidates, primitives, shape, stored_cells, grid_origin, preferred, best)
+	if best.is_empty(): return {}
+	return _quantized_selected_witness(shape, stored_cells, grid_origin, best.point, best.owner)
+
+
+# Select by the original (squared distance, x, y) order, without sorting every
+# polygon candidate. Return only an actually accepted witness; invalid near
+# points never create a pruning bound. All work is local to this query.
+static func _nearest_accepted_shape_candidate(candidates: Array[Dictionary], primitives: Array[Dictionary], shape: Dictionary, stored_cells: Dictionary, grid_origin: Vector2i, preferred: Vector2i, previous: Dictionary) -> Dictionary:
+	var best := previous
 	for continuous: Dictionary in candidates:
-		if not _scalar_in_all(primitives, continuous):
-			continue
+		var dx := float(continuous.x) - float(preferred.x)
+		var dy := float(continuous.y) - float(preferred.y)
+		var distance := dx * dx + dy * dy
+		if not best.is_empty():
+			if distance > float(best.distance): continue
+			if distance == float(best.distance):
+				if float(continuous.x) > float(best.point.x): continue
+				if float(continuous.x) == float(best.point.x) and float(continuous.y) >= float(best.point.y): continue
+		if not _scalar_in_all(primitives, continuous): continue
 		var owner := _scalar_canonical_owner(continuous, grid_origin)
-		if _selected_cell_active(stored_cells, owner):
-			return _quantized_selected_witness(shape, stored_cells, grid_origin, continuous, owner)
-		var fallback := _nearest_polygon_cell(continuous, stored_cells, grid_origin)
-		if not fallback.is_empty() and _positive_area_in_cell(shape, Vector2i(fallback.cell), grid_origin):
-			return _quantized_selected_witness(shape, stored_cells, grid_origin, continuous, Vector2i(fallback.cell))
-	return {}
+		if not _selected_cell_active(stored_cells, owner):
+			var fallback := _nearest_polygon_cell(continuous, stored_cells, grid_origin)
+			if fallback.is_empty() or not _positive_area_in_cell(shape, Vector2i(fallback.cell), grid_origin): continue
+			owner = fallback.cell
+		best = {"point":continuous, "owner":owner, "distance":distance}
+	return best
+
+
+# Conservative broad phase only: retain a one-fixed-unit guard around analytic
+# boundaries (larger than Float64 predicate tolerances). Rejected polygons can
+# contribute no accepted candidate. Exact witnesses and tie order stay below.
+static func _cell_may_touch_primitives(primitives: Array[Dictionary], cell: Vector2i, grid_origin: Vector2i) -> bool:
+	var center := Grid.center(cell) + grid_origin
+	for primitive: Dictionary in primitives:
+		var kind := String(primitive.kind)
+		if kind != KIND_DISK and kind != KIND_SECTOR: continue
+		var origin: Vector2i = primitive.start if kind == KIND_SECTOR else primitive.center
+		var radius := int(primitive.range if kind == KIND_SECTOR else primitive.radius) + 1
+		var delta := center - origin
+		var gap_x := maxi(0, absi(delta.x) - Grid.HALF_WIDTH)
+		var gap_y := maxi(0, absi(delta.y) - Grid.HALF_HEIGHT)
+		if gap_x * gap_x + gap_y * gap_y > radius * radius: return false
+		if kind == KIND_SECTOR:
+			var aim: Vector2i = primitive.aim
+			var support := absi(aim.x) * (Grid.HALF_WIDTH + 1) + absi(aim.y) * (Grid.HALF_HEIGHT + 1)
+			if delta.x * aim.x + delta.y * aim.y + support < 0: return false
+			var root_side := sqrt(float(aim.x * aim.x + aim.y * aim.y - int(primitive.cosine_squared)))
+			var root_threshold := sqrt(float(primitive.cosine_squared))
+			for side: int in [-1, 1]:
+				var nx := root_side * aim.x + side * root_threshold * aim.y
+				var ny := root_side * aim.y - side * root_threshold * aim.x
+				var plane_support := absf(nx) * (Grid.HALF_WIDTH + 1) + absf(ny) * (Grid.HALF_HEIGHT + 1)
+				if nx * delta.x + ny * delta.y + plane_support < 0.0: return false
+	return true
 
 
 # Persistent whole-cell chemistry exists only in a cell stored by both fields.
@@ -743,11 +855,9 @@ static func _disk_positive_area_in_cell(shape: Dictionary, cell: Vector2i, grid_
 	var local_center: Vector2i = Vector2i(shape.center) - grid_origin
 	if Grid._point_in_cell(local_center, cell):
 		return true
-	var polygon := Grid.vertices(cell)
-	for edge_index: int in range(polygon.size()):
-		if _point_segment_strictly_within_radius(local_center, polygon[edge_index], polygon[(edge_index + 1) % polygon.size()], radius):
-			return true
-	return false
+	var offset := local_center - Grid.center(cell)
+	var point := Vector2i(absi(offset.x), absi(offset.y))
+	return _point_segment_strictly_within_radius(point, Vector2i(Grid.HALF_WIDTH, 0), Vector2i(Grid.HALF_WIDTH, Grid.HALF_HEIGHT / 2), radius) or _point_segment_strictly_within_radius(point, Vector2i(Grid.HALF_WIDTH, Grid.HALF_HEIGHT / 2), Vector2i(0, Grid.HALF_HEIGHT), radius)
 
 
 # Exact strict counterpart to HexGrid._point_segment_within_radius. Natural
@@ -766,9 +876,7 @@ static func _point_segment_strictly_within_radius(point: Vector2i, start: Vector
 		var from_end := point - end
 		return from_end.x * from_end.x + from_end.y * from_end.y < radius_squared
 	var cross := absi(offset.x * delta.y - offset.y * delta.x)
-	var cross_squared: Array[int] = Grid._nat_multiply(Grid._nat(cross), Grid._nat(cross))
-	var limit: Array[int] = Grid._nat_multiply(Grid._nat(radius_squared), Grid._nat(length_squared))
-	return Grid._nat_compare(cross_squared, limit) < 0
+	return Grid._compare_squared_distance(cross, radius_squared, length_squared) < 0
 
 
 # Positive sector area is decided without a numerical area or distance cutoff.
@@ -784,17 +892,23 @@ static func _sector_positive_area_in_cell(shape: Dictionary, cell: Vector2i, gri
 	if reach <= 0:
 		return false
 	var origin: Vector2i = shape.start
+	var center := Grid.center(cell) + grid_origin
+	var from_origin := center - origin
+	# Exact support of a pointy hex on the aim axis. A hex wholly behind the
+	# sector apex cannot overlap its positive forward half-plane.
+	var support := maxi(absi(sector_aim.x)*Grid.HALF_WIDTH + absi(sector_aim.y)*Grid.HALF_HEIGHT/2, absi(sector_aim.y)*Grid.HALF_HEIGHT)
+	if from_origin.x*sector_aim.x + from_origin.y*sector_aim.y + support <= 0:
+		return false
+	# Most fine-grid candidates are fully inside or wholly outside the cone.
+	# Test a strict interior witness and exact separating planes before the
+	# expensive edge-distance / clipped-polygon path. No tolerance or cache can
+	# expand coverage; boundary/sliver cases still use the original predicate.
+	if _sector_strictly_contains_integer(shape, center):
+		return true
 	if not _disk_positive_area_in_cell(disk(origin, reach), cell, grid_origin):
 		return false
-	# A hex vertex strictly inside both the integer cone and terminal radius has
-	# a positive neighborhood in the hex, even at a sub-Float64 area sliver.
-	var polygon := _world_cell_polygon(cell, grid_origin)
-	for local_vertex: Vector2i in Grid.vertices(cell):
-		if _sector_strictly_contains_integer(shape, local_vertex + grid_origin):
-			return true
-	for edge_index: int in range(polygon.size()):
-		if _sector_edge_closest_point_strictly_inside(shape, polygon[edge_index], polygon[(edge_index + 1) % polygon.size()]):
-			return true
+	var polygon := Grid.vertices(cell)
+	for index: int in polygon.size(): polygon[index] += grid_origin
 	var aim: Vector2i = shape.aim
 	var aim_squared := aim.x * aim.x + aim.y * aim.y
 	var threshold := int(shape.cosine_squared)
@@ -807,6 +921,14 @@ static func _sector_positive_area_in_cell(shape: Dictionary, cell: Vector2i, gri
 				break
 		if not any_strictly_inside:
 			return false
+	# A hex vertex strictly inside both the integer cone and terminal radius has
+	# a positive neighborhood in the hex, even at a sub-Float64 area sliver.
+	for vertex: Vector2i in polygon:
+		if _sector_strictly_contains_integer(shape, vertex):
+			return true
+	for edge_index: int in range(polygon.size()):
+		if _sector_edge_closest_point_strictly_inside(shape, polygon[edge_index], polygon[(edge_index + 1) % polygon.size()]):
+			return true
 	var cone_polygon: Array[Dictionary] = []
 	for vertex: Vector2i in polygon:
 		cone_polygon.append(_scalar_point(float(vertex.x), float(vertex.y)))
@@ -907,6 +1029,17 @@ static func _clip_positive_without_epsilon(interval: Dictionary, start_value: fl
 # Exact sign of sqrt(side_squared) * projection +
 # side_sign * sqrt(threshold) * cross, without materializing either root.
 static func _sector_half_plane_sign(offset: Vector2i, aim: Vector2i, threshold: int, side_squared: int, side_sign: int) -> int:
+	# A common direction factor appears squared on BOTH sides and cancels.
+	# Authored cardinal/diagonal headings carry factors1000/707: removing them
+	# keeps ordinary queries in int64 instead of allocating big-number arrays.
+	# Non-divisible directions and large coordinates retain the exact fallback.
+	var divisor := absi(aim.x)
+	var remainder := absi(aim.y)
+	while remainder != 0:
+		var next := divisor % remainder
+		divisor = remainder
+		remainder = next
+	if divisor > 1: aim = Vector2i(aim.x/divisor,aim.y/divisor)
 	var projection := offset.x * aim.x + offset.y * aim.y
 	var cross := (aim.x * offset.y - aim.y * offset.x) * side_sign
 	if projection == 0:
@@ -915,6 +1048,25 @@ static func _sector_half_plane_sign(offset: Vector2i, aim: Vector2i, threshold: 
 		return 1 if projection > 0 else -1
 	if (projection > 0) == (cross > 0):
 		return 1 if projection > 0 else -1
+	if absi(projection)<=3_037_000_499 and absi(cross)<=3_037_000_499:
+		var projected_square := projection*projection
+		var cross_square := cross*cross
+		if side_squared<=9_223_372_036_854_775_807/projected_square and threshold<=9_223_372_036_854_775_807/cross_square:
+			var left := side_squared*projected_square
+			var right := threshold*cross_square
+			if left==right: return 0
+			return signi(projection) if left>right else signi(cross)
+	# Filter only well-separated products before allocating arbitrary-precision
+	# integers. Integer-to-double conversion plus two finite multiplications is
+	# bounded by <8 unit roundoffs per side; the 1e-12 sum guard is >1000x that
+	# bound. An uncertain comparison (including equality/slivers) falls through
+	# to exact natural arithmetic. This is NOT an admission epsilon.
+	var left_estimate := float(side_squared)*float(projection)*float(projection)
+	var right_estimate := float(threshold)*float(cross)*float(cross)
+	var separation := left_estimate-right_estimate
+	var error_guard := (absf(left_estimate)+absf(right_estimate))*1.0e-12
+	if is_finite(separation) and absf(separation)>error_guard:
+		return signi(projection) if separation>0.0 else signi(cross)
 	var projection_term: Array[int] = Grid._nat_multiply(Grid._nat(side_squared), Grid._nat_multiply(Grid._nat(absi(projection)), Grid._nat(absi(projection))))
 	var cross_term: Array[int] = Grid._nat_multiply(Grid._nat(threshold), Grid._nat_multiply(Grid._nat(absi(cross)), Grid._nat(absi(cross))))
 	var comparison := Grid._nat_compare(projection_term, cross_term)
@@ -1484,9 +1636,14 @@ static func _active_selected_cells(stored_cells: Dictionary) -> Array[Vector2i]:
 
 
 static func _world_cell_polygon(cell: Vector2i, grid_origin: Vector2i) -> Array[Vector2i]:
+	var center := Grid.center(cell) + grid_origin
+	if _polygon_cache.has(center): return _polygon_cache[center]
 	var result: Array[Vector2i] = []
 	for local: Vector2i in Grid.vertices(cell):
 		result.append(local + grid_origin)
+	result.make_read_only()
+	if _polygon_cache.size() >= POLYGON_CACHE_LIMIT: _polygon_cache.clear()
+	_polygon_cache[center] = result
 	return result
 
 
@@ -1508,16 +1665,27 @@ static func _segment_scalar_point(start: Vector2i, end: Vector2i, amount: float)
 
 
 static func _scalar_canonical_owner(point: Dictionary, grid_origin: Vector2i) -> Vector2i:
-	var local_rounded := Vector2i(
-		roundi(float(point.x) - float(grid_origin.x)),
-		roundi(float(point.y) - float(grid_origin.y)))
-	var seed := Grid.world_to_cell(local_rounded)
 	var owners: Array[Vector2i] = []
-	for candidate: Vector2i in Grid.disk(seed, 2):
+	for candidate: Vector2i in _scalar_cell_candidates(point, grid_origin):
 		if _float_point_in_polygon(point, _world_cell_polygon(candidate, grid_origin)):
 			owners.append(candidate)
-	owners.sort_custom(Grid._cell_less)
-	return owners[0] if not owners.is_empty() else seed
+	owners.sort()
+	return owners[0] if not owners.is_empty() else Grid.world_to_cell(Vector2i(roundi(float(point.x) - grid_origin.x), roundi(float(point.y) - grid_origin.y)))
+
+
+static func _scalar_cell_candidates(point: Dictionary, grid_origin: Vector2i) -> Array[Vector2i]:
+	# ROW_PITCH > HALF_HEIGHT, so only the two centers bracketing y can
+	# contain a point. In each row only the two centers bracketing x can.
+	# Use Float64 scalars, not Vector2 (Float32), at fractional edge contacts.
+	var x := float(point.x) - float(grid_origin.x)
+	var y := float(point.y) - float(grid_origin.y)
+	var first_row := floori(y / Grid.ROW_PITCH)
+	var result: Array[Vector2i] = []
+	for r: int in range(first_row, first_row + 2):
+		var first_q := floori((x - Grid.HALF_WIDTH * r) / Grid.COLUMN_PITCH)
+		result.append(Vector2i(first_q, r))
+		result.append(Vector2i(first_q + 1, r))
+	return result
 
 
 static func _closest_point_in_primitive(primitive: Dictionary, preferred: Vector2i) -> Dictionary:
@@ -1577,10 +1745,10 @@ static func _sort_scalar_points_by_preference(points: Array[Dictionary], preferr
 
 static func _nearest_polygon_cell(point: Dictionary, stored_cells: Dictionary, grid_origin: Vector2i) -> Dictionary:
 	var owners: Array[Vector2i] = []
-	for cell: Vector2i in stored_cells:
+	for cell: Vector2i in _scalar_cell_candidates(point, grid_origin):
 		if _selected_cell_active(stored_cells, cell) and _float_point_in_polygon(point, _world_cell_polygon(cell, grid_origin)):
 			owners.append(cell)
-	owners.sort_custom(Grid._cell_less)
+	owners.sort()
 	return {"cell": owners[0]} if not owners.is_empty() else {}
 
 

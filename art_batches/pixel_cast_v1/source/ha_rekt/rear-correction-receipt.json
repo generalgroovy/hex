@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "id": "ha_rekt",
+  "asset": "rear_diagonal_correction",
+  "generator": "built_in_imagegen",
+  "status": "rear_correction_candidate_with_cast_occlusion_note",
+  "original_output_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b8-7f02-7203-8a99-a2a2e2cf443d\\exec-be5b00ed-042c-4815-9ee1-c845d6fe894a.png",
+  "reference_paths": [
+    "C:\\Users\\sende\\Projects\\hex\\art_batches\\pixel_cast_v1\\source\\ha_rekt\\source.png"
+  ],
+  "source_dimensions": [
+    1024,
+    1536
+  ],
+  "columns": 2,
+  "rows": 4,
+  "column_mapping": [
+    "NE",
+    "NW"
+  ],
+  "row_mapping": [
+    "idle",
+    "walk_left_foot_forward_right_arm_forward",
+    "walk_right_foot_forward_left_arm_forward",
+    "empty_hand_cast"
+  ],
+  "quality_flags": {
+    "visually_inspected": true,
+    "full_bodies_inside_canvas": true,
+    "rgba_confirmed": true,
+    "sampled_gutters_alpha_zero": true,
+    "rear_heads_no_frontal_eyes": true,
+    "zero_visible_teeth_or_front_muzzle": true,
+    "empty_hands": true,
+    "connected_wings_and_tail": true,
+    "casting_far_hand_partly_occluded_by_wing": true,
+    "exact_contact_choreography_requires_integration_review": true
+  },
+  "notes": [
+    "Additional one-strip correction explicitly requested by lead after original broad-sheet two-attempt limit. Original source.png remains unchanged.",
+    "Eight rear-facing full bodies, two columns x four rows. Heads now show only rear skull/no face. Diagonal bodies are near-rear three-quarter orientations.",
+    "Casting nearest hand is raised strongly forward, far hand partly hidden beneath wing and lower; both fully visible simultaneous forward palms are NOT claimed.",
+    "Strip for lead cell replacement only; no procedural pose invention, engine/runtime edits or imports."
+  ],
+  "exact_prompt": "Use case: precise-object-edit.\nCreate a NARROW REAR-VIEW CORRECTION STRIP for exactly the same HA REKT dark-indigo WYRMBORN HUMANOID in the input sprite sheet. Keep his red-and-gold armor, ivory horns, purple-blue bat wings, thick blue tail, compact dragon head, broad heavy torso, chunky arms and legs, and dense crisp handmade pixel style unchanged.\nOutput exactly EIGHT full-body sprites in TWO columns and FOUR rows, tall canvas, actual transparent RGBA. All eight are BACK views, no front or side views anywhere.\nLEFT column = BACK-RIGHT at 135 degrees: whole body and head face diagonally AWAY from the camera toward upper-right.\nRIGHT column = BACK-LEFT at 225 degrees: whole body and head face diagonally AWAY toward upper-left.\nCRITICAL every head shows only the BACK of skull, rear horn bases and rear neck scales. Absolutely ZERO eyes, ZERO nose or front muzzle, ZERO mouth, ZERO teeth. No head looking sideways or over the shoulder. The face is fully hidden beyond the far side of the head. We see backs of heads, backs of shoulder armor and back cross-straps, NOT fronts.\nRows: top neutral idle, empty hands lowered; second LEFT foot forward and RIGHT arm forward contact; third RIGHT foot forward and LEFT arm forward opposite contact; fourth both EMPTY open hands raised and reaching AWAY in the facing direction, no spell effect.\nExactly TWO arms, TWO legs, TWO attached wings, ONE tail in each sprite. Never a four-legged dragon. Preserve whole connected purple bat wings and tail; no detached wing fragments or clipping, no new cape. Casting hands remain visible to either side of the torso/wings. Keep a broad chunky body and head scale matching original, no skinny stretched anatomy.\nFull bodies fully inside their own generous cells, at least 30px empty gutters around horns, wings, tail, hands and feet. No grid/text, weapons/staves/shields, aura, magic, fire, ice, particles, shadows, scenery, ground or colored matte. Do not add rows. All unused pixels alpha zero."
+}

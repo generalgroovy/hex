@@ -1,0 +1,56 @@
+{
+  "id": "luuh_i_zeh",
+  "display_name": "Luuh I Zeh",
+  "race": "spiderkin",
+  "status": "not_accepted_direction_and_motion_gaps",
+  "generation_tool": "built-in image_gen",
+  "attempts": 2,
+  "generated_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-3caf-7f02-8030-e4d35e2365b4\\exec-722146bb-ee4e-4853-a049-3939f41ecdb1.png",
+  "prior_generated_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-3caf-7f02-8030-e4d35e2365b4\\exec-86341f83-732c-48e7-bc1b-25b44592ba27.png",
+  "reference_paths": [
+    "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/luuh_i_zeh-detail.png",
+    "C:/Users/sende/Pictures/styleref1.png",
+    "C:/Users/sende/Projects/hex/art_batches/pixel_body_pilot_v1/source/s-wayne.png"
+  ],
+  "observed_columns": 8,
+  "observed_rows": 4,
+  "source_row_mapping": {
+    "idle": 0,
+    "walk_left_contact_candidate": 1,
+    "walk_right_contact_candidate": 2,
+    "cast": 3
+  },
+  "requested_directions": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "dimensions": [
+    1536,
+    1024
+  ],
+  "inspection": {
+    "directions": "FAIL: columns3/5 retain orange eyes and front tabard/torso despite targeted correction. Not true NE/NW back-quarter views. Column4 straight back is correct.",
+    "contacts": "FAIL/UNCERTAIN: walk rows retain same lower/forward boot in front/back; profile contacts too similar. No final walk acceptance.",
+    "whole_bodies": "32 intact bodies. Four spider-back appendages plus two humanoid arms/two legs appear coherent, though occlusion prevents counting every appendage in profiles.",
+    "cast": "Forward empty-hand pose present, but invalid back-quarter directions."
+  },
+  "alpha_check": {
+    "format": "RGBA",
+    "background_samples_alpha": 0,
+    "note": "Hidden purple RGB backdrop under transparent pixels."
+  },
+  "visual_issues": [
+    "Back-quarter angles not resolved after two attempts; do not import as accepted eight-direction source.",
+    "Opposite contacts incomplete/unverified.",
+    "Source preserved for evidence only or explicit lead judgment."
+  ],
+  "prompt": "Use case: stylized-concept. Asset: fixed-pixel game sprite atlas on genuinely transparent RGBA.\nReferences: image 1 is exact character identity and clothing; image 2 is retro pixel style only (ignore its old names); image 3 is compact common-head/body proportions and readable charming finish only, NOT its row count.\nMake exactly 32 whole-body sprites in exactly 8 equal columns by 4 equal rows. Generous empty transparent gutters, identical size and baseline, feet/hair/appendages fully intact in each cell. Coarse clean pixel clusters, crisp limited-palette outlines, compact modest charming proportions matching image 3; no painterly smoothing.\nEVERY row column order: S front, SE front/right45, E right profile, NE back/right45, N straight back, NW back/left45, W left profile, SW front/left45. NE/N/NW show the back of the head with NO frontal eyes. Torso and feet rotate with head. Eight unmistakably distinct directions.\nRows only: 0 idle standing; 1 walk contact with LEFT foot forward and RIGHT arm forward; 2 opposite walk contact RIGHT foot forward and LEFT arm forward, genuinely alternating feet not duplicated poses; 3 planted stance, BOTH EMPTY hands forward casting, no magic. Never add a fifth row.\nMaintain exact face, costume, anatomy and palette in all32 frames. No staves, weapons, held objects, ground shadows, scenery, text, labels, grid lines, sparkles or baked spells. Wide transparent canvas.\nSubject: Luuh I Zeh, small spiderkin: purple-blue carapace skin, swept segmented spiky purple head, yellow-orange eyes, dark purple and gold fitted armor. Two normal humanoid arms and two normal legs PLUS four jointed purple spider appendages attached to upper back, two per side. Keep this exact appendage count and attach points in all views. No wings. Use exact image1 identity.\nPose priority: The two contact rows must visibly alternate BOTH legs and normal humanoid arms. Front/back forward foot swaps side. In E/W, near purple boot is forward with bent knee in one row and backward with extended knee in the other. The four extra back appendages stay coherently attached and clear of adjacent cells; no extra fingers/limbs or disappearing appendages.",
+  "correction_prompt": "Use case: identity-preserve. Correct ONLY the directions in image1. Preserve this exact purple spiderkin identity, two ordinary arms/two walking legs/four spider-back appendages, pixels, costume, palette, full-body positions, grid8x4 and transparency.\nIn EVERY row, replace column4 (zero-based3) with NE BACK-RIGHT three-quarter: turn the WHOLE BODY away45 degrees from straight back toward screen-right; see back of skull and back armor, NO eyes, NO front face, NO chest or front tabard.\nIn EVERY row, replace column6 (zero-based5) with NW BACK-LEFT three-quarter: turned away45 toward screen-left; see back of skull/back armor, NO eyes, NO front face, NO chest or front tabard.\nColumn5 is straight back reference. The back-quarter columns must look closely related to straight back, not front-side. Preserve their respective row poses (idle, left-contact, right-contact, hands-forward cast). The back-appendages attach consistently and may naturally occlude arms. Keep other six columns unchanged.\nExactly8 columns4 rows; transparent RGBA background; no added effects/props/shadows/grid/text.",
+  "runtime_imports_or_tests": "NOT_RUN; source art only"
+}

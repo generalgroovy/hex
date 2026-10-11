@@ -1,4 +1,6 @@
 * text=auto
+# Keep the standard whitespace checks while accepting exact-byte CRLF files.
+* whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 .gitattributes text eol=lf
 
 # Engine, data, documentation, and portable scripts use one canonical newline.
@@ -49,11 +51,43 @@ art_batches/pixel_v1/map/export/** -text
 art_batches/wellspring_style_v2/ground_style.gd -text
 art_batches/wellspring_style_v2/runtime/** -text
 
+# Art recipes, originals, manifests, and receipts pin one another's exact bytes.
+# A nested art-batch .gitattributes keeps its existing higher-precedence policy.
+art_batches/** -text
+# Original generation prompts are provenance, including their authored EOFs.
+art_batches/pixel_actions_v1/prompts/*.md -whitespace
+art_batches/pixel_actions_v2/prompts/*.md -whitespace
+art_batches/pixel_cast_v1/prompts/*.md -whitespace
+
 # Preserve receipt hashes, supplied originals, and the exact tested harness bytes.
-docs/verification/** -text
+docs/verification/** -text -whitespace
+# Dated evidence and archived documents retain the bytes their receipts identify.
+# Keep active root documentation under the canonical newline rules above.
+docs/*-evidence*/** -text -whitespace
+docs/performance-assessment-*/** -text -whitespace
+docs/performance-qualification-*/** -text -whitespace
+docs/archive/** -text -whitespace
+docs/history/** -text -whitespace
+docs/build-retention/** -text -whitespace
+docs/art/** -text -whitespace
+docs/art-direction-*/** -text -whitespace
+docs/proposals/** -text
+.agent/archive/** -text -whitespace
 # Captured engine output retains its original trailing spaces and hashes.
-docs/verification/**/*.log -whitespace
-docs/verification/**/*.out -whitespace
-reference/hex-handoff-20260920/** -text
+docs/**/*.log -text -whitespace
+docs/**/*.out -text -whitespace
+docs/**/*.err -text -whitespace
+reference/hex-handoff-20260920/** -text -whitespace
+reference/acceptance-*/** -text -whitespace
+reference/art/** -text -whitespace
+reference/character-sprites/** -text -whitespace
+reference/**/*.log -text -whitespace
+reference/**/*.out -text -whitespace
+reference/**/*.err -text -whitespace
+.agent/archive/**/*.log -whitespace
+.agent/archive/**/*.out -whitespace
+.agent/archive/**/*.err -whitespace
 tests/** -text
+# Frozen comparison implementation; retain its exact historical EOF.
+tests/support/hex_collision_pre_e7.gd -whitespace
 scripts/** -text

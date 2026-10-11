@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "id": "dr_apex",
+  "display_name": "Dr. Apex",
+  "race": "stoneborn",
+  "body_tier": "large",
+  "status": "accepted_source_candidate",
+  "generator": "built_in_imagegen",
+  "attempt": 1,
+  "original_output_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b8-7f02-7203-8a99-a2a2e2cf443d\\exec-9124d945-5ee8-426f-8a74-a88b555e4537.png",
+  "reference_paths": [
+    "C:\\Users\\sende\\Projects\\hex\\assets\\sprites\\fullbody_cast_v1\\dr_apex-detail.png",
+    "C:\\Users\\sende\\Pictures\\styleref1.png",
+    "C:\\Users\\sende\\Projects\\hex\\art_batches\\pixel_body_pilot_v1\\source\\red-baron.png"
+  ],
+  "source_dimensions": [
+    1536,
+    1024
+  ],
+  "columns": 8,
+  "rows": 4,
+  "column_mapping": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "row_mapping": [
+    "idle",
+    "walk_left_foot_forward_right_arm_forward",
+    "walk_right_foot_forward_left_arm_forward",
+    "empty_hand_cast"
+  ],
+  "quality_flags": {
+    "visually_inspected": true,
+    "full_bodies_inside_canvas": true,
+    "identity_preserved": true,
+    "eight_facing_layout": true,
+    "rear_views_have_no_frontal_eyes": true,
+    "empty_hands": true,
+    "no_baked_magic": true,
+    "rgba_confirmed": true,
+    "sampled_gutters_alpha_zero": true,
+    "native_pixel_calibration_pending": true,
+    "walk_contact_exactness_requires_integration_review": true,
+    "tiny_profile_eye_sliver_in_rear_diagonals_possible": true
+  },
+  "notes": [
+    "Compact bald stoneborn, grey-gold armor and integrated cyan chest diamond/teal tabard preserved. Empty-hand cast, four rows with separate contacts, eight distinct body orientations.",
+    "Some rear diagonal skull extreme edges have a tiny blue pixel sliver; no full frontal face or chest diamond on rear views. Flagged for lead visual review, not silently cleaned.",
+    "Corner and center gutter alpha sampled zero. Immutable source only; no raster pose synthesis or engine/runtime operation."
+  ],
+  "exact_prompt": "Use case: style-transfer.\nAsset type: production pixel-art character animation source sheet for H.E.X.\nInput image 1 is the character identity/costume reference only. Input image 2 is the retro pixel-art style reference only; IGNORE its old labels, held objects and magic. Input image 3 is the approved sheet/proportion/style reference only; do NOT copy its character.\nPrimary request: redraw the identity in image 1 as one coherent compact 16-bit pixel-art sheet, exactly 32 full-body sprites in an invisible 8-column by 4-row grid, on a genuinely transparent RGBA background. Landscape canvas, preferably 1536 x 1024. One character in each equal cell with generous empty gutters; keep every head, hand, foot, cape, horn, tail and wing completely inside its cell. Do not render grid lines or labels.\nStyle: charming dense handmade retro pixel clusters, crisp stepped edges, restrained 3-4 shade material ramps and readable dark outlines, matching the references. NO smooth vector/Flash shapes, airbrush, glossy 3D, high-definition painting, blurry outlines or noise. Large tier means broad bulky chest, heavy arms and thick legs; a compact head comparable to other character sizes, not a thin stretched giant or oversized bobblehead. Complete connected anatomy in every pose.\nColumns in EVERY row, left to right: 0 S = precisely symmetrical direct front, both eyes; 1 SE = 45-degree front-right three-quarter; 2 E = strict 90-degree right-facing profile; 3 NE = 135-degree rear-right three-quarter, show BACK of head/torso, NO frontal eyes or front chest; 4 N = direct full back, NO face; 5 NW = 225-degree rear-left three-quarter, show BACK of head/torso, NO frontal eyes or front chest; 6 W = strict 270-degree left-facing profile; 7 SW = 315-degree front-left three-quarter. All eight directions must be clearly distinct, proper rotation of one design, not repeated front views.\nRows top to bottom: row 0 neutral idle standing; row 1 walking contact with anatomical LEFT FOOT forward and RIGHT ARM forward, opposite limbs behind; row 2 opposite walking contact with RIGHT FOOT forward and LEFT ARM forward, visibly different from row 1; row 3 active empty-hand casting stance, BOTH HANDS lifted and extended toward the character's facing direction, open palms/fingers. Exactly these FOUR rows, no additional rows.\nKeep the identity, clothing, colors, anatomy and head size stable across all 32 sprites. Hands are EMPTY, including the casting row; keep intrinsic armor gauntlets, but remove all weapons, staves, shields and held props. No baked spells, elemental effects, aura, sparkles, floating debris, smoke, shadows, floor, scenery, text or symbols outside clothing. All unused pixels must have alpha 0, not a checkerboard picture or colored matte.\nCharacter identity: DR. APEX, a LARGE STONEBORN. Broad living dark-gray stone humanoid with compact bald angular stone head, small cyan-blue eyes, carved heavy brows and jaw. Entire body dark grey stone segmented plates with natural cracks; thick rounded stone fists and broad heavy boots. Slate-gray full plate armor with thick polished gold edging, rounded pauldrons, knee guards and shin plates. Bright cyan diamond-shaped chest crystal in a gold setting is INTEGRATED INTO ARMOR, never floating or glowing aura. Narrow teal-green tabard with gold border and square gold belt clasp. Match image 1. No staff or shield, no worn tools, no generated particles. Make fourth and sixth sprites in every row show BACKS of stone heads, no blue eyes, chest diamond fully hidden behind back armor. Keep every pose comfortably centered with 24+ pixels of empty room above and below, especially casting fingers."
+}

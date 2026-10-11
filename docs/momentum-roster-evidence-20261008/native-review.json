@@ -1,0 +1,285 @@
+{
+  "schema_version": 1,
+  "review_date": "2026-10-08",
+  "reviewer": "independent roster_ux agent",
+  "review_kind": "visual inspection of every supplied native PNG plus receipt reconciliation",
+  "status": "LIMITED",
+  "capture_directory": ".godot/momentum-roster-native-20261008-v1",
+  "receipt": {
+    "file": ".godot/momentum-roster-native-20261008-v1/receipt.json",
+    "sha256": "974e5ce0167e297454e0773b8f660e0fd9968639f0e052fc1fb3cd446fb22811",
+    "reported_status": "passed",
+    "build_id": "p57-6a4557e6cace",
+    "runtime_source_sha256": "6a4557e6caceb97302fd252a253a4b732de8f4f185e35f30ca4f49705418102c",
+    "png_count": 16,
+    "png_bytes": 6835166,
+    "all_png_hashes_independently_verified": true,
+    "simulation_ticks": 300,
+    "simulation_cases": 3,
+    "physical_input": false
+  },
+  "method": "Opened and visually inspected all 16 PNGs individually with the local image viewer; did not infer visual results from receipt metadata. Parsed the receipt and independently recomputed each PNG SHA-256. No engine, source changes, image edits, or input automation were performed by this reviewer.",
+  "viewing_limits": [
+    "The seven 1280x720 or smaller UI/map images and three 1280x720 direction sheets were inspected as delivered by the image viewer, as were both 1280x720 portraits and the 1280x720 timeline.",
+    "The tool reported downsampling the three 2560x1440 integer-zoom sheets to 2048x1152 for the model display. Their corresponding native 1280x720 sheets were also inspected. This is not a pixel-for-pixel 2560x1440 display-quality claim.",
+    "PASS means the stated static visual scope has no blocking defect observed; it is not overall gameplay, package, accessibility, or human acceptance.",
+    "LIMITED means the image exposes a specific readability or artwork limitation, or cannot establish continuous animation despite showing coherent static poses.",
+    "FAIL would mean a clear blocking defect within the stated static scope, such as absent champions, unreadable essential roster names, broken portrait identity, severe clipping, or a high-confidence heading inversion. None was found in these samples."
+  ],
+  "summary": {
+    "visually_inspected": 16,
+    "PASS": 4,
+    "LIMITED": 12,
+    "FAIL": 0,
+    "human_visual_acceptance": false,
+    "continuous_motion_acceptance": false,
+    "physical_input_acceptance": false,
+    "route_traversal_acceptance": false,
+    "packaged_build_acceptance": false
+  },
+  "cross_image_findings": [
+    "All 30 Gallery cards are visible at both captured sizes, in the intended Small/Middle/Large then name order. Long champion names wrap inside their cards rather than crossing card boundaries. Race columns and page controls are absent.",
+    "The 960x540 Gallery preserves the complete roster and details panel, but scaled helper, size, status and control text is small and less comfortable to read. This is not universal minimum-resolution readability acceptance.",
+    "The two refined portrait screens retain Joh's olive Orc identity and Grimm's violet Troll identity, including hair, tusks, ears, armor and Grimm's two side horns. Read-only inspection is visibly separate from the equipped Oh Tipi HUD identity and unavailable attunement state.",
+    "Farflow's service label is visibly low contrast at both map sizes. At 960x540, peripheral world labels and parts of the scene can fall beneath fixed HUD/quick-action panels; those captures do not establish complete service-discovery clarity.",
+    "Across all six direction sheets, front/back/profile progression is coherent with the disclosed distinction between travel A and aim B. Jump and walk face B; slide, roll and air dodge face A. No high-confidence cardinal-heading inversion or champion-identity substitution was observed.",
+    "Slide and roll visibly reuse the same low pose; air dodge reuses the airborne key. Stable held silhouettes remove obvious mesh distortion in these samples but do not supply authored slide, roll, strafe, backpedal or airborne-casting cycles.",
+    "The paid timeline visibly switches from aim-facing sprint to travel-facing slide, then back to aim-facing gather/jump. This matches the disclosed pose policy, but its perceived rotation abruptness needs continuous-motion human review.",
+    "The receipt reports ordinary paid simulation commands and separate controlled presenter fixtures. Static images cannot independently prove physical input, control latency, continuous-motion quality, route traversal, multiplayer behavior, or measured performance."
+  ],
+  "images": [
+    {
+      "file": "all-30-roster-1280x720.png",
+      "sha256": "bd6ae8b03a4f0cf5d5f8147cee866a4f4d8df3e559a4964b4b1ff4b1d32ea327",
+      "size": [1280, 720],
+      "kind": "production-gallery",
+      "status": "PASS",
+      "observations": [
+        "All 30 cards fit in six columns and five rows, with Small/Middle/Large tint boundaries and no pagination controls.",
+        "Don Doko Don, Leaf the Hidden, The Red Baron and Treevor the Mason wrap within their cells. No name, selected border or bottom-row card is clipped.",
+        "Oh Tipi's selected card, illustrated portrait, body preview, statistics, close control and separate Already equipped action state are visible without overlap."
+      ],
+      "limitations": ["Only the shown overview/detail state is reviewed; this still does not test navigation or attunement behavior."]
+    },
+    {
+      "file": "all-30-roster-960x540.png",
+      "sha256": "4d884ff621601972ca386e26e1dcfd80d6738105c6265088b07703d20282d05b",
+      "size": [960, 540],
+      "kind": "production-gallery",
+      "status": "LIMITED",
+      "observations": [
+        "All 30 cards and the entire right-hand details area remain in the panel; long names remain inside their cells.",
+        "Champion names are distinguishable in this sample and the selected Oh Tipi border is clear. No card or essential action button is visibly clipped."
+      ],
+      "limitations": [
+        "Helper text along the bottom, size/status tags and small detail labels are visibly tiny and rasterized at the 0.75 menu scale. Comfortable reading at this minimum resolution is not established."
+      ]
+    },
+    {
+      "file": "joh_haynes-refined-portrait-1280x720.png",
+      "sha256": "80635e030a08eee008e7c3f1e57f1387fbaf1568c8c4741753294c28fa41a809",
+      "size": [1280, 720],
+      "kind": "production-portrait",
+      "status": "PASS",
+      "observations": [
+        "The large portrait is completely contained in its square view, with intact ponytail, pointed ear, olive face, small tusks and bronze armor; the expression reads calm and steady.",
+        "The thumbnail and Large Orc body preview agree in identity. PORTRAIT / READ-ONLY, INSPECTING, return-to-roster and Attunement unavailable are visible; the background HUD still identifies equipped Oh Tipi.",
+        "No portrait, title, statistic or control overlap is visible."
+      ],
+      "limitations": ["Agent review of this static illustration is not human art acceptance or new body-animation evidence."]
+    },
+    {
+      "file": "grimm_bow-refined-portrait-1280x720.png",
+      "sha256": "1a252dfb25e0e49b09df2aafed4795580cfaf179ccfa3a327d218c635475a5df",
+      "size": [1280, 720],
+      "kind": "production-portrait",
+      "status": "PASS",
+      "observations": [
+        "The large portrait fits with both ivory side horns, pointed ears, spiky dark hair, violet skin, tusks and rounded gold-purple armor intact; the expression is warmer and more curious than Joh's.",
+        "The thumbnail and Large Troll body preview agree in identity. Read-only inspection, roster-return control and separate unavailable attunement state are visible without overlap.",
+        "No clipping of the horn tips or champion name is visible."
+      ],
+      "limitations": ["Agent review of this static illustration is not human art acceptance or new body-animation evidence."]
+    },
+    {
+      "file": "academy-farflow-services-1280x720.png",
+      "sha256": "56a6ec6b69fc744ad72477b9bb17f497f7bef90231d323f7cc5a0ae50ff8eda8",
+      "size": [1280, 720],
+      "kind": "production-map",
+      "status": "LIMITED",
+      "observations": [
+        "The central Academy doorway, actor, flanking planters and CHAMPIONS + SPELLS sign are visibly separated. Main health/resource and spell HUD panels fit.",
+        "Farflow's neighboring facade and door are visible to the right."
+      ],
+      "limitations": [
+        "FRIENDS + MATCHES / FARFLOW HALL near x932-1025,y268-286 is very faint against the grass, weakening service discovery away from the current actor.",
+        "Peripheral world text is partially outside the viewport. Landmark placement is not a traversed route or tested door interaction."
+      ]
+    },
+    {
+      "file": "crucible-open-south-passage-1280x720.png",
+      "sha256": "5381962583b6efecd16bdb9ba66d30e1797b96ef0a131eb2b0eb49230eceb2d0",
+      "size": [1280, 720],
+      "kind": "production-map",
+      "status": "PASS",
+      "observations": [
+        "The narrowed facade leaves visible open ground to its right; Oh Tipi stands in that passage without intersecting the building pixels.",
+        "The open-practice direction marker and FREE EXPERIMENT COURT label are visible below the passage. The main scene route is not blocked by the HUD in this framing."
+      ],
+      "limitations": [
+        "This is static landmark placement, not proof of collision clearance or traversed movement. Peripheral labels at viewport edges are outside the reviewed route scope."
+      ]
+    },
+    {
+      "file": "academy-farflow-services-960x540.png",
+      "sha256": "c77ede4f8359b61c7f4c52ea2ddae4f88ae7ded97aed2a4383376aa6405f892e",
+      "size": [960, 540],
+      "kind": "production-map",
+      "status": "LIMITED",
+      "observations": [
+        "The centered Academy door, actor and CHAMPIONS + SPELLS sign remain visible; the HUD fits the viewport.",
+        "The adjacent Farflow facade remains visible on the right."
+      ],
+      "limitations": [
+        "FRIENDS + MATCHES / FARFLOW HALL near x775-865,y268-286 remains low contrast and difficult to read.",
+        "Peripheral top building labels are cut by the narrower world viewport, and lower world labels are partly hidden behind the fixed HUD. This is not a complete minimum-resolution wayfinding pass."
+      ]
+    },
+    {
+      "file": "crucible-open-south-passage-960x540.png",
+      "sha256": "430425fb62f29c1dedc5bdb8d5646a3158a7b967be7c85381b10034cf6f1ca7c",
+      "size": [960, 540],
+      "kind": "production-map",
+      "status": "LIMITED",
+      "observations": [
+        "The facade, actor and open ground on the facade's right remain distinct. The open-practice marker and FREE EXPERIMENT COURT name are visible above the spell bar.",
+        "No visible actor/building overlap occurs at the sampled landmark."
+      ],
+      "limitations": [
+        "The lower-left MOVEMENT CHAIN COURT world label is partly obscured by the health/resource HUD; the lower route continues behind fixed HUD panels.",
+        "Neither this narrower view nor the receipt's reset placement establishes actual route traversal."
+      ]
+    },
+    {
+      "file": "lodge-wall-clearance-960x540.png",
+      "sha256": "21e7b08992c81bed343a7daf6887380ad9c19487f93e7a9571ba06d592f8def9",
+      "size": [960, 540],
+      "kind": "production-map",
+      "status": "LIMITED",
+      "observations": [
+        "MOVEMENT + CONTROLS / ROUTEKEEPER LODGE is visible below the actor and above the horizontal practice wall with a small but distinct gap.",
+        "The actor, service sign and practice wall do not visibly intersect."
+      ],
+      "limitations": [
+        "The fixed CHEMISTRY MATRIX / DEMOS and SOLO DUEL TRIAL panels partially cover the left Lodge facade and left edge of its doorway. The important lower service sign stays visible, but the full entrance silhouette is not unobscured.",
+        "This image does not establish doorway use or movement around the wall."
+      ]
+    },
+    {
+      "file": "s_wayne-transitions-1x-1280x720.png",
+      "sha256": "df913396d41021c2440fcc2132348ec6d866c2737c99b2fab7417fec4335d43e",
+      "size": [1280, 720],
+      "kind": "controlled-direction-sheet",
+      "status": "LIMITED",
+      "observations": [
+        "All 40 samples fit their lanes with readable A/B heading labels and no body clipping. Dark skin, curly dark hair and purple-gold clothing remain coherent across the headings.",
+        "Front, back and side poses agree with the displayed aim/travel split; no high-confidence cardinal inversion is visible."
+      ],
+      "limitations": [
+        "Slide and roll are visibly the same crouched source pose, not separate cycles. Air dodge reuses the jump silhouette.",
+        "The fixture fixes isolated states and suppresses world lift; it cannot establish transition timing, real displacement or continuous gait quality."
+      ]
+    },
+    {
+      "file": "s_wayne-transitions-2x-2560x1440.png",
+      "sha256": "0419b8d810641fbeeb2b5967ec56771ef0978882f1c52deba2c7fe69626f7c21",
+      "size": [2560, 1440],
+      "kind": "controlled-direction-sheet",
+      "status": "LIMITED",
+      "observations": [
+        "Enlarged samples retain S. Wayne's identity, readable front/back/profile progression, and complete silhouettes within each lane.",
+        "No isolated missing limbs or obvious mesh-like stretching is visible."
+      ],
+      "limitations": [
+        "The enlarged view confirms identical slide/roll low-pose reuse and jump-key reuse for air dodge; those are held substitutions, not authored cycles.",
+        "The model display downsampled this sheet to 2048x1152. No pixel-perfect 2x-output or continuous-motion acceptance is claimed."
+      ]
+    },
+    {
+      "file": "oh_tipi-transitions-1x-1280x720.png",
+      "sha256": "5e51a49038862e217ed191c12ddde50fd11383fb7bb7f81034b80912b504829c",
+      "size": [1280, 720],
+      "kind": "controlled-direction-sheet",
+      "status": "LIMITED",
+      "observations": [
+        "All 40 samples fit without tail, fin, hand or heading-label clipping. The blue Seakin head, tail and gold-dark armor remain recognizable throughout.",
+        "Back-facing north and front-facing south are distinct; the aim-facing jump/walk and travel-facing advanced rows follow the disclosed A/B policy."
+      ],
+      "limitations": [
+        "Slide and roll are identical crouched keys; the airborne dodge is a reused jump key. Similar diagonals remain small at 1x and are not a full exact-heading art certification.",
+        "One pose per state cannot prove authored movement cycles or transition smoothness."
+      ]
+    },
+    {
+      "file": "oh_tipi-transitions-2x-2560x1440.png",
+      "sha256": "ac71b9aaa10af3872f74d0efd738a042e2550b2cdfeb3de88870dc410990523a",
+      "size": [2560, 1440],
+      "kind": "controlled-direction-sheet",
+      "status": "LIMITED",
+      "observations": [
+        "The larger view keeps fins, tail, face and armor coherent across all eight direction columns, with no obvious source crop or neighboring-cell contamination.",
+        "Front/back distinction and the A/B-facing split remain legible."
+      ],
+      "limitations": [
+        "The low stance is repeated for slide and roll; air dodge has no separately authored cycle. No independent airborne cast pose is demonstrated.",
+        "The model display downsampled this sheet to 2048x1152; static enlargement does not validate continuous animation."
+      ]
+    },
+    {
+      "file": "red_baron-transitions-1x-1280x720.png",
+      "sha256": "3708457fc46d6001cec25c845593900d9bb813363fbd8b1d6bf67692fccef359",
+      "size": [1280, 720],
+      "kind": "controlled-direction-sheet",
+      "status": "LIMITED",
+      "observations": [
+        "All 40 crowned Undead samples remain inside their lanes. Skull, crown, red cape and armored silhouette preserve The Red Baron's identity.",
+        "The cape-backed north view and skull-front south view are coherent with the specified pose heading; no obvious reversed cardinal direction is seen."
+      ],
+      "limitations": [
+        "Slide and roll share the same planted low pose, including unchanged cape shape; air dodge reuses the jump pose. This is not rolling, sliding or cape-motion animation.",
+        "The isolated samples do not certify impact, takeoff, landing or gait continuity."
+      ]
+    },
+    {
+      "file": "red_baron-transitions-2x-2560x1440.png",
+      "sha256": "5b904eb4ca39de1159163aafc70fd9396bbaa44dec3b3ab379d476daa7a1fb34",
+      "size": [2560, 1440],
+      "kind": "controlled-direction-sheet",
+      "status": "LIMITED",
+      "observations": [
+        "The enlarged crown, skull, cape and limb outlines remain complete without source-cell clipping, visible mesh deformation or identity substitution.",
+        "The eight direction columns stay separated, with labels and full bodies visible."
+      ],
+      "limitations": [
+        "Enlargement clearly preserves the same low key across slide/roll and the same airborne key for dodge; distinct authored action cycles remain absent.",
+        "The model display downsampled this sheet to 2048x1152. These controlled stills do not establish continuous motion or full-resolution 2x display quality."
+      ]
+    },
+    {
+      "file": "paid-slide-gather-jump-timeline-1280x720.png",
+      "sha256": "b9c18392e2b9df2c6d5ba6ce09a5801c6c40c735d530a188b7a55340decf6af2",
+      "size": [1280, 720],
+      "kind": "actual-simulation-still-timeline",
+      "status": "LIMITED",
+      "observations": [
+        "Three size-profile rows and all six sample columns fit without sprite or annotation overlap. The displayed gather samples retain positive horizontal speed while speed decreases, followed by clearly lifted jump samples.",
+        "S. Wayne, Oh Tipi and The Red Baron remain identifiable; no missing body or obvious mesh stretch appears in the sampled states.",
+        "The timeline visibly changes pose direction from north-facing sprint to east-facing slide, then north-facing gather/jump, matching the receipt's aim-versus-travel policy."
+      ],
+      "limitations": [
+        "This is six still samples from each 100-step paid simulation, not continuous video or physical input. Labels and receipt corroborate simulation state but are not human movement-feel acceptance.",
+        "Direction switching may read abruptly in motion; no smoothness claim is made. Slide/roll/air-dodge cycles remain held-key substitutions, and this clear isolated arena does not exercise the map passage."
+      ]
+    }
+  ]
+}

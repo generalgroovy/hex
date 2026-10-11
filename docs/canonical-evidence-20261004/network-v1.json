@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "build_id": "p56-57663bc8a613",
+  "transport": "same-export localhost ENet",
+  "port": 24966,
+  "deadline_seconds": 120,
+  "wrapper_duration_ms": 69750,
+  "configured_tick_rate": 120,
+  "observed": [
+    "guest connected; shared HELLO and readiness",
+    "authoritative movement reconciliation",
+    "first Proving Court round began",
+    "late guest joined as spectator",
+    "guest disconnected and returned as exact reserved actor",
+    "return to Hearth; late spectator handoff",
+    "host and guests participated in second Proving Court round",
+    "host release delivered its reason and revoked return reservation"
+  ],
+  "stderr_bytes": {"host": 0, "guest": 0, "late_guest": 0},
+  "profile_isolation": ".godot/canonical-network-v1/isolated-roaming",
+  "owned_process_cleanup": "smoke-farflow.ps1 finally block; lead checked no owned engine processes remained",
+  "logs": ["network-host.log", "network-guest.log", "network-late-guest.log"],
+  "scope": "Bounded three-process localhost lifecycle PASS. Configured tick rate is not sustained simulation or rendered FPS acceptance. No physical internet, relay, two-PC, eight-active-player load or 16/32/64-player acceptance."
+}

@@ -1,0 +1,1196 @@
+{
+	"assertions": 11339,
+	"cases": [
+		"sustained-distributed",
+		"dense-crucible"
+	],
+	"engine": "4.7.1-stable (official)",
+	"failures": 0,
+	"performance_acceptance": "NOT_ESTABLISHED; diagnostic measurements depend on this machine and headless execution and do not establish rendered, networked, or release capacity.",
+	"repetitions_per_case": 2,
+	"runs": [
+		{
+			"admitted_by_wire": {
+				"140": 2,
+				"141": 2,
+				"145": 2,
+				"154": 2,
+				"159": 2,
+				"160": 2,
+				"163": 2,
+				"164": 2,
+				"179": 2,
+				"180": 12,
+				"181": 2,
+				"182": 10,
+				"183": 2,
+				"184": 10,
+				"185": 2,
+				"186": 9
+			},
+			"alive_work": {
+				"alive_actor_instance_ticks": 5760,
+				"alive_actor_instance_ticks_per_simulated_second": 960.0,
+				"alive_end": 8,
+				"deaths": 0,
+				"mean_alive_actors": 8.0,
+				"ticks_with_authority_work": 720,
+				"work_ticks_per_simulated_second": 120.0
+			},
+			"authority_metrics": {
+				"admitted": 65,
+				"deposited": 23,
+				"exposure_queries": 9152,
+				"matter_consumed": 21200,
+				"matter_expired": 17800,
+				"matter_paid": 39000,
+				"modifiers": 0,
+				"reactions": 27,
+				"refused": 12,
+				"requested": 77
+			},
+			"case": "sustained-distributed",
+			"cleanup_ticks": 620,
+			"contact_queries": 9152,
+			"contact_semantics": "contact_queries is the authoritative hex exposure-query counter; processed_clashes counts emitted real hex_clash outcomes. It is not an invented narrowphase-call estimate.",
+			"deadline_misses_over_8333us": {
+				"host": 491,
+				"step": 242
+			},
+			"envelope_capture_and_wire_pack_us": {
+				"max": 285002,
+				"p50": 131818,
+				"p95": 182820,
+				"p99": 210339,
+				"samples": 360
+			},
+			"event_accounting": {
+				"admitted_by_type": {
+					"cast_blocked": 9,
+					"cast_refused": 12,
+					"cast_started": 65,
+					"hex_clash": 23,
+					"projectile_expired": 14,
+					"projectile_impact": 17,
+					"projectile_spawned": 48,
+					"spray_fired": 3
+				},
+				"included_at_least_once_by_type": {
+					"cast_blocked": 9,
+					"cast_refused": 12,
+					"cast_started": 65,
+					"hex_clash": 23,
+					"projectile_expired": 14,
+					"projectile_impact": 17,
+					"projectile_spawned": 48,
+					"spray_fired": 3
+				},
+				"retired_after_redundancy_by_type": {
+					"cast_blocked": 9,
+					"cast_refused": 12,
+					"cast_started": 65,
+					"hex_clash": 23,
+					"projectile_expired": 14,
+					"projectile_impact": 17,
+					"projectile_spawned": 48,
+					"spray_fired": 3
+				},
+				"semantics": "Each exact trim row reports its assigned pending event ID and whether it entered a successfully packet-packed host envelope before removal; first_envelope_tick is -1 when it did not. Envelope inclusion does not prove socket delivery, remote receipt, or presentation.",
+				"trimmed_after_envelope_inclusion_by_type": {},
+				"trimmed_before_first_envelope_by_type": {},
+				"trimmed_events": [],
+				"trimmed_existing_by_type": {},
+				"trimmed_incoming_by_type": {},
+				"unencodable_by_type": {
+					"hex_flood_flow": 138,
+					"hex_product_flow": 98
+				}
+			},
+			"event_counts": {
+				"cast_blocked": 9,
+				"cast_refused": 12,
+				"cast_started": 65,
+				"hex_clash": 23,
+				"hex_flood_flow": 138,
+				"hex_product_flow": 98,
+				"projectile_expired": 14,
+				"projectile_impact": 17,
+				"projectile_spawned": 48,
+				"spray_fired": 3
+			},
+			"final_hash": "00c8cc15b709ba5dade0b9b5db18775ff12dbb8409f2bf2479d473c4342294a7",
+			"final_occupancy_after_cleanup": {
+				"active_cells": 0,
+				"product_quantity": 0,
+				"source_quantity": 0
+			},
+			"host_step_event_retention_and_60hz_envelope_us": {
+				"max": 292580,
+				"p50": 21826,
+				"p95": 187504,
+				"p99": 199125,
+				"samples": 720
+			},
+			"input_semantics": "Pressed intents and held Rapid input-ticks are reported separately. Held cooldown, recovery, Flux, and capacity nonadmission may be silent and is exposed by the admitted count rather than fabricated as a refusal.",
+			"instrumentation_scope": "Event accounting duplicates encoder and bounded-queue classification only after timing samples. Its dictionaries and exact trim records remain allocated during the run, so static/process memory figures include this diagnostic overhead and are not directly comparable to receipts without event-accounting-v1.",
+			"instrumentation_version": "event-accounting-v2-owned-publication",
+			"inventory_totals": {
+				"active_cell_instance_ticks": 204305,
+				"alive_actor_instance_ticks": 5760,
+				"cast_instance_ticks": 9905,
+				"pending_cast_instance_ticks": 457,
+				"product_instance_ticks": 7741,
+				"product_quantity_instance_ticks": 6226240,
+				"projectile_instance_ticks": 5265,
+				"source_quantity_instance_ticks": 5151360,
+				"ticks_with_authority_work": 720
+			},
+			"measurement_scope": "Timing covers real SimWorld.step; host timing adds production event retention and every-other-tick owned envelope capture/packing. The owned core timer excludes diagnostic envelope/packet byte counting and acknowledgement. The older encompassing snapshot timer retains those operations; it is not a socket or render metric. Additive by-type and exact-ID event accounting runs after those timing samples. Cleanup is excluded from quantiles but included in terminal counters and hashes.",
+			"owned_capture_and_packetization_core_us": {
+				"max": 284868,
+				"p50": 131726,
+				"p95": 182732,
+				"p99": 210242,
+				"samples": 360
+			},
+			"peaks": {
+				"active_cells": 452,
+				"casts": 22,
+				"datagram_bytes": 1324,
+				"events_per_tick": 5,
+				"fragments_per_envelope": 7,
+				"pending_casts": 4,
+				"product_quantity": 16400,
+				"products": 21,
+				"projectiles": 14,
+				"retained_events": 6,
+				"snapshot_raw_bytes": 13256,
+				"source_quantity": 12120,
+				"static_memory_bytes": 51293340
+			},
+			"processed_clashes": 23,
+			"processed_products": 27,
+			"publication": {
+				"accepted_events": 191,
+				"capture_attempts": 670,
+				"cleanup_capture_attempts": 310,
+				"evicted_events": 0,
+				"fragmented_envelopes": 670,
+				"fragments": 3503,
+				"mtu_violations": 0,
+				"raw_bytes": 7156064,
+				"rejections": 0,
+				"unencodable_events": 236,
+				"wire_bytes": 4297880
+			},
+			"refusals_by_wire_and_reason": {
+				"140:hex_capacity": 1,
+				"141:hex_capacity": 1,
+				"145:hex_capacity": 1,
+				"154:hex_capacity": 1,
+				"159:hex_capacity": 1,
+				"160:hex_capacity": 1,
+				"163:hex_capacity": 1,
+				"164:hex_capacity": 1,
+				"179:hex_capacity": 1,
+				"181:hex_capacity": 1,
+				"183:hex_capacity": 1,
+				"185:hex_capacity": 1
+			},
+			"released_by_wire": {
+				"140": 2,
+				"141": 1,
+				"145": 2,
+				"159": 1,
+				"160": 1,
+				"163": 1,
+				"164": 1,
+				"179": 2,
+				"180": 12,
+				"181": 1,
+				"182": 8,
+				"183": 1,
+				"184": 7,
+				"185": 2,
+				"186": 9
+			},
+			"repeat": 1,
+			"requested_held_ticks_by_wire": {
+				"180": 180,
+				"182": 180,
+				"184": 180,
+				"186": 180
+			},
+			"requested_pressed_by_wire": {
+				"140": 3,
+				"141": 3,
+				"145": 3,
+				"154": 3,
+				"159": 3,
+				"160": 3,
+				"163": 3,
+				"164": 3,
+				"179": 3,
+				"181": 3,
+				"183": 3,
+				"185": 3
+			},
+			"reverse_command_order": false,
+			"sample_end_hash": "cd829d6da578cc6372bbb079f98d1190d9acbd9c2913d0b2c9230fb00d0f369b",
+			"sample_ticks": 720,
+			"static_memory_bytes": {
+				"after_cleanup": 50177522,
+				"process_peak_after": 107969001,
+				"process_peak_before": 107969001,
+				"sample_end": 50985570,
+				"sampled_peak": 51293340,
+				"start": 48395847
+			},
+			"step_us": {
+				"max": 26016,
+				"p50": 7395,
+				"p95": 11873,
+				"p99": 15547,
+				"samples": 720
+			},
+			"trace_sha256": "26531d669f8b0e7a94fbe3bc01136e0d9d462871a1266ae0c1eda8e398662c5f",
+			"workload_totals": {
+				"active_cell_instance_ticks": 204305,
+				"admitted": 65,
+				"contact_queries": 9152,
+				"processed_clashes": 23,
+				"processed_products": 27,
+				"refusals": 12,
+				"releases": 51,
+				"requested_held_ticks": 720,
+				"requested_pressed": 36,
+				"source_quantity_instance_ticks": 5151360
+			}
+		},
+		{
+			"admitted_by_wire": {
+				"140": 2,
+				"141": 2,
+				"145": 2,
+				"154": 2,
+				"159": 2,
+				"160": 2,
+				"163": 2,
+				"164": 2,
+				"179": 2,
+				"180": 12,
+				"181": 2,
+				"182": 10,
+				"183": 2,
+				"184": 10,
+				"185": 2,
+				"186": 9
+			},
+			"alive_work": {
+				"alive_actor_instance_ticks": 5760,
+				"alive_actor_instance_ticks_per_simulated_second": 960.0,
+				"alive_end": 8,
+				"deaths": 0,
+				"mean_alive_actors": 8.0,
+				"ticks_with_authority_work": 720,
+				"work_ticks_per_simulated_second": 120.0
+			},
+			"authority_metrics": {
+				"admitted": 65,
+				"deposited": 23,
+				"exposure_queries": 9152,
+				"matter_consumed": 21200,
+				"matter_expired": 17800,
+				"matter_paid": 39000,
+				"modifiers": 0,
+				"reactions": 27,
+				"refused": 12,
+				"requested": 77
+			},
+			"case": "sustained-distributed",
+			"cleanup_ticks": 620,
+			"contact_queries": 9152,
+			"contact_semantics": "contact_queries is the authoritative hex exposure-query counter; processed_clashes counts emitted real hex_clash outcomes. It is not an invented narrowphase-call estimate.",
+			"deadline_misses_over_8333us": {
+				"host": 505,
+				"step": 269
+			},
+			"envelope_capture_and_wire_pack_us": {
+				"max": 211077,
+				"p50": 133518,
+				"p95": 187969,
+				"p99": 200191,
+				"samples": 360
+			},
+			"event_accounting": {
+				"admitted_by_type": {
+					"cast_blocked": 9,
+					"cast_refused": 12,
+					"cast_started": 65,
+					"hex_clash": 23,
+					"projectile_expired": 14,
+					"projectile_impact": 17,
+					"projectile_spawned": 48,
+					"spray_fired": 3
+				},
+				"included_at_least_once_by_type": {
+					"cast_blocked": 9,
+					"cast_refused": 12,
+					"cast_started": 65,
+					"hex_clash": 23,
+					"projectile_expired": 14,
+					"projectile_impact": 17,
+					"projectile_spawned": 48,
+					"spray_fired": 3
+				},
+				"retired_after_redundancy_by_type": {
+					"cast_blocked": 9,
+					"cast_refused": 12,
+					"cast_started": 65,
+					"hex_clash": 23,
+					"projectile_expired": 14,
+					"projectile_impact": 17,
+					"projectile_spawned": 48,
+					"spray_fired": 3
+				},
+				"semantics": "Each exact trim row reports its assigned pending event ID and whether it entered a successfully packet-packed host envelope before removal; first_envelope_tick is -1 when it did not. Envelope inclusion does not prove socket delivery, remote receipt, or presentation.",
+				"trimmed_after_envelope_inclusion_by_type": {},
+				"trimmed_before_first_envelope_by_type": {},
+				"trimmed_events": [],
+				"trimmed_existing_by_type": {},
+				"trimmed_incoming_by_type": {},
+				"unencodable_by_type": {
+					"hex_flood_flow": 138,
+					"hex_product_flow": 98
+				}
+			},
+			"event_counts": {
+				"cast_blocked": 9,
+				"cast_refused": 12,
+				"cast_started": 65,
+				"hex_clash": 23,
+				"hex_flood_flow": 138,
+				"hex_product_flow": 98,
+				"projectile_expired": 14,
+				"projectile_impact": 17,
+				"projectile_spawned": 48,
+				"spray_fired": 3
+			},
+			"final_hash": "00c8cc15b709ba5dade0b9b5db18775ff12dbb8409f2bf2479d473c4342294a7",
+			"final_occupancy_after_cleanup": {
+				"active_cells": 0,
+				"product_quantity": 0,
+				"source_quantity": 0
+			},
+			"host_step_event_retention_and_60hz_envelope_us": {
+				"max": 217972,
+				"p50": 21718,
+				"p95": 189925,
+				"p99": 202848,
+				"samples": 720
+			},
+			"input_semantics": "Pressed intents and held Rapid input-ticks are reported separately. Held cooldown, recovery, Flux, and capacity nonadmission may be silent and is exposed by the admitted count rather than fabricated as a refusal.",
+			"instrumentation_scope": "Event accounting duplicates encoder and bounded-queue classification only after timing samples. Its dictionaries and exact trim records remain allocated during the run, so static/process memory figures include this diagnostic overhead and are not directly comparable to receipts without event-accounting-v1.",
+			"instrumentation_version": "event-accounting-v2-owned-publication",
+			"inventory_totals": {
+				"active_cell_instance_ticks": 204305,
+				"alive_actor_instance_ticks": 5760,
+				"cast_instance_ticks": 9905,
+				"pending_cast_instance_ticks": 457,
+				"product_instance_ticks": 7741,
+				"product_quantity_instance_ticks": 6226240,
+				"projectile_instance_ticks": 5265,
+				"source_quantity_instance_ticks": 5151360,
+				"ticks_with_authority_work": 720
+			},
+			"measurement_scope": "Timing covers real SimWorld.step; host timing adds production event retention and every-other-tick owned envelope capture/packing. The owned core timer excludes diagnostic envelope/packet byte counting and acknowledgement. The older encompassing snapshot timer retains those operations; it is not a socket or render metric. Additive by-type and exact-ID event accounting runs after those timing samples. Cleanup is excluded from quantiles but included in terminal counters and hashes.",
+			"owned_capture_and_packetization_core_us": {
+				"max": 210944,
+				"p50": 133425,
+				"p95": 187874,
+				"p99": 200064,
+				"samples": 360
+			},
+			"peaks": {
+				"active_cells": 452,
+				"casts": 22,
+				"datagram_bytes": 1324,
+				"events_per_tick": 5,
+				"fragments_per_envelope": 7,
+				"pending_casts": 4,
+				"product_quantity": 16400,
+				"products": 21,
+				"projectiles": 14,
+				"retained_events": 6,
+				"snapshot_raw_bytes": 13256,
+				"source_quantity": 12120,
+				"static_memory_bytes": 51370604
+			},
+			"processed_clashes": 23,
+			"processed_products": 27,
+			"publication": {
+				"accepted_events": 191,
+				"capture_attempts": 670,
+				"cleanup_capture_attempts": 310,
+				"evicted_events": 0,
+				"fragmented_envelopes": 670,
+				"fragments": 3503,
+				"mtu_violations": 0,
+				"raw_bytes": 7156064,
+				"rejections": 0,
+				"unencodable_events": 236,
+				"wire_bytes": 4297880
+			},
+			"refusals_by_wire_and_reason": {
+				"140:hex_capacity": 1,
+				"141:hex_capacity": 1,
+				"145:hex_capacity": 1,
+				"154:hex_capacity": 1,
+				"159:hex_capacity": 1,
+				"160:hex_capacity": 1,
+				"163:hex_capacity": 1,
+				"164:hex_capacity": 1,
+				"179:hex_capacity": 1,
+				"181:hex_capacity": 1,
+				"183:hex_capacity": 1,
+				"185:hex_capacity": 1
+			},
+			"released_by_wire": {
+				"140": 2,
+				"141": 1,
+				"145": 2,
+				"159": 1,
+				"160": 1,
+				"163": 1,
+				"164": 1,
+				"179": 2,
+				"180": 12,
+				"181": 1,
+				"182": 8,
+				"183": 1,
+				"184": 7,
+				"185": 2,
+				"186": 9
+			},
+			"repeat": 2,
+			"requested_held_ticks_by_wire": {
+				"180": 180,
+				"182": 180,
+				"184": 180,
+				"186": 180
+			},
+			"requested_pressed_by_wire": {
+				"140": 3,
+				"141": 3,
+				"145": 3,
+				"154": 3,
+				"159": 3,
+				"160": 3,
+				"163": 3,
+				"164": 3,
+				"179": 3,
+				"181": 3,
+				"183": 3,
+				"185": 3
+			},
+			"reverse_command_order": true,
+			"sample_end_hash": "cd829d6da578cc6372bbb079f98d1190d9acbd9c2913d0b2c9230fb00d0f369b",
+			"sample_ticks": 720,
+			"static_memory_bytes": {
+				"after_cleanup": 50246054,
+				"process_peak_after": 107969001,
+				"process_peak_before": 107969001,
+				"sample_end": 51054478,
+				"sampled_peak": 51370604,
+				"start": 50192238
+			},
+			"step_us": {
+				"max": 36153,
+				"p50": 7613,
+				"p95": 12110,
+				"p99": 15424,
+				"samples": 720
+			},
+			"trace_sha256": "26531d669f8b0e7a94fbe3bc01136e0d9d462871a1266ae0c1eda8e398662c5f",
+			"workload_totals": {
+				"active_cell_instance_ticks": 204305,
+				"admitted": 65,
+				"contact_queries": 9152,
+				"processed_clashes": 23,
+				"processed_products": 27,
+				"refusals": 12,
+				"releases": 51,
+				"requested_held_ticks": 720,
+				"requested_pressed": 36,
+				"source_quantity_instance_ticks": 5151360
+			}
+		},
+		{
+			"admitted_by_wire": {
+				"140": 3,
+				"141": 2,
+				"145": 3,
+				"154": 2,
+				"159": 4,
+				"160": 2,
+				"163": 3,
+				"164": 2,
+				"179": 4,
+				"180": 6,
+				"181": 4,
+				"182": 4,
+				"183": 4,
+				"184": 7,
+				"185": 4,
+				"186": 4
+			},
+			"alive_work": {
+				"alive_actor_instance_ticks": 5760,
+				"alive_actor_instance_ticks_per_simulated_second": 960.0,
+				"alive_end": 8,
+				"deaths": 0,
+				"mean_alive_actors": 8.0,
+				"ticks_with_authority_work": 720,
+				"work_ticks_per_simulated_second": 120.0
+			},
+			"authority_metrics": {
+				"admitted": 58,
+				"deposited": 18,
+				"exposure_queries": 8632,
+				"matter_consumed": 32000,
+				"matter_expired": 2800,
+				"matter_paid": 34800,
+				"modifiers": 3,
+				"reactions": 30,
+				"refused": 3,
+				"requested": 61
+			},
+			"case": "dense-crucible",
+			"cleanup_ticks": 527,
+			"contact_queries": 8632,
+			"contact_semantics": "contact_queries is the authoritative hex exposure-query counter; processed_clashes counts emitted real hex_clash outcomes. It is not an invented narrowphase-call estimate.",
+			"deadline_misses_over_8333us": {
+				"host": 425,
+				"step": 128
+			},
+			"envelope_capture_and_wire_pack_us": {
+				"max": 192349,
+				"p50": 86803,
+				"p95": 111334,
+				"p99": 117885,
+				"samples": 360
+			},
+			"event_accounting": {
+				"admitted_by_type": {
+					"cast_blocked": 2,
+					"cast_refused": 3,
+					"cast_started": 58,
+					"hex_clash": 30,
+					"projectile_expired": 7,
+					"projectile_spawned": 48
+				},
+				"included_at_least_once_by_type": {
+					"cast_blocked": 2,
+					"cast_refused": 3,
+					"cast_started": 58,
+					"hex_clash": 30,
+					"projectile_expired": 7,
+					"projectile_spawned": 40
+				},
+				"retired_after_redundancy_by_type": {
+					"cast_blocked": 2,
+					"cast_refused": 3,
+					"cast_started": 58,
+					"hex_clash": 30,
+					"projectile_expired": 7,
+					"projectile_spawned": 40
+				},
+				"semantics": "Each exact trim row reports its assigned pending event ID and whether it entered a successfully packet-packed host envelope before removal; first_envelope_tick is -1 when it did not. Envelope inclusion does not prove socket delivery, remote receipt, or presentation.",
+				"trimmed_after_envelope_inclusion_by_type": {},
+				"trimmed_before_first_envelope_by_type": {
+					"projectile_spawned": 8
+				},
+				"trimmed_events": [
+					{
+						"disposition": "existing",
+						"event_id": 68,
+						"first_envelope_tick": -1,
+						"included_before_trim": false,
+						"type": "projectile_spawned"
+					},
+					{
+						"disposition": "existing",
+						"event_id": 69,
+						"first_envelope_tick": -1,
+						"included_before_trim": false,
+						"type": "projectile_spawned"
+					},
+					{
+						"disposition": "existing",
+						"event_id": 70,
+						"first_envelope_tick": -1,
+						"included_before_trim": false,
+						"type": "projectile_spawned"
+					},
+					{
+						"disposition": "existing",
+						"event_id": 71,
+						"first_envelope_tick": -1,
+						"included_before_trim": false,
+						"type": "projectile_spawned"
+					},
+					{
+						"disposition": "existing",
+						"event_id": 84,
+						"first_envelope_tick": -1,
+						"included_before_trim": false,
+						"type": "projectile_spawned"
+					},
+					{
+						"disposition": "existing",
+						"event_id": 85,
+						"first_envelope_tick": -1,
+						"included_before_trim": false,
+						"type": "projectile_spawned"
+					},
+					{
+						"disposition": "existing",
+						"event_id": 86,
+						"first_envelope_tick": -1,
+						"included_before_trim": false,
+						"type": "projectile_spawned"
+					},
+					{
+						"disposition": "existing",
+						"event_id": 87,
+						"first_envelope_tick": -1,
+						"included_before_trim": false,
+						"type": "projectile_spawned"
+					}
+				],
+				"trimmed_existing_by_type": {
+					"projectile_spawned": 8
+				},
+				"trimmed_incoming_by_type": {},
+				"unencodable_by_type": {
+					"hex_pressure": 12,
+					"hex_product_flow": 58
+				}
+			},
+			"event_counts": {
+				"cast_blocked": 2,
+				"cast_refused": 3,
+				"cast_started": 58,
+				"hex_clash": 30,
+				"hex_pressure": 12,
+				"hex_product_flow": 58,
+				"projectile_expired": 7,
+				"projectile_spawned": 48
+			},
+			"final_hash": "0596893c9c17b9a9781d6dd565dd43de47a0b1ca4d50f0faf2a0eea8a566e479",
+			"final_occupancy_after_cleanup": {
+				"active_cells": 0,
+				"product_quantity": 0,
+				"source_quantity": 0
+			},
+			"host_step_event_retention_and_60hz_envelope_us": {
+				"max": 208413,
+				"p50": 24797,
+				"p95": 117709,
+				"p99": 123079,
+				"samples": 720
+			},
+			"input_semantics": "Pressed intents and held Rapid input-ticks are reported separately. Held cooldown, recovery, Flux, and capacity nonadmission may be silent and is exposed by the admitted count rather than fabricated as a refusal.",
+			"instrumentation_scope": "Event accounting duplicates encoder and bounded-queue classification only after timing samples. Its dictionaries and exact trim records remain allocated during the run, so static/process memory figures include this diagnostic overhead and are not directly comparable to receipts without event-accounting-v1.",
+			"instrumentation_version": "event-accounting-v2-owned-publication",
+			"inventory_totals": {
+				"active_cell_instance_ticks": 63659,
+				"alive_actor_instance_ticks": 5760,
+				"cast_instance_ticks": 3881,
+				"pending_cast_instance_ticks": 590,
+				"product_instance_ticks": 9995,
+				"product_quantity_instance_ticks": 9515800,
+				"projectile_instance_ticks": 2568,
+				"source_quantity_instance_ticks": 2259440,
+				"ticks_with_authority_work": 720
+			},
+			"measurement_scope": "Timing covers real SimWorld.step; host timing adds production event retention and every-other-tick owned envelope capture/packing. The owned core timer excludes diagnostic envelope/packet byte counting and acknowledgement. The older encompassing snapshot timer retains those operations; it is not a socket or render metric. Additive by-type and exact-ID event accounting runs after those timing samples. Cleanup is excluded from quantiles but included in terminal counters and hashes.",
+			"owned_capture_and_packetization_core_us": {
+				"max": 192243,
+				"p50": 86723,
+				"p95": 111239,
+				"p99": 117798,
+				"samples": 360
+			},
+			"peaks": {
+				"active_cells": 135,
+				"casts": 17,
+				"datagram_bytes": 1324,
+				"events_per_tick": 9,
+				"fragments_per_envelope": 7,
+				"pending_casts": 8,
+				"product_quantity": 25800,
+				"products": 26,
+				"projectiles": 15,
+				"retained_events": 12,
+				"snapshot_raw_bytes": 13212,
+				"source_quantity": 9840,
+				"static_memory_bytes": 51011402
+			},
+			"processed_clashes": 30,
+			"processed_products": 30,
+			"publication": {
+				"accepted_events": 148,
+				"capture_attempts": 624,
+				"cleanup_capture_attempts": 264,
+				"evicted_events": 8,
+				"fragmented_envelopes": 624,
+				"fragments": 2792,
+				"mtu_violations": 0,
+				"raw_bytes": 6057312,
+				"rejections": 0,
+				"unencodable_events": 70,
+				"wire_bytes": 3322328
+			},
+			"refusals_by_wire_and_reason": {
+				"140:hex_capacity": 1,
+				"145:hex_capacity": 1,
+				"163:hex_capacity": 1
+			},
+			"released_by_wire": {
+				"140": 2,
+				"145": 3,
+				"159": 4,
+				"163": 3,
+				"179": 4,
+				"180": 6,
+				"181": 3,
+				"182": 4,
+				"183": 4,
+				"184": 7,
+				"185": 4,
+				"186": 4
+			},
+			"repeat": 1,
+			"requested_held_ticks_by_wire": {
+				"180": 120,
+				"182": 120,
+				"184": 120,
+				"186": 120
+			},
+			"requested_pressed_by_wire": {
+				"140": 4,
+				"141": 2,
+				"145": 4,
+				"154": 2,
+				"159": 4,
+				"160": 2,
+				"163": 4,
+				"164": 2,
+				"179": 4,
+				"181": 4,
+				"183": 4,
+				"185": 4
+			},
+			"reverse_command_order": false,
+			"sample_end_hash": "99e52565897d1f76122910b62edd0401926e77fbec48ebf6576542748629bf8a",
+			"sample_ticks": 720,
+			"static_memory_bytes": {
+				"after_cleanup": 50299918,
+				"process_peak_after": 107969001,
+				"process_peak_before": 107969001,
+				"sample_end": 50757570,
+				"sampled_peak": 51011402,
+				"start": 50219770
+			},
+			"step_us": {
+				"max": 51862,
+				"p50": 5273,
+				"p95": 10767,
+				"p99": 15088,
+				"samples": 720
+			},
+			"trace_sha256": "b974e57de3bbf026ee4c49ca6b36492d9771efc8d3df86127695e0fe9ca7e0a2",
+			"workload_totals": {
+				"active_cell_instance_ticks": 63659,
+				"admitted": 58,
+				"contact_queries": 8632,
+				"processed_clashes": 30,
+				"processed_products": 30,
+				"refusals": 3,
+				"releases": 48,
+				"requested_held_ticks": 480,
+				"requested_pressed": 40,
+				"source_quantity_instance_ticks": 2259440
+			}
+		},
+		{
+			"admitted_by_wire": {
+				"140": 3,
+				"141": 2,
+				"145": 3,
+				"154": 2,
+				"159": 4,
+				"160": 2,
+				"163": 3,
+				"164": 2,
+				"179": 4,
+				"180": 6,
+				"181": 4,
+				"182": 4,
+				"183": 4,
+				"184": 7,
+				"185": 4,
+				"186": 4
+			},
+			"alive_work": {
+				"alive_actor_instance_ticks": 5760,
+				"alive_actor_instance_ticks_per_simulated_second": 960.0,
+				"alive_end": 8,
+				"deaths": 0,
+				"mean_alive_actors": 8.0,
+				"ticks_with_authority_work": 720,
+				"work_ticks_per_simulated_second": 120.0
+			},
+			"authority_metrics": {
+				"admitted": 58,
+				"deposited": 18,
+				"exposure_queries": 8632,
+				"matter_consumed": 32000,
+				"matter_expired": 2800,
+				"matter_paid": 34800,
+				"modifiers": 3,
+				"reactions": 30,
+				"refused": 3,
+				"requested": 61
+			},
+			"case": "dense-crucible",
+			"cleanup_ticks": 527,
+			"contact_queries": 8632,
+			"contact_semantics": "contact_queries is the authoritative hex exposure-query counter; processed_clashes counts emitted real hex_clash outcomes. It is not an invented narrowphase-call estimate.",
+			"deadline_misses_over_8333us": {
+				"host": 418,
+				"step": 119
+			},
+			"envelope_capture_and_wire_pack_us": {
+				"max": 194238,
+				"p50": 87487,
+				"p95": 111634,
+				"p99": 130731,
+				"samples": 360
+			},
+			"event_accounting": {
+				"admitted_by_type": {
+					"cast_blocked": 2,
+					"cast_refused": 3,
+					"cast_started": 58,
+					"hex_clash": 30,
+					"projectile_expired": 7,
+					"projectile_spawned": 48
+				},
+				"included_at_least_once_by_type": {
+					"cast_blocked": 2,
+					"cast_refused": 3,
+					"cast_started": 58,
+					"hex_clash": 30,
+					"projectile_expired": 7,
+					"projectile_spawned": 40
+				},
+				"retired_after_redundancy_by_type": {
+					"cast_blocked": 2,
+					"cast_refused": 3,
+					"cast_started": 58,
+					"hex_clash": 30,
+					"projectile_expired": 7,
+					"projectile_spawned": 40
+				},
+				"semantics": "Each exact trim row reports its assigned pending event ID and whether it entered a successfully packet-packed host envelope before removal; first_envelope_tick is -1 when it did not. Envelope inclusion does not prove socket delivery, remote receipt, or presentation.",
+				"trimmed_after_envelope_inclusion_by_type": {},
+				"trimmed_before_first_envelope_by_type": {
+					"projectile_spawned": 8
+				},
+				"trimmed_events": [
+					{
+						"disposition": "existing",
+						"event_id": 68,
+						"first_envelope_tick": -1,
+						"included_before_trim": false,
+						"type": "projectile_spawned"
+					},
+					{
+						"disposition": "existing",
+						"event_id": 69,
+						"first_envelope_tick": -1,
+						"included_before_trim": false,
+						"type": "projectile_spawned"
+					},
+					{
+						"disposition": "existing",
+						"event_id": 70,
+						"first_envelope_tick": -1,
+						"included_before_trim": false,
+						"type": "projectile_spawned"
+					},
+					{
+						"disposition": "existing",
+						"event_id": 71,
+						"first_envelope_tick": -1,
+						"included_before_trim": false,
+						"type": "projectile_spawned"
+					},
+					{
+						"disposition": "existing",
+						"event_id": 84,
+						"first_envelope_tick": -1,
+						"included_before_trim": false,
+						"type": "projectile_spawned"
+					},
+					{
+						"disposition": "existing",
+						"event_id": 85,
+						"first_envelope_tick": -1,
+						"included_before_trim": false,
+						"type": "projectile_spawned"
+					},
+					{
+						"disposition": "existing",
+						"event_id": 86,
+						"first_envelope_tick": -1,
+						"included_before_trim": false,
+						"type": "projectile_spawned"
+					},
+					{
+						"disposition": "existing",
+						"event_id": 87,
+						"first_envelope_tick": -1,
+						"included_before_trim": false,
+						"type": "projectile_spawned"
+					}
+				],
+				"trimmed_existing_by_type": {
+					"projectile_spawned": 8
+				},
+				"trimmed_incoming_by_type": {},
+				"unencodable_by_type": {
+					"hex_pressure": 12,
+					"hex_product_flow": 58
+				}
+			},
+			"event_counts": {
+				"cast_blocked": 2,
+				"cast_refused": 3,
+				"cast_started": 58,
+				"hex_clash": 30,
+				"hex_pressure": 12,
+				"hex_product_flow": 58,
+				"projectile_expired": 7,
+				"projectile_spawned": 48
+			},
+			"final_hash": "0596893c9c17b9a9781d6dd565dd43de47a0b1ca4d50f0faf2a0eea8a566e479",
+			"final_occupancy_after_cleanup": {
+				"active_cells": 0,
+				"product_quantity": 0,
+				"source_quantity": 0
+			},
+			"host_step_event_retention_and_60hz_envelope_us": {
+				"max": 199901,
+				"p50": 23996,
+				"p95": 116810,
+				"p99": 129422,
+				"samples": 720
+			},
+			"input_semantics": "Pressed intents and held Rapid input-ticks are reported separately. Held cooldown, recovery, Flux, and capacity nonadmission may be silent and is exposed by the admitted count rather than fabricated as a refusal.",
+			"instrumentation_scope": "Event accounting duplicates encoder and bounded-queue classification only after timing samples. Its dictionaries and exact trim records remain allocated during the run, so static/process memory figures include this diagnostic overhead and are not directly comparable to receipts without event-accounting-v1.",
+			"instrumentation_version": "event-accounting-v2-owned-publication",
+			"inventory_totals": {
+				"active_cell_instance_ticks": 63659,
+				"alive_actor_instance_ticks": 5760,
+				"cast_instance_ticks": 3881,
+				"pending_cast_instance_ticks": 590,
+				"product_instance_ticks": 9995,
+				"product_quantity_instance_ticks": 9515800,
+				"projectile_instance_ticks": 2568,
+				"source_quantity_instance_ticks": 2259440,
+				"ticks_with_authority_work": 720
+			},
+			"measurement_scope": "Timing covers real SimWorld.step; host timing adds production event retention and every-other-tick owned envelope capture/packing. The owned core timer excludes diagnostic envelope/packet byte counting and acknowledgement. The older encompassing snapshot timer retains those operations; it is not a socket or render metric. Additive by-type and exact-ID event accounting runs after those timing samples. Cleanup is excluded from quantiles but included in terminal counters and hashes.",
+			"owned_capture_and_packetization_core_us": {
+				"max": 194158,
+				"p50": 87364,
+				"p95": 111513,
+				"p99": 130609,
+				"samples": 360
+			},
+			"peaks": {
+				"active_cells": 135,
+				"casts": 17,
+				"datagram_bytes": 1324,
+				"events_per_tick": 9,
+				"fragments_per_envelope": 7,
+				"pending_casts": 8,
+				"product_quantity": 25800,
+				"products": 26,
+				"projectiles": 15,
+				"retained_events": 12,
+				"snapshot_raw_bytes": 13212,
+				"source_quantity": 9840,
+				"static_memory_bytes": 51050814
+			},
+			"processed_clashes": 30,
+			"processed_products": 30,
+			"publication": {
+				"accepted_events": 148,
+				"capture_attempts": 624,
+				"cleanup_capture_attempts": 264,
+				"evicted_events": 8,
+				"fragmented_envelopes": 624,
+				"fragments": 2792,
+				"mtu_violations": 0,
+				"raw_bytes": 6057312,
+				"rejections": 0,
+				"unencodable_events": 70,
+				"wire_bytes": 3322328
+			},
+			"refusals_by_wire_and_reason": {
+				"140:hex_capacity": 1,
+				"145:hex_capacity": 1,
+				"163:hex_capacity": 1
+			},
+			"released_by_wire": {
+				"140": 2,
+				"145": 3,
+				"159": 4,
+				"163": 3,
+				"179": 4,
+				"180": 6,
+				"181": 3,
+				"182": 4,
+				"183": 4,
+				"184": 7,
+				"185": 4,
+				"186": 4
+			},
+			"repeat": 2,
+			"requested_held_ticks_by_wire": {
+				"180": 120,
+				"182": 120,
+				"184": 120,
+				"186": 120
+			},
+			"requested_pressed_by_wire": {
+				"140": 4,
+				"141": 2,
+				"145": 4,
+				"154": 2,
+				"159": 4,
+				"160": 2,
+				"163": 4,
+				"164": 2,
+				"179": 4,
+				"181": 4,
+				"183": 4,
+				"185": 4
+			},
+			"reverse_command_order": true,
+			"sample_end_hash": "99e52565897d1f76122910b62edd0401926e77fbec48ebf6576542748629bf8a",
+			"sample_ticks": 720,
+			"static_memory_bytes": {
+				"after_cleanup": 50338202,
+				"process_peak_after": 107969001,
+				"process_peak_before": 107969001,
+				"sample_end": 50795854,
+				"sampled_peak": 51050814,
+				"start": 50287754
+			},
+			"step_us": {
+				"max": 49699,
+				"p50": 5201,
+				"p95": 10195,
+				"p99": 15310,
+				"samples": 720
+			},
+			"trace_sha256": "b974e57de3bbf026ee4c49ca6b36492d9771efc8d3df86127695e0fe9ca7e0a2",
+			"workload_totals": {
+				"active_cell_instance_ticks": 63659,
+				"admitted": 58,
+				"contact_queries": 8632,
+				"processed_clashes": 30,
+				"processed_products": 30,
+				"refusals": 3,
+				"releases": 48,
+				"requested_held_ticks": 480,
+				"requested_pressed": 40,
+				"source_quantity_instance_ticks": 2259440
+			}
+		}
+	],
+	"runtime_identity": {
+		"authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate.",
+		"build_id": "p56-308f3dc64c41",
+		"canonical_encoding": "utf8-lf-tagged-length-v1",
+		"engine_identity": "4.7.1.stable.official.a13da4feb",
+		"protocol_version": 56.0,
+		"record_count": 3089.0,
+		"runtime_source_sha256": "308f3dc64c416ea4b193b9a11cd18150767737c1abc103d2caaaaead987d73ac",
+		"schema_version": 1.0,
+		"scope_id": "production-runtime-source-v1",
+		"snapshot_schema": 22.0,
+		"status": "candidate_generated_not_promoted"
+	},
+	"sample_ticks": 720,
+	"schema_version": 1,
+	"scope": "Headless normal-campus SimWorld.step, authoritative event retention, and 60 Hz combined envelope capture plus production wire packing. No sockets, rendering, physical input, state injection, resource refill, cooldown bypass, or capacity override.",
+	"seed": 906190,
+	"source_sha256": {
+		"content/abilities/foundation_abilities_v1.json": "720c16ce73f11ae9e723f43e31f39d1d700bc7a583619cd418ec3408b16f52bc",
+		"content/champions/foundation_champions_v1.json": "23a1f624a9de6c2bf88dc76578a69b23613465707605528e2988e209abba458a",
+		"content/maps/sanctum_campus_g2_v1.json": "a1d17e155000ebbdf36cb033823a2b42b1c8e31f844444da347fbac400b3c817",
+		"src/net/authoritative_session.gd": "0fe70ab3d86fae388aed5dc598e2a869dc1c0b5bc806ee1a5056198ea8764aa3",
+		"src/net/hex_chemistry_snapshot.gd": "d4fc2ea041d3523bc2e606d8e7464fdb394d374374f733b037a2013f470f04f1",
+		"src/net/hex_world_snapshot.gd": "d5e2adb39a2877dc65045e6a67b782a29198a8212368e4b644f9b8940800f3e6",
+		"src/net/session_transport.gd": "5340e52afda4208e1465579c3c02e0dd1e13289923153ea92899f2ecf081b136",
+		"src/net/world_snapshot_envelope.gd": "0385254ae2ed351e02e4e9bfa756e10677b601f21bacb1c835d3fa3137bcb8f1",
+		"src/presentation/hex_court_presenter.gd": "11172285bffb66c37e81cb3a3019eba6ab01626a5384f82d0864019971c971d3",
+		"src/sim/combat/combat_definition_table.gd": "aa1332c283c28536079292e660fe5d2a998d127f390997651828a72662495d83",
+		"src/sim/combat/combat_system.gd": "bf2c2083ac528a2189f4b4d925de2b21645c54c54b788aeeafe53e1c5752ae26",
+		"src/sim/combat/combat_tuning.gd": "1abd32b257fe274712f9f89f50cb3e248dca7abf946abe87606c9029f76ffb92",
+		"src/sim/core/sim_world.gd": "502b5e0bbc84a4d13e2ba1fbc8f18e09acc9c6a07947073fffb97043c5445289",
+		"src/sim/hex/hex_chemistry_world.gd": "aa9efa1458f75513a1c5fe99e04351bfcc2231f73d9c671901bdf8b673723e69",
+		"src/sim/hex/hex_collision_world.gd": "d6e7eb26fde51a07a46f1374eb9a6d8f5c2274508c8ab2dc3f7acc3fbcb131aa",
+		"src/sim/hex/hex_contact_workset.gd": "6b545be93a34064bf00bf0c8330533d90cedb7b6bfa39ef26c05dddea801465b",
+		"src/sim/hex/hex_convex_geometry.gd": "214c9a70c8421761dcba5f2edd984e69142834eb20e9c8223acc830519fd9168",
+		"src/sim/hex/hex_footprint.gd": "07e2fefe0b41ddc6d49708fe30023b6091f20384e5815d6383f839328f88351d",
+		"src/sim/hex/hex_product_effects.gd": "598933dd652e6b3961d506fab2ebcf4426f63b028ece9618f33e40c103ffbb57",
+		"src/sim/hex/hex_projectile_combat.gd": "ba0f80546663dd9c2db99d2996e65fc2b6572fc0179da2405d0c82a6e67b001b",
+		"src/sim/hex/hex_world_definition.gd": "e15d75d48ddedc6bc891400f508ae43d892742c151e54bb5b93aef68dfa23f18",
+		"tests/performance/profile_unified_wellspring.gd": "137e08f381f71643254661f48ca375ebd924c563588bb60a5db1f4606331ed72"
+	},
+	"source_sha256_before": {
+		"content/abilities/foundation_abilities_v1.json": "720c16ce73f11ae9e723f43e31f39d1d700bc7a583619cd418ec3408b16f52bc",
+		"content/champions/foundation_champions_v1.json": "23a1f624a9de6c2bf88dc76578a69b23613465707605528e2988e209abba458a",
+		"content/maps/sanctum_campus_g2_v1.json": "a1d17e155000ebbdf36cb033823a2b42b1c8e31f844444da347fbac400b3c817",
+		"src/net/authoritative_session.gd": "0fe70ab3d86fae388aed5dc598e2a869dc1c0b5bc806ee1a5056198ea8764aa3",
+		"src/net/hex_chemistry_snapshot.gd": "d4fc2ea041d3523bc2e606d8e7464fdb394d374374f733b037a2013f470f04f1",
+		"src/net/hex_world_snapshot.gd": "d5e2adb39a2877dc65045e6a67b782a29198a8212368e4b644f9b8940800f3e6",
+		"src/net/session_transport.gd": "5340e52afda4208e1465579c3c02e0dd1e13289923153ea92899f2ecf081b136",
+		"src/net/world_snapshot_envelope.gd": "0385254ae2ed351e02e4e9bfa756e10677b601f21bacb1c835d3fa3137bcb8f1",
+		"src/presentation/hex_court_presenter.gd": "11172285bffb66c37e81cb3a3019eba6ab01626a5384f82d0864019971c971d3",
+		"src/sim/combat/combat_definition_table.gd": "aa1332c283c28536079292e660fe5d2a998d127f390997651828a72662495d83",
+		"src/sim/combat/combat_system.gd": "bf2c2083ac528a2189f4b4d925de2b21645c54c54b788aeeafe53e1c5752ae26",
+		"src/sim/combat/combat_tuning.gd": "1abd32b257fe274712f9f89f50cb3e248dca7abf946abe87606c9029f76ffb92",
+		"src/sim/core/sim_world.gd": "502b5e0bbc84a4d13e2ba1fbc8f18e09acc9c6a07947073fffb97043c5445289",
+		"src/sim/hex/hex_chemistry_world.gd": "aa9efa1458f75513a1c5fe99e04351bfcc2231f73d9c671901bdf8b673723e69",
+		"src/sim/hex/hex_collision_world.gd": "d6e7eb26fde51a07a46f1374eb9a6d8f5c2274508c8ab2dc3f7acc3fbcb131aa",
+		"src/sim/hex/hex_contact_workset.gd": "6b545be93a34064bf00bf0c8330533d90cedb7b6bfa39ef26c05dddea801465b",
+		"src/sim/hex/hex_convex_geometry.gd": "214c9a70c8421761dcba5f2edd984e69142834eb20e9c8223acc830519fd9168",
+		"src/sim/hex/hex_footprint.gd": "07e2fefe0b41ddc6d49708fe30023b6091f20384e5815d6383f839328f88351d",
+		"src/sim/hex/hex_product_effects.gd": "598933dd652e6b3961d506fab2ebcf4426f63b028ece9618f33e40c103ffbb57",
+		"src/sim/hex/hex_projectile_combat.gd": "ba0f80546663dd9c2db99d2996e65fc2b6572fc0179da2405d0c82a6e67b001b",
+		"src/sim/hex/hex_world_definition.gd": "e15d75d48ddedc6bc891400f508ae43d892742c151e54bb5b93aef68dfa23f18",
+		"tests/performance/profile_unified_wellspring.gd": "137e08f381f71643254661f48ca375ebd924c563588bb60a5db1f4606331ed72"
+	},
+	"sources_unchanged": true,
+	"tick_rate": 120,
+	"warmup_ticks": 120,
+	"workload_version": "unified-wellspring-profile-v1"
+}

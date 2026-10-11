@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "character_id": "djonah_thaan",
+  "display_name": "Djonah Thaan",
+  "body_type": "middle",
+  "ancestry": "vampire",
+  "roster_source": "content/champions/foundation_champions_v1.json",
+  "created_on": "2026-10-03",
+  "status": "SOURCE_CANDIDATE_REVIEWED_WITH_LIMITATIONS",
+  "provenance": {
+    "tool": "built-in image_gen",
+    "initial_calls": 1,
+    "corrective_calls": 1,
+    "correction_reason": "Gross facing defect: initial E/W columns were front three-quarter instead of true profiles.",
+    "final_generated_original": "C:/Users/sende/.codex/generated_images/01a100d5-be6d-7f83-b29d-2b0041b8e65f/exec-daad61cd-deea-49e5-b0be-5881f01de5a6.png",
+    "initial_generated_original": "C:/Users/sende/.codex/generated_images/01a100d5-be6d-7f83-b29d-2b0041b8e65f/exec-66397483-2f3c-4506-a46d-2548bc93f08f.png",
+    "initial_sha256": "8557DAFEC47D1912BC173986D8D5ECB05086AEE5E0039DC259D66D53E8EE133F",
+    "save_method": "PowerShell Copy-Item, no pixel modification",
+    "original_sha256": "6C7DA203C45AA731C79523E408BF367E139033E24BE65232E288DFD708610F02",
+    "copied_sha256": "6C7DA203C45AA731C79523E408BF367E139033E24BE65232E288DFD708610F02",
+    "byte_identical": true,
+    "file_bytes": 1177926,
+    "exact_prompts": "art_batches/pixel_actions_v1/prompts/djonah_thaan.md",
+    "references": [
+      {
+        "path": "assets/sprites/pixel_cast_v1/djonah_thaan.png",
+        "role": "Primary current runtime identity, costume, palette and proportions",
+        "sha256": "1F03C1B09BA0FE445C20D21584EC99B21B1B26B7EF6C389E23663AD91DA731BA"
+      },
+      {
+        "path": "assets/sprites/fullbody_cast_v1/djonah_thaan-detail.png",
+        "role": "Supporting costume detail and directional anatomy",
+        "sha256": "6B2456F87F4AFB9C0F337F7185D651F250B04E1BF0B9019F435F73AD41DE3CC6"
+      },
+      {
+        "path": "C:/Users/sende/Pictures/styleref1.png",
+        "role": "Retro pixel-art style only, no labels/races/props treated as canonical",
+        "sha256": "C0FB63C912718D64CA061CCD85817869FFC3348A3C81A910962DF57066279FD4"
+      }
+    ]
+  },
+  "image": {
+    "width": 1774,
+    "height": 887,
+    "format": "PNG RGBA",
+    "columns": 8,
+    "rows": 4,
+    "sprites": 32,
+    "heading_order": [
+      "S",
+      "SE",
+      "E",
+      "NE",
+      "N",
+      "NW",
+      "W",
+      "SW"
+    ],
+    "row_order": [
+      "jumpsquat_anticipation",
+      "rising_tucked_jump",
+      "descending_feet_ready",
+      "compressed_landing"
+    ],
+    "alpha": {
+      "zero_pixels": 1065529,
+      "partial_pixels": 507672,
+      "opaque_pixels": 337,
+      "actual_transparency": true,
+      "cleanup_performed": false
+    }
+  },
+  "source_size_review": {
+    "inspected_original": true,
+    "method": "Visual inspection of generated original and copied original with view_image at original detail; metadata and alpha counts read through System.Drawing without edits.",
+    "observations": [
+      "Exactly 8 columns and 4 rows of complete full-body vampire figures; no visible cropped ears, hair, fingertips, boot soles or coat tails.",
+      "Pale skin, red eyes, black swept-back hair, pointed ears, black/deep-red costume, high collar and gold belt/trim retained.",
+      "Hands are empty; no weapons, magic, environment, text, cell borders or ground shadows observed.",
+      "Correction makes E/W more side-on with one visible eye; front, back and back-quarter headings remain readable.",
+      "Rising row tucks the feet and extends arms outward; descending row lengthens downward with altered arm placement.",
+      "Head/skull size appears broadly stable across rows at source resolution, but exact native continuity is unmeasured."
+    ],
+    "limitations": [
+      "Profile shoulders retain some three-quarter width; exact strict-profile silhouette should be reviewed at native scale.",
+      "Descending legs remain asymmetric with one bent/tucked leg in multiple headings; both-feet-ready readability is not uniformly strong.",
+      "Landing-versus-anticipation compression is subtle in several front/rear headings; the deeper landing requirement is not unambiguously established across all eight headings.",
+      "The targeted correction slightly changed other columns despite preservation instructions; final sheet is a new whole-source candidate, not a pixel-identical partial patch.",
+      "Generated alpha is mostly partial for foreground pixels. Threshold cleanup and hidden-RGB treatment, if approved, are lead-owned assembly work and were not performed.",
+      "Uniform registration, exact head/body measurement, downsampling, small-scale silhouette readability and animation timing are unverified.",
+      "Four key poses only, not complete animation cycles or authored casting actions."
+    ]
+  },
+  "acceptance": {
+    "source_preservation": "PASS_BYTE_IDENTICAL",
+    "source_size_visual_review": "COMPLETED_WITH_LIMITATIONS",
+    "native_scale": "NOT_RUN",
+    "runtime": "NOT_RUN",
+    "human": "NOT_RUN",
+    "import_capture_export": "NOT_RUN",
+    "integration": "HOLD_FOR_LEAD_REVIEW_OF_PROFILE_AND_ACTION_SEPARATION"
+  },
+  "scope": {
+    "engine_runtime_shared_edits": false,
+    "deterministic_cleanup_registration_downsampling": false,
+    "commit_push": false,
+    "outputs": [
+      "art_batches/pixel_actions_v1/source/djonah_thaan/source.png",
+      "art_batches/pixel_actions_v1/source/djonah_thaan/receipt.json",
+      "art_batches/pixel_actions_v1/prompts/djonah_thaan.md"
+    ]
+  },
+  "completion_marker": "SOURCE_TICKET_COMPLETE_WITH_REVIEW_LIMITATIONS"
+}

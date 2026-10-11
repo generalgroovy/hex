@@ -1,0 +1,23 @@
+{
+  "status": "complete_test_only_integration_deferred",
+  "runtime_build_id": "p55-dd2ab169dcfa",
+  "production_changed_in_D10": false,
+  "root_source_only_check": {
+    "command": "pwsh -NoProfile -File scripts/current-state.ps1 -Check -Quiet -OutputPath docs/verification/hex-cell-json-20260923/current-state-final.json",
+    "session_id": 62008,
+    "exit_code": 0,
+    "report": "current-state-final.json",
+    "output": "current-state-final.out",
+    "scope": "Read-only source continuity; no engine, rendered, packaging, networking or human acceptance claim. Completed after reviewer documentation read."
+  },
+  "usage": {
+    "weekly_used_percent": 98,
+    "weekly_remaining_percent": 2,
+    "user_cutoff_remaining_percent": 1,
+    "reset_credit_used": false,
+    "decision": "Stop at the completed bounded checkpoint before crossing the cutoff; no new runtime slice within the reserve."
+  },
+  "workers": "Both D10 workers and prior retention auditor completed; no delegated work running.",
+  "engine": "No matching hex or Godot processes at final root check; all root engine sessions finished.",
+  "acceptance": "D10 v2 1233 assertions, 47 equivalence cases and 336 observations pass; integration deferred after dense regression. D9 remains the verified playable game."
+}

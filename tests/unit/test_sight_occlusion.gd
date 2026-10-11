@@ -2,6 +2,7 @@ extends FluxTestSuite
 
 
 func run() -> int:
+	_test_surface_shadows()
 	_test_right_facing_shadow()
 	_test_left_facing_shadow()
 	_test_convex_hex_shadow()
@@ -137,3 +138,30 @@ func _test_rear_awareness_and_opaque_lines() -> void:
 	check(not SightOcclusion.point_visible(Vector2.ZERO, Vector2(201, 0), Vector2.RIGHT, 360, 200, clear), "full-angle view still obeys finite range")
 	check(not SightOcclusion.point_visible(Vector2.ZERO, Vector2(NAN, 0), Vector2.RIGHT, 120, 200, clear), "nonfinite target fails closed")
 	check(SightOcclusion.point_visible(Vector2.ZERO, Vector2(120, 0), Vector2.ZERO, 15, 200, clear), "zero vector fallback is deterministic and shared with mask angle")
+
+
+func _test_surface_shadows() -> void:
+	for zoom: float in [0.5, 0.75, 1.0]:
+		var offset := Vector2(-310, 220)
+		for direction: Vector2i in EightDirectionResolver.FIXED_VECTORS:
+			var ray := Vector2(direction).normalized()
+			var origin := offset - ray * 180.0 * zoom
+			for sides: int in [4, 6]:
+				var polygon := SightOcclusion.rectangle_polygon(Rect2(offset - Vector2(24, 24) * zoom, Vector2(48, 48) * zoom))
+				if sides == 6:
+					polygon.clear()
+					for vertex: Vector2i in HexGrid.LOCAL_VERTICES:
+						polygon.append(offset + Vector2(vertex) / 1000.0 * zoom)
+				var regions := SightOcclusion.shadow_outside_surface(origin, polygon, 2000.0)
+				check(not regions.is_empty(), "wall and exact hex cast a surface-excluding shadow in all eight approaches")
+				var behind_hidden := false
+				for region: PackedVector2Array in regions:
+					check(not Geometry2D.is_point_in_polygon(offset, region), "own surface is not shaded")
+					check(not Geometry2D.is_point_in_polygon(origin + ray * 110.0 * zoom, region), "approach remains visible")
+					behind_hidden = behind_hidden or Geometry2D.is_point_in_polygon(offset + ray * 70.0 * zoom, region)
+				check(behind_hidden, "terrain behind the wall stays hidden")
+	var wall := SightOcclusion.rectangle_polygon(Rect2(100, -20, 40, 40))
+	check(SightOcclusion.shadow_outside_surface(Vector2.ZERO, wall, 0).is_empty(), "invalid reach has no surface shadow")
+	check(SightOcclusion.shadow_outside_surface(Vector2(120, 0), wall, 1000).is_empty(), "invalid inside observer produces no fabricated sight")
+	# Surface exemption must never weaken the independent strict live-actor test.
+	check(not SightOcclusion.line_clear(Vector2.ZERO, Vector2(120, 0), [Rect2(100, -20, 40, 40)]), "visible wall surface does not reveal an actor inside it")

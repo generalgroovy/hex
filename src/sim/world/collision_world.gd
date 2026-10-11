@@ -123,6 +123,13 @@ func move_box(position: Vector2i, delta: Vector2i, radius: int) -> MoveResult:
 	var wall_id: int = 0
 	var next_x: int = clampi(position.x + delta.x, radius, width - radius)
 	var next_y: int = clampi(position.y + delta.y, radius, height - radius)
+	if delta == Vector2i.ZERO:
+		# Stationary bodies still receive the original bounds correction. No
+		# obstacle branch can resolve a face without a signed movement axis.
+		# Preserve the Y-after-X boundary ID even when the normal remains zero.
+		if next_x != position.x: wall_id = -1
+		if next_y != position.y: wall_id = -2
+		return MoveResult.new(Vector2i(next_x, next_y), Vector2i.ZERO, wall_id)
 	var candidates := _candidate_obstacles(
 		Vector2i(mini(position.x, next_x) - radius, mini(position.y, next_y) - radius),
 		Vector2i(maxi(position.x, next_x) + radius, maxi(position.y, next_y) + radius),

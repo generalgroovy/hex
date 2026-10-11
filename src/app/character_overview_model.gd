@@ -4,7 +4,8 @@ extends RefCounted
 
 # Presentation-only projection. Never use this model to authorize selection or
 # apply statistics; ChampionCatalog remains the playable authority.
-const RACE_RULE_NOTE := "Race identifies ancestry. Displayed stats belong to each champion; separate race bonuses are not active."
+const Perks = preload("res://src/sim/entities/identity_perk_policy.gd")
+const RACE_RULE_NOTE := "Ancestry supplies its listed situational perk and flight or double jump. Each champion adds a personal perk; displayed stats are the base profile."
 const PLANNED_NOTE := "Planned identity. Combat stats, kit and animation acceptance are not yet available."
 
 
@@ -51,6 +52,8 @@ static func build(champions: ChampionCatalog, roster: ChampionRosterPlan) -> Dic
 			"affinity_status": "active" if playable else "planned",
 			"reserved_future_affinity": String(identity.get("reserved_future_affinity", "")),
 			"stats": {}, "stat_lines": [], "foundation_kit": {}, "body_profile": {},
+			"air_action": "", "flight_duration_ms": 0,
+			"identity_perks": {},
 			"wire_id": 0, "playstyle": "", "note": "" if playable else PLANNED_NOTE,
 		}
 		if playable:
@@ -74,6 +77,22 @@ static func build(champions: ChampionCatalog, roster: ChampionRosterPlan) -> Dic
 			# Only the validated body role is exposed, not stale shared movement prose.
 			entry["body_profile"] = (champions.body_type_profiles.profiles[String(entry["body_type"])] as Dictionary).duplicate(true)
 			entry["hurt_radius"] = champions.body_type_profiles.hurt_radius(String(entry["body_type"]))
+			# Resolve capabilities through the same catalog application as gameplay,
+			# using a detached actor rather than duplicating ancestry rules in the UI.
+			var capability_probe := PlayerState.new()
+			if not champions.apply_to_player(capability_probe, champion_id):
+				return _failure("Character overview cannot resolve playable capabilities: %s" % champion_id)
+			entry["air_action"] = "flight" if capability_probe.flight_capable else "double_jump"
+			entry["flight_duration_ms"] = capability_probe.float_max_duration_ms if capability_probe.flight_capable else 0
+			var perks: Dictionary = Perks.describe(int(source["wire_id"]))
+			for scope: String in ["race", "character"]:
+				var perk: Variant = perks.get(scope, {})
+				if not perk is Dictionary or perk.is_empty():
+					return _failure("Character overview lacks a playable %s perk: %s" % [scope, champion_id])
+				for field: String in ["id", "name", "summary", "window", "counter"]:
+					if String(perk.get(field, "")).strip_edges().is_empty():
+						return _failure("Character overview lacks %s perk guidance: %s/%s" % [scope, champion_id, field])
+			entry["identity_perks"] = perks.duplicate(true)
 			playable_count += 1
 		var row: Dictionary = races[race_id]
 		(row["champions"] as Array).append(entry)
@@ -100,6 +119,36 @@ static func build(champions: ChampionCatalog, roster: ChampionRosterPlan) -> Dic
 		"source_hashes": {"champions": champions.content_hash, "roster": roster.content_hash},
 	}
 	_freeze(result)
+	return result
+
+
+static func perk_summaries(entry: Dictionary) -> Array[String]:
+	var result: Array[String] = []
+	if not bool(entry.get("stats_available", false)):
+		return result
+	var perks: Dictionary = entry.get("identity_perks", {})
+	for scope: String in ["race", "character"]:
+		var perk: Dictionary = perks.get(scope, {})
+		if not perk.is_empty():
+			result.append("%s / %s: %s" % [scope.capitalize(), String(perk.get("name", "")), String(perk.get("summary", ""))])
+	return result
+
+
+static func perk_detail_paragraphs(entry: Dictionary) -> Array[String]:
+	var result: Array[String] = []
+	if not bool(entry.get("stats_available", false)):
+		return result
+	var perks: Dictionary = entry.get("identity_perks", {})
+	for scope: String in ["race", "character"]:
+		var perk: Dictionary = perks.get(scope, {})
+		if perk.is_empty():
+			continue
+		result.append("%s perk / %s: %s" % [scope.capitalize(), String(perk.get("name", "")), String(perk.get("summary", ""))])
+		result.append("When: %s Limitation: %s" % [String(perk.get("window", "")), String(perk.get("counter", ""))])
+	if not result.is_empty():
+		result.append("Matching race and character modifiers multiply. Their combined adjustment stays between %.0f%% and %.0f%% of the value without perks; ordinary recovery ramps still apply. Paid actions still cost resources; damage reductions do not grant immunity." % [float(Perks.MIN_RATIO) / 10.0, float(Perks.MAX_RATIO) / 10.0])
+		result.append("Health, Flux and Stamina recovery perks respect their normal waits and action restrictions. Faster recovery does not cancel those waits.")
+		result.append("Cast startup checks your state before Flux payment. That spell's cooldown checks it when the paid startup releases. Moving or spending between those moments can change which perk applies. Each spell keeps its own cooldown across slot changes; this does not lock other ready spells.")
 	return result
 
 

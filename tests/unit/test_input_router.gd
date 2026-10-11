@@ -38,7 +38,7 @@ func run() -> int:
 		equal(_keycodes(InputRouter.SPELL_ACTIONS[button_index]), [KEY_1 + button_index], "spell button %d defaults to its number key" % (button_index + 1))
 	equal(_keycodes(InputRouter.SPELL_CTRL_LAYER_ACTION), [KEY_CTRL], "Ctrl selects the middle spell layer")
 	equal(_keycodes(InputRouter.SPELL_ALT_LAYER_ACTION), [KEY_ALT], "Alt selects the final spell layer")
-	equal(_keycodes(&"adjust_camera_zoom"), [KEY_F11], "F11 cycles the persisted camera zoom")
+	equal(_keycodes(&"adjust_camera_zoom"), [KEY_F11], "F11 retains the compatibility camera notice binding")
 	equal(InputRouter.selected_spell_slot_index(0, false, false), 0, "plain button 1 selects position 1")
 	equal(InputRouter.selected_spell_slot_index(3, true, false), 7, "Ctrl+4 selects position 8")
 	equal(InputRouter.selected_spell_slot_index(3, false, true), 11, "Alt+4 selects position 12")
@@ -52,6 +52,7 @@ func run() -> int:
 	_test_eight_direction_slide_chords()
 	_test_wheel_gesture_safety()
 	_test_modal_paid_action_quarantine()
+	_test_bootstrap_movement_cancel_guard()
 	_test_melee_modal_quarantine_without_wire_bits()
 	_test_s4_mouse_reconfiguration_clears_old_spell_aliases()
 	check(_has_joy_button(&"emote", JOY_BUTTON_START), "social speech moves off the four spell directions")
@@ -218,7 +219,7 @@ func _test_qv_physical_press_paths() -> void:
 			check(not event.is_action_pressed(&"technique" if action == &"evade" else &"evade"), "one physical key cannot match both semantic actions")
 			_deliver_movement_event(router, event)
 			var pressed := router.sample(0, Vector2.ZERO, Vector2.RIGHT)
-			equal(pressed.pressed_actions, expected, "physical key reaches exactly one paid command bit")
+			equal(pressed.pressed_actions, expected | SimCommand.PRESSED_CANCEL_MOVEMENT, "physical key reaches exactly one paid command bit plus the pending interruption cancellation")
 			var held := router.sample(1, Vector2.ZERO, Vector2.RIGHT)
 			equal(held.pressed_actions, 0, "held key does not repeat the semantic press during catch-up")
 			_deliver_movement_event(router, _physical_key_event(keycode, false))
@@ -419,7 +420,8 @@ func _test_wheel_gesture_safety() -> void:
 	_deliver_movement_event(router, _wheel_event(MOUSE_BUTTON_WHEEL_UP, true))
 	router.discard_transient_movement_input()
 	command = router.sample(9, Vector2.ZERO, Vector2.RIGHT)
-	check(not command.has_pressed(SimCommand.PRESSED_JUMP), "opening a modal discards an unconsumed wheel pulse")
+	equal(command.pressed_actions, SimCommand.PRESSED_CANCEL_MOVEMENT, "opening a modal replaces an unconsumed wheel pulse with exactly movement cancellation")
+	equal(command.held_actions, 0, "cancelled wheel pulse leaves no paid held intent")
 	_deliver_movement_event(router, _wheel_event(MOUSE_BUTTON_WHEEL_UP, false))
 	# The production consumer uses elapsed time, not a render-frame identity.
 	# Test it with explicit time instead of sleeping or faking an engine frame.
@@ -452,18 +454,25 @@ func _test_modal_paid_action_quarantine() -> void:
 		router.discard_transient_movement_input()
 		for tick: int in range(1, 4):
 			var blocked := router.sample(tick, Vector2.ZERO, Vector2.RIGHT)
-			check((blocked.held_actions & int(case.held)) == 0 and (blocked.pressed_actions & int(case.pressed)) == 0, "%s held during a modal cannot buy an action when gameplay resumes" % case.action)
+			equal(blocked.held_actions, 0, "%s held during a modal cannot retain any paid hold" % case.action)
+			equal(blocked.pressed_actions, SimCommand.PRESSED_CANCEL_MOVEMENT if tick == 1 else 0, "%s quarantine emits cancellation once and no paid action during catch-up" % case.action)
 		Input.action_release(case.action)
-		router.sample(4, Vector2.ZERO, Vector2.RIGHT)
+		var released := router.sample(4, Vector2.ZERO, Vector2.RIGHT)
+		equal(released.held_actions, 0, "%s interrupted release leaves no paid hold" % case.action)
+		equal(released.pressed_actions, 0, "%s interrupted release cannot create a new action or cancellation" % case.action)
 		Input.action_press(case.action)
 		var fresh := router.sample(5, Vector2.ZERO, Vector2.RIGHT)
-		check((fresh.held_actions & int(case.held)) == int(case.held) and (fresh.pressed_actions & int(case.pressed)) == int(case.pressed), "%s works after release and a fresh gameplay press" % case.action)
+		equal(fresh.held_actions, int(case.held), "%s fresh gameplay press restores exactly its paid hold" % case.action)
+		equal(fresh.pressed_actions, int(case.pressed), "%s fresh gameplay press restores exactly its paid edge without stale cancellation" % case.action)
 		Input.action_release(case.action)
 		router.sample(6, Vector2.ZERO, Vector2.RIGHT)
 	var direction_router := InputRouter.new()
 	Input.action_press(&"move_right")
 	direction_router.discard_transient_movement_input()
-	equal(direction_router.sample(7, Vector2.ZERO, Vector2.RIGHT).move_x, 1000, "ordinary directional movement may resume after a modal")
+	var resumed_direction := direction_router.sample(7, Vector2.ZERO, Vector2.RIGHT)
+	equal(resumed_direction.move_x, 1000, "ordinary directional movement may resume after a modal")
+	equal(resumed_direction.pressed_actions, SimCommand.PRESSED_CANCEL_MOVEMENT, "resumed direction carries exactly the pending movement cancellation")
+	equal(resumed_direction.held_actions, 0, "resumed direction cannot revive a paid hold")
 	Input.action_release(&"move_right")
 	# Quarantine follows the physical numbered action across Ctrl/Alt changes;
 	# it cannot be bypassed by selecting a different Rapid slot while held.
@@ -477,13 +486,16 @@ func _test_modal_paid_action_quarantine() -> void:
 			Input.action_press(layer)
 			var blocked := layer_router.sample(0, Vector2.ZERO, Vector2.RIGHT)
 			equal(blocked.held_actions, 0, "modifier changes cannot revive a quarantined Rapid hold")
-			equal(blocked.pressed_actions, 0, "modifier changes cannot revive a quarantined spell edge")
+			equal(blocked.pressed_actions, SimCommand.PRESSED_CANCEL_MOVEMENT, "modifier changes retain exactly cancellation and cannot revive a quarantined spell edge")
 			Input.action_release(action)
-			layer_router.sample(1, Vector2.ZERO, Vector2.RIGHT)
+			var released := layer_router.sample(1, Vector2.ZERO, Vector2.RIGHT)
+			equal(released.pressed_actions, 0, "layered release cannot repeat interruption cancellation")
+			equal(released.held_actions, 0, "layered release leaves no paid hold")
 			Input.action_press(action)
 			var fresh := layer_router.sample(2, Vector2.ZERO, Vector2.RIGHT)
 			var slot := InputRouter.selected_spell_slot_index(index, layer == InputRouter.SPELL_CTRL_LAYER_ACTION, layer == InputRouter.SPELL_ALT_LAYER_ACTION)
-			check(fresh.has_pressed(SimCommand.SPELL_PRESSED_BITS[slot]) and fresh.has_held(SimCommand.SPELL_HELD_BITS[slot]), "fresh layered press restores the correct slot after quarantine")
+			equal(fresh.pressed_actions, SimCommand.SPELL_PRESSED_BITS[slot], "fresh layered press restores exactly the selected slot without stale cancellation")
+			equal(fresh.held_actions, SimCommand.SPELL_HELD_BITS[slot], "fresh layered press restores exactly the selected slot hold")
 			Input.action_release(action)
 			Input.action_release(layer)
 	var wheel_router := InputRouter.new()
@@ -492,8 +504,63 @@ func _test_modal_paid_action_quarantine() -> void:
 	_deliver_movement_event(wheel_router, _physical_key_event(KEY_SPACE, false))
 	_deliver_movement_event(wheel_router, _wheel_event(MOUSE_BUTTON_WHEEL_UP, true))
 	var wheel := wheel_router.sample(8, Vector2.ZERO, Vector2.RIGHT)
-	check(wheel.has_pressed(SimCommand.PRESSED_JUMP) and not wheel.has_held(SimCommand.HELD_JUMP), "released quarantine permits a fresh short wheel jump without fabricating a hold")
+	equal(wheel.pressed_actions, SimCommand.PRESSED_JUMP | SimCommand.PRESSED_CANCEL_MOVEMENT, "direct router sampling retains the fresh wheel jump and undelivered cancellation exactly")
+	equal(wheel.held_actions, 0, "released quarantine permits a fresh short wheel jump without fabricating a hold")
 	_deliver_movement_event(wheel_router, _wheel_event(MOUSE_BUTTON_WHEEL_UP, false))
+
+
+func _test_bootstrap_movement_cancel_guard() -> void:
+	# A raw router may carry an undelivered cancellation beside a fresh press.
+	# Bootstrap must deliver that cancellation during the modal/focus guard so
+	# it cannot cancel the first legitimate action after gameplay resumes.
+	var cases: Array[Dictionary] = [
+		{"key": KEY_SPACE, "held": SimCommand.HELD_JUMP, "pressed": SimCommand.PRESSED_JUMP, "name": "jump"},
+		{"key": KEY_C, "held": SimCommand.HELD_SLIDE, "pressed": SimCommand.PRESSED_SLIDE, "name": "slide"},
+	]
+	for focus_interruption: bool in [false, true]:
+		for release_during_guard: bool in [false, true]:
+			for case: Dictionary in cases:
+				for action: StringName in InputRouter.PAID_ACTIONS + [&"move_left", &"move_right", &"move_up", &"move_down"]:
+					Input.action_release(action)
+				var node = BootstrapScript.new()
+				node.input_router = InputRouter.new(7)
+				var router: InputRouter = node.input_router
+				var label := "%s %s release_%s_guard" % ["focus" if focus_interruption else "modal", case.name, "during" if release_during_guard else "after"]
+				_deliver_movement_event(router, _physical_key_event(int(case.key), true))
+				var initial: SimCommand = node._sample_gameplay_command(0, Vector2.ZERO, Vector2.RIGHT, false)
+				equal(initial.pressed_actions, int(case.pressed), "%s starts with exactly the intended paid edge" % label)
+				equal(initial.held_actions, int(case.held), "%s starts with exactly the intended paid hold" % label)
+				Input.action_press(&"move_right")
+				node.application_input_active = not focus_interruption
+				for tick: int in range(1, 3):
+					if tick == 2 and release_during_guard:
+						_deliver_movement_event(router, _physical_key_event(int(case.key), false))
+					var guarded: SimCommand = node._sample_gameplay_command(tick, Vector2.ZERO, Vector2.RIGHT, not focus_interruption)
+					equal(guarded.pressed_actions, SimCommand.PRESSED_CANCEL_MOVEMENT, "%s blocked sample delivers exactly cancellation" % label)
+					equal(guarded.held_actions, 0, "%s blocked sample clears interrupted held state" % label)
+					equal(Vector2i(guarded.move_x, guarded.move_y), Vector2i.ZERO, "%s blocked sample suppresses directional movement" % label)
+					check(not router.movement_cancel_pending, "%s delivered guard cancellation cannot leak into fresh gameplay" % label)
+				node.application_input_active = true
+				if not release_during_guard:
+					var still_held: SimCommand = node._sample_gameplay_command(3, Vector2.ZERO, Vector2.RIGHT, false)
+					equal(still_held.pressed_actions, 0, "%s interrupted hold stays quarantined after the guard" % label)
+					equal(still_held.held_actions, 0, "%s interrupted hold cannot resume anticipation or flight" % label)
+					_deliver_movement_event(router, _physical_key_event(int(case.key), false))
+					var released: SimCommand = node._sample_gameplay_command(4, Vector2.ZERO, Vector2.RIGHT, false)
+					equal(released.pressed_actions, 0, "%s interrupted release cannot become a paid action" % label)
+					equal(released.held_actions, 0, "%s interrupted release leaves no held state" % label)
+				_deliver_movement_event(router, _physical_key_event(int(case.key), true))
+				var fresh: SimCommand = node._sample_gameplay_command(5, Vector2.ZERO, Vector2.RIGHT, false)
+				equal(fresh.pressed_actions, int(case.pressed), "%s first fresh action has exactly its paid edge and no cancellation" % label)
+				equal(fresh.held_actions, int(case.held), "%s first fresh action restores exactly its hold" % label)
+				equal(Vector2i(fresh.move_x, fresh.move_y), Vector2i(1000, 0), "%s fresh action preserves resumed movement" % label)
+				var catch_up: SimCommand = node._sample_gameplay_command(6, Vector2.ZERO, Vector2.RIGHT, false)
+				equal(catch_up.pressed_actions, 0, "%s catch-up cannot replay the fresh edge or cancellation" % label)
+				equal(catch_up.held_actions, int(case.held), "%s catch-up retains the legitimate fresh hold" % label)
+				_deliver_movement_event(router, _physical_key_event(int(case.key), false))
+				Input.action_release(&"move_right")
+				router.sample(7, Vector2.ZERO, Vector2.RIGHT)
+				node.free()
 
 
 func _test_melee_modal_quarantine_without_wire_bits() -> void:
@@ -507,9 +574,11 @@ func _test_melee_modal_quarantine_without_wire_bits() -> void:
 		check(not router._paid_action_down(action), "%s cannot re-enter gameplay while its modal hold continues" % action)
 		var no_wire_command := router.sample(0, Vector2.ZERO, Vector2.RIGHT)
 		equal(no_wire_command.held_actions, 0, "%s has no premature SimCommand held bit in S4" % action)
-		equal(no_wire_command.pressed_actions, 0, "%s has no premature SimCommand pressed bit in S4" % action)
+		equal(no_wire_command.pressed_actions, SimCommand.PRESSED_CANCEL_MOVEMENT, "%s sends only interruption cancellation and no premature SimCommand melee bit in S4" % action)
 		Input.action_release(action)
-		router.sample(1, Vector2.ZERO, Vector2.RIGHT)
+		var released := router.sample(1, Vector2.ZERO, Vector2.RIGHT)
+		equal(released.pressed_actions, 0, "%s release cannot repeat interruption cancellation" % action)
+		equal(released.held_actions, 0, "%s release leaves no paid hold" % action)
 		check(not router.quarantined_actions.has(action), "%s release clears its modal quarantine" % action)
 		Input.action_press(action)
 		check(router._paid_action_down(action), "%s fresh press is available for the later S5 command authority" % action)
@@ -660,9 +729,10 @@ func _test_capture_pointer_parser() -> void:
 	check(BootstrapScript.parse_capture_spell_sequence("--capture-spell-sequence=1,13").is_empty(), "density capture rejects a slot outside the twelve-position weave")
 	check(BootstrapScript.parse_capture_spell_sequence("--capture-spell-sequence=1,spell").is_empty(), "density capture rejects malformed positions")
 	check(BootstrapScript.parse_capture_spell_sequence("--other=1,2").is_empty(), "unrelated arguments cannot schedule diagnostic casts")
-	var display_order_bolts := PackedInt32Array([140, 159, 145, 163, 170, 101, 173, 142])
+	var display_order_bolts := PackedInt32Array([140, 145, 163, 159, 173, 142])
 	var retired_bursts := PackedInt32Array([147, 146, 148, 149, 150, 151, 152, 153])
-	equal(BootstrapScript.parse_capture_spell_wires("--capture-spell-wires=140,159,145,163,170,101,173,142"), display_order_bolts, "capture-only weave accepts the eight retained Bolts in display order")
+	equal(BootstrapScript.parse_capture_spell_wires("--capture-spell-wires=140,145,163,159,173,142"), display_order_bolts, "capture-only weave accepts the six live Bolts in canonical display order")
+	check(BootstrapScript.parse_capture_spell_wires("--capture-spell-wires=140,159,145,163,170,101,173,142").is_empty(), "capture-only weave rejects the old eight-Bolt set containing retired Ice and Charge")
 	check(BootstrapScript.parse_capture_spell_wires("--capture-spell-wires=140,140").is_empty(), "capture-only weave rejects duplicate wires")
 	check(BootstrapScript.parse_capture_spell_wires("--capture-spell-wires=140,110").is_empty(), "capture-only weave rejects a known non-playable wire")
 	check(BootstrapScript.parse_capture_spell_wires("--capture-spell-wires=140,spell").is_empty(), "capture-only weave rejects malformed wire values")
@@ -670,8 +740,13 @@ func _test_capture_pointer_parser() -> void:
 	check(BootstrapScript.parse_capture_spell_wires("--other=140").is_empty(), "unrelated arguments cannot replace the capture weave")
 	var capture_state := PlayerState.new(71)
 	var before_retired_apply := capture_state.canonical_values()
+	check(not BootstrapScript.apply_capture_spell_wires(capture_state, PackedInt32Array([140, 140])), "direct capture caller rejects duplicate live wires before placement")
+	equal(capture_state.canonical_values(), before_retired_apply, "duplicate refusal preserves the complete player state")
 	check(not BootstrapScript.apply_capture_spell_wires(capture_state, retired_bursts), "retired Burst wires cannot enter a capture-only player weave")
 	equal(capture_state.canonical_values(), before_retired_apply, "rejected retired Burst capture leaves the player unchanged")
+	for retired_wire: int in [101, 167, 170, 171, 187, 188, 189, 190]:
+		check(not BootstrapScript.apply_capture_spell_wires(capture_state, PackedInt32Array([140, retired_wire])), "retired Ice/Charge wire%d rejects the entire mixed capture weave" % retired_wire)
+		equal(capture_state.canonical_values(), before_retired_apply, "rejected retired element capture leaves every player value unchanged")
 	check(BootstrapScript.apply_capture_spell_wires(capture_state, display_order_bolts), "capture-only weave applies retained Bolts through ordinary proven-spell placement")
 	for bolt_index: int in range(display_order_bolts.size()):
 		equal(capture_state.spell_wire_id(bolt_index + 1), display_order_bolts[bolt_index], "capture-only weave keeps requested Bolt display order at slot %d" % (bolt_index + 1))

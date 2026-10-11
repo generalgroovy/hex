@@ -1,0 +1,313 @@
+{
+  "status": "passed",
+  "attempt": "v2",
+  "receipt_sha256": "1ec49e82957da5555cfc4b5774f037b11b43fc1fd0beb8b5b9106b454200c870",
+  "scope": "Independent artifact, RGBA, order and arithmetic audit. Not a new engine run or capacity acceptance.",
+  "pixel_cases": 55,
+  "timed_rows": 320,
+  "images": [
+    {
+      "case": "legal-camera-center",
+      "png_sha256": "6ce48cb0483de5a283cd852624cfca2779fdb47637dd23aad18d2dc0f2306a72",
+      "rgba_sha256": "7f72b13f0feec38c8041c53e3b7264263a5fb5564a9517a229144e912ac097ab"
+    },
+    {
+      "case": "legal-camera-top-left",
+      "png_sha256": "09b54cc9b03fe504e8a4f0255b6ca71f5f3c498802d03ff7bf1cefbc3841c259",
+      "rgba_sha256": "8d34143ba4369d6fbe5d21a055d970858fa37787887f07e9cf01e1c401c451e9"
+    },
+    {
+      "case": "legal-camera-bottom-right",
+      "png_sha256": "805bc0de5141029b855ee261d3f1a52c32c836885ee0cba049bb5908e1d29e97",
+      "rgba_sha256": "e1da4a3dec690e18b3a6e9f8140d400c195777d87b0151e2dde938368915fa13"
+    },
+    {
+      "case": "legal-reduced-center-75",
+      "png_sha256": "f5271416ad9b5dde9551e49ba4deb540dd684f3c771c1be83a547000eb105c5c",
+      "rgba_sha256": "34f9af03d7f9cfc3a0ac6e766efe9b0bebb4abf1bd4a1017cad6ede1b15c9612"
+    },
+    {
+      "case": "synthetic-material-extremes-normal-75",
+      "png_sha256": "416c503119c15c9285c4f48984a1b84394552433bae933afce2ee36826a0cb16",
+      "rgba_sha256": "57364386f96862b766c0ee1839ceea7f6291aaae13b58ea3dd44051c8d0c932e"
+    },
+    {
+      "case": "synthetic-material-extremes-reduced-75",
+      "png_sha256": "0d1f5abcd6db10c76450ec9777f999412da2ffb99f2e649699ebce456cdb8275",
+      "rgba_sha256": "f084e5446667b195dabdd9020cec4d92e9b5198c7c9f2faf702ec6003e848a02"
+    },
+    {
+      "case": "synthetic-practice-district-base",
+      "png_sha256": "11042d368568df4b72395f7ce487a928d75aae12acdfa796d321d7e7e8553849",
+      "rgba_sha256": "cea1e18ac5faba147744b9269ae7be5ca66375a327a4952a47a40f32221a4489"
+    },
+    {
+      "case": "synthetic-boundary-top-left-equal",
+      "png_sha256": "a0ea73972943924ba54c32e7278a7a4b3707e0b308188f1320472ba344bf9f91",
+      "rgba_sha256": "88c89f440f17322f86265a8147dc4b0e812eeaf3ee03d043d8a6c78a889eb76e"
+    },
+    {
+      "case": "synthetic-boundary-top-left-outside",
+      "png_sha256": "a0ea73972943924ba54c32e7278a7a4b3707e0b308188f1320472ba344bf9f91",
+      "rgba_sha256": "88c89f440f17322f86265a8147dc4b0e812eeaf3ee03d043d8a6c78a889eb76e"
+    }
+  ],
+  "timing": [
+    {
+      "case": "sustained-distributed",
+      "mode": "normal",
+      "summary_us": {
+        "candidate": {
+          "draw": {
+            "max": 32263,
+            "p50": 22348,
+            "p95": 27071,
+            "p99": 32263,
+            "samples": 40
+          },
+          "ground": {
+            "max": 16169,
+            "p50": 10712,
+            "p95": 12758,
+            "p99": 16169,
+            "samples": 40
+          },
+          "present": {
+            "max": 80639,
+            "p50": 59164,
+            "p95": 63280,
+            "p99": 80639,
+            "samples": 40
+          }
+        },
+        "production_current": {
+          "draw": {
+            "max": 41489,
+            "p50": 27187,
+            "p95": 34240,
+            "p99": 41489,
+            "samples": 40
+          },
+          "ground": {
+            "max": 23588,
+            "p50": 15534,
+            "p95": 20846,
+            "p99": 23588,
+            "samples": 40
+          },
+          "present": {
+            "max": 112799,
+            "p50": 60975,
+            "p95": 94165,
+            "p99": 112799,
+            "samples": 40
+          }
+        }
+      },
+      "above_16667us": {
+        "production_current": {
+          "ground": 4,
+          "draw": 40,
+          "present": 40
+        },
+        "candidate": {
+          "ground": 0,
+          "draw": 40,
+          "present": 40
+        }
+      }
+    },
+    {
+      "case": "sustained-distributed",
+      "mode": "reduced",
+      "summary_us": {
+        "candidate": {
+          "draw": {
+            "max": 31200,
+            "p50": 21892,
+            "p95": 24835,
+            "p99": 31200,
+            "samples": 40
+          },
+          "ground": {
+            "max": 14723,
+            "p50": 10480,
+            "p95": 11930,
+            "p99": 14723,
+            "samples": 40
+          },
+          "present": {
+            "max": 77684,
+            "p50": 58243,
+            "p95": 69756,
+            "p99": 77684,
+            "samples": 40
+          }
+        },
+        "production_current": {
+          "draw": {
+            "max": 34661,
+            "p50": 27080,
+            "p95": 31999,
+            "p99": 34661,
+            "samples": 40
+          },
+          "ground": {
+            "max": 21915,
+            "p50": 15628,
+            "p95": 18560,
+            "p99": 21915,
+            "samples": 40
+          },
+          "present": {
+            "max": 90382,
+            "p50": 61924,
+            "p95": 77173,
+            "p99": 90382,
+            "samples": 40
+          }
+        }
+      },
+      "above_16667us": {
+        "production_current": {
+          "ground": 5,
+          "draw": 40,
+          "present": 40
+        },
+        "candidate": {
+          "ground": 0,
+          "draw": 40,
+          "present": 40
+        }
+      }
+    },
+    {
+      "case": "dense-crucible",
+      "mode": "reduced",
+      "summary_us": {
+        "candidate": {
+          "draw": {
+            "max": 37982,
+            "p50": 33419,
+            "p95": 37083,
+            "p99": 37982,
+            "samples": 40
+          },
+          "ground": {
+            "max": 25222,
+            "p50": 19670,
+            "p95": 22694,
+            "p99": 25222,
+            "samples": 40
+          },
+          "present": {
+            "max": 95693,
+            "p50": 78096,
+            "p95": 80639,
+            "p99": 95693,
+            "samples": 40
+          }
+        },
+        "production_current": {
+          "draw": {
+            "max": 38243,
+            "p50": 32643,
+            "p95": 35539,
+            "p99": 38243,
+            "samples": 40
+          },
+          "ground": {
+            "max": 21944,
+            "p50": 19301,
+            "p95": 21281,
+            "p99": 21944,
+            "samples": 40
+          },
+          "present": {
+            "max": 89778,
+            "p50": 77086,
+            "p95": 80943,
+            "p99": 89778,
+            "samples": 40
+          }
+        }
+      },
+      "above_16667us": {
+        "production_current": {
+          "ground": 40,
+          "draw": 40,
+          "present": 40
+        },
+        "candidate": {
+          "ground": 40,
+          "draw": 40,
+          "present": 40
+        }
+      }
+    },
+    {
+      "case": "dense-crucible",
+      "mode": "normal",
+      "summary_us": {
+        "candidate": {
+          "draw": {
+            "max": 52907,
+            "p50": 34333,
+            "p95": 46701,
+            "p99": 52907,
+            "samples": 40
+          },
+          "ground": {
+            "max": 28472,
+            "p50": 20492,
+            "p95": 27109,
+            "p99": 28472,
+            "samples": 40
+          },
+          "present": {
+            "max": 111617,
+            "p50": 77807,
+            "p95": 105192,
+            "p99": 111617,
+            "samples": 40
+          }
+        },
+        "production_current": {
+          "draw": {
+            "max": 52315,
+            "p50": 33393,
+            "p95": 37250,
+            "p99": 52315,
+            "samples": 40
+          },
+          "ground": {
+            "max": 30012,
+            "p50": 19448,
+            "p95": 22912,
+            "p99": 30012,
+            "samples": 40
+          },
+          "present": {
+            "max": 118637,
+            "p50": 77494,
+            "p95": 94191,
+            "p99": 118637,
+            "samples": 40
+          }
+        }
+      },
+      "above_16667us": {
+        "production_current": {
+          "ground": 40,
+          "draw": 40,
+          "present": 40
+        },
+        "candidate": {
+          "ground": 40,
+          "draw": 40,
+          "present": 40
+        }
+      }
+    }
+  ]
+}

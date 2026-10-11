@@ -1,0 +1,115 @@
+{
+  "utc": "2026-09-23T20:47:15.258017+00:00",
+  "status": "passed",
+  "files": [
+    {
+      "source": ".godot/hex-cell-json-candidate-v2.json",
+      "preserved": "runs/v2/hex-cell-json-candidate-v2.json",
+      "sha256": "ac87f05a46f3cd77e74daf347f256f6c4847fb0057e33de96993231891518dc4"
+    },
+    {
+      "source": ".godot/hex-probe-cell-json-candidate-v2/probe.log",
+      "preserved": "runs/v2/probe.log",
+      "sha256": "ed598aa11514cff1147d47585720ce07ad762ffa98a53cf1a2c7d19a496e66cb"
+    },
+    {
+      "source": ".godot/hex-probe-cell-json-candidate-v2/probe.log.err",
+      "preserved": "runs/v2/probe.log.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "docs/verification/hex-cell-json-20260923/probe-v2.out",
+      "preserved": "runs/v2/probe-v2.out",
+      "sha256": "ed598aa11514cff1147d47585720ce07ad762ffa98a53cf1a2c7d19a496e66cb"
+    },
+    {
+      "source": ".godot/run_cell_json.ps1",
+      "preserved": "runs/v2/run_cell_json.ps1",
+      "sha256": "5344833642143e2e426acae92a65e893ea3a2c51a8931ffeb3d98209d08cb767"
+    },
+    {
+      "source": ".godot/curate_cell_json.py",
+      "preserved": "runs/v2/curate_cell_json.py",
+      "sha256": "6f3d90eee3b2096a42e8ff303d619a3d6b8d68aaa20e447f456575254da2b0e1"
+    }
+  ],
+  "protected_hashes": 78,
+  "frozen_files": 16,
+  "scope": "Test-only complete hash comparison; unchanged D9 runtime. No frame or capacity claim.",
+  "assertions": 1233,
+  "equivalence_cases": 47,
+  "measured_source_hashes": 15,
+  "ordered_blocks": 48,
+  "raw_samples": 336,
+  "rows": [
+    {
+      "case": "production-empty",
+      "production_us": {
+        "samples": 56,
+        "min": 42490,
+        "max": 63532,
+        "p50": 46793,
+        "p95": 57382,
+        "p99": 63532,
+        "over_8333_us": 56,
+        "over_16667_us": 56
+      },
+      "candidate_us": {
+        "samples": 56,
+        "min": 38813,
+        "max": 195107,
+        "p50": 42747,
+        "p95": 71473,
+        "p99": 195107,
+        "over_8333_us": 56,
+        "over_16667_us": 56
+      }
+    },
+    {
+      "case": "legal-paid-29-active",
+      "production_us": {
+        "samples": 56,
+        "min": 45679,
+        "max": 57682,
+        "p50": 49943,
+        "p95": 56006,
+        "p99": 57682,
+        "over_8333_us": 56,
+        "over_16667_us": 56
+      },
+      "candidate_us": {
+        "samples": 56,
+        "min": 45912,
+        "max": 58956,
+        "p50": 49564,
+        "p95": 55830,
+        "p99": 58956,
+        "over_8333_us": 56,
+        "over_16667_us": 56
+      }
+    },
+    {
+      "case": "synthetic-all-nonempty",
+      "production_us": {
+        "samples": 56,
+        "min": 118050,
+        "max": 274875,
+        "p50": 125827,
+        "p95": 147317,
+        "p99": 274875,
+        "over_8333_us": 56,
+        "over_16667_us": 56
+      },
+      "candidate_us": {
+        "samples": 56,
+        "min": 221350,
+        "max": 246080,
+        "p50": 226181,
+        "p95": 240075,
+        "p99": 246080,
+        "over_8333_us": 56,
+        "over_16667_us": 56
+      }
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "status": "passed",
+  "build_id": "p59-a289f67c1acf",
+  "runtime_source_sha256": "a289f67c1acffafad54e0be64365e947b9135d1c730e3802acd54566eeb99fb6",
+  "journeys": [
+    {
+      "kind": "advanced",
+      "passed": true,
+      "build_id": "p59-a289f67c1acf",
+      "checks": 7751,
+      "cases": 12,
+      "receipt": ".godot/movement-advanced-animation-followup-v1/receipt.json",
+      "receipt_sha256": "d46b0ae5b788f389f1b62e8f4e6f1af005b6ed30aeeb89ab13cdaa0aa2d1a40c",
+      "log_sha256": "8244e478c0614634b639a82ba6413234762e774ddbac26d23b65ea2211e2b904",
+      "stderr_bytes": 0,
+      "scope": "twelve real Bootstrap input and unified SimWorld advanced routes; catalog-gated flight and no raw air/contact/mode seeding",
+      "gaps": [
+        "full direction matrix",
+        "flight natural timeout and exhaustion",
+        "forced hit interruption",
+        "fresh C fast-fall",
+        "wall corners/gaps/lockout",
+        "low Stamina",
+        "mouse endpoint casts",
+        "physical devices",
+        "native scheduler/rendering",
+        "network lifecycle"
+      ],
+      "double_jump_routes": 3,
+      "float_routes": 3,
+      "wall_routes": 3,
+      "dodge_fastfall_routes": 3
+    },
+    {
+      "kind": "cast",
+      "passed": true,
+      "build_id": "p59-a289f67c1acf",
+      "checks": 11547,
+      "cases": 27,
+      "receipt": ".godot/movement-cast-animation-followup-v1/receipt.json",
+      "receipt_sha256": "bef135301cfc66c17afa09f7969ece910a7c4f6c4b37fc3d3db053ecad319d0c",
+      "log_sha256": "cb675aae3a5973f2acff008e9736b4842d24c7adb322bdf009a0ae4c92eeb539",
+      "stderr_bytes": 0,
+      "scope": "production Bootstrap events/sample -> unified SimWorld.step; no rendered or physical-device acceptance",
+      "gaps": [
+        "full 192-pair physics journey",
+        "mouse endpoint release geometry",
+        "Float/air-dodge/fastfall/wall transitions",
+        "low-Stamina boundary",
+        "Rapid hold-repeat focus recovery",
+        "native frame scheduler",
+        "physical keyboard/controller",
+        "network lifecycle",
+        "visual animation acceptance"
+      ],
+      "router_samples": 192,
+      "paid_transition_cases": 24,
+      "focus_cases": 3,
+      "low_flux_cases": 3
+    }
+  ],
+  "qualification_boundary": "Production Bootstrap and input-router routes under deterministic headless stepping. These checks do not certify physical devices, native frame pacing, human feel or network lifecycle."
+}

@@ -66,6 +66,8 @@ Check-Summary ($summary.PSObject.Properties.Name -notcontains 'passed' -and $sum
 $block = Format-FluxCurrentBuildMarkdown $summary
 Check-Summary ($block.Contains($summary.game.path) -and $block.Contains($summary.portable.path) -and $block.Contains($summary.pack.sha256)) 'Markdown is generated from summary fields'
 Check-Summary ($block.Contains('validates pointer metadata only') -and $block.Contains('current-checkpoint.ps1 -ReportOnly')) 'Markdown states the evidence boundary and exact verifier'
+Check-Summary ($block.Contains('not fresh availability') -and $block.Contains('not verified download links')) 'Metadata-only output never claims payload availability'
+Check-Summary (-not $block.Contains("]($($summary.game.path))") -and -not $block.Contains("]($($summary.pack.path))") -and -not $block.Contains("]($($summary.portable.path))")) 'Unchecked payloads remain archival text, not broken launch/download links'
 Check-Summary (Assert-FluxCurrentBuildText "intro`n`n$block`n`nafter" $block) 'One exact generated block passes'
 Check-Summary (Assert-FluxCurrentBuildText ("intro`r`n`r`n" + $block.Replace("`n", "`r`n") + "`r`n") $block) 'Line-ending differences do not create false drift'
 Reject-Summary 'Stale path in generated block fails closed' { Assert-FluxCurrentBuildText ($block.Replace($summary.game.path, 'exports/stale/windows/flux2.exe')) $block }

@@ -4,7 +4,10 @@ extends RefCounted
 
 const DEFAULT_PATH := "res://content/visual/foundation_champion_visuals_v1.json"
 const PixelMovement = preload("res://src/presentation/pixel_movement_effects.gd")
+const WallPose = preload("res://src/presentation/pixel_wallrun_pose.gd")
+const GroundSkid = preload("res://src/presentation/ground_skid_presentation.gd")
 const WireframeBody = preload("res://src/presentation/wireframe_body_presenter.gd")
+const FullbodyCast = preload("res://src/presentation/fullbody_cast_presenter.gd")
 const EXPECTED_ID := "foundation-champion-visuals-v15-motion-facing"
 const EXPECTED_AUTHORITY := "presentation only; hitboxes, movement, casts and outcomes remain authoritative elsewhere"
 const REQUIRED_FOUNDATION := ["oh_tipi", "s_wayne", "red_baron"]
@@ -82,10 +85,61 @@ var configuration_generation: int = 0
 var wireframe_mode: bool = true
 var wireframe_body := WireframeBody.new()
 var _wireframe_portraits: Dictionary = {}
+var fullbody_art: RefCounted
+
+
+func enable_fullbody_art(use_pixel_pilot: bool = false, use_full_cast: bool = false, bounded_residency: bool = false) -> bool:
+	var candidate := FullbodyCast.new()
+	if not candidate.configure(champions.keys(), bounded_residency):
+		last_error = candidate.last_error
+		return false
+	if (use_pixel_pilot or use_full_cast) and not candidate.enable_pixel_pilot(champions.keys(), use_full_cast):
+		last_error = candidate.last_error
+		return false
+	fullbody_art = candidate
+	if bounded_residency:
+		# Fullbody owns every admitted identity and its explicit same-identity
+		# action fallback. Tiny Fullbody portraits are already independently built.
+		# Wireframe is only sampled when fullbody_art == null; release its pages.
+		wireframe_body.clear()
+		_wireframe_portraits.clear()
+	configuration_generation += 1
+	return true
+
+
+func configure_fullbody_startup(visual_language: VisualLanguage, use_pixel_pilot: bool = false, use_full_cast: bool = false, path: String = DEFAULT_PATH) -> bool:
+	# This explicit startup route is chosen only after Fullbody flags are known.
+	# Validate an unpublished candidate, so a late Fullbody/page rejection cannot
+	# revoke a working eager fallback or an already prepared active identity.
+	var candidate: CartoonChampionPresenter = get_script().new()
+	if not candidate._configure_validated(visual_language, path, true):
+		last_error = candidate.last_error
+		return false
+	if not candidate.enable_fullbody_art(use_pixel_pilot, use_full_cast, true):
+		last_error = candidate.last_error
+		return false
+	candidate.atlas_hash = FileAccess.get_sha256(FullbodyCast.PATH + "manifest.json")
+	var art_identity := candidate.atlas_hash
+	if candidate.fullbody_art.pixel_pilot != null:
+		art_identity += JSON.stringify(candidate.fullbody_art.pixel_pilot.entries)
+		if candidate.fullbody_art.pixel_pilot.action_bank != null:
+			art_identity += JSON.stringify(candidate.fullbody_art.pixel_pilot.action_bank.entries)
+	candidate.content_hash = (candidate.content_hash + art_identity).sha256_text()
+	var next_generation := configuration_generation + 1
+	# Startup only: transfer owned references after every validation has passed.
+	# Reflection here avoids a second manually maintained list of presenter fields;
+	# frame sampling and active-page preparation do not use this path.
+	for property: Dictionary in candidate.get_property_list():
+		if (int(property.usage) & PROPERTY_USAGE_SCRIPT_VARIABLE) != 0:
+			set(property.name, candidate.get(property.name))
+	configuration_generation = next_generation
+	last_error = ""
+	return true
 
 
 func configure(visual_language: VisualLanguage, path: String = DEFAULT_PATH, override_path: String = DEFAULT_OVERRIDE_PATH, use_wireframe: bool = true) -> bool:
 	configuration_generation += 1
+	fullbody_art = null
 	wireframe_mode = use_wireframe
 	wireframe_body.clear()
 	_wireframe_portraits.clear()
@@ -106,7 +160,7 @@ func configure(visual_language: VisualLanguage, path: String = DEFAULT_PATH, ove
 	return false
 
 
-func _configure_validated(visual_language: VisualLanguage, path: String) -> bool:
+func _configure_validated(visual_language: VisualLanguage, path: String, metadata_only: bool = false) -> bool:
 	language = visual_language
 	champions.clear()
 	content_hash = ""
@@ -218,6 +272,11 @@ func _configure_validated(visual_language: VisualLanguage, path: String) -> bool
 				return false
 		if not _register_temporary_templates(live_entries):
 			return false
+		if metadata_only:
+			# Fullbody admission follows on the unpublished startup candidate. The
+			# unused wireframe atlases and their three portraits are never loaded.
+			content_hash = (source + live_source).sha256_text()
+			return true
 		if not wireframe_body.configure():
 			return _fail(wireframe_body.last_error)
 		for body_type: String in EXPECTED_BODY_TYPES:
@@ -448,6 +507,10 @@ func _validate_override_pixels(pixels: Image, height: int, visible_feet_y: int =
 
 
 func prepare_override_pages(champion_ids: Array[String]) -> bool:
+	if fullbody_art != null and fullbody_art.bounded_residency:
+		var ready: bool = fullbody_art.prepare_character_pages(champion_ids)
+		last_error = fullbody_art.last_error
+		return ready
 	# Caller invokes on active-identity changes before drawing, never per draw.
 	# Base identities cost no override slot. Invalid preparation preserves the
 	# last verified working set atomically and returns an actionable error.
@@ -482,6 +545,8 @@ func inspection_frame(champion_id: String, direction_id: String) -> Dictionary:
 	# Never display an old fallback for a valid but currently nonresident override.
 	if not can_present(champion_id) or direction_id not in EXPECTED_DIRECTIONS:
 		return {}
+	if fullbody_art != null:
+		return fullbody_art.inspection_frame(champion_id, EXPECTED_DIRECTIONS.find(direction_id))
 	if wireframe_mode:
 		return {"texture": texture_for_champion(champion_id), "region": WireframeBody.base_region("grounded", EXPECTED_DIRECTIONS.find(direction_id)), "wireframe_body": true, "visual_mode": "wireframe_body", "body_type": String(champions[champion_id]["body_type"])}
 	var texture := texture_for_champion(champion_id)
@@ -501,6 +566,8 @@ func inspection_frame(champion_id: String, direction_id: String) -> Dictionary:
 func portrait_frame(champion_id: String) -> Dictionary:
 	if not can_present(champion_id):
 		return {}
+	if fullbody_art != null:
+		return fullbody_art.portrait_frame(champion_id)
 	if wireframe_mode:
 		var wireframe: Dictionary = (_wireframe_portraits.get(String(champions[champion_id]["body_type"]), {}) as Dictionary).duplicate()
 		wireframe["wireframe_body"] = true
@@ -631,6 +698,8 @@ func _register_temporary_templates(entries: Array) -> bool:
 
 
 func can_present(champion_id: String) -> bool:
+	if fullbody_art != null:
+		return champions.has(champion_id) and fullbody_art.entries.has(champion_id)
 	return champions.has(champion_id) and (not wireframe_mode or wireframe_body.base_texture(String(champions[champion_id]["body_type"])) != null)
 
 
@@ -688,33 +757,56 @@ func draw(
 	reduced_effects: bool = false,
 	ground_anchor: Vector2 = Vector2.INF,
 	locomotion_phase: float = -1.0,
+	wall_travel: Vector2i = Vector2i.ZERO,
 ) -> bool:
 	if canvas == null or state == null or not champions.has(champion_id):
 		return false
-	var frame := movement_frame(champion_id, state, presentation_tick, config, reduced_effects, locomotion_phase)
+	var frame := movement_frame(champion_id, state, presentation_tick, config, reduced_effects, locomotion_phase, wall_travel)
 	if frame.is_empty():
 		return false
-	var definition: Dictionary = champions[champion_id]
 	var anchor := body_anchor + (frame["offset"] as Vector2)
 	var floor_anchor := ground_anchor if ground_anchor.is_finite() else body_anchor
 	var frame_texture: Texture2D = frame.get("texture", texture_for_champion(champion_id))
 	if frame_texture == null:
 		return false
 	var display_height := float(frame["display_height"])
-	if pixel_movement.ready():
-		pixel_movement.draw_afterimages(canvas, state, config, frame_texture, frame["source_region"], anchor, display_height, reduced_effects)
-	_draw_counter_strafe_accent(canvas, state, floor_anchor, reduced_effects)
-	_draw_takeoff_accent(canvas, state, floor_anchor, config, reduced_effects)
+	var protection := protection_contract(state, config, reduced_effects, display_height)
+	var body_tint: Color = protection["body_tint"]
+	# No ghost bodies or movement trails. Protection and height cues remain.
+	_draw_ground_skid_accent(canvas, state, floor_anchor, reduced_effects, locomotion_phase)
+	_draw_takeoff_accent(canvas, state, body_anchor if state.hop_mode == PlayerState.MovementMode.DOUBLE_JUMP else floor_anchor, config, reduced_effects)
 	_draw_movement_accent(canvas, state, floor_anchor, roundi(presentation_tick), reduced_effects, body_anchor, config)
-	_draw_aura(canvas, definition, anchor, roundi(presentation_tick), reduced_effects, float(frame["aura_scale"]))
-	canvas.draw_texture_rect_region(frame_texture, Rect2(anchor - PIVOT, CELL_SIZE), frame["source_region"])
+	# Affinities belong to the loadout/HUD and actual casts, not idle orbiting
+	# decorations. Protection and height cues below remain authority-driven.
+	var squat_depth := int(frame.get("squat_depth", 0))
+	if bool(frame.get("fullbody_art", false)):
+		FullbodyCast.draw_frame(canvas, frame, anchor, body_tint)
+	elif squat_depth > 0:
+		# Bend by translating the upper pose toward planted feet, never resizing
+		# the sprite or authority. Integer regions keep pixel edges crisp.
+		var source: Rect2 = frame["source_region"]
+		var split := 70.0
+		canvas.draw_texture_rect_region(frame_texture, Rect2(anchor - PIVOT + Vector2(0, split), Vector2(CELL_SIZE.x, CELL_SIZE.y - split)), Rect2(source.position + Vector2(0, split), Vector2(source.size.x, source.size.y - split)), body_tint)
+		canvas.draw_texture_rect_region(frame_texture, Rect2(anchor - PIVOT + Vector2(0, squat_depth), Vector2(CELL_SIZE.x, split)), Rect2(source.position, Vector2(source.size.x, split)), body_tint)
+	else:
+		canvas.draw_texture_rect_region(frame_texture, Rect2(anchor - PIVOT, CELL_SIZE), frame["source_region"], body_tint)
+	_draw_height_cue(canvas, state, anchor, config, display_height)
 	_draw_evasion_contour(canvas, state, anchor, config, reduced_effects, display_height)
 	return true
 
 
-func movement_frame(champion_id: String, state: PlayerState, presentation_tick: float, config: SimConfig, reduced_effects: bool = false, locomotion_phase: float = -1.0) -> Dictionary:
+func movement_frame(champion_id: String, state: PlayerState, presentation_tick: float, config: SimConfig, reduced_effects: bool = false, locomotion_phase: float = -1.0, wall_travel: Vector2i = Vector2i.ZERO) -> Dictionary:
 	if state == null or config == null or not champions.has(champion_id):
 		return {}
+	# Resolve the actual renderer once before preparing legacy body transforms.
+	# Fullbody owns offset/squat (and sometimes source_region); constructing
+	# those legacy values only to overwrite them cannot affect the final frame.
+	# Keep aura/contact/phase metadata exact and every fallback on its old path.
+	var fullbody_frame: Dictionary = {}
+	if fullbody_art != null:
+		fullbody_frame = fullbody_art.frame(champion_id, state, presentation_tick, config, locomotion_phase, reduced_effects, wall_travel)
+		if fullbody_art.bounded_residency and fullbody_frame.is_empty(): return {}
+	var prepare_legacy_offset := not fullbody_frame.has("offset")
 	var definition: Dictionary = champions[champion_id]
 	var animation_state := silhouette_state(state)
 	var motion_id := MinimalChampionMotion.motion_id(state)
@@ -736,32 +828,41 @@ func movement_frame(champion_id: String, state: PlayerState, presentation_tick: 
 			# Pure preview/legacy callers without world travel history retain the
 			# deterministic timed cycle; the live game supplies a distance phase.
 			motion_elapsed += float(maxi(0, state.entity_id) * 3)
-	var motion_sample := motion.sample(String(definition.get("motion_profile", "")), motion_id, motion_elapsed, reduced_effects)
+	var motion_sample := motion.sample(String(definition.get("motion_profile", "")), motion_id, motion_elapsed, reduced_effects, prepare_legacy_offset)
 	if motion_id in ["walk", "sprint"]:
 		var response := movement_response_scale(state)
-		motion_sample.offset *= response
+		if prepare_legacy_offset: motion_sample.offset *= response
 		motion_sample.aura_scale = lerpf(1.0, motion_sample.aura_scale, response)
-		_apply_relative_gait_motion(motion_sample, locomotion_gait(state), reduced_effects)
+		_apply_relative_gait_motion(motion_sample, locomotion_gait(state), reduced_effects, prepare_legacy_offset)
 	# Foot plants retain their exact pivot; the between-contact motion is tiny
 	# and smooth, never a scale pulse or blended directional atlas frame.
-	var pose_offset := motion_sample.offset.round() if motion_id in ["cast", "hit"] else Vector2.ZERO
-	if motion_id in ["walk", "sprint"]:
-		pose_offset = motion.locomotion_pivot_offset(String(definition.get("motion_profile", "")), motion_id, motion_elapsed, Vector2(state.velocity_x, state.velocity_y), movement_response_scale(state), reduced_effects)
+	var pose_offset: Vector2 = fullbody_frame.get("offset", Vector2.ZERO)
+	if prepare_legacy_offset:
+		pose_offset = motion_sample.offset.round() if motion_id in ["cast", "hit"] else Vector2.ZERO
+		if motion_id in ["walk", "sprint"]:
+			pose_offset = motion.locomotion_pivot_offset(String(definition.get("motion_profile", "")), motion_id, motion_elapsed, Vector2(state.velocity_x, state.velocity_y), movement_response_scale(state), reduced_effects)
 	var contact_frame := 0
 	if animation_state in EXPECTED_PHASE_STATES:
 		contact_frame = motion.locomotion_contact_frame(String(definition.get("motion_profile", "")), motion_id, motion_elapsed)
 		if contact_frame == 1:
 			animation_state += "_b"
-	var result := {"animation_state": animation_state, "motion_id": motion_id, "contact_frame": contact_frame, "offset": pose_offset, "scale": Vector2.ONE, "aura_scale": motion_sample.aura_scale, "source_region": source_region_for_animation_state(champion_id, state, animation_state), "display_height": int(definition.get("height", 68))}
-	if wireframe_mode:
+	var source: Rect2 = fullbody_frame.source_region if fullbody_frame.has("source_region") else source_region_for_animation_state(champion_id, state, animation_state)
+	var result := {"animation_state": animation_state, "motion_id": motion_id, "contact_frame": contact_frame, "offset": pose_offset, "scale": Vector2.ONE, "aura_scale": motion_sample.aura_scale, "source_region": source, "display_height": int(definition.get("height", 68))}
+	result["squat_depth"] = fullbody_frame.squat_depth if fullbody_frame.has("squat_depth") else JumpPresentation.squat_depth(state, config)
+	if wireframe_mode and fullbody_art == null:
 		var phase := locomotion_phase
 		if phase < 0.0 or not is_finite(phase):
 			var duration := motion.locomotion_elapsed_at_phase(String(definition.get("motion_profile", "")), motion_id, 0.5) * 2.0
 			phase = motion_elapsed / maxf(1.0, duration)
-		var body_frame := wireframe_body.frame(String(definition["body_type"]), animation_state, presentation_facing_vector(state, animation_state), Vector2i(state.velocity_x, state.velocity_y), phase)
+		var body_travel := Vector2i(state.velocity_x, state.velocity_y)
+		if animation_state == "slide":
+			body_travel = presentation_facing_vector(state, animation_state)
+		var body_frame := wireframe_body.frame(String(definition["body_type"]), animation_state, presentation_facing_vector(state, animation_state), body_travel, phase)
 		if body_frame.is_empty():
 			return {}
 		result.merge(body_frame, true)
+	if fullbody_art != null:
+		result.merge(fullbody_frame, true)
 	return result
 
 
@@ -771,6 +872,8 @@ func _draw_atlas_candidate(canvas: CanvasItem, state: PlayerState, champion_id: 
 
 
 func texture_for_champion(champion_id: String) -> Texture2D:
+	if fullbody_art != null:
+		return fullbody_art.textures.get(champion_id)
 	if wireframe_mode:
 		return wireframe_body.base_texture(String((champions.get(champion_id, {}) as Dictionary).get("body_type", "")))
 	if _override_textures.has(champion_id):
@@ -792,10 +895,16 @@ func portrait_region(champion_id: String) -> Rect2:
 func silhouette_state(state: PlayerState) -> String:
 	var action := semantic_action(state)
 	if state != null and state.health > 0 and state.control_state in [PlayerState.ControlState.FREE, PlayerState.ControlState.SLOWED]:
+		if state.jumpsquat_active:
+			return "grounded"
+		if state.crouching:
+			return "slide"
 		if state.is_rolling():
 			return "roll"
-		if state.movement_mode in [PlayerState.MovementMode.SLIDE, PlayerState.MovementMode.WAVE_DASH, PlayerState.MovementMode.WALL_SKIM]:
+		if state.movement_mode in [PlayerState.MovementMode.SLIDE, PlayerState.MovementMode.WAVE_DASH]:
 			return "slide"
+		if state.movement_mode == PlayerState.MovementMode.WALL_SKIM:
+			return "sprint"
 		if state.is_airborne():
 			return "jump"
 		if state.velocity_x != 0 or state.velocity_y != 0:
@@ -895,6 +1004,14 @@ static func direction_for_state(state_id: String, x: int, y: int) -> String:
 static func presentation_facing_vector(state: PlayerState, _state_id: String = "") -> Vector2i:
 	if state == null:
 		return Vector2i(0, 1000)
+	if _state_id == "slide" and not state.crouching:
+		var travel := Vector2i(state.velocity_x, state.velocity_y)
+		if Vector2(travel).length_squared() > 1000000.0:
+			return travel
+		var lane := Vector2i(state.slide_x, state.slide_y)
+		if lane != Vector2i.ZERO:
+			return lane
+		return Vector2i(state.facing_x, state.facing_y)
 	# Presentation follows live cursor/controller aim without turn easing or a
 	# cast-start latch. Movement facing still owns neutral evasions; pending cast
 	# aim still owns the committed shot. Never write either authority field here.
@@ -924,19 +1041,20 @@ static func locomotion_gait(state: PlayerState) -> String:
 	return EightDirectionResolver.relative_gait_from_vectors(facing, travel)
 
 
-static func _apply_relative_gait_motion(sample: MinimalChampionMotion.Sample, gait: String, reduced: bool) -> void:
+static func _apply_relative_gait_motion(sample: MinimalChampionMotion.Sample, gait: String, reduced: bool, include_offset: bool = true) -> void:
 	if sample == null or gait in ["idle", "forward"]:
 		return
 	var strength := 0.35 if reduced else 1.0
 	match gait:
 		"backward":
-			sample.offset.x *= -1.0
-			sample.offset.y *= lerpf(1.0, 0.72, strength)
+			if include_offset:
+				sample.offset.x *= -1.0
+				sample.offset.y *= lerpf(1.0, 0.72, strength)
 			sample.aura_scale = lerpf(1.0, sample.aura_scale, lerpf(1.0, 0.84, strength))
 		"strafe_left":
-			sample.offset.x -= 0.65 * strength
+			if include_offset: sample.offset.x -= 0.65 * strength
 		"strafe_right":
-			sample.offset.x += 0.65 * strength
+			if include_offset: sample.offset.x += 0.65 * strength
 
 
 static func body_type_render_scale(body_type: String) -> float:
@@ -1000,20 +1118,6 @@ static func hand_cast_origin(body_anchor: Vector2, aim: Vector2) -> Vector2:
 	return body_anchor + Vector2(0.0, -HAND_CAST_HEIGHT) + direction * HAND_CAST_FORWARD + side * HAND_CAST_SIDE
 
 
-func _draw_aura(canvas: CanvasItem, definition: Dictionary, anchor: Vector2, tick: int, reduced: bool, motion_scale: float = 1.0) -> void:
-	var affinities: Array = definition.get("affinities", [])
-	var count := mini(affinities.size(), 1 if reduced else 3)
-	for index: int in range(count):
-		var element_id := String(affinities[index])
-		var color := language.element_color(element_id, "base")
-		var phase := float((tick * (index + 2) + index * 17) % 90) / 90.0
-		var radius := (23.0 + float(index) * 4.0 + phase * 3.0) * motion_scale
-		var start := phase * TAU + float(index) * 1.9
-		canvas.draw_arc(anchor + Vector2(0.0, -19.0), radius, start, start + 0.74, 7, Color(color, 0.42), 2.0)
-		var spark := anchor + Vector2.from_angle(start + 0.37) * Vector2(radius, radius * 0.55) + Vector2(0.0, -19.0)
-		canvas.draw_rect(Rect2(spark - Vector2(1.0, 1.0), Vector2(3.0, 3.0)), Color(language.element_color(element_id, "bright"), 0.72), true)
-
-
 static func _directional_lean(state: PlayerState, motion_id: String, reduced: bool) -> Vector2:
 	if motion_id not in ["walk", "sprint", "low", "air"]:
 		return Vector2.ZERO
@@ -1040,35 +1144,17 @@ static func movement_response_scale(state: PlayerState) -> float:
 	return smoothstep(0.0, 1.0, clampf(speed / reference_speed, 0.0, 1.0))
 
 
-func _draw_counter_strafe_accent(canvas: CanvasItem, state: PlayerState, ground_anchor: Vector2, reduced: bool) -> void:
-	if state.is_airborne() or state.movement_mode not in [PlayerState.MovementMode.WALK, PlayerState.MovementMode.SPRINT]:
-		return
-	var velocity := Vector2(float(state.velocity_x), float(state.velocity_y))
-	var facing := Vector2(float(state.facing_x), float(state.facing_y))
-	if velocity.dot(facing) >= float(MovementTuning.COUNTER_STRAFE_DOT_THRESHOLD):
-		return
-	if pixel_movement.stamp(canvas, "slide_trail", ground_anchor - velocity.normalized() * 8.0, 0, reduced, velocity.angle(), 0.50):
-		return
-	var definition := motion.accent_by_id("counter_strafe")
-	if definition.is_empty():
-		return
-	var color := language.ramp_color(String(definition.get("ramp", "warm_stone")), int(definition.get("index", 4)))
-	var opacity := float(definition.get("opacity", 0.46)) * (0.5 if reduced else 1.0)
-	var travel := velocity.normalized()
-	var side := Vector2(-travel.y, travel.x)
-	var mark_count := 1 if reduced else 2
-	for index: int in range(mark_count):
-		var sign_value := -1.0 if index == 0 else 1.0
-		var heel := ground_anchor - travel * 5.0 + side * 7.0 * sign_value
-		canvas.draw_line(heel, heel - travel * 9.0, Color(color, opacity), 2.0)
-		canvas.draw_rect(Rect2(heel - travel * 11.0 - Vector2.ONE, Vector2(2.0, 2.0)), Color(color, opacity * 0.75), true)
+func _draw_ground_skid_accent(canvas: CanvasItem, state: PlayerState, ground_anchor: Vector2, reduced: bool, locomotion_phase: float = -1.0) -> void:
+	# Compact contacts replace the intentionally suppressed historical trail.
+	# Nothing is retained behind the actor or changes its registered sprite.
+	GroundSkid.draw(canvas, ground_anchor, GroundSkid.sample(state, locomotion_phase, reduced), language)
 
 
 func _draw_takeoff_accent(canvas: CanvasItem, state: PlayerState, ground_anchor: Vector2, config: SimConfig, reduced: bool) -> void:
 	var cue := JumpPresentation.takeoff_contract(state, config, reduced)
 	if not bool(cue["active"]):
 		return
-	var takeoff_age := maxi(0, config.milliseconds_to_ticks(MovementTuning.JUMP_INVULNERABILITY_MS) - state.jump_protection_ticks)
+	var takeoff_age := int(cue.get("age", 0))
 	if pixel_movement.stamp(canvas,"jump_takeoff",ground_anchor,takeoff_age,reduced):
 		return
 	var radius := float(cue["radius"])
@@ -1079,6 +1165,25 @@ func _draw_takeoff_accent(canvas: CanvasItem, state: PlayerState, ground_anchor:
 	if not reduced:
 		for direction: Vector2 in [Vector2.LEFT, Vector2.RIGHT]:
 			canvas.draw_line(ground_anchor + direction * (radius + 3.0), ground_anchor + direction * (radius + 6.0), Color(color, opacity * 0.7), 1.5)
+
+
+func _draw_height_cue(canvas: CanvasItem, state: PlayerState, anchor: Vector2, config: SimConfig, height: float) -> void:
+	var cue := JumpPresentation.height_contract(state, config)
+	if not bool(cue["active"]):
+		return
+	var center := anchor + Vector2(0, -height - 7)
+	var ink := Color(0.09, 0.16, 0.20, 0.94)
+	var color := Color(0.73, 0.90, 0.95, 1.0)
+	# Chevron UP = above ground threats, DOWN = under projectiles. No shield:
+	# height clearance is not dodge invulnerability or immunity to tall effects.
+	var sign_y := -1.0 if bool(cue["above"]) else 1.0
+	var points := PackedVector2Array([center + Vector2(-5, -2 * sign_y), center + Vector2(0, 2 * sign_y), center + Vector2(5, -2 * sign_y)])
+	canvas.draw_polyline(points, ink, 4.0)
+	canvas.draw_polyline(points, color, 2.0)
+	if bool(cue["flight"]):
+		var width := 18.0
+		canvas.draw_rect(Rect2(center + Vector2(-9, -10), Vector2(width, 3)), ink)
+		canvas.draw_rect(Rect2(center + Vector2(-9, -10), Vector2(ceilf(width * float(cue["budget"])), 2)), color)
 
 
 static func movement_trail_contract(state: PlayerState, config: SimConfig, reduced: bool = false) -> Dictionary:
@@ -1121,24 +1226,17 @@ static func movement_trail_contract(state: PlayerState, config: SimConfig, reduc
 
 
 func _draw_movement_accent(canvas: CanvasItem, state: PlayerState, ground_anchor: Vector2, tick: int, reduced: bool, body_anchor: Vector2 = Vector2.INF, config: SimConfig = null) -> void:
+	_draw_wall_attachment(canvas, state, body_anchor if body_anchor.is_finite() else ground_anchor, ground_anchor, config)
 	if pixel_movement.ready():
-		_draw_pixel_movement_accent(canvas,state,ground_anchor,tick * 2,reduced,config)
+		_draw_pixel_movement_accent(canvas,state,ground_anchor,tick * 2,reduced,config,body_anchor)
 		return
-	var trail := movement_trail_contract(state, config, reduced)
-	if bool(trail["active"]):
-		var trail_anchor := body_anchor if bool(trail["body_anchored"]) and body_anchor.is_finite() else ground_anchor
-		var trail_color := language.ramp_color("aged_brass" if bool(trail["body_anchored"]) else "warm_stone", 4)
-		for line: PackedVector2Array in trail["lines"]:
-			canvas.draw_polyline(_offset(line, trail_anchor), Color(trail_color, float(trail["opacity"])), 1.5)
-		for dust: Vector2 in trail["dust"]:
-			canvas.draw_arc(trail_anchor + dust, 2.5, 0.2, 5.5, 6, Color(trail_color, float(trail["opacity"]) * 0.7), 1.5)
 	var definition := motion.accent(state)
 	if definition.is_empty():
 		return
 	var kind := String(definition.get("kind", ""))
 	# The legacy DOUBLE_JUMP adapter is Float, whose state is marked only by
 	# the immediate protection layer. Never loop a stale lift ring on release.
-	if kind in ["lift_ring", "ground_wake", "speed_fins"]:
+	if kind in ["lift_ring", "ground_wake", "speed_fins", "ground_chevron", "fall_lines"]:
 		return
 	if kind in ["speed_fins", "fall_lines", "recovery_brace"] and body_anchor.is_finite():
 		ground_anchor = body_anchor
@@ -1165,10 +1263,10 @@ func _draw_movement_accent(canvas: CanvasItem, state: PlayerState, ground_anchor
 				canvas.draw_line(ground_anchor + Vector2(x_offset, -28.0), ground_anchor + Vector2(x_offset, -16.0 + phase * 5.0), Color(color, opacity), 2.0)
 		"wall_sparks":
 			var contact_geometry := wall_contact_geometry(state)
-			if contact_geometry.is_empty():
+			if contact_geometry.is_empty() or velocity.length_squared() <= 0.0:
 				return
 			var wall_normal: Vector2 = contact_geometry["normal"]
-			var contact := ground_anchor + (contact_geometry["offset"] as Vector2)
+			var contact := (body_anchor if body_anchor.is_finite() else ground_anchor) + (contact_geometry["offset"] as Vector2)
 			var count := 1 if reduced else 3
 			for index: int in range(count):
 				var spark_direction := wall_normal.rotated(-0.5 + float(index) * 0.5 if count > 1 else 0.0)
@@ -1187,7 +1285,7 @@ func _draw_movement_accent(canvas: CanvasItem, state: PlayerState, ground_anchor
 
 
 static func wall_contact_geometry(state: PlayerState) -> Dictionary:
-	if state == null or state.wall_skim_ticks <= 0 or state.wall_skim_surface_id <= 0:
+	if not WallPose.is_attached(state):
 		return {}
 	var normal := Vector2(state.wall_x, state.wall_y).normalized()
 	if normal == Vector2.ZERO:
@@ -1195,11 +1293,42 @@ static func wall_contact_geometry(state: PlayerState) -> Dictionary:
 	return {"normal": normal, "offset": -normal * float(MovementTuning.PLAYER_RADIUS) / SimConfig.FIXED_SCALE}
 
 
-func _draw_pixel_movement_accent(canvas: CanvasItem, state: PlayerState, ground_anchor: Vector2, age: int, reduced: bool, config: SimConfig) -> void:
+static func wall_attachment_contract(state: PlayerState, config: SimConfig, body_anchor: Vector2, ground_anchor: Vector2) -> Dictionary:
+	if config == null or not config.is_valid() or not body_anchor.is_finite() or not ground_anchor.is_finite(): return {}
+	var contact := wall_contact_geometry(state)
+	if contact.is_empty(): return {}
+	var normal: Vector2 = contact.normal
+	var duration := maxi(1, config.milliseconds_to_ticks(MovementTuning.WALL_SKIM_DURATION_MS))
+	var ratio := clampf(float(state.wall_skim_ticks) / float(duration), 0.0, 1.0)
+	return {"contact": body_anchor + (contact.offset as Vector2),
+		"floor_contact": ground_anchor + (contact.offset as Vector2), "normal": normal,
+		"tangent": Vector2(-normal.y, normal.x), "remaining_ratio": ratio,
+		"segments": clampi(ceili(ratio * 3.0), 1, 3),
+		"moving": state.velocity_x != 0 or state.velocity_y != 0}
+
+
+func _draw_wall_attachment(canvas: CanvasItem, state: PlayerState, body_anchor: Vector2, ground_anchor: Vector2, config: SimConfig) -> void:
+	var contact := wall_attachment_contract(state, config, body_anchor, ground_anchor)
+	if contact.is_empty(): return
+	var at: Vector2 = contact.contact
+	var tangent: Vector2 = contact.tangent
+	var normal: Vector2 = contact.normal
+	var ink := language.ramp_color("aged_brass", 0)
+	var light := language.ramp_color("aged_brass", 4)
+	# A short surface-aligned contact strip, never a shield around the actor.
+	# It stays legible in reduced mode and never advances on render time.
+	canvas.draw_line(at - tangent * 10.0, at + tangent * 10.0, Color(ink, 0.9), 4.0)
+	for segment: int in 3:
+		var start := at + tangent * (-8.0 + segment * 6.0) + normal
+		canvas.draw_line(start, start + tangent * 4.0, Color(light if segment < int(contact.segments) else ink, 0.92), 2.0)
+
+
+func _draw_pixel_movement_accent(canvas: CanvasItem, state: PlayerState, ground_anchor: Vector2, age: int, reduced: bool, config: SimConfig, body_anchor: Vector2 = Vector2.INF) -> void:
 	if state.health <= 0 or config == null:
 		return
 	var velocity := Vector2(state.velocity_x,state.velocity_y)
-	var walljump := pixel_movement.walljump_contact(state,config,age,ground_anchor)
+	var contact_anchor := body_anchor if body_anchor.is_finite() else ground_anchor
+	var walljump := pixel_movement.walljump_contact(state,config,age,contact_anchor)
 	if not walljump.is_empty():
 		pixel_movement.stamp(canvas,"walljump_burst",walljump.anchor,walljump.age,reduced)
 	if state.slide_ticks > 0 and not state.is_airborne() and velocity.length_squared() > 1000000.0:
@@ -1207,8 +1336,8 @@ func _draw_pixel_movement_accent(canvas: CanvasItem, state: PlayerState, ground_
 		var elapsed := maxi(0,config.milliseconds_to_ticks(MovementTuning.SLIDE_DURATION_MS) - state.slide_ticks)
 		pixel_movement.stamp(canvas,"slide_dust",ground_anchor - velocity.normalized() * 14,elapsed,reduced,0.0,0.65)
 	var contact := wall_contact_geometry(state)
-	if not contact.is_empty():
-		pixel_movement.stamp(canvas,"wallrun_sparks",ground_anchor + (contact.offset as Vector2),age,reduced)
+	if not contact.is_empty() and velocity.length_squared() > 0.0:
+		pixel_movement.stamp(canvas,"wallrun_sparks",contact_anchor + (contact.offset as Vector2),age,reduced)
 
 
 func _draw_evasion_contour(
@@ -1224,8 +1353,7 @@ func _draw_evasion_contour(
 	var contract := protection_contract(state, config, reduced, body_height)
 	if not bool(contract["active"]):
 		return
-	if pixel_movement.protection(canvas,contract,ground_anchor,reduced):
-		_draw_float_budget(canvas, contract, ground_anchor)
+	if contract["kind"] == "invulnerable" and pixel_movement.protection(canvas,contract,ground_anchor,reduced):
 		return
 	var teal := language.ramp_color("deep_water", 4)
 	var ink := language.ramp_color("deep_water", 0)
@@ -1237,35 +1365,31 @@ func _draw_evasion_contour(
 		canvas.draw_polyline(points, Color(teal, 1.0), 4.0)
 		canvas.draw_polyline(points, Color.WHITE, 1.5)
 	var shield := _offset(contract["shield"], ground_anchor)
-	canvas.draw_colored_polygon(shield, Color(ink, 0.98))
-	canvas.draw_polyline(shield, Color(teal, 1.0), 4.0)
-	canvas.draw_polyline(shield, Color.WHITE, 1.5)
-	for wing: PackedVector2Array in contract["float_wings"]:
-		var points := _offset(wing, ground_anchor)
+	if shield.size() >= 3:
+		canvas.draw_colored_polygon(shield, Color(ink, 0.98))
+		canvas.draw_polyline(shield, Color(teal, 1.0), 4.0)
+		canvas.draw_polyline(shield, Color.WHITE, 1.5)
+	for line: PackedVector2Array in contract["badge_lines"]:
+		var points := _offset(line, ground_anchor)
 		canvas.draw_polyline(points, Color(ink, 0.98), 5.0)
-		canvas.draw_polyline(points, Color(teal, 1.0), 3.0)
-		canvas.draw_polyline(points, Color.WHITE, 1.25)
-	_draw_float_budget(canvas, contract, ground_anchor)
-
-
-func _draw_float_budget(canvas: CanvasItem, contract: Dictionary, anchor: Vector2) -> void:
-	# Separate time information never fades/flashes the still-active shield.
-	# Normal and reduced effects retain exactly the same three native-pixel slots.
-	var ink := language.ramp_color("deep_water", 0)
-	var teal := language.ramp_color("deep_water", 4)
-	for slot: Rect2 in contract["float_budget_slots"]:
-		canvas.draw_rect(Rect2(anchor + slot.position, slot.size).grow(1.0), Color(ink, 0.98))
-		canvas.draw_rect(Rect2(anchor + slot.position, slot.size), Color(teal, 0.35))
-	for fill: Rect2 in contract["float_budget_fills"]:
-		canvas.draw_rect(Rect2(anchor + fill.position, fill.size), Color.WHITE)
+		canvas.draw_polyline(points, Color.WHITE, 2.0)
+	if int(contract["budget_pips"]) > 0:
+		# Stable discrete remaining-window marks; never a flashing/fading tail.
+		var top := -clampf(body_height, 40.0, 76.0) - 15.0
+		for index: int in 3:
+			var box := Rect2(ground_anchor+Vector2(13+index*5,top),Vector2(4,5))
+			canvas.draw_rect(box.grow(1),Color(ink,0.98))
+			if index < int(contract["budget_pips"]): canvas.draw_rect(box,Color.WHITE)
 
 
 static func protection_contract(state: PlayerState, config: SimConfig, _reduced: bool = false, body_height: float = 68.0) -> Dictionary:
-	var result := {"active": false, "brackets": [], "shield": PackedVector2Array(), "float_wings": [], "remaining_ratio": 0.0, "float_budget_ratio": 0.0, "float_budget_slots": [], "float_budget_fills": []}
+	# Flight and height cues belong exclusively to JumpPresentation.height_contract.
+	var result := {"active": false, "kind": "none", "brackets": [], "shield": PackedVector2Array(), "badge_lines": [], "remaining_ratio": 0.0, "body_tint": Color.WHITE, "budget_pips": 0}
 	var ratio := JumpPresentation.protection_ratio(state, config)
 	if ratio <= 0.0:
 		return result
 	result["active"] = true
+	result["kind"] = "invulnerable" if state.spawn_protection_ticks > 0 else "intangible"
 	result["remaining_ratio"] = ratio
 	var top := -clampf(body_height, 40.0, 76.0) - 2.0
 	var bottom := 2.0
@@ -1276,21 +1400,21 @@ static func protection_contract(state: PlayerState, config: SimConfig, _reduced:
 		brackets.append(PackedVector2Array([Vector2(x - side * 7, bottom), Vector2(x, bottom), Vector2(x, bottom - 9)]))
 	result["brackets"] = brackets
 	var center := Vector2(0, top - 11.0)
-	result["shield"] = PackedVector2Array([center + Vector2(-5, -4), center + Vector2(5, -4), center + Vector2(4, 2), center + Vector2(0, 6), center + Vector2(-4, 2), center + Vector2(-5, -4)])
-	if state.air_floating and state.air_height > 0 and state.stamina > 0 and state.float_ticks > 0:
-		var wings: Array[PackedVector2Array] = []
+	if result["kind"] == "intangible":
+		# Immediately restore opaque pixels on the first vulnerable frame.
+		# This is combat avoidance only; the body still collides with walls.
+		result["body_tint"] = Color(1,1,1,0.62)
+		result["budget_pips"] = clampi(ceili(ratio*3.0),1,3)
+		# Timed damage avoidance is a split/slash shape, never a closed spawn
+		# shield. This does not claim body phasing through world collisions.
+		brackets.clear()
 		for side: float in [-1.0, 1.0]:
-			wings.append(PackedVector2Array([center + Vector2(side * 8.0, 2.0), center + Vector2(side * 14.0, 2.0), center + Vector2(side * 18.0, -3.0)]))
-		result["float_wings"] = wings
-		var total := config.milliseconds_to_ticks(clampi(state.float_max_duration_ms, MovementTuning.FLOAT_LARGE_DURATION_MS, MovementTuning.FLOAT_SMALL_DURATION_MS))
-		var budget := clampf(float(state.float_ticks) / float(maxi(1, total)), 0.0, 1.0)
-		result["float_budget_ratio"] = budget
-		for index: int in range(3):
-			var slot := Rect2(center + Vector2(-12 + index * 9, -14), Vector2(7, 3))
-			(result["float_budget_slots"] as Array).append(slot)
-			var width := ceili(7.0 * clampf(budget * 3.0 - float(index), 0.0, 1.0))
-			if width > 0:
-				(result["float_budget_fills"] as Array).append(Rect2(slot.position, Vector2(width, 3)))
+			var x := 27.0 * side
+			brackets.append(PackedVector2Array([Vector2(x - side * 6, top + 5), Vector2(x, top - 1)]))
+			brackets.append(PackedVector2Array([Vector2(x - side * 6, bottom + 1), Vector2(x, bottom - 5)]))
+		result["badge_lines"] = [PackedVector2Array([center + Vector2(-7, 4), center + Vector2(-1, -4)]), PackedVector2Array([center + Vector2(1, 4), center + Vector2(7, -4)])]
+		return result
+	result["shield"] = PackedVector2Array([center + Vector2(-5, -4), center + Vector2(5, -4), center + Vector2(4, 2), center + Vector2(0, 6), center + Vector2(-4, 2), center + Vector2(-5, -4)])
 	return result
 
 

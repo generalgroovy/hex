@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "character_id": "spai_si",
+  "display_name": "Spai Si",
+  "body_type": "middle",
+  "ancestry": "demon",
+  "identity_authority": "content/champions/foundation_champions_v1.json and assets/sprites/pixel_cast_v1/spai_si.png",
+  "date": "2026-10-03",
+  "generation": {
+    "tool": "built-in image_gen",
+    "initial_calls": 1,
+    "corrective_calls": 0,
+    "intent": "identity-preserve",
+    "transparent_background": true,
+    "original_path": "C:/Users/sende/.codex/generated_images/01a100bc-17cb-7213-bae8-ce6559bf9d78/exec-10a3e7ae-d77d-4bd8-9393-1c81264fc227.png",
+    "saved_path": "art_batches/pixel_actions_v1/source/spai_si/source.png",
+    "copy_method": "PowerShell Copy-Item; unchanged original preserved",
+    "prompt_path": "art_batches/pixel_actions_v1/prompts/spai_si.md"
+  },
+  "references": [
+    {
+      "path": "assets/sprites/pixel_cast_v1/spai_si.png",
+      "sha256": "90272CFCEF611154A106FF163CF15BAE619570CC29A330CCC5E25B040B615450",
+      "role": "Primary runtime identity, proportions, costume and headings",
+      "visually_inspected": true
+    },
+    {
+      "path": "assets/sprites/fullbody_cast_v1/spai_si-detail.png",
+      "sha256": "ED2C449F02F12176CE0B4E93EE44597DFF3EEC830F1D18541B8F37D1F06BD660",
+      "role": "Identity detail and anatomy",
+      "visually_inspected": true
+    },
+    {
+      "path": "C:/Users/sende/Pictures/styleref1.png",
+      "sha256": "C0FB63C912718D64CA061CCD85817869FFC3348A3C81A910962DF57066279FD4",
+      "role": "Style only; old elf label and bow ignored",
+      "visually_inspected": true
+    }
+  ],
+  "source": {
+    "sha256": "FA312541178DFB5D238DFA1C347E93813B18613582E64D2EE926EF83396988A9",
+    "original_sha256": "FA312541178DFB5D238DFA1C347E93813B18613582E64D2EE926EF83396988A9",
+    "original_and_copy_hash_match": true,
+    "width": 1774,
+    "height": 887,
+    "pixel_format": "Format32bppArgb",
+    "transparency": {
+      "alpha_zero_pixels": 1186086,
+      "alpha_partial_pixels": 385963,
+      "alpha_opaque_pixels": 1489,
+      "actual_transparent_alpha": true,
+      "cleanup_performed": false
+    }
+  },
+  "layout": {
+    "columns": 8,
+    "rows": 4,
+    "sprite_count": 32,
+    "column_order": [
+      "S",
+      "SE",
+      "E",
+      "NE",
+      "N",
+      "NW",
+      "W",
+      "SW"
+    ],
+    "row_order": [
+      "jumpsquat_anticipation",
+      "rising_tucked_jump",
+      "descending_feet_ready",
+      "compressed_landing"
+    ]
+  },
+  "review": {
+    "status": "SOURCE_CANDIDATE_REVIEWED_WITH_LIMITATIONS",
+    "scope": "Original and byte-identical copied source visually inspected at source size only",
+    "observations": [
+      "All 32 full-body poses visible in an 8-column by 4-row grid, separated by transparent gutters.",
+      "Runtime demon identity retained: red skin/horns/tail, black hair and boots, green-and-gold jacket; not the poster elf.",
+      "Heading progression is readable, with true back and back-quarter torsos. E/W faces retain a slight three-quarter presentation rather than strict facial profiles.",
+      "Row 2 raises arms and tucks knees/boots; row 3 lowers arms and opens legs into feet-ready descent. Leg differentiation is subtler in rear-facing cells.",
+      "Row 4 bends deeper than anticipation, especially visible in front and profile cells; complete horns, tails, hands and boots remain within cells.",
+      "No bow, staff, weapons, effects, labels, grid marks, floor or shadow observed.",
+      "Head size appears broadly consistent across poses; source-size review cannot establish exact native-scale head/body or volume continuity."
+    ],
+    "limitations": [
+      "Generated partial alpha is extensive. Lead-owned deterministic alpha thresholding and hidden-RGB cleanup are required; original pixels are untouched.",
+      "Exact directional angular separation, root registration, native scale, head/volume continuity and action readability require lead assembly/cross-review.",
+      "Four authored keys are not a complete animation cycle.",
+      "No runtime or human acceptance is inferred from source visual review."
+    ]
+  },
+  "acceptance": {
+    "source_size_visual_review": "PERFORMED",
+    "native_scale": "NOT_RUN",
+    "runtime": "NOT_RUN",
+    "human": "NOT_RUN",
+    "animation_timing": "NOT_RUN",
+    "import_capture_export": "NOT_RUN"
+  },
+  "completion_marker": "SOURCE_TICKET_COMPLETE"
+}

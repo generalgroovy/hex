@@ -1,0 +1,953 @@
+{
+  "schema": "hex-final-portable-independent-audit-v1",
+  "status": "passed",
+  "audited_utc": "2026-10-10T03:57:00.278765+00:00",
+  "checks": 457,
+  "errors": [],
+  "scope": "Independent recomputation from saved actual portable logs and recorded Win32 samples. No engines, payload changes, receipt rewrites or new gameplay run.",
+  "final_identity": {
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate.",
+    "build_id": "p60-be3efd332e1a",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "protocol_version": 60,
+    "record_count": 3390,
+    "runtime_source_sha256": "be3efd332e1a9cc584a4cdc4e983c2ce9e5de84ed5a179a0d1152f5ef8237e33",
+    "schema_version": 1,
+    "scope_id": "production-runtime-source-v1",
+    "snapshot_schema": 24,
+    "status": "candidate_generated_not_promoted"
+  },
+  "final_current_payload_sha256": {
+    "exe_sha256": "04baf75cc1d69dd93eb709533ecab4fd7770bb8a530645717017a06a9d9809fc",
+    "pack_sha256": "4d75c71cc68845da6053733653f1de405ce69bd897d01402f80709a7a44ea812",
+    "build_state_sha256": "61fc8d5b93c5d71d609008bc8f9267f41cf04cc5381562a48dfac251f7297382"
+  },
+  "inputs_unchanged": true,
+  "input_sha256": {
+    "docs/performance-qualification-20261010/portable-visible-final.json": "0038f8d2b2fd7a736f906b68f69d2d267418dc58824d9a11636678f285650236",
+    ".godot/smooth-portable-visible-final-v2/measurement.json": "0038f8d2b2fd7a736f906b68f69d2d267418dc58824d9a11636678f285650236",
+    ".godot/smooth-portable-visible-final-v2/BUILD-STATE.input.json": "61fc8d5b93c5d71d609008bc8f9267f41cf04cc5381562a48dfac251f7297382",
+    ".godot/smooth-portable-visible-final-v2/hearth/measurement.json": "f489bca8593154bb57d55570293492c540e3f8a1a1e38581f2fec48dae1631b1",
+    ".godot/smooth-portable-visible-final-v2/hearth/engine.log": "daa2dbb3d19ab268c6df932a85d9d6136bb01de8e5668ba15abfa499959476ba",
+    ".godot/smooth-portable-visible-final-v2/hearth/engine.log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".godot/smooth-portable-visible-final-v2/garden-entry/measurement.json": "739c1db0d067f62d6ba32ce70081c9b32cecc95f78d817b417bcde47215945f2",
+    ".godot/smooth-portable-visible-final-v2/garden-entry/engine.log": "df150b1ecd958970cb2b628ed3fc0c3128350950aba3088734843832d45b882e",
+    ".godot/smooth-portable-visible-final-v2/garden-entry/engine.log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".godot/smooth-portable-visible-final-v2/paid-fire-bolt/measurement.json": "9c5645e0ab18d8d7f2f73d449c69e880af9ff00cc9ab84ef49c4be76eda43748",
+    ".godot/smooth-portable-visible-final-v2/paid-fire-bolt/engine.log": "5efee76d941fc5993a6eda53ef79a6ca6c80212aa619f6b7c36d1514516fc414",
+    ".godot/smooth-portable-visible-final-v2/paid-fire-bolt/engine.log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".godot/smooth-portable-visible-final-v2/paid-all-six-mantle/measurement.json": "b326a2214a00bbe6d63ae516aa5d4f69dabef08e1414b07af87f45c2fa269ff5",
+    ".godot/smooth-portable-visible-final-v2/paid-all-six-mantle/engine.log": "a507a486f4e97dd1c12fee57913a68b64c1aee2c5ffee1302b5d710990682078",
+    ".godot/smooth-portable-visible-final-v2/paid-all-six-mantle/engine.log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/performance-qualification-20261010/portable-visible-v1.json": "677a9a6ce10bc6777675a60d072b82b8b6399579dd2f38812a802ec1942e740f",
+    ".godot/smooth-portable-visible-final-v1/measurement.json": "677a9a6ce10bc6777675a60d072b82b8b6399579dd2f38812a802ec1942e740f",
+    ".godot/smooth-portable-visible-final-v1/BUILD-STATE.input.json": "a2db2ba19e58bf09d703fecbc60431775cd4f2786fc5fe912c2121bdf98a67dc",
+    ".godot/smooth-portable-visible-final-v1/hearth/measurement.json": "42fd5bacb6857edc27c8798e9127b1b28db14a7e93c34ded6f0994891bd9af4d",
+    ".godot/smooth-portable-visible-final-v1/hearth/engine.log": "fd4a313c8744bd2168f3458fda9a8eb9c5b9d0dfc0cd68cc6a6abf88c5fec77d",
+    ".godot/smooth-portable-visible-final-v1/hearth/engine.log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".godot/smooth-portable-visible-final-v1/garden-entry/measurement.json": "535096bbd8f0c6dbd742e2d0d4a3a36565561796d99ba1624011c0de2d6ebed9",
+    ".godot/smooth-portable-visible-final-v1/garden-entry/engine.log": "7ddbd0428c006aa668a49d5ce791a87629f6f913d10f7d7a735502c2ca5ac8c2",
+    ".godot/smooth-portable-visible-final-v1/garden-entry/engine.log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".godot/smooth-portable-visible-final-v1/paid-fire-bolt/measurement.json": "d5c81474707666b0653110bf49138805f16da62a7a0251360df5fe01a68edd61",
+    ".godot/smooth-portable-visible-final-v1/paid-fire-bolt/engine.log": "3c3a5d75abb7e201834a58ac37bef7f3f0ec94359d806ca9bbd7a1bda22ce2a4",
+    ".godot/smooth-portable-visible-final-v1/paid-fire-bolt/engine.log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".godot/smooth-portable-visible-final-v1/paid-all-six-mantle/measurement.json": "88c67f1e9e6c6f85937719acc443df892bada6b0fc4e20217c9042d16afd3ad7",
+    ".godot/smooth-portable-visible-final-v1/paid-all-six-mantle/engine.log": "26e848903abb7c8a11563533b1f36109fe566d94a8cb51bbce87bf7ef4bb0ace",
+    ".godot/smooth-portable-visible-final-v1/paid-all-six-mantle/engine.log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/performance-qualification-20261010/old-portable-visible.json": "0460a8b85476119c1655968dc3d3adf3a0b86d76dcb99b9040c1d949ec2cbe29",
+    ".godot/smooth-old-portable-visible-v1/measurement.json": "0460a8b85476119c1655968dc3d3adf3a0b86d76dcb99b9040c1d949ec2cbe29",
+    ".godot/smooth-old-portable-visible-v1/BUILD-STATE.input.json": "c18ec0ba289407e6f9eb76f58effcbdb41a215c0ba9583b717ea8a17060ca225",
+    ".godot/smooth-old-portable-visible-v1/hearth/measurement.json": "5702b770f803b8e627df1fa5a129e4ad0f205ec3cfa98c7d8a4cbcaa65e7d6d6",
+    ".godot/smooth-old-portable-visible-v1/hearth/engine.log": "3135f7b01a93d5129fef9a78ef0e6025e87359b3871626469448cfeec9778939",
+    ".godot/smooth-old-portable-visible-v1/hearth/engine.log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".godot/smooth-old-portable-visible-v1/garden-entry/measurement.json": "0f40c9e387a1d135bb68b6b96e939f1b95017586f250e965d28526d456fb32bc",
+    ".godot/smooth-old-portable-visible-v1/garden-entry/engine.log": "7dd77330949709579fa0e31ddbfb843a4feaa70b670243eb071b6d5da8698e6b",
+    ".godot/smooth-old-portable-visible-v1/garden-entry/engine.log.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exports/hex-smooth-fields-20261010/windows/hex.exe": "04baf75cc1d69dd93eb709533ecab4fd7770bb8a530645717017a06a9d9809fc",
+    "exports/hex-smooth-fields-20261010/windows/hex.pck": "4d75c71cc68845da6053733653f1de405ce69bd897d01402f80709a7a44ea812",
+    "exports/hex-smooth-fields-20261010/windows/BUILD-STATE.json": "61fc8d5b93c5d71d609008bc8f9267f41cf04cc5381562a48dfac251f7297382",
+    "scripts/measure-portable.ps1": "6235a1d9676b86f49426c003178a7e45483a766397f5936a625ac894506bf781",
+    ".godot/audit-final-portable.py": "41dc3d641bd8def9d06738bdddeb8d2edf77ed45d6c625730cde55f90fb27026"
+  },
+  "final_window_totals": {
+    "total": 245,
+    "foreground_process_matches": {
+      "true": 243,
+      "false": 2,
+      "null": 0
+    },
+    "main_window_available": {
+      "true": 243,
+      "false": 2,
+      "null": 0
+    },
+    "main_window_visible": {
+      "true": 243,
+      "false": 0,
+      "null": 2
+    },
+    "main_window_minimized": {
+      "true": 0,
+      "false": 243,
+      "null": 2
+    },
+    "available_and_foreground_visible_not_minimized": 243,
+    "errors": 0,
+    "exceptions": [
+      {
+        "elapsed_ms": 256,
+        "foreground_process_matches": false,
+        "main_window_available": false,
+        "main_window_visible": null,
+        "main_window_minimized": null,
+        "error": null
+      },
+      {
+        "elapsed_ms": 31192,
+        "foreground_process_matches": false,
+        "main_window_available": false,
+        "main_window_visible": null,
+        "main_window_minimized": null,
+        "error": null
+      }
+    ]
+  },
+  "runs": [
+    {
+      "receipt": "docs/performance-qualification-20261010/portable-visible-final.json",
+      "receipt_sha256": "0038f8d2b2fd7a736f906b68f69d2d267418dc58824d9a11636678f285650236",
+      "build_id": "p60-be3efd332e1a",
+      "wrapper_sha256": "6235a1d9676b86f49426c003178a7e45483a766397f5936a625ac894506bf781",
+      "cases": [
+        {
+          "case": "hearth",
+          "fps": {
+            "sample_count": 14,
+            "mean_reported_fps": 57.642857142857146,
+            "minimum_reported_fps": 46.0,
+            "maximum_reported_fps": 60.0
+          },
+          "all_reported_fps_in_log_order": [
+            57.0,
+            57.0,
+            59.0,
+            54.0,
+            46.0,
+            60.0,
+            59.0,
+            59.0,
+            58.0,
+            58.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0
+          ],
+          "cast_admission_ticks": [],
+          "refused_cast_ticks": [],
+          "reaction_recipe_ids_in_log_order": [],
+          "window_observations": {
+            "total": 59,
+            "foreground_process_matches": {
+              "true": 59,
+              "false": 0,
+              "null": 0
+            },
+            "main_window_available": {
+              "true": 59,
+              "false": 0,
+              "null": 0
+            },
+            "main_window_visible": {
+              "true": 59,
+              "false": 0,
+              "null": 0
+            },
+            "main_window_minimized": {
+              "true": 0,
+              "false": 59,
+              "null": 0
+            },
+            "available_and_foreground_visible_not_minimized": 59,
+            "errors": 0,
+            "exceptions": []
+          },
+          "process_wall_seconds": 31.8145056,
+          "engine_iterations_requested": 900,
+          "log_sha256": "daa2dbb3d19ab268c6df932a85d9d6136bb01de8e5668ba15abfa499959476ba",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_bytes": 0
+        },
+        {
+          "case": "garden-entry",
+          "fps": {
+            "sample_count": 14,
+            "mean_reported_fps": 59.0,
+            "minimum_reported_fps": 56.0,
+            "maximum_reported_fps": 61.0
+          },
+          "all_reported_fps_in_log_order": [
+            60.0,
+            57.0,
+            58.0,
+            60.0,
+            60.0,
+            60.0,
+            56.0,
+            60.0,
+            60.0,
+            57.0,
+            61.0,
+            60.0,
+            58.0,
+            59.0
+          ],
+          "cast_admission_ticks": [],
+          "refused_cast_ticks": [],
+          "reaction_recipe_ids_in_log_order": [],
+          "window_observations": {
+            "total": 56,
+            "foreground_process_matches": {
+              "true": 55,
+              "false": 1,
+              "null": 0
+            },
+            "main_window_available": {
+              "true": 55,
+              "false": 1,
+              "null": 0
+            },
+            "main_window_visible": {
+              "true": 55,
+              "false": 0,
+              "null": 1
+            },
+            "main_window_minimized": {
+              "true": 0,
+              "false": 55,
+              "null": 1
+            },
+            "available_and_foreground_visible_not_minimized": 55,
+            "errors": 0,
+            "exceptions": [
+              {
+                "elapsed_ms": 256,
+                "foreground_process_matches": false,
+                "main_window_available": false,
+                "main_window_visible": null,
+                "main_window_minimized": null,
+                "error": null
+              }
+            ]
+          },
+          "process_wall_seconds": 28.9534969,
+          "engine_iterations_requested": 900,
+          "log_sha256": "df150b1ecd958970cb2b628ed3fc0c3128350950aba3088734843832d45b882e",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_bytes": 0
+        },
+        {
+          "case": "paid-fire-bolt",
+          "fps": {
+            "sample_count": 16,
+            "mean_reported_fps": 49.125,
+            "minimum_reported_fps": 21.0,
+            "maximum_reported_fps": 60.0
+          },
+          "all_reported_fps_in_log_order": [
+            31.0,
+            22.0,
+            21.0,
+            22.0,
+            39.0,
+            51.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0
+          ],
+          "cast_admission_ticks": [
+            2,
+            34,
+            66,
+            98,
+            130,
+            162,
+            194,
+            226,
+            258,
+            290,
+            322,
+            354
+          ],
+          "refused_cast_ticks": [],
+          "reaction_recipe_ids_in_log_order": [
+            309,
+            309,
+            309,
+            309,
+            309,
+            309
+          ],
+          "window_observations": {
+            "total": 61,
+            "foreground_process_matches": {
+              "true": 60,
+              "false": 1,
+              "null": 0
+            },
+            "main_window_available": {
+              "true": 60,
+              "false": 1,
+              "null": 0
+            },
+            "main_window_visible": {
+              "true": 60,
+              "false": 0,
+              "null": 1
+            },
+            "main_window_minimized": {
+              "true": 0,
+              "false": 60,
+              "null": 1
+            },
+            "available_and_foreground_visible_not_minimized": 60,
+            "errors": 0,
+            "exceptions": [
+              {
+                "elapsed_ms": 31192,
+                "foreground_process_matches": false,
+                "main_window_available": false,
+                "main_window_visible": null,
+                "main_window_minimized": null,
+                "error": null
+              }
+            ]
+          },
+          "process_wall_seconds": 31.4373337,
+          "engine_iterations_requested": 900,
+          "log_sha256": "5efee76d941fc5993a6eda53ef79a6ca6c80212aa619f6b7c36d1514516fc414",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_bytes": 0
+        },
+        {
+          "case": "paid-all-six-mantle",
+          "fps": {
+            "sample_count": 21,
+            "mean_reported_fps": 38.714285714285715,
+            "minimum_reported_fps": 36.0,
+            "maximum_reported_fps": 50.0
+          },
+          "all_reported_fps_in_log_order": [
+            40.0,
+            40.0,
+            37.0,
+            38.0,
+            37.0,
+            37.0,
+            37.0,
+            37.0,
+            37.0,
+            37.0,
+            37.0,
+            37.0,
+            38.0,
+            37.0,
+            36.0,
+            36.0,
+            38.0,
+            39.0,
+            42.0,
+            46.0,
+            50.0
+          ],
+          "cast_admission_ticks": [
+            2,
+            195,
+            388,
+            581,
+            774,
+            967,
+            1160,
+            1353,
+            1546,
+            1739,
+            1932,
+            2125
+          ],
+          "refused_cast_ticks": [],
+          "reaction_recipe_ids_in_log_order": [],
+          "window_observations": {
+            "total": 69,
+            "foreground_process_matches": {
+              "true": 69,
+              "false": 0,
+              "null": 0
+            },
+            "main_window_available": {
+              "true": 69,
+              "false": 0,
+              "null": 0
+            },
+            "main_window_visible": {
+              "true": 69,
+              "false": 0,
+              "null": 0
+            },
+            "main_window_minimized": {
+              "true": 0,
+              "false": 69,
+              "null": 0
+            },
+            "available_and_foreground_visible_not_minimized": 69,
+            "errors": 0,
+            "exceptions": []
+          },
+          "process_wall_seconds": 35.6390618,
+          "engine_iterations_requested": 900,
+          "log_sha256": "a507a486f4e97dd1c12fee57913a68b64c1aee2c5ffee1302b5d710990682078",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_bytes": 0
+        }
+      ],
+      "available_memory_before_mb": 808.65,
+      "available_memory_after_mb": 915.89
+    },
+    {
+      "receipt": "docs/performance-qualification-20261010/portable-visible-v1.json",
+      "receipt_sha256": "677a9a6ce10bc6777675a60d072b82b8b6399579dd2f38812a802ec1942e740f",
+      "build_id": "p60-d649c4d1d99c",
+      "wrapper_sha256": "6235a1d9676b86f49426c003178a7e45483a766397f5936a625ac894506bf781",
+      "cases": [
+        {
+          "case": "hearth",
+          "fps": {
+            "sample_count": 13,
+            "mean_reported_fps": 59.76923076923077,
+            "minimum_reported_fps": 58.0,
+            "maximum_reported_fps": 60.0
+          },
+          "all_reported_fps_in_log_order": [
+            59.0,
+            60.0,
+            58.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0
+          ],
+          "cast_admission_ticks": [],
+          "refused_cast_ticks": [],
+          "reaction_recipe_ids_in_log_order": [],
+          "window_observations": {
+            "total": 57,
+            "foreground_process_matches": {
+              "true": 56,
+              "false": 0,
+              "null": 1
+            },
+            "main_window_available": {
+              "true": 56,
+              "false": 0,
+              "null": 1
+            },
+            "main_window_visible": {
+              "true": 56,
+              "false": 0,
+              "null": 1
+            },
+            "main_window_minimized": {
+              "true": 0,
+              "false": 56,
+              "null": 1
+            },
+            "available_and_foreground_visible_not_minimized": 56,
+            "errors": 1,
+            "exceptions": [
+              {
+                "elapsed_ms": 29194,
+                "foreground_process_matches": null,
+                "main_window_available": null,
+                "main_window_visible": null,
+                "main_window_minimized": null,
+                "error": "Process exited before this observation."
+              }
+            ]
+          },
+          "process_wall_seconds": 30.0815804,
+          "engine_iterations_requested": 900,
+          "log_sha256": "fd4a313c8744bd2168f3458fda9a8eb9c5b9d0dfc0cd68cc6a6abf88c5fec77d",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_bytes": 0
+        },
+        {
+          "case": "garden-entry",
+          "fps": {
+            "sample_count": 14,
+            "mean_reported_fps": 57.57142857142857,
+            "minimum_reported_fps": 51.0,
+            "maximum_reported_fps": 60.0
+          },
+          "all_reported_fps_in_log_order": [
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0,
+            52.0,
+            58.0,
+            60.0,
+            57.0,
+            51.0,
+            60.0,
+            55.0,
+            53.0,
+            60.0
+          ],
+          "cast_admission_ticks": [],
+          "refused_cast_ticks": [],
+          "reaction_recipe_ids_in_log_order": [],
+          "window_observations": {
+            "total": 56,
+            "foreground_process_matches": {
+              "true": 55,
+              "false": 1,
+              "null": 0
+            },
+            "main_window_available": {
+              "true": 55,
+              "false": 1,
+              "null": 0
+            },
+            "main_window_visible": {
+              "true": 55,
+              "false": 0,
+              "null": 1
+            },
+            "main_window_minimized": {
+              "true": 0,
+              "false": 55,
+              "null": 1
+            },
+            "available_and_foreground_visible_not_minimized": 55,
+            "errors": 0,
+            "exceptions": [
+              {
+                "elapsed_ms": 28714,
+                "foreground_process_matches": false,
+                "main_window_available": false,
+                "main_window_visible": null,
+                "main_window_minimized": null,
+                "error": null
+              }
+            ]
+          },
+          "process_wall_seconds": 28.9347965,
+          "engine_iterations_requested": 900,
+          "log_sha256": "7ddbd0428c006aa668a49d5ce791a87629f6f913d10f7d7a735502c2ca5ac8c2",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_bytes": 0
+        },
+        {
+          "case": "paid-fire-bolt",
+          "fps": {
+            "sample_count": 18,
+            "mean_reported_fps": 44.666666666666664,
+            "minimum_reported_fps": 11.0,
+            "maximum_reported_fps": 61.0
+          },
+          "all_reported_fps_in_log_order": [
+            26.0,
+            18.0,
+            13.0,
+            11.0,
+            11.0,
+            23.0,
+            44.0,
+            60.0,
+            60.0,
+            60.0,
+            59.0,
+            61.0,
+            59.0,
+            59.0,
+            60.0,
+            60.0,
+            60.0,
+            60.0
+          ],
+          "cast_admission_ticks": [
+            2,
+            34,
+            66,
+            98,
+            130,
+            162,
+            194,
+            226,
+            258,
+            290,
+            322,
+            354
+          ],
+          "refused_cast_ticks": [],
+          "reaction_recipe_ids_in_log_order": [
+            309,
+            309,
+            309,
+            309,
+            309,
+            309
+          ],
+          "window_observations": {
+            "total": 62,
+            "foreground_process_matches": {
+              "true": 62,
+              "false": 0,
+              "null": 0
+            },
+            "main_window_available": {
+              "true": 62,
+              "false": 0,
+              "null": 0
+            },
+            "main_window_visible": {
+              "true": 62,
+              "false": 0,
+              "null": 0
+            },
+            "main_window_minimized": {
+              "true": 0,
+              "false": 62,
+              "null": 0
+            },
+            "available_and_foreground_visible_not_minimized": 62,
+            "errors": 0,
+            "exceptions": []
+          },
+          "process_wall_seconds": 32.3364355,
+          "engine_iterations_requested": 900,
+          "log_sha256": "3c3a5d75abb7e201834a58ac37bef7f3f0ec94359d806ca9bbd7a1bda22ce2a4",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_bytes": 0
+        },
+        {
+          "case": "paid-all-six-mantle",
+          "fps": {
+            "sample_count": 26,
+            "mean_reported_fps": 29.923076923076923,
+            "minimum_reported_fps": 12.0,
+            "maximum_reported_fps": 60.0
+          },
+          "all_reported_fps_in_log_order": [
+            25.0,
+            32.0,
+            27.0,
+            22.0,
+            26.0,
+            29.0,
+            27.0,
+            30.0,
+            21.0,
+            22.0,
+            17.0,
+            25.0,
+            29.0,
+            27.0,
+            29.0,
+            20.0,
+            12.0,
+            19.0,
+            29.0,
+            33.0,
+            44.0,
+            46.0,
+            48.0,
+            20.0,
+            59.0,
+            60.0
+          ],
+          "cast_admission_ticks": [
+            2,
+            195,
+            388,
+            581,
+            774,
+            967,
+            1160,
+            1353,
+            1546,
+            1739,
+            1932,
+            2125
+          ],
+          "refused_cast_ticks": [],
+          "reaction_recipe_ids_in_log_order": [],
+          "window_observations": {
+            "total": 79,
+            "foreground_process_matches": {
+              "true": 78,
+              "false": 1,
+              "null": 0
+            },
+            "main_window_available": {
+              "true": 78,
+              "false": 1,
+              "null": 0
+            },
+            "main_window_visible": {
+              "true": 78,
+              "false": 0,
+              "null": 1
+            },
+            "main_window_minimized": {
+              "true": 0,
+              "false": 78,
+              "null": 1
+            },
+            "available_and_foreground_visible_not_minimized": 78,
+            "errors": 0,
+            "exceptions": [
+              {
+                "elapsed_ms": 259,
+                "foreground_process_matches": false,
+                "main_window_available": false,
+                "main_window_visible": null,
+                "main_window_minimized": null,
+                "error": null
+              }
+            ]
+          },
+          "process_wall_seconds": 41.1362369,
+          "engine_iterations_requested": 900,
+          "log_sha256": "26e848903abb7c8a11563533b1f36109fe566d94a8cb51bbce87bf7ef4bb0ace",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_bytes": 0
+        }
+      ],
+      "available_memory_before_mb": 1243.16,
+      "available_memory_after_mb": 1433.27
+    },
+    {
+      "receipt": "docs/performance-qualification-20261010/old-portable-visible.json",
+      "receipt_sha256": "0460a8b85476119c1655968dc3d3adf3a0b86d76dcb99b9040c1d949ec2cbe29",
+      "build_id": "p60-6d80c3bce71e",
+      "wrapper_sha256": "6235a1d9676b86f49426c003178a7e45483a766397f5936a625ac894506bf781",
+      "cases": [
+        {
+          "case": "hearth",
+          "fps": {
+            "sample_count": 7,
+            "mean_reported_fps": 24.571428571428573,
+            "minimum_reported_fps": 19.0,
+            "maximum_reported_fps": 28.0
+          },
+          "all_reported_fps_in_log_order": [
+            24.0,
+            27.0,
+            27.0,
+            28.0,
+            22.0,
+            19.0,
+            25.0
+          ],
+          "cast_admission_ticks": [],
+          "refused_cast_ticks": [],
+          "reaction_recipe_ids_in_log_order": [],
+          "window_observations": {
+            "total": 48,
+            "foreground_process_matches": {
+              "true": 47,
+              "false": 0,
+              "null": 1
+            },
+            "main_window_available": {
+              "true": 47,
+              "false": 0,
+              "null": 1
+            },
+            "main_window_visible": {
+              "true": 47,
+              "false": 0,
+              "null": 1
+            },
+            "main_window_minimized": {
+              "true": 0,
+              "false": 47,
+              "null": 1
+            },
+            "available_and_foreground_visible_not_minimized": 47,
+            "errors": 1,
+            "exceptions": [
+              {
+                "elapsed_ms": 24609,
+                "foreground_process_matches": null,
+                "main_window_available": null,
+                "main_window_visible": null,
+                "main_window_minimized": null,
+                "error": "Process exited before this observation."
+              }
+            ]
+          },
+          "process_wall_seconds": 25.9022429,
+          "engine_iterations_requested": 180,
+          "log_sha256": "3135f7b01a93d5129fef9a78ef0e6025e87359b3871626469448cfeec9778939",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_bytes": 0
+        },
+        {
+          "case": "garden-entry",
+          "fps": {
+            "sample_count": 63,
+            "mean_reported_fps": 2.746031746031746,
+            "minimum_reported_fps": 1.0,
+            "maximum_reported_fps": 5.0
+          },
+          "all_reported_fps_in_log_order": [
+            3.0,
+            2.0,
+            3.0,
+            2.0,
+            3.0,
+            3.0,
+            2.0,
+            3.0,
+            2.0,
+            2.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            2.0,
+            3.0,
+            3.0,
+            5.0,
+            4.0,
+            3.0,
+            3.0,
+            1.0,
+            1.0,
+            3.0,
+            2.0,
+            2.0,
+            3.0,
+            2.0,
+            2.0,
+            3.0,
+            2.0,
+            2.0,
+            3.0,
+            2.0,
+            3.0,
+            2.0,
+            3.0,
+            3.0,
+            4.0,
+            2.0,
+            3.0,
+            3.0,
+            4.0,
+            3.0,
+            3.0,
+            2.0,
+            3.0,
+            2.0,
+            2.0,
+            3.0,
+            3.0,
+            3.0,
+            2.0,
+            3.0,
+            4.0,
+            3.0,
+            4.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0
+          ],
+          "cast_admission_ticks": [],
+          "refused_cast_ticks": [],
+          "reaction_recipe_ids_in_log_order": [],
+          "window_observations": {
+            "total": 158,
+            "foreground_process_matches": {
+              "true": 156,
+              "false": 1,
+              "null": 1
+            },
+            "main_window_available": {
+              "true": 156,
+              "false": 1,
+              "null": 1
+            },
+            "main_window_visible": {
+              "true": 156,
+              "false": 0,
+              "null": 2
+            },
+            "main_window_minimized": {
+              "true": 0,
+              "false": 156,
+              "null": 2
+            },
+            "available_and_foreground_visible_not_minimized": 156,
+            "errors": 1,
+            "exceptions": [
+              {
+                "elapsed_ms": 265,
+                "foreground_process_matches": false,
+                "main_window_available": false,
+                "main_window_visible": null,
+                "main_window_minimized": null,
+                "error": null
+              },
+              {
+                "elapsed_ms": 81505,
+                "foreground_process_matches": null,
+                "main_window_available": null,
+                "main_window_visible": null,
+                "main_window_minimized": null,
+                "error": "Process exited before this observation."
+              }
+            ]
+          },
+          "process_wall_seconds": 81.7119409,
+          "engine_iterations_requested": 180,
+          "log_sha256": "7dd77330949709579fa0e31ddbfb843a4feaa70b670243eb071b6d5da8698e6b",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_bytes": 0
+        }
+      ],
+      "available_memory_before_mb": 890.03,
+      "available_memory_after_mb": 1440.05
+    }
+  ],
+  "proof_boundaries": [
+    "FPS values are all engine-reported one-second samples, not presentation timestamps, per-frame intervals, GPU timers, input latency, p95 or a certified sustained rate. No early or idle samples were omitted.",
+    "Both paid cases have twelve logged admissions and no logged refusals. This verifies finite ordinary casting, not unlimited sustained pressure. Fields and spells are not refilled by this audit or wrapper.",
+    "Final Fire reports31,22,21,22,39,51 FPS followed by ten60FPS samples. Its49.125 whole-run mean includes later idle/expiry recovery and must not represent the heavy section.",
+    "Final Mantle reports36..50FPS with38.714286 mean across21 samples; the casting case remains below60FPS.",
+    "All243 available final window samples are foreground-owned, visible and not minimized. The other two samples have unavailable handles: Garden at256ms after launch and Fire at31192ms near termination. No uninterrupted focus or unobscured scanout claim follows from periodic sampling.",
+    "Final and first-pass requests match exactly at900 engine iterations, but one-second sample counts, wall durations, background load, available memory and OS/cache histories differ. They are sequential observed comparisons, not controlled speedup ratios.",
+    "The old6d80 build uses180 iterations for only Hearth/Garden. Its Garden run therefore has a different duration and workload history; do not calculate a matched ratio against the final900-iteration runs.",
+    "Startup/loading/logging remain in process lifetime and the emitted FPS observations are retained. Process wall seconds include launch/teardown;900 requested iterations are neither900 proven displayed frames nor900seconds.",
+    "Final payload bytes were independently hashed now and agree with the recorded before/after endpoints. Historical payload invariance is checked against its saved receipts and BUILD-STATE input, not re-executed.",
+    "This audit establishes saved evidence consistency and visible portable observations on this PC. It adds no human feel, multiplayer, other hardware or long-duration stability acceptance."
+  ]
+}

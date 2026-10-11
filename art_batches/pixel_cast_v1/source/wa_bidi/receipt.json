@@ -1,0 +1,51 @@
+{
+  "id": "wa_bidi",
+  "display_name": "Wa Bidi",
+  "race": "goblin",
+  "status": "source_ready_for_lead_review",
+  "generation_tool": "built-in image_gen",
+  "attempts": 1,
+  "generated_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-3caf-7f02-8030-e4d35e2365b4\\exec-be331439-3c0e-450a-a70d-40b2741ead0a.png",
+  "reference_paths": [
+    "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/wa_bidi-detail.png",
+    "C:/Users/sende/Pictures/styleref1.png",
+    "C:/Users/sende/Projects/hex/art_batches/pixel_body_pilot_v1/source/s-wayne.png"
+  ],
+  "observed_columns": 8,
+  "observed_rows": 4,
+  "dimensions": [1774, 887],
+  "alpha_check": {
+    "format": "Format32bppArgb",
+    "corner_alpha": 0,
+    "top_middle_gutter_alpha": 0,
+    "bottom_right_alpha": 0
+  },
+  "source_row_mapping": {
+    "idle": 0,
+    "walk_left_contact": 1,
+    "walk_right_contact": 2,
+    "cast": 3
+  },
+  "directions": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "inspection": {
+    "directions": "Eight view angles and proper eye-free back heads. SE vs E is a subtle turn.",
+    "contacts": "Walk rows differ in arms and leg/boot spacing; contact reversal clearest in front/back and diagonals. Profile fore/aft overlap requires lead animated review.",
+    "whole_bodies": "32 complete bodies, generous gutters.",
+    "cast": "Forward empty hands across eight directions."
+  },
+  "visual_issues": [
+    "Small dark/gold outer fringe; deterministic alpha cleanup may be useful.",
+    "Profile contact alternation is subtle; not claiming final all-direction animated acceptance."
+  ],
+  "prompt": "Use case: stylized-concept. Asset: fixed-pixel game sprite atlas on genuinely transparent RGBA.\nReferences: image 1 is exact character identity and clothing; image 2 is retro pixel style only (ignore its old names); image 3 is compact common-head/body proportions and readable charming finish only, NOT its row count.\nMake exactly 32 whole-body sprites in exactly 8 equal columns by 4 equal rows. Generous empty transparent gutters, identical size and baseline, feet/hair/appendages fully intact in each cell. Coarse clean pixel clusters, crisp limited-palette outlines, compact modest charming proportions matching image 3; no painterly smoothing.\nEVERY row column order: S front, SE front/right45, E right profile, NE back/right45, N straight back, NW back/left45, W left profile, SW front/left45. NE/N/NW show the back of the head with NO frontal eyes. Torso and feet rotate with head. Eight unmistakably distinct directions.\nRows only: 0 idle standing; 1 walk contact with LEFT foot forward and RIGHT arm forward; 2 opposite walk contact RIGHT foot forward and LEFT arm forward, genuinely alternating feet not duplicated poses; 3 planted stance, BOTH EMPTY hands forward casting, no magic. Never add a fifth row.\nMaintain exact face, costume, anatomy and palette in all32 frames. No staves, weapons, held objects, ground shadows, scenery, text, labels, grid lines, sparkles or baked spells. Wide transparent canvas.\nSubject: Wa Bidi, small goblin: lime-green skin, very long pointed ears, tousled dark charcoal hair, yellow eyes, dark green leaf-panel tunic with gold edging, brown leather wrist guards and boots. NO wings, NO goggles. Use exact image1 identity.\nCritical animation constraint: rows1 and2 must use opposite actual limb positions. For E/W profiles the near boot must visibly go from BEHIND the torso in row1 to AHEAD of it in row2; far boot does the opposite. For S/N, lower/forward boot switches screen side. Arms counter-swing. Broad enough stride to read at tiny sprite scale.",
+  "runtime_imports_or_tests": "NOT_RUN; source art only"
+}

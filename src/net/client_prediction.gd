@@ -1,12 +1,14 @@
 class_name ClientPrediction
 extends RefCounted
 
+const ExpandedSpellState = preload("res://src/net/expanded_spell_state_codec.gd")
+
 
 const MAX_PENDING_INPUTS: int = 48
 const SOFT_CORRECTION_LIMIT_PIXELS: float = 72.0
 const CORRECTION_RECOVERY_PIXELS_PER_SECOND: float = 720.0
 const MOVEMENT_HELD_MASK: int = SimCommand.HELD_SPRINT | SimCommand.HELD_JUMP | SimCommand.HELD_FAST_FALL
-const MOVEMENT_PRESSED_MASK: int = SimCommand.PRESSED_EVADE | SimCommand.PRESSED_JUMP | SimCommand.PRESSED_TECHNIQUE | SimCommand.PRESSED_SLIDE
+const MOVEMENT_PRESSED_MASK: int = SimCommand.PRESSED_EVADE | SimCommand.PRESSED_JUMP | SimCommand.PRESSED_TECHNIQUE | SimCommand.PRESSED_SLIDE | SimCommand.PRESSED_CANCEL_MOVEMENT
 const STATE_FIELDS: Array[StringName] = [
 	&"entity_id",
 	&"position_x", &"position_y", &"position_remainder_x", &"position_remainder_y",
@@ -37,8 +39,12 @@ const STATE_FIELDS: Array[StringName] = [
 	&"landing_ticks", &"landing_intensity", &"impact_recovery_ticks", &"sprinting",
 	&"control_state", &"control_ticks", &"control_x", &"control_y", &"control_speed", &"slow_ratio",
 	&"team_id", &"health", &"spawn_protection_ticks",
+	&"flight_capable", &"jumpsquat_active", &"jumpsquat_ticks", &"double_jump_used", &"wallrun_armed", &"crouching",
+	&"champion_wire_id", &"health_maximum", &"health_recovery_per_second", &"health_recovery_remainder", &"health_recovery_delay_ticks",
+	&"flux", &"flux_maximum", &"flux_recovery_per_second", &"flux_recovery_remainder", &"flux_recovery_delay_ticks", &"flux_recovery_idle_ticks",
+	&"pending_cast_wire_id", &"pending_cast_ticks", &"cast_recovery_ticks",
 ]
-const BOOLEAN_FIELDS: Array[StringName] = [&"fast_falling", &"wave_dash_queued", &"sprinting", &"slide_held_last_tick", &"fast_fall_armed", &"evade_buffer_airborne", &"air_dodge_used", &"jump_held_last_tick", &"air_floating", &"float_used"]
+const BOOLEAN_FIELDS: Array[StringName] = [&"fast_falling", &"wave_dash_queued", &"sprinting", &"slide_held_last_tick", &"fast_fall_armed", &"evade_buffer_airborne", &"air_dodge_used", &"jump_held_last_tick", &"air_floating", &"float_used", &"flight_capable", &"jumpsquat_active", &"double_jump_used", &"wallrun_armed", &"crouching"]
 const DIRECTION_FIELDS: Array[StringName] = [
 	&"facing_x", &"facing_y", &"aim_x", &"aim_y",
 	&"landing_input_x", &"landing_input_y", &"hop_x", &"hop_y", &"air_dodge_x", &"air_dodge_y",
@@ -48,6 +54,7 @@ const DIRECTION_FIELDS: Array[StringName] = [
 	&"control_x", &"control_y",
 ]
 const TIMER_FIELDS: Array[StringName] = [
+	&"jumpsquat_ticks",
 	&"spawn_protection_ticks",
 	&"movement_commitment_ticks", &"wall_air_ticks",
 	&"stamina_recovery_delay_ticks", &"jump_buffer_ticks", &"technique_buffer_ticks", &"slide_buffer_ticks",
@@ -229,15 +236,18 @@ func estimated_ack_delay_ms() -> int:
 
 
 func _step_prediction(command: SimCommand) -> void:
-	# Eligibility is authoritative snapshot data. Only advance the one timer
-	# used by predicted discharge; combat/recovery still reconcile from the host.
+	# Identity and paid cast state come from the authoritative snapshot. Forecast
+	# recovery and existing cast-clock expiry so movement perk windows stay current.
+	# New casts, their payment, and combat outcomes still reconcile from the host.
 	if predicted_state.health <= 0:
 		SimWorld._idle_defeated(predicted_state)
 		predicted_tick += 1
 		return
-	predicted_state.spawn_protection_ticks = maxi(0, predicted_state.spawn_protection_ticks - 1)
 	predicted_state.aim_x = command.aim_x
 	predicted_state.aim_y = command.aim_y
+	PlayerResourcesSystem.step(predicted_state, config)
+	var status_events: Array[Dictionary] = []
+	SpellStatusPolicy.advance(predicted_state, config, status_events, false)
 	if hex_authority != null:
 		hex_authority.expire_at(predicted_tick)
 		hex_authority.fracture_products(predicted_tick)
@@ -260,40 +270,68 @@ func _step_prediction(command: SimCommand) -> void:
 		acceleration_ratio = int(modifiers.acceleration_ratio)
 		braking_ratio = int(modifiers.braking_ratio)
 	var previous := {"point": point, "height": predicted_state.air_height}
+	ground_ratio = mini(ground_ratio, SpellStatusPolicy.movement_ratio(predicted_state))
 	MovementSystem.step(predicted_state, command, config, reaction_movement, ground_ratio, acceleration_ratio, braking_ratio)
+	# Perk windows use existing authoritative cast clocks. Predict their expiry,
+	# never a new cast, projectile, payment or hit that has not been acknowledged.
+	predicted_state.cast_recovery_ticks = maxi(0, predicted_state.cast_recovery_ticks - 1)
+	if predicted_state.pending_cast_ticks > 0:
+		predicted_state.pending_cast_ticks -= 1
+		if predicted_state.pending_cast_ticks == 0:
+			var definition := CombatTuning.cast_definition(predicted_state.pending_cast_wire_id)
+			predicted_state.cast_recovery_ticks = config.milliseconds_to_ticks(int(definition.get("recovery_ms", 0)))
+			predicted_state.pending_cast_wire_id = 0
 	if hex_authority != null:
 		var actors: Array[PlayerState] = [predicted_state]
 		var events: Array[Dictionary] = []
 		hex_authority.apply_product_effects(actors, predicted_tick, config, reaction_movement, events, {predicted_state.entity_id: previous})
 	if CapacitorFieldPolicy.discharge_due(capacitor_lanes, predicted_tick):
 		reaction_movement.begin_actor(Vector2i(predicted_state.position_x, predicted_state.position_y), MovementTuning.PLAYER_RADIUS)
-		CapacitorFieldPolicy.apply_discharge(capacitor_lanes, predicted_state, predicted_tick, reaction_movement)
+		CapacitorFieldPolicy.apply_discharge(capacitor_lanes, predicted_state, predicted_tick, reaction_movement, config)
 	predicted_tick += 1
 
 
 # A matching full snapshot supplies prediction's geometry and timed effects.
 # Prediction owns every mutable dictionary and never changes the replica.
 func bind_hex_world(world: SimWorld) -> bool:
-	# Rebinding is atomic: refusal leaves the prior complete prediction context.
-	# World replacement callers explicitly reset before preparing a new epoch.
+	var prepared := prepare_hex_context(world)
+	if prepared.is_empty(): return false
+	publish_hex_context(prepared)
+	return true
+
+
+# Prepare without touching this predictor. The application can therefore stage
+# replica, prediction and epoch together, including a failed new-world bind.
+func prepare_hex_context(world: SimWorld) -> Dictionary:
 	if world == null or world.hex_court == null:
-		return false
+		return {}
 	var source: HexChemistryWorld = world.hex_court
 	var copy := HexChemistryWorld.new()
-	for field: String in ["cells", "casts", "products", "pending", "sources", "exposure", "flow_carry", "metrics"]:
+	if source.get_script().resource_path == "res://src/sim/hex/hex_chemistry_world.gd":
+		source.clone_cell_storage_to(copy)
+	else:
+		# Extension methods cannot claim ownership or alias authority into a
+		# prediction clone. Preserve the preceding unconditional deep copy.
+		copy.cells = (source.get("cells") as Dictionary).duplicate(true)
+	for field: String in ["casts", "products", "pending", "sources", "exposure", "flow_carry", "metrics"]:
 		copy.set(field, (source.get(field) as Dictionary).duplicate(true))
 	for field: String in ["origin", "next_cast_id", "next_product_id", "next_ground_part_id", "current_tick", "render_revision", "value_revision", "chemistry_enabled"]:
 		copy.set(field, source.get(field))
 	var base := HexWorldSnapshot._clone_base_collision(world.collision)
-	if base == null: return false
+	if base == null: return {}
 	var dynamic := HexCollisionWorld.new(base)
 	copy.collision = base
-	if not dynamic.set_hex_surfaces(copy, world.tick): return false
-	hex_authority = copy
-	hex_context_tick = world.tick
-	collision = dynamic
-	reaction_movement = dynamic
-	return true
+	if not dynamic.set_hex_surfaces(copy, world.tick): return {}
+	return {"authority": copy, "tick": world.tick, "collision": dynamic}
+
+
+# Internal commit of a locally prepared context, never a wire dictionary. No
+# validation/allocation follows the application's publication boundary.
+func publish_hex_context(prepared: Dictionary) -> void:
+	hex_authority = prepared.authority
+	hex_context_tick = int(prepared.tick)
+	collision = prepared.collision
+	reaction_movement = prepared.collision
 
 
 static func capture_packet(state: PlayerState, tick: int, acknowledged_sequence: int, reactions: Array = []) -> Dictionary:
@@ -303,6 +341,7 @@ static func capture_packet(state: PlayerState, tick: int, acknowledged_sequence:
 	for property_name: StringName in STATE_FIELDS:
 		var value: Variant = state.get(property_name)
 		values.append(int(value))
+	values.append_array(PackedInt64Array(Array(state.spell_status_values)))
 	var packet := {"tick": tick, "sequence": acknowledged_sequence, "values": values, "surfaces": ReactionMovementWorld.capture_surfaces(reactions, tick), "lanes": FrostwayFieldPolicy.capture(reactions, tick), "capacitors": CapacitorFieldPolicy.capture(reactions, tick)}
 	return packet if validate_packet(packet) else {}
 
@@ -314,6 +353,7 @@ static func restore_state(values: PackedInt64Array) -> PlayerState:
 	for index: int in range(STATE_FIELDS.size()):
 		var property_name := STATE_FIELDS[index]
 		state.set(property_name, values[index] == 1 if property_name in BOOLEAN_FIELDS else int(values[index]))
+	state.spell_status_values = PackedInt32Array(Array(values.slice(STATE_FIELDS.size())))
 	return state
 
 
@@ -348,11 +388,26 @@ static func validate_packet(packet: Dictionary) -> bool:
 
 
 static func validate_values(values: PackedInt64Array) -> bool:
-	if values.size() != STATE_FIELDS.size():
+	if values.size() != STATE_FIELDS.size() + ExpandedSpellState.STATUS_SIZE or not ExpandedSpellState.valid_status_values(values.slice(STATE_FIELDS.size())):
 		return false
 	if _value(values, &"entity_id") < 2 or _value(values, &"entity_id") > SessionTransport.MAX_PLAYERS:
 		return false
 	if _value(values, &"team_id") < 1 or _value(values, &"team_id") > 256 or _value(values, &"health") < 0 or _value(values, &"health") > 1_000_000:
+		return false
+	if _value(values, &"champion_wire_id") < 0 or _value(values, &"champion_wire_id") > 30:
+		return false
+	for name: StringName in [&"health_maximum", &"flux_maximum"]:
+		if _value(values, name) <= 0 or _value(values, name) > 1_000_000:
+			return false
+	if _value(values, &"health") > _value(values, &"health_maximum") or _value(values, &"flux") < 0 or _value(values, &"flux") > _value(values, &"flux_maximum"):
+		return false
+	for name: StringName in [&"health_recovery_per_second", &"flux_recovery_per_second", &"health_recovery_remainder", &"flux_recovery_remainder", &"health_recovery_delay_ticks", &"flux_recovery_delay_ticks", &"pending_cast_ticks", &"cast_recovery_ticks"]:
+		if _value(values, name) < 0 or _value(values, name) > SessionSnapshot.MAX_TIMER_TICKS:
+			return false
+	if _value(values, &"flux_recovery_idle_ticks") < 0 or _value(values, &"flux_recovery_idle_ticks") > ResourceRecovery.maximum_idle_ticks(120):
+		return false
+	var pending_wire := _value(values, &"pending_cast_wire_id")
+	if pending_wire != 0 and CombatTuning.cast_definition(pending_wire).is_empty():
 		return false
 	for property_name: StringName in [&"position_x", &"position_y"]:
 		if absi(_value(values, property_name)) > SessionSnapshot.MAX_ABSOLUTE_POSITION:
@@ -371,7 +426,9 @@ static func validate_values(values: PackedInt64Array) -> bool:
 			return false
 	if _value(values, &"air_height") < 0 or _value(values, &"air_height") > MovementTuning.AIR_MAX_HEIGHT:
 		return false
-	if _value(values, &"air_vertical_velocity") < -MovementTuning.AIR_TERMINAL_FALL_SPEED or _value(values, &"air_vertical_velocity") > MovementTuning.JUMP_VERTICAL_SPEED:
+	if _value(values, &"air_vertical_velocity") < -MovementTuning.AIR_TERMINAL_FALL_SPEED or _value(values, &"air_vertical_velocity") > MovementTuning.CHARGED_JUMP_VERTICAL_SPEED:
+		return false
+	if _value(values, &"jumpsquat_ticks") > (MovementTuning.JUMPSQUAT_CHARGE_MS * 120 + 999) / 1000:
 		return false
 	if absi(_value(values, &"air_height_remainder")) >= 2 * 120:
 		return false

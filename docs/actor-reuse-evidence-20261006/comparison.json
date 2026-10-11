@@ -1,0 +1,120 @@
+{
+  "schema": "actor-reuse-publication-comparison-v1",
+  "date": "2026-10-06",
+  "audit_status": "PASS",
+  "audit_method": "Independent read-only comparison of the four completed receipts, their raw .godot copies, recorded source hashes, every sample row and statistic, and the publication probe's timed call path. No additional engine run was performed for this audit.",
+  "engine": "4.7.1-stable (official)",
+  "run_order": ["a1", "b1", "b2", "a2"],
+  "arms": {"a": "preceding source", "b": "capture-local checked actor retention"},
+  "receipts": [
+    {"run": "a1", "file": "publication-stages-actor-oct6-a1.json", "sha256": "4783b796e49c54dec95de46f6e90848a3a65c5f3f0e119eab32b610ffee3d90e"},
+    {"run": "b1", "file": "publication-stages-actor-oct6-b1.json", "sha256": "672f3a982d33ad3e92166db58977874b9a9173947237632fddc734c76c413d05"},
+    {"run": "b2", "file": "publication-stages-actor-oct6-b2.json", "sha256": "3aa3654ce7c48fb7ccce221c890b235ea2ee4ab552e9069475122dedb7eed168"},
+    {"run": "a2", "file": "publication-stages-actor-oct6-a2.json", "sha256": "9403b739abba2b3a94d5efad7b483f8a61449eaab5daa557b514b75a009b52b0"}
+  ],
+  "source_identity": {
+    "tracked_files_per_run": 194,
+    "same_tracked_key_set": true,
+    "unchanged_before_to_after_every_run": true,
+    "a1_equals_a2": true,
+    "b1_equals_b2": true,
+    "changed_tracked_files": ["src/net/hex_world_snapshot.gd"],
+    "baseline_sha256": "0ecaff483c9e81038c981e905320563837f366bb9b428fe0070a286819849afb",
+    "candidate_sha256": "75857e23f8540787cb117a64afcf65104da232d7d5ad4db5babe0ef18d7b1595",
+    "baseline_matches_saved_before_file": true,
+    "candidate_matches_production_file_at_audit": true,
+    "retained_receipts_match_raw_copies": true,
+    "scope": "The 194 dependencies recorded by the probe, not a complete repository inventory. Original raw receipt timestamps corroborate A/B/B/A completion order."
+  },
+  "sampling": {
+    "completed_runs": 4,
+    "cases_per_run": 4,
+    "warm_samples_per_case_per_run_per_arm": 7,
+    "pooled_samples_per_case_per_source_arm": 14,
+    "omitted_samples_from_completed_runs": 0,
+    "comparison_series": "paired_publication.owned.samples_us",
+    "median_method": "Pool all seven a1 and a2 observations, and all seven b1 and b2 observations, per case. Sort each 14-value set; median is the arithmetic mean of its seventh and eighth values. Percentage reduction is 100 * (1 - candidate / baseline), rounded to three decimals.",
+    "all_paired_and_stage_samples_match_recorded_rows": true,
+    "all_pair_orders_and_rotated_stage_orders_match_probe": true,
+    "all_recorded_counts_medians_maxima_and_tail_statistics_recomputed": true,
+    "preflight_failure": "actor-publication-oct6-a1.log.err retains an earlier fresh-scoped-receipt-path refusal before fixture sampling. It is not one of these four completed runs or an excluded timed observation."
+  },
+  "correctness": {
+    "assertions_per_completed_run": 3230,
+    "failures_per_completed_run": 0,
+    "all_receipts_complete_and_pass": true,
+    "all_successful_raw_stderr_logs_empty": true,
+    "all_fixtures_owned_path_eligible": true,
+    "outer_owned_admission_in_timers": true,
+    "all_pair_results_exact": true,
+    "all_sources_and_detached_inputs_unchanged": true,
+    "all_receivers_exact_and_prepared_hashes_exact": true,
+    "identical_across_runs": ["state_hash", "trace_sha256", "authority_sha256", "envelope_sha256", "session_sha256", "packet_sha256", "packet_bytes", "packet_count", "total_packet_bytes", "authority_bytes", "envelope_bytes", "paid_metrics", "ticks", "paid_steps", "active_ramparts", "event_counts", "overflow_count"],
+    "actors_per_fixture": 8,
+    "topology_cells_per_fixture": 11337
+  },
+  "owned_capture_to_encoded_packet_medians_us": [
+    {
+      "case": "empty",
+      "paid_steps": 0,
+      "admitted_casts": 0,
+      "matter_paid": 0,
+      "baseline": 16561,
+      "candidate": 14559.5,
+      "reduction_percent": 12.086,
+      "per_run_medians": {"a1": 17834, "b1": 14532, "b2": 14578, "a2": 16113},
+      "baseline_sample_range": [16024, 29573],
+      "candidate_sample_range": [14396, 15511]
+    },
+    {
+      "case": "distributed-paid40",
+      "paid_steps": 40,
+      "admitted_casts": 7,
+      "matter_paid": 4200,
+      "baseline": 55113,
+      "candidate": 53464,
+      "reduction_percent": 2.992,
+      "per_run_medians": {"a1": 57926, "b1": 52776, "b2": 53841, "a2": 54889},
+      "baseline_sample_range": [54204, 61390],
+      "candidate_sample_range": [52630, 55071]
+    },
+    {
+      "case": "dense-paid40",
+      "paid_steps": 40,
+      "admitted_casts": 8,
+      "matter_paid": 4800,
+      "baseline": 29010.5,
+      "candidate": 27470.5,
+      "reduction_percent": 5.308,
+      "per_run_medians": {"a1": 29098, "b1": 27435, "b2": 27514, "a2": 28971},
+      "baseline_sample_range": [28860, 35218],
+      "candidate_sample_range": [27196, 28135]
+    },
+    {
+      "case": "active-rampart",
+      "paid_steps": 72,
+      "admitted_casts": 8,
+      "matter_paid": 4800,
+      "active_ramparts": 1,
+      "baseline": 26965.5,
+      "candidate": 24996,
+      "reduction_percent": 7.304,
+      "per_run_medians": {"a1": 27117, "b1": 24979, "b2": 25027, "a2": 26578},
+      "baseline_sample_range": [26505, 27777],
+      "candidate_sample_range": [24827, 25479]
+    }
+  ],
+  "memory": {
+    "measurement_scope": "Process-global observations, not allocation attribution to the owned/public path or the changed function.",
+    "candidate_minus_baseline_static_bytes_at_corresponding_observations": 10556,
+    "baseline_process_global_peak_bytes": 139400388,
+    "candidate_process_global_peak_bytes": 139443220,
+    "candidate_minus_baseline_process_global_peak_bytes": 42832,
+    "per_case_static_after_minus_before_bytes_identical_all_runs": {"empty": 242778, "distributed-paid40": 536649, "dense-paid40": 323782, "active-rampart": 324670},
+    "per_case_peak_after_minus_before_bytes_all_runs": 0,
+    "conclusion": "Small consistent increases in candidate process-global static and peak observations; no memory-reduction claim. Identical before-to-after deltas and no observed peak increase during the measured case windows do not establish leak freedom or bounded sustained memory."
+  },
+  "interpretation": "All four pooled owned-publication medians are lower, and both candidate run medians are below both baseline run medians for every case. Baseline variability remains visible: empty a1/a2 medians are 17834/16113 us and distributed a1/a2 are 57926/54889 us. The distributed sample ranges overlap; its 2.992 percent pooled decrease is modest. All recorded slow samples remain included.",
+  "limits": "Bounded warm headless diagnostics on prepared paid fixtures. Timers include owned capture, production admission, packetization and encoding, but exclude socket sends, rendering and setup. Inclusive stage timings overlap and must not be summed. These results do not establish sustained latency percentiles, FPS, 120 Hz gameplay, 60 Hz publication, fanout, eight-player capacity, physical or Internet networking, or human feel. The existing dense performance failure is not cleared by this comparison.",
+  "performance_acceptance": "NOT_ESTABLISHED"
+}

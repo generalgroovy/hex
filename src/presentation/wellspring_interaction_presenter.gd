@@ -7,12 +7,17 @@ const EXPECTED_ID := "wellspring-interaction-language-v1"
 const EXPECTED_AUTHORITY := "presentation only; station proximity, commands, authority, social events and outcomes remain owned elsewhere"
 const REQUIRED_KINDS := ["guide", "training", "champion", "spell", "farflow", "charter", "hearth", "ledger", "parting", "controls"]
 const GLYPHS := ["route", "bell", "mask", "weave", "gate", "scroll", "hearth", "ledger", "keys"]
+const COMPACT_PROMPT_HEIGHT := 40.0
 
 var language: VisualLanguage
 var data: Dictionary = {}
 var styles_by_kind: Dictionary[String, Dictionary] = {}
 var content_hash := ""
 var last_error := ""
+var _notice_message := ""
+var _notice_viewport := Vector2.ZERO
+var _notice_font: Font
+var _notice_cache: Dictionary = {}
 
 
 func configure(visual_language: VisualLanguage, campus: SanctumCampusLayout, path: String = DEFAULT_PATH) -> bool:
@@ -21,6 +26,7 @@ func configure(visual_language: VisualLanguage, campus: SanctumCampusLayout, pat
 	styles_by_kind.clear()
 	content_hash = ""
 	last_error = ""
+	_notice_cache = {}
 	if language == null or campus == null or language.ramps.is_empty() or campus.stations_by_id.is_empty():
 		return _fail("Wellspring interaction presentation requires validated visual and campus data")
 	if not FileAccess.file_exists(path):
@@ -100,40 +106,80 @@ func draw_station(
 ) -> void:
 	if canvas == null or not styles_by_kind.has(String(station.get("kind", ""))):
 		return
-	var layout: Dictionary = data.get("layout", {})
 	var budgets: Dictionary = data.get("budgets", {})
 	var style: Dictionary = styles_by_kind[String(station.get("kind", ""))]
 	var accent := language.ramp_color(String(style.get("ramp", "aged_brass")), int(style.get("ramp_index", 3)))
-	var width := float(layout.get("expanded_width" if expanded else "prompt_width", 296 if expanded else 232))
 	var line_height := float(budgets.get("line_height", 18))
-	var height := float(layout.get("expanded_header_height", 46)) + line_height * float(mini(lines.size(), int(budgets.get("maximum_station_lines", 6)))) if expanded else float(layout.get("prompt_height", 52))
-	var desired := Rect2(source_anchor.x - width * 0.5, source_anchor.y - float(layout.get("station_anchor_lift", 58)) - height, width, height)
-	var rectangle := clamped_panel_rect(desired, viewport_size, float(budgets.get("screen_margin", 16)), 126.0)
-	if not expanded:
-		rectangle = avoid_actor_rect(rectangle, protected_actor, viewport_size, float(budgets.get("screen_margin", 16)))
+	var rectangle := station_rect(viewport_size, source_anchor, expanded, lines.size(), protected_actor)
 	_draw_tether(canvas, source_anchor, rectangle, accent)
 	_draw_parchment_panel(canvas, rectangle, accent, 0.90 if expanded else 0.86)
-	var glyph_center := rectangle.position + Vector2(24, 24)
+	var glyph_center := rectangle.position + Vector2(22, 24 if expanded else 20)
 	_draw_glyph(canvas, glyph_center, String(style.get("glyph", "route")), accent)
 	var key_label := resolved_interact_label(interact_label)
 	var key_width := clampf(ThemeDB.fallback_font.get_string_size(key_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 10).x + 14.0, 28.0, 104.0)
-	var key_rect := Rect2(rectangle.end.x - key_width - 10.0, rectangle.position.y + 10.0, key_width, 24.0)
+	var key_rect := Rect2(rectangle.end.x - key_width - 10.0, rectangle.position.y + (10.0 if expanded else 8.0), key_width, 24.0)
 	canvas.draw_rect(key_rect, Color(language.ramp_color("worldbone", 0), 0.86), true)
 	canvas.draw_rect(key_rect, Color(accent, 0.90), false, 2.0)
 	canvas.draw_string(ThemeDB.fallback_font, key_rect.position + Vector2(0, 16), key_label.to_upper(), HORIZONTAL_ALIGNMENT_CENTER, key_rect.size.x, 10, language.ramp_color("parchment", 4))
 	var title_width := key_rect.position.x - (rectangle.position.x + 46.0) - 6.0
-	canvas.draw_string(ThemeDB.fallback_font, rectangle.position + Vector2(46, 20), String(station.get("title", "STATION")), HORIZONTAL_ALIGNMENT_LEFT, title_width, 12, language.ramp_color("worldbone", 0))
-	canvas.draw_line(rectangle.position + Vector2(46, 29), Vector2(key_rect.position.x - 6.0, rectangle.position.y + 29), Color(accent, 0.62), 1.0)
+	var service := WellspringServiceBuildings.definition_for(station)
+	var title := String(station.get("title", "STATION")) if expanded else String(service.get("title", station.get("title", "SERVICE")))
+	title = String(station.get("directory_title", title))
+	canvas.draw_string(ThemeDB.fallback_font, rectangle.position + Vector2(42, 20 if expanded else 24), title, HORIZONTAL_ALIGNMENT_LEFT, title_width + 4.0, 12, language.ramp_color("worldbone", 0))
 	if expanded:
+		canvas.draw_line(rectangle.position + Vector2(46, 29), Vector2(key_rect.position.x - 6.0, rectangle.position.y + 29), Color(accent, 0.62), 1.0)
 		for index: int in range(mini(lines.size(), int(budgets.get("maximum_station_lines", 6)))):
 			canvas.draw_string(ThemeDB.fallback_font, rectangle.position + Vector2(14, 50 + float(index) * line_height), localized_interaction_line(String(lines[index]), key_label), HORIZONTAL_ALIGNMENT_LEFT, rectangle.size.x - 28.0, 10, language.ramp_color("worldbone", 0))
-	else:
-		canvas.draw_string(ThemeDB.fallback_font, rectangle.position + Vector2(46, 42), station_action_text(station), HORIZONTAL_ALIGNMENT_LEFT, rectangle.size.x - 58.0, 10, language.ramp_color("parchment", 0))
+
+
+func station_rect(viewport_size: Vector2, source_anchor: Vector2, expanded: bool, line_count: int = 0, protected_actor: Rect2 = Rect2()) -> Rect2:
+	# Shared by draw and hover/focus hit testing: no mismatched invisible cards.
+	var layout: Dictionary = data.get("layout", {})
+	var budgets: Dictionary = data.get("budgets", {})
+	var width := float(layout.get("expanded_width" if expanded else "prompt_width", 296 if expanded else 232))
+	var height := COMPACT_PROMPT_HEIGHT
+	if expanded:
+		height = float(layout.get("expanded_header_height", 46)) + float(budgets.get("line_height", 18)) * float(clampi(line_count, 0, int(budgets.get("maximum_station_lines", 6))))
+	var desired := Rect2(source_anchor.x - width * 0.5, source_anchor.y - float(layout.get("station_anchor_lift", 58)) - height, width, height)
+	var rectangle := clamped_panel_rect(desired, viewport_size, float(budgets.get("screen_margin", 16)), 126.0)
+	if not expanded:
+		rectangle = avoid_actor_rect(rectangle, protected_actor, viewport_size, float(budgets.get("screen_margin", 16)))
+	return rectangle
 
 
 static func resolved_interact_label(value: String) -> String:
 	var label := value.strip_edges()
 	return "Not bound" if label.is_empty() or label == "\u2014" else label
+
+
+static func practice_station_lines(station: Dictionary, preferences: PlayerPreferences, device: int = ControlBindingEditor.DEVICE_KEYBOARD) -> Array[String]:
+	# Practice help follows the controls actually used to enter the directory.
+	# Static map copy must not teach an old binding or an obsolete motion rule.
+	var command := String(station.get("command", ""))
+	if command not in ["movement_guide", "impact_practice"] or preferences == null:
+		return []
+	var editor := ControlBindingEditor.new()
+	if command == "impact_practice":
+		var technique := resolved_interact_label(editor.binding_label(&"technique", device, preferences))
+		return [
+			"Hold direction to bend the launch for free.",
+			"Tech %s near landing or during the brace." % technique,
+			"Tech: %.1f base Stamina; perks / chain apply." % (float(MovementTuning.IMPACT_RECOVERY_TECH_COST) / SimConfig.FIXED_SCALE),
+			"No new protection; keep the exit lane clear.",
+			"Without a legal Tech: full %d ms brace." % MovementTuning.IMPACT_RECOVERY_DURATION_MS,
+		]
+	var jump := resolved_interact_label(editor.binding_label(&"jump", device, preferences))
+	var slide := resolved_interact_label(editor.binding_label(&"slide", device, preferences))
+	var evade := resolved_interact_label(editor.binding_label(&"evade", device, preferences))
+	var wheel_jump := device == ControlBindingEditor.DEVICE_MOUSE and int(preferences.mouse_bindings.get(&"jump", 0)) in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN, MOUSE_BUTTON_WHEEL_LEFT, MOUSE_BUTTON_WHEEL_RIGHT]
+	return [
+		"Jump %s: press, then release to launch." % jump,
+		"Wheel cannot hold charge, flight or wallrun." if wheel_jump else "Hold Jump to brake for charge; tap keeps speed.",
+		"Slide %s at speed; steer to carve or brake." % slide,
+		"Brake a slide: release and press %s again." % slide,
+		"Air %s: direction dodges; neutral fast-falls." % evade,
+		"Wall: hold Jump along it; release to walljump." if wheel_jump else "Wall: hold %s along it; release to walljump." % jump,
+	]
 
 
 static func avoid_actor_rect(panel: Rect2, actor: Rect2, viewport_size: Vector2, margin: float = 16.0) -> Rect2:
@@ -152,18 +198,50 @@ static func avoid_actor_rect(panel: Rect2, actor: Rect2, viewport_size: Vector2,
 	return panel
 
 
-func draw_notice(canvas: CanvasItem, viewport_size: Vector2, title: String, message: String) -> void:
-	if canvas == null or message.is_empty():
-		return
+func notice_layout(viewport_size: Vector2, message: String) -> Dictionary:
+	if not viewport_size.is_finite() or viewport_size.x < 180.0 or viewport_size.y < 180.0 or message.strip_edges().is_empty():
+		return {}
+	var font := ThemeDB.fallback_font
+	if not _notice_cache.is_empty() and message == _notice_message and viewport_size == _notice_viewport and font == _notice_font:
+		return _notice_cache
 	var layout: Dictionary = data.get("layout", {})
 	var budgets: Dictionary = data.get("budgets", {})
-	var width := minf(float(budgets.get("maximum_notice_width", 420)), viewport_size.x - 460.0)
-	var rectangle := Rect2((viewport_size.x - width) * 0.5, float(budgets.get("screen_margin", 16)), width, float(layout.get("notice_height", 42)))
+	var margin := float(budgets.get("screen_margin", 16))
+	var width := minf(float(budgets.get("maximum_notice_width", 420)), viewport_size.x - margin * 2.0)
+	# Only reshape when content or viewport changes; bound work for network copy.
+	var lines := PlayerCompendium.wrap_text(message.left(512), font, width - 54.0, 11)
+	if lines.size() > 3 or message.length() > 512:
+		lines.resize(mini(lines.size(), 3))
+		var tail := lines[-1]
+		while not tail.is_empty() and font.get_string_size(tail + "...", HORIZONTAL_ALIGNMENT_LEFT, -1, 11).x > width - 54.0:
+			tail = tail.left(-1)
+		lines[-1] = tail + "..."
+	var height := float(layout.get("notice_height", 42)) + 14.0 * float(lines.size() - 1)
+	# At narrow resolutions sit below the left/right top HUD rather than on it.
+	var top := margin if viewport_size.x - width >= 672.0 else 60.0
+	var rectangle := Rect2(roundf((viewport_size.x - width) * 0.5), top, width, height)
+	lines.make_read_only()
+	_notice_cache = {"rect": rectangle, "lines": lines}
+	_notice_cache.make_read_only()
+	_notice_message = message
+	_notice_viewport = viewport_size
+	_notice_font = font
+	return _notice_cache
+
+
+func draw_notice(canvas: CanvasItem, viewport_size: Vector2, title: String, message: String) -> void:
+	if canvas == null:
+		return
+	var model := notice_layout(viewport_size, message)
+	if model.is_empty():
+		return
+	var rectangle: Rect2 = model.rect
 	var accent := language.ramp_color("aged_brass", 4)
 	_draw_parchment_panel(canvas, rectangle, accent, 0.88)
-	_draw_glyph(canvas, rectangle.position + Vector2(22, 21), "bell", accent)
-	canvas.draw_string(ThemeDB.fallback_font, rectangle.position + Vector2(42, 16), title.to_upper(), HORIZONTAL_ALIGNMENT_LEFT, 92.0, 10, language.ramp_color("parchment", 0))
-	canvas.draw_string(ThemeDB.fallback_font, rectangle.position + Vector2(126, 25), message, HORIZONTAL_ALIGNMENT_LEFT, rectangle.size.x - 138.0, 11, language.ramp_color("worldbone", 0))
+	_draw_glyph(canvas, rectangle.position + Vector2(22, rectangle.size.y * 0.5), "bell", accent)
+	canvas.draw_string(ThemeDB.fallback_font, rectangle.position + Vector2(42, 15), title.to_upper(), HORIZONTAL_ALIGNMENT_LEFT, rectangle.size.x - 54.0, 10, language.ramp_color("parchment", 0))
+	for index: int in model.lines.size():
+		canvas.draw_string(ThemeDB.fallback_font, rectangle.position + Vector2(42, 30 + index * 14), model.lines[index], HORIZONTAL_ALIGNMENT_LEFT, rectangle.size.x - 54.0, 11, language.ramp_color("worldbone", 0))
 
 
 func draw_social(canvas: CanvasItem, viewport_size: Vector2, source_anchor: Vector2, speaker: String, message: String, life_ratio: float) -> void:

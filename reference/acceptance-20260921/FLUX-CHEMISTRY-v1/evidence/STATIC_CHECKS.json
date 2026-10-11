@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "status": "STATIC_VERIFIED",
+  "scope": "Archive integrity, literal data, integer/rational arithmetic, and source-presence checks only. No experiments or game tests were executed.",
+  "source_archive_sha256": "844e314277b3df5d6eccb44ec37b1f6a705b55abfb6c2101fc1fbadb939fc45f",
+  "input_manifest_sha256": "b0a9d9a54f575d6e4f056cdf0b35988ba843779d30bb0deaed130744b44175d1",
+  "input_integrity": {
+    "record_count": 63,
+    "matched_count": 63,
+    "mismatches": []
+  },
+  "catalog": {
+    "compiled_recipe_rows": 36,
+    "json_recipes": 36,
+    "wire_range": [
+      301,
+      336
+    ],
+    "first_four_unordered_pairs_including_mirrors": 10,
+    "other_pairs_retained": 26,
+    "internal_air_id": "wind"
+  },
+  "vortex_arithmetic": {
+    "baseline_inner_radius_world_units": 30000,
+    "baseline_outer_radius_world_units": 90000,
+    "opposite_vertical_vertex_distance_world_units": 73900,
+    "hex_diameter_squared_world_units": 5461302500,
+    "candidate_inner_radius_world_units": 74000,
+    "conclusion": "No whole hex fits in the baseline 30000-unit hole. A 74000-unit hole contains the entire hex containing the center, whatever its within-cell offset. This does not test walkability or Godot selection."
+  },
+  "steam_arithmetic": {
+    "unobstructed_origin_disk_radius_world_units": 64000,
+    "independent_exact_geometric_selected_cells": [
+      [
+        -1,
+        0
+      ],
+      [
+        -1,
+        1
+      ],
+      [
+        0,
+        -1
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        -1
+      ],
+      [
+        1,
+        0
+      ]
+    ],
+    "assumed_product_quantity_before": 1200,
+    "matched_strength_before": 5,
+    "intensity_before": 500,
+    "cooling_source_strength": 1,
+    "cooling_source_remaining_quantity": 600,
+    "quantity_after_current_code": 1800,
+    "intensity_after_current_code": 450,
+    "comparison_exposure_ticks": 120,
+    "first_canonical_cell_quantities": [
+      172,
+      258
+    ],
+    "before_damage_health_units": 1075,
+    "after_current_cooling_damage_health_units": 1451,
+    "candidate_consumed_cooling_work_damage_health_units": 967,
+    "interpretation": "Counterexample to a monotonic cooling-damage claim, calculated from W formulas at equal exposure; not a measured runtime hit or playtest."
+  },
+  "flow_quantization_arithmetic": {
+    "isolated_flow_units_per_second": 60000,
+    "normalized_aim": [
+      707,
+      707
+    ],
+    "two_tick_deltas_world_units": [
+      [
+        353,
+        353
+      ],
+      [
+        354,
+        354
+      ]
+    ],
+    "larger_step_squared_norm": 250632,
+    "strict_500_norm_would_change_baseline": true,
+    "conservative_candidate_net_step_cap_world_units": 502,
+    "candidate_cap_per_second_equivalent": 60240,
+    "scope": "Integer carry arithmetic only; E03 remains NOT_RUN."
+  },
+  "source_presence_checks": {
+    "vortex_not_in_product_eligible_lists": true,
+    "steam_view_intensity_floor_1000": true,
+    "steam_renderer_uses_cell_heat": true
+  },
+  "game_tests": {
+    "status": "NOT_RUN",
+    "experiments": "NOT_RUN",
+    "human_drills": "NOT_RUN",
+    "network_lifecycle": "NOT_RUN",
+    "performance": "NOT_RUN"
+  }
+}

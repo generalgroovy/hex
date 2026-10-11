@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "build_id": "p56-a85f2e9e7a7e",
+  "transport": "same-export localhost ENet",
+  "port": 24967,
+  "deadline_seconds": 120,
+  "wrapper_duration_ms": 60701,
+  "configured_tick_rate": 120,
+  "observed": [
+    "guest connected; shared HELLO and readiness",
+    "authoritative movement reconciliation",
+    "first Proving Court round began",
+    "late guest joined as spectator",
+    "guest disconnected and returned as exact reserved actor",
+    "return to Hearth; late spectator handoff",
+    "host and guests participated in second Proving Court round",
+    "host release delivered its reason and revoked return reservation"
+  ],
+  "stderr_bytes": {
+    "host": 0,
+    "guest": 0,
+    "late_guest": 0
+  },
+  "profile_isolation": ".godot/publication-network-v1/isolated-roaming",
+  "owned_process_cleanup": "smoke-farflow.ps1 finally block; lead verified no owned engine processes remained",
+  "logs": [
+    "network-host.log",
+    "network-guest.log",
+    "network-late-guest.log"
+  ],
+  "scope": "Bounded three-process localhost lifecycle only. Configured120Hz is not sustained simulation or rendered performance; no physical internet, relay, eight-active-player load or16/32/64-player acceptance."
+}

@@ -1,0 +1,72 @@
+{
+  "authored_keyposes": 192,
+  "characters": 3,
+  "complete_cycles": false,
+  "fresh_reassembly_cells": 192,
+  "fresh_reassembly_checks": [
+    {
+      "all_keys_distinct": true,
+      "fresh_reassembled_cells_match_atlas": 64,
+      "id": "wa_bidi",
+      "measurement_confidence": "low; skull crown obscured by hair, manual visual estimate",
+      "single_uniform_scale": 0.46153846153846156,
+      "source_head_height": 39.0,
+      "source_unchanged": true,
+      "target_head_height": 18
+    },
+    {
+      "all_keys_distinct": true,
+      "fresh_reassembled_cells_match_atlas": 64,
+      "id": "jan_wicked",
+      "measurement_confidence": "low; skull crown obscured by hair, manual visual estimate",
+      "single_uniform_scale": 0.5142857142857142,
+      "source_head_height": 35.0,
+      "source_unchanged": true,
+      "target_head_height": 18
+    },
+    {
+      "all_keys_distinct": true,
+      "fresh_reassembled_cells_match_atlas": 64,
+      "id": "fluup",
+      "measurement_confidence": "low; upper skull under cropped hair, manual visual estimate",
+      "single_uniform_scale": 0.47368421052631576,
+      "source_head_height": 38.0,
+      "source_unchanged": true,
+      "target_head_height": 18
+    }
+  ],
+  "holds": [
+    "Authored8 action keys per8 views, not continuous animations.",
+    "Cranial heights estimated through obscuring hair; human measurement approval pending.",
+    "Front/diagonal source facing remains ambiguous in some poses; exact45degree yaw not certified.",
+    "Airborne support translation is provisional; runtime physical jump height remains separate.",
+    "No production or gameplay integration in this registration."
+  ],
+  "human_approved": false,
+  "manifest_sha256": "b9a140845f719aa3a5e0c6b9f3465eabd4c1d8b07ab67ced005aef1d5da07d3d",
+  "native_validation": "NOT_RUN_BY_WORKER",
+  "production_ready": false,
+  "source_measurements": {
+    "fluup": {
+      "confidence": "low; upper skull under cropped hair, manual visual estimate",
+      "frame": "slide_entry/S",
+      "notes": "Original first-front source: estimated cranial crown y86 to chin y124 (38px). Excludes top hair, ears and shoulder armour. Review image source-first-front-measurement-review.png; body-pose bounds not used for scale.",
+      "source_head_height": 38
+    },
+    "jan_wicked": {
+      "confidence": "low; skull crown obscured by hair, manual visual estimate",
+      "frame": "slide_entry/S",
+      "notes": "Original first-front source: estimated cranial crown y76 to chin y111 (35px). Excludes hair silhouette and collar. Review image source-first-front-measurement-review.png; body-pose bounds not used for scale.",
+      "source_head_height": 35
+    },
+    "wa_bidi": {
+      "confidence": "low; skull crown obscured by hair, manual visual estimate",
+      "frame": "slide_entry/S",
+      "notes": "Original first-front source: estimated cranial crown y98 to chin y137 (39px). Excludes hair tips and long ears. Review image source-first-front-measurement-review.png; body-pose bounds not used for scale.",
+      "source_head_height": 39
+    }
+  },
+  "source_pixel_ownership": "Exact thresholded-alpha conservation and unique64keys per character checked by assemble",
+  "status": "PASS_OFFLINE_REGISTRATION",
+  "verification_command": "python art_batches/character_motion_v1/output/authored-keys-v2/verify-registered.py"
+}

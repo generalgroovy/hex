@@ -1,0 +1,71 @@
+{
+  "status": "REJECTED_FOR_RUNTIME_REVIEW_ONLY",
+  "generator": "built-in image_gen",
+  "generation_calls": 2,
+  "scope": "Isolated art-direction candidates only; no existing art, manifest, runtime, engine or export modified",
+  "existing_asset": {
+    "manifest": "art_batches/pixel_v1/magic/manifest.json",
+    "id": "magic.movement.landing_dust.normal",
+    "frame_size_px": [32, 32],
+    "pivot_px": [16, 24],
+    "duration_tick_rate": 120,
+    "frame_duration_ticks": [4, 6, 8, 10, 12],
+    "palette_rgba": ["00000000", "16212aff", "403424ff", "98805aff", "e2d4a7ff"],
+    "loop": false
+  },
+  "candidate_intended_contract_NOT_INTEGRATED": {
+    "proposed_id": "magic.movement.landing_contact_puff.normal.candidate_v1",
+    "frame_size_px": [32, 32],
+    "source_cells_px": [512, 512],
+    "source_grid": [3, 2],
+    "frame_order": "row-major",
+    "pivot_px": [16, 24],
+    "duration_tick_rate": 120,
+    "frame_duration_ticks": [3, 4, 5, 6, 6, 6],
+    "duration_ms": 250,
+    "attachment": "actual_ground_feet_contact",
+    "layer_role": "harmless_movement",
+    "texture_filter": "nearest",
+    "mipmaps": false,
+    "loop": false,
+    "end_behavior": "hide",
+    "world_anchor": "fixed at actual landing contact; never follows player as a trail",
+    "interruption": "authority first; hide immediately on death, airborne state or event end",
+    "maximum_simultaneous_instances": 8,
+    "reduced_effects": "Keep current reduced treatment; candidate provides no accepted reduced variant",
+    "visual_contract": "paired low heel puffs with an open center; crisp contact then breakup; no circles, trails, orbits, morphing blobs or danger-colored glow"
+  },
+  "qa": {
+    "method": "System.Drawing RGBA byte audit, actual generated-sheet visual inspection; no runtime rendering",
+    "reproduce": ".\\inspect-landing-candidate.ps1 -ImagePath .\\landing-contact-six-frame-candidate-v2.png",
+    "v1": {
+      "path": "landing-contact-six-frame-candidate-v1.png",
+      "sha256": "1f971766ec56663d5c320dfb023f9c193e3f6943f328eb52a02e8935a6ffad90",
+      "dimensions": [1536, 1024],
+      "transparent_pixels": 1521028,
+      "partial_alpha_pixels": 51836,
+      "opaque_pixels": 0,
+      "unique_visible_rgba": 33244,
+      "pixels_outside_exact_palette": 51825,
+      "nonuniform_16px_blocks_per_frame": [61, 102, 111, 79, 44, 22]
+    },
+    "v2": {
+      "path": "landing-contact-six-frame-candidate-v2.png",
+      "sha256": "bbfcabcc40e3687ecf5ff9a5c65312993759236e51e3f71a3b56e93b94b9a98e",
+      "dimensions": [1536, 1024],
+      "transparent_pixels": 1492384,
+      "partial_alpha_pixels": 80480,
+      "opaque_pixels": 0,
+      "unique_visible_rgba": 43311,
+      "pixels_outside_exact_palette": 80476,
+      "nonuniform_16px_blocks_per_frame": [77, 146, 145, 113, 75, 40],
+      "visible_pixel_counts_per_frame": [9547, 23441, 22764, 16200, 5793, 2735],
+      "alpha_bounds_per_frame": [[89,101,475,511],[7,38,511,473],[9,38,491,511],[70,183,511,511],[1,1,457,431],[7,23,463,354]],
+      "open_center_nontransparent_pixels_per_frame": [755,538,467,121,57,1]
+    },
+    "passes": ["six visible phases in 3x2 layout", "coherent paired-puff contact idea", "no text, character, ring or orbit", "substantial genuine transparent background"],
+    "fails": ["not exact native pixel grid", "not binary-alpha sprite art", "not exact neutral-stone palette", "stray partially transparent pixels invalidate clean cell bounds and open-center guarantee", "source shows soft halo-like shading instead of strictly flat crisp clusters"],
+    "not_run": ["native 32px raster acceptance", "runtime animation", "all-character feet alignment", "combat hazard overlap", "reduced-effects acceptance"],
+    "decision": "Do not integrate or downsample automatically. Preserve as visual direction only. A future approved clean pixel-art authoring pass must satisfy native palette, binary alpha, stable pivot, danger readability and runtime temporal QA."
+  }
+}

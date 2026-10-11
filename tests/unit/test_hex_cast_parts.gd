@@ -3,6 +3,16 @@ extends FluxTestSuite
 
 const Parts = preload("res://src/sim/hex/hex_cast_parts.gd")
 const Budget = preload("res://src/sim/combat/strength_budget.gd")
+const PartsBefore = preload("res://tests/support/hex_cast_parts_pre_validation_aggregate.gd")
+const ValidationFixture = preload("res://tests/support/hex_cast_parts_validation_fixture.gd")
+
+
+class OpaqueFootprintExtra:
+	extends RefCounted
+	var calls := 0
+	func _to_string() -> String:
+		calls += 1
+		return "ignored footprint extra"
 
 
 func run() -> int:
@@ -12,6 +22,8 @@ func run() -> int:
 	_test_contact_retile_uses_stable_location_prefixes()
 	_test_flight_expiry_and_atomic_refusals()
 	_test_strict_validation_rejects_forged_ownership()
+	_test_validation_aggregate_equivalence()
+	_test_validation_aggregate_malformed()
 	return finish("hex-cast-parts")
 
 
@@ -213,3 +225,105 @@ func _sum(values: Dictionary) -> int:
 	for value: Variant in values.values():
 		result += int(value)
 	return result
+
+
+func _assert_validation_equivalent(record: Dictionary, label: String, expected: bool = true) -> void:
+	var bytes := var_to_bytes(record)
+	var preceding := PartsBefore.validate(record)
+	equal(preceding, expected, label + " frozen validator result")
+	equal(Parts.validate(record), preceding, label + " exact preceding validation result")
+	check(var_to_bytes(record) == bytes, label + " preserves source values and insertion order")
+
+
+func _test_validation_aggregate_equivalence() -> void:
+	for part_count: int in [0, 1, 2, 16, 64]:
+		for cell_count: int in [1, 3, 13, 152, 511]:
+			for overlap: bool in [false, true]:
+				var forward := ValidationFixture.record(part_count, cell_count, overlap)
+				var reversed := ValidationFixture.record(part_count, cell_count, overlap, true)
+				var label := "parts=%d cells=%d overlap=%s" % [part_count, cell_count, overlap]
+				_assert_validation_equivalent(forward, label)
+				_assert_validation_equivalent(reversed, label + " reversed insertion")
+				check(forward == reversed, label + " insertion-independent exact aggregate values")
+	var maximum_parts := ValidationFixture.record(600, 1, true, true)
+	_assert_validation_equivalent(maximum_parts, "600 one-unit overlapping ground parts remain bounded")
+	var readonly := ValidationFixture.record(2, 13, true)
+	for part: Dictionary in readonly.ground_parts.values():
+		part.cells.make_read_only()
+		part.coverage.make_read_only()
+		part.footprint.make_read_only()
+		part.make_read_only()
+	for name: String in ["flight_parts", "ground_parts", "cells", "coverage", "ledger"]: readonly[name].make_read_only()
+	readonly.make_read_only()
+	_assert_validation_equivalent(readonly, "read-only nested source needs no mutation")
+	var changed := ValidationFixture.record(2, 3, true)
+	var cell: Vector2i = changed.cells.keys()[0]
+	var previous: int = changed.cells[cell]
+	changed.cells[cell] = previous + 1
+	_assert_validation_equivalent(changed, "direct aggregate mutation is seen", false)
+	changed.cells[cell] = previous
+	_assert_validation_equivalent(changed, "restored aggregate recovers without cached validation")
+	var extra := ValidationFixture.record(2, 3, true)
+	# Extra footprint fields are historically ignored. Preserve their acceptance
+	# and exact ownership without inspecting or formatting opaque values.
+	var ignored_object := OpaqueFootprintExtra.new()
+	extra.ground_parts[8002].footprint.extra = [{"opaque": ignored_object}]
+	var extra_before := extra.duplicate(true)
+	var extra_bytes := var_to_bytes(extra)
+	check(PartsBefore.validate(extra), "frozen validator accepts ignored opaque footprint extra")
+	check(extra == extra_before and var_to_bytes(extra) == extra_bytes, "frozen validator preserves ignored opaque extra and source order")
+	check(Parts.validate(extra), "candidate accepts ignored opaque footprint extra")
+	check(extra == extra_before and var_to_bytes(extra) == extra_bytes, "candidate preserves ignored opaque extra and source order")
+	equal(ignored_object.calls, 0, "validation never formats ignored objects")
+	extra.ground_parts[8002].footprint.erase("extra")
+	_assert_validation_equivalent(extra, "removing ignored opaque extra preserves ordinary source")
+
+
+func _test_validation_aggregate_malformed() -> void:
+	var mutations: Array[String] = ["flight-map", "ground-map", "cells-map", "coverage-map", "flight-id", "flight-id-type", "flight-zero", "flight-type", "flight-overflow", "part-id", "part-id-type", "part-value", "part-extra", "part-quantity", "part-overflow", "part-created", "part-expiry", "part-trail", "part-footprint", "part-cells", "part-coverage", "empty-cells", "coverage-type", "coverage-value", "cell-type", "cell-negative", "cell-overflow", "missing-cell", "extra-cell", "aggregate-extra", "aggregate-missing", "coverage-extra", "ledger-overflow"]
+	for mutation: String in mutations:
+		var record := ValidationFixture.record(2, 3, true)
+		var part: Dictionary = record.ground_parts[8001]
+		var cell: Vector2i = part.cells.keys()[0]
+		match mutation:
+			"flight-map": record.flight_parts = []
+			"ground-map": record.ground_parts = []
+			"cells-map": record.cells = []
+			"coverage-map": record.coverage = []
+			"flight-id": record.flight_parts = {0: 584}
+			"flight-id-type": record.flight_parts = {"7101": 584}
+			"flight-zero": record.flight_parts[7101] = 0
+			"flight-type": record.flight_parts[7101] = 584.0
+			"flight-overflow": record.flight_parts[7101] = 9_223_372_036_854_775_807
+			"part-id": record.ground_parts[0] = record.ground_parts[8001]; record.ground_parts.erase(8001)
+			"part-id-type": record.ground_parts["8001"] = record.ground_parts[8001]; record.ground_parts.erase(8001)
+			"part-value": record.ground_parts[8001] = 1
+			"part-extra": part.extra = 1
+			"part-quantity": part.quantity = 0
+			"part-overflow": part.quantity = 9_223_372_036_854_775_807
+			"part-created": part.created = -1
+			"part-expiry": part.expiry_tick = part.created
+			"part-trail": part.trail = 1
+			"part-footprint": part.footprint = {}
+			"part-cells": part.cells = []
+			"part-coverage": part.coverage = []
+			"empty-cells": part.cells = {}; part.coverage = {}
+			"coverage-type": part.coverage[cell] = 1.0
+			"coverage-value": part.coverage[cell] = 2
+			"cell-type": part.cells[cell] = float(part.cells[cell])
+			"cell-negative": part.cells[cell] = -1
+			"cell-overflow": part.cells[cell] = 9_223_372_036_854_775_807
+			"missing-cell": part.cells.erase(cell)
+			"extra-cell": part.cells.erase(cell); part.cells[Vector2i(500, 500)] = 1
+			"aggregate-extra": record.cells[Vector2i(500, 500)] = 0
+			"aggregate-missing": record.cells.erase(cell)
+			"coverage-extra": record.coverage[Vector2i(500, 500)] = 1
+			"ledger-overflow": record.ledger.budget = 9_223_372_036_854_775_807
+		_assert_validation_equivalent(record, mutation, false)
+	_assert_validation_equivalent(ValidationFixture.record(1, 512, false), "coverage above511 cells", false)
+	var zero_record := ValidationFixture.record(1, 511, true)
+	var zero_cell: Vector2i = zero_record.cells.keys()[0]
+	check(zero_record.cells[zero_cell] == 0, "boundary fixture contains meaningful zero allocations")
+	zero_record.cells.erase(zero_cell)
+	zero_record.coverage.erase(zero_cell)
+	_assert_validation_equivalent(zero_record, "dropping zero aggregate membership rejects", false)

@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "character_id": "joh_haynes",
+  "display_name": "Joh Haynes",
+  "ancestry": "orc",
+  "body_type": "large",
+  "standing_native_target_px": 68,
+  "date": "2026-10-04",
+  "repository": "C:/Users/sende/Projects/hex",
+  "repository_head_at_authoring": "1559a566e33255c59337c5963f1c3c685d757f1f",
+  "selection_evidence": "art_batches/pixel_actions_v2/review/scale-audit-20261004/receipt.json",
+  "repair_intent": "Preserve approved neutral bearded head, shoulders, chest and limb mass across jump poses; existing action bank had nearly equal front idle/fall height but visibly reduced anatomical mass",
+  "generation_mode": "built-in image_gen",
+  "tool": "image_gen.imagegen",
+  "transparent_background_requested": true,
+  "generation_calls": 1,
+  "corrective_calls": 0,
+  "source_status": "SOURCE_CANDIDATE_PENDING_LEAD_REVIEW",
+  "source_file": "art_batches/pixel_actions_v2/source/joh_haynes/source.png",
+  "prompt_file": "art_batches/pixel_actions_v2/prompts/joh_haynes.md",
+  "assembly_file": "art_batches/pixel_actions_v2/source/joh_haynes/assembly.json",
+  "assembly_sha256": "c309a5a0b4a3d103fffb4608d9df075d2c3f03712d0e4c5e2c314185e147ac99",
+  "generated_original": "C:/Users/sende/.codex/generated_images/01a106a3-1c20-75d1-bb18-92725dded5ca/exec-9cee2cf7-6aff-432e-bb82-17108cc52035.png",
+  "original_sha256": "f9f050594b24bb9c256add335a7c61b6d38bde7663758e97e759245c4719d0c5",
+  "source_sha256": "f9f050594b24bb9c256add335a7c61b6d38bde7663758e97e759245c4719d0c5",
+  "original_preserved_unchanged": true,
+  "copy_method": "PowerShell Copy-Item, source and destination SHA256 verified equal",
+  "byte_length": 1586865,
+  "width": 1586,
+  "height": 992,
+  "pixel_format": "Format32bppArgb",
+  "alpha_pixels": {
+    "transparent": 984773,
+    "partial": 587607,
+    "opaque": 932
+  },
+  "requested_grid": {
+    "columns": 8,
+    "rows": 5,
+    "sprites": 40,
+    "directions": [
+      "S",
+      "SE",
+      "E",
+      "NE",
+      "N",
+      "NW",
+      "W",
+      "SW"
+    ],
+    "rows_top_to_bottom": [
+      "neutral_calibration",
+      "jumpsquat",
+      "rise",
+      "fall_feet_ready",
+      "compressed_landing"
+    ],
+    "calibration_source_row": 0,
+    "source_rows": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "common_scale_only": true
+  },
+  "reference_roles": [
+    {
+      "path": "C:/Users/sende/Projects/hex/assets/sprites/pixel_cast_v1/joh_haynes.png",
+      "sha256": "c89a81007ea36ef3e11745c3ba05645580f19c2faacc5aa464ba363720bb9465",
+      "role": "Primary approved runtime first-row neutral skull/hair/beard/jaw, shoulders, torso, limbs, costume, palette and eight headings"
+    },
+    {
+      "path": "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/joh_haynes-detail.png",
+      "sha256": "b97d8621da81d60039467196e1c1e8df04b37ac8e273b8b3d55bcc1958f4f2ed",
+      "role": "Costume and profile/rear detail support, subordinate to primary proportions"
+    },
+    {
+      "path": "C:/Users/sende/Pictures/styleref1.png",
+      "sha256": "c0fb63c912718d64ca061ccd85817869ffc3348a3c81a910962df57066279fd4",
+      "role": "Retro pixel style only, not names, anatomy, roster, weapons, effects or spells"
+    }
+  ],
+  "source_visual_review": {
+    "scope": "Qualitative source-size inspection of generated original against current approved neutral atlas; no native assembly",
+    "complete_grid": true,
+    "visible_heading_order": "S, SE, E, NE, N, NW, W, SW in every row; profiles and rear quarters remain distinct, no gross facing swap observed",
+    "head_body_continuity": "Broad bearded skull, tied-back hair, substantial bronze shoulder plates, thick green arms, broad chest and heavy boots appear consistent across neutral and action rows; exact native mass matching NOT_RUN",
+    "actions": "Upright neutral; bent-knee planted anticipation; bent-knee tucked rise with open balancing hands; opened feet-ready fall; distinctly deeper planted landing",
+    "identity": "Olive-green tusked orc with tied-back black hair and full beard, bronze-brown gold-edged shoulder plates and bracers, leather torso armor, round gold buckle, green gold-edged tabard, leather hip panels and heavy boots",
+    "extremities": "No obvious clipped ponytail, beard, shoulder plates, fingers or boots; far-side hands and limbs naturally overlap in profiles and rear quarters",
+    "empty_hands_no_effects": true,
+    "gross_defect_requiring_correction": false,
+    "image_cleanup_or_transforms_performed": false
+  },
+  "known_limits": [
+    "Actual generated dimensions are 1586 by 992, not the approximately requested 2048 by 1280.",
+    "Source contains extensive partial alpha. Original remains unchanged; deterministic alpha cleanup, hidden-RGB removal, registration and downsampling belong to the integration lead.",
+    "Anticipation is subtler than landing and still requires a native-scale comparison.",
+    "Some far-side hands, feet and facial details are naturally occluded in side and rear-quarter poses.",
+    "Source-size visual observations do not establish native body-volume, skull-size or rendered idle-to-jump acceptance.",
+    "Four authored action keys plus neutral calibration are not full animation cycles or independent aiming/casting poses."
+  ],
+  "not_run": [
+    "native-scale assembly",
+    "assembled-native-pixel-board review",
+    "integration-lead acceptance",
+    "runtime integration",
+    "Godot import",
+    "rendered idle-to-jump continuity",
+    "animation timing",
+    "full animation-cycle testing",
+    "human acceptance"
+  ],
+  "human_accepted": false,
+  "ownership": "Only pixel_actions_v2 source/joh_haynes/source.png, receipt.json, assembly.json and prompts/joh_haynes.md were written for the repair; runtime, existing originals and shared builders untouched",
+  "source_completed": true
+}

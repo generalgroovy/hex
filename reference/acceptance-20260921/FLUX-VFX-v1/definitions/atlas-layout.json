@@ -1,0 +1,149 @@
+{
+  "status": "PROPOSAL",
+  "format": "RGBA8 PNG straight alpha, sRGB",
+  "filter": "nearest; no mipmaps",
+  "tile": [
+    64,
+    80
+  ],
+  "pivot": [
+    32,
+    40
+  ],
+  "logical_pixel_world_px": 2,
+  "columns": 8,
+  "packing": "row-major, 8 columns, no gutter; region sampling must not bleed",
+  "geometry": "Motifs only. Fill, boundary and selected polygons remain separate.",
+  "atlases": [
+    {
+      "path": "assets/motifs/water-normal.png",
+      "material": "water",
+      "mode": "normal",
+      "dimensions": [
+        512,
+        240
+      ],
+      "rows": [
+        "forming",
+        "active",
+        "decaying"
+      ],
+      "frames_per_row": 8,
+      "pivot": [
+        32,
+        40
+      ],
+      "alpha": "straight",
+      "status": "PROPOSAL"
+    },
+    {
+      "path": "assets/motifs/water-reduced.png",
+      "material": "water",
+      "mode": "reduced",
+      "dimensions": [
+        512,
+        240
+      ],
+      "rows": [
+        "forming",
+        "active",
+        "decaying"
+      ],
+      "frames_per_row": 8,
+      "pivot": [
+        32,
+        40
+      ],
+      "alpha": "straight",
+      "status": "PROPOSAL"
+    },
+    {
+      "path": "assets/motifs/fire-normal.png",
+      "material": "fire",
+      "mode": "normal",
+      "dimensions": [
+        512,
+        240
+      ],
+      "rows": [
+        "ignition",
+        "active",
+        "cooling"
+      ],
+      "frames_per_row": 8,
+      "pivot": [
+        32,
+        40
+      ],
+      "alpha": "straight",
+      "status": "PROPOSAL"
+    },
+    {
+      "path": "assets/motifs/fire-reduced.png",
+      "material": "fire",
+      "mode": "reduced",
+      "dimensions": [
+        512,
+        240
+      ],
+      "rows": [
+        "ignition",
+        "active",
+        "cooling"
+      ],
+      "frames_per_row": 8,
+      "pivot": [
+        32,
+        40
+      ],
+      "alpha": "straight",
+      "status": "PROPOSAL"
+    },
+    {
+      "path": "assets/motifs/steam-normal.png",
+      "material": "steam",
+      "mode": "normal",
+      "dimensions": [
+        512,
+        400
+      ],
+      "rows": [
+        "forming",
+        "active",
+        "hot",
+        "cool",
+        "decaying"
+      ],
+      "frames_per_row": 8,
+      "pivot": [
+        32,
+        40
+      ],
+      "alpha": "straight",
+      "status": "PROPOSAL"
+    },
+    {
+      "path": "assets/motifs/steam-reduced.png",
+      "material": "steam",
+      "mode": "reduced",
+      "dimensions": [
+        512,
+        400
+      ],
+      "rows": [
+        "forming",
+        "active",
+        "hot",
+        "cool",
+        "decaying"
+      ],
+      "frames_per_row": 8,
+      "pivot": [
+        32,
+        40
+      ],
+      "alpha": "straight",
+      "status": "PROPOSAL"
+    }
+  ]
+}

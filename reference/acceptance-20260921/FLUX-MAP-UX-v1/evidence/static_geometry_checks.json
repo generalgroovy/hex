@@ -1,0 +1,2032 @@
+{
+  "status": "STATIC_VERIFIED",
+  "tool": "Python standard library geometry port",
+  "scope": "Input bytes, integer lattice, AABB geometry and proposal data only",
+  "runtime": "NOT_RUN",
+  "human": "NOT_RUN",
+  "collision_dependency": "CollisionWorld implementation missing. Analytic AABB distance assumes tangent contact allowed; compare with live collision.can_occupy.",
+  "count": 247,
+  "passed": 247,
+  "failed": 0,
+  "results": [
+    {
+      "id": "baseline-eligible-count",
+      "status": "PASS",
+      "detail": {
+        "observed": 1493,
+        "historical_reference": 1493,
+        "scope": "offline port, not independently rerun Godot"
+      }
+    },
+    {
+      "id": "candidate-eligible-data",
+      "status": "PASS",
+      "detail": {
+        "observed": 1474
+      }
+    },
+    {
+      "id": "owner-center-0-0",
+      "status": "PASS",
+      "detail": {
+        "point_fixed": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "owner-center-13-23",
+      "status": "PASS",
+      "detail": {
+        "point_fixed": [
+          1568000,
+          1274775
+        ]
+      }
+    },
+    {
+      "id": "owner-center--4-9",
+      "status": "PASS",
+      "detail": {
+        "point_fixed": [
+          32000,
+          498825
+        ]
+      }
+    },
+    {
+      "id": "owner-center-20-12",
+      "status": "PASS",
+      "detail": {
+        "point_fixed": [
+          1664000,
+          665100
+        ]
+      }
+    },
+    {
+      "id": "lexicographic-face-owner",
+      "status": "PASS",
+      "detail": {
+        "point_fixed": [
+          32000,
+          0
+        ],
+        "owner": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "strict-disk-tangency",
+      "status": "PASS",
+      "detail": {
+        "radius_fixed": 32000,
+        "note": "Exact face tangency does not select neighbor."
+      }
+    },
+    {
+      "id": "one-fixed-unit-positive-overlap",
+      "status": "PASS",
+      "detail": {
+        "radius_fixed": 32001
+      }
+    },
+    {
+      "id": "zero-radius-owner",
+      "status": "PASS",
+      "detail": {
+        "point_fixed": [
+          32000,
+          0
+        ]
+      }
+    },
+    {
+      "id": "preserve-spawn",
+      "status": "PASS",
+      "detail": {
+        "policy": "unchanged from supplied baseline"
+      }
+    },
+    {
+      "id": "preserve-arena",
+      "status": "PASS",
+      "detail": {
+        "policy": "unchanged from supplied baseline"
+      }
+    },
+    {
+      "id": "preserve-stations",
+      "status": "PASS",
+      "detail": {
+        "policy": "unchanged from supplied baseline"
+      }
+    },
+    {
+      "id": "preserve-practice_targets",
+      "status": "PASS",
+      "detail": {
+        "policy": "unchanged from supplied baseline"
+      }
+    },
+    {
+      "id": "preserve-connections",
+      "status": "PASS",
+      "detail": {
+        "policy": "unchanged from supplied baseline"
+      }
+    },
+    {
+      "id": "preserve-canvas_size",
+      "status": "PASS",
+      "detail": {
+        "policy": "unchanged from supplied baseline"
+      }
+    },
+    {
+      "id": "preserve-reserved_ui_top",
+      "status": "PASS",
+      "detail": {
+        "policy": "unchanged from supplied baseline"
+      }
+    },
+    {
+      "id": "preserve-reset_zones",
+      "status": "PASS",
+      "detail": {
+        "policy": "unchanged from supplied baseline"
+      }
+    },
+    {
+      "id": "only-two-obstacles-added",
+      "status": "PASS",
+      "detail": {
+        "base": 16,
+        "candidate": 18
+      }
+    },
+    {
+      "id": "baseline-public-route-conservatory-ordinary",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 160.0,
+        "required_radius_px": 96.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "baseline-public-route-verdant-canopy-walk",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 80.0,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "baseline-public-route-nexus-processional",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 291.7807,
+        "required_radius_px": 96.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "baseline-public-route-nexus-fountain-loop",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 96.0,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "baseline-public-route-wayfarer-ordinary",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 272.0,
+        "required_radius_px": 96.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "baseline-public-route-eastern-outer-walk",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 128.0,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "baseline-public-route-conservatory-south-loop",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 84.0,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "baseline-public-route-crucible-south-return",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 240.0,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "baseline-public-route-garden-commons-grand-walk",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 180.7097,
+        "required_radius_px": 96.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "baseline-public-route-commons-wayfarer-processional",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 300.6127,
+        "required_radius_px": 96.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "baseline-public-route-north-garden-loop",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 100.0,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "baseline-public-route-north-range-loop",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 173.0665,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "baseline-public-route-south-garden-loop",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 173.0665,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "baseline-public-route-south-duel-loop",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 134.1044,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "baseline-public-route-south-garden-return",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 127.5617,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "baseline-anchor-shared-spawn",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 512.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-conservatory-spire",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 285.2367,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-verdant-well",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 192.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-archive-orrey",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 64.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-wayfarer-gate",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 288.4441,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-proving-crucible",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 176.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-movement-guide",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 273.8759,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-training-reset",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 272.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-momentum-chime",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 264.8773,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-champion-loom",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 272.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-spell-loom",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 272.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-farflow-host",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 498.3172,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-farflow-join",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 496.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-farflow-charter",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 496.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-session-hearth",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 505.2049,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-company-ledger",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 422.715,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-parting-bell",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 371.1172,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-controls-lectern",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 272.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-nexus-sparring-effigy",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 64.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-range-effigy-center",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 64.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-range-effigy-east",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 64.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-crucible-effigy",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 256.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-pattern-comparison-firing-0",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 304.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-pattern-comparison-firing-1",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 304.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-pattern-comparison-firing-2",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 289.8827,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-crucible-experiment-firing-0",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 64.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-duel-spawn-0",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 175.4537,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-duel-spawn-1",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 175.4537,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-duel-spawn-2",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 146.8605,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-duel-spawn-3",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 146.8605,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-duel-spawn-4",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 134.1044,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-duel-spawn-5",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 134.1044,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-duel-spawn-6",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 148.8086,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-duel-spawn-7",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 113.7014,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-hearth-gather-0",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 521.1679,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-hearth-gather-1",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 472.5272,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-hearth-gather-2",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 442.5381,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-hearth-gather-3",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 453.8744,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-hearth-gather-4",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 497.0312,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-hearth-gather-5",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 543.3986,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-hearth-gather-6",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 568.169,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-anchor-hearth-gather-7",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 559.0724,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "baseline-fire-line-nexus-sparring-effigy",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 64.0,
+        "required_px": 24.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-nexus-sparring-effigy-movement-guide",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1224.941,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-nexus-sparring-effigy-training-reset",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 958.833,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-nexus-sparring-effigy-momentum-chime",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1642.729,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-nexus-sparring-effigy-champion-loom",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 873.32,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-nexus-sparring-effigy-spell-loom",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 697.653,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-nexus-sparring-effigy-farflow-host",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1292.761,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-nexus-sparring-effigy-farflow-join",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1127.546,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-nexus-sparring-effigy-farflow-charter",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 966.147,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-nexus-sparring-effigy-session-hearth",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 810.846,
+        "required_px": 116.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-nexus-sparring-effigy-company-ledger",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 521.72,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-nexus-sparring-effigy-parting-bell",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 628.548,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-nexus-sparring-effigy-controls-lectern",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1049.099,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-range-effigy-center",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 64.0,
+        "required_px": 24.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-center-movement-guide",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1344.857,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-center-training-reset",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1032.589,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-center-momentum-chime",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1760.364,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-center-champion-loom",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 993.161,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-center-spell-loom",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 817.411,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-center-farflow-host",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1406.909,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-center-farflow-join",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1239.871,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-center-farflow-charter",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1075.695,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-center-session-hearth",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 915.921,
+        "required_px": 116.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-center-company-ledger",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 623.179,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-center-parting-bell",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 715.005,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-center-controls-lectern",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1168.986,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-range-effigy-east",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 64.0,
+        "required_px": 24.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-east-movement-guide",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1464.787,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-east-training-reset",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1114.415,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-east-momentum-chime",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1878.297,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-east-champion-loom",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1113.035,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-east-spell-loom",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 937.23,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-east-farflow-host",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1521.957,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-east-farflow-join",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1353.514,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-east-farflow-charter",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1187.266,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-east-session-hearth",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1024.281,
+        "required_px": 116.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-east-company-ledger",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 730.282,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-east-parting-bell",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 810.057,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-range-effigy-east-controls-lectern",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1288.894,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-crucible-effigy",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 64.0,
+        "required_px": 32.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-crucible-effigy-movement-guide",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 702.544,
+        "required_px": 128.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-crucible-effigy-training-reset",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 320.0,
+        "required_px": 128.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-crucible-effigy-momentum-chime",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 802.556,
+        "required_px": 104.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-crucible-effigy-champion-loom",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 608.0,
+        "required_px": 128.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-crucible-effigy-spell-loom",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 632.961,
+        "required_px": 128.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-crucible-effigy-farflow-host",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 426.033,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-crucible-effigy-farflow-join",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 297.617,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-crucible-effigy-farflow-charter",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 240.0,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-crucible-effigy-session-hearth",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 297.617,
+        "required_px": 124.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-crucible-effigy-company-ledger",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 569.744,
+        "required_px": 104.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-crucible-effigy-parting-bell",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 487.409,
+        "required_px": 104.0
+      }
+    },
+    {
+      "id": "baseline-fire-line-station-crucible-effigy-controls-lectern",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 632.961,
+        "required_px": 128.0
+      }
+    },
+    {
+      "id": "pilot-public-route-conservatory-ordinary",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 160.0,
+        "required_radius_px": 96.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "pilot-public-route-verdant-canopy-walk",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 80.0,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "pilot-public-route-nexus-processional",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 291.7807,
+        "required_radius_px": 96.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "pilot-public-route-nexus-fountain-loop",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 89.6891,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "pilot-public-route-wayfarer-ordinary",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 272.0,
+        "required_radius_px": 96.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "pilot-public-route-eastern-outer-walk",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 128.0,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "pilot-public-route-conservatory-south-loop",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 84.0,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "pilot-public-route-crucible-south-return",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 100.2397,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "pilot-public-route-garden-commons-grand-walk",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 180.7097,
+        "required_radius_px": 96.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "pilot-public-route-commons-wayfarer-processional",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 300.6127,
+        "required_radius_px": 96.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "pilot-public-route-north-garden-loop",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 100.0,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "pilot-public-route-north-range-loop",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 173.0665,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "pilot-public-route-south-garden-loop",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 153.675,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "pilot-public-route-south-duel-loop",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 134.1044,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "pilot-public-route-south-garden-return",
+      "status": "PASS",
+      "detail": {
+        "analytic_min_obstacle_distance_px": 127.5617,
+        "required_radius_px": 80.0,
+        "note": "Continuous static AABB distance, does not model player dynamics or temporary structures."
+      }
+    },
+    {
+      "id": "pilot-anchor-shared-spawn",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 408.3136,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-conservatory-spire",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 285.2367,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-verdant-well",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 192.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-archive-orrey",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 64.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-wayfarer-gate",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 288.4441,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-proving-crucible",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 176.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-movement-guide",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 273.8759,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-training-reset",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 100.2397,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-momentum-chime",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 264.8773,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-champion-loom",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 272.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-spell-loom",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 272.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-farflow-host",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 208.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-farflow-join",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 232.5511,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-farflow-charter",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 288.555,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-session-hearth",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 209.38,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-company-ledger",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 365.2068,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-parting-bell",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 237.8571,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-controls-lectern",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 272.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-nexus-sparring-effigy",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 64.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-range-effigy-center",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 64.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-range-effigy-east",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 64.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-crucible-effigy",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 200.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-pattern-comparison-firing-0",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 304.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-pattern-comparison-firing-1",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 304.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-pattern-comparison-firing-2",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 289.8827,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-crucible-experiment-firing-0",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 64.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-duel-spawn-0",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 175.4537,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-duel-spawn-1",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 175.4537,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-duel-spawn-2",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 146.8605,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-duel-spawn-3",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 146.8605,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-duel-spawn-4",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 134.1044,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-duel-spawn-5",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 134.1044,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-duel-spawn-6",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 148.8086,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-duel-spawn-7",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 113.7014,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-hearth-gather-0",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 208.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-hearth-gather-1",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 163.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-hearth-gather-2",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 145.9863,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-hearth-gather-3",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 177.0028,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-hearth-gather-4",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 225.8495,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-hearth-gather-5",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 262.2403,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-hearth-gather-6",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 273.0568,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-anchor-hearth-gather-7",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 253.0,
+        "common_wall_radius_px": 18
+      }
+    },
+    {
+      "id": "pilot-fire-line-nexus-sparring-effigy",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 64.0,
+        "required_px": 24.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-nexus-sparring-effigy-movement-guide",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1224.941,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-nexus-sparring-effigy-training-reset",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 958.833,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-nexus-sparring-effigy-momentum-chime",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1642.729,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-nexus-sparring-effigy-champion-loom",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 873.32,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-nexus-sparring-effigy-spell-loom",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 697.653,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-nexus-sparring-effigy-farflow-host",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1292.761,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-nexus-sparring-effigy-farflow-join",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1127.546,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-nexus-sparring-effigy-farflow-charter",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 966.147,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-nexus-sparring-effigy-session-hearth",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 810.846,
+        "required_px": 116.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-nexus-sparring-effigy-company-ledger",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 521.72,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-nexus-sparring-effigy-parting-bell",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 628.548,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-nexus-sparring-effigy-controls-lectern",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1049.099,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-range-effigy-center",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 64.0,
+        "required_px": 24.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-center-movement-guide",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1344.857,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-center-training-reset",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1032.589,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-center-momentum-chime",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1760.364,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-center-champion-loom",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 993.161,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-center-spell-loom",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 817.411,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-center-farflow-host",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1406.909,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-center-farflow-join",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1239.871,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-center-farflow-charter",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1075.695,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-center-session-hearth",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 915.921,
+        "required_px": 116.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-center-company-ledger",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 623.179,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-center-parting-bell",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 715.005,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-center-controls-lectern",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1168.986,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-range-effigy-east",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 64.0,
+        "required_px": 24.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-east-movement-guide",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1464.787,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-east-training-reset",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1114.415,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-east-momentum-chime",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1878.297,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-east-champion-loom",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1113.035,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-east-spell-loom",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 937.23,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-east-farflow-host",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1521.957,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-east-farflow-join",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1353.514,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-east-farflow-charter",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1187.266,
+        "required_px": 112.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-east-session-hearth",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1024.281,
+        "required_px": 116.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-east-company-ledger",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 730.282,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-east-parting-bell",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 810.057,
+        "required_px": 96.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-range-effigy-east-controls-lectern",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 1288.894,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-crucible-effigy",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 64.0,
+        "required_px": 32.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-crucible-effigy-movement-guide",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 702.544,
+        "required_px": 128.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-crucible-effigy-training-reset",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 320.0,
+        "required_px": 128.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-crucible-effigy-momentum-chime",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 802.556,
+        "required_px": 104.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-crucible-effigy-champion-loom",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 608.0,
+        "required_px": 128.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-crucible-effigy-spell-loom",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 632.961,
+        "required_px": 128.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-crucible-effigy-farflow-host",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 426.033,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-crucible-effigy-farflow-join",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 297.617,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-crucible-effigy-farflow-charter",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 240.0,
+        "required_px": 120.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-crucible-effigy-session-hearth",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 297.617,
+        "required_px": 124.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-crucible-effigy-company-ledger",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 569.744,
+        "required_px": 104.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-crucible-effigy-parting-bell",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 487.409,
+        "required_px": 104.0
+      }
+    },
+    {
+      "id": "pilot-fire-line-station-crucible-effigy-controls-lectern",
+      "status": "PASS",
+      "detail": {
+        "distance_px": 632.961,
+        "required_px": 128.0
+      }
+    },
+    {
+      "id": "pilot-escape-west-desired-width",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 48.0,
+        "required_half_width_px": 48.0,
+        "length_px": 702.854
+      }
+    },
+    {
+      "id": "pilot-escape-west-small",
+      "status": "PASS",
+      "detail": {
+        "wall_radius_px": 18,
+        "hurt_radius_px": 17,
+        "not_proven": "Body-to-body collision, temporary chemistry, dynamic wall normals, network correction."
+      }
+    },
+    {
+      "id": "pilot-escape-west-middle",
+      "status": "PASS",
+      "detail": {
+        "wall_radius_px": 18,
+        "hurt_radius_px": 18,
+        "not_proven": "Body-to-body collision, temporary chemistry, dynamic wall normals, network correction."
+      }
+    },
+    {
+      "id": "pilot-escape-west-large",
+      "status": "PASS",
+      "detail": {
+        "wall_radius_px": 18,
+        "hurt_radius_px": 19,
+        "not_proven": "Body-to-body collision, temporary chemistry, dynamic wall normals, network correction."
+      }
+    },
+    {
+      "id": "pilot-escape-east-desired-width",
+      "status": "PASS",
+      "detail": {
+        "minimum_obstacle_distance_px": 80.0,
+        "required_half_width_px": 48.0,
+        "length_px": 683.895
+      }
+    },
+    {
+      "id": "pilot-escape-east-small",
+      "status": "PASS",
+      "detail": {
+        "wall_radius_px": 18,
+        "hurt_radius_px": 17,
+        "not_proven": "Body-to-body collision, temporary chemistry, dynamic wall normals, network correction."
+      }
+    },
+    {
+      "id": "pilot-escape-east-middle",
+      "status": "PASS",
+      "detail": {
+        "wall_radius_px": 18,
+        "hurt_radius_px": 18,
+        "not_proven": "Body-to-body collision, temporary chemistry, dynamic wall normals, network correction."
+      }
+    },
+    {
+      "id": "pilot-escape-east-large",
+      "status": "PASS",
+      "detail": {
+        "wall_radius_px": 18,
+        "hurt_radius_px": 19,
+        "not_proven": "Body-to-body collision, temporary chemistry, dynamic wall normals, network correction."
+      }
+    },
+    {
+      "id": "forward-patch-object-match",
+      "status": "PASS",
+      "detail": {
+        "writes_to_checkout": false
+      }
+    },
+    {
+      "id": "rollback-object-match",
+      "status": "PASS",
+      "detail": {
+        "note": "Object identity, not source-file formatting. Never apply to changed live source."
+      }
+    }
+  ]
+}

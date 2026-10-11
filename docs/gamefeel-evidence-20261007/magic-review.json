@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "reviewed_on": "2026-10-07",
+  "reviewer": "magic_glow independent native image review",
+  "status": "BOUNDED_KEYFRAME_ACCEPTANCE_WITH_CAVEATS",
+  "runtime_build_id": "p57-a2124abed591",
+  "scope": "Readability and bounded visual safety of final native spell keyframes, with particular attention to compact Spray damage feedback. This is not overall gamefeel acceptance.",
+  "evidence_directory": ".godot/hex-cast-release-native-gamefeel-v1",
+  "receipt_sha256": "c7785dde66b11cb42aa69c0f2bfef06d65631207d1a4c3182b405ba9a3a06c59",
+  "inspection": {
+    "tool": "view_image",
+    "native_dimensions": [
+      1280,
+      720
+    ],
+    "gameplay_scale_percent": 75,
+    "directly_opened_new_images": 10,
+    "directly_opened_baseline_comparison_images": 2,
+    "method": "Opened all four paid family boards in Normal and Reduced plus Fire Spray release full frames in both modes. Opened the previous Normal Spray board and Fire Spray full frame for direct text-clutter comparison. Read both receipts and the prior visual review. No generated, resized or edited media.",
+    "byte_identical_to_previous_image_count": 16,
+    "hash_carried_forward_without_reopening_count": 10,
+    "carry_forward_rule": "Each carried-forward current image exactly matches both the retained magic-final PNG SHA256 and a visually_inspected=true entry in the prior review. Six other matching images (Bolt/Heavy/Rapid boards) were nevertheless reopened in this review. Unchanged-byte correspondence carries only the prior static keyframe observations, not new gameplay or runtime acceptance.",
+    "previous_image_directory": "docs/glow-flow-evidence-20261007/magic-final",
+    "previous_receipt_sha256": "34422506e61e57de1dce6a4f8378c6c61250bb19f3a9f425c69d3f26e7373966",
+    "previous_review": "docs/glow-flow-evidence-20261007/visual-review-v3.json",
+    "previous_review_sha256": "46d9a951892a66c4b65a543d52b16f9654f5fed7e695d00b5adf3aee584ec86b"
+  },
+  "receipt_checks": {
+    "frame_count": 20,
+    "frame_hash_matches": 20,
+    "source_hashes_checked_against_current_files": 9,
+    "source_hash_mismatches": [],
+    "distinct_paid_element_family_cases": 32,
+    "cases_with_positive_flux_payment_and_one_release_and_hostile_health_loss": 32,
+    "cases_with_600_paid_matter_and_valid_conservation": 32,
+    "cases_reporting_release_cue_expired": 32,
+    "normal_reduced_phase_pairs_checked": 96,
+    "phase_pairs_with_equal_tick_and_authority_hash": 96,
+    "active_fire_surface": {
+      "tick": 40,
+      "neutral_ticks_waited": 7,
+      "wait_bound_ticks": 120,
+      "active_region_count": 14,
+      "normal_surface_glow_admissions": 14,
+      "reduced_surface_glow_admissions": 0,
+      "surface_glow_limit": 48,
+      "same_authority_hash": "e27f0e96834536aa40ae4e1bd587cdc86467d8b390299a2bedfd516534c988f8",
+      "direct_field_injection": false
+    },
+    "qualification": "These checks independently reconcile recorded receipt values and on-disk hashes. The reviewer did not rerun the engine; receipt assertions are not substitutes for physical input or human acceptance."
+  },
+  "display": {
+    "server": "Windows",
+    "headless": false,
+    "mode": "minimized-subviewport",
+    "root_window_visible": true,
+    "subviewport_dimensions": [
+      1280,
+      720
+    ],
+    "update_always": true,
+    "qualification": "Native renderer readback, not a screenshot of the user's desktop. The root is minimized, not hidden."
+  },
+  "findings": {
+    "blocking_visual_regressions_observed": [],
+    "spray_contact_clutter": {
+      "status": "ACCEPTED_WITHIN_CAPTURED_KEYFRAMES",
+      "observations": [
+        "The previous Spray board and Fire full frame show two stacked spell-name/contact labels crossing the target area. The new Normal and Reduced captures remove that duplicated long-form and aggregate text.",
+        "Small per-target numeric feedback remains, most evident on the later Spray contact rows; it is restrained rather than a new large label stack.",
+        "Spray's directional fan and impact/material patterns remain visible after the text reduction. Fire's orange-red fan remains clear in both full-game context frames.",
+        "All four changed images are Spray-specific: the two paid Spray boards and two Fire Spray release full frames."
+      ],
+      "caveat": "At native scale the numeric feedback is small and less salient than the material fan. These snapshots do not establish every digit's immediate readability during active combat or label behavior across multiple simultaneous targets."
+    },
+    "element_and_family_readability": {
+      "status": "ACCEPTED_WITH_CAVEATS",
+      "observations": [
+        "The eight elemental palettes remain distinguishable in the sampled family boards: brown Earth, orange-red Fire, blue Water, green Wind/Air, cyan Ice, yellow Charge, pale Light and violet Dark.",
+        "Element-specific surface patterns and occupied-hex boundaries remain visible; the reviewed glow does not visibly introduce a second expanding danger circle or detached projectile copy.",
+        "Heavy cores and contact areas are more prominent than Bolt, and Rapid remains visibly smaller. Reduced mode preserves the core projectile/material distinctions.",
+        "Normal-versus-Reduced differences are local and restrained, not environment-wide bloom. Matching non-Spray image bytes preserve the previously reviewed appearance."
+      ],
+      "caveats": [
+        "Rapid release accents are tiny/subtle and can be hard to locate at full-game scale. A clearly readable per-cast Rapid glow is not accepted on this evidence.",
+        "Earth has lower contrast against pale stone than the brighter elemental colors; static distinguishability does not prove universal at-a-glance readability.",
+        "Water Spray launches its target high enough for some native crop-board target labels to touch or cross the crop edge. This is a crop-context limitation, not a claim of an unclipped full-screen Water review.",
+        "Whole-hex geometry and conservation are authoritative/test concerns; images show the sampled boundaries but cannot alone prove all safe holes or exact collision."
+      ]
+    }
+  },
+  "synthetic_helper_boards": {
+    "count": 2,
+    "files": [
+      "release-comparison-normal-1280x720.png",
+      "release-comparison-reduced-1280x720.png"
+    ],
+    "classification": "SYNTHETIC_PRESENTATION_FIXTURE_ONLY",
+    "qualification": "Age-4 helper A/B boards comparing old crosses to candidate release silhouettes. Their hashes match previously inspected images. They are not paid gameplay, actor-hit, chemistry-conservation or input evidence."
+  },
+  "not_established": [
+    "Continuous animation timing, smoothness, movement feel or motion-trail quality",
+    "Physical keyboard/controller interaction or genuine focus-loss behavior",
+    "Human readability/playtest acceptance or competitive balance",
+    "Multi-target and dense simultaneous Spray text behavior",
+    "Multiplayer or physical Internet behavior",
+    "Rendered performance, frame rate, 120 Hz throughput or capacity acceptance",
+    "All characters, all angles, all background contrast conditions or every reaction surface",
+    "Projectile muzzle-cover repair correctness; this capture matrix is not its adversarial thin-cover acceptance test"
+  ],
+  "images": [
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-bolt-normal-1280x720.png",
+      "sha256": "84e652ba0530f07f4f308c1a821ecbb237c6fc037fe8c9fe83b1fb596d39fce2",
+      "receipt_hash_matches": true,
+      "classification": "paid_native_crop_board",
+      "directly_inspected_in_this_review": true,
+      "matches_previous_retained_image": true,
+      "acceptance_basis": "current_view_image_inspection",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-bolt-reduced-1280x720.png",
+      "sha256": "40b0da032d74c8d70d4e48e33a771d980dbb2d3d29d0545c589983bc6f2cbe99",
+      "receipt_hash_matches": true,
+      "classification": "paid_native_crop_board",
+      "directly_inspected_in_this_review": true,
+      "matches_previous_retained_image": true,
+      "acceptance_basis": "current_view_image_inspection",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-fire-bolt-active-normal-1280x720.png",
+      "sha256": "b16154b98ac04dfd37e6513a3d66d8e653acfb3902d5b4c953f4f0a37a94811a",
+      "receipt_hash_matches": true,
+      "classification": "paid_active_fire_surface",
+      "directly_inspected_in_this_review": false,
+      "matches_previous_retained_image": true,
+      "acceptance_basis": "exact_sha256_match_to_previously_viewed_image",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-fire-bolt-active-reduced-1280x720.png",
+      "sha256": "e21c7cb3d7c28dba4ea55f7654acdfb19dfaf0260591b7c44aa346986339a7c8",
+      "receipt_hash_matches": true,
+      "classification": "paid_active_fire_surface",
+      "directly_inspected_in_this_review": false,
+      "matches_previous_retained_image": true,
+      "acceptance_basis": "exact_sha256_match_to_previously_viewed_image",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-fire-bolt-release-normal-1280x720.png",
+      "sha256": "3ed5710bcd833e22ec4be30bf112efb89114497f575d7ae08d0f6a9d755bcf12",
+      "receipt_hash_matches": true,
+      "classification": "paid_production_full_frame",
+      "directly_inspected_in_this_review": false,
+      "matches_previous_retained_image": true,
+      "acceptance_basis": "exact_sha256_match_to_previously_viewed_image",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-fire-bolt-release-reduced-1280x720.png",
+      "sha256": "ebb093d56af76bbc0f33ea2629de7f5ee2bfa43c85cbe7b60e387b74f76f8347",
+      "receipt_hash_matches": true,
+      "classification": "paid_production_full_frame",
+      "directly_inspected_in_this_review": false,
+      "matches_previous_retained_image": true,
+      "acceptance_basis": "exact_sha256_match_to_previously_viewed_image",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-fire-heavy-release-normal-1280x720.png",
+      "sha256": "a81cc6b14591b2eeb02995bd0a601777a64f02cb871829182561cedd46bbb0ca",
+      "receipt_hash_matches": true,
+      "classification": "paid_production_full_frame",
+      "directly_inspected_in_this_review": false,
+      "matches_previous_retained_image": true,
+      "acceptance_basis": "exact_sha256_match_to_previously_viewed_image",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-fire-heavy-release-reduced-1280x720.png",
+      "sha256": "3d60d6d275a2e71dd172cdcc10603f9bac92db7226edd6a3185ee881bbe8fa75",
+      "receipt_hash_matches": true,
+      "classification": "paid_production_full_frame",
+      "directly_inspected_in_this_review": false,
+      "matches_previous_retained_image": true,
+      "acceptance_basis": "exact_sha256_match_to_previously_viewed_image",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-fire-rapid-release-normal-1280x720.png",
+      "sha256": "acfe72363f4357b97a3feb6c1af888b9821b06ac0ce4c9b326edca686c68825a",
+      "receipt_hash_matches": true,
+      "classification": "paid_production_full_frame",
+      "directly_inspected_in_this_review": false,
+      "matches_previous_retained_image": true,
+      "acceptance_basis": "exact_sha256_match_to_previously_viewed_image",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-fire-rapid-release-reduced-1280x720.png",
+      "sha256": "4b50b4ae9155056d918e5616c46133442d4bb57a3b488a98958c9474294c6ba9",
+      "receipt_hash_matches": true,
+      "classification": "paid_production_full_frame",
+      "directly_inspected_in_this_review": false,
+      "matches_previous_retained_image": true,
+      "acceptance_basis": "exact_sha256_match_to_previously_viewed_image",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-fire-spray-release-normal-1280x720.png",
+      "sha256": "3657a13546c356c1e09b7bcaa15890fa6a23d92d0747be766567e58ab3cb399e",
+      "receipt_hash_matches": true,
+      "classification": "paid_production_full_frame",
+      "directly_inspected_in_this_review": true,
+      "matches_previous_retained_image": false,
+      "acceptance_basis": "current_view_image_inspection",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-fire-spray-release-reduced-1280x720.png",
+      "sha256": "4dfd97e419dd5dbb476749be0dbd2388ddb173b374b314d22a9b8536ada548b8",
+      "receipt_hash_matches": true,
+      "classification": "paid_production_full_frame",
+      "directly_inspected_in_this_review": true,
+      "matches_previous_retained_image": false,
+      "acceptance_basis": "current_view_image_inspection",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-heavy-normal-1280x720.png",
+      "sha256": "d8537afc636f6f43e1038d5ad5022746ad85dad1177fcd831c335871a6f3af25",
+      "receipt_hash_matches": true,
+      "classification": "paid_native_crop_board",
+      "directly_inspected_in_this_review": true,
+      "matches_previous_retained_image": true,
+      "acceptance_basis": "current_view_image_inspection",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-heavy-reduced-1280x720.png",
+      "sha256": "a6d6bf97c62846d45b77c250eb7aa0b1f8653ce6f166e88f49b4f9b61f9bc8cd",
+      "receipt_hash_matches": true,
+      "classification": "paid_native_crop_board",
+      "directly_inspected_in_this_review": true,
+      "matches_previous_retained_image": true,
+      "acceptance_basis": "current_view_image_inspection",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-rapid-normal-1280x720.png",
+      "sha256": "576a1a14b6c3ea23d0eef78017a9a0a33d0c8787ea0e96fa3d6733b83c9995e4",
+      "receipt_hash_matches": true,
+      "classification": "paid_native_crop_board",
+      "directly_inspected_in_this_review": true,
+      "matches_previous_retained_image": true,
+      "acceptance_basis": "current_view_image_inspection",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-rapid-reduced-1280x720.png",
+      "sha256": "f2089156905990e7ffcb7c9307a0535d6dd7db1f2e394407f627904eebbdcef2",
+      "receipt_hash_matches": true,
+      "classification": "paid_native_crop_board",
+      "directly_inspected_in_this_review": true,
+      "matches_previous_retained_image": true,
+      "acceptance_basis": "current_view_image_inspection",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-spray-normal-1280x720.png",
+      "sha256": "d5bf8738f6b15916a316a76b3cc93ccfae97aca9248be91c05631bdc110dfebb",
+      "receipt_hash_matches": true,
+      "classification": "paid_native_crop_board",
+      "directly_inspected_in_this_review": true,
+      "matches_previous_retained_image": false,
+      "acceptance_basis": "current_view_image_inspection",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/paid-spray-reduced-1280x720.png",
+      "sha256": "1e02a93d60804f313231c3051ab755ef1101271f614498131da917968414cf4c",
+      "receipt_hash_matches": true,
+      "classification": "paid_native_crop_board",
+      "directly_inspected_in_this_review": true,
+      "matches_previous_retained_image": false,
+      "acceptance_basis": "current_view_image_inspection",
+      "accepted_scope": "bounded_static_readability_with_stated_caveats"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/release-comparison-normal-1280x720.png",
+      "sha256": "1e5dfdbc97170f6e6a7881af0c6bb890ce5b7e30f42f1e22c5d2e0f1f1ecc409",
+      "receipt_hash_matches": true,
+      "classification": "synthetic_helper_not_paid_gameplay",
+      "directly_inspected_in_this_review": false,
+      "matches_previous_retained_image": true,
+      "acceptance_basis": "exact_sha256_match_to_previously_viewed_image",
+      "accepted_scope": "synthetic_silhouette_keyframe_only"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-gamefeel-v1/release-comparison-reduced-1280x720.png",
+      "sha256": "a8e7dc73a5eb92ac5f0edbb050a54688b36b33f015b7da56c5a28b4f9398c53b",
+      "receipt_hash_matches": true,
+      "classification": "synthetic_helper_not_paid_gameplay",
+      "directly_inspected_in_this_review": false,
+      "matches_previous_retained_image": true,
+      "acceptance_basis": "exact_sha256_match_to_previously_viewed_image",
+      "accepted_scope": "synthetic_silhouette_keyframe_only"
+    }
+  ],
+  "production_files_edited": false,
+  "capture_files_edited": false,
+  "engine_commands_run": false,
+  "only_written_artifact": "docs/gamefeel-evidence-20261007/magic-review.json"
+}

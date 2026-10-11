@@ -14,7 +14,7 @@ func run() -> int:
 	_test_provenance_reaction_and_conservation(catalog)
 	_test_exact_partial_match_fixture(catalog)
 	_test_product_modifiers(catalog)
-	_test_modifier_order_commutes(catalog)
+	_test_modifier_order_preserves_cooling(catalog)
 	_test_zero_height_and_vertical_transition_rules(catalog)
 	_test_real_blocked_and_negated_paid_releases(catalog)
 	_test_conservation_rejects_reverse_layer_corruption(catalog)
@@ -76,13 +76,15 @@ func _test_practice_loadout_and_real_paid_deliveries(catalog: AbilityCatalog) ->
 		_wire(catalog, "water", "heavy"), _wire(catalog, "fire", "heavy"),
 		_wire(catalog, "water", "rapid"), _wire(catalog, "fire", "rapid"),
 		_wire(catalog, "water", "spray"), _wire(catalog, "fire", "spray"),
+		_wire(catalog, "earth", "bolt"), _wire(catalog, "wind", "bolt"),
+		_wire(catalog, "light", "bolt"), _wire(catalog, "dark", "bolt"),
 	]
 	for slot_index: int in range(expected.size()):
 		var fixture := _practice(catalog)
 		var world: SimWorld = fixture.world
 		var court: HexCourt = fixture.court
 		var actor: PlayerState = world.player()
-		equal(actor.spell_wire_id(slot_index + 1), expected[slot_index], "practice slot %d uses the catalog-derived water/fire family order" % (slot_index + 1))
+		equal(actor.spell_wire_id(slot_index + 1), expected[slot_index], "practice slot %d keeps all four Water/Fire families followed by the other four live elements" % (slot_index + 1))
 		var definition := CombatTuning.cast_definition(expected[slot_index])
 		check(int(definition.get("flux_cost", 0)) > 0, "practice delivery %d retains a positive production Flux cost" % slot_index)
 		check(int(definition.get("startup_ms", 0)) > 0 and int(definition.get("cooldown_ms", 0)) > 0, "practice delivery %d retains positive production timing" % slot_index)
@@ -145,9 +147,24 @@ func _test_provenance_reaction_and_conservation(catalog: AbilityCatalog) -> void
 	_deposit(same_element, 2, water_bolt, 1202, point, 10)
 	equal(same_element.products.size(), 1, "two equal-strength Water casts create one explicit mirror product")
 	var flood: Dictionary = same_element.products[_single_product_id(same_element)]
-	equal(int(flood.recipe_wire_id), HexCourt.FLOOD_WIRE, "Water mirror keeps Flood316 recipe identity")
+	equal(int(flood.recipe_wire_id), HexCourt.FROSTWAY_WIRE, "Water mirror keeps Frostway316 recipe identity")
 	equal(String(flood.material), "flood", "Water mirror uses its own product layer instead of fake Steam")
 	equal(int(flood.quantity), HexCourt.MATTER_PER_CAST * 2, "full mirror match transfers both finite budgets")
+	equal(flood.source_funding, PackedInt64Array([1201, water_bolt, 5, 1202, water_bolt, 5]), "actual paid Water pair retains each five-strength contribution")
+	equal(int(flood.funded_strength), 10, "Frostway funding is the exact sum of its two paid Bolts")
+	equal(int(flood.damage_budget_remaining), 40_000, "Frostway begins with the linear paid damage ceiling")
+	equal(int(flood.active_tick), 88, "Water mirror uses its 78-tick freezing formation after tick10")
+	equal(int(flood.decay_tick), 508, "Water mirror then supplies exactly420 active ticks")
+	equal(int(flood.expiry_tick), 580, "Water mirror finishes with its72-tick decay")
+	var frozen_target := PlayerState.new(77)
+	frozen_target.team_id = 2
+	frozen_target.position_x = same_element.origin.x
+	frozen_target.position_y = same_element.origin.y
+	var frozen_health := frozen_target.health
+	same_element.apply_product_effects([frozen_target], 88, SimConfig.new(120), CollisionWorld.new(), [])
+	same_element.apply_product_effects([frozen_target], 89, SimConfig.new(120), CollisionWorld.new(), [])
+	equal(frozen_health - frozen_target.health, 2000, "a real five-strength paid Frostway applies one half-scale first-entry hit")
+	equal(int(flood.damage_budget_remaining), 38_000, "only actual realized Frostway Health loss spends its shared pool")
 	check(same_element.conservation_valid(), "same-element mirror reaction conserves both paid budgets")
 	var fire_mirror := _court()
 	_deposit(fire_mirror, 1, fire_bolt, 1251, point, 10)
@@ -165,7 +182,7 @@ func _test_provenance_reaction_and_conservation(catalog: AbilityCatalog) -> void
 	var product: Dictionary = reacted.products[_single_product_id(reacted)]
 	equal(product.source_ids, [1301, 1302], "product parents are stable runtime source ids in canonical order")
 	equal(String(product.material), "steam", "opposite Water and Fire keep Steam310 product identity")
-	equal(int(product.footprint.radius), HexCourt.MEDIUM_RADIUS, "contact product uses the explicit fixed 64px medium radius")
+	equal(int(product.footprint.radius), HexCourt.MEDIUM_RADIUS, "contact product uses the explicit compact medium radius")
 	equal(int(product.quantity), HexCourt.MATTER_PER_CAST * 2, "fully shared footprints transfer both finite budgets into product quantity")
 	check(bool(reacted.casts[water_id].reacted) and bool(reacted.casts[fire_id].reacted), "both parent casts permanently spend their one chemistry payload")
 	check(reacted.conservation_valid(), "opposite reaction conserves both paid budgets")
@@ -237,7 +254,8 @@ func _test_product_modifiers(catalog: AbilityCatalog) -> void:
 	var cool_cells: int = cooled_product.cells.size()
 	var cooler := _deposit(cooled, 7, water_bolt, 3103, Vector2i.ZERO, 160)
 	equal(cooled.products.size(), 1, "compatible Water modifies the existing product without creating another")
-	equal(int(cooled_product.intensity), 250, "strength-five Water subtracts min(500/2,5*50)=250")
+	equal(cool_cells, 19, "literal cooling regression uses the current centered nineteen-hex footprint")
+	equal(int(cooled_product.intensity), 165, "strength-five Water reduces thermal intensity to250 then compensates exact density/cap rounding to165")
 	equal(int(cooled_product.expires), cool_expiry, "Water spread never extends product expiry")
 	equal(int(cooled_product.quantity), cool_quantity + HexCourt.MATTER_PER_CAST, "Water spread adds exactly its one fresh finite budget")
 	equal(cooled_product.cells.size(), cool_cells, "Water cooling retains the selected hex set without forced neighboring-cell expansion")
@@ -318,7 +336,7 @@ func _test_finite_ground_and_product_expiry(catalog: AbilityCatalog) -> void:
 	equal(int(expired_record.ground), 0, "Water ground retires at its finite expiry tick")
 	equal(int(expired_record.expired), HexCourt.MATTER_PER_CAST, "expired Water enters the finite expiry sink before the record retires")
 	check(water.casts.has(water_id) and water.reserved_products() == 0, "expired Water releases cast capacity while retaining its empty source record until flight synchronization")
-	equal(_sum_values(water.cells[Vector2i.ZERO].water), 0, "Water expiry clears cell-layer references")
+	equal(_sum_values(water.cells[Vector2i.ZERO].get("water",{})), 0, "Water expiry clears cell-layer references")
 	water.sync_flights([], [])
 	check(not water.casts.has(water_id) and water.casts.is_empty(), "empty expired ground ledger retires and releases cast capacity after flight synchronization")
 	check(water.conservation_valid(), "finite ground expiry remains conserved")
@@ -332,7 +350,7 @@ func _test_finite_ground_and_product_expiry(catalog: AbilityCatalog) -> void:
 	steam.advance([], {}, expiry_tick, SimConfig.new(120), [])
 	equal(steam.products.size(), 0, "Steam product retires at its explicit medium expiry tick")
 	for cell: Vector2i in steam.cells:
-		equal((steam.cells[cell].steam as Dictionary).size(), 0, "Steam expiry clears every referenced cell layer")
+		equal((steam.cells[cell].get("steam",{}) as Dictionary).size(), 0, "Steam expiry clears every referenced cell layer")
 	steam.sync_flights([], [])
 	check(steam.conservation_valid(), "finite product expiry preserves parent matter accounting")
 
@@ -354,10 +372,10 @@ func _test_pressure_height_paths_and_invulnerability(catalog: AbilityCatalog) ->
 	var airborne := PlayerState.new(21)
 	airborne.position_x = fire_point.x
 	airborne.position_y = fire_point.y
-	airborne.air_height = 1
+	airborne.air_height = MovementTuning.GROUND_PROJECTILE_CLEARANCE_HEIGHT
 	var airborne_health := airborne.health
 	fire.advance([airborne], {airborne.entity_id: fire_point}, 30, SimConfig.new(120), [])
-	equal(airborne.health, airborne_health, "one unit of air height clears ground Fire pressure")
+	equal(airborne.health, airborne_health, "authored clearance height avoids ground Fire pressure")
 
 	var crossing := PlayerState.new(22)
 	var path_start := fire.origin + HexGrid.center(Vector2i(-2, 0))
@@ -410,8 +428,7 @@ func _test_pressure_height_paths_and_invulnerability(catalog: AbilityCatalog) ->
 	var intangible := PlayerState.new(32)
 	intangible.position_x = steam_point.x
 	intangible.position_y = steam_point.y
-	intangible.hop_ticks = 5
-	intangible.jump_protection_ticks = 5
+	intangible.air_dodge_ticks = SimConfig.new(120).milliseconds_to_ticks(MovementTuning.AIR_DODGE_DURATION_MS)
 	steam.exposure[intangible.entity_id] = 10
 	var intangible_health := intangible.health
 	steam.advance([intangible], {intangible.entity_id: steam_point}, 30, SimConfig.new(120), [])
@@ -434,10 +451,10 @@ func _test_hash_and_legacy_isolation(catalog: AbilityCatalog) -> void:
 	equal(world.deposits.size() + world.reactions.size() + world.fields.size(), 0, "configured hex court begins with every legacy chemistry array empty")
 	check(SessionSnapshot.capture(world, {}).is_empty(), "hex court refuses the incomplete legacy network snapshot")
 	var initial_hash := world.state_hash()
-	court.cells[Vector2i.ZERO].water[777] = 9
+	court.set_cell_amount(Vector2i.ZERO,"water",777,9)
 	check(world.state_hash() != initial_hash, "whole-world authority hash includes nested hex material layers")
 	var layered_hash := world.state_hash()
-	court.cells[Vector2i.ZERO].steam[888] = 11
+	court.set_cell_amount(Vector2i.ZERO,"steam",888,11)
 	check(world.state_hash() != layered_hash, "whole-world authority hash includes nested product layers independently")
 
 
@@ -570,7 +587,7 @@ func _has_refusal(events: Array[Dictionary], reason: String) -> bool:
 	return false
 
 
-func _test_modifier_order_commutes(catalog: AbilityCatalog) -> void:
+func _test_modifier_order_preserves_cooling(catalog: AbilityCatalog) -> void:
 	var water_bolt := _wire(catalog, "water", "bolt")
 	var fire_bolt := _wire(catalog, "fire", "bolt")
 
@@ -579,10 +596,10 @@ func _test_modifier_order_commutes(catalog: AbilityCatalog) -> void:
 	_deposit(cool_then_heat, 2, fire_bolt, 6002, Vector2i.ZERO, 0)
 	var first: Dictionary = cool_then_heat.products[_single_product_id(cool_then_heat)]
 	_deposit(cool_then_heat, 3, water_bolt, 6003, Vector2i.ZERO, 30)
-	equal(int(first.intensity), 250, "Water first subtracts min(500/2,5*50) from Steam")
+	equal(int(first.intensity), 165, "Water first compensates its reduced thermal intensity for the added finite density")
 	var cooled_expiry := int(first.expires)
 	_deposit(cool_then_heat, 4, fire_bolt, 6004, Vector2i.ZERO, 60)
-	equal(int(first.intensity), 500, "Fire after Water adds the incoming strength-five potency of 250")
+	equal(int(first.intensity), 415, "Fire after Water adds the unchanged incoming strength-five potency of250 to cooled165")
 	equal(int(first.expires), 60 + (cooled_expiry - 60) / 2, "Fire after Water halves only the remaining lifetime")
 	check(bool(first.heated) and bool(first.cooled), "cool-then-heat consumes each modifier permission exactly once")
 	equal(int(first.quantity), HexCourt.MATTER_PER_CAST * 4, "cool-then-heat accounts for both parents and both fresh modifiers")
@@ -596,7 +613,7 @@ func _test_modifier_order_commutes(catalog: AbilityCatalog) -> void:
 	equal(int(second.intensity), 750, "Fire first adds the incoming strength-five potency of 250")
 	var heated_expiry := int(second.expires)
 	_deposit(heat_then_cool, 4, water_bolt, 6104, Vector2i.ZERO, 60)
-	equal(int(second.intensity), 500, "Water after Fire subtracts min(750/2,5*50)=250")
+	equal(int(second.intensity), 372, "Water after Fire reduces thermal intensity to500 then compensates exact density/cap rounding to372")
 	equal(int(second.expires), heated_expiry, "Water after Fire cannot extend the shortened lifetime")
 	check(bool(second.heated) and bool(second.cooled), "heat-then-cool consumes each modifier permission exactly once")
 	equal(int(second.quantity), HexCourt.MATTER_PER_CAST * 4, "heat-then-cool accounts for both parents and both fresh modifiers")
@@ -623,11 +640,11 @@ func _test_zero_height_and_vertical_transition_rules(catalog: AbilityCatalog) ->
 	var wallskim := PlayerState.new(41)
 	wallskim.position_x = fire_point.x
 	wallskim.position_y = fire_point.y
-	wallskim.air_height = 0
+	wallskim.air_height = MovementTuning.GROUND_PROJECTILE_CLEARANCE_HEIGHT + 1
 	wallskim.wall_skim_ticks = 5
 	var wallskim_health := wallskim.health
 	fire.advance([wallskim], {wallskim.entity_id: {"point": fire_point, "height": 0}}, 30, SimConfig.new(120), [])
-	equal(wallskim_health - wallskim.health, expected_fire, "zero air height remains grounded for Fire despite wall-skim state")
+	equal(wallskim_health - wallskim.health, expected_fire, "wallrun remains exposed to Fire above ordinary ground clearance")
 
 	var landing := PlayerState.new(42)
 	var airborne_start := fire.origin + HexGrid.center(Vector2i(-3, 0))
@@ -636,15 +653,15 @@ func _test_zero_height_and_vertical_transition_rules(catalog: AbilityCatalog) ->
 	landing.position_y = quiet_landing.y
 	landing.air_height = 0
 	var landing_health := landing.health
-	fire.advance([landing], {landing.entity_id: {"point": airborne_start, "height": 1}}, 60, SimConfig.new(120), [])
+	fire.advance([landing], {landing.entity_id: {"point": airborne_start, "height": MovementTuning.GROUND_PROJECTILE_CLEARANCE_HEIGHT}}, 60, SimConfig.new(120), [])
 	equal(landing.health, landing_health, "landing samples only its grounded endpoint and ignores the swept airborne Fire crossing")
 
 	var steam := _court()
 	_deposit(steam, 1, _wire(catalog, "water", "bolt"), 6301, Vector2i.ZERO, 0)
 	_deposit(steam, 2, _wire(catalog, "fire", "bolt"), 6302, Vector2i.ZERO, 0)
 	var descending := PlayerState.new(43)
-	var above_start := steam.origin + HexGrid.center(Vector2i(-3, 0))
-	var quiet_endpoint := steam.origin + HexGrid.center(Vector2i(3, 0))
+	var above_start := steam.origin + HexGrid.center(Vector2i(-6, 0))
+	var quiet_endpoint := steam.origin + HexGrid.center(Vector2i(6, 0))
 	descending.position_x = quiet_endpoint.x
 	descending.position_y = quiet_endpoint.y
 	descending.air_height = HexCourt.STEAM_HEIGHT
@@ -726,22 +743,22 @@ func _test_real_blocked_and_negated_paid_releases(catalog: AbilityCatalog) -> vo
 func _test_conservation_rejects_reverse_layer_corruption(catalog: AbilityCatalog) -> void:
 	for layer: String in ["water", "fire", "steam", "conflagration", "flood"]:
 		var orphan := _court()
-		orphan.cells[Vector2i.ZERO][layer][999] = 1
+		orphan.set_cell_amount(Vector2i.ZERO,layer,999,1)
 		check(not orphan.conservation_valid(), "conservation rejects an orphan %s cell-layer id" % layer)
 
 	var duplicate := _court()
 	var water_id := _deposit(duplicate, 1, _wire(catalog, "water", "bolt"), 6401, Vector2i.ZERO, 0)
 	var water: Dictionary = duplicate.casts[water_id]
 	var cell: Vector2i = water.cells.keys()[0]
-	duplicate.cells[cell].fire[water_id] = int(water.cells[cell])
+	duplicate.set_cell_amount(cell,"fire",water_id,int(water.cells[cell]))
 	check(not duplicate.conservation_valid(), "conservation rejects a cast duplicated into the wrong element layer")
 
 
 func _court_ground_quantity(court: HexCourt) -> int:
 	var total := 0
 	for cell: Vector2i in court.cells:
-		total += _sum_values(court.cells[cell].water)
-		total += _sum_values(court.cells[cell].fire)
+		total += _sum_values(court.cells[cell].get("water",{}))
+		total += _sum_values(court.cells[cell].get("fire",{}))
 	return total
 
 

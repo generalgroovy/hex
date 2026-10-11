@@ -28,6 +28,8 @@ func reconcile(round_state: Dictionary, local_entity_id: int, available_entity_i
 		for entry_value: Variant in entries_value:
 			if not entry_value is Dictionary:
 				continue
+			if not bool(entry_value.get("present", true)):
+				continue
 			var entity_id := int((entry_value as Dictionary).get("entity_id", 0))
 			if available.has(entity_id) and not next_participants.has(entity_id):
 				next_participants.append(entity_id)

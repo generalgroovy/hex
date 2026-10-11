@@ -59,13 +59,13 @@ $retiredScopePaths = @(
 $currentContractClaims = @(
     @{ document = 'README.md'; fact = 'playable'; pattern = 'Current source:\s*(?<value>\d+)\s*playable profiles' },
     @{ document = 'README.md'; fact = 'spells'; pattern = 'Current source:[^\r\n]*playable profiles,\s*(?<value>\d+)\s*spells' },
-    @{ document = 'README.md'; fact = 'reactions'; pattern = '(?m)^\|\s*Chemistry\s*\|\s*(?<value>\d+)\s*symmetric' },
+    @{ document = 'README.md'; fact = 'reactions'; pattern = '(?m)^\|\s*Chemistry\s*\|\s*(?<value>\d+)\s*bounded reactions' },
     @{ document = 'README.md'; fact = 'simulation_hz'; pattern = '(?m)^\|\s*Engine\s*\|\s*(?<value>\d+)\s*Hz authoritative simulation' },
     @{ document = 'README.md'; fact = 'snapshot_hz'; pattern = '(?m)^\|\s*Engine\s*\|[^\r\n]*;\s*(?<value>\d+)\s*Hz transport snapshots' },
     @{ document = 'SPECIFICATION.md'; fact = 'playable'; pattern = '(?m)^\|\s*Cast\s*\|\s*(?<value>\d+)\s*named playable profiles' },
     @{ document = 'SPECIFICATION.md'; fact = 'reserved'; pattern = '(?m)^\|\s*Cast\s*\|[^\r\n]*;\s*(?<value>\d+)\s*reserved' },
     @{ document = 'SPECIFICATION.md'; fact = 'spells'; pattern = '(?m)^\|\s*Magic\s*\|[^\r\n]*;\s*(?<value>\d+)\s*selectable spells' },
-    @{ document = 'SPECIFICATION.md'; fact = 'reactions'; pattern = '(?m)^\|\s*Chemistry\s*\|\s*(?<value>\d+)\s*symmetric' },
+    @{ document = 'SPECIFICATION.md'; fact = 'reactions'; pattern = '(?m)^\|\s*Chemistry\s*\|\s*(?<value>\d+)\s*bounded reactions' },
     @{ document = 'SPECIFICATION.md'; fact = 'simulation_hz'; pattern = '(?m)^\|\s*Cadence\s*\|\s*(?<value>\d+)\s*Hz authoritative simulation' },
     @{ document = 'SPECIFICATION.md'; fact = 'snapshot_hz'; pattern = '(?m)^\|\s*Cadence\s*\|[^\r\n]*;\s*(?<value>\d+)\s*Hz snapshots' },
     @{ document = 'SPECIFICATION.md'; fact = 'players'; pattern = '(?m)^\|\s*Session\s*\|[^\r\n]*maximum\s*(?<value>\d+)\s*players' },
@@ -124,8 +124,8 @@ if ($SelfTest) {
     }
     $fixtureFacts = @{ playable = 27; spells = 57; reactions = 36; simulation_hz = 120; snapshot_hz = 60; players = 8; reserved = 1 }
     $fixtureDocuments = @{
-        'README.md' = "Current source: 27 playable profiles, 57 spells`n| Chemistry |36 symmetric reactions |`n| Engine |120 Hz authoritative simulation; 60 Hz transport snapshots |`nHistorical checkpoint:5playable,24planned,60Hz remains evidence only."
-        'SPECIFICATION.md' = "| Cast |27 named playable profiles;1 reserved Angel |`n| Magic | Eight elements;57 selectable spells;12 positions |`n| Chemistry |36 symmetric pairs |`n| Cadence |120Hz authoritative simulation;60Hz snapshots |`n| Session |Offline first, maximum8 players |"
+        'README.md' = "Current source: 27 playable profiles, 57 spells`n| Chemistry |36 bounded reactions |`n| Engine |120 Hz authoritative simulation; 60 Hz transport snapshots |`nHistorical checkpoint:5playable,24planned,60Hz remains evidence only."
+        'SPECIFICATION.md' = "| Cast |27 named playable profiles;1 reserved Angel |`n| Magic | Six elements;57 selectable spells;12 positions |`n| Chemistry |36 bounded reactions |`n| Cadence |120Hz authoritative simulation;60Hz snapshots |`n| Session |Offline first, maximum8 players |"
         '.agent/OVERHAUL-IMPLEMENTATION.md' = "Active playable profiles: 27."
     }
     if (@(Find-CurrentContractIssues $fixtureDocuments $fixtureFacts).Count -ne 0) { throw 'Current contract fixture did not validate.' }
@@ -163,7 +163,7 @@ foreach ($retiredPath in $retiredScopePaths) {
 $scopeChampions = Get-Content -Raw -LiteralPath (Join-Path $scopeRoot 'content/champions/foundation_champions_v1.json') | ConvertFrom-Json
 $scopeRoster = Get-Content -Raw -LiteralPath (Join-Path $scopeRoot 'content/champions/champion_roster_plan_v1.json') | ConvertFrom-Json
 $scopeAbilities = Get-Content -Raw -LiteralPath (Join-Path $scopeRoot 'content/abilities/foundation_abilities_v1.json') | ConvertFrom-Json
-$scopeReactions = Get-Content -Raw -LiteralPath (Join-Path $scopeRoot 'content/reactions/first_eight_element_reactions_v1.json') | ConvertFrom-Json
+$scopeReactions = Get-Content -Raw -LiteralPath (Join-Path $scopeRoot 'content/reactions/six_element_reactions_v2.json') | ConvertFrom-Json
 $scopeFacts = @{
     playable = @($scopeChampions.champions).Count
     reserved = @($scopeRoster.champions).Count - @($scopeChampions.champions).Count

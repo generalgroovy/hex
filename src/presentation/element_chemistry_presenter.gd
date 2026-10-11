@@ -168,6 +168,15 @@ func deposit_model(deposit: RefCounted, tick: float, reduced_effects: bool = fal
 
 
 func reaction_model(state: RefCounted, recipe: Dictionary, tick: float, reduced_effects: bool = false) -> Dictionary:
+	return _reaction_model(state, recipe, tick, reduced_effects, false)
+
+
+# Explicit historical art inspection. Never called by current Hex authority.
+func archive_reaction_model(state: RefCounted, recipe: Dictionary, tick: float, reduced_effects: bool = false) -> Dictionary:
+	return _reaction_model(state, recipe, tick, reduced_effects, true)
+
+
+func _reaction_model(state: RefCounted, recipe: Dictionary, tick: float, reduced_effects: bool, archive: bool) -> Dictionary:
 	if library == null or geometry(state, recipe).is_empty():
 		return {}
 	var phase_label := phase_at(state, tick)
@@ -183,7 +192,7 @@ func reaction_model(state: RefCounted, recipe: Dictionary, tick: float, reduced_
 	var effective := _without_path(state) if unlinked else state
 	if not _visible(Mask._extent(effective, shape, position, float(state.radius) / 1000.0)):
 		return {}
-	var mask := _masks.reaction_mask(effective, recipe, now, _config, _collision)
+	var mask := _masks.archive_reaction_mask(effective, recipe, now, _config, _collision) if archive else _masks.reaction_mask(effective, recipe, now, _config, _collision)
 	if mask.is_empty():
 		return {}
 	var socket := unlinked and (mask["polygons"] as Array).is_empty()
@@ -191,8 +200,10 @@ func reaction_model(state: RefCounted, recipe: Dictionary, tick: float, reduced_
 		return {}
 	if socket and _collision != null and not _collision.can_occupy(Vector2i(position * 1000.0), 0):
 		return {}
-	var asset_id := library.reaction_asset_id(state.recipe_wire_id, phase, reduced)
-	var metadata := library.reaction(state.recipe_wire_id)
+	var asset_id := library.reaction_asset_id(state.recipe_wire_id, phase, reduced) if archive else library.live_reaction_asset_id(state.recipe_wire_id, phase, reduced)
+	var metadata := library.reaction(state.recipe_wire_id) if archive else library.live_reaction(state.recipe_wire_id)
+	if metadata.is_empty() or asset_id.is_empty():
+		return {}
 	var composition: Dictionary = metadata["composition"]
 	var elements: Array = recipe.get("elements", [])
 	if elements.size() != 2 or int(elements[0]) < 1 or int(elements[0]) > 8:

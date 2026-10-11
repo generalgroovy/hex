@@ -1,0 +1,116 @@
+{
+  "id": "hex-wa-bidi-pixel-jump-keys-source-v1",
+  "date": "2026-10-03",
+  "status": "source-candidate-awaits-lead-native-review",
+  "generator": "built-in image_gen; transparent_background true; one generation call; no repairs; no CLI/API fallback",
+  "character": "wa_bidi",
+  "identity": "Small Goblin; current runtime identity; explicitly not the outdated sylph poster identity",
+  "body": "small",
+  "repository": "https://github.com/generalgroovy/hex.git",
+  "inspected_head": "1559a566e33255c59337c5963f1c3c685d757f1f",
+  "dirty_work_preserved": true,
+  "exact_prompt_file": "art_batches/pixel_actions_v1/prompts/wa_bidi.md",
+  "directions": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "intended_rows": [
+    "jumpsquat",
+    "jump_rise_apex",
+    "fall",
+    "land"
+  ],
+  "generated_files": [
+    {
+      "file": "source.png",
+      "original": "C:/Users/sende/.codex/generated_images/01a100ae-dba0-7d73-8544-a319aed7960f/exec-3f32a35e-8372-495e-8bc5-156e7b03dcd1.png",
+      "sha256": "17cf3e7a94cca4e089a69294ba5c43ff4306512785822e801743e8dac93746a1",
+      "size": [
+        1774,
+        887
+      ],
+      "pixel_format": "32bpp ARGB",
+      "copied_without_modification": true,
+      "original_and_saved_sha256_equal": true,
+      "selected_rows_zero_based": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "alpha_threshold_128_y_bands_inclusive": [
+        [
+          59,
+          208
+        ],
+        [
+          239,
+          412
+        ],
+        [
+          450,
+          641
+        ],
+        [
+          684,
+          825
+        ]
+      ],
+      "row_envelope_heights_at_threshold_128": [
+        150,
+        174,
+        192,
+        142
+      ],
+      "alpha_counts": {
+        "zero": 1077778,
+        "partial": 494697,
+        "fully_opaque": 1063,
+        "hidden_rgb_at_alpha_zero": 2168
+      },
+      "review": "Source-size visual review found 32 complete sprites, intended facing sequence, readable genuine rear headings, preserved goblin face/hair/costume, empty hands, no weapon/wings/VFX/ground. Landing is only modestly more compressed than anticipation. No gross defect justified an additional generation. Native proportions and rendered continuity remain unverified."
+    }
+  ],
+  "reference_roles": [
+    {
+      "path": "assets/sprites/pixel_cast_v1/wa_bidi.png",
+      "sha256": "c0c78b445d3e5b39013a3a4459babcd90dd70cd6140f57df00dda91a9481e5c4",
+      "role": "primary current runtime identity, body proportion and heading canon"
+    },
+    {
+      "path": "assets/sprites/fullbody_cast_v1/wa_bidi-detail.png",
+      "sha256": "52712c12192bb8614b57d8e08f6195d2d665b3c09622cc9d0dabba0e0546dabe",
+      "role": "supporting costume, face/hair and profile/rear volume anatomy"
+    },
+    {
+      "path": "C:/Users/sende/Pictures/styleref1.png",
+      "sha256": "c0fb63c912718d64ca061ccd85817869ffc3348a3c81a910962df57066279fd4",
+      "role": "style only; its old winged Wa Bidi identity and all weapons, labels, effects explicitly excluded"
+    }
+  ],
+  "assembly_guidance": {
+    "ownership": "Lead only; this worker saved source art and provenance only.",
+    "columns": 8,
+    "rows": 4,
+    "crop_policy": "Measure alpha bands and per-character isolation; retain full ears, hair, toes and fingertips. Do not assume image dimensions guarantee exact integer cell bounds.",
+    "alpha_policy": "Preserve this original unchanged. It contains genuine transparency, abundant partial alpha, and hidden RGB. Any approved threshold cleanup is lead-owned and must target a derivative.",
+    "scale_policy": "Calibrate one common scale against current standing identity and skull size; never fit individual poses to their occupied height. All four source rows are one selection.",
+    "registration_policy": "Preserve common body root; review tucked feet without erasing the pose by arbitrary per-pose bottom-foot alignment.",
+    "measured_envelope_note": "Source row maxima are 150/174/192/142px. At an illustrative common scale 60/192 they become 46.875/54.375/60/44.375 units; this is not final runtime calibration. Landing falls below the prompt's 48-51 target at this illustrative scale."
+  },
+  "limitations": [
+    "Only four authored jump-chain keys; not completed animation cycles or timed inbetweens.",
+    "Anticipation and landing silhouettes are similar; landing is modestly deeper and needs native transition review.",
+    "Head size was prompted at approximately one-third of standing height, but exact native skull/body ratio and inter-pose volume continuity are not quantitatively certified.",
+    "Some hands are naturally occluded in profile/rear quarter views; no separately authored casting cycle is included.",
+    "The source is visually pixel-styled but contains many partial-alpha pixels; no cleanup, resampling, pixel-grid or final palette certification was performed.",
+    "No native assembly, runtime integration, engine/import execution, tests, captures, export, manifest changes, build changes, commits or pushes were performed by this worker.",
+    "No human acceptance is claimed."
+  ]
+}

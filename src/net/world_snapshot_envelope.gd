@@ -10,7 +10,7 @@ const WORLD_LEGACY: int = 1
 const WORLD_HEX: int = 2
 const WORLD_KIND_LEGACY: int = WORLD_LEGACY
 const WORLD_KIND_HEX: int = WORLD_HEX
-const MAX_RAW_BYTES: int = 32_768
+const MAX_RAW_BYTES: int = 65_536
 const MAX_EPOCH: int = 0x7fffffff
 const MAX_TICK: int = 0x7fffffff
 const ENVELOPE_KEYS: Array[String] = ["schema", "world_kind", "world_epoch", "tick", "authority", "session"]
@@ -105,6 +105,29 @@ static func authority(envelope: Dictionary) -> Dictionary:
 	return (envelope.authority as Dictionary).duplicate(true) if validate(envelope) else {}
 
 
+# One synchronous, fully validated projection, not a reusable trust token. It
+# contains no authority or writable envelope aliases and is never accepted as
+# an input that bypasses validation. Public individual getters stay unchanged.
+static func metadata(envelope: Dictionary) -> Dictionary:
+	if not validate(envelope):
+		return {}
+	var session: Dictionary = envelope.session
+	var names_value: Array = []
+	if int(envelope.world_kind) == WORLD_LEGACY:
+		session = envelope.authority
+		for player: Array in session.players:
+			names_value.append([player[0], player[1], player[2]])
+	else:
+		names_value = (session.names as Array).duplicate(true)
+	return {
+		"world_kind": int(envelope.world_kind), "world_epoch": int(envelope.world_epoch), "tick": int(envelope.tick),
+		"names": names_value, "events": (session.events as Array).duplicate(true),
+		"hearth": (session.hearth as PackedInt32Array).duplicate(),
+		"round": (session.round as PackedInt32Array).duplicate(),
+		"overflow": (session.overflow as PackedInt32Array).duplicate(),
+	}
+
+
 static func names(envelope: Dictionary) -> Array:
 	if not validate(envelope):
 		return []
@@ -152,6 +175,13 @@ static func overflow(envelope: Dictionary) -> PackedInt32Array:
 static func _hex_authority_valid(authority_value: Dictionary) -> bool:
 	if not HexSnapshotCodec.validate_wire_structure(authority_value):
 		return false
+	return _hex_authority_header_valid(authority_value)
+
+
+# Only the envelope's additional header/ordered-actor constraints. Public
+# validation above always validates every authority lane first. The owned
+# publication factory calls this only on its own fresh HexSnapshot.capture().
+static func _hex_authority_header_valid(authority_value: Dictionary) -> bool:
 	if typeof(authority_value.get("header")) != TYPE_PACKED_INT64_ARRAY or typeof(authority_value.get("players")) != TYPE_PACKED_INT32_ARRAY:
 		return false
 	var header: PackedInt64Array = authority_value.header as PackedInt64Array
@@ -219,10 +249,14 @@ static func _hex_session_valid(session: Dictionary, authority_value: Dictionary)
 	if not _hex_session_shape_valid(session):
 		return false
 	var champion_ids: Array[int] = []
+	var champion_teams: Dictionary[int, int] = {}
+	var champion_health: Dictionary[int, int] = {}
 	var players: PackedInt32Array = authority_value.players as PackedInt32Array
 	for offset: int in range(0, players.size(), HexSnapshotCodec.PLAYER_VALUE_COUNT):
 		if players[offset + 2] == PlayerState.ActorKind.CHAMPION:
 			champion_ids.append(players[offset])
+			champion_teams[int(players[offset])] = int(players[offset + 1])
+			champion_health[int(players[offset])] = int(players[offset + 33])
 	if champion_ids.size() != (session.names as Array).size() or SessionHearth.entry_count(session.hearth) != champion_ids.size():
 		return false
 	for index: int in champion_ids.size():
@@ -234,7 +268,16 @@ static func _hex_session_valid(session: Dictionary, authority_value: Dictionary)
 		champion_set[entity_id] = true
 	var decoded_round: Dictionary = SessionRound.decoded(session.round)
 	for entry_value: Variant in decoded_round.get("entries", []):
-		if not entry_value is Dictionary or not champion_set.has(int((entry_value as Dictionary).get("entity_id", 0))):
+		if not entry_value is Dictionary:
+			return false
+		var entity_id := int(entry_value.get("entity_id", 0))
+		if not bool(entry_value.get("present", true)):
+			if champion_set.has(entity_id) and int(champion_health[entity_id]) != 0:
+				return false
+			continue # Frozen departed team ledger; a reused ID must be an inactive observer.
+		if not champion_set.has(entity_id):
+			return false
+		if int(decoded_round.get("mode", 0)) != SessionRound.Mode.FREE_FOR_ALL and int(champion_teams[entity_id]) != int(entry_value.team_id):
 			return false
 	return true
 

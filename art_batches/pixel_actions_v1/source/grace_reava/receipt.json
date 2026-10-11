@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "character_id": "grace_reava",
+  "character_name": "Grace Riva",
+  "species": "Small Sylph",
+  "date": "2026-10-03",
+  "status": "SOURCE_CANDIDATE_PENDING_LEAD_NATIVE_REVIEW",
+  "scope": "Four authored action keys in eight headings; unchanged source only. No runtime integration or animation-cycle acceptance.",
+  "generation": {
+    "tool": "built-in image_gen",
+    "call_count": 1,
+    "fallback_cli_used": false,
+    "transparent_background_requested": true,
+    "generated_original": "C:/Users/sende/.codex/generated_images/01a100ae-5cba-76a0-a593-b836ff14ee90/exec-fb93b1a9-798f-447b-bd80-6dac913dea09.png",
+    "prompt_file": "art_batches/pixel_actions_v1/prompts/grace_reava.md",
+    "copy_method": "PowerShell Copy-Item; original and destination SHA256 matched",
+    "modifications_to_generated_pixels": "NONE"
+  },
+  "source": {
+    "path": "art_batches/pixel_actions_v1/source/grace_reava/source.png",
+    "sha256": "b67c2afec97e0f606310aa12d35fb9356a95975b6722487cc6ff2c098692e73d",
+    "bytes": 1326467,
+    "width": 1774,
+    "height": 887,
+    "pixel_format": "Format32bppArgb",
+    "alpha_zero_pixels": 1091776,
+    "alpha_partial_pixels": 480371,
+    "alpha_opaque_pixels": 1391,
+    "corner_alpha": 0,
+    "alpha_preserved_unchanged": true
+  },
+  "references": [
+    {
+      "path": "assets/sprites/pixel_cast_v1/grace_reava.png",
+      "role": "PRIMARY current runtime identity, proportions, costume, palette, face and headings",
+      "sha256": "bdff9c6175cc9e253b0d993d6e9c90134cbdae13c3e37378f3be0355651dac58"
+    },
+    {
+      "path": "assets/sprites/fullbody_cast_v1/grace_reava-detail.png",
+      "role": "Supporting costume, wing anatomy, rear and profile detail",
+      "sha256": "9910a5001f9c47fe74bf7459d0cc2116fa64f49703be27123dcd1e2c4e26240c"
+    },
+    {
+      "path": "C:/Users/sende/Pictures/styleref1.png",
+      "role": "STYLE ONLY; no identity, text, magic or weapon transfer",
+      "sha256": "c0fb63c912718d64ca061ccd85817869ffc3348a3c81a910962df57066279fd4"
+    }
+  ],
+  "layout": {
+    "columns": 8,
+    "rows": 4,
+    "sprite_count": 32,
+    "directions_left_to_right": [
+      "S",
+      "SE",
+      "E",
+      "NE",
+      "N",
+      "NW",
+      "W",
+      "SW"
+    ],
+    "actions_top_to_bottom": [
+      "jumpsquat",
+      "rising_tucked",
+      "falling_feet_ready",
+      "compressed_landing"
+    ],
+    "common_model_scale_requested": true,
+    "independent_pose_scaling_forbidden": true,
+    "alpha128_row_envelopes_y_inclusive": [
+      [
+        62,
+        202
+      ],
+      [
+        250,
+        403
+      ],
+      [
+        470,
+        627
+      ],
+      [
+        700,
+        834
+      ]
+    ],
+    "alpha128_occupied_pixels_by_row_and_column": [
+      [
+        11335,
+        10944,
+        9551,
+        11200,
+        11912,
+        10895,
+        9771,
+        11610
+      ],
+      [
+        11067,
+        11373,
+        9303,
+        11850,
+        12436,
+        11993,
+        9479,
+        11388
+      ],
+      [
+        11746,
+        11310,
+        9729,
+        11540,
+        13007,
+        11397,
+        10299,
+        11696
+      ],
+      [
+        10928,
+        10413,
+        9683,
+        11219,
+        11831,
+        11045,
+        9884,
+        10719
+      ]
+    ],
+    "diagnostic_note": "Envelope and occupancy values use equal proportional grid bins and alpha >=128 without altering the image. Wing tips are included, so envelopes do not measure body-only height."
+  },
+  "review": {
+    "original_viewed": true,
+    "method": "Direct original-image inspection plus read-only System.Drawing dimensions and alpha diagnostics",
+    "source_size_findings": [
+      "All 32 full-body sprites present with transparent gutters and no apparent clipped extremities.",
+      "Requested S/SE/E/NE/N/NW/W/SW sequence appears in all four rows; rear views expose rear hair and tunic rather than faces.",
+      "Teal short hair, pointed ears, green/gold tunic, brown/gold boots and four pale cyan wings retained; hands empty.",
+      "Landing is visibly compressed below anticipation; no gross body or identity error identified requiring a second generation call.",
+      "No apparent weapons, captions, ground or baked floor shadow."
+    ],
+    "limitations": [
+      "Rising and falling keys are visually similar, especially from front and rear; transition readability needs lead review.",
+      "Nearly all nonzero pixels carry partial alpha. Cyan/green edge fringe and isolated low-alpha speckles are visible in the unchanged original; any approved alpha cleanup belongs to lead assembly, not this source worker.",
+      "One-third-head and common-scale constraints were requested but have not been numerically validated against native runtime anatomy.",
+      "Wing perspective, occlusion and limb/head volume continuity require native-scale comparison; source-size inspection is not runtime acceptance.",
+      "Four authored keys only, not completed cycles, cast poses or verified animation timing.",
+      "No Godot import, test, runtime capture, export, native rendered review or human acceptance performed."
+    ],
+    "repair_calls": 0
+  },
+  "prohibited_shared_actions_performed": false
+}

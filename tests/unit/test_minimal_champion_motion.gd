@@ -7,6 +7,8 @@ func run() -> int:
 	_test_tick_rate_parity_and_reduced_motion()
 	_test_locomotion_contact_phase()
 	_test_continuous_micro_pivot()
+	_test_contact_weight_transfer()
+	_test_invalid_micro_pivot()
 	_test_distance_phase_helpers()
 	return finish("minimal-champion-motion")
 
@@ -128,3 +130,46 @@ func _test_continuous_micro_pivot() -> void:
 					check(reduced.length() <= offset.length() + 0.0001, "reduced mode retains the same phase with quieter displacement")
 					previous = offset
 				equal(motion.locomotion_pivot_offset(profile_id, action, duration * 0.25, facing, 0.0), Vector2.ZERO, "stopped body cannot inherit a moving bob")
+
+
+func _test_contact_weight_transfer() -> void:
+	var motion := MinimalChampionMotion.new()
+	check(motion.load_from_file(), "contact weight transfer uses all existing body profiles")
+	for profile_id: String in motion.profiles:
+		for action: String in ["walk", "sprint"]:
+			var duration := float((motion.profiles[profile_id][action] as Dictionary)["duration_ticks"])
+			for direction: Vector2i in EightDirectionResolver.FIXED_VECTORS:
+				var travel := Vector2(direction).normalized()
+				var side := Vector2(-travel.y, travel.x)
+				for phase: float in [0.0, 0.5, 1.0]:
+					for delta: float in [-0.0001, 0.0001]:
+						var near_plant := motion.locomotion_pivot_offset(profile_id, action, (phase + delta + 1.0) * duration, travel, 1.0)
+						check(near_plant.length() < 0.00001, "all axes settle with zero velocity at either planted contact and the loop seam")
+				var first := motion.locomotion_pivot_offset(profile_id, action, duration * 0.25, travel, 1.0)
+				var second := motion.locomotion_pivot_offset(profile_id, action, duration * 0.75, travel, 1.0)
+				var bob := (first + second) * 0.5
+				check(absf(bob.x) < 0.0001 and bob.y < 0.0, "support shifts balance around the unchanged vertical body arc")
+				check((first - bob).dot(side) > 0.15 and (second - bob).dot(side) < -0.15, "weight shifts between opposite support feet in every travel heading")
+				for phase: float in [0.1, 0.25, 0.4, 0.6, 0.75, 0.9]:
+					var elapsed := phase * duration
+					var normal := motion.locomotion_pivot_offset(profile_id, action, elapsed, travel, 1.0)
+					var partial := motion.locomotion_pivot_offset(profile_id, action, elapsed, travel, 0.25)
+					var reduced := motion.locomotion_pivot_offset(profile_id, action, elapsed, travel, 1.0, true)
+					check(partial.distance_to(normal * 0.25) < 0.0001, "acceleration and braking retain continuous proportional weight transfer")
+					check(reduced.distance_to(normal * 0.25) < 0.0001, "reduced motion keeps the same support phase at quarter strength")
+					var scaled_travel := motion.locomotion_pivot_offset(profile_id, action, elapsed, travel * 8.0, 1.0)
+					check(scaled_travel.distance_to(normal) < 0.0001, "heading magnitude cannot inflate the bounded presentation offset")
+
+
+func _test_invalid_micro_pivot() -> void:
+	var motion := MinimalChampionMotion.new()
+	check(motion.load_from_file(), "micro-pivot input guards load existing profiles")
+	for elapsed: float in [NAN, INF, -INF]:
+		equal(motion.locomotion_pivot_offset("buoyant_keeper", "walk", elapsed, Vector2.RIGHT, 1.0), Vector2.ZERO, "invalid time retains a stable planted pose")
+	for response: float in [NAN, INF, -INF]:
+		equal(motion.locomotion_pivot_offset("buoyant_keeper", "walk", 5.5, Vector2.RIGHT, response), Vector2.ZERO, "invalid response cannot displace a body")
+	for direction: Vector2 in [Vector2.ZERO, Vector2(NAN, 1.0), Vector2(INF, 1.0)]:
+		equal(motion.locomotion_pivot_offset("buoyant_keeper", "walk", 5.5, direction, 1.0), Vector2.ZERO, "missing or invalid travel retains grounded feet")
+	for action: String in ["idle", "low", "air", "cast", "hit"]:
+		equal(motion.locomotion_pivot_offset("buoyant_keeper", action, 5.5, Vector2.RIGHT, 1.0), Vector2.ZERO, "weight transfer cannot alter an action or airborne pose")
+	equal(motion.locomotion_pivot_offset("missing", "walk", 5.5, Vector2.RIGHT, 1.0), Vector2.ZERO, "unknown profile does not invent a gait")

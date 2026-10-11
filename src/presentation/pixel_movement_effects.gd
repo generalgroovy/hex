@@ -20,6 +20,8 @@ func ready() -> bool:
 
 
 func stamp(canvas: CanvasItem, effect: String, anchor: Vector2, age: int, reduced: bool, angle: float = 0.0, opacity: float = 1.0) -> bool:
+	if effect in ["slide_trail", "slide_dust", "air_dash_afterimage_mask"]:
+		return true # Handled intentionally; never resurrect fallback trails.
 	if not ready():
 		return false
 	if effect in ["slide_dust","slide_trail","landing_dust","walljump_burst","wallrun_sparks"] and not library.take_decoration(Library.movement_asset_id(effect,reduced)):
@@ -113,11 +115,11 @@ func walljump_contact(state: PlayerState, config: SimConfig, tick: int, ground_a
 		if not _wall_contacts.has(state.entity_id) and _wall_contacts.size() >= 32:
 			_wall_contacts.erase(_wall_contacts.keys()[0])
 		_wall_contacts[state.entity_id] = {"anchor":ground_anchor-normal*float(MovementTuning.PLAYER_RADIUS)/1000.0,"tick":tick}
-	if state.hop_mode != PlayerState.MovementMode.WALL_KICK or state.jump_protection_ticks <= 0 or not _wall_contacts.has(state.entity_id):
+	if state.hop_mode != PlayerState.MovementMode.WALL_KICK or state.movement_commitment_ticks <= 0 or state.air_vertical_velocity <= 0 or not _wall_contacts.has(state.entity_id):
 		return {}
 	var remembered: Dictionary = _wall_contacts[state.entity_id]
-	var age := config.milliseconds_to_ticks(MovementTuning.JUMP_INVULNERABILITY_MS)-state.jump_protection_ticks
-	if tick < int(remembered.tick) or tick-int(remembered.tick) > memory + config.milliseconds_to_ticks(MovementTuning.JUMP_INVULNERABILITY_MS):
+	var age := config.milliseconds_to_ticks(MovementTuning.HOP_COMMITMENT_MS)-state.movement_commitment_ticks
+	if tick < int(remembered.tick) or tick-int(remembered.tick) > memory + config.milliseconds_to_ticks(MovementTuning.HOP_COMMITMENT_MS):
 		return {}
 	return {"anchor":remembered.anchor,"age":maxi(0,age)}
 

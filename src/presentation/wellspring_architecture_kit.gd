@@ -6,6 +6,7 @@ const DEFAULT_PATH := "res://content/visual/wellspring_architecture_kit_v1.json"
 const EXPECTED_ID := "wellspring-architecture-kit-v1"
 const EXPECTED_AUTHORITY := "presentation only; authored campus topology, collision, elevation, station commands and interaction radii remain canonical elsewhere"
 const BUILDING_STYLES := ["timber_hall", "garden_gate", "archive_hall", "spire", "service_tower", "portal_rotunda", "foundry_hall"]
+const SERVICE_DIRECTORY_BUILDINGS := {"training": 101, "academy": 104, "farflow": 109, "practice": 103}
 const STATION_KINDS := ["guide", "training", "champion", "spell", "farflow", "charter", "hearth", "ledger", "parting", "controls"]
 const LANDMARK_KINDS := ["attunement_spire", "grand_fountain", "archive_orrey", "portal_ring", "attunement_crucible"]
 const ROOF_SHAPES := ["gable", "hipped", "dome", "spire", "industrial"]
@@ -20,6 +21,7 @@ var runtime_kit: SanctumRuntimeKit
 var environment_kit: WellspringEnvironmentKit
 var data: Dictionary = {}
 var building_profiles: Dictionary[String, Dictionary] = {}
+var service_directories: Dictionary[String, Dictionary] = {}
 var station_profiles: Dictionary[String, Dictionary] = {}
 var landmark_profiles: Dictionary[String, Dictionary] = {}
 var court_decorations: Array[Dictionary] = []
@@ -32,6 +34,7 @@ func configure(visual_language: VisualLanguage, layout: SanctumCampusLayout, pat
 	language = visual_language
 	data.clear()
 	building_profiles.clear()
+	service_directories.clear()
 	station_profiles.clear()
 	landmark_profiles.clear()
 	court_decorations.clear()
@@ -66,6 +69,7 @@ func configure(visual_language: VisualLanguage, layout: SanctumCampusLayout, pat
 func validate(layout: SanctumCampusLayout) -> bool:
 	last_error = ""
 	building_profiles.clear()
+	service_directories.clear()
 	station_profiles.clear()
 	landmark_profiles.clear()
 	court_decorations.clear()
@@ -105,6 +109,21 @@ func validate(layout: SanctumCampusLayout) -> bool:
 		var kind := String(station.get("kind", ""))
 		if not station_profiles.has(kind):
 			return _fail("Live station kind has no architecture profile: %s" % kind)
+		var group := String(station.get("service_group", ""))
+		var building_id := int(station.get("building_id", -1))
+		if not SERVICE_DIRECTORY_BUILDINGS.has(group) or int(SERVICE_DIRECTORY_BUILDINGS[group]) != building_id or not layout.buildings_by_id.has(building_id):
+			return _fail("Service directory requires its canonical existing building")
+		var building: Dictionary = layout.buildings_by_id[building_id]
+		var bounds := SanctumCampusLayout._parse_bounds(building["bounds"])
+		var door := Vector2(bounds.get_center().x, bounds.end.y + 24)
+		if _point(station.get("position", [])) != door or String(station.get("district", "")) != String(building["district"]):
+			return _fail("Service directory must share the existing building district and front door")
+		if not service_directories.has(group):
+			# One anchor per directory, not a new facade or collision footprint.
+			service_directories[group] = {"building_id": building_id, "position": door, "station_ids": []}
+		service_directories[group]["station_ids"].append(String(station["id"]))
+	if service_directories.size() != SERVICE_DIRECTORY_BUILDINGS.size():
+		return _fail("Wellspring requires all four existing-building service directories")
 	for landmark: Dictionary in layout.landmarks_by_id.values():
 		var kind := String(landmark.get("kind", ""))
 		if not landmark_profiles.has(kind):

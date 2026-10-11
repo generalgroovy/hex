@@ -88,21 +88,20 @@ const RECIPE_ROWS: Array = [
 ]
 
 static func recipe(wire_id: int) -> Dictionary:
-	if wire_id < 301 or wire_id > 336:
-		return {}
-	var row: Array = RECIPE_ROWS[wire_id - 301]
-	var display_name := "Rampart" if wire_id == 301 else "Frostway" if wire_id == 327 else "Capacitor" if wire_id == 331 else String(row[0]).replace("_", " ").capitalize()
-	return {"id": row[0], "name": display_name, "wire_id": wire_id, "elements": [row[1], row[2]], "shape": row[3], "formation_ms": row[4], "active_ms": row[5], "decay_ms": row[6], "radius": extent(int(row[7])), "length": extent(int(row[8])), "speed": row[9], "pulse_ms": row[10], "health": int(row[11])*1000}
+	var live := HexRecipePolicy.definition(wire_id)
+	if live.is_empty(): return {}
+	return {"id": live.id, "name": live.name, "wire_id": wire_id, "elements": live.elements,
+		"shape": live.geometry_kind, "formation_ms": int(live.formation_ticks) * 1000 / 120,
+		"active_ms": int(live.active_ticks) * 1000 / 120, "decay_ms": int(live.decay_ticks) * 1000 / 120,
+		"radius": live.radius, "length": live.length, "speed": 0, "pulse_ms": int(live.pulse_ticks) * 1000 / 120, "health": live.health}
+
 
 static func recipe_wire(element_a: int, element_b: int) -> int:
-	for index: int in range(RECIPE_ROWS.size()):
-		var row: Array = RECIPE_ROWS[index]
-		if mini(element_a, element_b) == int(row[1]) and maxi(element_a, element_b) == int(row[2]):
-			return 301 + index
-	return 0
+	return HexRecipePolicy.recipe_wire(element_a, element_b)
+
 
 static func deposit_terminal(deposits: Array, entity_id: int, cast_id: int, spell_id: int, owner: int, team: int, element: int, position: Vector2i, tick: int, config: SimConfig, direction: Vector2i = Vector2i(1000,0), strength: int = 1000, flight_trail: bool = false, reaction_strength: int = 1) -> int:
-	if config == null or entity_id <= 0 or cast_id <= 0 or element < 1 or element > 8 or strength <= 0 or strength > 1000 or reaction_strength < 1 or reaction_strength > 15:
+	if config == null or entity_id <= 0 or cast_id <= 0 or element not in [1, 2, 3, 4, 7, 8] or strength <= 0 or strength > 1000 or reaction_strength < 1 or reaction_strength > 15:
 		return -1
 	var owner_count := 0
 	var owner_trails := 0
@@ -331,6 +330,7 @@ static func _links_alive(result: ElementReactionState,deposits: Array) -> bool:
 static func _apply_result(result: ElementReactionState,deposits: Array,reactions: Array,actors: Array,collision: CollisionWorld,config: SimConfig,tick: int,events: Array) -> void:
 	var definition := recipe(result.recipe_wire_id)
 	var wire := result.recipe_wire_id
+	var height_policy := HexRecipePolicy.definition(wire)
 	var age := tick-result.active_tick
 	var period := config.milliseconds_to_ticks(int(definition["pulse_ms"]))
 	@warning_ignore("integer_division")
@@ -373,9 +373,11 @@ static func _apply_result(result: ElementReactionState,deposits: Array,reactions
 			actor.chemistry_conceal_ticks = maxi(actor.chemistry_conceal_ticks,2)
 		if wire == 334 or (wire == 314 and new_pulse) or (wire == 332 and new_pulse) or (wire == 320 and (moving or entered)) or (wire in [321,336] and moving) or (wire == 330 and entered):
 			actor.chemistry_reveal_ticks = maxi(actor.chemistry_reveal_ticks,config.milliseconds_to_ticks(700 if wire in [314,332] else 250) if wire != 334 else 2)
-		if actor.team_id == result.team_id or actor.spawn_protection_ticks > 0:
+		if actor.team_id == result.team_id or actor.spawn_protection_ticks > 0 or MovementSystem.is_combat_intangible(actor, config):
 			continue
-		var grounded := actor.air_height <= 0 and not actor.is_airborne()
+		var grounded := not MovementSystem.avoids_ground_effects(actor)
+		if not bool(height_policy.get("ground_only", false)) and actor.wall_skim_ticks <= 0 and actor.air_height > int(height_policy.get("maximum_height", 256_000)):
+			continue
 		if wire == 308:
 			actor.chemistry_regen_block_ticks = maxi(actor.chemistry_regen_block_ticks,2)
 		if grounded and (wire == 303 or (wire == 318 and entered) or (wire == 330 and occupied_age >= config.milliseconds_to_ticks(350))):
@@ -395,7 +397,7 @@ static func _apply_result(result: ElementReactionState,deposits: Array,reactions
 		if new_pulse or (wire == 323 and entered):
 			match wire:
 				302: damage = 5 if grounded else 0
-				309: damage = 8
+				309: damage = 8 if grounded else 0
 				311: damage = 4
 				313: damage = 9 if connected and result.linked_deposit_ids.size() > 0 else 0
 				315: damage = 3 if occupied_age >= config.milliseconds_to_ticks(500) else 0
@@ -405,8 +407,9 @@ static func _apply_result(result: ElementReactionState,deposits: Array,reactions
 				328: damage = 8 if connected and result.linked_deposit_ids.size() > 0 else 0
 				336: damage = 2 if occupied_age >= config.milliseconds_to_ticks(1000) else 0
 		damage *= SimConfig.FIXED_SCALE
+		var health_before := actor.health
 		if damage > 0 and PlayerResourcesSystem.damage(actor,damage,config):
-			events.append({"type":"chemistry_hit","reaction_id":result.entity_id,"owner_id":result.owner_id,"target_id":actor.entity_id,"damage":damage})
+			events.append({"type":"chemistry_hit","reaction_id":result.entity_id,"owner_id":result.owner_id,"target_id":actor.entity_id,"damage":health_before - actor.health})
 			if actor.health == 0 and actor.actor_kind == PlayerState.ActorKind.CHAMPION:
 				events.append({"type":"champion_defeated","projectile_id":0,"owner_id":result.owner_id,"target_id":actor.entity_id})
 

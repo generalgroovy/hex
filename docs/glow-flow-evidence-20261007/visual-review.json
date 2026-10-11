@@ -1,0 +1,319 @@
+{
+  "schema_version": 1,
+  "reviewed_on": "2026-10-07",
+  "reviewer": "movement_flow independent agent",
+  "review_kind": "native_renderer_keyframes",
+  "status": "PARTIAL_KEYFRAME_ACCEPTANCE",
+  "runtime_build_id": "p57-6d73bc53d52a",
+  "inspected_image_count": 26,
+  "inspection_method": "Opened all six movement v4 PNGs with view_image at original 1280x720 resolution and compared Normal/Reduced full frames and unscaled native crop boards. All twenty magic v3 PNGs are SHA-256-identical to the twenty magic v2 PNGs already directly inspected at original resolution; prior visual findings carry forward by exact byte identity. No engine commands or production edits by this reviewer.",
+  "display_evidence": {
+    "movement": "Receipt reports minimized_root=true, unfocusable=false, Windows, update_always=true. The recorded focus exception is scripted; this is not genuine focus-loss or desktop-screen evidence.",
+    "magic": "Receipt reports native Windows renderer, headless=false, minimized-subviewport, root_window_visible=true, always-updating 1280x720 SubViewport. The root is not claimed hidden.",
+    "scope": "Rendered image inspection, not physical input, continuous motion, user acceptance, network or dense rendered performance."
+  },
+  "movement": {
+    "keyframe_safety": "ACCEPTED_WITHIN_REVIEWED_CASES",
+    "restrained_wake_presentation": "ACCEPTED_WITH_CAVEATS",
+    "at_a_glance_trail_readability": "NOT_ACCEPTED",
+    "improvement_from_v3": "The stronger opacity and 3px dark under-stroke make the compact sprint/slide wakes easier to locate against pale stone. Normal versus Reduced is visibly different near the actor when deliberately inspecting that area.",
+    "usability": "At native 75 percent gameplay scale, these remain restrained decorative marks rather than conspicuous trails. The short neutral strokes can merge with floor joints, body outlines and Oh Tipi's tail; walking is least readable. The v4 keyframes support a visible local movement accent, but not immediately readable wakes across the full-game view.",
+    "alignment": "No displaced body copies, ghost silhouettes, false attack area, or obvious body-anchor misalignment observed in the three body sizes and walk/sprint/slide board.",
+    "cleanup": "Reduced, paid-to-idle, and Spell Loom screenshots are visually clean; no persistent wake observed.",
+    "next_bounded_review": "Do not claim the stronger movement-trail usability outcome from these keyframes alone. If conspicuous trails are required, inspect the youngest unoccluded segments in continuous gameplay before deciding whether residual weakness is short visible geometry, sprite occlusion, or contrast. Additional blind opacity escalation is not recommended by this review."
+  },
+  "magic": {
+    "keyframe_safety": "ACCEPTED_WITHIN_REVIEWED_CASES",
+    "restrained_accent_presentation": "ACCEPTED_WITH_CAVEATS",
+    "observations": [
+      "Eight elemental colors and occupied hex footprints remain distinguishable on the native family boards.",
+      "Heavy travel cores and active Fire are readily visible; decorative brightening does not visibly replace or obscure footprint boundaries.",
+      "Reduced Effects preserves essential spell bodies and material footprints while remaining quieter.",
+      "No extra expanding field circle, detached ghost projectile, or obvious glow-induced sprite displacement observed.",
+      "Synthetic age-4 comparison boards show distinct elemental release silhouettes, but are not paid gameplay evidence."
+    ],
+    "caveats": [
+      "The added glow reads as a restrained inner accent, not strong bloom or environment lighting.",
+      "Normal/Reduced differences are small in several full-game frames. The Rapid release accent is difficult to pick out at full-game scale and is not accepted as a clearly readable per-cast glow on this evidence.",
+      "The boards demonstrate keyframe coverage, not the timing, continuity or feel of animations.",
+      "Spray contact labels overlap in the sampled boards/full frames; that pre-existing text clutter is visible, but this review does not attribute it to the glow patch."
+    ],
+    "reinspection": "All twenty v3 magic PNG hashes equal their corresponding v2 images in visual-review-v3.json; no changed magic pixels require new visual interpretation."
+  },
+  "not_established": [
+    "Continuous smoothness or buttery movement feel",
+    "Physical keyboard/controller input or genuine focus-loss behavior",
+    "Human playtest or competitive balance",
+    "Multiplayer or physical Internet behavior",
+    "Dense frame-rate or 120 Hz rendered performance acceptance",
+    "Movement directions beyond the captured lane, all thirty identities, or all forty-four material surfaces",
+    "Universal at-a-glance readability of movement wakes or every spell release"
+  ],
+  "receipt_hashes": [
+    {
+      "directory": ".godot/glow-flow-native-20261007-v4",
+      "status": "passed",
+      "display": {
+        "minimized_root": true,
+        "server": "Windows",
+        "unfocusable": false,
+        "update_always": true,
+        "viewport": [
+          1280,
+          720
+        ]
+      },
+      "build_id": "p57-6d73bc53d52a",
+      "frame_count": 6,
+      "receipt_sha256": "5d45a2ef7f168e3479fa02872ac5c12c33966972bfb2e70ae5bb0e45719e3b49"
+    },
+    {
+      "directory": ".godot/hex-cast-release-native-glow-20261007-v3",
+      "status": "passed",
+      "display": {
+        "evidence": "native renderer output, not desktop-screen or physical-input evidence",
+        "headless": false,
+        "mode": "minimized-subviewport",
+        "render_size": [
+          1280,
+          720
+        ],
+        "root_window_visible": true,
+        "server": "Windows",
+        "update_mode": "always",
+        "viewport_type": "SubViewport"
+      },
+      "build_id": "p57-6d73bc53d52a",
+      "frame_count": 20,
+      "receipt_sha256": "34422506e61e57de1dce6a4f8378c6c61250bb19f3a9f425c69d3f26e7373966"
+    }
+  ],
+  "images": [
+    {
+      "path": ".godot/glow-flow-native-20261007-v4/middle-idle-cleanup-1280x720.png",
+      "sha256": "2f83f85d17308c2d82f82472f14f6d008d1710b0d523acb005c8c47c12b0b396",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "direct_view_image_original_resolution"
+    },
+    {
+      "path": ".godot/glow-flow-native-20261007-v4/middle-menu-cleanup-1280x720.png",
+      "sha256": "3cf4cfa09a5aee30e1340e385aef4268158f4a06df8126db6cde595f71527106",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "direct_view_image_original_resolution"
+    },
+    {
+      "path": ".godot/glow-flow-native-20261007-v4/middle-slide-normal-1280x720.png",
+      "sha256": "793f097a2f201f3b06fcb453d607daa186f36917971b1805578247a0c90bc662",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "direct_view_image_original_resolution"
+    },
+    {
+      "path": ".godot/glow-flow-native-20261007-v4/middle-slide-reduced-1280x720.png",
+      "sha256": "598fdca30f70e915cb66b5da98cb1df97c4a99e22103bffe636ea0218cf1310b",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "direct_view_image_original_resolution"
+    },
+    {
+      "path": ".godot/glow-flow-native-20261007-v4/movement-board-normal-1280x720.png",
+      "sha256": "75f40d6cab07e44c52236f59bd08c1c7b1ea5f71d5c1df76b920be29e0861d78",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "direct_view_image_original_resolution"
+    },
+    {
+      "path": ".godot/glow-flow-native-20261007-v4/movement-board-reduced-1280x720.png",
+      "sha256": "d88dc6069548ab2d0e878eb5420a5cea9528a61ad7b6e348f66ea33bc4fda2cc",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "direct_view_image_original_resolution"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-bolt-normal-1280x720.png",
+      "sha256": "84e652ba0530f07f4f308c1a821ecbb237c6fc037fe8c9fe83b1fb596d39fce2",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-bolt-normal-1280x720.png",
+      "prior_inspected_sha256": "84e652ba0530f07f4f308c1a821ecbb237c6fc037fe8c9fe83b1fb596d39fce2"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-bolt-reduced-1280x720.png",
+      "sha256": "40b0da032d74c8d70d4e48e33a771d980dbb2d3d29d0545c589983bc6f2cbe99",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-bolt-reduced-1280x720.png",
+      "prior_inspected_sha256": "40b0da032d74c8d70d4e48e33a771d980dbb2d3d29d0545c589983bc6f2cbe99"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-fire-bolt-active-normal-1280x720.png",
+      "sha256": "b16154b98ac04dfd37e6513a3d66d8e653acfb3902d5b4c953f4f0a37a94811a",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-fire-bolt-active-normal-1280x720.png",
+      "prior_inspected_sha256": "b16154b98ac04dfd37e6513a3d66d8e653acfb3902d5b4c953f4f0a37a94811a"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-fire-bolt-active-reduced-1280x720.png",
+      "sha256": "e21c7cb3d7c28dba4ea55f7654acdfb19dfaf0260591b7c44aa346986339a7c8",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-fire-bolt-active-reduced-1280x720.png",
+      "prior_inspected_sha256": "e21c7cb3d7c28dba4ea55f7654acdfb19dfaf0260591b7c44aa346986339a7c8"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-fire-bolt-release-normal-1280x720.png",
+      "sha256": "3ed5710bcd833e22ec4be30bf112efb89114497f575d7ae08d0f6a9d755bcf12",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-fire-bolt-release-normal-1280x720.png",
+      "prior_inspected_sha256": "3ed5710bcd833e22ec4be30bf112efb89114497f575d7ae08d0f6a9d755bcf12"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-fire-bolt-release-reduced-1280x720.png",
+      "sha256": "ebb093d56af76bbc0f33ea2629de7f5ee2bfa43c85cbe7b60e387b74f76f8347",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-fire-bolt-release-reduced-1280x720.png",
+      "prior_inspected_sha256": "ebb093d56af76bbc0f33ea2629de7f5ee2bfa43c85cbe7b60e387b74f76f8347"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-fire-heavy-release-normal-1280x720.png",
+      "sha256": "a81cc6b14591b2eeb02995bd0a601777a64f02cb871829182561cedd46bbb0ca",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-fire-heavy-release-normal-1280x720.png",
+      "prior_inspected_sha256": "a81cc6b14591b2eeb02995bd0a601777a64f02cb871829182561cedd46bbb0ca"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-fire-heavy-release-reduced-1280x720.png",
+      "sha256": "3d60d6d275a2e71dd172cdcc10603f9bac92db7226edd6a3185ee881bbe8fa75",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-fire-heavy-release-reduced-1280x720.png",
+      "prior_inspected_sha256": "3d60d6d275a2e71dd172cdcc10603f9bac92db7226edd6a3185ee881bbe8fa75"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-fire-rapid-release-normal-1280x720.png",
+      "sha256": "acfe72363f4357b97a3feb6c1af888b9821b06ac0ce4c9b326edca686c68825a",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-fire-rapid-release-normal-1280x720.png",
+      "prior_inspected_sha256": "acfe72363f4357b97a3feb6c1af888b9821b06ac0ce4c9b326edca686c68825a"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-fire-rapid-release-reduced-1280x720.png",
+      "sha256": "4b50b4ae9155056d918e5616c46133442d4bb57a3b488a98958c9474294c6ba9",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-fire-rapid-release-reduced-1280x720.png",
+      "prior_inspected_sha256": "4b50b4ae9155056d918e5616c46133442d4bb57a3b488a98958c9474294c6ba9"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-fire-spray-release-normal-1280x720.png",
+      "sha256": "3138c85330ce17c8060b026bee1b85aa57a2494da2092b5d222b09a04b3442d3",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-fire-spray-release-normal-1280x720.png",
+      "prior_inspected_sha256": "3138c85330ce17c8060b026bee1b85aa57a2494da2092b5d222b09a04b3442d3"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-fire-spray-release-reduced-1280x720.png",
+      "sha256": "dcf4afac17d596dc8add4ac0da7dc56ab52f964aa79df78a350a508a579b741a",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-fire-spray-release-reduced-1280x720.png",
+      "prior_inspected_sha256": "dcf4afac17d596dc8add4ac0da7dc56ab52f964aa79df78a350a508a579b741a"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-heavy-normal-1280x720.png",
+      "sha256": "d8537afc636f6f43e1038d5ad5022746ad85dad1177fcd831c335871a6f3af25",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-heavy-normal-1280x720.png",
+      "prior_inspected_sha256": "d8537afc636f6f43e1038d5ad5022746ad85dad1177fcd831c335871a6f3af25"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-heavy-reduced-1280x720.png",
+      "sha256": "a6d6bf97c62846d45b77c250eb7aa0b1f8653ce6f166e88f49b4f9b61f9bc8cd",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-heavy-reduced-1280x720.png",
+      "prior_inspected_sha256": "a6d6bf97c62846d45b77c250eb7aa0b1f8653ce6f166e88f49b4f9b61f9bc8cd"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-rapid-normal-1280x720.png",
+      "sha256": "576a1a14b6c3ea23d0eef78017a9a0a33d0c8787ea0e96fa3d6733b83c9995e4",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-rapid-normal-1280x720.png",
+      "prior_inspected_sha256": "576a1a14b6c3ea23d0eef78017a9a0a33d0c8787ea0e96fa3d6733b83c9995e4"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-rapid-reduced-1280x720.png",
+      "sha256": "f2089156905990e7ffcb7c9307a0535d6dd7db1f2e394407f627904eebbdcef2",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-rapid-reduced-1280x720.png",
+      "prior_inspected_sha256": "f2089156905990e7ffcb7c9307a0535d6dd7db1f2e394407f627904eebbdcef2"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-spray-normal-1280x720.png",
+      "sha256": "e2eb3a47fde932a87dd8d07c203520a2117690cfceb08c98882d053baa507237",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-spray-normal-1280x720.png",
+      "prior_inspected_sha256": "e2eb3a47fde932a87dd8d07c203520a2117690cfceb08c98882d053baa507237"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/paid-spray-reduced-1280x720.png",
+      "sha256": "ad3d023ccf9ee97894e6b860eb64b0a058b226f33f7932c8b9cc35f0366ac9aa",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/paid-spray-reduced-1280x720.png",
+      "prior_inspected_sha256": "ad3d023ccf9ee97894e6b860eb64b0a058b226f33f7932c8b9cc35f0366ac9aa"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/release-comparison-normal-1280x720.png",
+      "sha256": "1e5dfdbc97170f6e6a7881af0c6bb890ce5b7e30f42f1e22c5d2e0f1f1ecc409",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/release-comparison-normal-1280x720.png",
+      "prior_inspected_sha256": "1e5dfdbc97170f6e6a7881af0c6bb890ce5b7e30f42f1e22c5d2e0f1f1ecc409"
+    },
+    {
+      "path": ".godot/hex-cast-release-native-glow-20261007-v3/release-comparison-reduced-1280x720.png",
+      "sha256": "a8e7dc73a5eb92ac5f0edbb050a54688b36b33f015b7da56c5a28b4f9398c53b",
+      "receipt_hash_matches": true,
+      "visually_inspected": true,
+      "inspection_basis": "sha256_identical_to_prior_direct_visual_inspection",
+      "prior_inspected_path": ".godot/hex-cast-release-native-glow-20261007-v2/release-comparison-reduced-1280x720.png",
+      "prior_inspected_sha256": "a8e7dc73a5eb92ac5f0edbb050a54688b36b33f015b7da56c5a28b4f9398c53b"
+    }
+  ],
+  "production_files_edited": false,
+  "engine_commands_run": false,
+  "directly_inspected_current_image_count": 6,
+  "sha256_identical_prior_inspection_count": 20
+}

@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "id": "flux-visual-language-v1",
+  "authority": "presentation only; simulation, collision, visibility and outcomes remain authoritative elsewhere",
+  "pixel_contract": {
+    "design_viewport": [640, 360],
+    "output_scale": 2,
+    "supported_camera_percent": [50, 75, 100],
+    "base_unit": 2,
+    "nearest_neighbor": true,
+    "snap_translation_to_output_pixel": true,
+    "subpixel_simulation_preserved": true
+  },
+  "perspective_contract": {
+    "projection": "top_down_cardinal_with_tilted_facades",
+    "floor_axes": ["screen_horizontal", "screen_vertical"],
+    "floor_tile_aspect_ratio": 1.0,
+    "maximum_facade_rise_to_footprint_ratio": 0.85,
+    "cardinal_navigation_unambiguous": true,
+    "collision_footprint_visible": true,
+    "door_threshold_visible": true,
+    "foreground_cutaway_required": false,
+    "worldbone_opaque": true,
+    "forbid_diamond_grid": true,
+    "forbid_art_owned_collision": true
+  },
+  "character_contract": {
+    "style": "mature_compact_expressive_cartoon_pixel",
+    "head_height_ratio": [0.20, 0.23],
+    "grounded_cell": [96, 96],
+    "grounded_pivot": [48, 84],
+    "gameplay_height_pixels": [58, 76],
+    "body_heights": {"small": 58, "middle": 68, "large": 76},
+    "outline_pixels": [1, 2],
+    "material_ramp_colors": [3, 5],
+    "separate_ground_shadow": true,
+    "required_directions": ["south", "south_east", "east", "north_east", "north", "north_west", "west", "south_west"],
+    "required_silhouette_states": ["grounded", "jump", "cast", "hit", "walk", "sprint", "slide", "roll", "walk_b", "sprint_b"],
+    "preserve_sensible_anatomy": true,
+    "preserve_fixed_body_scale": true,
+    "forbid_photorealistic_rendering": true,
+    "portrait_source": "south_grounded_occupied_top_third",
+    "forbid_sexualized_design": true
+  },
+  "element_availability": {
+    "active": ["earth", "fire", "water", "wind", "ice", "charge", "light", "dark"],
+    "reserved_style_only": ["spirit", "chaos", "gravity", "time"]
+  },
+  "layers": [
+    "deep_water",
+    "world_foundation",
+    "traversable_surface",
+    "surface_detail",
+    "architecture",
+    "props",
+    "actor_shadow",
+    "actor",
+    "spell_underlay",
+    "spell",
+    "spell_impact",
+    "cutaway",
+    "world_prompt",
+    "visibility_mask",
+    "combat_hud",
+    "station_overlay",
+    "diagnostics"
+  ],
+  "ramps": {
+    "deep_water": ["#07171d", "#0f2c38", "#155064", "#258298", "#58d8dd"],
+    "worldbone": ["#101315", "#202428", "#363a3d", "#55554f", "#88816e"],
+    "warm_stone": ["#403424", "#6c5737", "#98805a", "#c2ac7b", "#e2d4a7"],
+    "timber": ["#17120f", "#2c1d18", "#4c3024", "#755039", "#ad7a4a"],
+    "aged_brass": ["#2b1d0c", "#634117", "#a56d24", "#d19a3f", "#f1cf72"],
+    "garden": ["#102015", "#223a20", "#3d6130", "#6e8d47", "#a8b967"],
+    "indigo_roof": ["#11151d", "#20293b", "#344461", "#52688a", "#8094ad"],
+    "parchment": ["#443823", "#8f7950", "#c5ad79", "#e4d3a5", "#fff0c6"],
+    "health": ["#351315", "#76252b", "#b74245", "#e36459", "#ff9b76"],
+    "flux": ["#1b1029", "#3f205d", "#7140a2", "#a66bd8", "#d9a5ff"],
+    "stamina": ["#0b2830", "#14505c", "#238492", "#4fc3c7", "#9ce8df"]
+  },
+  "elements": {
+    "earth": {"dark": "#4a2d1a", "base": "#b47c36", "bright": "#edc179", "shape": "block_fracture", "cadence": "weighty"},
+    "fire": {
+      "dark": "#701d20", "base": "#fa4b26", "bright": "#ff943e", "shape": "forked_flame", "cadence": "accelerating",
+      "phases": {
+        "ignition": {"dark": "#701d20", "base": "#ff6a2e", "bright": "#ffc05a", "danger": "#ff943e"},
+        "active": {"dark": "#701d20", "base": "#fa4b26", "bright": "#ff943e", "danger": "#ff6a2e"},
+        "cooling": {"dark": "#4b2822", "base": "#8f3b27", "bright": "#d5683a", "danger": "#fa4b26"}
+      }
+    },
+    "water": {
+      "dark": "#15366e", "base": "#1f70f2", "bright": "#57baff", "shape": "curling_wave", "cadence": "flowing",
+      "phases": {
+        "forming": {"dark": "#102a59", "base": "#1959c6", "bright": "#4a9ce8", "danger": "#57baff"},
+        "active": {"dark": "#15366e", "base": "#1f70f2", "bright": "#57baff", "danger": "#57baff"},
+        "decaying": {"dark": "#294b75", "base": "#4c79ad", "bright": "#8cb8dc", "danger": "#57baff"}
+      }
+    },
+    "wind": {"dark": "#16513d", "base": "#28d882", "bright": "#88f3ad", "shape": "open_spiral", "cadence": "staccato"},
+    "ice": {"dark": "#246078", "base": "#41d8ed", "bright": "#b0f7ff", "shape": "six_point_crystal", "cadence": "crystalline"},
+    "charge": {"dark": "#786011", "base": "#eed42e", "bright": "#ffef78", "shape": "broken_bolt", "cadence": "snapping"},
+    "light": {"dark": "#8e8262", "base": "#f9ebc0", "bright": "#fff9e8", "shape": "radiant_diamond", "cadence": "measured_pulse"},
+    "dark": {"dark": "#301345", "base": "#a246df", "bright": "#d98aff", "shape": "inward_crescent", "cadence": "lingering"},
+    "spirit": {"dark": "#21414d", "base": "#6aa2a2", "bright": "#d5eee0", "shape": "double_echo", "cadence": "breathing"},
+    "chaos": {"dark": "#29102f", "base": "#8f3c80", "bright": "#ef8bd2", "shape": "broken_orbit", "cadence": "irregular_bounded"},
+    "gravity": {"dark": "#18203b", "base": "#455c9a", "bright": "#a1b5ec", "shape": "concentric_weight", "cadence": "compressing"},
+    "time": {"dark": "#35401b", "base": "#839143", "bright": "#dce48b", "shape": "offset_hour", "cadence": "syncopated"}
+  },
+  "reaction_materials": {
+    "flood": {
+      "dark": "#103c69", "base": "#287bd3", "bright": "#9edfff", "danger": "#57baff",
+      "shape": "parallel_current_chevrons", "cadence": "steady_directional_flow"
+    },
+    "conflagration": {
+      "dark": "#551d1c", "base": "#f45a28", "bright": "#ffc065", "danger": "#ff8a3e",
+      "shape": "crowned_flame_cluster", "cadence": "measured_hazard_pulse"
+    },
+    "steam": {
+      "dark": "#666477", "base": "#bcb9c9", "bright": "#eeebf1",
+      "shape": "ascending_curls", "cadence": "restrained_rising_pulse",
+      "identity": "pale blue-gray curls with sparse warm scald accents; legacy atlas colors remain the top-level compatibility palette",
+      "legacy_atlas_palette": {"dark": "#666477", "base": "#bcb9c9", "bright": "#eeebf1"},
+      "phases": {
+        "forming": {"dark": "#3e586c", "base": "#7897a8", "bright": "#cce2e8", "danger": "#f3a061"},
+        "active": {"dark": "#354f63", "base": "#83a6b8", "bright": "#d7edf2", "danger": "#ff8f4f"},
+        "hot": {"dark": "#584b4a", "base": "#a77d69", "bright": "#f2c2a6", "danger": "#ff7740"},
+        "cool": {"dark": "#456575", "base": "#8eb8c7", "bright": "#d5edf2", "danger": "#e8a065"},
+        "decaying": {"dark": "#566a73", "base": "#a4bdc5", "bright": "#e2f0f2", "danger": "#d8895b"}
+      }
+    }
+  },
+  "ui": {
+    "panel_fill": "#0c100ddf",
+    "panel_fill_strong": "#090c0af5",
+    "scrim": "#050806b8",
+    "text_primary": "#fff0c6",
+    "text_secondary": "#c5ad79",
+    "text_muted": "#8f7950",
+    "focus": "#58d8dd",
+    "danger": "#e36459",
+    "pending": "#d19a3f",
+    "panel_padding": 12,
+    "cell_gap": 4,
+    "outline_thin": 1,
+    "outline_regular": 2,
+    "outline_emphasis": 3,
+    "corner_step": 6,
+    "prompt_maximum_width": 300,
+    "combat_hud_maximum_height": 104
+  },
+  "budgets": {
+    "maximum_simultaneous_full_density_auras": 8,
+    "maximum_element_particles_per_actor": 12,
+    "maximum_world_prompt_lines": 3,
+    "maximum_combat_hud_coverage_percent": 19,
+    "quiet_lane_detail_contrast_percent": 14,
+    "reduced_effects_particle_percent": 35
+  },
+  "rubric": {
+    "categories": ["cohesion", "silhouette", "material_identity", "world_overview", "hud_clarity", "animation_response", "spell_readability"],
+    "minimum_each": 4,
+    "minimum_mean": 4.5,
+    "automatic_acceptance": false
+  }
+}

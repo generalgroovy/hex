@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "completed_at_utc": "2026-09-30T08:17:02.2084011Z",
+  "tier": "focused",
+  "result": "failed",
+  "failure": "Godot emitted a script/import/runtime error.",
+  "source": {
+    "current_state_path": ".godot/windows-tests/0b6369064fb44303885cae8c2bf9216d/current-state.json",
+    "asset_inventory_path": null,
+    "head": "1559a566e33255c59337c5963f1c3c685d757f1f",
+    "branch": "main",
+    "dirty": true,
+    "current_state_sha256": "72a1c6c2ac5165778c179d041bb92d3191fdd3c65feb52cb8b213174e76d8962",
+    "asset_inventory_sha256": null
+  },
+  "requested_suite_ids": [
+    "combat-definition-table",
+    "combat",
+    "spell-delivery-expansion",
+    "elemental-bursts",
+    "hex-field-interception",
+    "hex-contact-workset"
+  ],
+  "supervision": {
+    "default_engine_timeout_seconds": 180,
+    "suite_timeout_seconds": 180
+  },
+  "isolation": {
+    "appdata_path": ".godot/windows-tests/0b6369064fb44303885cae8c2bf9216d/isolated-roaming",
+    "scope": "Godot import, suite and boot user data; packaging retains its own isolation policy",
+    "caller_appdata_restored": true
+  },
+  "executed": {
+    "current_state_check": true,
+    "asset_inventory": false,
+    "doctor": true,
+    "import": false,
+    "post_import_identity_check": false,
+    "deterministic_suite_runner": true,
+    "suite_count": 6,
+    "assertion_count": 40877,
+    "suites": [
+      {
+        "id": "hex-contact-workset",
+        "assertions": 1049,
+        "failures": 0
+      },
+      {
+        "id": "hex-field-interception",
+        "assertions": 193,
+        "failures": 0
+      },
+      {
+        "id": "combat-definition-table",
+        "assertions": 353,
+        "failures": 0
+      },
+      {
+        "id": "combat",
+        "assertions": 22277,
+        "failures": 0
+      },
+      {
+        "id": "elemental-bursts",
+        "assertions": 314,
+        "failures": 0
+      },
+      {
+        "id": "spell-delivery-expansion",
+        "assertions": 16691,
+        "failures": 64
+      }
+    ],
+    "boot_120_hz": false,
+    "package_and_installer": false
+  },
+  "duration_ms": 99985,
+  "stderr_bytes": 0,
+  "logs": [
+    {
+      "path": ".godot/windows-tests/0b6369064fb44303885cae8c2bf9216d/suite.log",
+      "sha256": "3af4847ec790880288c105c172494542fe7a630f333ab24d5fd9086fc88e7978",
+      "stderr_bytes": 0
+    }
+  ]
+}

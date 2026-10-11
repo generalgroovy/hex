@@ -1,0 +1,147 @@
+{
+  "schema": 1,
+  "reviewed_on": "2026-10-07",
+  "reviewer": "independent match_independent_review agent",
+  "review_type": "agent visual inspection of saved native frames, read-only receipt verification, and source tracing",
+  "status": "passed_with_scope_limitations",
+  "scope": "Round HUD identities, local respawn countdown and tied result at 1280x720 and 960x540; three-size fixed-pixel contact board at explicit non-quarter phases; normal/reduced comparisons.",
+  "engine_execution_by_reviewer": "NOT_RUN",
+  "runtime_or_production_files_changed_by_reviewer": false,
+  "source_receipt": {
+    "path": "C:/Users/sende/Projects/hex/.godot/match-refinement-native-oct6-v1/receipt.json",
+    "sha256": "baba84156fdfbb06ce14c7ea6af4323c2ae13db2ebc972cf12e1572ce8a5c03e",
+    "reported_status": "passed",
+    "reported_contact_board_checks": 48,
+    "reported_checks_rerun_by_reviewer": false,
+    "reported_runtime_build_id": "p56-2411d5bf5c95",
+    "runtime_identity_regenerated_by_reviewer": false
+  },
+  "file_verification": {
+    "method": "PowerShell Get-FileHash SHA256 compared with each receipt frame; System.Drawing Bitmap dimensions compared with receipt width and height",
+    "files_checked": 10,
+    "hash_matches": 10,
+    "dimension_matches": 10,
+    "directly_viewed_images": 6
+  },
+  "files": [
+    {
+      "path": "C:/Users/sende/Projects/hex/.godot/match-refinement-native-oct6-v1/ffa-duplicate-names-respawn-normal-1280x720.png",
+      "sha256": "275802c18df97ca82c78c92e8cc31fd625c65a34ea16c8ec89f2572c03c080e4",
+      "dimensions": [1280, 720],
+      "matches_receipt": true,
+      "inspection": "direct original-resolution image view",
+      "finding": "Complete four-line round panel is inside the top-right bounds. YOU P1 2, P2 TRAV 2, P3 TRAV 2, P4 TRAV 2 and YOU P1 RETURN IN 1.8S are visible without row collision or cutoff. The center fixture banner and bottom HUD panels remain separate."
+    },
+    {
+      "path": "C:/Users/sende/Projects/hex/.godot/match-refinement-native-oct6-v1/ffa-duplicate-names-respawn-reduced-1280x720.png",
+      "sha256": "275802c18df97ca82c78c92e8cc31fd625c65a34ea16c8ec89f2572c03c080e4",
+      "dimensions": [1280, 720],
+      "matches_receipt": true,
+      "inspection": "verified byte-identical SHA256 to directly viewed normal counterpart; not separately opened",
+      "finding": "Same saved pixels and visual findings as the normal counterpart."
+    },
+    {
+      "path": "C:/Users/sende/Projects/hex/.godot/match-refinement-native-oct6-v1/ffa-draw-result-normal-1280x720.png",
+      "sha256": "4cacbc408e4776fa90cd9fe38b7d5f27ad00e57f46bfc032571a9abeff2ff9b4",
+      "dimensions": [1280, 720],
+      "matches_receipt": true,
+      "inspection": "direct original-resolution image view",
+      "finding": "DRAW | HEARTH IN 6S is complete. All four tied standings remain visible on two rows, with local identity explicit; the active respawn line is absent. No overlap with the center banner or bottom resources/spells."
+    },
+    {
+      "path": "C:/Users/sende/Projects/hex/.godot/match-refinement-native-oct6-v1/ffa-draw-result-reduced-1280x720.png",
+      "sha256": "4cacbc408e4776fa90cd9fe38b7d5f27ad00e57f46bfc032571a9abeff2ff9b4",
+      "dimensions": [1280, 720],
+      "matches_receipt": true,
+      "inspection": "verified byte-identical SHA256 to directly viewed normal counterpart; not separately opened",
+      "finding": "Same saved pixels and visual findings as the normal counterpart."
+    },
+    {
+      "path": "C:/Users/sende/Projects/hex/.godot/match-refinement-native-oct6-v1/ffa-duplicate-names-respawn-normal-960x540.png",
+      "sha256": "0fb562274a4279a5317bcc652e9eaee4b41cdc710a469234bee8277f1e8533ce",
+      "dimensions": [960, 540],
+      "matches_receipt": true,
+      "inspection": "direct original-resolution image view, plus in-memory 3x nearest-neighbor inspection of center-banner rectangle [315, 0, 330, 65]; no image file changed",
+      "finding": "The smaller round panel still contains the timer, score target, four distinct P-identities and local 1.8S countdown. No line crosses panel edges or collides with adjacent HUD. Small scaled text is visibly coarse; the pre-existing center COURT title is less legible than at 1280, but inspection did not establish a geometric cutoff."
+    },
+    {
+      "path": "C:/Users/sende/Projects/hex/.godot/match-refinement-native-oct6-v1/ffa-duplicate-names-respawn-reduced-960x540.png",
+      "sha256": "0fb562274a4279a5317bcc652e9eaee4b41cdc710a469234bee8277f1e8533ce",
+      "dimensions": [960, 540],
+      "matches_receipt": true,
+      "inspection": "verified byte-identical SHA256 to directly viewed normal counterpart; not separately opened",
+      "finding": "Same saved pixels and visual findings as the normal counterpart."
+    },
+    {
+      "path": "C:/Users/sende/Projects/hex/.godot/match-refinement-native-oct6-v1/ffa-draw-result-normal-960x540.png",
+      "sha256": "4fb64bbb9b957d3b510fdb4428e4ed46265aeffe5d01cdb3652742434ffeb8f6",
+      "dimensions": [960, 540],
+      "matches_receipt": true,
+      "inspection": "direct original-resolution image view",
+      "finding": "DRAW and the 6S Hearth return are visible above both complete tied-score rows. Local identity and all rival identifiers remain present. No stale respawn line, HUD overlap or visible round-panel cutoff. Text is compact at this resolution."
+    },
+    {
+      "path": "C:/Users/sende/Projects/hex/.godot/match-refinement-native-oct6-v1/ffa-draw-result-reduced-960x540.png",
+      "sha256": "4fb64bbb9b957d3b510fdb4428e4ed46265aeffe5d01cdb3652742434ffeb8f6",
+      "dimensions": [960, 540],
+      "matches_receipt": true,
+      "inspection": "verified byte-identical SHA256 to directly viewed normal counterpart; not separately opened",
+      "finding": "Same saved pixels and visual findings as the normal counterpart."
+    },
+    {
+      "path": "C:/Users/sende/Projects/hex/.godot/match-refinement-native-oct6-v1/pixel-contact-boundaries-normal-1280x720.png",
+      "sha256": "90c58924e144e335452256e67d865639f42d46671dc694b2b2caaf84d974c9bc",
+      "dimensions": [1280, 720],
+      "matches_receipt": true,
+      "inspection": "direct original-resolution image view",
+      "finding": "All 24 cells and captions are inside the board. Small S. Wayne, middle Oh Tipi and large Red Baron retain their feet on their row baselines and keep heads, tail/cape and casting arm inside their cells. The eight non-quarter phase columns show the expected contact/pass/contact/pass boundary changes. Backpedal swaps passing-beat labels while retaining whole-body heading; Red Baron retains the casting upper body across lower-body contacts. No visible waist gap, stretch or adjacent-cell overlap."
+    },
+    {
+      "path": "C:/Users/sende/Projects/hex/.godot/match-refinement-native-oct6-v1/pixel-contact-boundaries-reduced-1280x720.png",
+      "sha256": "467f178efd306ab6239b6f65d543d3cced37a29f0f8609eb6e1edc8518df555c",
+      "dimensions": [1280, 720],
+      "matches_receipt": true,
+      "inspection": "direct original-resolution image view and raw-pixel comparison below the title region",
+      "finding": "All three body rows, anchors, captions and non-quarter contact selections match normal. NORMAL changes to REDUCED in the title; the inspected body region is independently pixel-identical."
+    }
+  ],
+  "normal_reduced_comparison": {
+    "hud_pairs_byte_identical": 4,
+    "contact_boards_whole_files_identical": false,
+    "contact_board_pixel_comparison": {
+      "rectangle_xywh": [0, 75, 1280, 645],
+      "format": "System.Drawing Format32bppArgb memory bytes (BGRA on this Windows host)",
+      "byte_count": 3302400,
+      "normal_sha256": "a30440e1de6d21fbec9aeb1fa029748ddf89edd38bbe834cb41e175069012054",
+      "reduced_sha256": "a30440e1de6d21fbec9aeb1fa029748ddf89edd38bbe834cb41e175069012054",
+      "identical": true,
+      "interpretation": "The complete board body below y=75 is pixel-identical; the whole-file hash difference is in the excluded heading region."
+    }
+  },
+  "contact_phase_review": {
+    "phases": [0.14, 0.16, 0.34, 0.36, 0.64, 0.66, 0.84, 0.86],
+    "visible_lower_rows": [1, 0, 0, 2, 2, 0, 0, 1],
+    "forward_and_cast_beats": [0.0, 0.25, 0.25, 0.5, 0.5, 0.75, 0.75, 0.0],
+    "backpedal_beats": [0.0, 0.75, 0.75, 0.5, 0.5, 0.25, 0.25, 0.0],
+    "size_anchors": [
+      {"id": "s_wayne", "body": "small", "view": "walk south, forward", "observed": "Whole sprite stays within each cell and feet remain planted on its row baseline."},
+      {"id": "oh_tipi", "body": "middle", "view": "sprint east, backpedal", "observed": "Tail and head remain inside each cell, with stable foot baseline and whole-body facing."},
+      {"id": "red_baron", "body": "large", "view": "southeast, sidestep plus cast", "observed": "Head, cape and casting arm fit; upper casting pose persists while lower contacts change without a visible waist break."}
+    ]
+  },
+  "actionable_findings": [],
+  "observations": [
+    "The 960x540 HUD is substantially smaller than at 1280x720. Its round fields remain visible, but this review does not certify comfortable readability on a physical display.",
+    "The center notice remains explicitly labelled INSPECTION FIXTURE even on the result captures. It is fixture context, not evidence of a gameplay event notification.",
+    "Duplicate TRAV name prefixes are distinguishable by P1/P2/P3/P4, and local identity is separately marked YOU. Full names are intentionally not shown in the standings."
+  ],
+  "limitations": [
+    "This is agent review of saved static images, not a human playtest or physical-display acceptance.",
+    "The capture harness uses production drawing and a real tied-timeout transition, but hosting mode, participant admission, scores, death and clocks are authored fixtures. No sockets, real remote peers or earned knockout flow are established by these images.",
+    "The local 1.8-second countdown and six-second return label are inspected at selected instants; continuous countdown progression is not demonstrated here.",
+    "The native contact board samples explicit distance phases, not elapsed-time motion. It verifies visible selected poses and registration, not animation feel, cadence, frame pacing, input responsiveness or rendered performance.",
+    "Normal/reduced equality is limited to these captured fixtures and phases; it does not establish behavior for every character, action or effect.",
+    "The board uses existing contacts and repeated neutral passing poses. It does not add or certify missing sidestep/backpedal art, held-jump animation, or complete action coverage.",
+    "No engine, full regression, network, installer, release or deployment validation was performed by this reviewer. The receipt's 48 checks are recorded as supplied engine evidence, not independently rerun evidence."
+  ]
+}

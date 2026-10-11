@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "character_id": "ha_rekt",
+  "display_name": "Ha Rekt",
+  "ancestry": "wyrmborn",
+  "body_type": "large",
+  "identity_source": "content/champions/foundation_champions_v1.json",
+  "date": "2026-10-03",
+  "provenance": {
+    "method": "built_in_image_gen",
+    "initial_generation_calls": 1,
+    "corrective_generation_calls": 0,
+    "original_generated_path": "C:/Users/sende/.codex/generated_images/01a100bf-daab-7113-bfd3-ec40d5926b1a/exec-bedc0ed9-e833-412c-bfb6-e86b7953e99f.png",
+    "saved_path": "art_batches/pixel_actions_v1/source/ha_rekt/source.png",
+    "copy_method": "PowerShell Copy-Item, byte-identical; no image edits or conversion",
+    "original_sha256": "D1A1D4E4E25CFBBF68A6923F5F266101874839F826D4DF2D988A0148B48FBA43",
+    "saved_sha256": "D1A1D4E4E25CFBBF68A6923F5F266101874839F826D4DF2D988A0148B48FBA43",
+    "exact_prompt_path": "art_batches/pixel_actions_v1/prompts/ha_rekt.md"
+  },
+  "references": [
+    {
+      "path": "C:/Users/sende/Projects/hex/assets/sprites/pixel_cast_v1/ha_rekt.png",
+      "role": "Primary current runtime identity, proportions, colors, costume and headings",
+      "sha256": "6582E6748D3B51A94851A08B3AEB3B047BEE16DF061876AA0DE96F6E60641F78",
+      "viewed_before_generation": true
+    },
+    {
+      "path": "C:/Users/sende/Projects/hex/assets/sprites/fullbody_cast_v1/ha_rekt-detail.png",
+      "role": "Supporting costume, wing, tail and anatomy detail",
+      "sha256": "CFBE5BE6749DB198C8E4AFFE45135B00213040FE0E71F3620BFC4ACBBE838169",
+      "viewed_before_generation": true
+    },
+    {
+      "path": "C:/Users/sende/Pictures/styleref1.png",
+      "role": "Retro pixel style only; old names, identities, races, props and effects excluded",
+      "sha256": "C0FB63C912718D64CA061CCD85817869FFC3348A3C81A910962DF57066279FD4",
+      "viewed_before_generation": true
+    }
+  ],
+  "image": {
+    "format": "PNG",
+    "width": 1774,
+    "height": 887,
+    "pixel_format_observed": "Format32bppArgb",
+    "transparency": "Actual alpha present and preserved unchanged",
+    "fully_transparent_pixels": 1015839,
+    "partial_alpha_pixels": 555701,
+    "fully_opaque_pixels": 1998,
+    "columns": 8,
+    "rows": 4,
+    "complete_pose_count": 32,
+    "column_headings": ["S", "SE", "E", "NE", "N", "NW", "W", "SW"],
+    "row_actions": ["jumpsquat_anticipation", "rising_tucked_jump", "descending_feet_ready_jump", "deep_compressed_landing"]
+  },
+  "source_size_visual_review": {
+    "status": "REVIEWED_SOURCE_CANDIDATE",
+    "observations": [
+      "All 32 complete full-body poses are visible in an eight-column, four-row layout.",
+      "Blue-scaled anthropomorphic wyrmborn identity, pale horns, purple wings, slate tail and red/gold costume remain recognizable.",
+      "Front, true side profiles, rear quarters and full backs are distinguishable in the requested order.",
+      "Rising row has folded knees and tucked feet; descending row has more open legs and feet beneath the pelvis.",
+      "Landing row visibly lowers the pelvis and bends the knees more deeply than anticipation, especially in front and profile views.",
+      "No gross skull enlargement, missing extremity, cropping, merged neighbor, wrong grid or facing defect observed at source size.",
+      "Wings and tails have visible clearance from neighbors and sheet edges; hands are empty with no baked effects, ground shadows or text."
+    ],
+    "limitations": [
+      "Rear hands and limbs are partly occluded naturally by wings, torso or tail in some views.",
+      "Exact common skull dimensions, limb-length continuity, root registration and row crop bands require lead-owned assembly measurements.",
+      "A large number of generated pixels have partial alpha. Any deterministic alpha thresholding and hidden-RGB cleanup belongs to lead assembly; this original remains untouched.",
+      "The wing and tail envelopes dominate some silhouettes; leg-pose readability at native game scale has not been verified.",
+      "Four authored jump keys are provided, not a complete animation cycle or independently tested transitions."
+    ]
+  },
+  "acceptance": {
+    "native_scale_review": "NOT_RUN",
+    "runtime_import": "NOT_RUN",
+    "runtime_animation_transitions": "NOT_RUN",
+    "rendered_game_capture": "NOT_RUN",
+    "human_acceptance": "NOT_RUN"
+  },
+  "scope": "Only source PNG, exact prompt and receipt written; no runtime, engine, gameplay, shared manifest, builder, import, export, commit or push changes.",
+  "completion_marker": "SOURCE_TICKET_COMPLETE"
+}

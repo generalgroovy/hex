@@ -1,0 +1,24 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+UNIFIED_SNAPSHOT_COST stage=global_setup complete elapsed_us=1758409 failures=0
+UNIFIED_SNAPSHOT_COST stage=fixture case=sustained-distributed complete elapsed_us=183920 actors=8
+UNIFIED_SNAPSHOT_COST stage=warmup case=sustained-distributed complete elapsed_us=182080 tick=120
+UNIFIED_SNAPSHOT_COST stage=paid_steps case=sustained-distributed complete tick=160 hash=297a88e17b43 admitted=7
+UNIFIED_SNAPSHOT_COST stage=world_state_hash case=sustained-distributed complete p50_us=147076 p95_us=147573
+UNIFIED_SNAPSHOT_COST stage=hex_chemistry_capture case=sustained-distributed complete p50_us=870543 bytes=3540
+UNIFIED_SNAPSHOT_COST stage=hex_world_capture case=sustained-distributed complete p50_us=669167 bytes=8080
+UNIFIED_SNAPSHOT_COST stage=capture_envelope case=sustained-distributed complete p50_us=671139 bytes=9556
+UNIFIED_SNAPSHOT_COST stage=envelope_wire_packets case=sustained-distributed complete p50_us=3217 packets=4 wire_bytes=4724
+UNIFIED_SNAPSHOT_COST stage=roundtrip case=sustained-distributed complete chemistry=true world=true envelope=true packets=4
+UNIFIED_SNAPSHOT_COST stage=case_complete case=sustained-distributed tick=160 failures=1
+UNIFIED_SNAPSHOT_COST stage=fixture case=dense-crucible complete elapsed_us=173382 actors=8
+UNIFIED_SNAPSHOT_COST stage=warmup case=dense-crucible complete elapsed_us=188990 tick=120
+UNIFIED_SNAPSHOT_COST stage=paid_steps case=dense-crucible complete tick=160 hash=c7da4a0f8274 admitted=8
+UNIFIED_SNAPSHOT_COST stage=world_state_hash case=dense-crucible complete p50_us=136328 p95_us=141058
+UNIFIED_SNAPSHOT_COST stage=hex_chemistry_capture case=dense-crucible complete p50_us=831763 bytes=1658
+UNIFIED_SNAPSHOT_COST stage=hex_world_capture case=dense-crucible complete p50_us=633638 bytes=7708
+UNIFIED_SNAPSHOT_COST stage=capture_envelope case=dense-crucible complete p50_us=644222 bytes=9208
+UNIFIED_SNAPSHOT_COST stage=envelope_wire_packets case=dense-crucible complete p50_us=3088 packets=3 wire_bytes=3928
+UNIFIED_SNAPSHOT_COST stage=roundtrip case=dense-crucible complete chemistry=true world=true envelope=true packets=3
+UNIFIED_SNAPSHOT_COST stage=case_complete case=dense-crucible tick=160 failures=1
+FAIL: unified-snapshot-cost; 603 assertions; 1 failures; output=res://.godot/unified-snapshot-cost-eight-final.json

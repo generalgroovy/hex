@@ -9,24 +9,59 @@ func run() -> int:
 	_test_local_query_matches_exhaustive_oracle()
 	_test_random_cross_edge_oracle()
 	_test_invalid_bounds_fail_closed()
+	_test_scalar_membership_matches_six_planes()
+	_test_bounded_native_products_match_exact_naturals()
 	return finish("hex-grid")
 
 
+func _test_bounded_native_products_match_exact_naturals() -> void:
+	for cross: int in [0, 1, 3_037_000_499, 3_037_000_500, 5_000_000_000, 128_000_000_000_000]:
+		for radius_squared: int in [0, 1, 262_144_000_000, 1_000_000_000_000]:
+			for length_squared: int in [0, 1, 500_000_000, 256_000_000_000_000]:
+				var square := HexGrid._nat_multiply(HexGrid._nat(cross), HexGrid._nat(cross))
+				var product := HexGrid._nat_multiply(HexGrid._nat(radius_squared), HexGrid._nat(length_squared))
+				equal(HexGrid._compare_squared_distance(cross, radius_squared, length_squared), HexGrid._nat_compare(square, product), "native/fallback products equal exact oracle across overflow boundary")
+
+
+func _test_scalar_membership_matches_six_planes() -> void:
+	var random := RandomNumberGenerator.new()
+	random.seed = 92028
+	for cell: Vector2i in [Vector2i.ZERO, Vector2i(-150, 90), Vector2i(180, -210), Vector2i(-2, -1)]:
+		var polygon := HexGrid.vertices(cell)
+		var points: Array[Vector2i] = []
+		for vertex: Vector2i in polygon:
+			for x: int in [-1, 0, 1]:
+				for y: int in [-1, 0, 1]: points.append(vertex + Vector2i(x, y))
+		for unused: int in 256:
+			points.append(HexGrid.center(cell) + Vector2i(random.randi_range(-30000, 30000), random.randi_range(-30000, 30000)))
+		for point: Vector2i in points:
+			var closed := true
+			var strict := true
+			for index: int in 6:
+				var edge := polygon[(index + 1) % 6] - polygon[index]
+				var delta := point - polygon[index]
+				var cross := edge.x * delta.y - edge.y * delta.x
+				closed = closed and cross >= 0
+				strict = strict and cross > 0
+			equal(HexGrid._point_in_cell(point, cell), closed, "scalar closed membership equals six independent integer planes")
+			equal(HexGrid._point_strictly_in_cell(point, cell), strict, "scalar strict membership preserves one-unit boundary distinctions")
+
+
 func _test_authored_geometry_and_closed_ownership() -> void:
-	equal(HexGrid.COLUMN_PITCH, 48_000, "48px cells are 25 percent narrower than the previous 64px grid")
+	equal(HexGrid.COLUMN_PITCH, 24_000, "24px symbol cells halve the previous48px width")
 	equal(HexGrid.ROW_PITCH * 2, HexGrid.HALF_HEIGHT * 3, "even fixed-point height leaves no shared-face cracks")
 	equal(MovementTuning.PLAYER_RADIUS, 18_000, "finer chemistry cells do not shrink common actor wall clearance")
-	equal(HexGrid.center(Vector2i(2, -3)), Vector2i(24_000, -124_704), "axial center uses the fixed pointy-top lattice")
+	equal(HexGrid.center(Vector2i(2, -3)), Vector2i(12_000, -62_352), "axial center uses the fixed pointy-top lattice")
 	equal(HexGrid.vertices(Vector2i.ZERO), [
-		Vector2i(0, -27_712), Vector2i(24_000, -13_856),
-		Vector2i(24_000, 13_856), Vector2i(0, 27_712),
-		Vector2i(-24_000, 13_856), Vector2i(-24_000, -13_856),
+		Vector2i(0, -13_856), Vector2i(12_000, -6_928),
+		Vector2i(12_000, 6_928), Vector2i(0, 13_856),
+		Vector2i(-12_000, 6_928), Vector2i(-12_000, -6_928),
 	], "origin vertices retain the authored clockwise geometry")
 	for cell: Vector2i in [Vector2i.ZERO, Vector2i(3, -2), Vector2i(-4, 5), Vector2i(-7, -6)]:
 		equal(HexGrid.world_to_cell(HexGrid.center(cell)), cell, "cell center round-trips across signed axial coordinates")
-	equal(HexGrid.world_to_cell(Vector2i(24_000, 0)), Vector2i.ZERO, "closed shared face belongs to lexicographically smaller cell")
-	equal(HexGrid.world_to_cell(Vector2i(24_000, 13_856)), Vector2i.ZERO, "three-cell lower-right vertex chooses the lexicographic owner")
-	equal(HexGrid.world_to_cell(Vector2i(0, -27_712)), Vector2i(0, -1), "negative shared vertex chooses the lexicographic owner")
+	equal(HexGrid.world_to_cell(Vector2i(12_000, 0)), Vector2i.ZERO, "closed shared face belongs to lexicographically smaller cell")
+	equal(HexGrid.world_to_cell(Vector2i(12_000, 6_928)), Vector2i.ZERO, "three-cell lower-right vertex chooses the lexicographic owner")
+	equal(HexGrid.world_to_cell(Vector2i(0, -13_856)), Vector2i(0, -1), "negative shared vertex chooses the lexicographic owner")
 
 
 func _test_topology_and_canonical_order() -> void:
@@ -50,19 +85,19 @@ func _test_topology_and_canonical_order() -> void:
 
 
 func _test_sweep_edges_vertices_and_radius() -> void:
-	equal(HexGrid.swept_cells(Vector2i(-23_999, 0), Vector2i(23_999, 0), 0), [Vector2i.ZERO], "one-unit-inside endpoints prove one strict convex-hex segment")
-	equal(HexGrid.swept_cells(Vector2i(0, -27_711), Vector2i(0, -27_711), 0), [Vector2i.ZERO], "one-unit-inside corner remains strict interior")
-	var face_touch := HexGrid.swept_cells(Vector2i(24_000, -10_000), Vector2i(24_000, 10_000), 0)
+	equal(HexGrid.swept_cells(Vector2i(-11_999, 0), Vector2i(11_999, 0), 0), [Vector2i.ZERO], "one-unit-inside endpoints prove one strict convex-hex segment")
+	equal(HexGrid.swept_cells(Vector2i(0, -13_855), Vector2i(0, -13_855), 0), [Vector2i.ZERO], "one-unit-inside corner remains strict interior")
+	var face_touch := HexGrid.swept_cells(Vector2i(12_000, -10_000), Vector2i(12_000, 10_000), 0)
 	check(face_touch.has(Vector2i.ZERO) and face_touch.has(Vector2i(1, 0)), "zero-radius shared-face sweep includes both closed cells")
-	var vertex_touch := HexGrid.swept_cells(Vector2i(24_000, 13_856), Vector2i(24_000, 13_856), 0)
+	var vertex_touch := HexGrid.swept_cells(Vector2i(12_000, 6_928), Vector2i(12_000, 6_928), 0)
 	for cell: Vector2i in [Vector2i.ZERO, Vector2i(0, 1), Vector2i(1, 0)]:
 		check(vertex_touch.has(cell), "zero-length vertex sweep includes every closed owner")
-	var tangent := HexGrid.swept_cells(Vector2i(34_000, -10_000), Vector2i(34_000, 10_000), 10_000)
-	var one_unit_gap := HexGrid.swept_cells(Vector2i(34_001, -10_000), Vector2i(34_001, 10_000), 10_000)
+	var tangent := HexGrid.swept_cells(Vector2i(22_000, -10_000), Vector2i(22_000, 10_000), 10_000)
+	var one_unit_gap := HexGrid.swept_cells(Vector2i(22_001, -10_000), Vector2i(22_001, 10_000), 10_000)
 	check(tangent.has(Vector2i.ZERO), "radius includes exact vertical-face tangency")
 	check(not one_unit_gap.has(Vector2i.ZERO), "one world unit beyond face tangency misses")
-	var diagonal_gap := HexGrid.swept_cells(Vector2i(-23_999, -13_855), Vector2i(168_001, -13_855), 1)
-	var diagonal_overlap := HexGrid.swept_cells(Vector2i(-23_999, -13_855), Vector2i(168_001, -13_855), 2)
+	var diagonal_gap := HexGrid.swept_cells(Vector2i(-11_999, -6_927), Vector2i(84_001, -6_927), 1)
+	var diagonal_overlap := HexGrid.swept_cells(Vector2i(-11_999, -6_927), Vector2i(84_001, -6_927), 2)
 	check(not diagonal_gap.has(Vector2i(0, -1)), "sqrt(2) endpoint-to-vertex gap exceeds a one-unit radius")
 	check(diagonal_overlap.has(Vector2i(0, -1)), "two-unit radius reaches the same diagonal endpoint-to-vertex gap")
 	check(HexGrid.swept_cells(Vector2i.ZERO, Vector2i.ZERO, 0).has(Vector2i.ZERO), "stationary point query includes its cell")
@@ -84,7 +119,7 @@ func _test_local_query_matches_exhaustive_oracle() -> void:
 		[Vector2i(-260_000, -170_000), Vector2i(330_000, 190_000), 0],
 		[Vector2i(305_000, -280_000), Vector2i(-250_000, 315_000), 12_000],
 		[Vector2i(-415_000, 90_000), Vector2i(440_000, 95_000), 32_000],
-		[Vector2i(-23_999, -13_855), Vector2i(168_001, -13_855), 1],
+		[Vector2i(-11_999, -6_927), Vector2i(84_001, -6_927), 1],
 		[Vector2i(-510_000, -405_000), Vector2i(-140_000, 490_000), 67_000],
 	]
 	for case_index: int in range(cases.size()):
@@ -92,7 +127,7 @@ func _test_local_query_matches_exhaustive_oracle() -> void:
 		var end: Vector2i = cases[case_index][1]
 		var radius: int = cases[case_index][2]
 		var actual := HexGrid.swept_cells(start, end, radius)
-		var expected := _exhaustive_float_oracle(start, end, radius, -18, 18)
+		var expected := _exhaustive_float_oracle(start, end, radius, -36, 36)
 		equal(actual, expected, "local traversal matches independent exhaustive polygon oracle case %d" % case_index)
 
 
@@ -105,7 +140,7 @@ func _test_random_cross_edge_oracle() -> void:
 		var end := Vector2i(random.randi_range(-380_000, 380_000), random.randi_range(-300_000, 300_000))
 		crossed_cells += int(HexGrid.world_to_cell(start) != HexGrid.world_to_cell(end))
 		var actual := HexGrid.swept_cells(start, end, 0)
-		var expected := _exhaustive_float_oracle(start, end, 0, -12, 12)
+		var expected := _exhaustive_float_oracle(start, end, 0, -24, 24)
 		equal(actual, expected, "radius-zero random traversal matches exhaustive oracle case %d" % case_index)
 	check(crossed_cells >= 60, "random differential set exercises cross-cell traversal rather than only the interior fast path")
 

@@ -1,0 +1,881 @@
+{
+	"assertions": 7991,
+	"authority_workload_version": "unified-wellspring-profile-v1",
+	"cases": [
+		"sustained-distributed",
+		"dense-crucible"
+	],
+	"display_server": "Windows",
+	"engine": "4.7.1-stable (official)",
+	"failures": 0,
+	"measurement_semantics": "present_frame_elapsed_us spans queue_redraw through RenderingServer.frame_post_draw and includes frame scheduling/render completion. bootstrap_draw_submission_us is CPU time inside Bootstrap._draw while it submits CanvasItem commands. two_tick_sim_us and presentation_prepare_us are separately timed on the main thread. Hashing, trace construction, event/inventory accounting, monitor reads, and assertions are outside all reported timers. Godot Performance render counters are samples, not CPU/GPU duration attribution.",
+	"modes": [
+		"normal",
+		"reduced"
+	],
+	"performance_acceptance": "NOT_ESTABLISHED; native rendered diagnostic measurements depend on this machine, display backend, driver, window state, and build. They do not establish release capacity or human visual acceptance.",
+	"present_frames_per_run": 360,
+	"runs": [
+		{
+			"admitted_by_wire": {
+				"140": 1,
+				"141": 2,
+				"145": 2,
+				"154": 2,
+				"159": 2,
+				"160": 2,
+				"163": 2,
+				"164": 2,
+				"179": 2,
+				"180": 9,
+				"181": 2,
+				"182": 9,
+				"183": 2,
+				"184": 9,
+				"185": 2,
+				"186": 9
+			},
+			"alive_work": {
+				"alive_actor_instance_ticks": 5760,
+				"alive_end": 8,
+				"deaths": 0,
+				"mean_alive_actors": 8.0,
+				"ticks_with_authority_work": 720
+			},
+			"authority_metrics": {
+				"admitted": 59,
+				"deposited": 70,
+				"exposure_queries": 9208,
+				"matter_consumed": 26211,
+				"matter_expired": 9189,
+				"matter_paid": 35400,
+				"modifiers": 0,
+				"reactions": 35,
+				"refused": 217,
+				"requested": 276
+			},
+			"bootstrap_draw_submission_us": {
+				"max": 238156,
+				"p50": 101771,
+				"p95": 142448,
+				"p99": 180629,
+				"samples": 360
+			},
+			"case": "sustained-distributed",
+			"cleanup_ticks": 632,
+			"contact_queries": 9208,
+			"draw_authority_checks": 7,
+			"draw_authority_mutations": 0,
+			"event_counts": {
+				"cast_blocked": 5,
+				"cast_refused": 217,
+				"cast_started": 59,
+				"hex_clash": 32,
+				"hex_flood_flow": 1800,
+				"hex_pressure": 16,
+				"hex_product_flow": 1384,
+				"projectile_expired": 10,
+				"projectile_impact": 5,
+				"projectile_spawned": 46,
+				"spray_fired": 5
+			},
+			"final_hash": "4e63b224e05e4544233fe94e1f5e2215aa9e9a99284d57fa58d1bc5cc7b48f8e",
+			"final_occupancy_after_cleanup": {
+				"active_cells": 0,
+				"product_quantity": 0,
+				"source_quantity": 0
+			},
+			"frame_deadline_misses_over_16667us": 360,
+			"inventory_totals": {
+				"active_cell_instance_ticks": 111658,
+				"alive_actor_instance_ticks": 5760,
+				"cast_instance_ticks": 8633,
+				"pending_cast_instance_ticks": 509,
+				"product_instance_ticks": 9630,
+				"product_quantity_instance_ticks": 7411200,
+				"projectile_instance_ticks": 4128,
+				"source_quantity_instance_ticks": 4343564,
+				"ticks_with_authority_work": 720
+			},
+			"measurement_scope": "Quantiles contain 360 native present frames after 60 equal warmup frames. Each measured present frame owns exactly two consecutive real SimWorld steps. The matched trace hashes authority plus both ticks' events once per presented frame; draw nonmutation is audited at one-second boundaries and the final frame. Observer hashing/accounting and untimed, unrendered cleanup are excluded from timing quantiles.",
+			"peaks": {
+				"active_cells": 210,
+				"casts": 20,
+				"pending_casts": 4,
+				"product_quantity": 16772,
+				"products": 22,
+				"projectiles": 12,
+				"source_quantity": 10588
+			},
+			"present_frame_elapsed_us": {
+				"max": 496761,
+				"p50": 211695,
+				"p95": 301223,
+				"p99": 401104,
+				"samples": 360
+			},
+			"present_frames": 360,
+			"presentation_prepare_us": {
+				"max": 834,
+				"p50": 369,
+				"p95": 574,
+				"p99": 788,
+				"samples": 360
+			},
+			"processed_clashes": 32,
+			"processed_products": 35,
+			"refusals_by_wire_and_reason": {
+				"140:hex_capacity": 2,
+				"141:hex_capacity": 1,
+				"145:hex_capacity": 1,
+				"154:hex_capacity": 1,
+				"159:hex_capacity": 1,
+				"160:hex_capacity": 1,
+				"163:hex_capacity": 1,
+				"164:hex_capacity": 1,
+				"179:hex_capacity": 1,
+				"180:hex_capacity": 45,
+				"181:hex_capacity": 1,
+				"182:hex_capacity": 60,
+				"183:hex_capacity": 1,
+				"184:hex_capacity": 54,
+				"185:hex_capacity": 1,
+				"186:hex_capacity": 45
+			},
+			"released_by_wire": {
+				"140": 1,
+				"141": 2,
+				"145": 2,
+				"154": 1,
+				"159": 1,
+				"160": 1,
+				"163": 2,
+				"164": 1,
+				"179": 2,
+				"180": 9,
+				"181": 2,
+				"182": 9,
+				"183": 2,
+				"184": 5,
+				"185": 2,
+				"186": 9
+			},
+			"render_monitors": {
+				"draw_calls_per_frame": {
+					"max": 3318,
+					"p50": 2308,
+					"p95": 3256,
+					"p99": 3302,
+					"samples": 360
+				},
+				"objects_per_frame": {
+					"max": 7307,
+					"p50": 5313,
+					"p95": 7091,
+					"p99": 7295,
+					"samples": 360
+				},
+				"primitives_per_frame": {
+					"max": 21602,
+					"p50": 15306,
+					"p95": 21340,
+					"p99": 21526,
+					"samples": 360
+				},
+				"video_memory_bytes": {
+					"max": 301458423,
+					"p50": 301311227,
+					"p95": 301452663,
+					"p99": 301456887,
+					"samples": 360
+				}
+			},
+			"requested_held_ticks_by_wire": {
+				"180": 180,
+				"182": 180,
+				"184": 180,
+				"186": 180
+			},
+			"requested_pressed_by_wire": {
+				"140": 3,
+				"141": 3,
+				"145": 3,
+				"154": 3,
+				"159": 3,
+				"160": 3,
+				"163": 3,
+				"164": 3,
+				"179": 3,
+				"181": 3,
+				"183": 3,
+				"185": 3
+			},
+			"sample_end_hash": "bd0caab3843c40782bb76c5dd3d642963899c50e55dee948b5eca1743bc1761d",
+			"sample_ticks": 720,
+			"trace_sha256": "1ea724472a69a5799ef642a23304a0b97000e038b9fba7ebccc13dc1a017c634",
+			"two_tick_sim_us": {
+				"max": 115889,
+				"p50": 64183,
+				"p95": 97056,
+				"p99": 111614,
+				"samples": 360
+			},
+			"visual_mode": "normal",
+			"workload_totals": {
+				"active_cell_instance_ticks": 111658,
+				"admitted": 59,
+				"contact_queries": 9208,
+				"processed_clashes": 32,
+				"processed_products": 35,
+				"product_quantity_instance_ticks": 7411200,
+				"refusals": 217,
+				"releases": 51,
+				"requested_held_ticks": 720,
+				"requested_pressed": 36,
+				"source_quantity_instance_ticks": 4343564
+			}
+		},
+		{
+			"admitted_by_wire": {
+				"140": 1,
+				"141": 2,
+				"145": 2,
+				"154": 2,
+				"159": 2,
+				"160": 2,
+				"163": 2,
+				"164": 2,
+				"179": 2,
+				"180": 9,
+				"181": 2,
+				"182": 9,
+				"183": 2,
+				"184": 9,
+				"185": 2,
+				"186": 9
+			},
+			"alive_work": {
+				"alive_actor_instance_ticks": 5760,
+				"alive_end": 8,
+				"deaths": 0,
+				"mean_alive_actors": 8.0,
+				"ticks_with_authority_work": 720
+			},
+			"authority_metrics": {
+				"admitted": 59,
+				"deposited": 70,
+				"exposure_queries": 9208,
+				"matter_consumed": 26211,
+				"matter_expired": 9189,
+				"matter_paid": 35400,
+				"modifiers": 0,
+				"reactions": 35,
+				"refused": 217,
+				"requested": 276
+			},
+			"bootstrap_draw_submission_us": {
+				"max": 243996,
+				"p50": 101849,
+				"p95": 139523,
+				"p99": 211818,
+				"samples": 360
+			},
+			"case": "sustained-distributed",
+			"cleanup_ticks": 632,
+			"contact_queries": 9208,
+			"draw_authority_checks": 7,
+			"draw_authority_mutations": 0,
+			"event_counts": {
+				"cast_blocked": 5,
+				"cast_refused": 217,
+				"cast_started": 59,
+				"hex_clash": 32,
+				"hex_flood_flow": 1800,
+				"hex_pressure": 16,
+				"hex_product_flow": 1384,
+				"projectile_expired": 10,
+				"projectile_impact": 5,
+				"projectile_spawned": 46,
+				"spray_fired": 5
+			},
+			"final_hash": "4e63b224e05e4544233fe94e1f5e2215aa9e9a99284d57fa58d1bc5cc7b48f8e",
+			"final_occupancy_after_cleanup": {
+				"active_cells": 0,
+				"product_quantity": 0,
+				"source_quantity": 0
+			},
+			"frame_deadline_misses_over_16667us": 360,
+			"inventory_totals": {
+				"active_cell_instance_ticks": 111658,
+				"alive_actor_instance_ticks": 5760,
+				"cast_instance_ticks": 8633,
+				"pending_cast_instance_ticks": 509,
+				"product_instance_ticks": 9630,
+				"product_quantity_instance_ticks": 7411200,
+				"projectile_instance_ticks": 4128,
+				"source_quantity_instance_ticks": 4343564,
+				"ticks_with_authority_work": 720
+			},
+			"measurement_scope": "Quantiles contain 360 native present frames after 60 equal warmup frames. Each measured present frame owns exactly two consecutive real SimWorld steps. The matched trace hashes authority plus both ticks' events once per presented frame; draw nonmutation is audited at one-second boundaries and the final frame. Observer hashing/accounting and untimed, unrendered cleanup are excluded from timing quantiles.",
+			"peaks": {
+				"active_cells": 210,
+				"casts": 20,
+				"pending_casts": 4,
+				"product_quantity": 16772,
+				"products": 22,
+				"projectiles": 12,
+				"source_quantity": 10588
+			},
+			"present_frame_elapsed_us": {
+				"max": 526562,
+				"p50": 209740,
+				"p95": 290993,
+				"p99": 401674,
+				"samples": 360
+			},
+			"present_frames": 360,
+			"presentation_prepare_us": {
+				"max": 1682,
+				"p50": 371,
+				"p95": 577,
+				"p99": 835,
+				"samples": 360
+			},
+			"processed_clashes": 32,
+			"processed_products": 35,
+			"refusals_by_wire_and_reason": {
+				"140:hex_capacity": 2,
+				"141:hex_capacity": 1,
+				"145:hex_capacity": 1,
+				"154:hex_capacity": 1,
+				"159:hex_capacity": 1,
+				"160:hex_capacity": 1,
+				"163:hex_capacity": 1,
+				"164:hex_capacity": 1,
+				"179:hex_capacity": 1,
+				"180:hex_capacity": 45,
+				"181:hex_capacity": 1,
+				"182:hex_capacity": 60,
+				"183:hex_capacity": 1,
+				"184:hex_capacity": 54,
+				"185:hex_capacity": 1,
+				"186:hex_capacity": 45
+			},
+			"released_by_wire": {
+				"140": 1,
+				"141": 2,
+				"145": 2,
+				"154": 1,
+				"159": 1,
+				"160": 1,
+				"163": 2,
+				"164": 1,
+				"179": 2,
+				"180": 9,
+				"181": 2,
+				"182": 9,
+				"183": 2,
+				"184": 5,
+				"185": 2,
+				"186": 9
+			},
+			"render_monitors": {
+				"draw_calls_per_frame": {
+					"max": 3314,
+					"p50": 2304,
+					"p95": 3252,
+					"p99": 3298,
+					"samples": 360
+				},
+				"objects_per_frame": {
+					"max": 7303,
+					"p50": 5309,
+					"p95": 7087,
+					"p99": 7291,
+					"samples": 360
+				},
+				"primitives_per_frame": {
+					"max": 21574,
+					"p50": 15278,
+					"p95": 21312,
+					"p99": 21498,
+					"samples": 360
+				},
+				"video_memory_bytes": {
+					"max": 301457751,
+					"p50": 301310555,
+					"p95": 301451991,
+					"p99": 301456215,
+					"samples": 360
+				}
+			},
+			"requested_held_ticks_by_wire": {
+				"180": 180,
+				"182": 180,
+				"184": 180,
+				"186": 180
+			},
+			"requested_pressed_by_wire": {
+				"140": 3,
+				"141": 3,
+				"145": 3,
+				"154": 3,
+				"159": 3,
+				"160": 3,
+				"163": 3,
+				"164": 3,
+				"179": 3,
+				"181": 3,
+				"183": 3,
+				"185": 3
+			},
+			"sample_end_hash": "bd0caab3843c40782bb76c5dd3d642963899c50e55dee948b5eca1743bc1761d",
+			"sample_ticks": 720,
+			"trace_sha256": "1ea724472a69a5799ef642a23304a0b97000e038b9fba7ebccc13dc1a017c634",
+			"two_tick_sim_us": {
+				"max": 151927,
+				"p50": 62240,
+				"p95": 97727,
+				"p99": 135344,
+				"samples": 360
+			},
+			"visual_mode": "reduced",
+			"workload_totals": {
+				"active_cell_instance_ticks": 111658,
+				"admitted": 59,
+				"contact_queries": 9208,
+				"processed_clashes": 32,
+				"processed_products": 35,
+				"product_quantity_instance_ticks": 7411200,
+				"refusals": 217,
+				"releases": 51,
+				"requested_held_ticks": 720,
+				"requested_pressed": 36,
+				"source_quantity_instance_ticks": 4343564
+			}
+		},
+		{
+			"admitted_by_wire": {
+				"140": 4,
+				"141": 2,
+				"145": 4,
+				"154": 2,
+				"159": 4,
+				"160": 2,
+				"163": 4,
+				"164": 2,
+				"179": 4,
+				"180": 8,
+				"181": 4,
+				"182": 8,
+				"183": 4,
+				"184": 8,
+				"185": 4,
+				"186": 7
+			},
+			"alive_work": {
+				"alive_actor_instance_ticks": 5760,
+				"alive_end": 8,
+				"deaths": 0,
+				"mean_alive_actors": 8.0,
+				"ticks_with_authority_work": 720
+			},
+			"authority_metrics": {
+				"admitted": 71,
+				"deposited": 111,
+				"exposure_queries": 9264,
+				"matter_consumed": 42200,
+				"matter_expired": 400,
+				"matter_paid": 42600,
+				"modifiers": 2,
+				"reactions": 33,
+				"refused": 40,
+				"requested": 111
+			},
+			"bootstrap_draw_submission_us": {
+				"max": 148333,
+				"p50": 63703,
+				"p95": 98857,
+				"p99": 126499,
+				"samples": 360
+			},
+			"case": "dense-crucible",
+			"cleanup_ticks": 619,
+			"contact_queries": 9264,
+			"draw_authority_checks": 7,
+			"draw_authority_mutations": 0,
+			"event_counts": {
+				"cast_refused": 40,
+				"cast_started": 71,
+				"hex_clash": 28,
+				"hex_pressure": 19,
+				"hex_product_flow": 856,
+				"projectile_expired": 17,
+				"projectile_spawned": 63,
+				"spray_fired": 2
+			},
+			"final_hash": "fdc48de0c7f1236ccdda067b95e3767dc7b38ef7625708bcca39f499c79175ac",
+			"final_occupancy_after_cleanup": {
+				"active_cells": 0,
+				"product_quantity": 0,
+				"source_quantity": 0
+			},
+			"frame_deadline_misses_over_16667us": 360,
+			"inventory_totals": {
+				"active_cell_instance_ticks": 32453,
+				"alive_actor_instance_ticks": 5760,
+				"cast_instance_ticks": 3333,
+				"pending_cast_instance_ticks": 759,
+				"product_instance_ticks": 9047,
+				"product_quantity_instance_ticks": 10899200,
+				"projectile_instance_ticks": 2491,
+				"source_quantity_instance_ticks": 1972600,
+				"ticks_with_authority_work": 720
+			},
+			"measurement_scope": "Quantiles contain 360 native present frames after 60 equal warmup frames. Each measured present frame owns exactly two consecutive real SimWorld steps. The matched trace hashes authority plus both ticks' events once per presented frame; draw nonmutation is audited at one-second boundaries and the final frame. Observer hashing/accounting and untimed, unrendered cleanup are excluded from timing quantiles.",
+			"peaks": {
+				"active_cells": 66,
+				"casts": 20,
+				"pending_casts": 8,
+				"product_quantity": 26800,
+				"products": 23,
+				"projectiles": 20,
+				"source_quantity": 12000
+			},
+			"present_frame_elapsed_us": {
+				"max": 303520,
+				"p50": 131039,
+				"p95": 202998,
+				"p99": 238072,
+				"samples": 360
+			},
+			"present_frames": 360,
+			"presentation_prepare_us": {
+				"max": 3267,
+				"p50": 309,
+				"p95": 548,
+				"p99": 1134,
+				"samples": 360
+			},
+			"processed_clashes": 28,
+			"processed_products": 33,
+			"refusals_by_wire_and_reason": {
+				"180:hex_capacity": 6,
+				"182:hex_capacity": 14,
+				"184:hex_capacity": 5,
+				"186:hex_capacity": 15
+			},
+			"released_by_wire": {
+				"140": 4,
+				"145": 4,
+				"159": 4,
+				"163": 4,
+				"164": 2,
+				"179": 4,
+				"180": 8,
+				"181": 4,
+				"182": 8,
+				"183": 4,
+				"184": 8,
+				"185": 4,
+				"186": 7
+			},
+			"render_monitors": {
+				"draw_calls_per_frame": {
+					"max": 2080,
+					"p50": 1233,
+					"p95": 1982,
+					"p99": 2052,
+					"samples": 360
+				},
+				"objects_per_frame": {
+					"max": 4645,
+					"p50": 3258,
+					"p95": 4374,
+					"p99": 4587,
+					"samples": 360
+				},
+				"primitives_per_frame": {
+					"max": 15822,
+					"p50": 10198,
+					"p95": 15154,
+					"p99": 15692,
+					"samples": 360
+				},
+				"video_memory_bytes": {
+					"max": 305592823,
+					"p50": 305457783,
+					"p95": 305581543,
+					"p99": 305591575,
+					"samples": 360
+				}
+			},
+			"requested_held_ticks_by_wire": {
+				"180": 120,
+				"182": 120,
+				"184": 120,
+				"186": 120
+			},
+			"requested_pressed_by_wire": {
+				"140": 4,
+				"141": 2,
+				"145": 4,
+				"154": 2,
+				"159": 4,
+				"160": 2,
+				"163": 4,
+				"164": 2,
+				"179": 4,
+				"181": 4,
+				"183": 4,
+				"185": 4
+			},
+			"sample_end_hash": "d2fe22f30bbccc27aa7e8790ff42171c00e6d9cca3a8539713ca20c4100a02a2",
+			"sample_ticks": 720,
+			"trace_sha256": "b76a26f2e43e703114913b41f6304cf9b92bb20757e60ffe50c68e16e273127b",
+			"two_tick_sim_us": {
+				"max": 227256,
+				"p50": 97886,
+				"p95": 168337,
+				"p99": 202731,
+				"samples": 360
+			},
+			"visual_mode": "reduced",
+			"workload_totals": {
+				"active_cell_instance_ticks": 32453,
+				"admitted": 71,
+				"contact_queries": 9264,
+				"processed_clashes": 28,
+				"processed_products": 33,
+				"product_quantity_instance_ticks": 10899200,
+				"refusals": 40,
+				"releases": 65,
+				"requested_held_ticks": 480,
+				"requested_pressed": 40,
+				"source_quantity_instance_ticks": 1972600
+			}
+		},
+		{
+			"admitted_by_wire": {
+				"140": 4,
+				"141": 2,
+				"145": 4,
+				"154": 2,
+				"159": 4,
+				"160": 2,
+				"163": 4,
+				"164": 2,
+				"179": 4,
+				"180": 8,
+				"181": 4,
+				"182": 8,
+				"183": 4,
+				"184": 8,
+				"185": 4,
+				"186": 7
+			},
+			"alive_work": {
+				"alive_actor_instance_ticks": 5760,
+				"alive_end": 8,
+				"deaths": 0,
+				"mean_alive_actors": 8.0,
+				"ticks_with_authority_work": 720
+			},
+			"authority_metrics": {
+				"admitted": 71,
+				"deposited": 111,
+				"exposure_queries": 9264,
+				"matter_consumed": 42200,
+				"matter_expired": 400,
+				"matter_paid": 42600,
+				"modifiers": 2,
+				"reactions": 33,
+				"refused": 40,
+				"requested": 111
+			},
+			"bootstrap_draw_submission_us": {
+				"max": 147831,
+				"p50": 54523,
+				"p95": 94530,
+				"p99": 114476,
+				"samples": 360
+			},
+			"case": "dense-crucible",
+			"cleanup_ticks": 619,
+			"contact_queries": 9264,
+			"draw_authority_checks": 7,
+			"draw_authority_mutations": 0,
+			"event_counts": {
+				"cast_refused": 40,
+				"cast_started": 71,
+				"hex_clash": 28,
+				"hex_pressure": 19,
+				"hex_product_flow": 856,
+				"projectile_expired": 17,
+				"projectile_spawned": 63,
+				"spray_fired": 2
+			},
+			"final_hash": "fdc48de0c7f1236ccdda067b95e3767dc7b38ef7625708bcca39f499c79175ac",
+			"final_occupancy_after_cleanup": {
+				"active_cells": 0,
+				"product_quantity": 0,
+				"source_quantity": 0
+			},
+			"frame_deadline_misses_over_16667us": 360,
+			"inventory_totals": {
+				"active_cell_instance_ticks": 32453,
+				"alive_actor_instance_ticks": 5760,
+				"cast_instance_ticks": 3333,
+				"pending_cast_instance_ticks": 759,
+				"product_instance_ticks": 9047,
+				"product_quantity_instance_ticks": 10899200,
+				"projectile_instance_ticks": 2491,
+				"source_quantity_instance_ticks": 1972600,
+				"ticks_with_authority_work": 720
+			},
+			"measurement_scope": "Quantiles contain 360 native present frames after 60 equal warmup frames. Each measured present frame owns exactly two consecutive real SimWorld steps. The matched trace hashes authority plus both ticks' events once per presented frame; draw nonmutation is audited at one-second boundaries and the final frame. Observer hashing/accounting and untimed, unrendered cleanup are excluded from timing quantiles.",
+			"peaks": {
+				"active_cells": 66,
+				"casts": 20,
+				"pending_casts": 8,
+				"product_quantity": 26800,
+				"products": 23,
+				"projectiles": 20,
+				"source_quantity": 12000
+			},
+			"present_frame_elapsed_us": {
+				"max": 273307,
+				"p50": 126031,
+				"p95": 187711,
+				"p99": 235284,
+				"samples": 360
+			},
+			"present_frames": 360,
+			"presentation_prepare_us": {
+				"max": 1605,
+				"p50": 307,
+				"p95": 510,
+				"p99": 1127,
+				"samples": 360
+			},
+			"processed_clashes": 28,
+			"processed_products": 33,
+			"refusals_by_wire_and_reason": {
+				"180:hex_capacity": 6,
+				"182:hex_capacity": 14,
+				"184:hex_capacity": 5,
+				"186:hex_capacity": 15
+			},
+			"released_by_wire": {
+				"140": 4,
+				"145": 4,
+				"159": 4,
+				"163": 4,
+				"164": 2,
+				"179": 4,
+				"180": 8,
+				"181": 4,
+				"182": 8,
+				"183": 4,
+				"184": 8,
+				"185": 4,
+				"186": 7
+			},
+			"render_monitors": {
+				"draw_calls_per_frame": {
+					"max": 2108,
+					"p50": 1265,
+					"p95": 2010,
+					"p99": 2080,
+					"samples": 360
+				},
+				"objects_per_frame": {
+					"max": 4673,
+					"p50": 3286,
+					"p95": 4402,
+					"p99": 4615,
+					"samples": 360
+				},
+				"primitives_per_frame": {
+					"max": 16018,
+					"p50": 10394,
+					"p95": 15350,
+					"p99": 15888,
+					"samples": 360
+				},
+				"video_memory_bytes": {
+					"max": 305597527,
+					"p50": 305462487,
+					"p95": 305586247,
+					"p99": 305596279,
+					"samples": 360
+				}
+			},
+			"requested_held_ticks_by_wire": {
+				"180": 120,
+				"182": 120,
+				"184": 120,
+				"186": 120
+			},
+			"requested_pressed_by_wire": {
+				"140": 4,
+				"141": 2,
+				"145": 4,
+				"154": 2,
+				"159": 4,
+				"160": 2,
+				"163": 4,
+				"164": 2,
+				"179": 4,
+				"181": 4,
+				"183": 4,
+				"185": 4
+			},
+			"sample_end_hash": "d2fe22f30bbccc27aa7e8790ff42171c00e6d9cca3a8539713ca20c4100a02a2",
+			"sample_ticks": 720,
+			"trace_sha256": "b76a26f2e43e703114913b41f6304cf9b92bb20757e60ffe50c68e16e273127b",
+			"two_tick_sim_us": {
+				"max": 221228,
+				"p50": 94781,
+				"p95": 167707,
+				"p99": 189778,
+				"samples": 360
+			},
+			"visual_mode": "normal",
+			"workload_totals": {
+				"active_cell_instance_ticks": 32453,
+				"admitted": 71,
+				"contact_queries": 9264,
+				"processed_clashes": 28,
+				"processed_products": 33,
+				"product_quantity_instance_ticks": 10899200,
+				"refusals": 40,
+				"releases": 65,
+				"requested_held_ticks": 480,
+				"requested_pressed": 40,
+				"source_quantity_instance_ticks": 1972600
+			}
+		}
+	],
+	"sample_ticks": 720,
+	"schema_version": 1,
+	"scope": "Native-window production Bootstrap draw path at 1280x720 and 60 presentation frames per second. Every measured frame advances the unchanged legal eight-champion workload by two real 120 Hz authority ticks. Normal and reduced modes use fresh matched worlds and identical commands; no state injection, resource refill, cooldown bypass, capacity override, fake scene, socket, physical input, or preference persistence.",
+	"seed": 906190,
+	"source_sha256": {
+		"src/app/bootstrap.gd": "4b3ac3e972d1bd14570ce22bdaa9594f43116b92f740a40c8130e2351e63c856",
+		"src/presentation/hex_court_presenter.gd": "57926b68365d872a71224a52d6560ae9a0c0119f8533cb5a99ee60291da5621a",
+		"src/sim/core/sim_world.gd": "2a6340d3d12d25c1c06b786c1e6ce8d96f8032ed427dbf431e1ec175b3191baa",
+		"src/sim/hex/hex_chemistry_world.gd": "7582964d1c889f1ceaf5114ff6600eb3ead842318e4cf6db95aed1d82985cb7b",
+		"tests/performance/profile_unified_wellspring.gd": "7f524c49f7104f7a549c964f759248c0b1d8abff8da1d12e19a0c7ae728ee6b9",
+		"tests/performance/profile_unified_wellspring_rendered.gd": "ba398dabdeccf38c4ffd9478534f8c2a3d4672da72289a87a60a5a779377f680",
+		"tests/support/chemistry_coach_harness.gd": "2e78a37ffd1592c043a34ccbfbbe8fb94011337ca84012e80901287ee01d93ad"
+	},
+	"ticks_per_present_frame": 2,
+	"warmup_ticks": 120,
+	"window": {
+		"height": 720,
+		"presentation_hz": 60,
+		"width": 1280
+	},
+	"workload_version": "unified-wellspring-render-profile-v1"
+}

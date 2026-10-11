@@ -1,0 +1,5183 @@
+{
+  "schema": "hex-native-profile-wrapper-v1",
+  "status": "measured",
+  "scope": "Instrumented native source runtime, not portable-release FPS acceptance or physical presentation/input latency. Cold rows mean this process cache, not a flushed OS cache; warm and travel rows stay separate. No source/package/promotion edits; engine preferences live only in the isolated profile. The shared checked-engine runner validates process results, but does not expose a numeric exit code when Windows leaves it unavailable.",
+  "numeric_process_exit_code": null,
+  "exit_code_scope": "Not exposed by the shared checked-engine runner; clean launcher return, exact completion marker, complete receipt and empty stderr are required.",
+  "appdata_restored": true,
+  "requested": {
+    "profiles": [
+      "low"
+    ],
+    "cases": [
+      "paid_fire_bolt_close"
+    ],
+    "seconds_per_case": 10.0,
+    "soak_seconds": 0.0,
+    "frame_limit": 60,
+    "width": 1280,
+    "height": 720,
+    "observer_mode": "full",
+    "screenshots": true,
+    "timeout_seconds": 180
+  },
+  "output_directory": "C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-close-fire-profile-v2",
+  "engine": "C:\\Users\\sende\\AppData\\Local\\FLUX-dev\\godot-4.7.1\\Godot_v4.7.1-stable_win64.exe",
+  "arguments": [
+    "--path",
+    "C:\\Users\\sende\\Projects\\hex",
+    "--script",
+    "res://scripts/profile-gameplay.gd",
+    "--windowed",
+    "--resolution",
+    "1280x720",
+    "--",
+    "--no-lan-discovery",
+    "--fullbody-art",
+    "--pixel-cast",
+    "--profile-output=C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-close-fire-profile-v2\\metrics.json",
+    "--profile-user-data=C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-close-fire-profile-v2\\isolated-roaming\\Godot\\app_userdata\\FLUX 2",
+    "--profile-seconds=10",
+    "--profile-soak-seconds=0",
+    "--profile-profiles=low",
+    "--profile-cases=paid_fire_bolt_close",
+    "--profile-frame-limit=60",
+    "--profile-width=1280",
+    "--profile-height=720",
+    "--profile-screenshots"
+  ],
+  "wall_seconds": 113.4007402,
+  "available_memory_before": {
+    "observed_utc": "2026-10-10T03:07:38.6695042Z",
+    "os": "Microsoft Windows 11 Home",
+    "os_version": "10.0.26300",
+    "available_mb": 1203.28,
+    "total_visible_mb": 7455.62,
+    "error": null
+  },
+  "available_memory_after": {
+    "observed_utc": "2026-10-10T03:09:32.1878907Z",
+    "os": "Microsoft Windows 11 Home",
+    "os_version": "10.0.26300",
+    "available_mb": 1080.38,
+    "total_visible_mb": 7455.62,
+    "error": null
+  },
+  "runtime_identity_before": {
+    "schema_version": 1,
+    "status": "candidate_generated_not_promoted",
+    "scope_id": "production-runtime-source-v1",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "protocol_version": 60,
+    "snapshot_schema": 24,
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "record_count": 3388,
+    "runtime_source_sha256": "6980b3dcafecb85697889a3c7db9b6dda3f184f4f929c756759447f13efea3ec",
+    "build_id": "p60-6980b3dcafec",
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate."
+  },
+  "runtime_identity_after": {
+    "schema_version": 1,
+    "status": "candidate_generated_not_promoted",
+    "scope_id": "production-runtime-source-v1",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "protocol_version": 60,
+    "snapshot_schema": 24,
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "record_count": 3388,
+    "runtime_source_sha256": "6980b3dcafecb85697889a3c7db9b6dda3f184f4f929c756759447f13efea3ec",
+    "build_id": "p60-6980b3dcafec",
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate."
+  },
+  "input_hashes_before": {
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\profile-gameplay.gd": "d1675c3f4e6aa2f347ba30113c7fed00d7b54eefcaabdc4486bd47b76df424c6",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\profile-gameplay.ps1": "d57bcba9b8bedcbabc95270df03560b1d06345e7cb5f0ee6ddefa8e689853c4f",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\runtime-build-identity.ps1": "ee1b11776ae2219f8374d80eaf7bbbe3d44364626e9ed8c60ce8b9290de014fa",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\flux2-common.ps1": "f302086d9472dbd23abc45aede79321071156088fa553aea9c8b09c147b5702c",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\engine-guard.ps1": "9de3d4ae5d09dc59abc56e40bb78f626875db92ceee63136bfa99f62d4b38cd1",
+    "C:\\Users\\sende\\Projects\\hex\\content\\runtime\\runtime_build_identity_v1.json": "936bef1aa1a7ab3e2a953e3cf4dd65e533d6634c9379a5620e4c57f9c451c158"
+  },
+  "input_hashes_after": {
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\profile-gameplay.gd": "d1675c3f4e6aa2f347ba30113c7fed00d7b54eefcaabdc4486bd47b76df424c6",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\profile-gameplay.ps1": "d57bcba9b8bedcbabc95270df03560b1d06345e7cb5f0ee6ddefa8e689853c4f",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\runtime-build-identity.ps1": "ee1b11776ae2219f8374d80eaf7bbbe3d44364626e9ed8c60ce8b9290de014fa",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\flux2-common.ps1": "f302086d9472dbd23abc45aede79321071156088fa553aea9c8b09c147b5702c",
+    "C:\\Users\\sende\\Projects\\hex\\scripts\\engine-guard.ps1": "9de3d4ae5d09dc59abc56e40bb78f626875db92ceee63136bfa99f62d4b38cd1",
+    "C:\\Users\\sende\\Projects\\hex\\content\\runtime\\runtime_build_identity_v1.json": "936bef1aa1a7ab3e2a953e3cf4dd65e533d6634c9379a5620e4c57f9c451c158"
+  },
+  "raw_metrics_path": "C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-close-fire-profile-v2\\metrics.json",
+  "native_log_path": "C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-close-fire-profile-v2\\engine.log",
+  "metrics_sha256": "74317d9ee9b463c49a7956ea3664170134af9abc5be73954d0b39fa7e692d23d",
+  "validation_errors": [],
+  "benchmark": {
+    "adapter": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001506) Direct3D11 vs_5_0 ps_5_0, D3D11-32.0.21045.5002)",
+    "case_seconds": 10.0,
+    "complete": true,
+    "debug_build": true,
+    "display_server": "Windows",
+    "draw_stage_scope": "Full mode clears stage storage immediately before each actual Bootstrap._draw call. main_draw_stages_us and main_draw_contexts align by index with draw_submission_elapsed_ms. Each context records a monotonic callback serial, process frame and entry phase. Loading/no-world callbacks have current empty stages, counted as zero for any stage observed elsewhere in that case; full draw elapsed time remains measured. No categories are invented if the entire case has no gameplay stages. Earlier receipts could repeat stale gameplay stage dictionaries during loading; their cold stage statistics are not valid.",
+    "engine": {
+      "build": "official",
+      "hash": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+      "hex": 263937,
+      "major": 4,
+      "minor": 7,
+      "patch": 1,
+      "status": "stable",
+      "string": "4.7.1-stable (official)",
+      "timestamp": 0
+    },
+    "executable": "C:/Users/sende/AppData/Local/FLUX-dev/godot-4.7.1/Godot_v4.7.1-stable_win64.exe",
+    "fixtures": "Fresh120Hz world per independent case, ordinary paid SimCommand casts, no measured-period refill. Direct placement/equip happens before warm measurement. Cold travel uses actual authored menu travel. Focus loss is observed, while deterministic commands continue.",
+    "frame_limit": 60,
+    "manifest": {
+      "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate.",
+      "build_id": "p60-6980b3dcafec",
+      "canonical_encoding": "utf8-lf-tagged-length-v1",
+      "engine_identity": "4.7.1.stable.official.a13da4feb",
+      "protocol_version": 60.0,
+      "record_count": 3388.0,
+      "runtime_source_sha256": "6980b3dcafecb85697889a3c7db9b6dda3f184f4f929c756759447f13efea3ec",
+      "schema_version": 1.0,
+      "scope_id": "production-runtime-source-v1",
+      "snapshot_schema": 24.0,
+      "status": "candidate_generated_not_promoted"
+    },
+    "manifest_note": "Generated runtime identity is recorded here; exact source-to-manifest binding is checked by the separate packaging gate.",
+    "observed_source_after": {
+      "count": 297,
+      "observed_utc": "2026-10-10T03:08:54",
+      "ok": true,
+      "sha256": "1d66213ab2cd023b97518912de9a338a106100b28caf8e04de8de8e787f5bd03",
+      "unreadable_paths": []
+    },
+    "observed_source_before": {
+      "count": 297,
+      "observed_utc": "2026-10-10T03:08:34",
+      "ok": true,
+      "sha256": "1d66213ab2cd023b97518912de9a338a106100b28caf8e04de8de8e787f5bd03",
+      "unreadable_paths": []
+    },
+    "observed_source_scope": "Independent raw-byte filesystem hashes of project.godot, this benchmark, src/*.gd, scenes/*.tscn and *.tres, content/*.json except the generated identity, and assets/shaders/*.gdshader (recursive). Sorted path<TAB>SHA256<LF> records are SHA256 hashed. Start/end snapshots detect source drift; they do not hash imported textures, certify a pack, or prove code was not edited and restored between snapshots. Source reading occurs outside measured intervals and may warm OS file cache.",
+    "observed_source_unchanged": true,
+    "observer_mode": "full",
+    "observer_overhead_scope": "Benchmark _process head and tail, excluding elapsed Bootstrap._process: interval recording, synthetic focus bookkeeping, focus/counters, final-step copies, paid-cell membership and memory monitors when enabled. Excludes draw/render-setup observation and the overhead of timers embedded inside Bootstrap/SimWorld. Includes scheduling waits, not pure CPU cost.",
+    "observer_policy": "Light mode retains frame/process/draw intervals, tick/endpoints and inexpensive counters; disables per-frame occupied-membership queries, memory monitors, stage dictionaries and nested component timers. Unavailable metrics are null, never inferred maxima. Both modes remain instrumented, not physical-presentation measurements.",
+    "process_timer_scope": "Elapsed Bootstrap._process call only; excludes benchmark head/tail observation. Earlier receipts included head bookkeeping. Embedded simulation and nested component timer overhead remains inside this value in full mode.",
+    "profile_script_sha256": "d1675c3f4e6aa2f347ba30113c7fed00d7b54eefcaabdc4486bd47b76df424c6",
+    "profiles": [
+      "low"
+    ],
+    "protocol": 60,
+    "renderer": "gl_compatibility",
+    "results": [
+      {
+        "cast_attempts": 0,
+        "champion_wire": 1,
+        "clamped_delta_seconds": 0.0,
+        "distance_pixels": 0.0,
+        "draw_submission_elapsed_ms": {
+          "count": 15,
+          "max": 49.678,
+          "mean": 5.03186666666667,
+          "p50": 0.056,
+          "p95": 49.678,
+          "p99": 49.678,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 1,
+            "over_33_3ms": 1,
+            "over_50ms": 0
+          }
+        },
+        "dropped_accumulator_seconds": 0.00833333333333333,
+        "engine_render_setup_cpu_ms": {
+          "count": 14,
+          "max": 2.482,
+          "mean": 0.186285714285714,
+          "p50": 0.009,
+          "p95": 2.482,
+          "p99": 2.482,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "fixture": {
+          "initial_startup": true
+        },
+        "flux_after": 114400,
+        "flux_before": 114400,
+        "frame_interval_ms": {
+          "count": 13,
+          "max": 132.398,
+          "mean": 30.1294615384615,
+          "p50": 16.869,
+          "p95": 132.398,
+          "p99": 132.398,
+          "threshold_counts": {
+            "over_100ms": 1,
+            "over_20ms": 3,
+            "over_33_3ms": 3,
+            "over_50ms": 2
+          }
+        },
+        "garden_draw_elapsed_ms": {
+          "count": 4,
+          "max": 0.018,
+          "mean": 0.0155,
+          "p50": 0.015,
+          "p95": 0.018,
+          "p99": 0.018,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "garden_stage_stats_ms": {},
+        "garden_step_elapsed_ms": {
+          "count": 13,
+          "max": 0.092,
+          "mean": 0.0592307692307692,
+          "p50": 0.055,
+          "p95": 0.092,
+          "p99": 0.092,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "label": "startup_arrival",
+        "last_fixed_step_stage_stats_ms": {
+          "actor_product_effects": {
+            "count": 3,
+            "max": 0.018,
+            "mean": 0.016,
+            "p50": 0.016,
+            "p95": 0.018,
+            "p99": 0.018,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "chemistry_exposure": {
+            "count": 3,
+            "max": 0.018,
+            "mean": 0.0136666666666667,
+            "p50": 0.012,
+            "p95": 0.018,
+            "p99": 0.018,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "command_order": {
+            "count": 3,
+            "max": 0.035,
+            "mean": 0.0236666666666667,
+            "p50": 0.023,
+            "p95": 0.035,
+            "p99": 0.035,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "finalize": {
+            "count": 3,
+            "max": 0.017,
+            "mean": 0.0126666666666667,
+            "p50": 0.011,
+            "p95": 0.017,
+            "p99": 0.017,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "movement_cast_admission": {
+            "count": 3,
+            "max": 0.995,
+            "mean": 0.766333333333333,
+            "p50": 0.704,
+            "p95": 0.995,
+            "p99": 0.995,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "projectile_contacts": {
+            "count": 3,
+            "max": 0.062,
+            "mean": 0.0496666666666667,
+            "p50": 0.045,
+            "p95": 0.062,
+            "p99": 0.062,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "spray_contacts": {
+            "count": 3,
+            "max": 0.07,
+            "mean": 0.0523333333333333,
+            "p50": 0.045,
+            "p95": 0.07,
+            "p99": 0.07,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "surfaces_expiry": {
+            "count": 3,
+            "max": 0.073,
+            "mean": 0.0566666666666667,
+            "p50": 0.061,
+            "p95": 0.073,
+            "p99": 0.073,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "terminal_deposits": {
+            "count": 3,
+            "max": 0.004,
+            "mean": 0.00366666666666667,
+            "p50": 0.004,
+            "p95": 0.004,
+            "p99": 0.004,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          }
+        },
+        "main_campus_draw_elapsed_ms": {
+          "count": 4,
+          "max": 38.616,
+          "mean": 11.67625,
+          "p50": 1.928,
+          "p95": 38.616,
+          "p99": 38.616,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 1,
+            "over_33_3ms": 1,
+            "over_50ms": 0
+          }
+        },
+        "main_court_components_total_us": {
+          "bundle": 0,
+          "draw_count": 4,
+          "geometry": 435,
+          "surface": 0
+        },
+        "main_court_draw_elapsed_ms": {
+          "count": 4,
+          "max": 0.351,
+          "mean": 0.12125,
+          "p50": 0.044,
+          "p95": 0.351,
+          "p99": 0.351,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "main_draw_stage_stats_ms": {
+          "actors": {
+            "count": 15,
+            "max": 0.719,
+            "mean": 0.167466666666667,
+            "p50": 0.0,
+            "p95": 0.719,
+            "p99": 0.719,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "campus_and_setup": {
+            "count": 15,
+            "max": 39.043,
+            "mean": 3.24013333333333,
+            "p50": 0.0,
+            "p95": 39.043,
+            "p99": 39.043,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 1,
+              "over_33_3ms": 1,
+              "over_50ms": 0
+            }
+          },
+          "combat_hud": {
+            "count": 15,
+            "max": 4.594,
+            "mean": 0.6238,
+            "p50": 0.0,
+            "p95": 4.594,
+            "p99": 4.594,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "garden": {
+            "count": 15,
+            "max": 0.113,
+            "mean": 0.0276666666666667,
+            "p50": 0.0,
+            "p95": 0.113,
+            "p99": 0.113,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "garden_inspection": {
+            "count": 15,
+            "max": 0.037,
+            "mean": 0.0086,
+            "p50": 0.0,
+            "p95": 0.037,
+            "p99": 0.037,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "local_labels_reticle": {
+            "count": 15,
+            "max": 0.281,
+            "mean": 0.0434666666666667,
+            "p50": 0.0,
+            "p95": 0.281,
+            "p99": 0.281,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "paid_ground": {
+            "count": 15,
+            "max": 0.366,
+            "mean": 0.0361333333333333,
+            "p50": 0.0,
+            "p95": 0.366,
+            "p99": 0.366,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "panels": {
+            "count": 15,
+            "max": 0.739,
+            "mean": 0.0572,
+            "p50": 0.0,
+            "p95": 0.739,
+            "p99": 0.739,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "practice_coach": {
+            "count": 15,
+            "max": 0.125,
+            "mean": 0.0258,
+            "p50": 0.0,
+            "p95": 0.125,
+            "p99": 0.125,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "projectiles_targets_cues": {
+            "count": 15,
+            "max": 1.464,
+            "mean": 0.182866666666667,
+            "p50": 0.0,
+            "p95": 1.464,
+            "p99": 1.464,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "visibility": {
+            "count": 15,
+            "max": 3.205,
+            "mean": 0.526866666666667,
+            "p50": 0.0,
+            "p95": 3.205,
+            "p99": 3.205,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          }
+        },
+        "matter_paid_delta": 0,
+        "max_paid_cells": 0,
+        "max_projectiles": 0,
+        "max_resident_plots": 0,
+        "memory_endpoint_bytes": {
+          "after": {
+            "static": 242115069,
+            "textures": 94722919,
+            "video": 103367927
+          },
+          "before": {
+            "static": 236999285,
+            "textures": 52753995,
+            "video": 59167019
+          }
+        },
+        "memory_max_bytes": {
+          "static": 242052820,
+          "textures": 94722919,
+          "video": 103366967
+        },
+        "observer_mode": "full",
+        "observer_overhead_elapsed_ms": {
+          "count": 14,
+          "max": 0.051,
+          "mean": 0.039,
+          "p50": 0.037,
+          "p95": 0.051,
+          "p99": 0.051,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "paid_cells_endpoints": {
+          "after": 0,
+          "before": 0
+        },
+        "position_after": [
+          1536.0,
+          880.0
+        ],
+        "position_before": [
+          1536.0,
+          880.0
+        ],
+        "pov_elapsed_ms": {
+          "count": 4,
+          "max": 2.897,
+          "mean": 1.722,
+          "p50": 1.324,
+          "p95": 2.897,
+          "p99": 2.897,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "process_elapsed_ms": {
+          "count": 14,
+          "max": 20.627,
+          "mean": 8.02692857142857,
+          "p50": 11.091,
+          "p95": 20.627,
+          "p99": 20.627,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 1,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "quality": "low",
+        "ready": true,
+        "render_last": {
+          "draw_calls": 203.0,
+          "primitives": 4602.0
+        },
+        "temperature": "cold_process_cache",
+        "terrain_after": {
+          "bytes": 16777216,
+          "closed": false,
+          "error": "",
+          "pending": 2,
+          "queued": 6,
+          "ready": 12,
+          "requests": 18,
+          "required": 12,
+          "resident": 16,
+          "suspended": false,
+          "uploads": 16
+        },
+        "terrain_before": {
+          "bytes": 0,
+          "closed": false,
+          "error": "",
+          "pending": 0,
+          "queued": 0,
+          "ready": 0,
+          "requests": 0,
+          "required": 0,
+          "resident": 0,
+          "suspended": false,
+          "uploads": 0
+        },
+        "terrain_loading_frames": 11,
+        "terrain_tile_crossings": 0,
+        "ticks_advanced": 13,
+        "ticks_per_wall_second": 25.899819498181,
+        "unavailable_metrics": [],
+        "unfocused_frames": 0,
+        "wall_seconds": 0.501934,
+        "window_focus_end": true,
+        "window_size": [
+          1280,
+          720
+        ],
+        "world_map": "wellspring-campus-loop-v2",
+        "world_stage_sample_scope": "One final completed fixed step per rendered process frame; not every step or a sum across catch-up steps. Includes the stage timing overhead and may undersample rare earlier steps."
+      },
+      {
+        "admitted_casts_delta": 12,
+        "cast_attempt_ticks": [
+          147,
+          179,
+          211,
+          243,
+          275,
+          307,
+          339,
+          371,
+          403,
+          435,
+          467,
+          499
+        ],
+        "cast_attempts": 12,
+        "champion_wire": 1,
+        "clamped_delta_seconds": 0.0,
+        "close_fire_observation": {
+          "accepted_prepared_regions": 14401,
+          "cache_after": {
+            "geometry": {
+              "builds": 15,
+              "cells": 0,
+              "courts": 2,
+              "hits": 388
+            },
+            "outline": {
+              "batches": 25,
+              "fallbacks": 0,
+              "hits": 8675,
+              "meshes": 25,
+              "uploads": 25
+            },
+            "surface": {
+              "geometry_builds": 13,
+              "geometry_entries": 13,
+              "geometry_hits": 0,
+              "mesh_entries": 13,
+              "mesh_hits": 338,
+              "mesh_uploads": 13,
+              "sequences": 264,
+              "template_builds": 13,
+              "template_hits": 0,
+              "texture_bytes": 2703360,
+              "textures": 660,
+              "translated_draws": 351,
+              "triangle_fallback_draws": 0
+            }
+          },
+          "cache_before": {
+            "geometry": {
+              "builds": 2,
+              "cells": 0,
+              "courts": 2,
+              "hits": 33
+            },
+            "outline": {
+              "batches": 0,
+              "fallbacks": 0,
+              "hits": 0,
+              "meshes": 0,
+              "uploads": 0
+            },
+            "surface": {
+              "geometry_builds": 0,
+              "geometry_entries": 0,
+              "geometry_hits": 0,
+              "mesh_entries": 0,
+              "mesh_hits": 0,
+              "mesh_uploads": 0,
+              "sequences": 264,
+              "template_builds": 0,
+              "template_hits": 0,
+              "texture_bytes": 2703360,
+              "textures": 660,
+              "translated_draws": 0,
+              "triangle_fallback_draws": 0
+            }
+          },
+          "fire_mark_calls": 14401,
+          "fire_mark_inclusive_us": 268275,
+          "max_cast_records": 3,
+          "max_ground_parts": 1,
+          "max_prepared_regions_per_draw": 150,
+          "max_products": 6,
+          "mirror_product_calls": 186,
+          "mirror_product_inclusive_us": 858574,
+          "per_draw_regions": [
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 45,
+              "regions": 0,
+              "render_tick": 150.67048,
+              "sample_index": 0
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 46,
+              "regions": 0,
+              "render_tick": 154.88572,
+              "sample_index": 1
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 47,
+              "regions": 0,
+              "render_tick": 158.0,
+              "sample_index": 2
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 48,
+              "regions": 0,
+              "render_tick": 161.56912,
+              "sample_index": 3
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 49,
+              "regions": 0,
+              "render_tick": 165.7054,
+              "sample_index": 4
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 50,
+              "regions": 0,
+              "render_tick": 169.2054,
+              "sample_index": 5
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 51,
+              "regions": 0,
+              "render_tick": 172.7054,
+              "sample_index": 6
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 52,
+              "regions": 0,
+              "render_tick": 176.2054,
+              "sample_index": 7
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 53,
+              "regions": 0,
+              "render_tick": 180.52852,
+              "sample_index": 8
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 54,
+              "regions": 0,
+              "render_tick": 185.24392,
+              "sample_index": 9
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 55,
+              "regions": 0,
+              "render_tick": 189.24392,
+              "sample_index": 10
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 56,
+              "regions": 0,
+              "render_tick": 193.24392,
+              "sample_index": 11
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 57,
+              "regions": 0,
+              "render_tick": 197.67112,
+              "sample_index": 12
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 58,
+              "regions": 0,
+              "render_tick": 202.11112,
+              "sample_index": 13
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 59,
+              "regions": 0,
+              "render_tick": 206.36112,
+              "sample_index": 14
+            },
+            {
+              "materials": {
+                "fire": 13
+              },
+              "phases": {
+                "fire/ignition": 13
+              },
+              "process_frame": 60,
+              "regions": 13,
+              "render_tick": 210.56112,
+              "sample_index": 15
+            },
+            {
+              "materials": {
+                "fire": 13
+              },
+              "phases": {
+                "fire/ignition": 13
+              },
+              "process_frame": 61,
+              "regions": 13,
+              "render_tick": 215.19712,
+              "sample_index": 16
+            },
+            {
+              "materials": {
+                "fire": 13
+              },
+              "phases": {
+                "fire/ignition": 13
+              },
+              "process_frame": 62,
+              "regions": 13,
+              "render_tick": 219.44712,
+              "sample_index": 17
+            },
+            {
+              "materials": {
+                "fire": 13
+              },
+              "phases": {
+                "fire/ignition": 13
+              },
+              "process_frame": 63,
+              "regions": 13,
+              "render_tick": 223.01108,
+              "sample_index": 18
+            },
+            {
+              "materials": {
+                "fire": 13
+              },
+              "phases": {
+                "fire/ignition": 13
+              },
+              "process_frame": 64,
+              "regions": 13,
+              "render_tick": 226.28996,
+              "sample_index": 19
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/forming": 25
+              },
+              "process_frame": 65,
+              "regions": 25,
+              "render_tick": 229.42652,
+              "sample_index": 20
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/forming": 25
+              },
+              "process_frame": 66,
+              "regions": 25,
+              "render_tick": 233.0,
+              "sample_index": 21
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/forming": 25
+              },
+              "process_frame": 67,
+              "regions": 25,
+              "render_tick": 236.5,
+              "sample_index": 22
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/forming": 25
+              },
+              "process_frame": 68,
+              "regions": 25,
+              "render_tick": 240.0,
+              "sample_index": 23
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/forming": 25
+              },
+              "process_frame": 69,
+              "regions": 25,
+              "render_tick": 243.5,
+              "sample_index": 24
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/forming": 25
+              },
+              "process_frame": 70,
+              "regions": 25,
+              "render_tick": 247.0,
+              "sample_index": 25
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/active": 25
+              },
+              "process_frame": 71,
+              "regions": 25,
+              "render_tick": 250.80964,
+              "sample_index": 26
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/active": 25
+              },
+              "process_frame": 72,
+              "regions": 25,
+              "render_tick": 254.30964,
+              "sample_index": 27
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/active": 25
+              },
+              "process_frame": 73,
+              "regions": 25,
+              "render_tick": 257.80964,
+              "sample_index": 28
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/active": 25
+              },
+              "process_frame": 74,
+              "regions": 25,
+              "render_tick": 261.30964,
+              "sample_index": 29
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/active": 25
+              },
+              "process_frame": 75,
+              "regions": 25,
+              "render_tick": 264.764185454546,
+              "sample_index": 30
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/active": 25
+              },
+              "process_frame": 76,
+              "regions": 25,
+              "render_tick": 268.0,
+              "sample_index": 31
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/active": 25
+              },
+              "process_frame": 77,
+              "regions": 25,
+              "render_tick": 271.24328,
+              "sample_index": 32
+            },
+            {
+              "materials": {
+                "conflagration": 25,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "fire/ignition": 13
+              },
+              "process_frame": 78,
+              "regions": 38,
+              "render_tick": 274.4036,
+              "sample_index": 33
+            },
+            {
+              "materials": {
+                "conflagration": 25,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "fire/ignition": 13
+              },
+              "process_frame": 79,
+              "regions": 38,
+              "render_tick": 278.0,
+              "sample_index": 34
+            },
+            {
+              "materials": {
+                "conflagration": 25,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "fire/ignition": 13
+              },
+              "process_frame": 80,
+              "regions": 38,
+              "render_tick": 281.79136,
+              "sample_index": 35
+            },
+            {
+              "materials": {
+                "conflagration": 25,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "fire/ignition": 13
+              },
+              "process_frame": 81,
+              "regions": 38,
+              "render_tick": 285.5224,
+              "sample_index": 36
+            },
+            {
+              "materials": {
+                "conflagration": 25,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "fire/ignition": 13
+              },
+              "process_frame": 82,
+              "regions": 38,
+              "render_tick": 289.65124,
+              "sample_index": 37
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/forming": 25
+              },
+              "process_frame": 83,
+              "regions": 50,
+              "render_tick": 293.94568,
+              "sample_index": 38
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/forming": 25
+              },
+              "process_frame": 84,
+              "regions": 50,
+              "render_tick": 298.12144,
+              "sample_index": 39
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/forming": 25
+              },
+              "process_frame": 85,
+              "regions": 50,
+              "render_tick": 302.12144,
+              "sample_index": 40
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/forming": 25
+              },
+              "process_frame": 86,
+              "regions": 50,
+              "render_tick": 306.12144,
+              "sample_index": 41
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/forming": 25
+              },
+              "process_frame": 87,
+              "regions": 50,
+              "render_tick": 310.12144,
+              "sample_index": 42
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 50
+              },
+              "process_frame": 88,
+              "regions": 50,
+              "render_tick": 314.04428,
+              "sample_index": 43
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 50
+              },
+              "process_frame": 89,
+              "regions": 50,
+              "render_tick": 317.34188,
+              "sample_index": 44
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 50
+              },
+              "process_frame": 90,
+              "regions": 50,
+              "render_tick": 320.71928,
+              "sample_index": 45
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 50
+              },
+              "process_frame": 91,
+              "regions": 50,
+              "render_tick": 324.21788,
+              "sample_index": 46
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 50
+              },
+              "process_frame": 92,
+              "regions": 50,
+              "render_tick": 327.71788,
+              "sample_index": 47
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 50
+              },
+              "process_frame": 93,
+              "regions": 50,
+              "render_tick": 331.21788,
+              "sample_index": 48
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 50
+              },
+              "process_frame": 94,
+              "regions": 50,
+              "render_tick": 334.71788,
+              "sample_index": 49
+            },
+            {
+              "materials": {
+                "conflagration": 50,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "fire/ignition": 13
+              },
+              "process_frame": 95,
+              "regions": 63,
+              "render_tick": 338.21788,
+              "sample_index": 50
+            },
+            {
+              "materials": {
+                "conflagration": 50,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "fire/ignition": 13
+              },
+              "process_frame": 96,
+              "regions": 63,
+              "render_tick": 341.71788,
+              "sample_index": 51
+            },
+            {
+              "materials": {
+                "conflagration": 50,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "fire/ignition": 13
+              },
+              "process_frame": 97,
+              "regions": 63,
+              "render_tick": 345.21788,
+              "sample_index": 52
+            },
+            {
+              "materials": {
+                "conflagration": 50,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "fire/ignition": 13
+              },
+              "process_frame": 98,
+              "regions": 63,
+              "render_tick": 349.15504,
+              "sample_index": 53
+            },
+            {
+              "materials": {
+                "conflagration": 50,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "fire/ignition": 13
+              },
+              "process_frame": 99,
+              "regions": 63,
+              "render_tick": 353.30128,
+              "sample_index": 54
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/forming": 25
+              },
+              "process_frame": 100,
+              "regions": 75,
+              "render_tick": 357.34324,
+              "sample_index": 55
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/forming": 25
+              },
+              "process_frame": 101,
+              "regions": 75,
+              "render_tick": 361.58836,
+              "sample_index": 56
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/forming": 25
+              },
+              "process_frame": 102,
+              "regions": 75,
+              "render_tick": 365.82064,
+              "sample_index": 57
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/forming": 25
+              },
+              "process_frame": 103,
+              "regions": 75,
+              "render_tick": 369.86572,
+              "sample_index": 58
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/forming": 25
+              },
+              "process_frame": 104,
+              "regions": 75,
+              "render_tick": 373.76176,
+              "sample_index": 59
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/forming": 25
+              },
+              "process_frame": 105,
+              "regions": 75,
+              "render_tick": 377.73628,
+              "sample_index": 60
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 75
+              },
+              "process_frame": 106,
+              "regions": 75,
+              "render_tick": 381.70912,
+              "sample_index": 61
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 75
+              },
+              "process_frame": 107,
+              "regions": 75,
+              "render_tick": 385.625786666667,
+              "sample_index": 62
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 75
+              },
+              "process_frame": 108,
+              "regions": 75,
+              "render_tick": 389.625786666667,
+              "sample_index": 63
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 75
+              },
+              "process_frame": 109,
+              "regions": 75,
+              "render_tick": 393.625786666667,
+              "sample_index": 64
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 75
+              },
+              "process_frame": 110,
+              "regions": 75,
+              "render_tick": 397.61052,
+              "sample_index": 65
+            },
+            {
+              "materials": {
+                "conflagration": 75,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "fire/ignition": 13
+              },
+              "process_frame": 111,
+              "regions": 88,
+              "render_tick": 401.527186666667,
+              "sample_index": 66
+            },
+            {
+              "materials": {
+                "conflagration": 75,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "fire/ignition": 13
+              },
+              "process_frame": 112,
+              "regions": 88,
+              "render_tick": 405.527186666667,
+              "sample_index": 67
+            },
+            {
+              "materials": {
+                "conflagration": 75,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "fire/ignition": 13
+              },
+              "process_frame": 113,
+              "regions": 88,
+              "render_tick": 409.69528,
+              "sample_index": 68
+            },
+            {
+              "materials": {
+                "conflagration": 75,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "fire/ignition": 13
+              },
+              "process_frame": 114,
+              "regions": 88,
+              "render_tick": 413.88136,
+              "sample_index": 69
+            },
+            {
+              "materials": {
+                "conflagration": 75,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "fire/ignition": 13
+              },
+              "process_frame": 115,
+              "regions": 88,
+              "render_tick": 418.26556,
+              "sample_index": 70
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/forming": 25
+              },
+              "process_frame": 116,
+              "regions": 100,
+              "render_tick": 422.7328,
+              "sample_index": 71
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/forming": 25
+              },
+              "process_frame": 117,
+              "regions": 100,
+              "render_tick": 427.27144,
+              "sample_index": 72
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/forming": 25
+              },
+              "process_frame": 118,
+              "regions": 100,
+              "render_tick": 431.604773333333,
+              "sample_index": 73
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/forming": 25
+              },
+              "process_frame": 119,
+              "regions": 100,
+              "render_tick": 435.938106666667,
+              "sample_index": 74
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/forming": 25
+              },
+              "process_frame": 120,
+              "regions": 100,
+              "render_tick": 440.55508,
+              "sample_index": 75
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 100
+              },
+              "process_frame": 121,
+              "regions": 100,
+              "render_tick": 444.94108,
+              "sample_index": 76
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 100
+              },
+              "process_frame": 122,
+              "regions": 100,
+              "render_tick": 449.34108,
+              "sample_index": 77
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 100
+              },
+              "process_frame": 123,
+              "regions": 100,
+              "render_tick": 453.74108,
+              "sample_index": 78
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 100
+              },
+              "process_frame": 124,
+              "regions": 100,
+              "render_tick": 458.0,
+              "sample_index": 79
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 100
+              },
+              "process_frame": 125,
+              "regions": 100,
+              "render_tick": 462.375,
+              "sample_index": 80
+            },
+            {
+              "materials": {
+                "conflagration": 100,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "fire/ignition": 13
+              },
+              "process_frame": 126,
+              "regions": 113,
+              "render_tick": 466.75,
+              "sample_index": 81
+            },
+            {
+              "materials": {
+                "conflagration": 100,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "fire/ignition": 13
+              },
+              "process_frame": 127,
+              "regions": 113,
+              "render_tick": 471.15,
+              "sample_index": 82
+            },
+            {
+              "materials": {
+                "conflagration": 100,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "fire/ignition": 13
+              },
+              "process_frame": 128,
+              "regions": 113,
+              "render_tick": 475.55,
+              "sample_index": 83
+            },
+            {
+              "materials": {
+                "conflagration": 100,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "fire/ignition": 13
+              },
+              "process_frame": 129,
+              "regions": 113,
+              "render_tick": 479.95,
+              "sample_index": 84
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/forming": 25
+              },
+              "process_frame": 130,
+              "regions": 125,
+              "render_tick": 484.83724,
+              "sample_index": 85
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/forming": 25
+              },
+              "process_frame": 131,
+              "regions": 125,
+              "render_tick": 492.0,
+              "sample_index": 86
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/forming": 25
+              },
+              "process_frame": 132,
+              "regions": 125,
+              "render_tick": 498.1086,
+              "sample_index": 87
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/forming": 25
+              },
+              "process_frame": 133,
+              "regions": 125,
+              "render_tick": 504.0,
+              "sample_index": 88
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 125
+              },
+              "process_frame": 134,
+              "regions": 125,
+              "render_tick": 509.67644,
+              "sample_index": 89
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 125
+              },
+              "process_frame": 135,
+              "regions": 125,
+              "render_tick": 515.5196,
+              "sample_index": 90
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 125
+              },
+              "process_frame": 136,
+              "regions": 125,
+              "render_tick": 520.65368,
+              "sample_index": 91
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 125
+              },
+              "process_frame": 137,
+              "regions": 125,
+              "render_tick": 525.85976,
+              "sample_index": 92
+            },
+            {
+              "materials": {
+                "conflagration": 125,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 125,
+                "fire/ignition": 13
+              },
+              "process_frame": 138,
+              "regions": 138,
+              "render_tick": 531.09416,
+              "sample_index": 93
+            },
+            {
+              "materials": {
+                "conflagration": 125,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 125,
+                "fire/ignition": 13
+              },
+              "process_frame": 139,
+              "regions": 138,
+              "render_tick": 536.522731428572,
+              "sample_index": 94
+            },
+            {
+              "materials": {
+                "conflagration": 125,
+                "fire": 13
+              },
+              "phases": {
+                "conflagration/active": 125,
+                "fire/ignition": 13
+              },
+              "process_frame": 140,
+              "regions": 138,
+              "render_tick": 542.022731428572,
+              "sample_index": 95
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 125,
+                "conflagration/forming": 25
+              },
+              "process_frame": 141,
+              "regions": 150,
+              "render_tick": 547.522731428572,
+              "sample_index": 96
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 125,
+                "conflagration/forming": 25
+              },
+              "process_frame": 142,
+              "regions": 150,
+              "render_tick": 553.51648,
+              "sample_index": 97
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 125,
+                "conflagration/forming": 25
+              },
+              "process_frame": 143,
+              "regions": 150,
+              "render_tick": 559.81384,
+              "sample_index": 98
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 125,
+                "conflagration/forming": 25
+              },
+              "process_frame": 144,
+              "regions": 150,
+              "render_tick": 567.0,
+              "sample_index": 99
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 150
+              },
+              "process_frame": 145,
+              "regions": 150,
+              "render_tick": 574.95492,
+              "sample_index": 100
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 150
+              },
+              "process_frame": 146,
+              "regions": 150,
+              "render_tick": 582.34896,
+              "sample_index": 101
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 150
+              },
+              "process_frame": 147,
+              "regions": 150,
+              "render_tick": 588.1248,
+              "sample_index": 102
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 150
+              },
+              "process_frame": 148,
+              "regions": 150,
+              "render_tick": 594.7518,
+              "sample_index": 103
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 150
+              },
+              "process_frame": 149,
+              "regions": 150,
+              "render_tick": 602.0,
+              "sample_index": 104
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 125,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 150,
+              "regions": 150,
+              "render_tick": 610.0,
+              "sample_index": 105
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 125,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 151,
+              "regions": 150,
+              "render_tick": 617.93624,
+              "sample_index": 106
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 125,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 152,
+              "regions": 150,
+              "render_tick": 625.2656,
+              "sample_index": 107
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 125,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 153,
+              "regions": 150,
+              "render_tick": 632.06492,
+              "sample_index": 108
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 125,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 154,
+              "regions": 150,
+              "render_tick": 640.49708,
+              "sample_index": 109
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 125,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 155,
+              "regions": 150,
+              "render_tick": 648.20224,
+              "sample_index": 110
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 125,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 156,
+              "regions": 150,
+              "render_tick": 655.71808,
+              "sample_index": 111
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 125,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 157,
+              "regions": 150,
+              "render_tick": 661.0,
+              "sample_index": 112
+            },
+            {
+              "materials": {
+                "conflagration": 150
+              },
+              "phases": {
+                "conflagration/active": 125,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 158,
+              "regions": 150,
+              "render_tick": 666.0,
+              "sample_index": 113
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 125
+              },
+              "process_frame": 159,
+              "regions": 125,
+              "render_tick": 671.0,
+              "sample_index": 114
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 160,
+              "regions": 125,
+              "render_tick": 675.55216,
+              "sample_index": 115
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 161,
+              "regions": 125,
+              "render_tick": 680.49328,
+              "sample_index": 116
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 162,
+              "regions": 125,
+              "render_tick": 684.87316,
+              "sample_index": 117
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 163,
+              "regions": 125,
+              "render_tick": 689.17864,
+              "sample_index": 118
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 164,
+              "regions": 125,
+              "render_tick": 694.0,
+              "sample_index": 119
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 165,
+              "regions": 125,
+              "render_tick": 698.65112,
+              "sample_index": 120
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 166,
+              "regions": 125,
+              "render_tick": 703.317786666667,
+              "sample_index": 121
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 167,
+              "regions": 125,
+              "render_tick": 708.0,
+              "sample_index": 122
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 168,
+              "regions": 125,
+              "render_tick": 712.666666666667,
+              "sample_index": 123
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 169,
+              "regions": 125,
+              "render_tick": 717.333333333333,
+              "sample_index": 124
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 170,
+              "regions": 125,
+              "render_tick": 722.0,
+              "sample_index": 125
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 171,
+              "regions": 125,
+              "render_tick": 726.666666666667,
+              "sample_index": 126
+            },
+            {
+              "materials": {
+                "conflagration": 125
+              },
+              "phases": {
+                "conflagration/active": 100,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 172,
+              "regions": 125,
+              "render_tick": 731.333333333333,
+              "sample_index": 127
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 100
+              },
+              "process_frame": 173,
+              "regions": 100,
+              "render_tick": 735.9842,
+              "sample_index": 128
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 174,
+              "regions": 100,
+              "render_tick": 740.30632,
+              "sample_index": 129
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 175,
+              "regions": 100,
+              "render_tick": 744.3244,
+              "sample_index": 130
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 176,
+              "regions": 100,
+              "render_tick": 748.36096,
+              "sample_index": 131
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 177,
+              "regions": 100,
+              "render_tick": 752.45968,
+              "sample_index": 132
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 178,
+              "regions": 100,
+              "render_tick": 756.39016,
+              "sample_index": 133
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 179,
+              "regions": 100,
+              "render_tick": 760.34332,
+              "sample_index": 134
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 180,
+              "regions": 100,
+              "render_tick": 764.29168,
+              "sample_index": 135
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 181,
+              "regions": 100,
+              "render_tick": 768.41668,
+              "sample_index": 136
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 182,
+              "regions": 100,
+              "render_tick": 772.527791111111,
+              "sample_index": 137
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 183,
+              "regions": 100,
+              "render_tick": 776.627791111111,
+              "sample_index": 138
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 184,
+              "regions": 100,
+              "render_tick": 780.71870020202,
+              "sample_index": 139
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 185,
+              "regions": 100,
+              "render_tick": 784.78672,
+              "sample_index": 140
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 186,
+              "regions": 100,
+              "render_tick": 789.0,
+              "sample_index": 141
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 187,
+              "regions": 100,
+              "render_tick": 793.08704,
+              "sample_index": 142
+            },
+            {
+              "materials": {
+                "conflagration": 100
+              },
+              "phases": {
+                "conflagration/active": 75,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 188,
+              "regions": 100,
+              "render_tick": 797.177949090909,
+              "sample_index": 143
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 75
+              },
+              "process_frame": 189,
+              "regions": 75,
+              "render_tick": 801.268858181818,
+              "sample_index": 144
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 190,
+              "regions": 75,
+              "render_tick": 805.24756,
+              "sample_index": 145
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 191,
+              "regions": 75,
+              "render_tick": 808.95772,
+              "sample_index": 146
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 192,
+              "regions": 75,
+              "render_tick": 812.5318,
+              "sample_index": 147
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 193,
+              "regions": 75,
+              "render_tick": 816.41944,
+              "sample_index": 148
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 194,
+              "regions": 75,
+              "render_tick": 820.02196,
+              "sample_index": 149
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 195,
+              "regions": 75,
+              "render_tick": 823.5952,
+              "sample_index": 150
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 196,
+              "regions": 75,
+              "render_tick": 827.24056,
+              "sample_index": 151
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 197,
+              "regions": 75,
+              "render_tick": 830.907226666667,
+              "sample_index": 152
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 198,
+              "regions": 75,
+              "render_tick": 834.573893333333,
+              "sample_index": 153
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 199,
+              "regions": 75,
+              "render_tick": 838.24056,
+              "sample_index": 154
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 200,
+              "regions": 75,
+              "render_tick": 842.04408,
+              "sample_index": 155
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 201,
+              "regions": 75,
+              "render_tick": 845.758365714286,
+              "sample_index": 156
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 202,
+              "regions": 75,
+              "render_tick": 849.472651428572,
+              "sample_index": 157
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 203,
+              "regions": 75,
+              "render_tick": 853.186937142857,
+              "sample_index": 158
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 204,
+              "regions": 75,
+              "render_tick": 856.886937142857,
+              "sample_index": 159
+            },
+            {
+              "materials": {
+                "conflagration": 75
+              },
+              "phases": {
+                "conflagration/active": 50,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 205,
+              "regions": 75,
+              "render_tick": 860.586937142857,
+              "sample_index": 160
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 50
+              },
+              "process_frame": 206,
+              "regions": 50,
+              "render_tick": 864.286937142857,
+              "sample_index": 161
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 207,
+              "regions": 50,
+              "render_tick": 867.953603809524,
+              "sample_index": 162
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 208,
+              "regions": 50,
+              "render_tick": 871.620270476191,
+              "sample_index": 163
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 209,
+              "regions": 50,
+              "render_tick": 875.320270476191,
+              "sample_index": 164
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 210,
+              "regions": 50,
+              "render_tick": 879.020270476191,
+              "sample_index": 165
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 211,
+              "regions": 50,
+              "render_tick": 882.720270476191,
+              "sample_index": 166
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 212,
+              "regions": 50,
+              "render_tick": 886.386937142857,
+              "sample_index": 167
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 213,
+              "regions": 50,
+              "render_tick": 890.053603809524,
+              "sample_index": 168
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 214,
+              "regions": 50,
+              "render_tick": 893.53648,
+              "sample_index": 169
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 215,
+              "regions": 50,
+              "render_tick": 896.73124,
+              "sample_index": 170
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 216,
+              "regions": 50,
+              "render_tick": 900.15436,
+              "sample_index": 171
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 217,
+              "regions": 50,
+              "render_tick": 903.48424,
+              "sample_index": 172
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 218,
+              "regions": 50,
+              "render_tick": 906.817573333333,
+              "sample_index": 173
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 219,
+              "regions": 50,
+              "render_tick": 910.04308,
+              "sample_index": 174
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 220,
+              "regions": 50,
+              "render_tick": 913.4086,
+              "sample_index": 175
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 221,
+              "regions": 50,
+              "render_tick": 916.62688,
+              "sample_index": 176
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 222,
+              "regions": 50,
+              "render_tick": 919.77472,
+              "sample_index": 177
+            },
+            {
+              "materials": {
+                "conflagration": 50
+              },
+              "phases": {
+                "conflagration/active": 25,
+                "conflagration/decaying": 25
+              },
+              "process_frame": 223,
+              "regions": 50,
+              "render_tick": 923.04616,
+              "sample_index": 178
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/active": 25
+              },
+              "process_frame": 224,
+              "regions": 25,
+              "render_tick": 926.379493333333,
+              "sample_index": 179
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/active": 25
+              },
+              "process_frame": 225,
+              "regions": 25,
+              "render_tick": 929.01736,
+              "sample_index": 180
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 226,
+              "regions": 25,
+              "render_tick": 931.6354,
+              "sample_index": 181
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 227,
+              "regions": 25,
+              "render_tick": 934.39684,
+              "sample_index": 182
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 228,
+              "regions": 25,
+              "render_tick": 937.14148,
+              "sample_index": 183
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 229,
+              "regions": 25,
+              "render_tick": 939.808146666667,
+              "sample_index": 184
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 230,
+              "regions": 25,
+              "render_tick": 942.558146666667,
+              "sample_index": 185
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 231,
+              "regions": 25,
+              "render_tick": 946.18368,
+              "sample_index": 186
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 232,
+              "regions": 25,
+              "render_tick": 949.52196,
+              "sample_index": 187
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 233,
+              "regions": 25,
+              "render_tick": 952.5948,
+              "sample_index": 188
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 234,
+              "regions": 25,
+              "render_tick": 956.09952,
+              "sample_index": 189
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 235,
+              "regions": 25,
+              "render_tick": 959.432853333333,
+              "sample_index": 190
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 236,
+              "regions": 25,
+              "render_tick": 962.682853333333,
+              "sample_index": 191
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 237,
+              "regions": 25,
+              "render_tick": 965.89384,
+              "sample_index": 192
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 238,
+              "regions": 25,
+              "render_tick": 968.77024,
+              "sample_index": 193
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 239,
+              "regions": 25,
+              "render_tick": 971.60656,
+              "sample_index": 194
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 240,
+              "regions": 25,
+              "render_tick": 974.47432,
+              "sample_index": 195
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 241,
+              "regions": 25,
+              "render_tick": 977.34376,
+              "sample_index": 196
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 242,
+              "regions": 25,
+              "render_tick": 980.21356,
+              "sample_index": 197
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 243,
+              "regions": 25,
+              "render_tick": 983.01652,
+              "sample_index": 198
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 244,
+              "regions": 25,
+              "render_tick": 985.7878,
+              "sample_index": 199
+            },
+            {
+              "materials": {
+                "conflagration": 25
+              },
+              "phases": {
+                "conflagration/decaying": 25
+              },
+              "process_frame": 245,
+              "regions": 25,
+              "render_tick": 988.56976,
+              "sample_index": 200
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 246,
+              "regions": 0,
+              "render_tick": 991.486426666667,
+              "sample_index": 201
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 247,
+              "regions": 0,
+              "render_tick": 994.10056,
+              "sample_index": 202
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 248,
+              "regions": 0,
+              "render_tick": 996.29704,
+              "sample_index": 203
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 249,
+              "regions": 0,
+              "render_tick": 998.36104,
+              "sample_index": 204
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 250,
+              "regions": 0,
+              "render_tick": 1000.51384,
+              "sample_index": 205
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 251,
+              "regions": 0,
+              "render_tick": 1002.4492,
+              "sample_index": 206
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 252,
+              "regions": 0,
+              "render_tick": 1004.61586666667,
+              "sample_index": 207
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 253,
+              "regions": 0,
+              "render_tick": 1006.75816,
+              "sample_index": 208
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 254,
+              "regions": 0,
+              "render_tick": 1008.76324,
+              "sample_index": 209
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 255,
+              "regions": 0,
+              "render_tick": 1010.79064,
+              "sample_index": 210
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 256,
+              "regions": 0,
+              "render_tick": 1012.77556,
+              "sample_index": 211
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 257,
+              "regions": 0,
+              "render_tick": 1014.71164,
+              "sample_index": 212
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 258,
+              "regions": 0,
+              "render_tick": 1016.79497333333,
+              "sample_index": 213
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 259,
+              "regions": 0,
+              "render_tick": 1018.79497333333,
+              "sample_index": 214
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 260,
+              "regions": 0,
+              "render_tick": 1020.79497333333,
+              "sample_index": 215
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 261,
+              "regions": 0,
+              "render_tick": 1022.79497333333,
+              "sample_index": 216
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 262,
+              "regions": 0,
+              "render_tick": 1024.79497333333,
+              "sample_index": 217
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 263,
+              "regions": 0,
+              "render_tick": 1026.79497333333,
+              "sample_index": 218
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 264,
+              "regions": 0,
+              "render_tick": 1028.79497333333,
+              "sample_index": 219
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 265,
+              "regions": 0,
+              "render_tick": 1030.79497333333,
+              "sample_index": 220
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 266,
+              "regions": 0,
+              "render_tick": 1032.79497333333,
+              "sample_index": 221
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 267,
+              "regions": 0,
+              "render_tick": 1034.79497333333,
+              "sample_index": 222
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 268,
+              "regions": 0,
+              "render_tick": 1036.79497333333,
+              "sample_index": 223
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 269,
+              "regions": 0,
+              "render_tick": 1038.79497333333,
+              "sample_index": 224
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 270,
+              "regions": 0,
+              "render_tick": 1040.86532,
+              "sample_index": 225
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 271,
+              "regions": 0,
+              "render_tick": 1042.93244,
+              "sample_index": 226
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 272,
+              "regions": 0,
+              "render_tick": 1045.01528,
+              "sample_index": 227
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 273,
+              "regions": 0,
+              "render_tick": 1047.01528,
+              "sample_index": 228
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 274,
+              "regions": 0,
+              "render_tick": 1049.08748,
+              "sample_index": 229
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 275,
+              "regions": 0,
+              "render_tick": 1051.08748,
+              "sample_index": 230
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 276,
+              "regions": 0,
+              "render_tick": 1053.12764,
+              "sample_index": 231
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 277,
+              "regions": 0,
+              "render_tick": 1055.15288,
+              "sample_index": 232
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 278,
+              "regions": 0,
+              "render_tick": 1057.20512,
+              "sample_index": 233
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 279,
+              "regions": 0,
+              "render_tick": 1059.20512,
+              "sample_index": 234
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 280,
+              "regions": 0,
+              "render_tick": 1061.24144,
+              "sample_index": 235
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 281,
+              "regions": 0,
+              "render_tick": 1063.24144,
+              "sample_index": 236
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 282,
+              "regions": 0,
+              "render_tick": 1065.24144,
+              "sample_index": 237
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 283,
+              "regions": 0,
+              "render_tick": 1067.24144,
+              "sample_index": 238
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 284,
+              "regions": 0,
+              "render_tick": 1069.24144,
+              "sample_index": 239
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 285,
+              "regions": 0,
+              "render_tick": 1071.24144,
+              "sample_index": 240
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 286,
+              "regions": 0,
+              "render_tick": 1073.24144,
+              "sample_index": 241
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 287,
+              "regions": 0,
+              "render_tick": 1075.29332,
+              "sample_index": 242
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 288,
+              "regions": 0,
+              "render_tick": 1077.37665333333,
+              "sample_index": 243
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 289,
+              "regions": 0,
+              "render_tick": 1079.45998666667,
+              "sample_index": 244
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 290,
+              "regions": 0,
+              "render_tick": 1081.54332,
+              "sample_index": 245
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 291,
+              "regions": 0,
+              "render_tick": 1083.62665333333,
+              "sample_index": 246
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 292,
+              "regions": 0,
+              "render_tick": 1085.70998666667,
+              "sample_index": 247
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 293,
+              "regions": 0,
+              "render_tick": 1088.0,
+              "sample_index": 248
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 294,
+              "regions": 0,
+              "render_tick": 1090.08333333333,
+              "sample_index": 249
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 295,
+              "regions": 0,
+              "render_tick": 1092.15524,
+              "sample_index": 250
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 296,
+              "regions": 0,
+              "render_tick": 1094.18744,
+              "sample_index": 251
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 297,
+              "regions": 0,
+              "render_tick": 1096.19816,
+              "sample_index": 252
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 298,
+              "regions": 0,
+              "render_tick": 1098.20132,
+              "sample_index": 253
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 299,
+              "regions": 0,
+              "render_tick": 1100.21132,
+              "sample_index": 254
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 300,
+              "regions": 0,
+              "render_tick": 1102.25252,
+              "sample_index": 255
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 301,
+              "regions": 0,
+              "render_tick": 1104.33452,
+              "sample_index": 256
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 302,
+              "regions": 0,
+              "render_tick": 1106.33452,
+              "sample_index": 257
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 303,
+              "regions": 0,
+              "render_tick": 1108.41785333333,
+              "sample_index": 258
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 304,
+              "regions": 0,
+              "render_tick": 1110.41785333333,
+              "sample_index": 259
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 305,
+              "regions": 0,
+              "render_tick": 1112.47628,
+              "sample_index": 260
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 306,
+              "regions": 0,
+              "render_tick": 1114.55961333333,
+              "sample_index": 261
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 307,
+              "regions": 0,
+              "render_tick": 1116.63848,
+              "sample_index": 262
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 308,
+              "regions": 0,
+              "render_tick": 1118.6912,
+              "sample_index": 263
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 309,
+              "regions": 0,
+              "render_tick": 1120.71152,
+              "sample_index": 264
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 310,
+              "regions": 0,
+              "render_tick": 1122.7544,
+              "sample_index": 265
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 311,
+              "regions": 0,
+              "render_tick": 1124.7544,
+              "sample_index": 266
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 312,
+              "regions": 0,
+              "render_tick": 1127.0,
+              "sample_index": 267
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 313,
+              "regions": 0,
+              "render_tick": 1129.08333333333,
+              "sample_index": 268
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 314,
+              "regions": 0,
+              "render_tick": 1131.16666666667,
+              "sample_index": 269
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 315,
+              "regions": 0,
+              "render_tick": 1133.25,
+              "sample_index": 270
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 316,
+              "regions": 0,
+              "render_tick": 1135.33333333333,
+              "sample_index": 271
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 317,
+              "regions": 0,
+              "render_tick": 1137.41666666667,
+              "sample_index": 272
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 318,
+              "regions": 0,
+              "render_tick": 1139.5,
+              "sample_index": 273
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 319,
+              "regions": 0,
+              "render_tick": 1141.58333333333,
+              "sample_index": 274
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 320,
+              "regions": 0,
+              "render_tick": 1143.66666666667,
+              "sample_index": 275
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 321,
+              "regions": 0,
+              "render_tick": 1145.75,
+              "sample_index": 276
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 322,
+              "regions": 0,
+              "render_tick": 1147.83333333333,
+              "sample_index": 277
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 323,
+              "regions": 0,
+              "render_tick": 1149.91666666667,
+              "sample_index": 278
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 324,
+              "regions": 0,
+              "render_tick": 1152.0,
+              "sample_index": 279
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 325,
+              "regions": 0,
+              "render_tick": 1154.08333333333,
+              "sample_index": 280
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 326,
+              "regions": 0,
+              "render_tick": 1156.16666666667,
+              "sample_index": 281
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 327,
+              "regions": 0,
+              "render_tick": 1158.25,
+              "sample_index": 282
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 328,
+              "regions": 0,
+              "render_tick": 1160.33333333333,
+              "sample_index": 283
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 329,
+              "regions": 0,
+              "render_tick": 1162.41666666667,
+              "sample_index": 284
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 330,
+              "regions": 0,
+              "render_tick": 1164.5,
+              "sample_index": 285
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 331,
+              "regions": 0,
+              "render_tick": 1166.58333333333,
+              "sample_index": 286
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 332,
+              "regions": 0,
+              "render_tick": 1168.66666666667,
+              "sample_index": 287
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 333,
+              "regions": 0,
+              "render_tick": 1170.75,
+              "sample_index": 288
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 334,
+              "regions": 0,
+              "render_tick": 1172.83333333333,
+              "sample_index": 289
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 335,
+              "regions": 0,
+              "render_tick": 1174.91666666667,
+              "sample_index": 290
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 336,
+              "regions": 0,
+              "render_tick": 1177.0,
+              "sample_index": 291
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 337,
+              "regions": 0,
+              "render_tick": 1179.08333333333,
+              "sample_index": 292
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 338,
+              "regions": 0,
+              "render_tick": 1181.21664,
+              "sample_index": 293
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 339,
+              "regions": 0,
+              "render_tick": 1183.30164,
+              "sample_index": 294
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 340,
+              "regions": 0,
+              "render_tick": 1185.38497333333,
+              "sample_index": 295
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 341,
+              "regions": 0,
+              "render_tick": 1187.46830666667,
+              "sample_index": 296
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 342,
+              "regions": 0,
+              "render_tick": 1189.55164,
+              "sample_index": 297
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 343,
+              "regions": 0,
+              "render_tick": 1191.63497333333,
+              "sample_index": 298
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 344,
+              "regions": 0,
+              "render_tick": 1193.71830666667,
+              "sample_index": 299
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 345,
+              "regions": 0,
+              "render_tick": 1195.80164,
+              "sample_index": 300
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 346,
+              "regions": 0,
+              "render_tick": 1197.88497333333,
+              "sample_index": 301
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 347,
+              "regions": 0,
+              "render_tick": 1199.96830666667,
+              "sample_index": 302
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 348,
+              "regions": 0,
+              "render_tick": 1202.05164,
+              "sample_index": 303
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 349,
+              "regions": 0,
+              "render_tick": 1204.13497333333,
+              "sample_index": 304
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 350,
+              "regions": 0,
+              "render_tick": 1206.21830666667,
+              "sample_index": 305
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 351,
+              "regions": 0,
+              "render_tick": 1208.30164,
+              "sample_index": 306
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 352,
+              "regions": 0,
+              "render_tick": 1210.38497333333,
+              "sample_index": 307
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 353,
+              "regions": 0,
+              "render_tick": 1212.46830666667,
+              "sample_index": 308
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 354,
+              "regions": 0,
+              "render_tick": 1214.55164,
+              "sample_index": 309
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 355,
+              "regions": 0,
+              "render_tick": 1216.63497333333,
+              "sample_index": 310
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 356,
+              "regions": 0,
+              "render_tick": 1218.71830666667,
+              "sample_index": 311
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 357,
+              "regions": 0,
+              "render_tick": 1220.97588,
+              "sample_index": 312
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 358,
+              "regions": 0,
+              "render_tick": 1223.1924,
+              "sample_index": 313
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 359,
+              "regions": 0,
+              "render_tick": 1225.2924,
+              "sample_index": 314
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 360,
+              "regions": 0,
+              "render_tick": 1227.3924,
+              "sample_index": 315
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 361,
+              "regions": 0,
+              "render_tick": 1229.4924,
+              "sample_index": 316
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 362,
+              "regions": 0,
+              "render_tick": 1231.5924,
+              "sample_index": 317
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 363,
+              "regions": 0,
+              "render_tick": 1233.6924,
+              "sample_index": 318
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 364,
+              "regions": 0,
+              "render_tick": 1235.7924,
+              "sample_index": 319
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 365,
+              "regions": 0,
+              "render_tick": 1237.8924,
+              "sample_index": 320
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 366,
+              "regions": 0,
+              "render_tick": 1239.9924,
+              "sample_index": 321
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 367,
+              "regions": 0,
+              "render_tick": 1242.0,
+              "sample_index": 322
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 368,
+              "regions": 0,
+              "render_tick": 1244.1,
+              "sample_index": 323
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 369,
+              "regions": 0,
+              "render_tick": 1246.19090909091,
+              "sample_index": 324
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 370,
+              "regions": 0,
+              "render_tick": 1249.0,
+              "sample_index": 325
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 371,
+              "regions": 0,
+              "render_tick": 1251.04264,
+              "sample_index": 326
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 372,
+              "regions": 0,
+              "render_tick": 1253.00548,
+              "sample_index": 327
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 373,
+              "regions": 0,
+              "render_tick": 1255.01068,
+              "sample_index": 328
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 374,
+              "regions": 0,
+              "render_tick": 1257.09401333333,
+              "sample_index": 329
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 375,
+              "regions": 0,
+              "render_tick": 1259.15728,
+              "sample_index": 330
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 376,
+              "regions": 0,
+              "render_tick": 1261.20748,
+              "sample_index": 331
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 377,
+              "regions": 0,
+              "render_tick": 1263.24508,
+              "sample_index": 332
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 378,
+              "regions": 0,
+              "render_tick": 1265.26264,
+              "sample_index": 333
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 379,
+              "regions": 0,
+              "render_tick": 1267.34597333333,
+              "sample_index": 334
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 380,
+              "regions": 0,
+              "render_tick": 1269.42930666667,
+              "sample_index": 335
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 381,
+              "regions": 0,
+              "render_tick": 1271.50456,
+              "sample_index": 336
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 382,
+              "regions": 0,
+              "render_tick": 1273.50456,
+              "sample_index": 337
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 383,
+              "regions": 0,
+              "render_tick": 1275.45052,
+              "sample_index": 338
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 384,
+              "regions": 0,
+              "render_tick": 1277.45052,
+              "sample_index": 339
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 385,
+              "regions": 0,
+              "render_tick": 1279.45052,
+              "sample_index": 340
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 386,
+              "regions": 0,
+              "render_tick": 1281.45052,
+              "sample_index": 341
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 387,
+              "regions": 0,
+              "render_tick": 1283.45052,
+              "sample_index": 342
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 388,
+              "regions": 0,
+              "render_tick": 1285.45052,
+              "sample_index": 343
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 389,
+              "regions": 0,
+              "render_tick": 1287.45052,
+              "sample_index": 344
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 390,
+              "regions": 0,
+              "render_tick": 1289.45052,
+              "sample_index": 345
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 391,
+              "regions": 0,
+              "render_tick": 1291.45052,
+              "sample_index": 346
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 392,
+              "regions": 0,
+              "render_tick": 1293.45052,
+              "sample_index": 347
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 393,
+              "regions": 0,
+              "render_tick": 1295.45052,
+              "sample_index": 348
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 394,
+              "regions": 0,
+              "render_tick": 1297.45052,
+              "sample_index": 349
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 395,
+              "regions": 0,
+              "render_tick": 1299.45052,
+              "sample_index": 350
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 396,
+              "regions": 0,
+              "render_tick": 1301.45052,
+              "sample_index": 351
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 397,
+              "regions": 0,
+              "render_tick": 1303.53385333333,
+              "sample_index": 352
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 398,
+              "regions": 0,
+              "render_tick": 1305.61718666667,
+              "sample_index": 353
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 399,
+              "regions": 0,
+              "render_tick": 1307.70052,
+              "sample_index": 354
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 400,
+              "regions": 0,
+              "render_tick": 1309.78385333333,
+              "sample_index": 355
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 401,
+              "regions": 0,
+              "render_tick": 1312.36392,
+              "sample_index": 356
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 402,
+              "regions": 0,
+              "render_tick": 1314.47232,
+              "sample_index": 357
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 403,
+              "regions": 0,
+              "render_tick": 1316.55565333333,
+              "sample_index": 358
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 404,
+              "regions": 0,
+              "render_tick": 1318.63898666667,
+              "sample_index": 359
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 405,
+              "regions": 0,
+              "render_tick": 1320.72232,
+              "sample_index": 360
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 406,
+              "regions": 0,
+              "render_tick": 1323.18156,
+              "sample_index": 361
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 407,
+              "regions": 0,
+              "render_tick": 1326.7092,
+              "sample_index": 362
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 408,
+              "regions": 0,
+              "render_tick": 1329.4592,
+              "sample_index": 363
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 409,
+              "regions": 0,
+              "render_tick": 1332.0,
+              "sample_index": 364
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 410,
+              "regions": 0,
+              "render_tick": 1334.66666666667,
+              "sample_index": 365
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 411,
+              "regions": 0,
+              "render_tick": 1337.33333333333,
+              "sample_index": 366
+            },
+            {
+              "materials": {},
+              "phases": {},
+              "process_frame": 412,
+              "regions": 0,
+              "render_tick": 1339.7788,
+              "sample_index": 367
+            }
+          ],
+          "prepare_region_calls": 14401,
+          "prepare_region_inclusive_us": 227621,
+          "prepared_regions_by_material": {
+            "conflagration": 14050,
+            "fire": 351
+          }
+        },
+        "distance_pixels": 0.0,
+        "draw_submission_elapsed_ms": {
+          "count": 368,
+          "max": 46.083,
+          "mean": 11.6755489130435,
+          "p50": 10.423,
+          "p95": 21.961,
+          "p99": 36.097,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 29,
+            "over_33_3ms": 5,
+            "over_50ms": 0
+          }
+        },
+        "dropped_accumulator_seconds": 0.00833333333333333,
+        "engine_render_setup_cpu_ms": {
+          "count": 368,
+          "max": 0.029,
+          "mean": 0.00965217391304342,
+          "p50": 0.009,
+          "p95": 0.012,
+          "p99": 0.018,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "fixture": {
+          "actor_world_px": [
+            1536,
+            880
+          ],
+          "cast_policy": "Twelve finite slot-1 attempts at the first tick with no pending cast, no cast recovery and zero spell-owned cooldown; ordinary paid admission, no refill. Same readiness predicate and 200px cursor as the portable capture sequence. Warm source instrumentation, not identical cold-start sampling.",
+          "finite_attempt_limit": 12,
+          "fixture_prepare_ms": 0.601,
+          "fresh_world": true,
+          "region_observation_scope": "Full observer only: inclusive region/mirror/fire-mark timings and counts; nested timers are not additive (mirror includes fire marks). Extra timers/counters have overhead. Cache counters are unmeasured endpoints. Counts are prepared visible region records, not unique occupied cells.",
+          "resource_refill": false,
+          "source_case": "paid_fire_bolt_close",
+          "spell_wire": 145,
+          "target_distance_px": 200,
+          "target_world_px": [
+            1736,
+            880
+          ]
+        },
+        "flux_after": 114400,
+        "flux_before": 114400,
+        "frame_interval_ms": {
+          "count": 367,
+          "max": 106.734,
+          "mean": 27.2726376021798,
+          "p50": 25.632,
+          "p95": 48.506,
+          "p99": 81.769,
+          "threshold_counts": {
+            "over_100ms": 1,
+            "over_20ms": 209,
+            "over_33_3ms": 99,
+            "over_50ms": 16
+          }
+        },
+        "garden_draw_elapsed_ms": {
+          "count": 368,
+          "max": 0.098,
+          "mean": 0.0157527173913043,
+          "p50": 0.015,
+          "p95": 0.023,
+          "p99": 0.034,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "garden_stage_stats_ms": {},
+        "garden_step_elapsed_ms": {
+          "count": 1192,
+          "max": 0.269,
+          "mean": 0.0461367449664431,
+          "p50": 0.041,
+          "p95": 0.095,
+          "p99": 0.12,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "label": "paid_fire_bolt_close",
+        "last_fixed_step_stage_stats_ms": {
+          "actor_product_effects": {
+            "count": 368,
+            "max": 0.162,
+            "mean": 0.0400951086956522,
+            "p50": 0.039,
+            "p95": 0.111,
+            "p99": 0.146,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "chemistry_exposure": {
+            "count": 368,
+            "max": 0.286,
+            "mean": 0.0643423913043478,
+            "p50": 0.033,
+            "p95": 0.176,
+            "p99": 0.241,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "command_order": {
+            "count": 368,
+            "max": 0.038,
+            "mean": 0.0101195652173913,
+            "p50": 0.009,
+            "p95": 0.019,
+            "p99": 0.032,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "finalize": {
+            "count": 368,
+            "max": 0.168,
+            "mean": 0.00956250000000001,
+            "p50": 0.008,
+            "p95": 0.016,
+            "p99": 0.023,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "movement_cast_admission": {
+            "count": 368,
+            "max": 1.559,
+            "mean": 0.52414402173913,
+            "p50": 0.458,
+            "p95": 0.81,
+            "p99": 1.355,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "projectile_contacts": {
+            "count": 368,
+            "max": 2.636,
+            "mean": 0.114505434782609,
+            "p50": 0.028,
+            "p95": 0.409,
+            "p99": 0.558,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "spray_contacts": {
+            "count": 368,
+            "max": 0.177,
+            "mean": 0.0459021739130436,
+            "p50": 0.025,
+            "p95": 0.114,
+            "p99": 0.159,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "surfaces_expiry": {
+            "count": 368,
+            "max": 0.171,
+            "mean": 0.027445652173913,
+            "p50": 0.021,
+            "p95": 0.07,
+            "p99": 0.111,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "terminal_deposits": {
+            "count": 368,
+            "max": 0.007,
+            "mean": 0.00223369565217391,
+            "p50": 0.002,
+            "p95": 0.004,
+            "p99": 0.005,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          }
+        },
+        "main_campus_draw_elapsed_ms": {
+          "count": 368,
+          "max": 4.595,
+          "mean": 2.09183967391304,
+          "p50": 2.026,
+          "p95": 2.8,
+          "p99": 4.265,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "main_court_components_total_us": {
+          "bundle": 559115,
+          "draw_count": 368,
+          "geometry": 26700,
+          "surface": 74792
+        },
+        "main_court_draw_elapsed_ms": {
+          "count": 368,
+          "max": 30.32,
+          "mean": 4.31257065217391,
+          "p50": 2.838,
+          "p95": 14.192,
+          "p99": 21.647,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 5,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "main_draw_stage_stats_ms": {
+          "actors": {
+            "count": 368,
+            "max": 1.805,
+            "mean": 0.675298913043478,
+            "p50": 0.623,
+            "p95": 1.029,
+            "p99": 1.494,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "campus_and_setup": {
+            "count": 368,
+            "max": 4.739,
+            "mean": 2.15233967391305,
+            "p50": 2.097,
+            "p95": 2.885,
+            "p99": 4.382,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "combat_hud": {
+            "count": 368,
+            "max": 6.69,
+            "mean": 1.58635054347826,
+            "p50": 1.39,
+            "p95": 2.681,
+            "p99": 3.88,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "garden": {
+            "count": 368,
+            "max": 0.208,
+            "mean": 0.102625,
+            "p50": 0.099,
+            "p95": 0.145,
+            "p99": 0.183,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "garden_inspection": {
+            "count": 368,
+            "max": 0.101,
+            "mean": 0.0385081521739131,
+            "p50": 0.036,
+            "p95": 0.056,
+            "p99": 0.081,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "local_labels_reticle": {
+            "count": 368,
+            "max": 1.498,
+            "mean": 0.342225543478261,
+            "p50": 0.29,
+            "p95": 0.616,
+            "p99": 0.815,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "paid_ground": {
+            "count": 368,
+            "max": 30.385,
+            "mean": 4.3373125,
+            "p50": 2.864,
+            "p95": 14.22,
+            "p99": 21.753,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 5,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "panels": {
+            "count": 368,
+            "max": 0.282,
+            "mean": 0.0473396739130434,
+            "p50": 0.044,
+            "p95": 0.073,
+            "p99": 0.101,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "practice_coach": {
+            "count": 368,
+            "max": 0.307,
+            "mean": 0.133521739130435,
+            "p50": 0.128,
+            "p95": 0.202,
+            "p99": 0.276,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "projectiles_targets_cues": {
+            "count": 368,
+            "max": 3.542,
+            "mean": 0.661592391304348,
+            "p50": 0.448,
+            "p95": 1.566,
+            "p99": 2.064,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          },
+          "visibility": {
+            "count": 368,
+            "max": 3.169,
+            "mean": 1.5802527173913,
+            "p50": 1.466,
+            "p95": 2.111,
+            "p99": 2.803,
+            "threshold_counts": {
+              "over_100ms": 0,
+              "over_20ms": 0,
+              "over_33_3ms": 0,
+              "over_50ms": 0
+            }
+          }
+        },
+        "matter_paid_delta": 7200,
+        "max_paid_cells": 30,
+        "max_projectiles": 2,
+        "max_resident_plots": 0,
+        "memory_endpoint_bytes": {
+          "after": {
+            "static": 242660001,
+            "textures": 111600227,
+            "video": 120257683
+          },
+          "before": {
+            "static": 240068853,
+            "textures": 111500119,
+            "video": 120145127
+          }
+        },
+        "memory_max_bytes": {
+          "static": 242605569,
+          "textures": 111600227,
+          "video": 120266383
+        },
+        "observer_mode": "full",
+        "observer_overhead_elapsed_ms": {
+          "count": 368,
+          "max": 0.168,
+          "mean": 0.0458532608695652,
+          "p50": 0.04,
+          "p95": 0.085,
+          "p99": 0.142,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "paid_cells_endpoints": {
+          "after": 0,
+          "before": 0
+        },
+        "position_after": [
+          1536.0,
+          880.0
+        ],
+        "position_before": [
+          1536.0,
+          880.0
+        ],
+        "pov_elapsed_ms": {
+          "count": 368,
+          "max": 2.625,
+          "mean": 1.33915760869565,
+          "p50": 1.269,
+          "p95": 1.676,
+          "p99": 2.226,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "process_elapsed_ms": {
+          "count": 368,
+          "max": 24.305,
+          "mean": 4.57525,
+          "p50": 3.473,
+          "p95": 10.366,
+          "p99": 17.055,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 1,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "quality": "low",
+        "ready": true,
+        "refused_casts_delta": 0,
+        "render_last": {
+          "draw_calls": 203.0,
+          "primitives": 4602.0
+        },
+        "screenshot": "C:\\Users\\sende\\Projects\\hex\\.godot\\smooth-close-fire-profile-v2\\metrics-low-paid_fire_bolt_close.png",
+        "temperature": "warm",
+        "terrain_after": {
+          "bytes": 29360128,
+          "closed": false,
+          "error": "",
+          "pending": 0,
+          "queued": 0,
+          "ready": 15,
+          "requests": 28,
+          "required": 15,
+          "resident": 28,
+          "suspended": false,
+          "uploads": 28
+        },
+        "terrain_before": {
+          "bytes": 29360128,
+          "closed": false,
+          "error": "",
+          "pending": 0,
+          "queued": 0,
+          "ready": 15,
+          "requests": 28,
+          "required": 15,
+          "resident": 28,
+          "suspended": false,
+          "uploads": 28
+        },
+        "terrain_loading_frames": 0,
+        "terrain_tile_crossings": 0,
+        "ticks_advanced": 1192,
+        "ticks_per_wall_second": 118.797478503586,
+        "unavailable_metrics": [],
+        "unfocused_frames": 0,
+        "wall_seconds": 10.033883,
+        "window_focus_end": true,
+        "window_size": [
+          1280,
+          720
+        ],
+        "world_map": "wellspring-campus-loop-v2",
+        "world_stage_sample_scope": "One final completed fixed step per rendered process frame; not every step or a sum across catch-up steps. Includes the stage timing overhead and may undersample rare earlier steps."
+      }
+    ],
+    "schema": "hex-gameplay-profile-v1",
+    "scope": "Instrumented native source runtime. Main-thread elapsed timers can include scheduling/driver waits. Frame-start intervals are not GPU time, physical presentation or input-to-photon latency. Nested timers are not additive. No 60FPS acceptance is inferred.",
+    "screen_id": 0,
+    "screen_refresh_hz": 60.0,
+    "screen_size": [
+      1920,
+      1080
+    ],
+    "soak_seconds": 0.0,
+    "started_utc": "2026-10-10T03:08:40",
+    "startup_synchronous_ms": 5736.476,
+    "statistics": "Nearest-rank quantiles of raw process-start intervals; short samples do not establish stable tails. Sequential profile order is recorded; repeat in reverse order for comparisons.",
+    "tick_rate": 120,
+    "user_data": "C:/Users/sende/Projects/hex/.godot/smooth-close-fire-profile-v2/isolated-roaming/Godot/app_userdata/FLUX 2",
+    "window_size": [
+      1280,
+      720
+    ],
+    "window_vsync_mode": 1
+  }
+}

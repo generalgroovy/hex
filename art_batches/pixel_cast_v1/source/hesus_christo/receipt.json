@@ -1,0 +1,64 @@
+{
+  "id": "hesus_christo",
+  "display_name": "Hesus Christo",
+  "ancestry": "elf",
+  "body_type": "middle",
+  "generator": "built-in image_gen",
+  "generator_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-ece9-7650-9c46-262da7c2d18d\\exec-86c5efac-b467-4d53-95fd-2916d1bd5821.png",
+  "source_file": "source.png",
+  "attempt": 2,
+  "attempt1_generator_path": "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-ece9-7650-9c46-262da7c2d18d\\exec-e4e30f2a-a043-4d46-b4dc-2d063a0adac6.png",
+  "attempt1_local": "attempt-1.png",
+  "references": [
+    "C:\\Users\\sende\\Projects\\hex\\assets\\sprites\\fullbody_cast_v1\\hesus_christo-detail.png",
+    "C:\\Users\\sende\\Pictures\\styleref1.png",
+    "C:\\Users\\sende\\Projects\\hex\\art_batches\\pixel_body_pilot_v1\\source\\s-wayne.png"
+  ],
+  "correction_references": [
+    "C:\\Users\\sende\\.codex\\generated_images\\01a0f9b7-ece9-7650-9c46-262da7c2d18d\\exec-e4e30f2a-a043-4d46-b4dc-2d063a0adac6.png"
+  ],
+  "observed": {
+    "width": 1774,
+    "height": 887,
+    "pixel_format": "Format32bppArgb",
+    "sampled_zero_alpha": 13810,
+    "sampled_partial_alpha": 10823,
+    "sampled_total": 24642,
+    "sha256": "E12F56B4790963ECBDD557990C7BA31690CA959D54EB53E3991792578C85F26B",
+    "columns": 8,
+    "rows": 4,
+    "row_mapping": [
+      "idle",
+      "walk_contact_a",
+      "walk_contact_b",
+      "cast"
+    ],
+    "headings": [
+      "S",
+      "SE",
+      "E",
+      "NE",
+      "N",
+      "NW",
+      "W",
+      "SW"
+    ]
+  },
+  "visual_assessment": {
+    "status": "accepted_source_candidate",
+    "strengths": [
+      "32 intact connected elf bodies, costume retained",
+      "Targeted second attempt fixed duplicate-looking rear diagonal columns",
+      "NE and NW now turn clearly toward opposite image sides without frontal eyes",
+      "empty-hand cast row retained"
+    ],
+    "quality_flags": [
+      "Walking contact separation is subtle in rear headings",
+      "Soft alpha requires deterministic cleanup",
+      "Narrow bottom/top margin but intact boots and hair",
+      "No runtime acceptance claimed"
+    ]
+  },
+  "exact_prompt": "Use case: stylized-concept\nAsset type: production 2D game character pixel-art sprite source sheet for H.E.X.\nPrimary request: ONE coherent identity, exactly EIGHT columns and FOUR rows, total 32 separate full-body poses on genuinely transparent RGBA.\nInput images: Image 1 is CURRENT identity reference, preserving its face, ancestry, hair, clothing colors, costume and anatomy; Image 2 is old pixel STYLE ONLY, ignore its text, outdated names/races, props and spells; Image 3 is compact appealing proportion/style and eight-heading reference ONLY, do NOT copy its five-row layout or its identity.\nStyle/medium: charming endearing compact oldschool pixel art, expressive readable face, crisp deliberate chunky pixel clusters, restrained shading and dark colored outline; unified cranial head size and sturdy connected anatomy. Do not elongate limbs or torso. Middle body build, approx 2.7 heads high with volume rather than stretched height; the final assembler will make body 63 pixels high inside 128 pixel cells.\nComposition: exactly 8 equal columns x 4 equal rows, landscape sheet. Each sprite centered in its own invisible cell with generous fully transparent gutters and margin. Entire head, hands, feet, costume, tail/wings when present must fit intact. No sprites touching.\nEvery row has these precise eight distinct directions LEFT TO RIGHT: column0 S straight FRONT facing viewer; column1 SE FRONT-RIGHT 45 degrees; column2 E RIGHT PROFILE; column3 NE BACK-RIGHT 45 degrees with back of head and NO frontal eyes; column4 N straight BACK with NO face; column5 NW BACK-LEFT 45 degrees with back of head and NO frontal eyes; column6 W LEFT PROFILE; column7 SW FRONT-LEFT 45 degrees.\nFOUR ROWS ONLY top to bottom: row0 relaxed IDLE neutral standing; row1 WALK CONTACT A with LEFT foot forward and RIGHT arm forward; row2 WALK CONTACT B with RIGHT foot forward and LEFT arm forward, clearly opposite legs from row1; row3 CAST with both EMPTY hands extended forward in that heading. Four rows, never five. Keep body shape, head size, costume and scale consistent through all 32 poses; head, torso, arms, hands, legs, feet physically connected.\nNo weapons, staves, held tools, baked spells, magic particles, aura, ground shadow, ground plane, scene, labels, letters, watermarks, visible grid or checkerboard. Actual transparent background with alpha=0 between figures.\nSubject: Hesus Christo, current ancestry ELF, not a dragon or wyrm. Pale warm skin, very long pointed ears, black swept-back tousled hair with long hair at nape, friendly determined expressive face. Deep forest green structured tunic/short coat with gold edging, gold square belt buckle, brown leather bracers, dark pants, brown boots. Preserve Image 1 current elf identity and green-gold costume, no horns, wings or tail, no weapon.",
+  "exact_correction_prompt": "Use case: identity-preserve\nAsset type: H.E.X. transparent pixel-art 8-direction x4-pose sprite sheet.\nImage 1 is the sheet to correct. Preserve its elf identity, connected full bodies, costumes, pixel style, four rows, eight columns, scale, generous transparent gutters, alternating walk contacts and empty-hand cast. Change ONLY rear diagonal facing orientation. In EVERY ROW: column3 (fourth from left) must face BACK-RIGHT, showing back of head and body turned toward the image RIGHT; column5 (sixth from left) must face BACK-LEFT, showing back of head and body turned toward the image LEFT. These two columns must be clearly opposite back diagonals, not duplicate facing. Neither back diagonal may show frontal eyes. Keep column4 pure BACK. Unchanged column order is S(front), SE(front-right), E(right profile), NE(back-right), N(back), NW(back-left), W(left profile), SW(front-left). Unchanged rows idle, walk contact A, opposite walk contact B, empty-hand cast. Keep the green gold elf costume and long black hair. No background or ground/shadow, no weapons, no spell effects, no labels, no visible grid. Genuine transparent RGBA alpha background. Exactly32 intact sprites, no new rows."
+}

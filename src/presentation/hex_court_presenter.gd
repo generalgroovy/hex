@@ -5,7 +5,21 @@ extends RefCounted
 # H0/H2 presentation candidate. Court state, occupied cells, quantities and
 # phases remain authoritative in HexCourt; this class only reads them.
 const HexGrid = preload("res://src/sim/hex/hex_grid.gd")
+const HexChemistryWorldScript = preload("res://src/sim/hex/hex_chemistry_world.gd")
+const HexCourtScript = preload("res://src/sim/hex/hex_court.gd")
+const RecipePolicy = preload("res://src/sim/hex/hex_recipe_policy.gd")
+const Elements = preload("res://src/content/element_rules.gd")
+const ArchiveContract = preload("res://src/presentation/archive_magic_contract.gd")
 const ProjectileMotion = preload("res://src/presentation/projectile_presentation_motion.gd")
+const ProjectileFacets = preload("res://src/presentation/hex_projectile_facets.gd")
+const MagicGlow = preload("res://src/presentation/hex_magic_glow.gd")
+const SurfaceGlowCache = preload("res://src/presentation/hex_surface_glow_cache.gd")
+const Quality = preload("res://src/presentation/render_quality.gd")
+const WaterMaterial = preload("res://src/presentation/hex_water_material_presenter.gd")
+const RetroMarks = preload("res://src/presentation/retro_material_marks.gd")
+const MaterialSurface = preload("res://src/presentation/hex_material_surface.gd")
+const StoneFloor = preload("res://src/presentation/hex_stone_floor.gd")
+const COMBAT_PHASE_MATERIALS := ["thermal_shock", "plasma_arc", "solar_flare", "superconduct", "arcflash", "radiance", "penumbra"]
 
 const ATLAS_PATH := "res://assets/sprites/hex_court_v1/projectile_atlas.png"
 const ATLAS_RGBA_SHA256 := "bbdbcf3212b17582a9d9314b53d5f671f1c45eaca4192c67d5591e45cd41e717"
@@ -16,52 +30,55 @@ const EDGE_NEIGHBORS: Array[Vector2i] = [
 	Vector2i(-1, 1), Vector2i(-1, 0), Vector2i(0, -1),
 ]
 const FAMILY_ROWS := {"rapid": 0, "bolt": 1, "heavy": 2, "spray": 3}
+# Minimum art diameters retain tiny fast cores; larger physical projectiles
+# start from their real diameter before remaining-strength presentation shrink.
 const FAMILY_SIZE := {"rapid": 18.0, "bolt": 24.0, "heavy": 32.0, "spray": 24.0}
+const PROJECTILE_CONTACT_DRAW_LIMIT := 8
 const PROJECTILE_READABLE_FLOOR := 5.0
 const PROJECTILE_SHRINK_TICKS := 6.0
 const PROJECTILE_CACHE_LIMIT := 128
+const SPRAY_CUE_RAYS := [0, 1, 2, 3, 4]
+const SPRAY_CUE_REDUCED_RAYS := [0, 2, 4]
+const STEAM_VENT_OUTLINE_WIDTH := 4.0
+const STEAM_VENT_CORE_WIDTH := 2.0
+const DRAW_STYLE_LIMIT := 64
 const ELEMENT_COLUMNS := {1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6, 8: 7}
 const ELEMENT_IDS := {1: "earth", 2: "fire", 3: "water", 4: "wind", 5: "ice", 6: "charge", 7: "light", 8: "dark"}
-const INGREDIENT_MATERIALS: Array[String] = ["earth", "fire", "water", "wind", "ice", "charge", "light", "dark"]
+const INGREDIENT_MATERIALS: Array[String] = Elements.IDS
 const LEGACY_HEX_MATERIALS: Array[String] = ["water", "fire", "steam", "flood", "conflagration"]
-const PRODUCT_MATERIALS: Array[String] = [
-	"fortify", "magma", "mud", "dustfront", "permafrost", "grounding_network", "crystal_prism", "blightsoil",
-	"conflagration", "steam", "firestorm", "thermal_shock", "plasma_arc", "solar_flare", "cinderveil", "flood",
-	"mistcurrent", "freeze", "conductive_flood", "mirrorwater", "blackwater", "vortex", "hailstream", "ion_storm",
-	"lightbend", "shadowdraft", "glacier", "superconduct", "crystal_lens", "black_ice", "overload", "arcflash",
-	"static_shroud", "radiance", "penumbra", "umbral_field",
-]
-const MATERIALS: Array[String] = [
-	"earth", "fire", "water", "wind", "ice", "charge", "light", "dark",
-	"fortify", "magma", "mud", "dustfront", "permafrost", "grounding_network", "crystal_prism", "blightsoil",
-	"conflagration", "steam", "firestorm", "thermal_shock", "plasma_arc", "solar_flare", "cinderveil", "flood",
-	"mistcurrent", "freeze", "conductive_flood", "mirrorwater", "blackwater", "vortex", "hailstream", "ion_storm",
-	"lightbend", "shadowdraft", "glacier", "superconduct", "crystal_lens", "black_ice", "overload", "arcflash",
-	"static_shroud", "radiance", "penumbra", "umbral_field",
-]
+static var PRODUCT_MATERIALS: Array[String] = _live_product_materials()
+static var MATERIALS: Array[String] = _live_materials()
+static var _product_wire_by_material: Dictionary = _live_product_wire_map()
+
+
+static func _live_product_wire_map() -> Dictionary:
+	var result := {}
+	for wire: int in RecipePolicy.ACTIVE_RECIPE_WIRES:
+		result[RecipePolicy.product_layer(wire)] = wire
+	result.make_read_only()
+	return result
+
+
+static func _material_wire(material: String) -> int:
+	return 0 if material in INGREDIENT_MATERIALS else int(_product_wire_by_material.get(material, -1))
+
+
+static func _live_product_materials() -> Array[String]:
+	var result: Array[String] = []
+	for wire: int in RecipePolicy.active_wire_ids():
+		result.append(RecipePolicy.product_layer(wire))
+	return result
+
+
+static func _live_materials() -> Array[String]:
+	var result: Array[String] = []
+	result.assign(Elements.IDS)
+	result.append_array(_live_product_materials())
+	return result
+
 const ELEMENT_WIRES := {"earth": 1, "fire": 2, "water": 3, "wind": 4, "ice": 5, "charge": 6, "light": 7, "dark": 8}
-# Presentation metadata mirrors the stable compiled recipe identity table. It
-# selects palette and mark vocabulary only; it does not imply a gameplay rule.
-const PRODUCT_ROWS: Array = [
-	["fortify",301,"earth","earth","cover"], ["magma",302,"earth","fire","front"],
-	["mud",303,"earth","water","disk"], ["dustfront",304,"earth","wind","corridor"],
-	["permafrost",305,"earth","ice","cover"], ["grounding_network",306,"earth","charge","node"],
-	["crystal_prism",307,"earth","light","plane"], ["blightsoil",308,"earth","dark","disk"],
-	["conflagration",309,"fire","fire","ring"], ["steam",310,"fire","water","expanding_veil"],
-	["firestorm",311,"fire","wind","corridor"], ["thermal_shock",312,"fire","ice","fracture"],
-	["plasma_arc",313,"fire","charge","branch"], ["solar_flare",314,"fire","light","reveal_pulse"],
-	["cinderveil",315,"fire","dark","ember_veil"], ["flood",316,"water","water","flow"],
-	["mistcurrent",317,"water","wind","corridor"], ["freeze",318,"water","ice","growing_strip"],
-	["conductive_flood",319,"water","charge","water_path"], ["mirrorwater",320,"water","light","observation"],
-	["blackwater",321,"water","dark","motion_veil"], ["vortex",322,"wind","wind","annulus"],
-	["hailstream",323,"wind","ice","pulse_lane"], ["ion_storm",324,"wind","charge","drifting_node"],
-	["lightbend",325,"wind","light","bend"], ["shadowdraft",326,"wind","dark","bands"],
-	["glacier",327,"ice","ice","corridor"], ["superconduct",328,"ice","charge","frost_path"],
-	["crystal_lens",329,"ice","light","lens"], ["black_ice",330,"ice","dark","entry_mark"],
-	["overload",331,"charge","charge","corridor"], ["arcflash",332,"charge","light","reveal_line"],
-	["static_shroud",333,"charge","dark","entry_veil"], ["radiance",334,"light","light","reveal_area"],
-	["penumbra",335,"light","dark","border"], ["umbral_field",336,"dark","dark","attrition_veil"],
-]
+# Product identities and visual grammar come from the compiled recipe rows;
+# presentation owns palettes/motifs, not a second recipe identity table.
 const ATMOSPHERIC_MATERIALS := {
 	"wind": true, "steam": true, "dustfront": true, "firestorm": true, "cinderveil": true,
 	"mistcurrent": true, "blackwater": true, "ion_storm": true, "shadowdraft": true,
@@ -80,38 +97,159 @@ const APRON_GRASS := Color("6e8d47")
 const APRON_LIGHT := Color("a8b967")
 
 var _language: VisualLanguage
+var _stone_floor := StoneFloor.new(STONE_DARK, STONE_LOW, STONE_BASE, STONE_HIGH, STONE_LIGHT)
+var _contact_punctuation := preload("res://src/presentation/hex_contact_punctuation.gd").new()
+var _cast_release := preload("res://src/presentation/hex_cast_release.gd").new()
 var _atlas_texture: Texture2D
 var _atlas_attempted := false
 var _cached_court_id := -1
 var _cached_revision := -1
+# Geometry only, shared across the Garden's independent courts. Bound retained
+# cells as well as courts, so a large main court cannot multiply its footprint.
+const COURT_CACHE_LIMIT := 64
+const COURT_CACHE_CELL_LIMIT := 8192
+const VIEW_CULL_MARGIN := 64.0 # Complete neighbor cells + all existing material marks.
+var _court_geometry: Dictionary = {}
+var _court_order: Array[int] = []
+var _court_cache_cells := 0
+var _court_geometry_builds := 0
+var _court_geometry_hits := 0
+var _visible_rect := Rect2()
+var _compact_draw_bundle := false
 var _cells: Array[Vector2i] = []
 var _cell_set: Dictionary = {}
 var _centers: Dictionary = {}
 var _vertices: Dictionary = {}
 var _projectile_size_cache: Dictionary = {}
+var _cover_surface_regions: Dictionary = {}
+# Exact polygon keys only: phase, owner, danger and lifetime never enter these
+# bounded geometry caches. Keys are detached; returned scalar/vector arrays are
+# recursively read-only (packed arrays are mutable reference values in GDScript).
+const BOUNDARY_CACHE_LIMIT := 512
+var _edge_segments_cache: Dictionary = {}
+var _edge_segments_order: Array[PackedVector2Array] = []
+var _edge_segments_cursor := 0
+var _outline_geometry_cache: Dictionary = {}
+var _outline_geometry_order: Array[PackedVector2Array] = []
+var _outline_geometry_cursor := 0
+# Exact geometry plus this draw's exposed-edge mask; never cached authority.
+const OUTLINE_BATCH_LIMIT := 512
+var _outline_batches: Dictionary = {}
+var _outline_batch_order: Array[Array] = []
+var _outline_batch_cursor := 0
+var _outline_meshes: Dictionary = {}
+var _outline_mesh_uploads := 0
+var _outline_mesh_hits := 0
+var _outline_mesh_fallbacks := 0
+var water_material := WaterMaterial.new()
+var retro_marks := RetroMarks.new()
+var material_surface := MaterialSurface.new()
+var _surface_palettes: Dictionary = {}
+var _surface_palette_compatible := false
+const REGION_LAYOUT_LIMIT := 512
+const REGION_GEOMETRY_LIMIT := 512
+const CELL_BOUNDARY_DUPLICATE_LIMIT := 64
+var _region_layouts: Dictionary = {}
+var _edge_prefixes: Dictionary = {}
+var _pixel_region_polygons: Dictionary = {}
+var _pixel_region_builds := 0
+var _pixel_region_hits := 0
+var _pixel_region_fallbacks := 0
+var _pixel_region_rejections := 0
+var _surface_glow := SurfaceGlowCache.new()
+# Diagnostic comparison only: toggling this never changes region authority.
+var water_motifs_enabled := true
+var material_surfaces_enabled := true
+var _magic_surface_glows := 0
 
 
 func configure(shared_language: VisualLanguage) -> bool:
+	_court_geometry.clear()
+	_court_order.clear()
+	_court_cache_cells = 0
+	_court_geometry_builds = 0
+	_court_geometry_hits = 0
+	_cached_court_id = -1
+	_cached_revision = -1
+	_cells = []
+	_cell_set = {}
+	_centers = {}
+	_vertices = {}
+	_surface_palettes.clear()
+	_surface_palette_compatible = false
+	_region_layouts.clear()
+	_edge_prefixes.clear()
+	_pixel_region_polygons.clear()
+	_pixel_region_builds = 0
+	_pixel_region_hits = 0
+	_pixel_region_fallbacks = 0
+	_pixel_region_rejections = 0
+	_surface_glow = SurfaceGlowCache.new()
+	_edge_segments_cache.clear()
+	_edge_segments_order.clear()
+	_edge_segments_cursor = 0
+	_outline_geometry_cache.clear()
+	_outline_geometry_order.clear()
+	_outline_geometry_cursor = 0
+	_outline_batches.clear()
+	_outline_batch_order.clear()
+	_outline_batch_cursor = 0
+	_outline_meshes.clear()
+	_outline_mesh_uploads = 0
+	_outline_mesh_hits = 0
+	_outline_mesh_fallbacks = 0
 	if shared_language == null or shared_language.elements.is_empty() or shared_language.reaction_materials.is_empty():
 		_language = null
 		return false
 	_language = shared_language
+	# A failed candidate import retains the old marks and the canonical fill.
+	water_material.configure()
+	material_surface.configure()
+	var native_language := VisualLanguage.new()
+	_surface_palette_compatible = native_language.load_from_file() and native_language.elements == shared_language.elements and native_language.reaction_materials == shared_language.reaction_materials
+	_prepare_surface_palettes()
 	return true
 
 
+# Additive entry point: existing generic/profiling draw_ground overrides retain
+# their original signature. Only presentation is culled; authority is untouched.
+func draw_ground_in_view(canvas: CanvasItem, court: RefCounted, tick: float, reduced: bool, draw_district_base: bool, visible_rect: Rect2) -> bool:
+	if not visible_rect.has_area() or not visible_rect.position.is_finite() or not visible_rect.end.is_finite(): return false
+	var previous := _visible_rect
+	_visible_rect = visible_rect
+	var result := draw_ground(canvas, court, tick, reduced, draw_district_base)
+	_visible_rect = previous
+	return result
+
+
 func draw_ground(canvas: CanvasItem, court: RefCounted, tick: float, reduced: bool, draw_district_base: bool = true) -> bool:
+	_cover_surface_regions.clear()
+	_edge_prefixes.clear()
+	_magic_surface_glows = 0
 	if canvas == null or court == null or _language == null or not is_finite(tick) or not court.has_method("view"):
 		return false
 	if not _prepare_court(court, draw_district_base):
 		return false
 	canvas.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	var views: Dictionary = {}
-	for cell: Vector2i in _cells:
-		var value: Variant = court.call("view", cell, tick)
-		views[cell] = value if value is Dictionary else {}
-	var regions := _collect_render_regions(court, views, tick)
-	if regions.is_empty() and _has_active_material(views):
+	# The normal campus already supplies its floor. After validated membership
+	# is empty there is no material to prepare or submit; leave the standalone
+	# diagnostic court's apron/base path intact. No tick/revision cache: a cast,
+	# restore or direct coverage change is observed by _prepare_court each call.
+	if _cells.is_empty() and not draw_district_base:
+		return true
+	var frame: Dictionary = _prepare_draw_bundle(court, tick)
+	var views: Dictionary = frame.get("views", {})
+	var regions: Dictionary = frame.get("regions", {})
+	if regions.is_empty() and not views.is_empty() and _has_active_material(views):
 		return false
+	for material: String in ["fortify", "permafrost", "grounding_network", "crystal_prism", "crystal_lens"]:
+		var active := {}
+		for cell: Vector2i in regions.get(material, {}):
+			var selected: Array[Dictionary] = []
+			for region: Dictionary in regions[material][cell]:
+				if String(region.phase) == "active": selected.append(region)
+			if not selected.is_empty(): active[cell] = selected
+		_cover_surface_regions[material] = active
 	if draw_district_base:
 		_draw_apron(canvas, reduced)
 		_draw_stone(canvas, court, reduced)
@@ -121,14 +259,27 @@ func draw_ground(canvas: CanvasItem, court: RefCounted, tick: float, reduced: bo
 		if material not in ["water", "fire"]:
 			_draw_shared_material(canvas, regions.get(material, {}), material, tick, reduced)
 	_draw_steam(canvas, views, regions.get("steam", {}), tick, reduced)
-	_draw_mirror_product(canvas, regions.get("flood", {}), "flood", tick, reduced)
 	_draw_mirror_product(canvas, regions.get("conflagration", {}), "conflagration", tick, reduced)
 	for material: String in PRODUCT_MATERIALS:
-		if material not in ["steam", "flood", "conflagration"]:
+		if material not in ["steam", "conflagration"]:
 			_draw_shared_material(canvas, regions.get(material, {}), material, tick, reduced)
 	if draw_district_base:
 		_draw_outer_rim(canvas)
 	return true
+
+
+# Repaint only the visible physical cover after opaque terrain replacement.
+# Reuses this frame's canonical prepared regions; never redraws other layers.
+func draw_cover_surfaces(canvas: CanvasItem, polygons: Array[PackedVector2Array], tick: float, reduced: bool) -> void:
+	var allowed := {}
+	for polygon: PackedVector2Array in polygons:
+		allowed[Vector2i((_polygon_centroid(polygon) * 1000.0).round())] = true
+	for material: String in _cover_surface_regions:
+		var selected := {}
+		for cell: Vector2i in _cover_surface_regions[material]:
+			if allowed.has(Vector2i((_centers[cell] * 1000.0).round())):
+				selected[cell] = _cover_surface_regions[material][cell]
+		_draw_shared_material(canvas, selected, material, tick, reduced)
 
 
 func draw_cue(canvas: CanvasItem, cue: Dictionary, reduced: bool) -> bool:
@@ -154,11 +305,17 @@ func draw_cue(canvas: CanvasItem, cue: Dictionary, reduced: bool) -> bool:
 	if semantic == "hex_clash":
 		return _draw_hex_clash_cue(canvas, cue, position, palette, progress, reduced)
 	if kind == "pixel_release":
+		_draw_magic_cue_glow(canvas, cue, _cast_release.sample(cue, definition, reduced), palette, reduced)
+		if _cast_release.draw(canvas, cue, definition, reduced):
+			return true
 		_draw_cue_cross(canvas, position, dark, base, bright, opacity, progress, reduced, false)
 		return true
 	if kind == "spray" or event_type == "spray_fired":
 		return _draw_spray_cue(canvas, cue, definition, dark, base, bright, opacity, reduced)
 	if semantic in ["impact", "pixel_impact", "projectile_hit", "spray_hit", "field_triggered", "projectile_bounced"]:
+		_draw_magic_cue_glow(canvas, cue, _contact_punctuation.sample(cue, String(ELEMENT_IDS[element_wire]), reduced), palette, reduced)
+		if _contact_punctuation.draw(canvas, cue, String(ELEMENT_IDS[element_wire]), reduced):
+			return true
 		_draw_cue_cross(canvas, position, dark, base, bright, opacity, progress, reduced, true)
 		return true
 	if semantic in ["refusal", "cast_refused", "cast_blocked"]:
@@ -182,7 +339,7 @@ func draw_projectile(canvas: CanvasItem, shot: ProjectileState, tick: float, alp
 	var position := ProjectileMotion.interpolated_position(shot, alpha).round()
 	var travel := ProjectileMotion.travel_direction(shot)
 	var angle := _octant_angle(travel)
-	var authored_size := float(FAMILY_SIZE[family])
+	var authored_size := projectile_full_size(family, shot.radius)
 	var strength := projectile_strength_pair(shot)
 	if strength.y <= 0:
 		_projectile_size_cache.erase(shot.entity_id)
@@ -196,7 +353,6 @@ func draw_projectile(canvas: CanvasItem, shot: ProjectileState, tick: float, alp
 	if texture != null and size > 0.0:
 		var row := int(FAMILY_ROWS[family])
 		var source := Rect2(Vector2(column * ATLAS_CELL.x, row * ATLAS_CELL.y), Vector2(ATLAS_CELL))
-		var shimmer := 1.0 if reduced else 0.94 + 0.06 * float(posmod(int(floor(tick)) + shot.entity_id, 8) < 4)
 		var half_size := Vector2.ONE * size * 0.5
 		var vertices := _world_points(PackedVector2Array([
 			-half_size, Vector2(half_size.x, -half_size.y), half_size, Vector2(-half_size.x, half_size.y),
@@ -207,10 +363,17 @@ func draw_projectile(canvas: CanvasItem, shot: ProjectileState, tick: float, alp
 		var uvs := PackedVector2Array([
 			uv_start, Vector2(uv_end.x, uv_start.y), uv_end, Vector2(uv_start.x, uv_end.y),
 		])
-		canvas.draw_polygon(vertices, PackedColorArray([Color(1.0, 1.0, 1.0, shimmer)]), uvs, texture)
+		canvas.draw_polygon(vertices, PackedColorArray([Color.WHITE]), uvs, texture)
 	elif size > 0.0:
 		_draw_projectile_fallback(canvas, position, angle, family, shot.element_wire_id, size, reduced)
-	_draw_projectile_collision_outline(canvas, position, shot.radius, shot.element_wire_id, reduced)
+	var glow_palette := _element_palette(shot.element_wire_id)
+	MagicGlow.draw_radial(canvas, position, MagicGlow.projectile_radius(collision_radius_px(shot.radius), minf(size, target_size)), glow_palette[1], glow_palette[2], reduced)
+	if projectile_has_motion(shot):
+		# The atlas keeps its pixel octants; this inset facet follows true travel.
+		# Read current strength immediately in both modes while remaining inside
+		# the displayed core during its existing normal-mode shrink transition.
+		_draw_projectile_nose_facet(canvas, position, travel, shot.radius, shot.element_wire_id, minf(size, target_size))
+	_draw_projectile_contact_pixels(canvas, position, shot.radius, shot.element_wire_id, reduced)
 	return true
 
 
@@ -237,28 +400,53 @@ func _draw_apron(canvas: CanvasItem, reduced: bool) -> void:
 
 
 func _prepare_court(court: RefCounted, include_empty: bool = true) -> bool:
-	var cells_value: Variant = court.get("cells")
+	var cells_value: Variant = (court as HexChemistryWorld).topology_cells_view() if court.get_script() == HexChemistryWorldScript else court.get("cells")
 	if not cells_value is Dictionary:
 		return false
-	# Normal Wellspring draws paid coverage only; the diagnostic court still
-	# draws its stone base. Compare membership, so expiry/reactions update safely.
 	if not include_empty and court.has_method("occupied_cells"):
 		cells_value = court.call("occupied_cells")
-	var revision := int(court.get("render_revision"))
-	var court_id := int(court.get_instance_id())
-	if court_id == _cached_court_id and revision == _cached_revision and cells_value.keys().size() == _cell_set.size() and _same_membership(cells_value):
-		return true
-	var cells: Dictionary = cells_value
-	_cells.clear()
-	_cell_set.clear()
-	_centers.clear()
-	_vertices.clear()
-	for key: Variant in cells.keys():
-		if key is Vector2i:
-			_cells.append(key)
-	_cells.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
 	var origin_value: Variant = court.get("origin")
 	var origin: Vector2i = origin_value if origin_value is Vector2i else COURT_ORIGIN
+	# Keep whole selected cells and a generous neighbor margin. Never trim the
+	# polygon or manufacture a visible outline where an offscreen neighbor ends.
+	if _visible_rect.has_area():
+		var visible := {}
+		var bounds := _visible_rect.grow(VIEW_CULL_MARGIN)
+		for key: Variant in cells_value:
+			if key is Vector2i:
+				var point := Vector2(HexGrid.center(key) + origin) / 1000.0
+				if point.x >= bounds.position.x and point.x <= bounds.end.x and point.y >= bounds.position.y and point.y <= bounds.end.y:
+					visible[key] = true
+		cells_value = visible
+	var revision := int(court.get("render_revision"))
+	var court_id := int(court.get_instance_id())
+	var cached: Dictionary = _court_geometry.get(court_id, {})
+	if not cached.is_empty() and (cached.reference as WeakRef).get_ref() == court and int(cached.revision) == revision and cached.origin == origin:
+		var membership: Dictionary = cached.membership
+		var same: bool = cells_value.size() == membership.size()
+		if same:
+			for key: Variant in cells_value:
+				if not membership.has(key): same = false; break
+		if same:
+			_cells = cached.cells
+			_cell_set = membership
+			_centers = cached.centers
+			_vertices = cached.vertices
+			_cached_court_id = court_id
+			_cached_revision = revision
+			_court_order.erase(court_id)
+			_court_order.append(court_id)
+			_court_geometry_hits += 1
+			return true
+	# Fresh containers: clearing a previous borrowed cache entry would corrupt
+	# another resident court. Origin and direct membership mutations are checked.
+	_cells = []
+	_cell_set = {}
+	_centers = {}
+	_vertices = {}
+	for key: Variant in cells_value:
+		if key is Vector2i: _cells.append(key)
+	_cells.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
 	for cell: Vector2i in _cells:
 		_cell_set[cell] = true
 		_centers[cell] = Vector2(HexGrid.center(cell) + origin) / 1000.0
@@ -268,7 +456,28 @@ func _prepare_court(court: RefCounted, include_empty: bool = true) -> bool:
 		_vertices[cell] = polygon
 	_cached_court_id = court_id
 	_cached_revision = revision
+	_court_geometry_builds += 1
+	_forget_court_geometry(court_id)
+	if _cells.size() <= COURT_CACHE_CELL_LIMIT:
+		while not _court_order.is_empty() and (_court_order.size() >= COURT_CACHE_LIMIT or _court_cache_cells + _cells.size() > COURT_CACHE_CELL_LIMIT):
+			_forget_court_geometry(_court_order[0])
+		_court_geometry[court_id] = {"reference": weakref(court), "revision": revision, "origin": origin,
+			"cells": _cells, "membership": _cell_set, "centers": _centers, "vertices": _vertices}
+		_court_order.append(court_id)
+		_court_cache_cells += _cells.size()
 	return true
+
+
+func _forget_court_geometry(court_id: int) -> void:
+	if _court_geometry.has(court_id):
+		_court_cache_cells -= (_court_geometry[court_id].cells as Array).size()
+		_court_geometry.erase(court_id)
+	_court_order.erase(court_id)
+
+
+func geometry_cache_stats() -> Dictionary:
+	return {"courts": _court_geometry.size(), "cells": _court_cache_cells,
+		"builds": _court_geometry_builds, "hits": _court_geometry_hits}
 
 
 func _same_membership(cells: Dictionary) -> bool:
@@ -278,7 +487,8 @@ func _same_membership(cells: Dictionary) -> bool:
 
 
 func _draw_stone(canvas: CanvasItem, court: RefCounted, reduced: bool) -> void:
-	var cells: Dictionary = court.get("cells")
+	var cells: Dictionary = (court as HexChemistryWorld).topology_cells_view() if court.get_script() == HexChemistryWorldScript else court.get("cells")
+	if _stone_floor.draw(canvas, _cells, _centers, _vertices, cells, reduced): return
 	for cell: Vector2i in _cells:
 		var record: Dictionary = cells.get(cell, {})
 		var terrain := int(record.get("terrain", 0))
@@ -295,6 +505,117 @@ func _draw_stone(canvas: CanvasItem, court: RefCounted, reduced: bool) -> void:
 			var length := 3.0 + float(posmod(mark_seed >> 12, 4))
 			var color := Color(STONE_LIGHT if mark_seed & 1 else STONE_DARK, 0.12 if reduced else 0.16)
 			canvas.draw_line((center + offset).round(), (center + offset + Vector2(length, 0)).round(), color, 2.0)
+
+
+# Builds the two read-only presentation products together for the exact base
+# court. Generic courts, subclasses, and renderable malformed records retain
+# the published call-based path below.
+func _prepare_draw_bundle(court: RefCounted, tick: float) -> Dictionary:
+	var previous := _compact_draw_bundle
+	var floor_cells := _cells
+	# The standalone Range still draws every eligible floor cell. Material work
+	# follows only current paid coverage, intersected with the prepared view. The
+	# known HexCourt compatibility class adds topology only, with no view override.
+	# Arbitrary subclasses/generic contracts keep their complete existing queries.
+	if court.get_script() == HexChemistryWorldScript or court.get_script() == HexCourtScript:
+		var world: HexChemistryWorld = court as HexChemistryWorld
+		var aggregate_coverage := true
+		# Legacy/directly authored ground parts may have no aggregate coverage.
+		# Preserve their complete prepared-view fallback instead of hiding them.
+		# Ordinary paid records always carry a Dictionary aggregate, even empty.
+		for cast_id: int in world.casts:
+			if not world.casts[cast_id].get("coverage") is Dictionary:
+				aggregate_coverage = false
+				break
+		if aggregate_coverage:
+			var material_cells: Array[Vector2i] = []
+			for cell: Vector2i in world.occupied_cells():
+				if _cell_set.has(cell): material_cells.append(cell)
+			material_cells.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
+			_cells = material_cells
+	_compact_draw_bundle = true
+	var result := _prepare_frame_bundle(court, tick)
+	_compact_draw_bundle = previous
+	_cells = floor_cells
+	return result
+
+
+func _prepare_frame_bundle(court: RefCounted, tick: float) -> Dictionary:
+	if court.get_script() != HexChemistryWorldScript and not (_compact_draw_bundle and court.get_script() == HexCourtScript):
+		return _current_frame_bundle(court, tick)
+	var materials: Array[String] = HexChemistryWorld.material_layers()
+	if materials != MATERIALS:
+		return _current_frame_bundle(court, tick)
+	var world: HexChemistryWorld = court as HexChemistryWorld
+	var views: Dictionary = {}
+	var regions: Dictionary = {}
+	if not _compact_draw_bundle:
+		for material: String in materials: regions[material] = {}
+	if _cells.is_empty():
+		return {"views": views, "regions": regions}
+
+	var zero_view: Dictionary = {"fire_phase": "none", "steam_heat": 1000}
+	if not _compact_draw_bundle:
+		for material: String in materials:
+			zero_view[material + "_quantity"] = 0
+			zero_view[material + "_present"] = false
+	var preparation_failed := false
+	for cell: Vector2i in _cells:
+		if not world.has_cell(cell):
+			views[cell] = {"fire_phase": "none", "steam_heat": 1000}
+			continue
+		var view: Dictionary = zero_view.duplicate()
+		var record_value: Variant = world.cell_record_value(cell)
+		if not record_value is Dictionary:
+			return _current_frame_bundle(court, tick)
+		var record: Dictionary = record_value
+		# Sparse authority stores only present layers. Keep the stable output
+		# schema, but do work for actual materials rather than44 empty slots.
+		for key: Variant in record:
+			if typeof(key) not in [TYPE_STRING, TYPE_STRING_NAME] or _material_wire(String(key)) < 0:
+				continue
+			var material: String = key
+			var layer_value: Variant = record[material]
+			if not layer_value is Dictionary:
+				return _current_frame_bundle(court, tick)
+			if (layer_value as Dictionary).is_empty():
+				continue
+			var raw: Array[Dictionary] = world.render_regions(cell, material, tick)
+			if raw.is_empty():
+				continue
+			var quantity := 0
+			for region: Dictionary in raw:
+				quantity += int(region.quantity)
+				if material == "fire":
+					view.fire_phase = region.phase
+				elif material == "steam":
+					view.steam_heat = maxi(int(view.steam_heat), int(region.intensity))
+			view[material + "_quantity"] = quantity
+			view[material + "_present"] = true
+			if preparation_failed:
+				continue
+			var prepared: Array[Dictionary] = []
+			for value: Dictionary in raw:
+				var expected_polygon: PackedVector2Array = _vertices.get(cell, PackedVector2Array())
+				var prepared_region: Dictionary = _prepare_region(value, material, expected_polygon)
+				if prepared_region.is_empty():
+					preparation_failed = true
+					break
+				prepared.append(prepared_region)
+			if not preparation_failed:
+				prepared.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.footprint_id) < int(b.footprint_id))
+				if not regions.has(material): regions[material] = {}
+				(regions[material] as Dictionary)[cell] = prepared
+		views[cell] = view
+	return {"views": views, "regions": {} if preparation_failed else regions}
+
+
+func _current_frame_bundle(court: RefCounted, tick: float) -> Dictionary:
+	var views: Dictionary = {}
+	for cell: Vector2i in _cells:
+		var value: Variant = court.call("view", cell, tick)
+		views[cell] = value if value is Dictionary else {}
+	return {"views": views, "regions": _collect_render_regions(court, views, tick)}
 
 
 func _collect_render_regions(court: RefCounted, views: Dictionary, tick: float) -> Dictionary:
@@ -334,12 +655,12 @@ func _prepare_region(value: Variant, material: String, expected_polygon: PackedV
 	var has_expiry := source.has("expiry_tick") or source.has("expires")
 	if phase.is_empty() or not source.has("footprint_id") or not source.has("danger") or not source.has("intensity") or not has_owner or not has_expiry:
 		return {}
-	var descriptor := _material_descriptor(material)
+	var expected_wire := _material_wire(material)
 	var direction_value: Variant = source.get("direction", Vector2i(0, -1000))
 	var source_ids_value: Variant = source.get("source_ids", [])
 	if (
-		descriptor.is_empty()
-		or (source.has("recipe_wire_id") and int(source.recipe_wire_id) != int(descriptor.wire_id))
+		expected_wire < 0
+		or (source.has("recipe_wire_id") and int(source.recipe_wire_id) != expected_wire)
 		or not direction_value is Vector2i
 		or not source_ids_value is Array
 		or (source.has("material") and String(source.material) != material)
@@ -358,24 +679,56 @@ func _prepare_region(value: Variant, material: String, expected_polygon: PackedV
 		"footprint_id": int(source.footprint_id), "fixed_polygon": fixed_polygon,
 		"polygon": PackedVector2Array(), "phase": phase, "danger": bool(source.danger),
 		"intensity": maxi(1, int(source.intensity)), "material": material,
+		# Preserve the existing art floor; only decorative light reads raw stock.
+		"raw_intensity": int(source.intensity),
 		"owner_key": source.get("owner_key", source.get("owner", source.get("owner_id", source.get("source_ids", [])))),
 		"owner": int(source.get("owner", source.get("owner_id", 0))),
 		"source_ids": (source_ids_value as Array).duplicate(),
 		"quantity": maxi(0, int(source.get("quantity", 0))),
 		"expiry_tick": int(source.get("expiry_tick", source.get("expires", 0))),
+		"active_tick": int(source.get("active_tick", 0)),
+		"decay_tick": int(source.get("decay_tick", 0)),
 		"recipe_wire_id": int(source.get("recipe_wire_id", 0)),
 		"direction": direction_value,
 	}
-	var polygon := PackedVector2Array()
-	for fixed_point: Vector2 in fixed_polygon:
-		var point := fixed_point / 1000.0 # Court returns absolute world-fixed cell vertices.
-		if not point.is_finite():
-			return {}
-		polygon.append(point)
-	if expected_polygon.size() == 6 and not _same_polygon_vertices(polygon, expected_polygon):
-		return {}
+	var polygon := _pixel_region_polygon(fixed_polygon, expected_polygon)
+	if polygon.is_empty(): return {}
 	result.polygon = polygon
 	return result
+
+
+func _pixel_region_polygon(fixed_polygon: PackedVector2Array, expected_polygon: PackedVector2Array) -> PackedVector2Array:
+	# Geometry is immutable between real membership changes; authority is not.
+	# Key both exact inputs, since a moved/reversed/edited expected cell must be
+	# checked again. Return a detached array so diagnostic callers cannot poison
+	# the retained geometry or another region's public result.
+	var key: Array = [fixed_polygon, expected_polygon]
+	if _pixel_region_polygons.has(key):
+		_pixel_region_hits += 1
+		return (_pixel_region_polygons[key] as PackedVector2Array).duplicate()
+	var polygon := PackedVector2Array()
+	for fixed_point: Vector2 in fixed_polygon:
+		var point := fixed_point / 1000.0
+		if not point.is_finite():
+			_pixel_region_rejections += 1
+			return PackedVector2Array()
+		polygon.append(point)
+	if expected_polygon.size() == 6 and not _same_polygon_vertices(polygon, expected_polygon):
+		_pixel_region_rejections += 1
+		return PackedVector2Array()
+	if fixed_polygon.size() == 6 and expected_polygon.size() == 6 and _pixel_region_polygons.size() < REGION_GEOMETRY_LIMIT:
+		key = [fixed_polygon.duplicate(), expected_polygon.duplicate()]
+		key.make_read_only()
+		_pixel_region_polygons[key] = polygon.duplicate()
+		_pixel_region_builds += 1
+	else:
+		_pixel_region_fallbacks += 1
+	return polygon
+
+
+func region_geometry_cache_stats() -> Dictionary:
+	return {"entries": _pixel_region_polygons.size(), "builds": _pixel_region_builds,
+		"hits": _pixel_region_hits, "fallbacks": _pixel_region_fallbacks, "rejections": _pixel_region_rejections}
 
 
 static func _same_polygon_vertices(first: PackedVector2Array, second: PackedVector2Array) -> bool:
@@ -415,10 +768,13 @@ func _draw_mirror_product(canvas: CanvasItem, regions_by_cell: Dictionary, mater
 			var decaying: bool = region.phase == "decaying"
 			var intensity := clampf(float(region.intensity) / 1000.0, 0.1, 1.5)
 			var opacity := ((0.19 if reduced else 0.25) + 0.06 * intensity) * (0.45 if decaying else 1.0)
-			canvas.draw_colored_polygon(region.polygon, Color(base, opacity))
+			_draw_retained_region_fill(canvas, region.polygon, Color(base, opacity))
+			var surface_style := {"dark": dark, "base": base, "bright": bright, "phase": String(region.phase)}
+			var painted := _draw_material_surface(canvas, material, region, surface_style, tick, reduced)
 			_draw_region_outline(canvas, region, counts, Color(bright if active else dark, 0.80 if active else 0.50), 2.0)
-			var center := _polygon_centroid(region.polygon)
-			var radius := _polygon_clearance(center, region.polygon) - 3.0
+			var layout := _region_layout(region.polygon)
+			var center: Vector2 = layout.center
+			var radius: float = float(layout.clearance) - 3.0
 			if radius < 5.0: continue
 			if material == "flood":
 				var direction := Vector2(region.direction).normalized()
@@ -430,7 +786,8 @@ func _draw_mirror_product(canvas: CanvasItem, regions_by_cell: Dictionary, mater
 					canvas.draw_line(anchor + direction * radius * 0.15, anchor - direction * radius * 0.18 + side * radius * 0.28, Color(bright, 0.85), 2.0)
 			else:
 				var phase := "active" if active else "cooling" if decaying else "ignition"
-				_draw_fire_region_mark(canvas, region.polygon, phase, dark, base, bright, _language.reaction_color(material, "danger"), tick, int(region.footprint_id), reduced)
+				if not painted or not active:
+					_draw_fire_region_mark(canvas, region.polygon, phase, dark, base, bright, _language.reaction_color(material, "danger"), tick, int(region.footprint_id), reduced)
 				# A restrained three-point crown distinguishes the mirror product
 				# from one ordinary Fire ingredient without obscuring its footprint.
 				if active:
@@ -439,15 +796,39 @@ func _draw_mirror_product(canvas: CanvasItem, regions_by_cell: Dictionary, mater
 						canvas.draw_line(anchor, anchor + Vector2(0, -radius * 0.35), Color(bright, 0.78), 2.0)
 
 
+func _draw_retained_region_fill(canvas: CanvasItem, polygon: PackedVector2Array, color: Color) -> void:
+	# The same exact polygon/triangulation as the clipped flame stamp, with no
+	# texture and the original float color. Every region keeps its painter order.
+	var mesh := retro_marks._region_mesh(polygon)
+	if mesh != null:
+		RenderingServer.canvas_item_add_mesh(canvas.get_canvas_item(), mesh.get_rid(), Transform2D.IDENTITY, color)
+	else:
+		canvas.draw_colored_polygon(polygon, color)
+
+
+func _region_layout(polygon: PackedVector2Array) -> Dictionary:
+	if _region_layouts.has(polygon): return _region_layouts[polygon]
+	var center := _polygon_centroid(polygon)
+	var result := {"center": center, "clearance": _polygon_clearance(center, polygon)}
+	# Cache geometry only. Values are detached, immutable and never contain phase,
+	# stock, owner, animation time or palette. Excess/diagnostic inputs stay exact.
+	result.make_read_only()
+	if _region_layouts.size() < REGION_LAYOUT_LIMIT and polygon.size() == 6 and _finite_boundary(polygon):
+		_region_layouts[polygon.duplicate()] = result
+	return result
+
+
 func _draw_water(canvas: CanvasItem, _views: Dictionary, regions_by_cell: Dictionary, tick: float, reduced: bool) -> void:
 	var edge_counts := _region_edge_counts(regions_by_cell)
 	for cell: Vector2i in regions_by_cell:
 		for region: Dictionary in regions_by_cell[cell]:
 			var style := _water_region_style(region, reduced)
 			canvas.draw_colored_polygon(region.polygon, Color(style.base, style.fill_opacity))
+			var painted := water_motifs_enabled and _draw_material_surface(canvas, "water", region, style, tick, reduced)
 			_draw_region_outline(canvas, region, edge_counts, Color(style.edge, style.edge_opacity), style.edge_width)
 			var seed := _cell_seed(cell, int(region.footprint_id) * 401)
-			_draw_water_region_mark(canvas, region.polygon, style.bright, style.phase, tick, seed, reduced)
+			if not painted and (not water_motifs_enabled or not _surface_palette_matches("water", style) or not water_material.draw_region(canvas, region.polygon, style.phase, tick, seed, reduced)):
+				_draw_water_region_mark(canvas, region.polygon, style.bright, style.phase, tick, seed, reduced)
 
 
 func _draw_fire(canvas: CanvasItem, _views: Dictionary, regions_by_cell: Dictionary, tick: float, reduced: bool) -> void:
@@ -456,9 +837,11 @@ func _draw_fire(canvas: CanvasItem, _views: Dictionary, regions_by_cell: Diction
 		for region: Dictionary in regions_by_cell[cell]:
 			var style := _fire_region_style(region, reduced)
 			canvas.draw_colored_polygon(region.polygon, Color(style.base, style.fill_opacity))
+			var painted := _draw_material_surface(canvas, "fire", region, style, tick, reduced)
 			_draw_region_outline(canvas, region, edge_counts, Color(style.edge, style.edge_opacity), style.edge_width)
 			var seed := _cell_seed(cell, int(region.footprint_id) * 809)
-			_draw_fire_region_mark(canvas, region.polygon, style.phase, style.dark, style.base, style.bright, style.danger_color, tick, seed, reduced)
+			if not painted or String(region.phase) != "active":
+				_draw_fire_region_mark(canvas, region.polygon, style.phase, style.dark, style.base, style.bright, style.danger_color, tick, seed, reduced)
 
 
 func _draw_steam(canvas: CanvasItem, views: Dictionary, regions_by_cell: Dictionary, tick: float, reduced: bool) -> void:
@@ -468,26 +851,133 @@ func _draw_steam(canvas: CanvasItem, views: Dictionary, regions_by_cell: Diction
 		for region: Dictionary in regions_by_cell[cell]:
 			var style := _steam_region_style(region, heat, reduced)
 			canvas.draw_colored_polygon(region.polygon, Color(style.base, style.fill_opacity))
+			var painted := _draw_material_surface(canvas, "steam", region, style, tick, reduced)
 			_draw_region_outline(canvas, region, edge_counts, Color(style.dark, style.edge_opacity), style.edge_width)
 			if bool(style.danger):
 				_draw_region_outline(canvas, region, edge_counts, Color(style.danger_color, style.danger_opacity), 1.0)
 			var seed := _cell_seed(cell, int(region.footprint_id) * 1201 + heat)
-			_draw_steam_region_mark(canvas, region.polygon, style.dark, style.bright, style.danger_color, style.palette_phase, tick, seed, reduced, bool(style.danger), String(region.phase))
+			_draw_steam_region_mark(canvas, region.polygon, style.dark, style.bright, style.danger_color, style.palette_phase, tick, seed, reduced, bool(style.danger), String(region.phase), painted)
 
 
 func _draw_shared_material(canvas: CanvasItem, regions_by_cell: Dictionary, material: String, tick: float, reduced: bool) -> void:
 	if regions_by_cell.is_empty():
 		return
 	var edge_counts := _region_edge_counts(regions_by_cell)
+	var styles: Dictionary = {} # Call-local: never survives a phase/palette update.
 	for cell: Vector2i in regions_by_cell:
 		for region: Dictionary in regions_by_cell[cell]:
-			var style := _shared_material_style(material, region, reduced)
+			var style := _shared_style_for_draw(styles, material, region, reduced)
 			if style.is_empty():
 				continue
-			canvas.draw_colored_polygon(region.polygon, Color(style.base, style.fill_opacity))
+			var warning := backdraft_warning(region, tick)
+			if warning:
+				style = style.duplicate()
+				style["backdraft_warning"] = true
+				style.fill_opacity = 0.06
+				style.bright = _language.element_color("fire", "bright")
+				style.edge = style.bright
+				style.edge_opacity = 1.0
+				style.edge_width = 3.0
+			_draw_retained_region_fill(canvas, region.polygon, Color(style.base, style.fill_opacity))
+			var painted := false if warning else _draw_material_surface(canvas, material, region, style, tick, reduced)
 			_draw_region_outline(canvas, region, edge_counts, Color(style.edge, style.edge_opacity), style.edge_width)
 			var seed := _cell_seed(cell, int(region.footprint_id) * 1597 + int(style.wire_id))
-			_draw_shared_material_mark(canvas, region, style, tick, seed, reduced)
+			_draw_shared_material_mark(canvas, region, style, tick, seed, reduced, painted)
+
+
+static func backdraft_warning(region: Dictionary, tick: float) -> bool:
+	var decay_tick := int(region.get("decay_tick", 0))
+	return int(region.get("recipe_wire_id", 0)) == 315 and String(region.get("phase", "")) == "active" \
+		and bool(region.get("danger", false)) and decay_tick > 0 and tick >= decay_tick - 72 and tick < decay_tick
+
+
+func _prepare_surface_palettes() -> void:
+	# The asset bank contains canonical RGB pixels. A later public palette edit
+	# must immediately use the old freshly colored marks, never stale artwork or
+	# a per-draw image rebuild. These are compatibility guards, not cached styles.
+	for material: String in MATERIALS:
+		for phase: String in ["forming", "ignition", "active", "decaying", "cooling"]:
+			var region := {"phase": phase, "danger": false, "intensity": 1000}
+			var style: Dictionary
+			if material == "water": style = _water_region_style(region, false)
+			elif material == "fire": style = _fire_region_style(region, false)
+			elif material == "conflagration":
+				style = {"phase": phase, "dark": _language.reaction_color(material, "dark"), "base": _language.reaction_color(material, "base"), "bright": _language.reaction_color(material, "bright")}
+			elif material == "steam":
+				for heat: int in [500, 1000, 1500]:
+					style = _steam_region_style(region, heat, false)
+					_surface_palettes[_surface_palette_key(material, style)] = [style.dark, style.base, style.bright]
+				continue
+			else: style = _shared_material_style(material, region, false)
+			_surface_palettes[_surface_palette_key(material, style)] = [style.dark, style.base, style.bright]
+
+
+static func _surface_palette_key(material: String, style: Dictionary) -> String:
+	return material + "/" + String(style.phase) + "/" + String(style.get("palette_phase", ""))
+
+
+func _surface_palette_matches(material: String, style: Dictionary) -> bool:
+	if not _surface_palette_compatible: return false
+	var expected: Array = _surface_palettes.get(_surface_palette_key(material, style), [])
+	return expected.size() == 3 and expected[0] == style.dark and expected[1] == style.base and expected[2] == style.bright
+
+
+func _draw_material_surface(canvas: CanvasItem, material: String, region: Dictionary, style: Dictionary, tick: float, reduced: bool) -> bool:
+	if not material_surfaces_enabled or not _surface_palette_matches(material, style):
+		return false
+	# These two categorical silhouettes carry the field's vapor/flame identity
+	# at gameplay zoom. Select their original mark instead of layering textures.
+	if material in ["steam", "conflagration"]:
+		return false
+	# A tiny phase mask may sample only transparent pixels on a world grid.
+	# Keep the guaranteed centered warning/terminal mark for pressure effects;
+	# their active field alone replaces the emblem with native material pixels.
+	if String(style.get("visual_material", material)) in COMBAT_PHASE_MATERIALS and String(region.phase) != "active":
+		return false
+	var wire := int(ELEMENT_WIRES.get(material, 0))
+	if wire == 0:
+		wire = _material_wire(material)
+		if wire <= 0: return false
+	var polygon: PackedVector2Array = region.polygon
+	var phase := String(region.phase)
+	var opacity := (0.82 if not reduced else 0.64) * _intensity_ratio(region)
+	var tint := Color.WHITE
+	if phase in ["forming", "ignition"]: opacity *= 0.70
+	elif phase in ["decaying", "cooling"]: opacity *= 0.46
+	if material == "steam" and String(style.get("palette_phase", "active")) in ["hot", "cool"]:
+		tint = style.base # Heat remains a fresh palette input, not a stored phase.
+	var painted := material_surface.draw_region(canvas, wire, polygon, phase, tick, reduced, opacity, tint)
+	if painted:
+		var glow_opacity := _take_magic_surface_glow_opacity(region, reduced)
+		if glow_opacity > 0.0:
+			_surface_glow.draw_surface(canvas, polygon, style.base, style.bright, glow_opacity)
+	return painted
+
+
+func _take_magic_surface_glow_opacity(region: Dictionary, reduced: bool) -> float:
+	if _magic_surface_glows >= Quality.surface_glow_limit(MagicGlow.SURFACE_LIMIT):
+		return 0.0
+	var intensity := int(region.get("raw_intensity", region.get("intensity", 0)))
+	var opacity := MagicGlow.surface_opacity(String(region.get("phase", "")), intensity, reduced)
+	# Reserve only admitted decoration. Real zero stock must neither brighten
+	# through the legacy art floor nor deny another occupied cell its light.
+	if opacity > 0.0:
+		_magic_surface_glows += 1
+	return opacity
+
+
+func _shared_style_for_draw(styles: Dictionary, material: String, region: Dictionary, reduced: bool) -> Dictionary:
+	# These are exactly the dynamic inputs read by _shared_material_style. Owner,
+	# direction and footprint affect borders/marks separately and are not memoized.
+	# Clamp identically, never quantize: close intensities still yield exact colors.
+	var key: Array = [material, String(region.get("phase", "active")), bool(region.get("danger", false)), _intensity_ratio(region), reduced]
+	if styles.has(key): return styles[key]
+	var style := _shared_material_style(material, region, reduced)
+	style.make_read_only() # Scalars, strings and Color values only.
+	if not style.is_empty() and styles.size() < DRAW_STYLE_LIMIT:
+		key.make_read_only()
+		styles[key] = style
+	return style
 
 
 func _material_descriptor(material: String) -> Dictionary:
@@ -499,15 +989,23 @@ func _material_descriptor(material: String) -> Dictionary:
 			"cadence": _language.element_cadence(material),
 			"atmospheric": ATMOSPHERIC_MATERIALS.has(material),
 		}
-	for row: Array in PRODUCT_ROWS:
-		if String(row[0]) == material:
-			return {
-				"material": material, "wire_id": int(row[1]), "ingredient": false,
-				"first": String(row[2]), "second": String(row[3]), "shape": String(row[4]),
-				"cadence": "%s+%s" % [_language.element_cadence(String(row[2])), _language.element_cadence(String(row[3]))],
-				"atmospheric": ATMOSPHERIC_MATERIALS.has(material),
-			}
-	return {}
+	var wire := _material_wire(material)
+	if wire <= 0:
+		return {}
+	var definition := RecipePolicy.runtime_definition(wire)
+	var archive_wire := int(definition.get("archive_recipe_wire", 0))
+	if archive_wire < 301 or archive_wire > 336:
+		return {}
+	var archived: Dictionary = ArchiveContract.REACTIONS[archive_wire - 301]
+	var first := String(archived.elements[0])
+	var second := String(archived.elements[1])
+	return {
+		"material": material, "wire_id": wire, "ingredient": false,
+		"first": first, "second": second, "shape": String(archived.shape),
+		"visual_material": String(definition.get("visual_material", material)),
+		"cadence": "%s+%s" % [_language.element_cadence(first), _language.element_cadence(second)],
+		"atmospheric": ATMOSPHERIC_MATERIALS.has(String(definition.get("visual_material", material))),
+	}
 
 
 func _shared_material_style(material: String, region: Dictionary, reduced: bool) -> Dictionary:
@@ -526,11 +1024,12 @@ func _shared_material_style(material: String, region: Dictionary, reduced: bool)
 		bright = bright.lerp(_language.element_phase_color(second, phase, "bright"), 0.58)
 	# Active danger keeps its dominant material instead of averaging Fire into
 	# a green Air corridor. Geometry and phase still come from authority.
-	if material in ["magma", "firestorm"]:
+	var visual_material := String(descriptor.get("visual_material", material))
+	if visual_material in ["magma", "firestorm"]:
 		dark = _language.element_phase_color("fire", phase, "dark")
 		base = _language.element_phase_color("fire", phase, "base")
 		bright = _language.element_phase_color("fire", phase, "bright")
-	elif material in ["mud", "dustfront"]:
+	elif visual_material in ["mud", "dustfront"]:
 		dark = _language.element_phase_color("earth", phase, "dark")
 		base = _language.element_phase_color("earth", phase, "base")
 		bright = _language.element_phase_color("earth", phase, "bright")
@@ -542,26 +1041,79 @@ func _shared_material_style(material: String, region: Dictionary, reduced: bool)
 	if atmospheric:
 		fill_opacity = minf(fill_opacity, 0.22)
 	var danger := bool(region.get("danger", false))
+	# The revised pressure fields need a phase cue that survives pale palettes
+	# and reduced effects. Reuse the existing strokes: small dark preparation,
+	# full bright active mark, tiny dim embers in decay. No extra draw calls,
+	# particles, geometry queries or authoritative state are introduced.
+	var combat_phase := visual_material in COMBAT_PHASE_MATERIALS
+	var fading := phase in ["decaying", "cooling"]
+	var preparing := phase in ["forming", "ignition"]
+	var mark_scale := 1.0
+	var edge_opacity := 0.88 if danger else 0.72
+	if combat_phase and (preparing or fading):
+		# Light's authored dark tint is sand-colored: preserve its colored fill
+		# but anchor the warning ink against the beige Wellspring floor.
+		if preparing:
+			dark = Color("202737")
+		bright = dark.lerp(base, 0.18 if preparing else 0.12)
+		mark_scale = 0.72 if preparing else 0.40
+		if fading:
+			fill_opacity *= 0.30
+			edge_opacity = 0.24
 	return {
-		"material": material, "wire_id": int(descriptor.wire_id), "shape": String(descriptor.shape), "cadence": String(descriptor.cadence),
+		"material": material, "visual_material": visual_material, "wire_id": int(descriptor.wire_id), "shape": String(descriptor.shape), "cadence": String(descriptor.cadence),
 		"phase": phase, "danger": danger, "atmospheric": atmospheric,
 		"dark": dark, "base": base, "bright": bright,
 		"edge": bright if danger else dark,
-		"fill_opacity": fill_opacity, "edge_opacity": 0.88 if danger else 0.72,
+		"fill_opacity": fill_opacity, "edge_opacity": edge_opacity, "mark_scale": mark_scale,
 		"edge_width": 2.5 if danger else 2.0, "motion": not reduced, "mark_count": 1,
 	}
 
 
-func _draw_shared_material_mark(canvas: CanvasItem, region: Dictionary, style: Dictionary, tick: float, seed: int, reduced: bool) -> void:
+func _draw_shared_material_mark(canvas: CanvasItem, region: Dictionary, style: Dictionary, tick: float, seed: int, reduced: bool, surface_painted: bool = false) -> void:
+	var shape := String(style.shape)
+	var material := String(style.get("visual_material", style.material))
+	var retain_cover := String(region.phase) == "active" and material in ["permafrost", "grounding_network", "crystal_prism", "crystal_lens"]
+	var retain_pillar := int(style.wire_id) == 301 and String(region.phase) == "active"
+	# A successfully painted surface already replaces these exact old no-op
+	# branches. Skip their polygon centroid/clearance; essential cues still run.
+	if surface_painted and not bool(style.get("backdraft_warning", false)) and not retain_cover and not retain_pillar:
+		if material in COMBAT_PHASE_MATERIALS or material in ["earth", "wind", "mud", "magma", "vortex", "ice", "charge", "light", "dark"]:
+			return
+		if material not in ["firestorm", "dustfront", "mistcurrent"] and shape not in ["corridor", "flow", "water_path", "growing_strip", "pulse_lane", "bands", "frost_path", "reveal_line"]:
+			return
 	var polygon: PackedVector2Array = region.polygon
-	var center := _polygon_centroid(polygon)
-	var radius := _polygon_clearance(center, polygon) - 3.0
+	var layout := _region_layout(polygon)
+	var center: Vector2 = layout.center
+	var radius: float = float(layout.clearance) - 3.0
 	if radius < 4.0:
 		return
-	var shape := String(style.shape)
-	var material := String(style.material)
+	radius *= float(style.get("mark_scale", 1.0))
+	if bool(style.get("backdraft_warning", false)):
+		# One stable impending-burst mark replaces the veil motif in both modes.
+		canvas.draw_line(center + Vector2(0, -radius * 0.55), center + Vector2(0, radius * 0.18), Color(style.bright), 3.0)
+		canvas.draw_rect(Rect2(center + Vector2(-1.5, radius * 0.40), Vector2(3, 3)), Color(style.bright))
+		return
+	# The native surface replaces the emblem, not essential physical-cover or
+	# directional information. Keep exactly the previously reached cue branches.
+	if surface_painted and not retain_cover and retain_pillar:
+		_draw_earth_pillar(canvas, polygon, style.dark, style.base, style.bright, radius)
+		return
+	if material in COMBAT_PHASE_MATERIALS:
+		# One bounded retro stamp replaces several thin line segments. It follows
+		# the existing harmless-warning/active/decay scale and stays clipped inside
+		# the authoritative cell; the unchanged fill/outline communicates reach.
+		var mark_polygon := PackedVector2Array()
+		var scale := float(style.get("mark_scale", 1.0))
+		for point: Vector2 in polygon: mark_polygon.append(center + (point - center) * scale)
+		var mark_base: Color = style.base if String(region.phase) == "active" else style.bright
+		if retro_marks.draw_region(canvas, material, mark_polygon, style.dark, mark_base, style.bright, tick, seed,
+			reduced or String(region.phase) != "active", 0.98 if bool(style.danger) else 0.72):
+			return
 	if material == "earth":
 		# Loose, harmless ingredient stock must not imply an active solid pillar.
+		if retro_marks.draw_region(canvas, "earth", polygon, style.dark, style.base, style.bright, tick, seed, true):
+			return
 		for offset: Vector2 in [Vector2(-0.30, 0.12), Vector2(0.22, -0.20), Vector2(0.31, 0.30)]:
 			var pebble := center + offset * radius
 			canvas.draw_rect(Rect2(pebble - Vector2(3, 2), Vector2(6, 4)), Color(style.dark, 0.82))
@@ -570,13 +1122,20 @@ func _draw_shared_material_mark(canvas: CanvasItem, region: Dictionary, style: D
 	if int(style.wire_id) == 301 and String(region.get("phase", "")) == "active":
 		_draw_earth_pillar(canvas, polygon, style.dark, style.base, style.bright, radius)
 		return
+	# Compact material stamps replace smooth glyphs for the most common cells.
+	# Cover, directional lanes and warning/decay boundaries retain their specific
+	# grammar. The exact cell fill/border continues to define the real footprint.
+	if material in ["wind", "mud", "magma", "vortex", "ice", "charge", "light", "dark"]:
+		if retro_marks.draw_region(canvas, material, polygon, style.dark, style.base, style.bright, tick, seed, reduced, 0.94 if String(style.phase) == "active" else 0.72):
+			return
 	var motion := 0.0 if reduced else sin((tick + float(seed % 71)) * _cadence_rate(String(style.cadence))) * minf(2.0, radius * 0.08)
 	var direction := Vector2(region.get("direction", Vector2i(0, -1000))).normalized()
 	if direction.is_zero_approx():
 		direction = Vector2.UP
 	var side := Vector2(-direction.y, direction.x)
 	if material == "firestorm":
-		_draw_fire_region_mark(canvas, polygon, style.phase, style.dark, style.base, style.bright, style.bright, tick, seed, reduced)
+		if not surface_painted or String(region.phase) != "active":
+			_draw_fire_region_mark(canvas, polygon, style.phase, style.dark, style.base, style.bright, style.bright, tick, seed, reduced)
 		# Arrowheads indicate front travel; the flame remains the danger mark.
 		for sign_value: float in [-1.0, 1.0]:
 			var tip := center + side * radius * 0.62 * sign_value + direction * radius * 0.18
@@ -739,15 +1298,18 @@ func _steam_region_style(region: Dictionary, heat: int, reduced: bool) -> Dictio
 		palette_phase = "hot" if heat > 1000 else "cool" if heat < 1000 else "active"
 	var danger := bool(region.get("danger", false))
 	var intensity := _intensity_ratio(region)
+	var phase_opacity := 0.70 if phase == "forming" else 0.56 if phase in ["decaying", "cooling"] else 1.0
+	var base := _language.reaction_phase_color("steam", palette_phase, "base")
+	var bright := _language.reaction_phase_color("steam", palette_phase, "bright")
 	return {
 		"phase": phase, "palette_phase": palette_phase, "danger": danger,
 		"dark": _language.reaction_phase_color("steam", palette_phase, "dark"),
-		"base": _language.reaction_phase_color("steam", palette_phase, "base"),
-		"bright": _language.reaction_phase_color("steam", palette_phase, "bright"),
+		"base": base.lerp(bright, 0.32),
+		"bright": bright,
 		"danger_color": _language.reaction_phase_color("steam", palette_phase, "danger"),
-		"fill_opacity": (0.16 if reduced else 0.20) + 0.04 * intensity,
-		"edge_opacity": 0.72, "edge_width": 3.0,
-		"danger_opacity": 0.70 if reduced else 0.78,
+		"fill_opacity": (0.34 + 0.08 * intensity) * phase_opacity,
+		"edge_opacity": 0.84, "edge_width": 2.0,
+		"danger_opacity": 0.92,
 		"motion": not reduced, "mark_count": 2,
 	}
 
@@ -755,39 +1317,199 @@ func _steam_region_style(region: Dictionary, heat: int, reduced: bool) -> Dictio
 func _region_edge_counts(regions_by_cell: Dictionary) -> Dictionary:
 	var counts: Dictionary = {}
 	for cell: Vector2i in regions_by_cell:
+		# Overlapping compatible records in one cell are one side of a boundary,
+		# not neighboring coverage. Keep each record's draw/lifetime independent.
+		var cell_edges: Dictionary = {}
+		var cell_regions: Dictionary = {}
 		for region: Dictionary in regions_by_cell[cell]:
 			var fixed_polygon: PackedVector2Array = region.fixed_polygon
-			for index: int in fixed_polygon.size():
-				var key := _region_edge_key(region, fixed_polygon[index], fixed_polygon[(index + 1) % fixed_polygon.size()])
+			var prefix := _region_edge_prefix(region)
+			# Same-cell compatible overlaps already contribute one side per edge.
+			# Skip their repeated six concatenations without changing neighboring
+			# cell counts, insertion order, fresh dynamic prefixes or generic input.
+			var identity: Array = [prefix, fixed_polygon]
+			if cell_regions.has(identity): continue
+			if fixed_polygon.size() == 6 and cell_regions.size() < CELL_BOUNDARY_DUPLICATE_LIMIT:
+				cell_regions[identity] = true
+			for segment: String in _boundary_segments(fixed_polygon):
+				var key := prefix + segment
+				if cell_edges.has(key):
+					continue
+				cell_edges[key] = true
 				counts[key] = int(counts.get(key, 0)) + 1
 	return counts
 
 
-func _region_edge_key(region: Dictionary, first: Vector2, second: Vector2) -> String:
+func _boundary_segments(fixed_polygon: PackedVector2Array) -> Array[String]:
+	if _edge_segments_cache.has(fixed_polygon):
+		return _edge_segments_cache[fixed_polygon]
+	var result: Array[String] = []
+	for index: int in fixed_polygon.size():
+		var first := fixed_polygon[index]
+		var second := fixed_polygon[(index + 1) % fixed_polygon.size()]
+		var a := "%d,%d" % [roundi(first.x), roundi(first.y)]
+		var b := "%d,%d" % [roundi(second.x), roundi(second.y)]
+		result.append(a + ":" + b if a < b else b + ":" + a)
+	result.make_read_only()
+	# Non-hex diagnostic callers still get exact results without growing storage.
+	if fixed_polygon.size() == 6 and _finite_boundary(fixed_polygon):
+		var key := fixed_polygon.duplicate()
+		if _edge_segments_order.size() < BOUNDARY_CACHE_LIMIT:
+			_edge_segments_order.append(key)
+		else:
+			_edge_segments_cache.erase(_edge_segments_order[_edge_segments_cursor])
+			_edge_segments_order[_edge_segments_cursor] = key
+			_edge_segments_cursor = (_edge_segments_cursor + 1) % BOUNDARY_CACHE_LIMIT
+		_edge_segments_cache[key] = result
+	return result
+
+
+func _boundary_triangles(polygon: PackedVector2Array, width: float) -> Array:
+	# Only the three production stroke widths can occupy a cached polygon row;
+	# unusual/invalid diagnostic inputs use the unchanged geometry calculation.
+	var cacheable := polygon.size() == 6 and width in [1.0, 2.0, 2.5] and _finite_boundary(polygon)
+	if cacheable and _outline_geometry_cache.has(polygon) and (_outline_geometry_cache[polygon] as Dictionary).has(width):
+		return _outline_geometry_cache[polygon][width]
+	var result: Array = []
+	var center := _polygon_centroid(polygon)
+	for index: int in polygon.size():
+		var triangles: Array = []
+		for packed: PackedVector2Array in _inward_edge_triangles(polygon, index, width, center):
+			var points: Array[Vector2] = []
+			for point: Vector2 in packed: points.append(point)
+			points.make_read_only()
+			triangles.append(points)
+		triangles.make_read_only()
+		result.append(triangles)
+	result.make_read_only()
+	if cacheable:
+		if not _outline_geometry_cache.has(polygon):
+			var key := polygon.duplicate()
+			if _outline_geometry_order.size() < BOUNDARY_CACHE_LIMIT:
+				_outline_geometry_order.append(key)
+			else:
+				_outline_geometry_cache.erase(_outline_geometry_order[_outline_geometry_cursor])
+				_outline_geometry_order[_outline_geometry_cursor] = key
+				_outline_geometry_cursor = (_outline_geometry_cursor + 1) % BOUNDARY_CACHE_LIMIT
+			_outline_geometry_cache[key] = {}
+		_outline_geometry_cache[polygon][width] = result
+	return result
+
+
+static func _finite_boundary(polygon: PackedVector2Array) -> bool:
+	for point: Vector2 in polygon:
+		if not point.is_finite(): return false
+	return true
+
+
+func _region_edge_key(region: Dictionary, first: Vector2, second: Vector2, prefix: String = "") -> String:
 	var a := "%d,%d" % [roundi(first.x), roundi(first.y)]
 	var b := "%d,%d" % [roundi(second.x), roundi(second.y)]
 	var segment := a + ":" + b if a < b else b + ":" + a
+	return (_region_edge_prefix(region) if prefix.is_empty() else prefix) + segment
+
+
+func _region_edge_prefix(region: Dictionary) -> String:
+	# Every dynamic boundary input is read now. The ordinary ground draw clears
+	# this bounded cache each pass; direct callers also key all current values.
 	var owner_key := JSON.stringify(region.get("owner_key", null))
-	if String(region.material) not in LEGACY_HEX_MATERIALS:
+	var material := String(region.material)
+	var legacy := material in LEGACY_HEX_MATERIALS
+	var key: Array = [material, String(region.phase), bool(region.danger), owner_key,
+		int(region.footprint_id) if legacy else 0, int(region.intensity) if legacy else 0,
+		int(region.get("expiry_tick", 0)) if legacy else 0, int(region.get("decay_tick", 0)) if material == "cinderveil" else 0]
+	if _edge_prefixes.has(key): return _edge_prefixes[key]
+	var result: String
+	if String(region.material) == "cinderveil":
+		# Adjacent Backdrafts with different real fuse endpoints must keep their
+		# boundary when one is warning and its neighbour still conceals.
+		result = "%s/%s/%s/%s/%d/" % [String(region.material), String(region.phase), str(bool(region.danger)), owner_key, int(region.get("decay_tick", 0))]
+	elif String(region.material) not in LEGACY_HEX_MATERIALS:
 		# Unified fields cohere across adjacent records from the same owner and
 		# phase. Record lifetime and intensity alter the fill without inventing an
 		# internal wall; ownership, phase and danger remain visible boundaries.
-		return "%s/%s/%s/%s/%s" % [String(region.material), String(region.phase), str(bool(region.danger)), owner_key, segment]
-	return "%s/%d/%s/%s/%d/%d/%s/%s" % [String(region.material), int(region.footprint_id), String(region.phase), str(bool(region.danger)), int(region.intensity), int(region.get("expiry_tick", 0)), owner_key, segment]
+		result = "%s/%s/%s/%s/" % [String(region.material), String(region.phase), str(bool(region.danger)), owner_key]
+	else:
+		result = "%s/%d/%s/%s/%d/%d/%s/" % [String(region.material), int(region.footprint_id), String(region.phase), str(bool(region.danger)), int(region.intensity), int(region.get("expiry_tick", 0)), owner_key]
+	if _edge_prefixes.size() < REGION_LAYOUT_LIMIT:
+		key.make_read_only()
+		_edge_prefixes[key] = result
+	return result
 
 
 func _draw_region_outline(canvas: CanvasItem, region: Dictionary, edge_counts: Dictionary, color: Color, width: float) -> void:
 	var polygon: PackedVector2Array = region.polygon
-	var fixed_polygon: PackedVector2Array = region.fixed_polygon
-	var center := _polygon_centroid(polygon)
+	var prefix := _region_edge_prefix(region)
+	var segments := _boundary_segments(region.fixed_polygon)
+	var exposed := 0
 	for index: int in polygon.size():
-		var key := _region_edge_key(region, fixed_polygon[index], fixed_polygon[(index + 1) % fixed_polygon.size()])
-		if int(edge_counts.get(key, 0)) > 1:
-			continue
-		# Draw the cell boundary inward so hazard ink remains inside the complete
-		# authoritative selected hex, including in reduced-effects mode.
-		for triangle: PackedVector2Array in _inward_edge_triangles(polygon, index, width, center):
-			canvas.draw_primitive(triangle, PackedColorArray([color]), PackedVector2Array())
+		if int(edge_counts.get(prefix + segments[index], 0)) <= 1:
+			exposed |= 1 << index
+	if exposed == 0: return
+	var points := _outline_batch_points(polygon, width, exposed)
+	if not points.is_empty(): _submit_outline(canvas, points, color)
+
+
+func _outline_batch_points(polygon: PackedVector2Array, width: float, exposed: int) -> PackedVector2Array:
+	# The old triangles were consecutive commands with identical color/transform.
+	# Flatten only that single region: no material, owner, cell or painter-order
+	# sorting. Fresh edge counts still decide the mask after every phase/change.
+	var key: Array = [polygon, width, exposed]
+	if _outline_batches.has(key): return _outline_batches[key]
+	var points := PackedVector2Array()
+	var geometry := _boundary_triangles(polygon, width)
+	for index: int in polygon.size():
+		if exposed & (1 << index) == 0: continue
+		for triangle: Array in geometry[index]:
+			for point: Vector2 in triangle: points.append(point)
+	# 512 x at most36 native points (144 KiB) plus small bounded keys. Diagnostic
+	# nonhex/invalid widths remain exact without growing resident storage.
+	if polygon.size() == 6 and width in [1.0, 2.0, 2.5, 3.0] and exposed > 0 and exposed < 64 and _finite_boundary(polygon):
+		key = [polygon.duplicate(), width, exposed]
+		key.make_read_only()
+		if _outline_batch_order.size() < OUTLINE_BATCH_LIMIT:
+			_outline_batch_order.append(key)
+		else:
+			_outline_batches.erase(_outline_batch_order[_outline_batch_cursor])
+			_outline_batch_order[_outline_batch_cursor] = key
+			_outline_batch_cursor = (_outline_batch_cursor + 1) % OUTLINE_BATCH_LIMIT
+		_outline_batches[key] = points
+	return points
+
+
+func _submit_outline(canvas: CanvasItem, points: PackedVector2Array, color: Color) -> void:
+	var mesh := _resident_outline_mesh(points)
+	if mesh != null:
+		RenderingServer.canvas_item_add_mesh(canvas.get_canvas_item(), mesh.get_rid(), Transform2D.IDENTITY, color)
+	else:
+		# Overflow stays exact. Never evict an in-flight mesh/RID just because a
+		# later region in this retained draw list needs a different edge mask.
+		RenderingServer.canvas_item_add_triangle_array(canvas.get_canvas_item(), PackedInt32Array(),
+			points, PackedColorArray([color]), PackedVector2Array())
+		_outline_mesh_fallbacks += 1
+
+
+func _resident_outline_mesh(points: PackedVector2Array) -> ArrayMesh:
+	if _outline_meshes.has(points):
+		_outline_mesh_hits += 1
+		return _outline_meshes[points]
+	if _outline_meshes.size() >= OUTLINE_BATCH_LIMIT or points.is_empty() or points.size() > 36 or points.size() % 3 != 0 or not _finite_boundary(points):
+		return null
+	var vertices := PackedVector3Array()
+	for point: Vector2 in points: vertices.append(Vector3(point.x, point.y, 0.0))
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	_outline_meshes[points.duplicate()] = mesh
+	_outline_mesh_uploads += 1
+	return mesh
+
+
+func outline_cache_stats() -> Dictionary:
+	return {"batches": _outline_batches.size(), "meshes": _outline_meshes.size(),
+		"uploads": _outline_mesh_uploads, "hits": _outline_mesh_hits, "fallbacks": _outline_mesh_fallbacks}
 
 
 static func _inward_edge_triangles(polygon: PackedVector2Array, edge_index: int, width: float, centroid: Vector2 = Vector2.INF) -> Array[PackedVector2Array]:
@@ -843,8 +1565,9 @@ func _draw_water_region_mark(canvas: CanvasItem, polygon: PackedVector2Array, br
 
 
 func _draw_fire_region_mark(canvas: CanvasItem, polygon: PackedVector2Array, phase: String, dark: Color, base: Color, bright: Color, danger: Color, tick: float, seed: int, reduced: bool) -> void:
-	var center := _polygon_centroid(polygon)
-	var radius := _polygon_clearance(center, polygon) - 2.5
+	var layout := _region_layout(polygon)
+	var center: Vector2 = layout.center
+	var radius: float = float(layout.clearance) - 2.5
 	if radius < 3.5:
 		return
 	if phase == "ignition":
@@ -865,6 +1588,8 @@ func _draw_fire_region_mark(canvas: CanvasItem, polygon: PackedVector2Array, pha
 		])
 		canvas.draw_polyline(ember, Color(dark, 0.88), 3.0, false)
 		canvas.draw_polyline(ember, Color(bright, 0.68), 1.0, false)
+		return
+	if retro_marks.draw_region(canvas, "fire", polygon, dark, base, bright, tick, seed, reduced):
 		return
 	var sway := 0.0 if reduced else float(posmod(int(floor(tick / 4.0)) + seed, 3) - 1) * radius * 0.07
 	var outer := PackedVector2Array([
@@ -891,16 +1616,21 @@ func _draw_fire_region_mark(canvas: CanvasItem, polygon: PackedVector2Array, pha
 	canvas.draw_colored_polygon(spark, bright)
 
 
-func _draw_steam_region_mark(canvas: CanvasItem, polygon: PackedVector2Array, dark: Color, bright: Color, danger: Color, phase: String, tick: float, seed: int, reduced: bool, harmful: bool, source_phase: String = "active") -> void:
+func _draw_steam_region_mark(canvas: CanvasItem, polygon: PackedVector2Array, dark: Color, bright: Color, danger: Color, phase: String, tick: float, seed: int, reduced: bool, harmful: bool, source_phase: String = "active", surface_painted: bool = false) -> void:
 	var center := _polygon_centroid(polygon)
 	var radius := _polygon_clearance(center, polygon) - 2.0
 	if radius < 5.0:
 		return
-	# Persistent paired vent bases give hot exposure a shape cue without fog.
-	# Geometry stays inside the source polygon; no visual timer creates danger.
+	# Pale, chunky vapor occupies the real cell instead of a tiny warm symbol.
+	# Warm ground vents are a separate harm cue; they do not recolor the cloud
+	# into Water or Fire, obscure actors, or imply smoke/line-of-sight mechanics.
+	var vapor_opacity := 0.50 if source_phase in ["decaying", "cooling"] else 0.72 if source_phase == "forming" else 0.94
+	var painted := surface_painted or retro_marks.draw_region(canvas, "steam", polygon, dark, bright.darkened(0.16), bright, tick, seed, reduced, vapor_opacity)
 	for vent: PackedVector2Array in steam_vent_marks(polygon, harmful, source_phase):
-		canvas.draw_polyline(vent, Color(dark, 0.90), 4.0, false)
-		canvas.draw_polyline(vent, Color(bright, 0.96), 2.0, false)
+		canvas.draw_polyline(vent, Color(dark, 0.90), STEAM_VENT_OUTLINE_WIDTH, false)
+		canvas.draw_polyline(vent, Color(danger if harmful else bright, 0.98), STEAM_VENT_CORE_WIDTH, false)
+	if painted:
+		return
 	var drift := 0.0 if reduced else sin((tick + float(seed % 61)) * 0.045) * radius * 0.04
 	var lift := -radius * 0.08 if phase == "hot" else radius * 0.05 if phase == "cool" else 0.0
 	for curl_index: int in 2:
@@ -928,13 +1658,20 @@ static func steam_vent_marks(polygon: PackedVector2Array, harmful: bool, source_
 	if polygon.size() < 3:
 		return marks
 	var center := _polygon_centroid(polygon)
-	var radius := _polygon_clearance(center, polygon) - 2.0
+	var radius := _polygon_clearance(center, polygon) - STEAM_VENT_OUTLINE_WIDTH * 0.5
 	if radius < 5.0:
 		return marks
 	if harmful:
 		for side: float in [-1.0, 1.0]:
-			var anchor := center + Vector2(side * radius * 0.28, radius * 0.46)
-			marks.append(PackedVector2Array([anchor + Vector2(-radius * 0.17, 0), anchor + Vector2(radius * 0.17, 0)]))
+			# Broad angular vents remain readable on 24px cells at 75% zoom.
+			# Their static shape carries danger even without color or motion;
+			# keep the outlined strokes well inside the real occupied polygon.
+			var anchor := center + Vector2(side * radius * 0.39, radius * 0.43)
+			marks.append(PackedVector2Array([
+				anchor + Vector2(-radius * 0.27, radius * 0.09),
+				anchor + Vector2(0, -radius * 0.25),
+				anchor + Vector2(radius * 0.27, radius * 0.09),
+			]))
 	if source_phase in ["decaying", "cooling"]:
 		marks.append(PackedVector2Array([
 			center + Vector2(-radius * 0.42, radius * 0.57),
@@ -990,11 +1727,10 @@ func _projectile_atlas() -> Texture2D:
 	return _atlas_texture
 
 
-func _draw_projectile_fallback(canvas: CanvasItem, position: Vector2, angle: float, family: String, element_wire: int, size: float, reduced: bool) -> void:
+func _draw_projectile_fallback(canvas: CanvasItem, position: Vector2, angle: float, family: String, element_wire: int, size: float, _reduced: bool) -> void:
 	var palette := _element_palette(element_wire if ELEMENT_IDS.has(element_wire) else 3)
 	var dark: Color = palette[0]
 	var base: Color = palette[1]
-	var bright: Color = palette[2]
 	var scale := size / 24.0
 	var points := PackedVector2Array()
 	match family:
@@ -1009,18 +1745,61 @@ func _draw_projectile_fallback(canvas: CanvasItem, position: Vector2, angle: flo
 	var world_points := _world_points(points, position, angle, scale)
 	canvas.draw_colored_polygon(world_points, base)
 	canvas.draw_polyline(_closed(world_points), dark, 2.0, false)
-	var highlight := _world_points(PackedVector2Array([Vector2(2, 0), Vector2(7, 0)]), position, angle, scale)
-	canvas.draw_line(highlight[0], highlight[1], Color(bright, 0.92 if reduced else 1.0), 2.0)
 
 
-func _draw_projectile_collision_outline(canvas: CanvasItem, position: Vector2, radius_fixed: int, element_wire: int, reduced: bool) -> void:
+func _draw_projectile_nose_facet(canvas: CanvasItem, position: Vector2, travel: Vector2, radius_fixed: int, element_wire: int, core_size: float) -> void:
+	if canvas == null or _language == null or not position.is_finite() or not ELEMENT_IDS.has(element_wire):
+		return
+	var element := String(ELEMENT_IDS[element_wire])
+	ProjectileFacets.draw(canvas, position, travel, collision_radius_px(radius_fixed), core_size, element_wire, _language.element_color(element, "bright"))
+
+
+static func projectile_has_motion(shot: ProjectileState) -> bool:
+	# ProjectileMotion's stationary DOWN fallback is useful for the old body,
+	# but must never manufacture a new directional cue.
+	return shot != null and (shot.velocity_x != 0 or shot.velocity_y != 0 or shot.position_x != shot.previous_x or shot.position_y != shot.previous_y)
+
+
+static func projectile_nose_facet(direction: Vector2, radius: float, core_size: float, highlight: bool = false) -> PackedVector2Array:
+	if not direction.is_finite() or not is_finite(radius) or not is_finite(core_size) or radius <= 0.0 or core_size <= 0.0:
+		return PackedVector2Array()
+	var squared := direction.length_squared()
+	if not is_finite(squared) or squared <= 0.0:
+		return PackedVector2Array()
+	# Keep a full pixel of raster clearance inside both the current visual
+	# core and physical disk. The smaller centre facet cannot imply more reach.
+	var extent := minf(radius, core_size * 0.35) - 1.0
+	if extent < 2.0:
+		return PackedVector2Array()
+	var forward := direction / sqrt(squared)
+	var side := Vector2(-forward.y, forward.x)
+	var tip := extent * (0.78 if highlight else 1.0)
+	var rear := extent * (0.40 if highlight else 0.15)
+	var half_width := extent * (0.16 if highlight else 0.45)
+	return PackedVector2Array([forward * tip, forward * rear + side * half_width, forward * rear - side * half_width])
+
+
+func _draw_projectile_contact_pixels(canvas: CanvasItem, position: Vector2, radius_fixed: int, element_wire: int, reduced: bool) -> void:
 	var radius := collision_radius_px(radius_fixed)
 	if radius <= 0.0:
 		return
 	var palette := _element_palette(element_wire if ELEMENT_IDS.has(element_wire) else 3)
-	var color: Color = palette[2] if reduced else palette[0]
-	var point_count := clampi(ceili(radius * 0.85), 12, 32)
-	canvas.draw_arc(position, radius, 0.0, TAU, point_count, Color(color, 0.30 if reduced else 0.36), 1.0, false)
+	# Static, inset pixel ticks disclose the fixed collision extent as strength
+	# shrinks the core. Two-tone contrast survives both light and dark ground,
+	# including at75% zoom. Always four marks/eight draws, no optional budget,
+	# flashing, strength-scaled radius, enclosing ring or new attack geometry.
+	for mark: Rect2 in projectile_contact_pixels(radius):
+		canvas.draw_rect(Rect2(position + mark.position, mark.size), Color(palette[0], 0.82 if reduced else 0.90))
+		canvas.draw_rect(Rect2(position + mark.position + Vector2.ONE, Vector2.ONE), Color(palette[2], 0.90 if reduced else 1.0))
+
+
+static func projectile_contact_pixels(radius: float) -> Array[Rect2]:
+	var result: Array[Rect2] = []
+	if not is_finite(radius) or radius < 3.0: return result
+	var extent := floorf(radius) - 2.0
+	for direction: Vector2 in [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]:
+		result.append(Rect2(direction * extent - Vector2.ONE, Vector2(2, 2)))
+	return result
 
 
 static func collision_radius_px(radius_fixed: int) -> float:
@@ -1028,48 +1807,132 @@ static func collision_radius_px(radius_fixed: int) -> float:
 
 
 func _draw_spray_cue(canvas: CanvasItem, cue: Dictionary, definition: Dictionary, dark: Color, base: Color, bright: Color, opacity: float, reduced: bool) -> bool:
+	# Admission prepares detached geometry once. Drawing never re-queries cover,
+	# including when Reduced Effects changes during this short cue's lifetime.
+	var geometry: Dictionary
+	if cue.has("spray_geometry"):
+		geometry = cue["spray_geometry"]
+	else:
+		geometry = _spray_cue_geometry(cue, definition)
+	if geometry.is_empty():
+		return false
+	var start: Vector2 = geometry.start
+	var endpoints: PackedVector2Array = geometry.endpoints
+	for index: int in (SPRAY_CUE_REDUCED_RAYS if reduced else SPRAY_CUE_RAYS):
+		var target := endpoints[index]
+		if target == start:
+			continue
+		var shoulder := start.lerp(target, 0.30)
+		var line_color := bright if index == 2 else base
+		var line_opacity := opacity * (0.84 if index == 2 else 0.46)
+		canvas.draw_polyline(PackedVector2Array([start, shoulder, target]), Color(line_color, line_opacity), 2.0 if index == 2 else 1.0, false)
+	var brace: PackedVector2Array = geometry.brace
+	if brace[0] != brace[1]:
+		var origin := ProjectileFacets.spray_origin(geometry)
+		if not origin.is_empty():
+			MagicGlow.draw_radial(canvas, origin.position, MagicGlow.projectile_radius(origin.radius, origin.core_size), base, bright, reduced, opacity * opacity)
+		if origin.is_empty() or not ProjectileFacets.draw(canvas, origin.position, origin.direction, origin.radius, origin.core_size, int(definition.get("element_wire_id", 0)), Color(bright, opacity)):
+			canvas.draw_line(brace[0], brace[1], Color(dark, opacity * 0.72), 2.0)
+	return true
+
+
+static func prepare_spray_cue(cue: Dictionary, collision: CollisionWorld) -> Dictionary:
+	var definition := CombatTuning.cast_definition(int(cue.get("source_wire_id", 0)))
+	if collision == null or String(definition.get("shape", "")) != "spray":
+		return {}
+	var geometry := _spray_cue_geometry(cue, definition)
+	if geometry.is_empty():
+		return {}
+	var start: Vector2 = geometry.start
+	var end: Vector2 = geometry.end
+	var coordinate_limit := float(HexGrid.MAX_ABS_QUERY_COORDINATE) / SimConfig.FIXED_SCALE
+	if maxf(absf(start.x), absf(start.y)) > coordinate_limit or maxf(absf(end.x), absf(end.y)) > coordinate_limit \
+		or start.distance_to(end) > float(definition.range) / SimConfig.FIXED_SCALE + 0.001:
+		return {}
+	var origin := Vector2i((start * SimConfig.FIXED_SCALE).round())
+	var endpoints: PackedVector2Array = geometry.endpoints
+	var nearest := INF
+	var clipped := false
+	for index: int in endpoints.size():
+		var requested := endpoints[index]
+		var offset := Vector2i((requested * SimConfig.FIXED_SCALE).round()) - origin
+		var distance := SimCommand._integer_square_root(offset.length_squared())
+		if distance <= 0:
+			endpoints[index] = start
+			nearest = 0.0
+			clipped = true
+			continue
+		var direction := SimCommand._normalized_direction(offset.x, offset.y)
+		# Five analytic queries at cue creation share the actor-ray radius and
+		# shot-cover policy. Drawing only consumes these detached cached spokes.
+		var clear := CombatSystem.spray_clear_endpoint(origin, direction, distance, int(definition.radius), collision)
+		var full := origin + ElementChemistrySystem.scaled(direction, distance)
+		# Successful fixed-point normalization need not land on the original float
+		# endpoint. Preserve the old all-clear visual exactly instead of jittering.
+		if clear != full:
+			endpoints[index] = start if clear == origin else Vector2(clear) / SimConfig.FIXED_SCALE
+			clipped = true
+		nearest = minf(nearest, start.distance_to(endpoints[index]))
+	var old_length := start.distance_to(geometry.end)
+	if clipped:
+		geometry.brace = _spray_cue_brace(start, (geometry.end - start).normalized(), float(geometry.half_angle), minf(old_length, nearest))
+	# Only detached vectors/scalars leave this helper: no mutable world, event,
+	# obstacle or actor survives into the finite cue's drawing path.
+	return geometry
+
+
+static func _spray_cue_geometry(cue: Dictionary, definition: Dictionary) -> Dictionary:
 	var start := _cue_point(cue, "start", _cue_point(cue, "position", Vector2.ZERO))
 	var endpoint := _cue_point(cue, "end", _cue_point(cue, "position", start))
+	if not start.is_finite() or not endpoint.is_finite():
+		return {}
 	var lane := endpoint - start
 	if lane.length_squared() <= 0.0:
-		return false
+		return {}
 	var fixed_range := _cue_fixed_range(cue)
 	if fixed_range <= 0:
 		fixed_range = int(definition.get("range", 0))
 	var maximum_length := float(fixed_range) / 1000.0
 	var length := minf(lane.length(), maximum_length) if maximum_length > 0.0 else lane.length()
 	if length <= 0.0:
-		return false
+		return {}
 	var direction := lane.normalized()
-	var side := direction.orthogonal()
 	var cone_cosine_squared := clampf(float(definition.get("cone_cosine_squared_per_million", 820_000)) / 1_000_000.0, 0.05, 1.0)
 	var half_angle := acos(sqrt(cone_cosine_squared))
-	var offsets: Array[float] = [-1.0, -0.5, 0.0, 0.5, 1.0]
-	if reduced:
-		offsets = [-1.0, 0.0, 1.0]
-	for offset: float in offsets:
-		var target := start + direction.rotated(half_angle * offset) * length
-		var shoulder := start.lerp(target, 0.30)
-		var line_color := bright if is_zero_approx(offset) else base
-		var line_opacity := opacity * (0.84 if is_zero_approx(offset) else 0.46)
-		canvas.draw_polyline(PackedVector2Array([start, shoulder, target]), Color(line_color, line_opacity), 2.0 if is_zero_approx(offset) else 1.0, false)
+	var endpoints := PackedVector2Array()
+	for offset: float in [-1.0, -0.5, 0.0, 0.5, 1.0]:
+		endpoints.append(start + direction.rotated(half_angle * offset) * length)
+	return {"start": start, "end": start + direction * length, "half_angle": half_angle,
+		"endpoints": endpoints, "brace": _spray_cue_brace(start, direction, half_angle, length)}
+
+
+static func _spray_cue_brace(start: Vector2, direction: Vector2, half_angle: float, length: float) -> PackedVector2Array:
 	# The start brace identifies a transient cast fan. It does not surround or
 	# fill the authoritative ground cells affected after resolution.
 	var brace_distance := minf(18.0, length * 0.22)
 	var brace_center := start + direction * brace_distance
 	var brace_half := minf(8.0, tan(half_angle) * brace_distance)
-	canvas.draw_line(brace_center - side * brace_half, brace_center + side * brace_half, Color(dark, opacity * 0.72), 2.0)
-	return true
+	var side := direction.orthogonal()
+	return PackedVector2Array([brace_center - side * brace_half, brace_center + side * brace_half])
 
 
 func _draw_cue_cross(canvas: CanvasItem, position: Vector2, dark: Color, base: Color, bright: Color, opacity: float, progress: float, reduced: bool, expanding: bool) -> void:
 	var extent := 5.0 + (progress * (6.0 if reduced else 10.0) if expanding else 0.0)
+	MagicGlow.draw_radial(canvas, position, 5.0, base, bright, reduced, opacity * opacity)
 	var thickness := 2.0 if reduced else 3.0
 	canvas.draw_line(position - Vector2(extent, 0), position + Vector2(extent, 0), Color(dark, opacity * 0.82), thickness + 2.0)
 	canvas.draw_line(position - Vector2(0, extent), position + Vector2(0, extent), Color(dark, opacity * 0.82), thickness + 2.0)
 	canvas.draw_line(position - Vector2(extent, 0), position + Vector2(extent, 0), Color(base, opacity * 0.92), thickness)
 	canvas.draw_line(position - Vector2(0, extent), position + Vector2(0, extent), Color(bright, opacity), thickness)
 	canvas.draw_rect(Rect2(position - Vector2.ONE * 2.0, Vector2.ONE * 4.0), Color(bright, opacity), true)
+
+
+func _draw_magic_cue_glow(canvas: CanvasItem, cue: Dictionary, model: Dictionary, palette: Array[Color], reduced: bool) -> void:
+	if model.is_empty() or not bool(model.get("visible", false)):
+		return
+	var opacity := MagicGlow.cue_opacity(cue, int(model.get("duration_ticks", 0)))
+	# Stationary contact/hand accent, not an expanding area or extra lifetime.
+	MagicGlow.draw_radial(canvas, model.position, minf(16.0, 8.0 * float(model.get("scale", 1.0))), palette[1], palette[2], reduced, opacity)
 
 
 func _draw_hex_clash_cue(canvas: CanvasItem, cue: Dictionary, fallback_position: Vector2, first_palette: Array[Color], progress: float, reduced: bool) -> bool:
@@ -1147,6 +2010,14 @@ static func strength_scaled_size(authored_size: float, remaining_strength: int, 
 	var ratio := clampf(float(remaining_strength) / float(initial_strength), 0.0, 1.0)
 	var minimum_size := clampf(readable_floor, 0.0, minf(PROJECTILE_READABLE_FLOOR, authored_size))
 	return maxf(minimum_size, authored_size * sqrt(ratio))
+
+
+static func projectile_full_size(family: String, radius_fixed: int) -> float:
+	if not FAMILY_SIZE.has(family) or radius_fixed <= 0:
+		return 0.0
+	# The immutable collision radius, never current velocity, owns launch size.
+	# Core strength loss is independent: contact marks still use shot.radius.
+	return maxf(float(FAMILY_SIZE[family]), collision_radius_px(radius_fixed) * 2.0)
 
 
 static func projectile_cache_identity(shot: ProjectileState) -> String:
@@ -1231,16 +2102,7 @@ static func prune_projectile_cache(cache: Dictionary, tick: float, keep_entity_i
 static func _projectile_family(shot: ProjectileState) -> String:
 	var definition := CombatTuning.cast_definition(shot.source_wire_id)
 	if not definition.is_empty():
-		var shape := String(definition.get("shape", ""))
-		if shape == "spray":
-			return "spray"
-		if shape != "projectile":
-			return ""
-		if bool(definition.get("repeat_while_held", false)):
-			return "rapid"
-		if int(definition.get("blast_radius", 0)) > 0:
-			return "heavy"
-		return "bolt"
+		return String(definition.get("family", ""))
 	# Incomplete isolated fixtures may omit the source catalogue. The published
 	# reaction ladder remains a bounded visual fallback, never simulation input.
 	match shot.reaction_strength:

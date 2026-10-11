@@ -111,7 +111,8 @@ Check-Identity (($requiredFiles | Where-Object { $_ -ceq 'art_batches/wellspring
 
 # Scan direct res:// string edges from included GDScript/scenes, plus included
 # out-of-tree GDScript required files. Existing file targets must belong to the
-# runtime identity unless they are one of the two documented self/editor edges.
+# runtime identity unless they are documented self/editor edges or the exact
+# terrain bake-provenance declaration below (not an executable dependency).
 $repoRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $edgeSources = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
 foreach ($relativeRoot in @('src', 'content', 'scenes', 'addons', 'assets')) {
@@ -131,6 +132,32 @@ $intentionalExcludedEdges = @(
     'scripts/generate_sanctum_runtime_kit.gd'
 )
 $edgePattern = [regex]'(?m)["'']res://([^"''\r\n]+)["'']'
+$terrainProvenanceSource = 'src/presentation/wellspring_terrain_stream.gd'
+$terrainProvenanceTarget = 'scripts/bake_wellspring_terrain.gd'
+$terrainSource = Get-Content -Raw -LiteralPath (Join-Path $repoRoot $terrainProvenanceSource)
+$terrainDeclarations = [regex]::Matches($terrainSource, '(?ms)^const BAKE_SOURCE_PATHS: Array\[String\] = \[(?<body>.*?)^\]\r?$')
+Check-Identity ($terrainDeclarations.Count -eq 1) 'Terrain authoring provenance has one explicit typed BAKE_SOURCE_PATHS declaration'
+$terrainBody = $terrainDeclarations[0].Groups['body']
+$terrainBakeEntries = @($edgePattern.Matches($terrainBody.Value) | Where-Object { $_.Groups[1].Value -ceq $terrainProvenanceTarget })
+Check-Identity ($terrainBakeEntries.Count -eq 1) 'Terrain authoring provenance names the exact baker once'
+$terrainLiteralPattern = [regex]'(?m)^[ \t]*(?<literal>(?<quote>["''])res://scripts/bake_wellspring_terrain\.gd\k<quote>)[ \t]*,?[ \t]*\r?$'
+$terrainLiteralEntries = $terrainLiteralPattern.Matches($terrainBody.Value)
+Check-Identity ($terrainLiteralEntries.Count -eq 1 -and $terrainLiteralEntries[0].Groups['literal'].Index -eq $terrainBakeEntries[0].Index) 'Terrain baker provenance is a bare literal entry, never an executable expression'
+$wrappedTerrainEntry = $terrainBody.Value.Replace($terrainBakeEntries[0].Value, ('str(preload(' + $terrainBakeEntries[0].Value + '))'))
+Check-Identity ($terrainLiteralPattern.Matches($wrappedTerrainEntry).Count -eq 0) 'An expression-wrapped baker reference cannot inherit the provenance exception'
+$terrainBakeOffset = $terrainBody.Index + $terrainBakeEntries[0].Index
+
+function Test-TerrainBakeProvenanceEdge([string]$Source, [string]$Target, [int]$Offset) {
+    # The baker is a source fingerprint checked by the bake-equivalence suite.
+    # Runtime consumes versioned baked signatures; it does not load this script.
+    # Match the declaration occurrence, so a new preload even in this same
+    # source remains an ordinary runtime edge and cannot inherit this exception.
+    return $Source -ceq $terrainProvenanceSource -and $Target -ceq $terrainProvenanceTarget -and $Offset -eq $terrainBakeOffset
+}
+Check-Identity (Test-TerrainBakeProvenanceEdge $terrainProvenanceSource $terrainProvenanceTarget $terrainBakeOffset) 'Exact terrain authoring occurrence is recognized'
+Check-Identity (-not (Test-TerrainBakeProvenanceEdge 'src/app/bootstrap.gd' $terrainProvenanceTarget $terrainBakeOffset)) 'Another runtime source cannot inherit the terrain provenance exception'
+Check-Identity (-not (Test-TerrainBakeProvenanceEdge $terrainProvenanceSource 'scripts/other_baker.gd' $terrainBakeOffset)) 'Another script cannot inherit the terrain provenance exception'
+Check-Identity (-not (Test-TerrainBakeProvenanceEdge $terrainProvenanceSource $terrainProvenanceTarget ($terrainBakeOffset + 1))) 'Another occurrence in the same source cannot inherit the terrain provenance exception'
 foreach ($sourceRelative in $edgeSources) {
     $sourcePath = Join-Path $repoRoot $sourceRelative
     if (-not (Test-Path -LiteralPath $sourcePath -PathType Leaf)) { throw "Static runtime edge source is missing: $sourceRelative" }
@@ -140,6 +167,7 @@ foreach ($sourceRelative in $edgeSources) {
         Check-Identity ($targetPath.StartsWith($repoRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) "Runtime resource edge remains inside the checkout: $sourceRelative -> $targetRelative"
         if (-not (Test-Path -LiteralPath $targetPath -PathType Leaf)) { continue }
         if ($intentionalExcludedEdges -ccontains $targetRelative) { continue }
+        if (Test-TerrainBakeProvenanceEdge $sourceRelative $targetRelative $match.Index) { continue }
         Check-Identity (Test-FluxRuntimeIdentityMember $targetRelative) "Existing runtime resource edge is identity-covered: $sourceRelative -> $targetRelative"
     }
 }

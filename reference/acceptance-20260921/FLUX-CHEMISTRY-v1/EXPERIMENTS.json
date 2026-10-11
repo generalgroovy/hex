@@ -1,0 +1,727 @@
+{
+  "schema_version": 1,
+  "task_id": "CHEMISTRY",
+  "status": "PROPOSAL",
+  "experiments_status": "NOT_RUN",
+  "variable_naming": "All candidate switches are proposed experiment names, not claims of pre-existing config keys. Raw source locations and units are specified per variable.",
+  "run_order": "E01–E03 address mirror/overlap counterplay; E04–E06 address cross-pair commitment and Steam reliability. Run each against its own frozen baseline; combine only accepted diffs with an additional full regression.",
+  "shared_controls": {
+    "source_freeze": {
+      "packet_runtime_identity_as_reported": "p53-cb264f9358a4",
+      "require_live_identity_and_dirty_diff_before_work": true,
+      "baseline": "Freeze the locally runnable equivalent of this source; never assume the live checkout is still identical. Save a separate baseline result and exact diff for each experiment."
+    },
+    "invariants": [
+      "120 Hz authority; fixed integer world units and same source-ID ordering",
+      "All eight elements, 36 recipe IDs, enabled ability catalog and 12 configurable slots retained",
+      "Whole selected hexes; no actor circle re-clipping or nearest-N truncation",
+      "600 paid matter per source, existing strength subtraction, immutable paid source IDs, one-use modifier channels",
+      "Existing capacities and capacity-before-payment; no invisible paid-product eviction or free refresh",
+      "Current body templates, 18 px common wall clearance, movement costs/cooldowns, teams and protection unchanged except expressly named candidate behavior"
+    ],
+    "measurement_protocol": {
+      "status": "NOT_RUN",
+      "seeds": [
+        20260920,
+        20260921,
+        20260922
+      ],
+      "ticks_per_second": 120,
+      "warmup_ticks": 120,
+      "paired_measured_ticks_per_seed": 3600,
+      "equal_demand": "Replay identical press/release/held commands, all eight actors alive where the fixture requires it, with all later-four features enabled. Also rerun the original 480-tick fixture for comparability. Human movement-dependent outcomes are recorded separately, not used as a cheaper performance replay.",
+      "report": [
+        "source identity, candidate variables and hardware/engine identity",
+        "input press edges, held ticks, eligible release opportunities, authority requested/admitted/refused and reasons; do not equate those denominators",
+        "active-cell peak and instance-ticks; product/cast/projectile peaks and instance-ticks",
+        "candidate contact/contribution counts as well as applied effects and deaths",
+        "paid/live/consumed/expired matter and consumed-source IDs, no free product clones",
+        "simulation p50/p95/p99/max; capture+wire-pack p50/p95/p99/max; total host work and deadline misses",
+        "event type and semantic class; produced/accepted/retained/evicted/unencodable counts; snapshot raw/packed bytes, wire bytes, fragments, queue high water",
+        "normal/reduced native-scale recognition and escape outcomes separated by body size"
+      ],
+      "historical_reference": "PROFILE#/runs/0 records accounting success but timing failure. Report old and new results side by side; never copy old successful functional results into new candidate results."
+    },
+    "gates": {
+      "G0": "All applicable deterministic predicates in COUNTERPLAY_TESTS.md pass, including later-four, conservation, ordering and protection. Zero new unexplained divergence, paid loss, unencodable authoritative event, or lifecycle failure.",
+      "G1": "Paired demand/admission ledgers are comparable. Any intentional geometry or applied-event reduction is disclosed and traced to the candidate, not hidden via refusals, disabled products, lower tick rate, validation removal or eviction.",
+      "G2": "Diagnostic no-regression gate: across each of the three paired seeds, candidate simulation/capture/host p95 <= baseline x1.05 and p99 <= baseline x1.10 at equal documented demand; no increase in unclassified event loss or admission failures. This does NOT clear the known production performance failure.",
+      "G3": "Promotion separately requires the integrator's complete Full, localhost return/rematch and actual render/network acceptance. For this proposal the authority/host 120 Hz deadline remains 8333 microseconds; a candidate slower than it is not a performance pass even if G2 passes.",
+      "G4": "Human readings are recorded as trials, not anecdotes: at least 12 counterbalanced opportunities per relevant condition, rotate size and player role; >=10/12 correct phase/direction/counter choices for the named drill target. This is a local readability gate, not a population win-rate claim."
+    },
+    "rollback_protocol": "Keep a separate local commit/diff owned by the integrator for each candidate. Stop only owned test processes; restore only that candidate's edited hunks/switches and rerun its focused baseline. Do not reset/stash/clean shared dirty work, mass-edit catalogs, push or promote a checkpoint. A later experiment does not silently depend on an earlier one being accepted."
+  },
+  "experiments": [
+    {
+      "id": "E01",
+      "order": 1,
+      "title": "Vortex: create a real whole-hex eye",
+      "status": "NOT_RUN",
+      "hypothesis": "A geometrically real center opening gives a grounded route-planning counter and a useful ring to play around without reducing force or expanding outer coverage.",
+      "baseline": {
+        "wire_id": 322,
+        "compiled_inner_length_world_units": 24000,
+        "extent_numerator": 1250,
+        "extent_denominator": 1000,
+        "effective_inner_radius_world_units": 30000,
+        "effective_outer_radius_world_units": 90000,
+        "ground_flow_world_units_per_second": 45000,
+        "phase_ticks": [
+          48,
+          330,
+          48
+        ],
+        "finding": "No complete authored hex fits inside the 30000-unit inner circle; baseline selection fills the eye."
+      },
+      "baseline_source": [
+        "P:L58-L58",
+        "P:L267-L272",
+        "G:L20-L26",
+        "F:L720-L736"
+      ],
+      "candidate_variables": [
+        {
+          "name": "vortex_inner_radius",
+          "existing_config_key": false,
+          "baseline": 30000,
+          "candidate": 74000,
+          "units": "world units (1000 per pixel); raw compiled length 24000 -> 59200 under unchanged x1.25 extent",
+          "baseline_source": [
+            "P:L58-L58",
+            "P:L172-L194",
+            "P:L318-L320",
+            "F:L720-L736"
+          ],
+          "proposed_live_location": "hex_recipe_policy.gd: wire 322 COMPILED_ROWS length field only"
+        }
+      ],
+      "changed_variable_count": 1,
+      "controls": "shared_controls",
+      "setup": [
+        "At an unobstructed grid center, shared face, shared vertex and each position ±1 world unit, form Vortex using valid paid pairs. Repeat in negative axial coordinates and adjacent to a wall.",
+        "Hold outer radius 90000, flow 45000, timing 48/330/48 and all phase/quantity code fixed. Do not manually delete a chosen hex: let unchanged positive-area annulus selection operate.",
+        "Use the baseline source freeze, not an already modified flow or presenter build. Test all three body templates with the same foot trace before using natural movement."
+      ],
+      "measured_outcomes": [
+        {
+          "metric": "center-owning cell selected (boolean)",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "center safe-cell count and selected-cell IDs",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "grounded entry/exit success and wall entrapment ticks",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "active-cell peak/instance-ticks; unchanged initial transferred matter",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "normal/reduced recognition of affected boundary and opening",
+          "result": null,
+          "status": "NOT_RUN"
+        }
+      ],
+      "acceptance_criteria": [
+        "Every unobstructed tested center-owning cell is excluded by selection; every selected annular cell remains fully authoritative, including its interior outside the analytic band.",
+        "At least one valid ground escape path exists in each intentionally open fixture; no new clipping, collision escape exploit or all-size disagreement is introduced.",
+        "Force, product quantity and phase times are unchanged; selected-cell count never exceeds baseline for identical center/topology; >0 affected cells remain in the open fixtures.",
+        "H01: at least 10/12 trials identify the real safe opening, and grounded passage succeeds whenever the scripted path lies in excluded cells.",
+        "Pass G0, G1 and G2; apply G4 to the named human question. G3 remains a separate release block."
+      ],
+      "rollback_criteria": [
+        "Any tested center still affects its whole owner cell, outer reach grows, inner band is rendered safe while selected, or narrow fixtures become unreadable/trapping.",
+        "The reduced ring no longer offers a usable rotational interception route in H01; retain the finding but reject the numeric candidate rather than inflating outer radius.",
+        "Any shared correctness, conservation, later-four compatibility, event-integrity or performance no-regression gate fails."
+      ],
+      "rollback": "Restore only this experiment's variables/owned code; preserve all baseline and failed results. Keep a separate local commit/diff owned by the integrator for each candidate. Stop only owned test processes; restore only that candidate's edited hunks/switches and rerun its focused baseline. Do not reset/stash/clean shared dirty work, mass-edit catalogs, push or promote a checkpoint. A later experiment does not silently depend on an earlier one being accepted.",
+      "cost_implications": {
+        "active_cells": "Same or fewer selected cells; unchanged 32-product cap and lifetime. Record the legitimate decrease, not a generic optimizer claim.",
+        "cpu": "Same selector/actor paths, changed geometric eligibility. No new per-tick actor state.",
+        "events": "No new event types or intentionally dropped product events. Fewer contacts, if any, must be reported as changed geometry.",
+        "replication": "Same product schema; cell allocation and snapshot bytes may shrink. Source identity still changes.",
+        "paid_resources": "No Flux or source-matter change; same finite quantity is reallocated over fewer full cells, so later interactions/density-dependent systems must be regression-tested."
+      },
+      "deterministic_cases": [
+        "D01",
+        "D02",
+        "D04",
+        "D05",
+        "D10",
+        "D27",
+        "D29"
+      ],
+      "human_drills": [
+        "H01"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "E02",
+      "order": 2,
+      "title": "Conflagration: preserve a readable pulse gap under overlap",
+      "status": "NOT_RUN",
+      "hypothesis": "A single globally phased strongest Conflagration dose makes overlap deny a place rather than manufacture near-continuous damage by phase-staggering many otherwise identical paid fields.",
+      "baseline": {
+        "wire_id": 309,
+        "pulse_period_ticks": 72,
+        "pulse_clock": "tick - product.active_tick",
+        "overlap_damage": "sum of independently due eligible products",
+        "damage_formula": "floor(8000 * I / 1000)",
+        "team_filter": "none beyond normal protection/intangibility/death checks"
+      },
+      "baseline_source": [
+        "W:L759-L770",
+        "W:L939-L954"
+      ],
+      "candidate_variables": [
+        {
+          "name": "conflagration_pulse_clock",
+          "existing_config_key": false,
+          "baseline": "per_product_activation",
+          "candidate": "global_tick_mod_72",
+          "units": "clock policy; period remains 72 ticks (600 ms)",
+          "baseline_source": [
+            "W:L759-L770"
+          ],
+          "proposed_live_location": "hex_chemistry_world.gd: Conflagration branch"
+        },
+        {
+          "name": "conflagration_overlap_damage",
+          "existing_config_key": false,
+          "baseline": "sum_due_products",
+          "candidate": "strongest_eligible_once_per_actor_per_global_pulse",
+          "units": "aggregation policy; ties lowest stable product ID; maximum selection only within wire 309",
+          "baseline_source": [
+            "W:L759-L770",
+            "W:L939-L954"
+          ],
+          "proposed_live_location": "hex_chemistry_world.gd: collect wire 309 contributors then resolve one winner"
+        }
+      ],
+      "changed_variable_count": 2,
+      "controls": "shared_controls",
+      "setup": [
+        "Use one, two and eight distinct paid Conflagrations, equal and unequal strengths, with creation offsets 0, 1, 35 and 71 ticks and shared eligible feet.",
+        "An eligible product must satisfy active_tick <= tick < min(decay_tick, expiry_tick). On tick %72==0 choose maximum integer damage, tie lowest product ID, then use existing damage/defeat handling.",
+        "Do not fold fundamental Fire, Steam, Magma or Firestorm into this group. Do not remove losing products, refund their sources, or change coverage and quantity.",
+        "Document that a solitary product can wait 0–71 ticks after activation for its first global pulse; this timing tradeoff is intentional and is not baseline-equivalent."
+      ],
+      "measured_outcomes": [
+        {
+          "metric": "damage event ticks and contributor IDs per actor",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "damage and winner identity on coincident pulses",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "first-active-to-first-pulse delay ticks",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "maximum consecutive ground danger without a scheduled gap",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "H03 correct crossing timing and completion; active-cell/event/snapshot costs",
+          "result": null,
+          "status": "NOT_RUN"
+        }
+      ],
+      "acceptance_criteria": [
+        "At most one wire-309 damage application per eligible actor per global pulse; damage equals strongest eligible candidate, never the sum.",
+        "Owner/allies retain the same baseline vulnerability; no active-before-formation hit, post-decay hit or duplicated defeat event.",
+        "Within each product lifetime the candidate never exceeds the damage from all baseline-eligible products for a continuously grounded stationary actor; record phase-dependent crossing outcomes separately.",
+        "H03: >=10/12 counter opportunities correctly use or avoid the public pulse phase; attackers can still deny a selected ground landing window in >=10/12 scripted on-pulse landings.",
+        "Pass G0, G1 and G2; apply G4 to the named human question. G3 remains a separate release block."
+      ],
+      "rollback_criteria": [
+        "The new phase cannot be read from the existing source-driven presentation in normal/reduced mode, or the delayed first pulse makes the paid field a misleading harmless-looking trap.",
+        "Any field is silently removed or paid stock refunded to compensate for a losing contribution; any global damage/target-team behavior outside wire 309 changes.",
+        "Any shared correctness, conservation, later-four compatibility, event-integrity or performance no-regression gate fails."
+      ],
+      "rollback": "Restore only this experiment's variables/owned code; preserve all baseline and failed results. Keep a separate local commit/diff owned by the integrator for each candidate. Stop only owned test processes; restore only that candidate's edited hunks/switches and rerun its focused baseline. Do not reset/stash/clean shared dirty work, mass-edit catalogs, push or promote a checkpoint. A later experiment does not silently depend on an earlier one being accepted.",
+      "cost_implications": {
+        "active_cells": "Unchanged geometry, product count and lifetime. Retain every paid overlapping field.",
+        "cpu": "One eligible-contributor scan and per-actor max; bounded by existing products/actors. No new persistent cooldown dictionary is required.",
+        "events": "Applied Conflagration damage events may intentionally fall. Record total eligible contributions alongside applied events so the lower count is not disguised as equal semantic workload. Preserve winner/defeat data.",
+        "replication": "Global phase derives from tick. No additional persistent product state intended; verify restored snapshots give identical next-pulse winners and rejected mixed source identities.",
+        "paid_resources": "All ingredients remain consumed as before; no discount/refund. Overlap has diminishing payoff by explicit rule rather than free lifetime or extra area."
+      },
+      "deterministic_cases": [
+        "D03",
+        "D07",
+        "D08",
+        "D14",
+        "D23",
+        "D25",
+        "D27",
+        "D29"
+      ],
+      "human_drills": [
+        "H03",
+        "H06"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "E03",
+      "order": 3,
+      "title": "Ground-flow overlap: one bounded net displacement",
+      "status": "NOT_RUN",
+      "hypothesis": "Combining already-eligible first-four ground-flow contributions before collision limits same-cell wall pins and cancellation artifacts while preserving a single field's useful directional role.",
+      "baseline": {
+        "wires": [
+          304,
+          316,
+          317,
+          322
+        ],
+        "baseline_aggregation": "per-product integer carry, sequential per-product collision moves",
+        "aggregate_cap": null,
+        "largest_isolated_first_four_flow_world_units_per_second": 60000,
+        "common_wall_clearance_world_units": 18000
+      },
+      "baseline_source": [
+        "W:L740-L808",
+        "E:L119-L183",
+        "E:L391-L412"
+      ],
+      "candidate_variables": [
+        {
+          "name": "first_four_ground_flow_overlap",
+          "existing_config_key": false,
+          "baseline": "sequential_moves",
+          "candidate": "sum_eligible_deltas_then_one_collision_move",
+          "units": "aggregation policy; only wires 304/316/317/322",
+          "baseline_source": [
+            "W:L771-L790",
+            "E:L391-L412"
+          ],
+          "proposed_live_location": "hex_product_effects.gd / hex_chemistry_world.gd: shared collection before actor displacement"
+        },
+        {
+          "name": "first_four_ground_flow_net_cap",
+          "existing_config_key": false,
+          "baseline": null,
+          "candidate": 60240,
+          "units": "world units/second; <=502 units displacement per 120 Hz tick before collision, including a conservative fixed-point rounding allowance",
+          "baseline_source": [
+            "P:L251-L272",
+            "W:L780-L788"
+          ],
+          "proposed_live_location": "shared first-four flow application; derived per-tick cap"
+        }
+      ],
+      "changed_variable_count": 2,
+      "controls": "shared_controls",
+      "setup": [
+        "Preserve existing per-product fractional carries and stable contributor order. Compute every direction from the common pre-push actor position; do not let an earlier impulse change a later Vortex tangent.",
+        "Sum the integer per-product deltas of all already-eligible first-four flow fields. Clamp the vector to length <=502 world units using integer square root rounded upward for the divisor, component division toward zero, then make one collision move at the unchanged 18000-unit clearance.",
+        "The discrete cap is ceil(60000/120)+2 = 502 units/tick: a conservative fixed-point rounding allowance, not an increase to any individual flow speed. For example an unchanged 60px/s Flood at aim(707,707) can alternate (353,353) and (354,354), so a strict 500-unit norm clamp would incorrectly alter the isolated baseline.",
+        "Do not bank clipped excess for later bursts; the cap discards excess requested displacement, not ingredient matter. Preserve every contributor, paid product and suppression capacity.",
+        "Test one, two and eight sources with parallel, opposing and perpendicular directions; wall corners; all body sizes; slides and jumps. Do not change later-four movement/control logic.",
+        "Require a bounded, version-owned flow event containing contributor IDs/requested deltas and applied net delta if the old event schema cannot represent the new semantics. Do not fabricate per-product applied displacements."
+      ],
+      "measured_outcomes": [
+        {
+          "metric": "requested vector versus applied vector world units/tick",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "max net displacement and available jump/wall action response ticks",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "same-foot-trace displacement by body size",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "contributor count, event encoding size, snapshot state and active-cell work",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "wall pin duration and successful H01/H07 exit actions",
+          "result": null,
+          "status": "NOT_RUN"
+        }
+      ],
+      "acceptance_criteria": [
+        "Isolated-field open-space output and carry match baseline exactly; aggregate norm never exceeds 502 units per tick.",
+        "Equal opposite requested deltas cancel before collision; no false inward move survives solely because product IDs changed the collision sequence.",
+        "All available jump/escape commands remain accepted on the same eligibility tick as the matched isolated-control fixture; no new actor-state lock, wall penetration or accumulated release burst.",
+        "No change to later-four pre-movement or control-state behavior; every contributor remains traceable, and no authoritative flow event becomes unencodable.",
+        "Pass G0, G1 and G2; apply G4 to the named human question. G3 remains a separate release block."
+      ],
+      "rollback_criteria": [
+        "Single-field output changes, net cap is exceeded by rounding, carry grows without bound, or the aggregate event cannot be delivered within existing bounded envelopes.",
+        "H01/H07 show a loss of usable directional play or a new reliable pin in a fixture that had a valid escape; do not compensate by enlarging fields or deleting contributors.",
+        "Any shared correctness, conservation, later-four compatibility, event-integrity or performance no-regression gate fails."
+      ],
+      "rollback": "Restore only this experiment's variables/owned code; preserve all baseline and failed results. Keep a separate local commit/diff owned by the integrator for each candidate. Stop only owned test processes; restore only that candidate's edited hunks/switches and rerun its focused baseline. Do not reset/stash/clean shared dirty work, mass-edit catalogs, push or promote a checkpoint. A later experiment does not silently depend on an earlier one being accepted.",
+      "cost_implications": {
+        "active_cells": "Unchanged; all paid fields remain live.",
+        "cpu": "Replaces repeated collision moves with collection + one move per affected actor, but collection/normalization cost must be measured, not assumed faster.",
+        "events": "New aggregation semantics may reduce event count but add a bounded contributor list (at most existing 32 products). Report both requested and applied contributions. Integrator owns schema/version updates; do not silently omit the event.",
+        "replication": "Reuse existing per-product carries and derive aggregate transiently. Confirm no extra persistent state is needed; if it is, stop and obtain root-owned schema work, then rerun lifecycle gates.",
+        "paid_resources": "No quantity/capacity/Flux change. Displacement saturation is an explicit counterplay rule, not eviction of a paid source."
+      },
+      "deterministic_cases": [
+        "D04",
+        "D09",
+        "D10",
+        "D11",
+        "D12",
+        "D23",
+        "D25",
+        "D27",
+        "D29"
+      ],
+      "human_drills": [
+        "H01",
+        "H07"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "E04",
+      "order": 4,
+      "title": "Magma: require strength commitment for full pulse payoff",
+      "status": "NOT_RUN",
+      "hypothesis": "Scaling only Magma's fixed pulse down for weak matched strength may prevent low-commitment delivery from buying full-strength damage while preserving Magma's slow, moving ground-route role.",
+      "baseline": {
+        "wire_id": 302,
+        "pulse_damage_health_units": 5000,
+        "pulse_period_ticks": 48,
+        "scaling": "none",
+        "ground_speed_ratio": 750,
+        "formation_active_decay_ticks": [
+          42,
+          330,
+          60
+        ],
+        "anchor_motion_world_units_per_second": 30000
+      },
+      "baseline_source": [
+        "P:L206-L212",
+        "E:L351-L358",
+        "W:L546-L555"
+      ],
+      "candidate_variables": [
+        {
+          "name": "magma_pulse_strength_scaling",
+          "existing_config_key": false,
+          "baseline": "5000",
+          "candidate": "floor(5000 * min(1000, product.intensity) / 1000)",
+          "units": "health units per eligible 48-tick pulse; strength 1/3/5/15 -> 500/1500/2500/5000",
+          "baseline_source": [
+            "P:L206-L212",
+            "E:L351-L358"
+          ],
+          "proposed_live_location": "hex_product_effects.gd: MAGMA damage branch only"
+        }
+      ],
+      "changed_variable_count": 1,
+      "controls": "shared_controls",
+      "setup": [
+        "First resolve and freeze the live ability catalog: actual Flux, repeat intervals, recovery, damage/control and movement resource costs. If unavailable, keep this experiment NOT_RUN rather than guessing cost efficiency.",
+        "Use pristine and partially consumed sources from all four families; keep actual paid costs unchanged. Compare equal paid Flux over a fixed command window as well as equal admitted pair count, reporting both.",
+        "Do not scale slow, selected reach, lifetime, front speed, Firestorm damage, Rampart health or Mistcurrent capacity. Heavy gains no additional pulse damage.",
+        "Run straight-ground, sliding-ground, airborne and lateral-detour paths. Sliding bypasses the ordinary target-speed modifier, not grounded Magma damage."
+      ],
+      "measured_outcomes": [
+        {
+          "metric": "pulse damage by matched strength and remaining quantity",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "enemy damage/route-denial time per actual paid Flux and per admitted pair",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "retained jump/slide/side-exit outcomes",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "family usage/commitment choices in H04, without claiming statistical market balance",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "peak cells, contacts, events, admissions and packed bytes",
+          "result": null,
+          "status": "NOT_RUN"
+        }
+      ],
+      "acceptance_criteria": [
+        "Formula matches exactly, capped at baseline 5000; no damage above baseline for any intensity and no change in slow or effect lifetime.",
+        "H04 participants identify the ground-only jump/detour counter in >=10/12 opportunities and full-commitment Magma still punishes >=10/12 scripted grounded on-pulse crossings.",
+        "The suspected weak-family advantage must be demonstrated in the actual baseline cost table and then reduced by the candidate; if the baseline does not show the problem, do not adopt a speculative nerf.",
+        "At least two delivery families retain a distinct useful Magma setup in the recorded drills; report utility loss rather than inventing a win-rate target.",
+        "Pass G0, G1 and G2; apply G4 to the named human question. G3 remains a separate release block."
+      ],
+      "rollback_criteria": [
+        "The source-equalization hypothesis is unsupported by actual paid-cost/cadence measurements, or weaker Magma becomes a useless imitation of Mud/Firestorm.",
+        "Any change affects other recipes, makes slide damage disappear, increases Heavy damage, or hides reduced actual workload behind fewer surviving actors.",
+        "Any shared correctness, conservation, later-four compatibility, event-integrity or performance no-regression gate fails."
+      ],
+      "rollback": "Restore only this experiment's variables/owned code; preserve all baseline and failed results. Keep a separate local commit/diff owned by the integrator for each candidate. Stop only owned test processes; restore only that candidate's edited hunks/switches and rerun its focused baseline. Do not reset/stash/clean shared dirty work, mass-edit catalogs, push or promote a checkpoint. A later experiment does not silently depend on an earlier one being accepted.",
+      "cost_implications": {
+        "active_cells": "Unchanged geometry and lifetime.",
+        "cpu": "One bounded integer scaling/clamp on an already due Magma pulse; not an asserted timing improvement.",
+        "events": "Same eligible pulse opportunities. Damage amounts/deaths may differ, so preserve an alive matched-load fixture and report natural combat separately.",
+        "replication": "No new state or fields; changed source identity and replay expectations are mandatory.",
+        "paid_resources": "No Flux/cooldown change; weaker sources buy less HP payoff but the same ground geometry/slow. Exact economic acceptance depends on the missing live authored catalog."
+      },
+      "deterministic_cases": [
+        "D03",
+        "D08",
+        "D13",
+        "D18",
+        "D22",
+        "D23",
+        "D27",
+        "D29"
+      ],
+      "human_drills": [
+        "H04"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "E05",
+      "order": 5,
+      "title": "Steam: make paid cooling a reliable counter, not extra scald",
+      "status": "NOT_RUN",
+      "hypothesis": "Spending Water as cooling work instead of extra scald density makes the cooling channel monotonically reduce that product's equal-exposure pressure; excluding decay-only targets prevents a fading product from wasting the paid counter.",
+      "baseline": {
+        "wire_id": 310,
+        "current_cooling_quantity_destination": "product.quantity += consumed_remaining_quantity",
+        "intensity_rule": "I - min(floor(I/2), 50 * consumed_remaining_strength)",
+        "modifier_phase_eligibility": "before expiry, including harmless decay",
+        "uses_per_channel": 1,
+        "heat_behavior": "unchanged: add remaining matter, add 50*S capped1500, halve remaining lifetime"
+      },
+      "baseline_source": [
+        "W:L377-L429",
+        "W:L861-L936",
+        "W:L991-L1028"
+      ],
+      "candidate_variables": [
+        {
+          "name": "steam_cooling_quantity_destination",
+          "existing_config_key": false,
+          "baseline": "live_product_matter",
+          "candidate": "consumed_cooling_work",
+          "units": "ledger accounting policy; incoming finite matter is still consumed, but cooling adds 0 live product matter",
+          "baseline_source": [
+            "W:L401-L426",
+            "W:L991-L1028"
+          ],
+          "proposed_live_location": "hex_chemistry_world.gd: _try_modifier cooling branch; keep heat transfer unchanged"
+        },
+        {
+          "name": "steam_modifier_phase_eligibility",
+          "existing_config_key": false,
+          "baseline": "tick < expiry_tick",
+          "candidate": "tick < min(decay_tick, expiry_tick)",
+          "units": "tick predicate; forming and active accepted, harmless decay rejected, applies to both one-use channels",
+          "baseline_source": [
+            "W:L388-L399"
+          ],
+          "proposed_live_location": "hex_chemistry_world.gd: _try_modifier Steam eligibility"
+        }
+      ],
+      "changed_variable_count": 2,
+      "controls": "shared_controls",
+      "setup": [
+        "Preserve consume_remaining(), matter_consumed accounting, source_ids, one cooled/heated flag per channel and existing intensity rule. Cooling is a real paid effect; do not refund, drop the source, create fresh Water or decrement consumed accounting.",
+        "On cooling, leave product.quantity and its whole-cell allocations unchanged. Retile only as needed for unchanged coverage/metadata. The extra paid matter performs cooling work and is already represented as consumed in the ledger; it is not duplicated into another source.",
+        "On a decay-only candidate skip it and continue stable-ID search for another eligible product; if none accepts, let the same still-live paid source follow its existing normal terminal handling. Do not auto-create or refresh Steam.",
+        "Use single-factor diagnostic arms for the two named variables, then the combined candidate, with all other state identical. Report which factor affects each outcome; these are arms of E05, not additional unnamed changes.",
+        "Exhaustively compare each allocation and exposure E=0..240 before/after valid cooling at equal E, including intensity 100/300/500/1500, partially spent source quantities, zero-allocation cells and heat-then-cool/cool-then-heat sequences."
+      ],
+      "measured_outcomes": [
+        {
+          "metric": "per-product equal-exposure pressure before/after cooling, health units",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "paid/live/consumed/expired matter and product totals",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "modifier acceptance at active/decay/expiry boundaries and overlapping product ID",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "heat/cool channel uses, intensity and fixed coverage/expiry",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "H05 reliable paid counter recognition; active cells and event/replication cost",
+          "result": null,
+          "status": "NOT_RUN"
+        }
+      ],
+      "acceptance_criteria": [
+        "For every tested cell/density/exposure, that product's immediate post-cooling pressure is <= its pre-cooling pressure at equal E; if baseline pressure was >0 and intensity falls enough to quantize a difference, record the actual reduction.",
+        "Reproduce the static counterexample through real Godot source creation before crediting a runtime fix: baseline 1075 ->1451 in the stated seven-cell equal-E fixture; candidate cooling-work arm yields 967 health units. If the live baseline differs, reconcile source/fixture first.",
+        "Every paid cooling source remains fully accounted as consumed work; product_total <= consumed and live+consumed+expired=paid. Heat behavior, initial pair transfer, geometry, caps and one-use channels are unchanged.",
+        "At decay_tick and later, the old Steam product consumes no incoming modifier; continued search/fallback keeps the source valid, finite and normally paid. At decay_tick-1 normal eligible behavior remains.",
+        "H05 >=10/12 opportunities identify leaving/exposure reset and demonstrate that fresh paid cooling does not make its own product more dangerous at equal exposure; a separately stronger Fire/Steam product may still win.",
+        "Pass G0, G1 and G2; apply G4 to the named human question. G3 remains a separate release block."
+      ],
+      "rollback_criteria": [
+        "Any equal-E cooling case increases its own product's pressure, a consumed source gains new live matter, or an actor can refresh/reuse either channel for free.",
+        "A valid forming/active heat modifier changes compared with baseline, or rejection of fading Steam erases the incoming source instead of preserving normal handling.",
+        "Reduced intensity is mistaken for a universally safe field; keep damage/status tied to source and treat visual failure separately under E06.",
+        "Any shared correctness, conservation, later-four compatibility, event-integrity or performance no-regression gate fails."
+      ],
+      "rollback": "Restore only this experiment's variables/owned code; preserve all baseline and failed results. Keep a separate local commit/diff owned by the integrator for each candidate. Stop only owned test processes; restore only that candidate's edited hunks/switches and rerun its focused baseline. Do not reset/stash/clean shared dirty work, mass-edit catalogs, push or promote a checkpoint. A later experiment does not silently depend on an earlier one being accepted.",
+      "cost_implications": {
+        "active_cells": "Unchanged for an accepted cooling operation; unchanged product matter reallocation. Normal fallback on a rejected decaying target can legitimately create a different paid ground ingredient/product later—count it, do not hide it.",
+        "cpu": "One extra phase comparison and one conditional quantity transfer. Exhaustive dose comparisons belong in tests, not the 120 Hz simulation.",
+        "events": "No extra product spawned by cooling. Existing modifier/source accounting retained; add diagnostic consumed-cooling-work counters outside release authority if needed, without dropping authoritative events.",
+        "replication": "Existing quantity/intensity/source-ID/heated/cooled fields should suffice. Verify snapshot conservation allows consumed nonresident cooling work, as its existing inequality does; root owns any unexpected schema adjustment.",
+        "paid_resources": "Incoming Water pays/spends its finite remainder as cooling work; no refund. This explicitly changes current modifier matter destination, preserving source subtraction and conservation rather than silently deleting a paid effect."
+      },
+      "deterministic_cases": [
+        "D03",
+        "D14",
+        "D15",
+        "D16",
+        "D17",
+        "D19",
+        "D25",
+        "D27",
+        "D29"
+      ],
+      "human_drills": [
+        "H05",
+        "H06"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "E06",
+      "order": 6,
+      "title": "Steam: style each source region by its actual intensity",
+      "status": "NOT_RUN",
+      "hypothesis": "Using per-region intensity removes the hard 1000 heat floor and prevents one hot overlapping product from relabeling cooler products, improving the recognition of paid thermal decisions without changing chemistry.",
+      "baseline": {
+        "view_steam_heat_initial": 1000,
+        "aggregation": "max(1000, every Steam region intensity in the cell)",
+        "style_input": "same aggregated heat passed to every Steam region",
+        "palette_rule": "active: hot above1000, cool below1000, active at1000; forming/decay retain phase"
+      },
+      "baseline_source": [
+        "W:L95-L105",
+        "V:L464-L475",
+        "V:L735-L751"
+      ],
+      "candidate_variables": [
+        {
+          "name": "steam_style_intensity_source",
+          "existing_config_key": false,
+          "baseline": "cell_view_steam_heat",
+          "candidate": "region.intensity",
+          "units": "intensity units, ratio denominator1000; fallback1000 only when an invalid/missing field is diagnosed, not a minimum",
+          "baseline_source": [
+            "W:L95-L105",
+            "V:L464-L475",
+            "V:L735-L751"
+          ],
+          "proposed_live_location": "hex_court_presenter.gd: _draw_steam style and seed heat input"
+        }
+      ],
+      "changed_variable_count": 1,
+      "controls": "shared_controls",
+      "setup": [
+        "Change only the heat argument/seed input within each Steam region iteration to the region's actual intensity. Do not edit authority view(), intensities, phases, cells, damage, opacity budgets or network state.",
+        "Freeze normal/reduced modes and light/dark floor fixtures at native scale. Test a solitary intensity500 product, a cooled product, an intensity1500 product and overlapping intensity500/1500 products in one cell.",
+        "Use actor, projectile and aim overlays in a runnable capture. Do not replace gameplay captures with concept images. Keep phase-derived danger outlines even for cool-colored active material.",
+        "Explain that cool palette means intensity <1000, not necessarily that someone used the cooling channel: unmodified Bolt/Bolt Steam starts at500. Test a participant can distinguish lower-intensity active scald from harmless expiry."
+      ],
+      "measured_outcomes": [
+        {
+          "metric": "chosen palette_phase and region intensity per footprint ID",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "normal/reduced phase recognition and actor/projectile/aim occlusion",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "authority state hash equality and event byte equality across visual modes",
+          "result": null,
+          "status": "NOT_RUN"
+        },
+        {
+          "metric": "draw call/mark count and presenter CPU time; no particle count inflation",
+          "result": null,
+          "status": "NOT_RUN"
+        }
+      ],
+      "acceptance_criteria": [
+        "For every active region, heat passed to style equals that region's intensity; <1000 selects cool, >1000 hot, ==1000 active. Forming/decay continue using their actual phases.",
+        "A hot overlapping region does not alter a cooler region's chosen palette phase; both retain correct whole-cell coverage and danger.",
+        "Authority hashes, source ledgers, damage events and replication bytes are identical between baseline and visual candidate for identical commands.",
+        "H05/H06 >=10/12 trials distinguish active lower-intensity scald from harmless decay in each normal/reduced floor condition; actors, projectiles and aim remain identifiable. Failure means no visual acceptance.",
+        "Pass G0, G1 and G2; apply G4 to the named human question. G3 remains a separate release block."
+      ],
+      "rollback_criteria": [
+        "A palette change hides active danger, implies cool means harmless, changes simulation/network state, or requires more particles/marks to pass.",
+        "Layering still makes per-product intensity unreadable; report the remaining overlap limitation rather than claiming this one-line data-source change solves every visibility problem.",
+        "Any shared correctness, conservation, later-four compatibility, event-integrity or performance no-regression gate fails."
+      ],
+      "rollback": "Restore only this experiment's variables/owned code; preserve all baseline and failed results. Keep a separate local commit/diff owned by the integrator for each candidate. Stop only owned test processes; restore only that candidate's edited hunks/switches and rerun its focused baseline. Do not reset/stash/clean shared dirty work, mass-edit catalogs, push or promote a checkpoint. A later experiment does not silently depend on an earlier one being accepted.",
+      "cost_implications": {
+        "active_cells": "No authority change.",
+        "cpu": "Replace one cell-level read with one region intensity read; same loop, marks and drawing primitives. Benchmark presenter separately from authority.",
+        "events": "Zero authority event changes required.",
+        "replication": "Zero schema, payload or frequency changes required.",
+        "paid_resources": "No Flux, matter, capacity, cooldown, damage or lifetime change. Coordinate this presenter-only experiment with the VFX owner."
+      },
+      "deterministic_cases": [
+        "D14",
+        "D16",
+        "D17",
+        "D26",
+        "D27",
+        "D29"
+      ],
+      "human_drills": [
+        "H05",
+        "H06"
+      ],
+      "evidence": []
+    }
+  ]
+}

@@ -1,33 +1,28 @@
-# FLUX shared elemental sandbox
+# H.E.X. game design overview
 
-Status: current product summary; [SPECIFICATION](../SPECIFICATION.md) owns scope.
+Status: current concise overview, October 11, 2026; SPECIFICATION.md owns the detailed contract.
 
-An original movement-led 2.5D bullet-pattern magic sandbox: read space, choose
-movement and spell shape, create temporary matter, exploit/counter reactions,
-reposition. Clear tradeoffs and responsive execution precede more mechanics.
+H.E.X. combines movement execution, aimed spell combat and finite elemental
+terrain. Players learn a small set of actions, then express skill through timing,
+route choice, countercasting and combinations.
 
-| Language | Expression | Foundation |
-| --- | --- | --- |
-| Movement | Preserve, redirect, spend momentum | Eight-way input, continuous aim, finite paid evasion |
-| Spells | Choose range, coverage and commitment | Seven families, positive Flux cost, visible ownership/counter |
-| Chemistry | Create, combine, avoid, reset space | Eight elements, 36 finite pairs, exact active boundaries |
-| Character | Identity and body-role choice | Universal movement/spells; explicit size-specific hurtboxes, identical wall clearance |
-| Wellspring | Learn, configure, practice, meet friends | Purposeful stations, clear routes, no detached main menu |
+The [current design contract](../SPECIFICATION.md) is the single authority for
+scope and rules. The [player guide](PLAYER-GUIDE.md) explains controls; the
+[balance contract](HEX-BALANCE-CONTRACT.md) separates implemented capabilities
+from intended viability and uniqueness.
 
-The current campus has 9 districts/12 stations: controls/accessibility, Gallery,
-Spell Loom, movement/spell practice, chemistry teaching and Farflow session
-actions. District presence is not proof of a separate finished mode.
+| Pillar | Current foundation |
+|---|---|
+| Movement | Independent travel/aim; paid slide chains, evasions, wall routes and finite second-jump options |
+| Spells | Six ingredients form 63 compositions across Bolt, Heavy, Rapid, Spray, Mantle, Fuse, Split and Rebound: 504 definitions and twelve configured positions |
+| Chemistry | Sixty-three bounded reactions cover every ingredient subset, with shared damage funding and situational effects |
+| Characters | Thirty identities, twenty-one ancestries, three sizes; each race and champion has a situational passive |
+| Wellspring | Seven districts, thirteen travel arrivals, an Element Garden with 63 bounded exhibits, configuration, practice and experimental friend sessions |
 
-The [cast](CURRENT-CAST.md) has 27 named playable profiles, 3 sizes and 1 reserved
-Angel. Alphabetical race columns organize selection. Three affinity points over
-two/three active elements do not grant automatic damage or racial passives.
-All 57 spells remain configurable by every champion.
-
-Walking should solve ordinary pressure; evasion trades resources and commitment
-for a readable response. Objects support routes/counterplay, not input ambiguity.
-Effects disclose ownership, phase and consequence at all supported zooms.
-Use broad clarity/responsiveness lessons from Zelda Game Boy games, Enter the
-Gungeon, movement shooters and systemic magic games, with original assets/maps/UI.
-
-No future element, mode, race, recursive system or larger lobby is a requirement
-of the current foundation. Expansion needs an explicit bounded acceptance slice.
+The [implementation record](../.agent/OVERHAUL-IMPLEMENTATION.md) separates
+completed work from the current authorized task. Exact source/package identity
+and measured limits live in the [resume](../.agent/HEX-RESUME.md).
+The [pre-publication overview](archive/source-publication-20261011/CORE-GAME-DESIGN.md)
+is retained exactly; its four-family spell description is superseded here.
+The [earlier summary](archive/core-docs-20261007/CORE-GAME-DESIGN.md) is archived:
+its FLUX title, seven families, fifty-seven spells and older roster are not current.
