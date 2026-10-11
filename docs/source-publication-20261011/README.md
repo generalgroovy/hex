@@ -68,6 +68,13 @@ and [the agent archive](../../.agent/archive/source-publication-20261011/).
   budget. The first fresh attempt reached the old 180-second limit while still
   importing art with zero stderr; that failed attempt is preserved locally.
   Full suites retain 1800 seconds and Focused suites/boot retain 180 seconds.
+- `docs/.gdignore` keeps evidence screenshots and archived diagnostics out of
+  Godot's import scan while retaining them in Git. The audit found no current
+  runtime/test resource dependencies on `res://docs/`; both export presets
+  already exclude documentation. This follows
+  [Godot's documented project layout](https://docs.godotengine.org/en/stable/tutorials/best_practices/project_organization.html).
+  The scan identified 127 additional documentation images, totaling 49.428 MiB,
+  outside the older nested exclusions; no import-time speedup is claimed.
 - Current design, character, spell, networking, development and handoff guides
   agree with the current source. Older originals remain archived as evidence.
 - The README explains source prerequisites, launch commands and building a new
@@ -82,7 +89,27 @@ detection guarantee.
 
 ## Publication validation
 
-Fresh-checkout validation is recorded here before the source is pushed. The
-manual Windows foundation workflow provides the remote Full gate; its result
-and tested commit are available in
+A detached checkout of commit `ab6f0c1f5e4ad2e7b5aa8f65a8f220797ad53073`
+started without a `.godot` cache and passed:
+
+- **Fast:** cold editor import, exact post-import identity and the 120 Hz bounded
+  boot; zero stderr. The complete gate took 381,926 ms, including source checks.
+- **Focused:** seven suites, **109,877 assertions**, zero failures and zero
+  stderr. Coverage includes paid fields, character residency, streamed terrain,
+  the Element Garden, expanded spells and their network protocol.
+- **Standalone policy reference:** 289 assertions, zero failures and zero
+  stderr, using the reference included in Git.
+- The checkout remained clean after validation. Source-only checks passed
+  772 runtime-identity regression assertions and 45 build-summary assertions.
+  The asset audit covered 1,097 tracked assets with zero missing runtime asset
+  references; archived/documentation references remain separately classified.
+
+The [machine-readable summary](validation.json) identifies the tested source,
+original receipt hashes, supervision limits and the initial failed attempt.
+Original local receipts and logs are retained outside Git. This publication
+record and the documentation-only import exclusion were added after that
+checkout test; they do not change the canonical runtime identity.
+
+The manual Windows foundation workflow provides the cold **Full** gate for the
+published commit. Its tested commit and terminal result are available in
 [GitHub Actions](https://github.com/generalgroovy/hex/actions/workflows/ci.yml).

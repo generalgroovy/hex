@@ -5154,3 +5154,26 @@ Native22-frame final capture and isolated14-frame gait pilot preserved.
 Actual Windows EXE/PCK identity, safe close and ZIP byte audit pass.
 See docs/HEX-INTEGRATION-CHECKPOINT.md for evidence and launch paths.
 Selected P48 pointer/fallback preserved. Stop for human playtest; no expansion.
+
+## 2026-10-11 -- current H.E.X. source publication
+
+The user authorized the current source, relevant assets/evidence, documentation
+cleanup, commit and push. This supersedes the older publication pauses above.
+The game remains p60-be3efd332e1a / 3,390 canonical records; no gameplay bytes
+changed during publication preparation. Three specialists audited and
+cross-reviewed documentation, file retention and tooling.
+
+Obsolete redirects, a duplicate art ZIP and historical test profiles were removed
+from active folders with hash-verified local recovery copies. Current guides and
+role cards now reflect six elements, 63 compositions, eight deliveries and 504
+spells. Git preserves runtime, art and evidence bytes. Developer tasks select
+PowerShell 7.2+; source audits handle empty witnesses and the exact terrain-bake
+provenance edge; cold editor import has its own bounded 600-second allowance.
+
+A new checkout passed cold import, unchanged identity and boot. Seven selected
+suites passed 109,877 assertions; the standalone policy diagnostic passed 289.
+All had zero stderr. docs/.gdignore excludes documentation images from Godot
+import while retaining the evidence in Git. See the
+[source publication record](../docs/source-publication-20261011/README.md) for
+the tested commit, receipt summary, preserved failure and remote Full workflow.
+Existing portable payloads and personal saves remain local and unchanged.
