@@ -1,12 +1,13 @@
 extends RefCounted
 
 
-# Saved bindings, not a guess about the active device. Keep the explicit keyboard
-# assignment first, then mouse, then pad. InputRouter combines these same actions
-# across devices, so a modifier and spell button may legitimately use two devices.
+# Saved bindings follow deliberate device activity. Missing bindings on that
+# device stay explicit; fallback devices remain available in Controls.
 # Empty means no saved binding; callers retain their own unknown/unbound wording.
 static func action_label(action: StringName, preferences: PlayerPreferences) -> String:
 	if preferences == null: return ""
+	if preferences.prompt_device == ControlBindingEditor.DEVICE_CONTROLLER:
+		return _controller_label(preferences.controller_bindings.get(action))
 	var key := int(preferences.keyboard_bindings.get(action, 0))
 	if key != 0: return OS.get_keycode_string(key)
 	var mouse := _mouse_label(int(preferences.mouse_bindings.get(action, 0)))

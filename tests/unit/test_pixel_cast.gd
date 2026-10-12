@@ -140,7 +140,7 @@ func _test_live_cast() -> void:
 			equal(frame.get("rigid_pose_fallback",false),not compact_jump,"unpainted ground and dodge actions disclose their reused fixed-pixel pose")
 			if compact_jump:
 				# Native atlas order is south0, south-east1, east2.
-				preload("res://tests/support/native_aerial_assertions.gd").assert_frame(self, frame, bank, id, action, 0)
+				preload("res://tests/support/native_aerial_assertions.gd").assert_frame(self, frame, bank, id, action, 0, "extend")
 			check(not frame.has("mesh") and not frame.has("render_mesh"),"advanced pixel-cast actions never introduce mesh morphing")
 			equal(frame.get("action"),action,"fallback retains the actual action")
 			equal(state.canonical_values(),before,"fallback preserves gameplay authority")

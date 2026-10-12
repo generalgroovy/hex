@@ -10,6 +10,10 @@ class LoaderProbe:
 	var finalized: Array[String] = []
 	var statuses: Dictionary[String, int] = {}
 	var premature_gets := 0
+	var clock_usec := 0
+	var retrieval_usec := 0
+	func _clock_usec() -> int:
+		return clock_usec
 	func _start_request(path: String) -> Error:
 		started.append(path)
 		return OK
@@ -19,6 +23,7 @@ class LoaderProbe:
 	func _take_ready(path: String) -> Image:
 		if _request_status(path) != ResourceLoader.THREAD_LOAD_LOADED: premature_gets += 1
 		retrieved.append(path)
+		clock_usec += retrieval_usec
 		var size := Vector2i(512, 256 if path.ends_with("_10.res") else 512)
 		var image := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
 		image.fill(Color(0.25, 0.5, 0.75, 1.0))
@@ -30,10 +35,51 @@ class LoaderProbe:
 func run() -> int:
 	_test_manifest_and_pixels()
 	_test_queue_and_large_views()
+	_test_time_bytes_and_destination_prefetch()
 	_test_suspend_resume_and_shutdown()
 	_test_reconfiguration_ownership()
+	_test_profile_stages()
 	_test_real_bake_equivalence()
 	return finish("wellspring-terrain-stream")
+
+
+func _test_profile_stages() -> void:
+	var stream := LoaderProbe.new()
+	check(stream.configure(_fixture(), "a".repeat(64), Vector2i(6144, 5376)), "profile fixture admits the same pixel-validated terrain")
+	stream.request_view(Rect2(1024, 1024, 512, 512))
+	check(stream.status().profile == null, "production default performs no detailed stage capture")
+	stream.profile_enabled = true
+	stream.clock_usec = 1000
+	stream.pump(1)
+	var pending_before := stream.pending.duplicate()
+	var queue_before := stream.queue.duplicate()
+	stream.reset_profile()
+	equal(stream.pending, pending_before, "resetting observation never cancels or changes resource tokens")
+	equal(stream.queue, queue_before, "resetting observation cannot reorder demand")
+	stream.clock_usec = 9000
+	stream.allow_completion = true
+	stream.retrieval_usec = 350
+	equal(stream.pump(1), 1, "profile mode keeps the ordinary upload count budget")
+	var stages := stream.profile_status()
+	equal(int(stages.calls.get("ready_retrieval", 0)), 1, "one ready resource retrieval is recorded")
+	equal(int(stages.elapsed_usec.get("ready_retrieval", -1)), 350, "retrieval interval is separate from validation, texture creation and trim")
+	equal(int(stages.calls.get("pixel_validation", 0)), 1, "exact pixel validation remains measured and mandatory")
+	equal(int(stages.calls.get("texture_creation", 0)), 1, "only one admitted texture creation is counted")
+	equal(int(stages.completed_profiled_requests), 0, "requests pending before reset never acquire invented decode latency")
+	stages.calls.clear()
+	check(not stream.profile_status().calls.is_empty(), "caller mutation cannot erase retained timing evidence")
+	stream.retrieval_usec = 0
+	stream.clock_usec = 12000
+	stream.pump(2)
+	check(int(stream.profile_status().completed_profiled_requests) >= 1, "a request submitted during capture produces real request-to-observed-ready latency")
+	check(int(stream.profile_status().maximum_request_latency_usec) > 0, "request latency retains wall scheduling/poll delay without calling it decode CPU")
+	check(stream._request_started_usec.size() <= Stream.MAX_PENDING, "pending timing metadata stays within resource token bound")
+	var before_disabled := stream.profile_status()
+	stream.profile_enabled = false
+	stream.pump(2)
+	equal(stream.profile_status().calls, before_disabled.calls, "disabled observer does not collect new stage samples")
+	stream.finish_shutdown()
+	check(stream._request_started_usec.is_empty(), "final teardown releases pending timing ownership")
 
 
 func _fixture() -> Dictionary:
@@ -131,6 +177,66 @@ func _test_queue_and_large_views() -> void:
 	stream.request_view(Rect2(0, 0, 6144, 5376))
 	equal(stream.required.size(), 132, "whole-campus camera request remains exact and finite with no quality fallback")
 	equal(stream.desired.size(), 132, "prefetch never extends beyond the world or duplicates native tiles")
+
+
+func _test_time_bytes_and_destination_prefetch() -> void:
+	var stream := LoaderProbe.new()
+	check(stream.configure(_fixture(), "a".repeat(64), Vector2i(6144, 5376)), "budget fixture admits exact native inventory")
+	var view := Rect2(48, 48, 160, 160)
+	var destination := Rect2(4608, 3584, 1536, 1536)
+	stream.request_view(view)
+	var active_required: Array = stream.required.duplicate()
+	var active_desired: Array = stream.desired.duplicate()
+	stream.prefetch_view(destination)
+	equal(stream.required, active_required, "map highlight never replaces current readiness requirement")
+	equal(stream.desired.slice(0, active_desired.size()), active_desired, "current camera and movement halo precede destination jobs")
+	equal(stream.requests, 0, "prefetch intent cannot decode or upload inside a draw callback")
+	check(not stream.ready_for(destination), "highlight alone makes no destination-ready promise")
+	stream.pump()
+	stream.allow_completion = true
+	stream.retrieval_usec = Stream.MAX_PUMP_USEC + 1
+	equal(stream.pump(), 1, "one indivisible over-budget upload makes progress but prevents a second")
+	equal(stream.last_pump_usec, Stream.MAX_PUMP_USEC + 1, "actual time overrun remains visible rather than clamped")
+	equal(stream.last_pump_bytes, 512 * 512 * 4, "upload bytes use validated native dimensions")
+	equal(stream.requests, 2, "time overrun also prevents another request admission")
+	check(stream.budget_yields > 0 and stream.ready_for(view), "budget yield preserves exact current tile readiness")
+	stream.retrieval_usec = 0
+	var reads: int = stream.retrieved.size()
+	equal(stream.pump(2, Stream.MAX_PUMP_USEC, 512 * 512 * 4 - 1), 0, "subtile byte budget cannot exceed limit even for first upload")
+	equal(stream.retrieved.size(), reads, "insufficient byte budget leaves loaded token owned for a later frame")
+	for frame: int in 30:
+		stream.pump(2, Stream.MAX_PUMP_USEC, 512 * 512 * 4)
+		check(stream.last_pump_bytes <= 512 * 512 * 4, "per-frame byte budget is strict")
+		check(stream.pending.size() <= 2, "prefetch shares the original request concurrency ceiling")
+		if stream.queue.is_empty() and stream.pending.is_empty(): break
+	check(stream.ready_for(destination), "bounded destination eventually verifies every requested native tile")
+	var uploads: int = stream.uploads
+	var prefetched_before: Array = stream.prefetched.duplicate()
+	stream.request_view(view)
+	equal(stream.prefetched, prefetched_before, "repeated live camera preparation preserves active destination selection")
+	stream.clear_prefetch()
+	check(stream.prefetched.is_empty() and stream.status().prefetch_required == 0, "closing map clears only speculative demand")
+	check(stream.ready_for(view), "closing map cannot evict current required pixels")
+	stream.request_view(destination)
+	check(stream.ready_for(destination), "confirmed travel reuses verified destination pixels already retained")
+	equal(stream.uploads, uploads, "prepared arrival performs no duplicate upload")
+	stream.prefetch_view(Rect2(0, 0, 6144, 5376))
+	equal(stream.prefetched.size(), Stream.MAX_PREFETCH_CHUNKS, "even full-world highlight cannot exceed24 destination tiles")
+	check(stream.desired.size() <= Stream.MAX_CHUNKS and stream.cache_bytes <= Stream.MAX_BYTES, "speculative demand retains finite whole-world ceilings")
+	stream.clear_prefetch()
+	stream.request_view(view)
+	stream.prefetch_view(Rect2(2500, 2500, 400, 400))
+	stream.pump()
+	check(not stream.pending.is_empty(), "cancellation fixture owns real destination request tokens")
+	stream.clear_prefetch()
+	var kept: int = stream.uploads
+	stream.pump()
+	equal(stream.uploads, kept, "cancelled destination tokens drain without stale pixel uploads")
+	stream.suspend()
+	stream.prefetch_view(destination)
+	check(stream.prefetched.is_empty() and stream.suspended, "highlight cannot wake a suspended terrain owner")
+	stream.finish_shutdown()
+	equal(stream.premature_gets, 0, "prefetch and budgets never retrieve an in-progress resource")
 
 
 func _test_suspend_resume_and_shutdown() -> void:

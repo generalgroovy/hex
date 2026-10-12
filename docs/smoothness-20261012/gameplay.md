@@ -1,0 +1,65 @@
+# Fast delivery implementation — October 12
+
+This pass changes travel speed and its finite distance/time envelope. It preserves six elements, 63 payloads, eight deliveries, 504 spell identities, 120 Hz authority, damage, reaction strength, Flux admission, startup, cooldown, and shared paid source ownership. The preserved `p60-845f85b5253e` portable and its clean Full receipt are the predecessor, not qualification of this candidate.
+
+The tested intermediate candidate is `p60-46fca721f60d`, runtime SHA-256 `46fca721f60d2526be71bea06bdb3a43ae921998d2e0216b13507f9ef2deb4f6`, with 3,436 records. Root generated this identity after the approved rival-range correction. Its unrelated paid-ground optimization was subsequently withdrawn after native timing showed no supported benefit; the speed policy remains unchanged. Final source identity, Full, foreground profiling and delivery are separate gates. The [performance assessment](performance.md) preserves the intermediate results and withdrawal boundary.
+
+The post-withdrawal frozen source is `p60-be680e20d70e`, full SHA-256 `be680e20d70e1a284eb4175916a7d97da4446b20bfada79a89f98e741446aa8e`, with 3,436 records. Full passed 261 suites / 7,401,986 assertions with zero failures and empty stderr; its fresh portable passed archive, terrain and lifecycle gates recorded in the [delivery record](README.md). Its final immediate profile timed out before manual Start and produced zero gameplay cases, so final-source performance remains unqualified and the retained-campus trial is deferred. The [subsequent iteration](../iteration-20261012/README.md) changes source beyond this qualified package and has separate acceptance gates.
+
+## Policy
+
+The actual movement system caps retained planar traversal at 900 px/s. The fastest current ordinary profile sprints at 629.64 px/s before bounded terrain influence; slide/jump/air-dodge chains can carry higher momentum. Fast projectile families therefore use explicit margins above the movement cap:
+
+| Delivery | Previous speed | Implemented speed | Nominal muzzle travel | New timeout |
+| --- | ---: | ---: | ---: | ---: |
+| Rapid | 600 px/s | 1,440 px/s | 648 px | 450 ms |
+| Bolt template | 360 px/s | 1,260 px/s | 1,152 px | 915 ms |
+| Rebound | 350 px/s | 1,170 px/s | 910 px | 778 ms |
+| Split | 330 px/s | 1,080 px/s | 792 px | 734 ms |
+
+Original Bolt identities retain their individually authored nominal travel: Rillshot 1,036.8 px/823 ms, Cinderbolt 1,052.64 px/836 ms, Eclipse Disc 1,248.48 px/991 ms. Heavy remains 180 px/s; Fuse remains 260 px/s with its existing paid delayed warning. Spray remains instantaneous and Mantle follows its caster. These are distinct delivery roles, not an across-the-board speed multiplier.
+
+An optional positive projectile `range` compiles into the existing replicated `remaining_distance`. A nearer cursor subtracts the existing muzzle clearance and remains binding; a farther cursor cannot extend the authored ceiling. The timeout is the smallest whole millisecond that covers nominal clear-flight distance; exact swept distance clipping removes whole-tick overshoot. This preserves authored nominal reach, not the predecessor's incidental lifetime-rounding overshoot. Rebound and Split inherit the same remaining path budget. Split's 77 ms deadline quantizes to ten ticks and keeps its fork near the former approximately 80 px of straight flight; both branches share the original damage/material allocation.
+
+Signature rivals use the explicit range for direct-attempt and reflected-path planning. Definitions without it retain the prior speed-times-lifetime estimate; tell, movement, casting cadence and ordinary payment are unchanged. Boundary fixtures cover the exact ceiling and its next fixed unit, and a real wall-bank path just below and above its required distance.
+
+Frostway retains its existing 65% displacement modifier without rewriting projectile velocity. The resulting slower travel is an explicit environmental counter. Cover, committed lateral movement, paid jump protection, the Split fan's central gap, finite flight, and finite source clashes remain separate counterplay requirements. Faster travel is a balance change in hit probability even when damage and casting cadence remain unchanged.
+
+## Evidence and limits
+
+`tests/unit/test_projectile_speed_policy.gd` checks all 252 fast cells; ordinary paid casts against an already sprinting small character; ordinary paid slide/jump/air-dodge movement; free/near/far endpoints; cover, crossing and jump controls; correctly led Split branches versus the central gap; shared branch and bank budgets; snapshot roundtrip; and an actual two-paid-Water Frostway followed by a third paid probe. Setup defines fresh scene positions/profiles; it does not inject movement or resource grants during a route.
+
+The root agent ran the following affected checks; the gameplay agent independently inspected the final two-suite log and its empty stderr file. No engine was run concurrently by this agent.
+
+| Check | Assertions | Result and scope |
+| --- | ---: | --- |
+| `projectile-speed-policy` | 7,526 | Passed; finite paid travel, pursuit, movement-chain comparison, actual cover/jump/lateral counters, Split and Rebound ownership, and real Frostway slowing plus exit restoration |
+| `element-garden-exhibition` | 76,949 | Passed in the same final focused invocation; harmless exhibition contract remains intact |
+| `hex-avoidance-feedback` | 1,899 | Passed on the faster source; protected paid crossings preserve canonical flight and paid ledgers, including Fuse |
+| `elemental-spell-expansion` | 18,146 | Passed affected elemental/status tests |
+| `element-delivery-presentation` | 15,638 | Passed; presentation follows the compiled Split deadline |
+| `spell-delivery-expansion` | 52,539 | Passed after updating only the intentional Rapid speed/range/lifetime policy oracle; damage, cadence and payment assertions remain |
+
+The terminal speed/Garden evidence is `.godot/smoothness-20261012/garden-projectile-focused-4.log`; its `.err` file is empty. Earlier failing runs are retained. The new suite initially listened for a private terminal event already consumed by `SimWorld`, started a hop too early for Rebound's arrival, and expected a central-gap Split shot to behave as a straight Bolt. Repairs retain public and authoritative endpoint checks, cue a paid hop from observed approach, and require both correctly led branch pursuit and the gap counter. A later Frostway fixture correctly witnessed slowing but placed its opposing paid supplier close enough to intercept the probe before it left the last occupied whole cell. Moving only that supplier's initial separation from 400 to 600 px permits actual exit; all three families now must and do resume full speed without a velocity override. Neither the field nor its phase/source ledgers are injected.
+
+These are clean focused results for the current source slice. Candidate-wide Full, native rendering, foreground performance, and packaging remain separate root-owned gates. Fixed 120 Hz scenarios do not establish human reaction/readability, equal usefulness of all mixtures, balance at every range/profile, or smooth frame pacing on this PC.
+
+Before Full, a source scan found and corrected stale test contracts in `test_elemental_bursts.gd`, `test_combat_definition_table.gd`, and `test_projectile_chemistry_integration.gd`: old speed/lifetime and inverse-strength tuning, the additional range field in reconstructed historical signatures, and an extreme cursor incorrectly expected to grant extreme paid travel. The old historical travel baseline, unrelated definition fields, exact damage/strength, and full protocol distance boundary plus one-unit rejection remain checked. The capped paid release and passive maximum-distance snapshot are now separate fixtures. Signature and solo-trial test controllers lead with their actual equipped projectile speed; the joined introduction requests its hop from a 150 ms observed approach and still requires a real protected swept crossing.
+
+The subsequent root-run affected gate passed **nine suites / 88,840 assertions / zero failures**, with empty stderr. The gameplay agent independently read `.godot/smoothness-20261012/gameplay-prefull.log` and checked its `.err` length. Exact suite counts are: `signature-rival` 451; `range-target-scenario` 1,426; `signature-progression` 5,661; `six-element-cadence` 619; `solo-duel-trial` 72; `combat-definition-table` 11,058; `combat` 62,279; `elemental-bursts` 465; `projectile-chemistry-integration` 6,809. The solo trial reached an ordinary paid victory at tick 1,080, with 20 paid casts and nine direct hits. These results qualify the repaired fixtures and the narrow rival policy for their stated scenarios; they do not replace Full or establish general balance.
+
+The later diagnostic Full at `.godot/windows-tests/aeffffef3d934350885cfe29670b9125` exposed another stale fixture shared by ownership/publication/snapshot suites: it requested Fire at tick 190 after the faster paid Water flight on the same 230 px route had already ended. The two helpers in `test_hex_world_snapshot.gd` and `test_hex_snapshot_optimization.gd` now make that one ordinary followup request when actual flight/product authority and ordinary pending/recovery/cooldown readiness overlap. The original Water schedule, five-request ceiling, aim point, 560-tick deadline and simultaneous pending/flight/product assertion remain. No timers, resources, flights or products are injected; byte-equivalence, rejection and detachment assertions remain intact. Originals and exact reviewed proposals are preserved under `.godot/smoothness-20261012/rich-fixture-repair/`. Experience independently approved both changes; the targeted rerun and fresh Full are pending. This test-only correction does not change the `be680` production identity.
+
+## Independent review
+
+The experience agent reviewed optional range validation, cursor/range precedence, swept endpoint clipping, Split deadline and inherited paid budgets, and the paid counter fixtures; no required change remained. The gameplay agent independently reviewed the experience agent's fixed movement-trail pool and observed straight-leg sampling, including actual paid movement and authority checks. It also reviewed the private normalized projectile/glyph drawing path: current position, palette, strength, warning and coverage remain per-draw inputs, and diagnostic outputs remain detached.
+
+The gameplay agent reviewed the technical agent's proposed `render_regions_for_frame` seam and frozen predecessor oracle for call-local ownership, exact coverage/phase boundaries and overflow without dropped cells. Native equality passed, but paired CPU timing supplied no speed benefit, so this pass's Court/world batch and legacy-style memo were withdrawn. The gameplay reviewer independently matched all four before/after hashes, confirmed both production files byte-match their pre-pass references, inspected the narrowly removed tests and found no stale production calls. These proposals remain preserved evidence, not retained optimizations.
+
+The isolated native submission fixture was also source-reviewed. It compares 210 declared projectile states and 48 glyph states, requires exact RGBA equality with the same decorative arcs, reports production arc removal separately, and checks retained projectile/model state after drawing and CPU batches. All projectile variants receive the same candidate-generated model; separate frozen/current glyph equality is required because the frozen projectile drawing module imports the current glyph helper. Its alternating CPU command-submission batches exclude command clearing and GPU work. It does not measure predecessor model construction, ordinary paid gameplay, full-game FPS or human readability; native results remain a separate receipt.
+
+## Precedents and transfer limits
+
+- [Dodge Roll's Dave Crooks on Gungeon](https://www.gamedeveloper.com/design/q-a-the-guns-and-dungeons-of-i-enter-the-gungeon-i-) describes testing rooms, distinct weapon rhythms, team iteration on bullet patterns, and dodge/cover counters. This supports testing delivery and room interaction together; it supplies no speed ratio for H.E.X.
+- [Nintendo's official Samus Brawl design page](https://www.smashbros.com/wii/en_uk/characters/samus.html) distinguishes a homing missile from a faster straight Super Missile, plus charge and reflect/absorb responses. This supports differentiated delivery tradeoffs. It is Brawl evidence, not Melee frame data.
+- [Paradox's Magicka 2 description](https://www.paradoxinteractive.com/games/magicka-2/about) supports compositional spell experimentation; [Nolla's Noita description](https://noitagame.com/) describes material reactions such as burning/freezing. Neither proves that H.E.X.'s 63 payloads are equally useful, independently unique, balanced, or fast to render. The numerical speeds above are H.E.X. hypotheses tested against its own movement and finite combat rules.

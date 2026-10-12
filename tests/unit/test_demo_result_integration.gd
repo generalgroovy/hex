@@ -231,6 +231,10 @@ func _test_round_invalidation(node: Node) -> void:
 
 func _test_actual_input_dismissal() -> void:
 	var previous_mouse_mode := Input.mouse_mode
+	InputRouter.ensure_input_map()
+	var saved_events := {}
+	for action: StringName in PlayerPreferences.DEFAULT_MOUSE_BINDINGS:
+		saved_events[action] = InputMap.action_get_events(action).duplicate()
 	for kind: String in ["escape", "click"]:
 		var node := ResultHarness.new()
 		var configured := _configure(node)
@@ -238,6 +242,13 @@ func _test_actual_input_dismissal() -> void:
 		if not configured:
 			node.free()
 			continue
+		node.input_router = InputRouter.new()
+		node.element_expansion.game = node
+		node.local_navigation.configure(node)
+		if kind == "click":
+			node.player_preferences.mouse_bindings[&"punch"] = 0
+			node.player_preferences.mouse_bindings[&"spell_1"] = MOUSE_BUTTON_LEFT
+		check(node.input_router.configure_mouse_bindings(node.player_preferences.mouse_bindings), "result handoff uses a supported saved pointer binding")
 		var viewport := SubViewport.new()
 		viewport.size = Vector2i(1280, 720)
 		viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
@@ -279,19 +290,64 @@ func _test_actual_input_dismissal() -> void:
 			check(not node._handle_demo_result_input(click), "close-button release does not consume gameplay input")
 			click.pressed = true
 			event = click
+		if kind == "click":
+			Input.parse_input_event(event)
+			Input.flush_buffered_events()
 		viewport.push_input(event, true)
 		check(viewport.is_input_handled(), kind + " is consumed through real viewport -> inherited _unhandled_input")
 		check(not node.hex_playground_demo.has_terminal_result(), kind + " dismisses the actual model, not a visual copy")
 		check(node._demo_result_view().is_empty(), kind + " removes the inactive result view")
-		check(not node._gameplay_input_blocked(), kind + " does not leave a modal or input guard behind")
+		equal(node.controls_input_guard_frames, 2, kind + " uses the bounded existing input handoff")
 		check(not node.player_compendium.is_open, kind + " cannot fall through to the global Back action")
 		check(node.hex_playground_demo.command(node.world) == null, kind + " never generates an automatic retry command")
 		check(not node._handle_demo_result_input(event), kind + " repeated dismissal is inert")
 		equal(node.world.state_hash(), before, kind + " changes no weave, resources, product or simulation tick")
+		if kind == "click": _assert_result_pointer_handoff(node, viewport, event as InputEventMouseButton)
 		var preferences: NoSavePreferences = node.player_preferences
 		viewport.free()
 		equal(preferences.save_attempts, 0, "input integration and teardown never save fixture preferences")
+	for action: StringName in saved_events:
+		Input.action_release(action)
+		InputMap.action_erase_events(action)
+		for event: InputEvent in saved_events[action]: InputMap.action_add_event(action, event)
 	Input.mouse_mode = previous_mouse_mode
+
+
+func _assert_result_pointer_handoff(node: Node, viewport: SubViewport, click: InputEventMouseButton) -> void:
+	var actor: PlayerState = node.world.player()
+	var flux_before := actor.flux
+	var matter_before: int = node.world.hex_court.metrics.matter_paid
+	check(node.input_router.quarantined_actions.has(&"spell_1"), "result Close quarantines the actual held remapped spell")
+	for sample: int in 6:
+		var command: SimCommand = node._sample_gameplay_command(node.world.tick, Vector2.ZERO, Vector2.RIGHT, node._gameplay_input_blocked())
+		check(not command.has_pressed(SimCommand.PRESSED_SPELL_1), "held Close pointer cannot cast during or after handoff guard")
+		var commands: Array[SimCommand] = [command]
+		check(node.world.step(commands), "finished paid world accepts neutral handoff commands")
+		node.controls_input_guard_frames = maxi(0, node.controls_input_guard_frames - 1)
+	equal(actor.flux, flux_before, "held result Close spends no Flux")
+	equal(int(node.world.hex_court.metrics.matter_paid), matter_before, "held result Close creates no new paid source")
+	check(not node._gameplay_input_blocked(), "result handoff expires without leaving a modal")
+	click = click.duplicate()
+	click.pressed = false
+	Input.parse_input_event(click); Input.flush_buffered_events(); viewport.push_input(click, true)
+	var released: SimCommand = node._sample_gameplay_command(node.world.tick, Vector2.ZERO, Vector2.RIGHT, false)
+	check(not released.has_pressed(SimCommand.PRESSED_SPELL_1), "Close release cannot trigger a paid spell")
+	var release_commands: Array[SimCommand] = [released]
+	check(node.world.step(release_commands), "actual pointer release advances normally")
+	check(not node.input_router.quarantined_actions.has(&"spell_1"), "release rearms the remapped spell")
+	click = click.duplicate()
+	click.position = Vector2(viewport.size.x - 8, 8)
+	click.pressed = true
+	Input.parse_input_event(click); Input.flush_buffered_events(); viewport.push_input(click, true)
+	var fresh: SimCommand = node._sample_gameplay_command(node.world.tick, Vector2.ZERO, Vector2.RIGHT, false)
+	check(fresh.has_pressed(SimCommand.PRESSED_SPELL_1), "first deliberate world click after release produces its spell edge")
+	var fresh_commands: Array[SimCommand] = [fresh]
+	check(node.world.step(fresh_commands), "fresh world click follows ordinary cast admission")
+	equal(flux_before - actor.flux, int(CombatTuning.cast_definition_view(actor.spell_wire_id(1)).flux_cost), "fresh post-result cast pays its exact normal Flux cost")
+	equal(actor.pending_cast_wire_id, actor.spell_wire_id(1), "fresh post-result input owns the actual equipped startup")
+	click = click.duplicate()
+	click.pressed = false
+	Input.parse_input_event(click); Input.flush_buffered_events(); viewport.push_input(click, true)
 
 
 func _function_body(source: String, name: String) -> String:

@@ -96,7 +96,8 @@ static func step_player(
 		if pressed_cast_intent:
 			_refuse_cast(state, requested_wire_id, requested_spell_slot, "hex_capacity", events)
 		return null
-	var admission_startup_ms := Perks.scale(state, "spell_startup_ratio", int(definition["startup_ms"]))
+	var admission_timing := Perks.spell_timing(state, definition, config, SpellStatusPolicy.startup_ratio(state))
+	var admission_startup_ms := maxi(1, int(definition["startup_ms"]) * int(admission_timing.startup_ratio) / 1000)
 	admission_startup_ms = maxi(1,admission_startup_ms*SpellStatusPolicy.startup_ratio(state)/1000)
 	if not PlayerResourcesSystem.spend_flux(state, int(definition["flux_cost"]), config):
 		if admission_policy != null:
@@ -417,7 +418,8 @@ static func _release_cast(
 		state.pending_cast_wire_id = 0
 		state.pending_cast_ticks = 0
 		return null
-	if not state.set_spell_cooldown(wire_id, config.milliseconds_to_ticks(Perks.scale(state, "spell_cooldown_ratio", int(definition["cooldown_ms"])))):
+	var release_timing := Perks.spell_timing(state, definition, config, SpellStatusPolicy.startup_ratio(state))
+	if not state.set_spell_cooldown(wire_id, int(release_timing.cooldown_ticks)):
 		state.pending_cast_wire_id = 0
 		state.pending_cast_ticks = 0
 		return null
@@ -509,6 +511,10 @@ static func _release_projectiles(
 		projectile.reaction_strength = int(definition["reaction_strength"])
 		projectile.material_strength = 1000 / maxi(1, directions.size())
 		projectile.remaining_distance = maxi(0, locked_distance - spawn_distance) if locked_distance >= 0 else -1
+		# A faster flight retains its authored muzzle-to-terminal distance. The
+		# existing replicated budget also keeps a nearer cursor endpoint binding.
+		if definition.has("range"):
+			projectile.remaining_distance = mini(projectile.remaining_distance, int(definition.range)) if projectile.remaining_distance >= 0 else int(definition.range)
 		HexExpandedDelivery.initialize(projectile,config)
 		projectiles.append(projectile)
 		events.append({

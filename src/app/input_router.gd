@@ -17,10 +17,13 @@ const SPELL_ACTIONS: Array[StringName] = [&"spell_1", &"spell_2", &"spell_3", &"
 const SPELL_CTRL_LAYER_ACTION: StringName = &"spell_layer_ctrl"
 const SPELL_ALT_LAYER_ACTION: StringName = &"spell_layer_alt"
 const AIM_DEADZONE: float = 0.25
+const AIM_ACTIONS: Array[StringName] = [&"aim_left", &"aim_right", &"aim_up", &"aim_down"]
 const WHEEL_GESTURE_QUIET_MS: int = 120
 const WHEEL_MOVEMENT_ACTIONS: Array[StringName] = [&"jump", &"slide"]
 const PAID_ACTIONS: Array[StringName] = [&"sprint", &"primary", &"evade", &"jump", &"technique", &"active_1", &"slide", &"punch", &"kick", &"spell_1", &"spell_2", &"spell_3", &"spell_4"]
 
+var movement_deadzone: float = AIM_DEADZONE
+var aim_deadzone: float = AIM_DEADZONE
 var entity_id: int
 var evade_was_down: bool = false
 var jump_was_down: bool = false
@@ -31,6 +34,7 @@ var spell_was_down: Array[bool] = [false, false, false, false]
 var movement_reference: String = PlayerPreferences.MOVEMENT_WORLD_RELATIVE
 var last_quantized_aim := Vector2i(1000, 0)
 var controller_aim_active: bool = false
+var prompt_device: int = ControlBindingEditor.DEVICE_KEYBOARD
 var consumed_engine_edge_frames: Dictionary[StringName, int] = {}
 var wheel_last_pulse_ms: Dictionary[StringName, int] = {}
 var wheel_origin_actions: Dictionary[StringName, bool] = {}
@@ -68,14 +72,6 @@ static func ensure_input_map() -> void:
 	for action: StringName in CONTROLLER_ACTIONS:
 		_ensure_action(action)
 		_add_controller_binding(action, CONTROLLER_ACTIONS[action])
-	_ensure_action(&"aim_left")
-	_ensure_action(&"aim_right")
-	_ensure_action(&"aim_up")
-	_ensure_action(&"aim_down")
-	_add_joy_axis(&"aim_left", JOY_AXIS_RIGHT_X, -1.0)
-	_add_joy_axis(&"aim_right", JOY_AXIS_RIGHT_X, 1.0)
-	_add_joy_axis(&"aim_up", JOY_AXIS_RIGHT_Y, -1.0)
-	_add_joy_axis(&"aim_down", JOY_AXIS_RIGHT_Y, 1.0)
 	_add_joy_button(SPECTATE_NEXT_ACTION, JOY_BUTTON_DPAD_RIGHT)
 
 
@@ -125,6 +121,7 @@ static func _add_event_once(action: StringName, event: InputEvent) -> void:
 
 
 func observe_input_event(event: InputEvent) -> void:
+	observe_prompt_device(event)
 	# Modal callers immediately discard the observed intent. Keeping its source
 	# still distinguishes a UI wheel pulse from an intentionally held button.
 	# Keep wheel origin until sampling: Godot's aggregate action state otherwise
@@ -157,6 +154,23 @@ func observe_input_event(event: InputEvent) -> void:
 		if event.is_action_released(action) and not _raw_paid_action_down(action):
 			quarantined_actions.erase(action)
 			_consume_engine_edge(action)
+
+
+func observe_prompt_device(event: InputEvent) -> bool:
+	# Only deliberate activity changes hints. Neutral stick drift, releases and
+	# synthetic pointer motion must not flicker between input vocabularies.
+	var previous := prompt_device
+	if event is InputEventKey and event.pressed and not event.echo:
+		prompt_device = ControlBindingEditor.DEVICE_KEYBOARD
+	elif event is InputEventMouseButton and event.pressed:
+		prompt_device = ControlBindingEditor.DEVICE_KEYBOARD
+	elif event is InputEventMouseMotion and event.relative.length_squared() >= 16.0:
+		prompt_device = ControlBindingEditor.DEVICE_KEYBOARD
+	elif event is InputEventJoypadButton and event.pressed:
+		prompt_device = ControlBindingEditor.DEVICE_CONTROLLER
+	elif event is InputEventJoypadMotion and absf(event.axis_value) >= 0.6:
+		prompt_device = ControlBindingEditor.DEVICE_CONTROLLER
+	return previous != prompt_device
 
 
 func accept_wheel_pulse(action: StringName, timestamp_ms: int) -> bool:
@@ -231,7 +245,7 @@ func discard_transient_movement_input() -> void:
 	# Quarantine paid holds across modal/focus interruptions. Directional movement
 	# may resume, but UI presses and drags cannot become fresh gameplay actions.
 	pending_wheel_pulses.clear()
-	for action: StringName in PAID_ACTIONS:
+	for action: StringName in PAID_ACTIONS + AIM_ACTIONS:
 		if _raw_paid_action_down(action):
 			quarantined_actions[action] = true
 		else:
@@ -247,6 +261,9 @@ func discard_transient_movement_input() -> void:
 
 
 func _raw_paid_action_down(action: StringName) -> bool:
+	if action in AIM_ACTIONS:
+		var vector := Vector2(Input.get_action_raw_strength(&"aim_right")-Input.get_action_raw_strength(&"aim_left"),Input.get_action_raw_strength(&"aim_down")-Input.get_action_raw_strength(&"aim_up"))
+		return vector.length() >= aim_deadzone and Input.get_action_raw_strength(action)>0.0
 	return _movement_action_down(action) if action in WHEEL_MOVEMENT_ACTIONS else Input.is_action_pressed(action)
 
 
@@ -263,10 +280,26 @@ func _consume_quarantined_input() -> void:
 			quarantined_actions.erase(action)
 
 
+# XAG107: remappable digital aim and independent analog thresholds. These are
+# local input adapters, never movement/aim assistance or new simulation actions.
+# https://learn.microsoft.com/en-us/xbox/accessibility/xbox-accessibility-guidelines/107
+func configure_accessibility(preferences: PlayerPreferences) -> void:
+	if preferences == null: return
+	movement_deadzone = clampf(float(preferences.movement_deadzone_percent)/100.0,0.05,0.50)
+	aim_deadzone = clampf(float(preferences.aim_deadzone_percent)/100.0,0.05,0.50)
+	for action: StringName in [&"move_left",&"move_right",&"move_up",&"move_down"]:
+		InputMap.action_set_deadzone(action,movement_deadzone)
+	for action: StringName in AIM_ACTIONS: InputMap.action_set_deadzone(action,aim_deadzone)
+
+
+func _aim_strength(action: StringName) -> float:
+	return 0.0 if quarantined_actions.has(action) else Input.get_action_raw_strength(action)
+
+
 func sample(tick: int, player_position: Vector2, pointer_position: Vector2) -> SimCommand:
 	_consume_quarantined_input()
 	var movement_input := Input.get_vector(
-		&"move_left", &"move_right", &"move_up", &"move_down", AIM_DEADZONE,
+		&"move_left", &"move_right", &"move_up", &"move_down", movement_deadzone,
 	)
 	var quantized_movement := quantize_movement_vector(movement_input)
 	var raw_move_x := quantized_movement.x
@@ -324,10 +357,10 @@ func sample(tick: int, player_position: Vector2, pointer_position: Vector2) -> S
 	slide_was_down = slide_down
 
 	var joy_aim := Vector2(
-		Input.get_action_strength(&"aim_right") - Input.get_action_strength(&"aim_left"),
-		Input.get_action_strength(&"aim_down") - Input.get_action_strength(&"aim_up"),
+		_aim_strength(&"aim_right") - _aim_strength(&"aim_left"),
+		_aim_strength(&"aim_down") - _aim_strength(&"aim_up"),
 	)
-	var joy_stick_active: bool = joy_aim.length() >= AIM_DEADZONE
+	var joy_stick_active: bool = joy_aim.length() >= aim_deadzone
 	if joy_stick_active:
 		controller_aim_active = true
 	var aim_delta: Vector2 = joy_aim if joy_stick_active else (pointer_position - player_position)

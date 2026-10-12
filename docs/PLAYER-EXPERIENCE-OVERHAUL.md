@@ -1,6 +1,13 @@
-# FLUX player-experience contract
+# FLUX player-experience contract — historical
 
-Status: **canonical experience and usability contract**.
+Status: **historical pre-six-element experience and usability contract; superseded**.
+
+The original checkpoint's content is preserved below. Its references to current
+authority, active revisions and next work describe that historical checkpoint.
+Use the [current specification](../SPECIFICATION.md),
+[audit implementation record](audit-implementation-20261011/README.md) and
+[single implementation queue](../.agent/OVERHAUL-IMPLEMENTATION.md) for current
+rules, implemented work and remaining acceptance.
 
 FLUX should be immediately playable, deeply expressive and pleasant to inhabit
 without explaining itself through a conventional menu or text wall. Movement,

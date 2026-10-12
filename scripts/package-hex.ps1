@@ -55,12 +55,20 @@ tested its replacement. Saved controls and personal weaves are preserved.
 Skeleton mode is the default.
 
 PERFORMANCE
-Menu > Performance selects Low or Standard visual detail and a 60, 120 or
-unlimited frame limit. Low and 60 FPS are the defaults. Low trims decorative
+Menu > Display & text size selects Low or Standard visual detail, a 60, 120 or
+unlimited frame limit, and 100/125/150/200 percent text. Low and 60 FPS are the
+defaults. Low trims decorative
 glow and Garden samples while keeping complete spell areas and danger cues.
 Movement, collision and paid spell rules still run at 120 Hz. Reduced Motion
 remains a separate accessibility option. Far travel prepares its destination
 before offline movement resumes; saved controls and weaves are retained.
+Small windows and larger text reflow spell, controls, map, Gallery and Compendium
+panels. Selected identity stays visible while full details page. At the smallest
+layout, Options/O/controller Back reveals reference controls; B closes. The
+combination picker outlines controller focus. Loom accepts L3 for Options.
+Range Setup/T/controller X contains target settings and tools. More/O/L3 pages
+those tools, including delivery selection. Existing controller category/facing
+shortcuts remain available.
 
 TRY A NEW BUILD
 Extract each portable into its own folder. Keep the previous working folder
@@ -76,6 +84,9 @@ Spells: 1-4, Ctrl+1-4, Alt+1-4           Compendium: F4
 Interact with buildings: F
 Menu: Esc / controller Back / click Menu     World map: M
 Controller Start keeps its gameplay emote action.
+Controls has separate movement and aim stick deadzones. Four remappable digital
+aim directions default unbound, preserving established custom keys. Release held
+inputs after closing a menu or restoring focus before beginning a fresh action.
 
 WHERE TO GO
 Approach a building's front door and press your Interact binding.
@@ -85,6 +96,9 @@ Hover cards for details. Walk south to Chain Courtyard, Cover Garden and Open
 Laboratory. Menus do not pause the shared world.
 Open Menu > World map, or M, for thirteen named offline travel destinations.
 Select a place, read its context, then confirm Travel / Enter / controller A.
+Details/C/controller Y pages district and practice purpose. Highlighted authored
+district links suggest connections; you still choose a path around local cover.
+The smallest map shows the selected pin and player; its list reaches all places.
 The four new regions are Tideglass Quays, Verdant Reaches, Basalt Foundry and
 Starward Terraces. Travel preserves Health, Flux, Stamina, spell cooldowns and
 your weave; it does not reset resources. Land and finish active actions first.
@@ -98,7 +112,9 @@ the other 57 show mixed fields. Together they display six raw materials and all 
 reaction identities. Approach a plot for its ingredients, phase, effect and counter.
 These are harmless, bounded exhibits that expire and repeat. Your spells remain
 live and their real ground effects draw above the exhibits. Use Spell Range for
-full-footprint combat tests. The garden spends no player Flux or progression.
+full-footprint combat tests. Opening the Range from a nearby plot selects that
+mixture, ready for your explicit Equip and paid cast. The garden spends no player
+Flux or progression.
 
 TRY IT
 Hold Jump to prepare, release to launch; non-fliers have one double jump.
@@ -121,7 +137,12 @@ Choose Water, Fire, Air, Earth, Light and Dark: 63 compositions in eight familie
 Ice and Charge are derived effects. Old saved weaves show a slot-by-slot preview;
 Apply confirms migration and preserves an original-file backup.
 Combine element buttons, choose a delivery, review Swap/Replace, then confirm.
-The selector starts with four core forms; More Forms reveals Mantle, Fuse, Split and Rebound.
+The wide selector starts with four core forms; More Forms reveals the other four.
+The compact reading view keeps the spell name and current costs visible. Options
+reveals form arrows and Browse for spell/slot focus; Assign confirms your choice.
+Compare/C/right-stick click in the Loom compares the equipped and selected spell.
+Range Compare uses C/controller Y. Read the full purpose/counter and timing pages;
+direct hits and shared damage pools are not sustained DPS estimates.
 Damaging hits apply finite status effects. Mixed payloads can form their named field;
 single ingredients need another paid source to react. Read the effect and counter.
 Bolt and Rapid repeat while held; Heavy and Spray require a fresh press.
@@ -138,11 +159,24 @@ During a challenge the Menu button stays hidden to keep the rival visible;
 the card retains return, next-rival and Developer keys.
 Range shows ingredients, Flux cost, startup/cooldown, hit statuses and field counters.
 Its loans go in slot 1 and never overwrite saved weaves. Equip does not cast.
-Use refill, reset and clear deliberately. Leaving practice starts a fresh world
+Setup selects still/moving targets, their paid firing and Small/Medium/Large size.
+Settings do not refill resources. Statistics distinguish casts/Flux and damage
+components; Reset statistics changes only the observation window. Use the separate
+refill, reset and clear tools deliberately. Leaving practice starts a fresh world
 with your own weave. All 30 sandbox characters are already available.
 In the Range, Menu contains Change Range spell, Spell Loom, Characters,
 Reset practice court and Return to Wellspring. Hazard help appears when relevant.
-Developer overrides are temporary and do not earn challenge rewards.
+Menu > Tactical lessons optionally observes actual chains, mixed hits, rival
+avoidance and clean saved victory. Skip whenever you want. Signature suggestions
+start with Wa Bidi in Conservatory, Oh Tipi in Tideglass and S. Wayne in Basalt;
+every rival remains selectable in any order.
+Earned progress maintains a verified rolling last-good backup. Missing/damaged
+progress offers explicit Recover progress backup; a damaged copy is preserved.
+Retry progress save remains available when a session reward is not yet saved.
+Developer overrides are temporary and do not earn challenge rewards. The tools
+also offer explicit offline Record 60-second replay and Export recorded replay.
+Continuous cheats must be off; resets/world changes stop recording. Export is
+a local file, never an automatic upload, and verification remains a separate step.
 Gallery clicks inspect. Attune switches character and restores that character's
 saved weave; uncustomized characters use their starter kit.
 Every character has one ancestry perk and one personal perk. Gallery overview

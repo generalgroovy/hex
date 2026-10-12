@@ -553,6 +553,14 @@ func ground_ready_for(visible: Rect2) -> bool:
 	return ground != null or (terrain_stream != null and terrain_stream.ready_for(visible))
 
 
+func prefetch_ground_view(visible: Rect2) -> void:
+	if terrain_stream != null: terrain_stream.prefetch_view(visible)
+
+
+func clear_ground_prefetch() -> void:
+	if terrain_stream != null: terrain_stream.clear_prefetch()
+
+
 func suspend_ground() -> bool:
 	if terrain_stream == null: return true
 	var drained: bool = terrain_stream.suspend()

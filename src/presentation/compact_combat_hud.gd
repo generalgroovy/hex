@@ -5,6 +5,7 @@ extends RefCounted
 const DEFAULT_PATH := "res://content/visual/compact_hud_v1.json"
 const ElementGlyphRendererScript = preload("res://src/presentation/element_glyph_renderer.gd")
 const BindingLabels = preload("res://src/presentation/spell_binding_labels.gd")
+const LayoutCache = preload("res://src/presentation/compact_hud_layout_cache.gd")
 const Recovery = preload("res://src/sim/entities/resource_recovery.gd")
 const EXPECTED_ID := "compact-combat-hud-v1"
 const EXPECTED_AUTHORITY := "presentation only; simulation, input legality and resource ownership remain authoritative elsewhere"
@@ -21,6 +22,7 @@ var content_hash := ""
 var last_error := ""
 var _spell_card_layouts: Dictionary[int, Dictionary] = {}
 var _spell_card_layout_builds := 0
+var _layout_cache := LayoutCache.new()
 const MAX_PANEL_GEOMETRIES := 64
 var _panel_geometries: Dictionary = {}
 var _panel_geometry_builds := 0
@@ -28,6 +30,7 @@ var _panel_geometry_builds := 0
 
 func configure(visual_language: VisualLanguage, path: String = DEFAULT_PATH) -> bool:
 	_spell_card_layouts.clear()
+	_layout_cache.clear()
 	_panel_geometries.clear()
 	language = visual_language
 	data.clear()
@@ -111,12 +114,12 @@ func draw(
 		return
 	var layout: Dictionary = data.get("layout", {})
 	var copy: Dictionary = data.get("copy", {})
-	var margin := float(layout.get("margin", 16))
-	var header_height := float(layout.get("header_height", 34))
-	var header := Rect2(margin, margin, float(layout.get("header_width", 312)), header_height)
-	var session_width := float(layout.get("session_width", 248))
 	var session_lines := session_label.to_upper().split("\n")
-	var session := session_panel(viewport_size, margin, session_width, header_height, session_lines.size())
+	var layer_label := _binding_layer_label(active_layer, preferences)
+	var layer_width := clampf(_layout_cache.text_width(&"layer", layer_label, 9) + 28.0, 112.0, 220.0)
+	var frame := _layout_cache.frame_layout(viewport_size, layout, session_lines.size(), layer_width)
+	var header: Rect2 = frame.header
+	var session: Rect2 = frame.session
 	_draw_panel(canvas, header, 1.0)
 	_draw_panel(canvas, session, 0.82)
 	var title := ("WATCHING " if spectating else "") + champion_name.to_upper()
@@ -126,13 +129,11 @@ func draw(
 		canvas.draw_string(ThemeDB.fallback_font, session.position + Vector2(10, 21 + line_index * 14), session_lines[line_index], HORIZONTAL_ALIGNMENT_RIGHT, session.size.x - 20.0, 11, language.ui_color("focus"))
 	if not feedback_label.is_empty():
 		# Queue pressure has its own bounded line so build/round text cannot clip it.
-		var feedback := Rect2(session.position + Vector2(0, session.size.y + 4), Vector2(session_width, 24))
+		var feedback: Rect2 = frame.feedback
 		_draw_panel(canvas, feedback, 0.94)
 		canvas.draw_string(ThemeDB.fallback_font, feedback.position + Vector2(10, 16), feedback_label, HORIZONTAL_ALIGNMENT_RIGHT, feedback.size.x - 20.0, 11, language.ui_color("focus"))
 
-	var resource_width := float(layout.get("resource_width", 270))
-	var resource_height := float(layout.get("resource_height", 118))
-	var resources := Rect2(margin, viewport_size.y - margin - resource_height, resource_width, resource_height)
+	var resources: Rect2 = frame.resources
 	_draw_resources(canvas, resources, state, champion_id, champion_name, layout, tick_rate)
 	var preparation := {} if spectating else jump_preparation_status(state, tick_rate)
 	var preparation_panel := jump_preparation_panel(resources, viewport_size) if not preparation.is_empty() else Rect2()
@@ -147,34 +148,28 @@ func draw(
 			for line_index: int in range(detail_lines.size()):
 				canvas.draw_string(ThemeDB.fallback_font, detail_panel.position + Vector2(10, 18 + line_index * 16), detail_lines[line_index], HORIZONTAL_ALIGNMENT_LEFT, detail_panel.size.x - 20.0, 11, language.ui_color("text_primary"))
 
-	var cell_width := float(layout.get("spell_cell_width", 142))
-	var cell_height := float(layout.get("spell_cell_height", 70))
-	var gap := float(layout.get("spell_cell_gap", 6))
-	var spell_width := cell_width * float(PlayerState.SPELL_BUTTON_COUNT) + gap * float(PlayerState.SPELL_BUTTON_COUNT - 1)
-	var spell_start := Vector2(viewport_size.x - margin - spell_width, viewport_size.y - margin - cell_height)
-	var layer_label := binding_layer_label(active_layer, preferences)
-	var layer_width := clampf(ThemeDB.fallback_font.get_string_size(layer_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 9).x + 28.0, 112.0, 220.0)
-	var layer_tab := Rect2(spell_start + Vector2(0, -24), Vector2(layer_width, 20))
+	var layer_tab: Rect2 = frame.layer_tab
 	_draw_panel(canvas, layer_tab, 0.94)
 	canvas.draw_rect(Rect2(layer_tab.position + Vector2(5, 5), Vector2(5, 10)), language.ui_color("focus"), true)
 	canvas.draw_string(ThemeDB.fallback_font, layer_tab.position + Vector2(16, 14), layer_label, HORIZONTAL_ALIGNMENT_LEFT, layer_tab.size.x - 22.0, 9, language.ui_color("text_primary"))
 	var hidden_cast := hidden_cast_status(state, ability_catalog, active_layer, preferences, tick_rate)
+	var wait_label := cast_wait_label(state, cast_gate)
 	if not hidden_cast.is_empty():
 		# Releasing a modifier must not hide an already-paid cast's progress.
 		# This reads authority each draw; it never keeps its own startup timer.
-		var cue := Rect2(layer_tab.position + Vector2(layer_width + gap, 0), Vector2(spell_width - layer_width - gap, 20))
+		var cue: Rect2 = frame.cast_cue
 		var accent := language.element_color(String(hidden_cast.element), "bright")
 		_draw_panel(canvas, cue, 0.94)
 		canvas.draw_string(ThemeDB.fallback_font, cue.position + Vector2(7, 13), String(hidden_cast.label), HORIZONTAL_ALIGNMENT_LEFT, cue.size.x - 14.0, 9, accent)
 		canvas.draw_rect(Rect2(cue.position + Vector2(5, 17), Vector2((cue.size.x - 10.0) * float(hidden_cast.progress), 2)), accent)
-	elif not cast_wait_label(state, cast_gate).is_empty():
+	elif not wait_label.is_empty():
 		# The visible casting card already identifies the paid spell. Explain the
 		# shared restriction once, leaving other cards free for their own cooldown.
-		var cue := Rect2(layer_tab.position + Vector2(layer_width + gap, 0), Vector2(spell_width - layer_width - gap, 20))
+		var cue: Rect2 = frame.cast_cue
 		_draw_panel(canvas, cue, 0.82)
-		canvas.draw_string(ThemeDB.fallback_font, cue.position + Vector2(7, 13), cast_wait_label(state, cast_gate), HORIZONTAL_ALIGNMENT_LEFT, cue.size.x - 14.0, 9, language.ui_color("text_secondary"))
+		canvas.draw_string(ThemeDB.fallback_font, cue.position + Vector2(7, 13), wait_label, HORIZONTAL_ALIGNMENT_LEFT, cue.size.x - 14.0, 9, language.ui_color("text_secondary"))
 	for button_index: int in range(PlayerState.SPELL_BUTTON_COUNT):
-		var rectangle := Rect2(spell_start + Vector2(float(button_index) * (cell_width + gap), 0), Vector2(cell_width, cell_height))
+		var rectangle: Rect2 = frame.spell_rectangles[button_index]
 		var slot_index := active_layer * PlayerState.SPELL_BUTTON_COUNT + button_index
 		_draw_spell_cell(canvas, rectangle, state, ability_catalog, slot_index, button_index, tick_rate, copy, capacity, cast_gate, preferences)
 
@@ -190,9 +185,9 @@ func _draw_resources(canvas: CanvasItem, rectangle: Rect2, state: PlayerState, c
 	var bar_x := rectangle.position.x + 54.0
 	var bar_width := rectangle.size.x - 66.0
 	var bar_height := float(layout.get("resource_bar_height", 20))
-	_draw_resource_bar(canvas, Rect2(bar_x, rectangle.position.y + 29, bar_width, bar_height), quiet_resource_label(state, "HEALTH"), state.health, state.health_maximum, language.ramp_color("health", 3))
-	_draw_resource_bar(canvas, Rect2(bar_x, rectangle.position.y + 56, bar_width, bar_height), quiet_resource_label(state, "FLUX"), state.flux, state.flux_maximum, language.ramp_color("flux", 3))
-	_draw_resource_bar(canvas, Rect2(bar_x, rectangle.position.y + 83, bar_width, bar_height), quiet_resource_label(state, "STAMINA"), state.stamina, state.stamina_maximum, language.ramp_color("stamina", 3))
+	_draw_resource_bar(canvas, Rect2(bar_x, rectangle.position.y + 29, bar_width, bar_height), quiet_resource_label(state, "HEALTH"), state.health, state.health_maximum, language.ramp_color("health", 3), &"health")
+	_draw_resource_bar(canvas, Rect2(bar_x, rectangle.position.y + 56, bar_width, bar_height), quiet_resource_label(state, "FLUX"), state.flux, state.flux_maximum, language.ramp_color("flux", 3), &"flux")
+	_draw_resource_bar(canvas, Rect2(bar_x, rectangle.position.y + 83, bar_width, bar_height), quiet_resource_label(state, "STAMINA"), state.stamina, state.stamina_maximum, language.ramp_color("stamina", 3), &"stamina")
 
 
 static func jump_preparation_status(state: PlayerState, tick_rate: int = 120) -> Dictionary:
@@ -334,7 +329,7 @@ static func _rate_points(value: int) -> String:
 	return ("%.1f" % (float(value) / 1000.0)).trim_suffix(".0")
 
 
-func _draw_resource_bar(canvas: CanvasItem, rectangle: Rect2, label: String, value: int, maximum: int, color: Color) -> void:
+func _draw_resource_bar(canvas: CanvasItem, rectangle: Rect2, label: String, value: int, maximum: int, color: Color, role: StringName = &"resource") -> void:
 	var ratio := clampf(float(value) / float(maxi(maximum, 1)), 0.0, 1.0)
 	canvas.draw_rect(rectangle, Color(language.ramp_color("worldbone", 0), 0.92), true)
 	canvas.draw_rect(Rect2(rectangle.position + Vector2(2, 2), Vector2((rectangle.size.x - 4.0) * ratio, rectangle.size.y - 4.0)), color, true)
@@ -343,7 +338,7 @@ func _draw_resource_bar(canvas: CanvasItem, rectangle: Rect2, label: String, val
 		var marker_x := rectangle.position.x + rectangle.size.x * float(marker_index) / 4.0
 		canvas.draw_line(Vector2(marker_x, rectangle.end.y - 5), Vector2(marker_x, rectangle.end.y - 2), Color(language.ramp_color("worldbone", 0), 0.36), 1.0)
 	var amount := resource_amount_label(value, maximum)
-	var label_width := maxf(0.0, rectangle.size.x - 20.0 - ThemeDB.fallback_font.get_string_size(amount, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x)
+	var label_width := maxf(0.0, rectangle.size.x - 20.0 - _layout_cache.text_width(role, amount, 12))
 	# A one-pixel dark underprint keeps values legible over both the bright fill
 	# and empty track without adding an opaque plate or obscuring bar quantities.
 	canvas.draw_string(ThemeDB.fallback_font, rectangle.position + Vector2(7, 15), label, HORIZONTAL_ALIGNMENT_LEFT, label_width, 11, language.ramp_color("worldbone", 0))
@@ -369,7 +364,7 @@ func _draw_spell_cell(canvas: CanvasItem, rectangle: Rect2, state: PlayerState, 
 	var readiness := spell_display_status(state, ability, tick_rate, capacity, cast_gate)
 	_draw_panel(canvas, rectangle, 0.95)
 	canvas.draw_rect(rectangle, Color(accent, 1.0 if readiness.casting else (0.36 if readiness.waiting else 0.72)), false, 3.0 if readiness.casting else (1.0 if readiness.waiting else 2.0))
-	var card := _spell_card_layout(slot_index, ability, button_binding_label(button_index, preferences), rectangle)
+	var card := _spell_card_layout(slot_index, ability, _button_binding_label(button_index, preferences), rectangle)
 	var key_box: Rect2 = card.key_box
 	canvas.draw_rect(key_box, Color(accent, 0.18))
 	canvas.draw_string(ThemeDB.fallback_font, card.key_at, card.key_label, HORIZONTAL_ALIGNMENT_LEFT, key_box.size.x - 10.0, 10, language.ui_color("text_primary"))
@@ -515,13 +510,42 @@ func _spell_card_layout(slot: int, ability: Dictionary, key_label: String, recta
 	# capacity and control locks are still sampled from authority every draw.
 	if font == null: font = ThemeDB.fallback_font
 	if slot < 0 or slot >= PlayerState.SPELL_SLOT_COUNT: return spell_card_model(ability, key_label, rectangle, font)
+	# Retain only the fields that shape this card, not the full combat definition.
+	# In-place catalog edits are compared by value, even when the wire is unchanged.
+	var descriptor := [ability.is_empty(), int(ability.get("wire_id", 0)), int(ability.get("element_mask", 0)), String(ability.get("element", "")),
+		String(ability.get("delivery_kernel", "")), String(ability.get("family", "")), String(ability.get("shape", "")),
+		String(ability.get("runtime_status", "playable")), int(ability.get("flux_cost", 0))]
+	var font_generation := _layout_cache.font_revision(font)
 	var row: Dictionary = _spell_card_layouts.get(slot, {})
-	if not row.is_empty() and row.ability == ability and row.key_label == key_label and row.rectangle == rectangle and row.font_id == font.get_instance_id():
+	if not row.is_empty() and row.descriptor == descriptor and row.key_label == key_label and row.rectangle == rectangle and row.font_generation == font_generation:
 		return row.model
 	var model := spell_card_model(ability, key_label, rectangle, font)
-	_spell_card_layouts[slot] = {"ability": ability.duplicate(true), "key_label": key_label, "rectangle": rectangle, "font_id": font.get_instance_id(), "model": model}
+	for heading: Dictionary in model.headings: heading.make_read_only()
+	(model.headings as Array).make_read_only()
+	model.make_read_only()
+	_spell_card_layouts[slot] = {"descriptor": descriptor, "key_label": key_label, "rectangle": rectangle, "font_generation": font_generation, "model": model}
 	_spell_card_layout_builds += 1
 	return model
+
+
+func _button_binding_label(button_index: int, preferences: PlayerPreferences) -> String:
+	if preferences == null or button_index < 0 or button_index >= PlayerState.SPELL_BUTTON_COUNT: return "?"
+	var label := _layout_cache.binding_label(StringName("spell_%d" % (button_index + 1)), preferences)
+	return label if not label.is_empty() else "-"
+
+
+func _binding_layer_label(layer: int, preferences: PlayerPreferences) -> String:
+	if layer == 0: return "PLAIN SPELLS"
+	if preferences == null: return "? SPELLS"
+	var label := _layout_cache.binding_label(&"spell_layer_ctrl" if layer == 1 else &"spell_layer_alt", preferences)
+	return "%s SPELLS" % label if not label.is_empty() else "LAYER UNBOUND"
+
+
+func preparation_stats() -> Dictionary:
+	return {"card_layout_builds": _spell_card_layout_builds, "retained_cards": _spell_card_layouts.size(),
+		"binding_builds": _layout_cache.binding_builds, "retained_bindings": _layout_cache._bindings.size(),
+		"text_measurements": _layout_cache.text_measurements, "retained_text_metrics": _layout_cache._text_metrics.size(),
+		"frame_layout_builds": _layout_cache.layout_builds, "panel_geometry_builds": _panel_geometry_builds}
 
 
 static func button_binding_label(button_index: int, preferences: PlayerPreferences) -> String:

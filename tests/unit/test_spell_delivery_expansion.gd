@@ -282,7 +282,7 @@ func _test_real_catalog_and_paid_lanes() -> void:
 					equal(int(definition.get(key, 0)), int(expected[key]), "Heavy %d has the shared %s contract" % [wire, key])
 			elif family == "rapid":
 				for key: String in ["speed", "radius", "damage", "flux_cost", "startup_ms", "cooldown_ms"]:
-					var expected: Dictionary = {"speed": 600_000, "radius": 4000, "damage": 3000, "flux_cost": 2000, "startup_ms": 8, "cooldown_ms": 80}
+					var expected: Dictionary = {"speed": 1_440_000, "range": 648_000, "lifetime_ms": 450, "radius": 4000, "damage": 3000, "flux_cost": 2000, "startup_ms": 8, "cooldown_ms": 80}
 					equal(int(definition.get(key, 0)), int(expected[key]), "Rapid %d has the shared %s contract" % [wire, key])
 				equal(bool(definition.get("repeat_while_held", false)), true, "every element's Rapid explicitly opts into held-number repeat")
 			var world := _world()

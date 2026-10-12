@@ -1,0 +1,2901 @@
+{
+  "schema": "hex-native-performance-comparison-v1",
+  "scope": "Instrumented native source diagnostics. Frame-start cadence is not physical presentation rate, GPU time or input latency. No 60 FPS acceptance, general speedup or portable qualification is inferred.",
+  "verdict": "No overall mean frame-time improvement is established. Final run is diagnostic because focus changed and initial free RAM differed. Exact paid rendering is independently verified; source caches remove repeated work but their causal timing benefit is not isolated.",
+  "method": {
+    "statistics": "Nearest-rank quantiles. Comparison values are unrounded extraction of receipt aggregates, serialized to at most six decimals for readability.",
+    "visible_paid_ground": "Recomputed from raw Court elapsed samples indexed by each per-draw region record; duplicate/out-of-range indices are rejected, and full coverage is recorded. Means do not include empty post-effect draws.",
+    "frame_activity": "Prior frame post-process world state labels the following process-start interval; world paid-ground presence is not the same as visible Court coverage.",
+    "timers": "Elapsed CPU-side observations include scheduling/driver waits. Nested region/surface timers are inclusive and not additive; last-fixed-step stages sample only the last completed step per process frame.",
+    "missing_values": "Null means not recorded or not available, never zero. Baseline Mantle admission/refusal counts were not recorded.",
+    "raw_storage": "Full per-frame metrics remain local under .godot; SHA256 and byte lengths below identify the exact files."
+  },
+  "comparability_limits": [
+    "Baseline wrapper failed: requested 1280x720, actual 1290x730. All runs actually used 1290x730; this does not retrospectively pass baseline validation.",
+    "Baseline observer source differs from both candidates. Candidates use the same profile script SHA256; added preparation/active-region observation can affect timing versus baseline.",
+    "Final wrapper reports measured and validates viewport/source/completion/stderr, but does not reject focus loss. Exact per-case focus counts are preserved below.",
+    "Final run began with 632.62 MiB available OS RAM versus 1295.06 MiB baseline and 1585.01 MiB intermediate. Paging/thermal/background load was not controlled or attributed.",
+    "Final paid Hearth cases required 12 terrain chunks versus 15 in the intermediate run. Focus-sensitive camera state can change visible work, so small Court changes cannot be assigned to the edge-mask patch.",
+    "These are sequential single observations, not randomized repeats or an isolated source ablation. Ten-second tails are short samples.",
+    "The 60-second soak belongs only to p60-3a7e6f5fee64, before final edge-mask/save changes. It is not a final-source endurance receipt."
+  ],
+  "runs": [
+    {
+      "id": "baseline",
+      "runtime_build_id": "p60-33606f016138",
+      "runtime_source_sha256": "33606f016138b1285e9ec7e67451381cb9f611287312cef776e449b2f6b44e2f",
+      "runtime_record_count": 3392,
+      "observed_source_sha256": "ad45ce6cef8d4ba66b92610065564e184a49a24f2e040bbf900f30c0490e9107",
+      "profile_script_sha256": "5a18d1baaf2eea3869780cfbba258c51fe1a97d9022f51a90eef33fad6136300",
+      "engine": "4.7.1-stable (official)",
+      "adapter": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001506) Direct3D11 vs_5_0 ps_5_0, D3D11-32.0.21045.5002)",
+      "renderer": "gl_compatibility",
+      "debug_build": true,
+      "observer": "full",
+      "frame_cap": 60,
+      "screen_refresh_hz": 60,
+      "vsync": 1,
+      "requested_viewport": null,
+      "actual_viewport_start": [
+        1290,
+        730
+      ],
+      "actual_viewport_end": null,
+      "source_unchanged": true,
+      "complete": true,
+      "wrapper_status": "incomplete_or_failed",
+      "wrapper_validation_errors": [
+        "Actual native window size differs from the requested bounds."
+      ],
+      "available_memory_before_mib": 1295.06,
+      "available_memory_after_mib": 1356.31,
+      "raw_artifacts": [
+        {
+          "path": ".godot/audit-overhaul-20261011/baseline/metrics.json",
+          "bytes": 2499954,
+          "sha256": "d4af15931adc552bf0b9fab9354d7b7b228485231a77ee7251d9857336184c64"
+        },
+        {
+          "path": ".godot/audit-overhaul-20261011/baseline/summary.json",
+          "bytes": 234462,
+          "sha256": "c70fd53fc0b7537464bbba8008f1fdc4ce5f2a645e1fbad1134551364817719e"
+        },
+        {
+          "path": ".godot/audit-overhaul-20261011/baseline/engine.log",
+          "bytes": 107393,
+          "sha256": "9f0ebf512f7a050bb1845babab3a4b20110b20b8a342e19390d51c09d7408ba6"
+        },
+        {
+          "path": ".godot/audit-overhaul-20261011/baseline/engine.log.err",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".godot/audit-overhaul-20261011/baseline/runtime-identity.input.json",
+          "bytes": 564,
+          "sha256": "d6a4c1bb30c00942761d8b0604b0eb06a3915cf618a09ac8a57081dba4ea1f16"
+        }
+      ]
+    },
+    {
+      "id": "intermediate",
+      "runtime_build_id": "p60-3a7e6f5fee64",
+      "runtime_source_sha256": "3a7e6f5fee64fe8f424a5e5344f1aae37aca3191a1f5f2f0b31d13bb2c870d26",
+      "runtime_record_count": 3412,
+      "observed_source_sha256": "70c5cf21c8c5a03466ac242079b12ecfcfb71ff1643c39b6724c4cfdd8a69b46",
+      "profile_script_sha256": "631ab1ff0ebbcc7165b6223c783644c4c9b16400ec9eae4d235a7594448f4ed7",
+      "engine": "4.7.1-stable (official)",
+      "adapter": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001506) Direct3D11 vs_5_0 ps_5_0, D3D11-32.0.21045.5002)",
+      "renderer": "gl_compatibility",
+      "debug_build": true,
+      "observer": "full",
+      "frame_cap": 60,
+      "screen_refresh_hz": 60,
+      "vsync": 1,
+      "requested_viewport": [
+        1290,
+        730
+      ],
+      "actual_viewport_start": [
+        1290,
+        730
+      ],
+      "actual_viewport_end": [
+        1290,
+        730
+      ],
+      "source_unchanged": true,
+      "complete": true,
+      "wrapper_status": "measured",
+      "wrapper_validation_errors": [],
+      "available_memory_before_mib": 1585.01,
+      "available_memory_after_mib": 1439.09,
+      "raw_artifacts": [
+        {
+          "path": ".godot/audit-overhaul-20261011/candidate/metrics.json",
+          "bytes": 7344489,
+          "sha256": "f8ef4f23ea8d231e8d5730bf26e13c9b74a9155689ccb88204d3ae687a7317df"
+        },
+        {
+          "path": ".godot/audit-overhaul-20261011/candidate/summary.json",
+          "bytes": 336334,
+          "sha256": "887a8ec421c543cc38ab2a5ad15eb55edf0f2f0ef1d561a2bd59e9ee45e43c06"
+        },
+        {
+          "path": ".godot/audit-overhaul-20261011/candidate/engine.log",
+          "bytes": 159565,
+          "sha256": "e6fd4df5e2adca0fb84b1385ae3f27c1d689b12cd3fd207299047d277d8c0111"
+        },
+        {
+          "path": ".godot/audit-overhaul-20261011/candidate/engine.log.err",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".godot/audit-overhaul-20261011/candidate/runtime-identity.input.json",
+          "bytes": 576,
+          "sha256": "488d2335baab802629a794d8c97c2e52e30f20ae4c0742b3a1af97beba3fcb3a"
+        }
+      ]
+    },
+    {
+      "id": "final",
+      "runtime_build_id": "p60-d8e6ea1cd808",
+      "runtime_source_sha256": "d8e6ea1cd808ee4e43ca93fb45c1af414ba4f714df399e4b973ac76aaaccedf3",
+      "runtime_record_count": 3412,
+      "observed_source_sha256": "0174403c72355c2d50aa948e656ba69d413e5d3a7a28ea16c02af1a1fea303e3",
+      "profile_script_sha256": "631ab1ff0ebbcc7165b6223c783644c4c9b16400ec9eae4d235a7594448f4ed7",
+      "engine": "4.7.1-stable (official)",
+      "adapter": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001506) Direct3D11 vs_5_0 ps_5_0, D3D11-32.0.21045.5002)",
+      "renderer": "gl_compatibility",
+      "debug_build": true,
+      "observer": "full",
+      "frame_cap": 60,
+      "screen_refresh_hz": 60,
+      "vsync": 1,
+      "requested_viewport": [
+        1290,
+        730
+      ],
+      "actual_viewport_start": [
+        1290,
+        730
+      ],
+      "actual_viewport_end": [
+        1290,
+        730
+      ],
+      "source_unchanged": true,
+      "complete": true,
+      "wrapper_status": "measured",
+      "wrapper_validation_errors": [],
+      "available_memory_before_mib": 632.62,
+      "available_memory_after_mib": 1259.95,
+      "raw_artifacts": [
+        {
+          "path": ".godot/audit-overhaul-20261011/final-candidate/metrics.json",
+          "bytes": 3518788,
+          "sha256": "354dfc266356ec2d0418748084bb975f171f970ff9538e0bffe020639fc9d725"
+        },
+        {
+          "path": ".godot/audit-overhaul-20261011/final-candidate/summary.json",
+          "bytes": 295261,
+          "sha256": "6fd02dfe1c3ed4c06cf227cd4b5bb3c74252f84d107b1869e52cb35690e9cd11"
+        },
+        {
+          "path": ".godot/audit-overhaul-20261011/final-candidate/engine.log",
+          "bytes": 139014,
+          "sha256": "13241a7bc8cc35abc5c3dd24a14c5d85712783fe63ef28868c9f80d80eed1926"
+        },
+        {
+          "path": ".godot/audit-overhaul-20261011/final-candidate/engine.log.err",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": ".godot/audit-overhaul-20261011/final-candidate/runtime-identity.input.json",
+          "bytes": 576,
+          "sha256": "1574f9b63a4d2662a5c56bc20952f2d6a11ebdb259e696ab4206ad5726386b28"
+        }
+      ]
+    }
+  ],
+  "case_comparisons": [
+    {
+      "case": "hearth_idle",
+      "baseline": {
+        "frame": {
+          "count": 501,
+          "mean_ms": 19.990727,
+          "p95_ms": 27.066,
+          "p99_ms": 54.089,
+          "max_ms": 68.076,
+          "over_33_3_ms": 15,
+          "over_50_ms": 8
+        },
+        "process_start_cadence_hz": 50.023194,
+        "simulation_hz": 120.592975,
+        "process_frames": 502,
+        "unfocused_frames": 0,
+        "viewport_mismatch_frames": null,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 0,
+          "admitted": null,
+          "refused": null,
+          "matter_paid": 0,
+          "max_paid_cells": 0,
+          "distance_pixels": 0,
+          "tile_crossings": 0
+        },
+        "court_all_draws": {
+          "count": 502,
+          "mean_ms": 0.051034,
+          "p95_ms": 0.071,
+          "p99_ms": 0.097,
+          "max_ms": 0.393
+        },
+        "court_visible_paid_ground": null,
+        "court_no_visible_paid_ground": null
+      },
+      "intermediate": {
+        "frame": {
+          "count": 483,
+          "mean_ms": 20.734342,
+          "p95_ms": 24.311,
+          "p99_ms": 26.943,
+          "max_ms": 30.628,
+          "over_33_3_ms": 0,
+          "over_50_ms": 0
+        },
+        "process_start_cadence_hz": 48.229166,
+        "simulation_hz": 120.003951,
+        "process_frames": 484,
+        "unfocused_frames": 0,
+        "viewport_mismatch_frames": 0,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 0,
+          "admitted": 0,
+          "refused": 0,
+          "matter_paid": 0,
+          "max_paid_cells": 0,
+          "distance_pixels": 0,
+          "tile_crossings": 0
+        },
+        "court_all_draws": {
+          "count": 484,
+          "mean_ms": 0.048432,
+          "p95_ms": 0.069,
+          "p99_ms": 0.127,
+          "max_ms": 0.15
+        },
+        "court_visible_paid_ground": null,
+        "court_no_visible_paid_ground": null
+      },
+      "final": {
+        "frame": {
+          "count": 442,
+          "mean_ms": 22.683848,
+          "p95_ms": 28.2,
+          "p99_ms": 39.066,
+          "max_ms": 51.095,
+          "over_33_3_ms": 7,
+          "over_50_ms": 1
+        },
+        "process_start_cadence_hz": 44.08423,
+        "simulation_hz": 119.869093,
+        "process_frames": 443,
+        "unfocused_frames": 0,
+        "viewport_mismatch_frames": 0,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 0,
+          "admitted": 0,
+          "refused": 0,
+          "matter_paid": 0,
+          "max_paid_cells": 0,
+          "distance_pixels": 0,
+          "tile_crossings": 0
+        },
+        "court_all_draws": {
+          "count": 443,
+          "mean_ms": 0.051041,
+          "p95_ms": 0.072,
+          "p99_ms": 0.091,
+          "max_ms": 0.144
+        },
+        "court_visible_paid_ground": null,
+        "court_no_visible_paid_ground": null
+      }
+    },
+    {
+      "case": "garden_middle",
+      "baseline": {
+        "frame": {
+          "count": 538,
+          "mean_ms": 18.613214,
+          "p95_ms": 25.364,
+          "p99_ms": 31.256,
+          "max_ms": 49.482,
+          "over_33_3_ms": 5,
+          "over_50_ms": 0
+        },
+        "process_start_cadence_hz": 53.725274,
+        "simulation_hz": 119.917439,
+        "process_frames": 539,
+        "unfocused_frames": 0,
+        "viewport_mismatch_frames": null,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 0,
+          "admitted": null,
+          "refused": null,
+          "matter_paid": 0,
+          "max_paid_cells": 0,
+          "distance_pixels": 0,
+          "tile_crossings": 0
+        },
+        "court_all_draws": {
+          "count": 539,
+          "mean_ms": 0.051291,
+          "p95_ms": 0.09,
+          "p99_ms": 0.119,
+          "max_ms": 0.167
+        },
+        "court_visible_paid_ground": null,
+        "court_no_visible_paid_ground": null
+      },
+      "intermediate": {
+        "frame": {
+          "count": 479,
+          "mean_ms": 20.891639,
+          "p95_ms": 27.966,
+          "p99_ms": 36.155,
+          "max_ms": 40.687,
+          "over_33_3_ms": 8,
+          "over_50_ms": 0
+        },
+        "process_start_cadence_hz": 47.866039,
+        "simulation_hz": 120.087676,
+        "process_frames": 480,
+        "unfocused_frames": 0,
+        "viewport_mismatch_frames": 0,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 0,
+          "admitted": 0,
+          "refused": 0,
+          "matter_paid": 0,
+          "max_paid_cells": 0,
+          "distance_pixels": 0,
+          "tile_crossings": 0
+        },
+        "court_all_draws": {
+          "count": 480,
+          "mean_ms": 0.053558,
+          "p95_ms": 0.101,
+          "p99_ms": 0.24,
+          "max_ms": 0.652
+        },
+        "court_visible_paid_ground": null,
+        "court_no_visible_paid_ground": null
+      },
+      "final": {
+        "frame": {
+          "count": 470,
+          "mean_ms": 21.277877,
+          "p95_ms": 27.074,
+          "p99_ms": 31.61,
+          "max_ms": 35.601,
+          "over_33_3_ms": 2,
+          "over_50_ms": 0
+        },
+        "process_start_cadence_hz": 46.997171,
+        "simulation_hz": 120.236334,
+        "process_frames": 471,
+        "unfocused_frames": 438,
+        "viewport_mismatch_frames": 0,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 0,
+          "admitted": 0,
+          "refused": 0,
+          "matter_paid": 0,
+          "max_paid_cells": 0,
+          "distance_pixels": 0,
+          "tile_crossings": 0
+        },
+        "court_all_draws": {
+          "count": 471,
+          "mean_ms": 0.05141,
+          "p95_ms": 0.078,
+          "p99_ms": 0.144,
+          "max_ms": 0.359
+        },
+        "court_visible_paid_ground": null,
+        "court_no_visible_paid_ground": null
+      }
+    },
+    {
+      "case": "paid_all_six_mantle",
+      "baseline": {
+        "frame": {
+          "count": 343,
+          "mean_ms": 29.223513,
+          "p95_ms": 35.746,
+          "p99_ms": 40.07,
+          "max_ms": 46.511,
+          "over_33_3_ms": 64,
+          "over_50_ms": 0
+        },
+        "process_start_cadence_hz": 34.219021,
+        "simulation_hz": 119.875866,
+        "process_frames": 344,
+        "unfocused_frames": 0,
+        "viewport_mismatch_frames": null,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 11,
+          "admitted": null,
+          "refused": null,
+          "matter_paid": 3600,
+          "max_paid_cells": 33,
+          "distance_pixels": 0,
+          "tile_crossings": 0
+        },
+        "court_all_draws": {
+          "count": 344,
+          "mean_ms": 4.8635,
+          "p95_ms": 7.357,
+          "p99_ms": 7.902,
+          "max_ms": 16.504
+        },
+        "court_visible_paid_ground": null,
+        "court_no_visible_paid_ground": null
+      },
+      "intermediate": {
+        "frame": {
+          "count": 287,
+          "mean_ms": 34.881592,
+          "p95_ms": 45.231,
+          "p99_ms": 51.103,
+          "max_ms": 55.721,
+          "over_33_3_ms": 167,
+          "over_50_ms": 4
+        },
+        "process_start_cadence_hz": 28.668416,
+        "simulation_hz": 119.91472,
+        "process_frames": 288,
+        "unfocused_frames": 0,
+        "viewport_mismatch_frames": 0,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 11,
+          "admitted": 6,
+          "refused": 5,
+          "matter_paid": 3600,
+          "max_paid_cells": 33,
+          "distance_pixels": 0,
+          "tile_crossings": 0
+        },
+        "court_all_draws": {
+          "count": 288,
+          "mean_ms": 5.30924,
+          "p95_ms": 8.354,
+          "p99_ms": 11.23,
+          "max_ms": 13.438
+        },
+        "court_visible_paid_ground": {
+          "count": 283,
+          "mean_ms": 5.40212,
+          "p95_ms": 8.354,
+          "p99_ms": 11.23,
+          "max_ms": 13.438
+        },
+        "court_no_visible_paid_ground": {
+          "count": 5,
+          "mean_ms": 0.0522,
+          "p95_ms": 0.086,
+          "p99_ms": 0.086,
+          "max_ms": 0.086
+        }
+      },
+      "final": {
+        "frame": {
+          "count": 289,
+          "mean_ms": 34.72082,
+          "p95_ms": 42.576,
+          "p99_ms": 61.096,
+          "max_ms": 70.05,
+          "over_33_3_ms": 163,
+          "over_50_ms": 4
+        },
+        "process_start_cadence_hz": 28.801163,
+        "simulation_hz": 119.99437,
+        "process_frames": 290,
+        "unfocused_frames": 290,
+        "viewport_mismatch_frames": 0,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 11,
+          "admitted": 6,
+          "refused": 5,
+          "matter_paid": 3600,
+          "max_paid_cells": 33,
+          "distance_pixels": 0,
+          "tile_crossings": 0
+        },
+        "court_all_draws": {
+          "count": 290,
+          "mean_ms": 5.166848,
+          "p95_ms": 7.872,
+          "p99_ms": 11.144,
+          "max_ms": 20.627
+        },
+        "court_visible_paid_ground": {
+          "count": 286,
+          "mean_ms": 5.238434,
+          "p95_ms": 7.872,
+          "p99_ms": 11.144,
+          "max_ms": 20.627
+        },
+        "court_no_visible_paid_ground": {
+          "count": 4,
+          "mean_ms": 0.0485,
+          "p95_ms": 0.059,
+          "p99_ms": 0.059,
+          "max_ms": 0.059
+        }
+      }
+    },
+    {
+      "case": "movement_boundary",
+      "baseline": {
+        "frame": {
+          "count": 465,
+          "mean_ms": 21.532632,
+          "p95_ms": 31.119,
+          "p99_ms": 48.107,
+          "max_ms": 70.501,
+          "over_33_3_ms": 20,
+          "over_50_ms": 4
+        },
+        "process_start_cadence_hz": 46.44114,
+        "simulation_hz": 119.898429,
+        "process_frames": 466,
+        "unfocused_frames": 0,
+        "viewport_mismatch_frames": null,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 0,
+          "admitted": null,
+          "refused": null,
+          "matter_paid": 0,
+          "max_paid_cells": 0,
+          "distance_pixels": 5256.56311,
+          "tile_crossings": 8
+        },
+        "court_all_draws": {
+          "count": 466,
+          "mean_ms": 0.051835,
+          "p95_ms": 0.074,
+          "p99_ms": 0.103,
+          "max_ms": 0.13
+        },
+        "court_visible_paid_ground": null,
+        "court_no_visible_paid_ground": null
+      },
+      "intermediate": {
+        "frame": {
+          "count": 434,
+          "mean_ms": 23.059827,
+          "p95_ms": 30.43,
+          "p99_ms": 38.699,
+          "max_ms": 48.447,
+          "over_33_3_ms": 9,
+          "over_50_ms": 0
+        },
+        "process_start_cadence_hz": 43.365459,
+        "simulation_hz": 120.068706,
+        "process_frames": 435,
+        "unfocused_frames": 0,
+        "viewport_mismatch_frames": 0,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 0,
+          "admitted": 0,
+          "refused": 0,
+          "matter_paid": 0,
+          "max_paid_cells": 0,
+          "distance_pixels": 5251.546997,
+          "tile_crossings": 8
+        },
+        "court_all_draws": {
+          "count": 435,
+          "mean_ms": 0.051995,
+          "p95_ms": 0.076,
+          "p99_ms": 0.185,
+          "max_ms": 0.397
+        },
+        "court_visible_paid_ground": null,
+        "court_no_visible_paid_ground": null
+      },
+      "final": {
+        "frame": {
+          "count": 443,
+          "mean_ms": 22.633348,
+          "p95_ms": 32.737,
+          "p99_ms": 41.213,
+          "max_ms": 50.266,
+          "over_33_3_ms": 20,
+          "over_50_ms": 1
+        },
+        "process_start_cadence_hz": 44.182594,
+        "simulation_hz": 120.06039,
+        "process_frames": 444,
+        "unfocused_frames": 444,
+        "viewport_mismatch_frames": 0,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 0,
+          "admitted": 0,
+          "refused": 0,
+          "matter_paid": 0,
+          "max_paid_cells": 0,
+          "distance_pixels": 5271.135986,
+          "tile_crossings": 8
+        },
+        "court_all_draws": {
+          "count": 444,
+          "mean_ms": 0.053354,
+          "p95_ms": 0.084,
+          "p99_ms": 0.124,
+          "max_ms": 0.201
+        },
+        "court_visible_paid_ground": null,
+        "court_no_visible_paid_ground": null
+      }
+    },
+    {
+      "case": "paid_fire_bolt_close",
+      "baseline": {
+        "frame": {
+          "count": 360,
+          "mean_ms": 27.791986,
+          "p95_ms": 53.244,
+          "p99_ms": 69.616,
+          "max_ms": 75.18,
+          "over_33_3_ms": 90,
+          "over_50_ms": 21
+        },
+        "process_start_cadence_hz": 35.981595,
+        "simulation_hz": 119.740563,
+        "process_frames": 361,
+        "unfocused_frames": 0,
+        "viewport_mismatch_frames": null,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0.008333,
+        "fixture": {
+          "attempts": 12,
+          "admitted": 12,
+          "refused": 0,
+          "matter_paid": 7200,
+          "max_paid_cells": 30,
+          "distance_pixels": 0,
+          "tile_crossings": 0
+        },
+        "court_all_draws": {
+          "count": 361,
+          "mean_ms": 4.109158,
+          "p95_ms": 13.846,
+          "p99_ms": 19.822,
+          "max_ms": 23.077
+        },
+        "court_visible_paid_ground": {
+          "count": 177,
+          "mean_ms": 8.319446,
+          "p95_ms": 16.605,
+          "p99_ms": 20.401,
+          "max_ms": 23.077
+        },
+        "court_no_visible_paid_ground": {
+          "count": 184,
+          "mean_ms": 0.059043,
+          "p95_ms": 0.066,
+          "p99_ms": 0.1,
+          "max_ms": 1.725
+        }
+      },
+      "intermediate": {
+        "frame": {
+          "count": 329,
+          "mean_ms": 30.405574,
+          "p95_ms": 46.072,
+          "p99_ms": 51.038,
+          "max_ms": 52.668,
+          "over_33_3_ms": 138,
+          "over_50_ms": 4
+        },
+        "process_start_cadence_hz": 32.888706,
+        "simulation_hz": 120.130667,
+        "process_frames": 330,
+        "unfocused_frames": 0,
+        "viewport_mismatch_frames": 0,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 12,
+          "admitted": 12,
+          "refused": 0,
+          "matter_paid": 7200,
+          "max_paid_cells": 30,
+          "distance_pixels": 0,
+          "tile_crossings": 0
+        },
+        "court_all_draws": {
+          "count": 330,
+          "mean_ms": 4.23963,
+          "p95_ms": 12.57,
+          "p99_ms": 14.308,
+          "max_ms": 15.241
+        },
+        "court_visible_paid_ground": {
+          "count": 166,
+          "mean_ms": 8.378946,
+          "p95_ms": 13.819,
+          "p99_ms": 15.189,
+          "max_ms": 15.241
+        },
+        "court_no_visible_paid_ground": {
+          "count": 164,
+          "mean_ms": 0.049835,
+          "p95_ms": 0.073,
+          "p99_ms": 0.137,
+          "max_ms": 0.159
+        }
+      },
+      "final": {
+        "frame": {
+          "count": 328,
+          "mean_ms": 30.518552,
+          "p95_ms": 48.987,
+          "p99_ms": 56.862,
+          "max_ms": 61.956,
+          "over_33_3_ms": 136,
+          "over_50_ms": 14
+        },
+        "process_start_cadence_hz": 32.766955,
+        "simulation_hz": 120.128778,
+        "process_frames": 329,
+        "unfocused_frames": 329,
+        "viewport_mismatch_frames": 0,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 12,
+          "admitted": 12,
+          "refused": 0,
+          "matter_paid": 7200,
+          "max_paid_cells": 30,
+          "distance_pixels": 0,
+          "tile_crossings": 0
+        },
+        "court_all_draws": {
+          "count": 329,
+          "mean_ms": 4.126629,
+          "p95_ms": 12.3,
+          "p99_ms": 14.924,
+          "max_ms": 16.053
+        },
+        "court_visible_paid_ground": {
+          "count": 167,
+          "mean_ms": 8.07718,
+          "p95_ms": 13.514,
+          "p99_ms": 15.948,
+          "max_ms": 16.053
+        },
+        "court_no_visible_paid_ground": {
+          "count": 162,
+          "mean_ms": 0.054148,
+          "p95_ms": 0.09,
+          "p99_ms": 0.15,
+          "max_ms": 0.425
+        }
+      }
+    },
+    {
+      "case": "paid_fire_bolt_sustained",
+      "baseline": null,
+      "intermediate": {
+        "frame": {
+          "count": 317,
+          "mean_ms": 31.553432,
+          "p95_ms": 40.479,
+          "p99_ms": 43.424,
+          "max_ms": 46.991,
+          "over_33_3_ms": 106,
+          "over_50_ms": 0
+        },
+        "process_start_cadence_hz": 31.692273,
+        "simulation_hz": 119.958027,
+        "process_frames": 318,
+        "unfocused_frames": 0,
+        "viewport_mismatch_frames": 0,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 11,
+          "admitted": 11,
+          "refused": 0,
+          "matter_paid": 6600,
+          "max_paid_cells": 30,
+          "distance_pixels": 0,
+          "tile_crossings": 0
+        },
+        "court_all_draws": {
+          "count": 318,
+          "mean_ms": 4.83983,
+          "p95_ms": 9.078,
+          "p99_ms": 10.702,
+          "max_ms": 12.174
+        },
+        "court_visible_paid_ground": {
+          "count": 295,
+          "mean_ms": 5.213302,
+          "p95_ms": 9.128,
+          "p99_ms": 10.935,
+          "max_ms": 12.174
+        },
+        "court_no_visible_paid_ground": {
+          "count": 23,
+          "mean_ms": 0.049652,
+          "p95_ms": 0.07,
+          "p99_ms": 0.07,
+          "max_ms": 0.07
+        }
+      },
+      "final": {
+        "frame": {
+          "count": 295,
+          "mean_ms": 33.901959,
+          "p95_ms": 50.151,
+          "p99_ms": 59.477,
+          "max_ms": 65.113,
+          "over_33_3_ms": 138,
+          "over_50_ms": 15
+        },
+        "process_start_cadence_hz": 29.49682,
+        "simulation_hz": 120.012623,
+        "process_frames": 296,
+        "unfocused_frames": 238,
+        "viewport_mismatch_frames": 0,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 11,
+          "admitted": 11,
+          "refused": 0,
+          "matter_paid": 6600,
+          "max_paid_cells": 30,
+          "distance_pixels": 0,
+          "tile_crossings": 0
+        },
+        "court_all_draws": {
+          "count": 296,
+          "mean_ms": 4.815909,
+          "p95_ms": 9.44,
+          "p99_ms": 10.901,
+          "max_ms": 11.644
+        },
+        "court_visible_paid_ground": {
+          "count": 272,
+          "mean_ms": 5.236393,
+          "p95_ms": 9.462,
+          "p99_ms": 10.901,
+          "max_ms": 11.644
+        },
+        "court_no_visible_paid_ground": {
+          "count": 24,
+          "mean_ms": 0.050417,
+          "p95_ms": 0.065,
+          "p99_ms": 0.074,
+          "max_ms": 0.074
+        }
+      }
+    },
+    {
+      "case": "paid_all_six_mantle_sustained",
+      "baseline": null,
+      "intermediate": {
+        "frame": {
+          "count": 288,
+          "mean_ms": 34.835983,
+          "p95_ms": 42.478,
+          "p99_ms": 47.601,
+          "max_ms": 52.578,
+          "over_33_3_ms": 186,
+          "over_50_ms": 1
+        },
+        "process_start_cadence_hz": 28.705951,
+        "simulation_hz": 120.017975,
+        "process_frames": 289,
+        "unfocused_frames": 0,
+        "viewport_mismatch_frames": 0,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 11,
+          "admitted": 6,
+          "refused": 5,
+          "matter_paid": 3600,
+          "max_paid_cells": 33,
+          "distance_pixels": 0,
+          "tile_crossings": 0
+        },
+        "court_all_draws": {
+          "count": 289,
+          "mean_ms": 5.249401,
+          "p95_ms": 7.671,
+          "p99_ms": 8.603,
+          "max_ms": 11.101
+        },
+        "court_visible_paid_ground": {
+          "count": 284,
+          "mean_ms": 5.340993,
+          "p95_ms": 7.671,
+          "p99_ms": 8.603,
+          "max_ms": 11.101
+        },
+        "court_no_visible_paid_ground": {
+          "count": 5,
+          "mean_ms": 0.047,
+          "p95_ms": 0.055,
+          "p99_ms": 0.055,
+          "max_ms": 0.055
+        }
+      },
+      "final": {
+        "frame": {
+          "count": 289,
+          "mean_ms": 34.687087,
+          "p95_ms": 42.7,
+          "p99_ms": 63.245,
+          "max_ms": 67.047,
+          "over_33_3_ms": 172,
+          "over_50_ms": 6
+        },
+        "process_start_cadence_hz": 28.829172,
+        "simulation_hz": 119.923583,
+        "process_frames": 290,
+        "unfocused_frames": 0,
+        "viewport_mismatch_frames": 0,
+        "clamped_delta_seconds": 0,
+        "dropped_accumulator_seconds": 0,
+        "fixture": {
+          "attempts": 11,
+          "admitted": 6,
+          "refused": 5,
+          "matter_paid": 3600,
+          "max_paid_cells": 33,
+          "distance_pixels": 0,
+          "tile_crossings": 0
+        },
+        "court_all_draws": {
+          "count": 290,
+          "mean_ms": 4.975297,
+          "p95_ms": 7.802,
+          "p99_ms": 8.967,
+          "max_ms": 9.565
+        },
+        "court_visible_paid_ground": {
+          "count": 284,
+          "mean_ms": 5.079338,
+          "p95_ms": 7.802,
+          "p99_ms": 8.967,
+          "max_ms": 9.565
+        },
+        "court_no_visible_paid_ground": {
+          "count": 6,
+          "mean_ms": 0.050667,
+          "p95_ms": 0.061,
+          "p99_ms": 0.061,
+          "max_ms": 0.061
+        }
+      }
+    }
+  ],
+  "final_case_detail": [
+    {
+      "case": "hearth_idle",
+      "temperature": "warm",
+      "wall_seconds": 10.052633,
+      "draw_submission": {
+        "count": 443,
+        "mean_ms": 7.393887,
+        "p95_ms": 9.866,
+        "p99_ms": 12.057,
+        "max_ms": 15.432
+      },
+      "bootstrap_process": {
+        "count": 443,
+        "mean_ms": 4.174027,
+        "p95_ms": 6.391,
+        "p99_ms": 7.722,
+        "max_ms": 10.313
+      },
+      "court_preparation": {
+        "bundle": {
+          "mean_ms": 0,
+          "p95_ms": 0,
+          "count": 443
+        },
+        "drawing_and_other": {
+          "mean_ms": 0.013122,
+          "p95_ms": 0.019,
+          "count": 443
+        },
+        "geometry": {
+          "mean_ms": 0.037919,
+          "p95_ms": 0.056,
+          "count": 443
+        }
+      },
+      "draw_stages": {
+        "actors": {
+          "mean_ms": 0.792336,
+          "p95_ms": 1.307,
+          "count": 443
+        },
+        "campus_and_setup": {
+          "mean_ms": 2.377296,
+          "p95_ms": 3.52,
+          "count": 443
+        },
+        "combat_hud": {
+          "mean_ms": 1.86044,
+          "p95_ms": 3.13,
+          "count": 443
+        },
+        "garden": {
+          "mean_ms": 0.115993,
+          "p95_ms": 0.17,
+          "count": 443
+        },
+        "garden_inspection": {
+          "mean_ms": 0.045153,
+          "p95_ms": 0.071,
+          "count": 443
+        },
+        "local_labels_reticle": {
+          "mean_ms": 0.400722,
+          "p95_ms": 0.728,
+          "count": 443
+        },
+        "paid_ground": {
+          "mean_ms": 0.071503,
+          "p95_ms": 0.102,
+          "count": 443
+        },
+        "panels": {
+          "mean_ms": 0.064822,
+          "p95_ms": 0.101,
+          "count": 443
+        },
+        "practice_coach": {
+          "mean_ms": 0.182052,
+          "p95_ms": 0.275,
+          "count": 443
+        },
+        "projectiles_targets_cues": {
+          "mean_ms": 0.716684,
+          "p95_ms": 1.307,
+          "count": 443
+        },
+        "visibility": {
+          "mean_ms": 0.744129,
+          "p95_ms": 1.242,
+          "count": 443
+        }
+      },
+      "sampled_last_fixed_step_stages": {
+        "actor_product_effects": {
+          "mean_ms": 0.013508,
+          "p95_ms": 0.024,
+          "count": 443
+        },
+        "chemistry_exposure": {
+          "mean_ms": 0.011318,
+          "p95_ms": 0.02,
+          "count": 443
+        },
+        "command_order": {
+          "mean_ms": 0.014607,
+          "p95_ms": 0.029,
+          "count": 443
+        },
+        "finalize": {
+          "mean_ms": 0.011474,
+          "p95_ms": 0.019,
+          "count": 443
+        },
+        "movement_cast_admission": {
+          "mean_ms": 0.629174,
+          "p95_ms": 1.034,
+          "count": 443
+        },
+        "projectile_contacts": {
+          "mean_ms": 0.044244,
+          "p95_ms": 0.081,
+          "count": 443
+        },
+        "spray_contacts": {
+          "mean_ms": 0.042115,
+          "p95_ms": 0.09,
+          "count": 443
+        },
+        "surfaces_expiry": {
+          "mean_ms": 0.034217,
+          "p95_ms": 0.072,
+          "count": 443
+        },
+        "terminal_deposits": {
+          "mean_ms": 0.002788,
+          "p95_ms": 0.005,
+          "count": 443
+        }
+      },
+      "frame_activity": {
+        "idle": {
+          "mean_ms": 22.683848,
+          "p95_ms": 28.2,
+          "count": 442
+        }
+      },
+      "observer_head_tail": {
+        "count": 443,
+        "mean_ms": 0.048535,
+        "p95_ms": 0.08,
+        "p99_ms": 0.11,
+        "max_ms": 0.169
+      },
+      "terrain_preparation": {
+        "count": 443,
+        "mean_ms": 0.205016,
+        "p95_ms": 0.357,
+        "p99_ms": 0.423,
+        "max_ms": 0.497
+      },
+      "terrain_before": {
+        "required": 15,
+        "ready": 15,
+        "resident": 24,
+        "bytes": 25165824,
+        "requests": 24,
+        "uploads": 24,
+        "pending": 0,
+        "queued": 0,
+        "budget_yields": 34,
+        "pump_byte_limit": 2097152,
+        "pump_time_target_usec": 2000
+      },
+      "terrain_after": {
+        "required": 15,
+        "ready": 15,
+        "resident": 24,
+        "bytes": 25165824,
+        "requests": 24,
+        "uploads": 24,
+        "pending": 0,
+        "queued": 0,
+        "budget_yields": 34,
+        "pump_byte_limit": 2097152,
+        "pump_time_target_usec": 2000
+      },
+      "hud_preparation_endpoints": {
+        "after": {
+          "binding_builds": 4,
+          "card_layout_builds": 4,
+          "frame_layout_builds": 1,
+          "panel_geometry_builds": 8,
+          "retained_bindings": 4,
+          "retained_cards": 4,
+          "retained_text_metrics": 4,
+          "text_measurements": 4
+        },
+        "before": {
+          "binding_builds": 4,
+          "card_layout_builds": 4,
+          "frame_layout_builds": 1,
+          "panel_geometry_builds": 8,
+          "retained_bindings": 4,
+          "retained_cards": 4,
+          "retained_text_metrics": 4,
+          "text_measurements": 4
+        }
+      },
+      "region_sample_alignment": null
+    },
+    {
+      "case": "garden_middle",
+      "temperature": "warm",
+      "wall_seconds": 10.021929,
+      "draw_submission": {
+        "count": 471,
+        "mean_ms": 7.509582,
+        "p95_ms": 9.48,
+        "p99_ms": 11.732,
+        "max_ms": 13.211
+      },
+      "bootstrap_process": {
+        "count": 471,
+        "mean_ms": 4.905374,
+        "p95_ms": 10.055,
+        "p99_ms": 13.174,
+        "max_ms": 16.431
+      },
+      "court_preparation": {
+        "bundle": {
+          "mean_ms": 0,
+          "p95_ms": 0,
+          "count": 471
+        },
+        "drawing_and_other": {
+          "mean_ms": 0.015189,
+          "p95_ms": 0.022,
+          "count": 471
+        },
+        "geometry": {
+          "mean_ms": 0.036221,
+          "p95_ms": 0.054,
+          "count": 471
+        }
+      },
+      "draw_stages": {
+        "actors": {
+          "mean_ms": 1.181261,
+          "p95_ms": 1.692,
+          "count": 471
+        },
+        "campus_and_setup": {
+          "mean_ms": 0.603701,
+          "p95_ms": 0.903,
+          "count": 471
+        },
+        "combat_hud": {
+          "mean_ms": 1.852384,
+          "p95_ms": 3.025,
+          "count": 471
+        },
+        "garden": {
+          "mean_ms": 1.69076,
+          "p95_ms": 2.583,
+          "count": 471
+        },
+        "garden_inspection": {
+          "mean_ms": 0.423403,
+          "p95_ms": 0.715,
+          "count": 471
+        },
+        "local_labels_reticle": {
+          "mean_ms": 0.192628,
+          "p95_ms": 0.535,
+          "count": 471
+        },
+        "paid_ground": {
+          "mean_ms": 0.07676,
+          "p95_ms": 0.117,
+          "count": 471
+        },
+        "panels": {
+          "mean_ms": 0.073291,
+          "p95_ms": 0.126,
+          "count": 471
+        },
+        "practice_coach": {
+          "mean_ms": 0.345028,
+          "p95_ms": 0.533,
+          "count": 471
+        },
+        "projectiles_targets_cues": {
+          "mean_ms": 0.274246,
+          "p95_ms": 0.4,
+          "count": 471
+        },
+        "visibility": {
+          "mean_ms": 0.772204,
+          "p95_ms": 1.306,
+          "count": 471
+        }
+      },
+      "sampled_last_fixed_step_stages": {
+        "actor_product_effects": {
+          "mean_ms": 0.014274,
+          "p95_ms": 0.024,
+          "count": 471
+        },
+        "chemistry_exposure": {
+          "mean_ms": 0.012193,
+          "p95_ms": 0.021,
+          "count": 471
+        },
+        "command_order": {
+          "mean_ms": 0.016185,
+          "p95_ms": 0.034,
+          "count": 471
+        },
+        "finalize": {
+          "mean_ms": 0.011554,
+          "p95_ms": 0.019,
+          "count": 471
+        },
+        "movement_cast_admission": {
+          "mean_ms": 0.644805,
+          "p95_ms": 1.059,
+          "count": 471
+        },
+        "projectile_contacts": {
+          "mean_ms": 0.044076,
+          "p95_ms": 0.073,
+          "count": 471
+        },
+        "spray_contacts": {
+          "mean_ms": 0.040654,
+          "p95_ms": 0.081,
+          "count": 471
+        },
+        "surfaces_expiry": {
+          "mean_ms": 0.03831,
+          "p95_ms": 0.09,
+          "count": 471
+        },
+        "terminal_deposits": {
+          "mean_ms": 0.002924,
+          "p95_ms": 0.005,
+          "count": 471
+        }
+      },
+      "frame_activity": {
+        "idle": {
+          "mean_ms": 21.277877,
+          "p95_ms": 27.074,
+          "count": 470
+        }
+      },
+      "observer_head_tail": {
+        "count": 471,
+        "mean_ms": 0.04669,
+        "p95_ms": 0.077,
+        "p99_ms": 0.119,
+        "max_ms": 0.201
+      },
+      "terrain_preparation": {
+        "count": 471,
+        "mean_ms": 0.138321,
+        "p95_ms": 0.269,
+        "p99_ms": 0.36,
+        "max_ms": 0.391
+      },
+      "terrain_before": {
+        "required": 20,
+        "ready": 20,
+        "resident": 30,
+        "bytes": 31457280,
+        "requests": 54,
+        "uploads": 54,
+        "pending": 0,
+        "queued": 0,
+        "budget_yields": 78,
+        "pump_byte_limit": 2097152,
+        "pump_time_target_usec": 2000
+      },
+      "terrain_after": {
+        "required": 20,
+        "ready": 20,
+        "resident": 30,
+        "bytes": 31457280,
+        "requests": 54,
+        "uploads": 54,
+        "pending": 0,
+        "queued": 0,
+        "budget_yields": 78,
+        "pump_byte_limit": 2097152,
+        "pump_time_target_usec": 2000
+      },
+      "hud_preparation_endpoints": {
+        "after": {
+          "binding_builds": 4,
+          "card_layout_builds": 4,
+          "frame_layout_builds": 1,
+          "panel_geometry_builds": 8,
+          "retained_bindings": 4,
+          "retained_cards": 4,
+          "retained_text_metrics": 4,
+          "text_measurements": 4
+        },
+        "before": {
+          "binding_builds": 4,
+          "card_layout_builds": 4,
+          "frame_layout_builds": 1,
+          "panel_geometry_builds": 8,
+          "retained_bindings": 4,
+          "retained_cards": 4,
+          "retained_text_metrics": 4,
+          "text_measurements": 4
+        }
+      },
+      "region_sample_alignment": null
+    },
+    {
+      "case": "paid_all_six_mantle",
+      "temperature": "warm",
+      "wall_seconds": 10.067139,
+      "draw_submission": {
+        "count": 290,
+        "mean_ms": 13.163497,
+        "p95_ms": 16.204,
+        "p99_ms": 20.822,
+        "max_ms": 27.909
+      },
+      "bootstrap_process": {
+        "count": 290,
+        "mean_ms": 8.456462,
+        "p95_ms": 12.263,
+        "p99_ms": 18.534,
+        "max_ms": 26.711
+      },
+      "court_preparation": {
+        "bundle": {
+          "mean_ms": 1.845938,
+          "p95_ms": 2.933,
+          "count": 290
+        },
+        "drawing_and_other": {
+          "mean_ms": 3.212721,
+          "p95_ms": 5.062,
+          "count": 290
+        },
+        "geometry": {
+          "mean_ms": 0.10819,
+          "p95_ms": 0.182,
+          "count": 290
+        }
+      },
+      "draw_stages": {
+        "actors": {
+          "mean_ms": 0.831921,
+          "p95_ms": 1.433,
+          "count": 290
+        },
+        "campus_and_setup": {
+          "mean_ms": 2.412217,
+          "p95_ms": 3.374,
+          "count": 290
+        },
+        "combat_hud": {
+          "mean_ms": 1.887024,
+          "p95_ms": 3.15,
+          "count": 290
+        },
+        "garden": {
+          "mean_ms": 0.111828,
+          "p95_ms": 0.162,
+          "count": 290
+        },
+        "garden_inspection": {
+          "mean_ms": 0.042328,
+          "p95_ms": 0.065,
+          "count": 290
+        },
+        "local_labels_reticle": {
+          "mean_ms": 0.159286,
+          "p95_ms": 0.303,
+          "count": 290
+        },
+        "paid_ground": {
+          "mean_ms": 5.201379,
+          "p95_ms": 7.909,
+          "count": 290
+        },
+        "panels": {
+          "mean_ms": 0.060638,
+          "p95_ms": 0.088,
+          "count": 290
+        },
+        "practice_coach": {
+          "mean_ms": 0.178672,
+          "p95_ms": 0.263,
+          "count": 290
+        },
+        "projectiles_targets_cues": {
+          "mean_ms": 1.516148,
+          "p95_ms": 2.562,
+          "count": 290
+        },
+        "visibility": {
+          "mean_ms": 0.740986,
+          "p95_ms": 1.264,
+          "count": 290
+        }
+      },
+      "sampled_last_fixed_step_stages": {
+        "actor_product_effects": {
+          "mean_ms": 0.236855,
+          "p95_ms": 0.446,
+          "count": 290
+        },
+        "chemistry_exposure": {
+          "mean_ms": 0.121338,
+          "p95_ms": 0.207,
+          "count": 290
+        },
+        "command_order": {
+          "mean_ms": 0.014352,
+          "p95_ms": 0.026,
+          "count": 290
+        },
+        "finalize": {
+          "mean_ms": 0.012493,
+          "p95_ms": 0.022,
+          "count": 290
+        },
+        "movement_cast_admission": {
+          "mean_ms": 0.728462,
+          "p95_ms": 1.175,
+          "count": 290
+        },
+        "projectile_contacts": {
+          "mean_ms": 0.155307,
+          "p95_ms": 0.302,
+          "count": 290
+        },
+        "spray_contacts": {
+          "mean_ms": 0.07959,
+          "p95_ms": 0.154,
+          "count": 290
+        },
+        "surfaces_expiry": {
+          "mean_ms": 0.041276,
+          "p95_ms": 0.079,
+          "count": 290
+        },
+        "terminal_deposits": {
+          "mean_ms": 0.003186,
+          "p95_ms": 0.005,
+          "count": 290
+        }
+      },
+      "frame_activity": {
+        "cast_or_projectile": {
+          "mean_ms": 35.21815,
+          "p95_ms": 42.274,
+          "count": 213
+        },
+        "paid_ground": {
+          "mean_ms": 33.326987,
+          "p95_ms": 45.604,
+          "count": 76
+        }
+      },
+      "observer_head_tail": {
+        "count": 290,
+        "mean_ms": 0.055021,
+        "p95_ms": 0.097,
+        "p99_ms": 0.127,
+        "max_ms": 0.16
+      },
+      "terrain_preparation": {
+        "count": 290,
+        "mean_ms": 0.11819,
+        "p95_ms": 0.241,
+        "p99_ms": 0.287,
+        "max_ms": 0.318
+      },
+      "terrain_before": {
+        "required": 12,
+        "ready": 12,
+        "resident": 24,
+        "bytes": 25165824,
+        "requests": 78,
+        "uploads": 78,
+        "pending": 0,
+        "queued": 0,
+        "budget_yields": 112,
+        "pump_byte_limit": 2097152,
+        "pump_time_target_usec": 2000
+      },
+      "terrain_after": {
+        "required": 12,
+        "ready": 12,
+        "resident": 24,
+        "bytes": 25165824,
+        "requests": 78,
+        "uploads": 78,
+        "pending": 0,
+        "queued": 0,
+        "budget_yields": 112,
+        "pump_byte_limit": 2097152,
+        "pump_time_target_usec": 2000
+      },
+      "hud_preparation_endpoints": {
+        "after": {
+          "binding_builds": 4,
+          "card_layout_builds": 5,
+          "frame_layout_builds": 1,
+          "panel_geometry_builds": 9,
+          "retained_bindings": 4,
+          "retained_cards": 4,
+          "retained_text_metrics": 4,
+          "text_measurements": 143
+        },
+        "before": {
+          "binding_builds": 4,
+          "card_layout_builds": 5,
+          "frame_layout_builds": 1,
+          "panel_geometry_builds": 8,
+          "retained_bindings": 4,
+          "retained_cards": 4,
+          "retained_text_metrics": 4,
+          "text_measurements": 4
+        }
+      },
+      "region_sample_alignment": {
+        "region_rows": 290,
+        "court_samples": 290,
+        "all_samples_observed": true
+      }
+    },
+    {
+      "case": "movement_boundary",
+      "temperature": "warm",
+      "wall_seconds": 10.053274,
+      "draw_submission": {
+        "count": 444,
+        "mean_ms": 8.230723,
+        "p95_ms": 11.771,
+        "p99_ms": 13.822,
+        "max_ms": 17.252
+      },
+      "bootstrap_process": {
+        "count": 444,
+        "mean_ms": 4.285137,
+        "p95_ms": 8.329,
+        "p99_ms": 10.418,
+        "max_ms": 12.378
+      },
+      "court_preparation": {
+        "bundle": {
+          "mean_ms": 0,
+          "p95_ms": 0,
+          "count": 444
+        },
+        "drawing_and_other": {
+          "mean_ms": 0.013752,
+          "p95_ms": 0.021,
+          "count": 444
+        },
+        "geometry": {
+          "mean_ms": 0.039601,
+          "p95_ms": 0.062,
+          "count": 444
+        }
+      },
+      "draw_stages": {
+        "actors": {
+          "mean_ms": 1.57164,
+          "p95_ms": 2.42,
+          "count": 444
+        },
+        "campus_and_setup": {
+          "mean_ms": 2.194009,
+          "p95_ms": 3.349,
+          "count": 444
+        },
+        "combat_hud": {
+          "mean_ms": 2.01136,
+          "p95_ms": 3.299,
+          "count": 444
+        },
+        "garden": {
+          "mean_ms": 0.119748,
+          "p95_ms": 0.183,
+          "count": 444
+        },
+        "garden_inspection": {
+          "mean_ms": 0.046351,
+          "p95_ms": 0.074,
+          "count": 444
+        },
+        "local_labels_reticle": {
+          "mean_ms": 0.181196,
+          "p95_ms": 0.369,
+          "count": 444
+        },
+        "paid_ground": {
+          "mean_ms": 0.074572,
+          "p95_ms": 0.118,
+          "count": 444
+        },
+        "panels": {
+          "mean_ms": 0.063887,
+          "p95_ms": 0.093,
+          "count": 444
+        },
+        "practice_coach": {
+          "mean_ms": 0.190241,
+          "p95_ms": 0.283,
+          "count": 444
+        },
+        "projectiles_targets_cues": {
+          "mean_ms": 0.921649,
+          "p95_ms": 1.793,
+          "count": 444
+        },
+        "visibility": {
+          "mean_ms": 0.83286,
+          "p95_ms": 1.364,
+          "count": 444
+        }
+      },
+      "sampled_last_fixed_step_stages": {
+        "actor_product_effects": {
+          "mean_ms": 0.014414,
+          "p95_ms": 0.026,
+          "count": 444
+        },
+        "chemistry_exposure": {
+          "mean_ms": 0.012351,
+          "p95_ms": 0.022,
+          "count": 444
+        },
+        "command_order": {
+          "mean_ms": 0.014676,
+          "p95_ms": 0.029,
+          "count": 444
+        },
+        "finalize": {
+          "mean_ms": 0.012282,
+          "p95_ms": 0.021,
+          "count": 444
+        },
+        "movement_cast_admission": {
+          "mean_ms": 0.684583,
+          "p95_ms": 1.249,
+          "count": 444
+        },
+        "projectile_contacts": {
+          "mean_ms": 0.046714,
+          "p95_ms": 0.083,
+          "count": 444
+        },
+        "spray_contacts": {
+          "mean_ms": 0.045509,
+          "p95_ms": 0.092,
+          "count": 444
+        },
+        "surfaces_expiry": {
+          "mean_ms": 0.034919,
+          "p95_ms": 0.082,
+          "count": 444
+        },
+        "terminal_deposits": {
+          "mean_ms": 0.002984,
+          "p95_ms": 0.005,
+          "count": 444
+        }
+      },
+      "frame_activity": {
+        "idle": {
+          "mean_ms": 22.633348,
+          "p95_ms": 32.737,
+          "count": 443
+        }
+      },
+      "observer_head_tail": {
+        "count": 444,
+        "mean_ms": 0.048068,
+        "p95_ms": 0.079,
+        "p99_ms": 0.105,
+        "max_ms": 0.188
+      },
+      "terrain_preparation": {
+        "count": 444,
+        "mean_ms": 0.121372,
+        "p95_ms": 0.237,
+        "p99_ms": 0.277,
+        "max_ms": 0.587
+      },
+      "terrain_before": {
+        "required": 15,
+        "ready": 15,
+        "resident": 24,
+        "bytes": 25165824,
+        "requests": 78,
+        "uploads": 78,
+        "pending": 0,
+        "queued": 0,
+        "budget_yields": 112,
+        "pump_byte_limit": 2097152,
+        "pump_time_target_usec": 2000
+      },
+      "terrain_after": {
+        "required": 15,
+        "ready": 15,
+        "resident": 24,
+        "bytes": 25165824,
+        "requests": 78,
+        "uploads": 78,
+        "pending": 0,
+        "queued": 0,
+        "budget_yields": 112,
+        "pump_byte_limit": 2097152,
+        "pump_time_target_usec": 2000
+      },
+      "hud_preparation_endpoints": {
+        "after": {
+          "binding_builds": 4,
+          "card_layout_builds": 5,
+          "frame_layout_builds": 1,
+          "panel_geometry_builds": 9,
+          "retained_bindings": 4,
+          "retained_cards": 4,
+          "retained_text_metrics": 4,
+          "text_measurements": 416
+        },
+        "before": {
+          "binding_builds": 4,
+          "card_layout_builds": 5,
+          "frame_layout_builds": 1,
+          "panel_geometry_builds": 9,
+          "retained_bindings": 4,
+          "retained_cards": 4,
+          "retained_text_metrics": 4,
+          "text_measurements": 144
+        }
+      },
+      "region_sample_alignment": null
+    },
+    {
+      "case": "paid_fire_bolt_close",
+      "temperature": "warm",
+      "wall_seconds": 10.030902,
+      "draw_submission": {
+        "count": 329,
+        "mean_ms": 11.377839,
+        "p95_ms": 19.373,
+        "p99_ms": 22.661,
+        "max_ms": 25.478
+      },
+      "bootstrap_process": {
+        "count": 329,
+        "mean_ms": 5.889878,
+        "p95_ms": 11.007,
+        "p99_ms": 15.555,
+        "max_ms": 24.457
+      },
+      "court_preparation": {
+        "bundle": {
+          "mean_ms": 1.41193,
+          "p95_ms": 4.253,
+          "count": 329
+        },
+        "drawing_and_other": {
+          "mean_ms": 2.633812,
+          "p95_ms": 8.05,
+          "count": 329
+        },
+        "geometry": {
+          "mean_ms": 0.080888,
+          "p95_ms": 0.176,
+          "count": 329
+        }
+      },
+      "draw_stages": {
+        "actors": {
+          "mean_ms": 0.788377,
+          "p95_ms": 1.258,
+          "count": 329
+        },
+        "campus_and_setup": {
+          "mean_ms": 2.407255,
+          "p95_ms": 3.474,
+          "count": 329
+        },
+        "combat_hud": {
+          "mean_ms": 1.714316,
+          "p95_ms": 2.581,
+          "count": 329
+        },
+        "garden": {
+          "mean_ms": 0.110185,
+          "p95_ms": 0.162,
+          "count": 329
+        },
+        "garden_inspection": {
+          "mean_ms": 0.041802,
+          "p95_ms": 0.06,
+          "count": 329
+        },
+        "local_labels_reticle": {
+          "mean_ms": 0.153152,
+          "p95_ms": 0.316,
+          "count": 329
+        },
+        "paid_ground": {
+          "mean_ms": 4.157249,
+          "p95_ms": 12.339,
+          "count": 329
+        },
+        "panels": {
+          "mean_ms": 0.058207,
+          "p95_ms": 0.078,
+          "count": 329
+        },
+        "practice_coach": {
+          "mean_ms": 0.170219,
+          "p95_ms": 0.23,
+          "count": 329
+        },
+        "projectiles_targets_cues": {
+          "mean_ms": 1.028757,
+          "p95_ms": 2.282,
+          "count": 329
+        },
+        "visibility": {
+          "mean_ms": 0.727441,
+          "p95_ms": 1.238,
+          "count": 329
+        }
+      },
+      "sampled_last_fixed_step_stages": {
+        "actor_product_effects": {
+          "mean_ms": 0.048878,
+          "p95_ms": 0.114,
+          "count": 329
+        },
+        "chemistry_exposure": {
+          "mean_ms": 0.076049,
+          "p95_ms": 0.188,
+          "count": 329
+        },
+        "command_order": {
+          "mean_ms": 0.012541,
+          "p95_ms": 0.023,
+          "count": 329
+        },
+        "finalize": {
+          "mean_ms": 0.011459,
+          "p95_ms": 0.019,
+          "count": 329
+        },
+        "movement_cast_admission": {
+          "mean_ms": 0.619581,
+          "p95_ms": 0.975,
+          "count": 329
+        },
+        "projectile_contacts": {
+          "mean_ms": 0.172422,
+          "p95_ms": 0.483,
+          "count": 329
+        },
+        "spray_contacts": {
+          "mean_ms": 0.058325,
+          "p95_ms": 0.137,
+          "count": 329
+        },
+        "surfaces_expiry": {
+          "mean_ms": 0.03507,
+          "p95_ms": 0.073,
+          "count": 329
+        },
+        "terminal_deposits": {
+          "mean_ms": 0.003,
+          "p95_ms": 0.005,
+          "count": 329
+        }
+      },
+      "frame_activity": {
+        "cast_or_projectile": {
+          "mean_ms": 37.260225,
+          "p95_ms": 50.491,
+          "count": 89
+        },
+        "paid_ground": {
+          "mean_ms": 37.751776,
+          "p95_ms": 51.535,
+          "count": 98
+        },
+        "post_effect_idle": {
+          "mean_ms": 21.235823,
+          "p95_ms": 25.55,
+          "count": 141
+        }
+      },
+      "observer_head_tail": {
+        "count": 329,
+        "mean_ms": 0.059055,
+        "p95_ms": 0.103,
+        "p99_ms": 0.157,
+        "max_ms": 0.23
+      },
+      "terrain_preparation": {
+        "count": 329,
+        "mean_ms": 0.104763,
+        "p95_ms": 0.2,
+        "p99_ms": 0.272,
+        "max_ms": 0.389
+      },
+      "terrain_before": {
+        "required": 12,
+        "ready": 12,
+        "resident": 24,
+        "bytes": 25165824,
+        "requests": 78,
+        "uploads": 78,
+        "pending": 0,
+        "queued": 0,
+        "budget_yields": 112,
+        "pump_byte_limit": 2097152,
+        "pump_time_target_usec": 2000
+      },
+      "terrain_after": {
+        "required": 12,
+        "ready": 12,
+        "resident": 24,
+        "bytes": 25165824,
+        "requests": 78,
+        "uploads": 78,
+        "pending": 0,
+        "queued": 0,
+        "budget_yields": 112,
+        "pump_byte_limit": 2097152,
+        "pump_time_target_usec": 2000
+      },
+      "hud_preparation_endpoints": {
+        "after": {
+          "binding_builds": 4,
+          "card_layout_builds": 7,
+          "frame_layout_builds": 1,
+          "panel_geometry_builds": 9,
+          "retained_bindings": 4,
+          "retained_cards": 4,
+          "retained_text_metrics": 4,
+          "text_measurements": 481
+        },
+        "before": {
+          "binding_builds": 4,
+          "card_layout_builds": 7,
+          "frame_layout_builds": 1,
+          "panel_geometry_builds": 9,
+          "retained_bindings": 4,
+          "retained_cards": 4,
+          "retained_text_metrics": 4,
+          "text_measurements": 417
+        }
+      },
+      "region_sample_alignment": {
+        "region_rows": 329,
+        "court_samples": 329,
+        "all_samples_observed": true
+      }
+    },
+    {
+      "case": "paid_fire_bolt_sustained",
+      "temperature": "warm",
+      "wall_seconds": 10.032278,
+      "draw_submission": {
+        "count": 296,
+        "mean_ms": 12.545453,
+        "p95_ms": 17.593,
+        "p99_ms": 20.558,
+        "max_ms": 23.207
+      },
+      "bootstrap_process": {
+        "count": 296,
+        "mean_ms": 7.284997,
+        "p95_ms": 12.669,
+        "p99_ms": 16.594,
+        "max_ms": 21.654
+      },
+      "court_preparation": {
+        "bundle": {
+          "mean_ms": 1.757405,
+          "p95_ms": 2.805,
+          "count": 296
+        },
+        "drawing_and_other": {
+          "mean_ms": 2.955902,
+          "p95_ms": 6.205,
+          "count": 296
+        },
+        "geometry": {
+          "mean_ms": 0.102601,
+          "p95_ms": 0.203,
+          "count": 296
+        }
+      },
+      "draw_stages": {
+        "actors": {
+          "mean_ms": 0.843905,
+          "p95_ms": 1.43,
+          "count": 296
+        },
+        "campus_and_setup": {
+          "mean_ms": 2.463169,
+          "p95_ms": 3.481,
+          "count": 296
+        },
+        "combat_hud": {
+          "mean_ms": 1.811986,
+          "p95_ms": 2.74,
+          "count": 296
+        },
+        "garden": {
+          "mean_ms": 0.114973,
+          "p95_ms": 0.165,
+          "count": 296
+        },
+        "garden_inspection": {
+          "mean_ms": 0.043101,
+          "p95_ms": 0.065,
+          "count": 296
+        },
+        "local_labels_reticle": {
+          "mean_ms": 0.225213,
+          "p95_ms": 0.545,
+          "count": 296
+        },
+        "paid_ground": {
+          "mean_ms": 4.851287,
+          "p95_ms": 9.487,
+          "count": 296
+        },
+        "panels": {
+          "mean_ms": 0.061865,
+          "p95_ms": 0.088,
+          "count": 296
+        },
+        "practice_coach": {
+          "mean_ms": 0.180152,
+          "p95_ms": 0.263,
+          "count": 296
+        },
+        "projectiles_targets_cues": {
+          "mean_ms": 1.145125,
+          "p95_ms": 2.094,
+          "count": 296
+        },
+        "visibility": {
+          "mean_ms": 0.782149,
+          "p95_ms": 1.311,
+          "count": 296
+        }
+      },
+      "sampled_last_fixed_step_stages": {
+        "actor_product_effects": {
+          "mean_ms": 0.070713,
+          "p95_ms": 0.135,
+          "count": 296
+        },
+        "chemistry_exposure": {
+          "mean_ms": 0.135274,
+          "p95_ms": 0.229,
+          "count": 296
+        },
+        "command_order": {
+          "mean_ms": 0.013872,
+          "p95_ms": 0.028,
+          "count": 296
+        },
+        "finalize": {
+          "mean_ms": 0.011983,
+          "p95_ms": 0.02,
+          "count": 296
+        },
+        "movement_cast_admission": {
+          "mean_ms": 0.651074,
+          "p95_ms": 1.136,
+          "count": 296
+        },
+        "projectile_contacts": {
+          "mean_ms": 0.165767,
+          "p95_ms": 0.453,
+          "count": 296
+        },
+        "spray_contacts": {
+          "mean_ms": 0.065899,
+          "p95_ms": 0.143,
+          "count": 296
+        },
+        "surfaces_expiry": {
+          "mean_ms": 0.041426,
+          "p95_ms": 0.098,
+          "count": 296
+        },
+        "terminal_deposits": {
+          "mean_ms": 0.003169,
+          "p95_ms": 0.006,
+          "count": 296
+        }
+      },
+      "frame_activity": {
+        "cast_or_projectile": {
+          "mean_ms": 32.681274,
+          "p95_ms": 47.224,
+          "count": 135
+        },
+        "paid_ground": {
+          "mean_ms": 34.931913,
+          "p95_ms": 51.189,
+          "count": 160
+        }
+      },
+      "observer_head_tail": {
+        "count": 296,
+        "mean_ms": 0.063598,
+        "p95_ms": 0.114,
+        "p99_ms": 0.136,
+        "max_ms": 0.157
+      },
+      "terrain_preparation": {
+        "count": 296,
+        "mean_ms": 0.219811,
+        "p95_ms": 0.363,
+        "p99_ms": 5.464,
+        "max_ms": 5.876
+      },
+      "terrain_before": {
+        "required": 12,
+        "ready": 12,
+        "resident": 24,
+        "bytes": 25165824,
+        "requests": 78,
+        "uploads": 78,
+        "pending": 0,
+        "queued": 0,
+        "budget_yields": 112,
+        "pump_byte_limit": 2097152,
+        "pump_time_target_usec": 2000
+      },
+      "terrain_after": {
+        "required": 15,
+        "ready": 15,
+        "resident": 28,
+        "bytes": 29360128,
+        "requests": 82,
+        "uploads": 82,
+        "pending": 0,
+        "queued": 0,
+        "budget_yields": 116,
+        "pump_byte_limit": 2097152,
+        "pump_time_target_usec": 2000
+      },
+      "hud_preparation_endpoints": {
+        "after": {
+          "binding_builds": 4,
+          "card_layout_builds": 7,
+          "frame_layout_builds": 1,
+          "panel_geometry_builds": 9,
+          "retained_bindings": 4,
+          "retained_cards": 4,
+          "retained_text_metrics": 4,
+          "text_measurements": 551
+        },
+        "before": {
+          "binding_builds": 4,
+          "card_layout_builds": 7,
+          "frame_layout_builds": 1,
+          "panel_geometry_builds": 9,
+          "retained_bindings": 4,
+          "retained_cards": 4,
+          "retained_text_metrics": 4,
+          "text_measurements": 481
+        }
+      },
+      "region_sample_alignment": {
+        "region_rows": 296,
+        "court_samples": 296,
+        "all_samples_observed": true
+      }
+    },
+    {
+      "case": "paid_all_six_mantle_sustained",
+      "temperature": "warm",
+      "wall_seconds": 10.056404,
+      "draw_submission": {
+        "count": 290,
+        "mean_ms": 12.940755,
+        "p95_ms": 16.604,
+        "p99_ms": 21.377,
+        "max_ms": 31.173
+      },
+      "bootstrap_process": {
+        "count": 290,
+        "mean_ms": 8.769748,
+        "p95_ms": 12.807,
+        "p99_ms": 17.13,
+        "max_ms": 25.807
+      },
+      "court_preparation": {
+        "bundle": {
+          "mean_ms": 1.810648,
+          "p95_ms": 2.752,
+          "count": 290
+        },
+        "drawing_and_other": {
+          "mean_ms": 3.06121,
+          "p95_ms": 4.929,
+          "count": 290
+        },
+        "geometry": {
+          "mean_ms": 0.103438,
+          "p95_ms": 0.153,
+          "count": 290
+        }
+      },
+      "draw_stages": {
+        "actors": {
+          "mean_ms": 0.812376,
+          "p95_ms": 1.371,
+          "count": 290
+        },
+        "campus_and_setup": {
+          "mean_ms": 2.30941,
+          "p95_ms": 3.25,
+          "count": 290
+        },
+        "combat_hud": {
+          "mean_ms": 1.839476,
+          "p95_ms": 2.926,
+          "count": 290
+        },
+        "garden": {
+          "mean_ms": 0.107738,
+          "p95_ms": 0.154,
+          "count": 290
+        },
+        "garden_inspection": {
+          "mean_ms": 0.043641,
+          "p95_ms": 0.068,
+          "count": 290
+        },
+        "local_labels_reticle": {
+          "mean_ms": 0.386869,
+          "p95_ms": 0.678,
+          "count": 290
+        },
+        "paid_ground": {
+          "mean_ms": 5.008345,
+          "p95_ms": 7.837,
+          "count": 290
+        },
+        "panels": {
+          "mean_ms": 0.064555,
+          "p95_ms": 0.095,
+          "count": 290
+        },
+        "practice_coach": {
+          "mean_ms": 0.178503,
+          "p95_ms": 0.257,
+          "count": 290
+        },
+        "projectiles_targets_cues": {
+          "mean_ms": 1.462907,
+          "p95_ms": 2.517,
+          "count": 290
+        },
+        "visibility": {
+          "mean_ms": 0.706566,
+          "p95_ms": 1.2,
+          "count": 290
+        }
+      },
+      "sampled_last_fixed_step_stages": {
+        "actor_product_effects": {
+          "mean_ms": 0.227855,
+          "p95_ms": 0.416,
+          "count": 290
+        },
+        "chemistry_exposure": {
+          "mean_ms": 0.114483,
+          "p95_ms": 0.198,
+          "count": 290
+        },
+        "command_order": {
+          "mean_ms": 0.013966,
+          "p95_ms": 0.026,
+          "count": 290
+        },
+        "finalize": {
+          "mean_ms": 0.011497,
+          "p95_ms": 0.019,
+          "count": 290
+        },
+        "movement_cast_admission": {
+          "mean_ms": 0.711852,
+          "p95_ms": 1.147,
+          "count": 290
+        },
+        "projectile_contacts": {
+          "mean_ms": 0.160352,
+          "p95_ms": 0.29,
+          "count": 290
+        },
+        "spray_contacts": {
+          "mean_ms": 0.076134,
+          "p95_ms": 0.145,
+          "count": 290
+        },
+        "surfaces_expiry": {
+          "mean_ms": 0.041121,
+          "p95_ms": 0.083,
+          "count": 290
+        },
+        "terminal_deposits": {
+          "mean_ms": 0.002997,
+          "p95_ms": 0.005,
+          "count": 290
+        }
+      },
+      "frame_activity": {
+        "cast_or_projectile": {
+          "mean_ms": 35.355033,
+          "p95_ms": 44.616,
+          "count": 213
+        },
+        "paid_ground": {
+          "mean_ms": 32.815079,
+          "p95_ms": 38.7,
+          "count": 76
+        }
+      },
+      "observer_head_tail": {
+        "count": 290,
+        "mean_ms": 0.055138,
+        "p95_ms": 0.096,
+        "p99_ms": 0.119,
+        "max_ms": 0.16
+      },
+      "terrain_preparation": {
+        "count": 290,
+        "mean_ms": 0.174921,
+        "p95_ms": 0.337,
+        "p99_ms": 0.438,
+        "max_ms": 0.477
+      },
+      "terrain_before": {
+        "required": 15,
+        "ready": 15,
+        "resident": 24,
+        "bytes": 25165824,
+        "requests": 82,
+        "uploads": 82,
+        "pending": 0,
+        "queued": 0,
+        "budget_yields": 116,
+        "pump_byte_limit": 2097152,
+        "pump_time_target_usec": 2000
+      },
+      "terrain_after": {
+        "required": 15,
+        "ready": 15,
+        "resident": 24,
+        "bytes": 25165824,
+        "requests": 82,
+        "uploads": 82,
+        "pending": 0,
+        "queued": 0,
+        "budget_yields": 116,
+        "pump_byte_limit": 2097152,
+        "pump_time_target_usec": 2000
+      },
+      "hud_preparation_endpoints": {
+        "after": {
+          "binding_builds": 4,
+          "card_layout_builds": 9,
+          "frame_layout_builds": 1,
+          "panel_geometry_builds": 9,
+          "retained_bindings": 4,
+          "retained_cards": 4,
+          "retained_text_metrics": 4,
+          "text_measurements": 693
+        },
+        "before": {
+          "binding_builds": 4,
+          "card_layout_builds": 9,
+          "frame_layout_builds": 1,
+          "panel_geometry_builds": 9,
+          "retained_bindings": 4,
+          "retained_cards": 4,
+          "retained_text_metrics": 4,
+          "text_measurements": 552
+        }
+      },
+      "region_sample_alignment": {
+        "region_rows": 290,
+        "court_samples": 290,
+        "all_samples_observed": true
+      }
+    }
+  ],
+  "cold_process_cache_observations": [
+    {
+      "run": "baseline",
+      "synchronous_startup_ms": 8282.178,
+      "arrivals": [
+        {
+          "case": "startup_arrival",
+          "temperature": "cold_process_cache",
+          "arrival_wall_ms": 587.99,
+          "frame": {
+            "count": 13,
+            "mean_ms": 36.376077,
+            "p95_ms": 206.818,
+            "p99_ms": 206.818,
+            "max_ms": 206.818,
+            "over_33_3_ms": 3,
+            "over_50_ms": 2
+          },
+          "loading_frames": 11,
+          "unfocused_frames": 0,
+          "terrain_after": {
+            "required": 12,
+            "ready": 12,
+            "resident": 16,
+            "bytes": 16777216,
+            "requests": 18,
+            "uploads": 16,
+            "pending": 2,
+            "queued": 6,
+            "budget_yields": null,
+            "pump_byte_limit": null,
+            "pump_time_target_usec": null
+          }
+        },
+        {
+          "case": "garden_middle_arrival",
+          "temperature": "travel_process_cache_state_recorded",
+          "arrival_wall_ms": 587.768,
+          "frame": {
+            "count": 18,
+            "mean_ms": 28.017722,
+            "p95_ms": 197.032,
+            "p99_ms": 197.032,
+            "max_ms": 197.032,
+            "over_33_3_ms": 2,
+            "over_50_ms": 2
+          },
+          "loading_frames": 16,
+          "unfocused_frames": 0,
+          "terrain_after": {
+            "required": 20,
+            "ready": 20,
+            "resident": 30,
+            "bytes": 31457280,
+            "requests": 54,
+            "uploads": 52,
+            "pending": 2,
+            "queued": 0,
+            "budget_yields": null,
+            "pump_byte_limit": null,
+            "pump_time_target_usec": null
+          }
+        }
+      ]
+    },
+    {
+      "run": "intermediate",
+      "synchronous_startup_ms": 7288.763,
+      "arrivals": [
+        {
+          "case": "startup_arrival",
+          "temperature": "cold_process_cache",
+          "arrival_wall_ms": 577.391,
+          "frame": {
+            "count": 19,
+            "mean_ms": 26.013211,
+            "p95_ms": 158.506,
+            "p99_ms": 158.506,
+            "max_ms": 158.506,
+            "over_33_3_ms": 2,
+            "over_50_ms": 2
+          },
+          "loading_frames": 17,
+          "unfocused_frames": 0,
+          "terrain_after": {
+            "required": 12,
+            "ready": 12,
+            "resident": 13,
+            "bytes": 13631488,
+            "requests": 14,
+            "uploads": 13,
+            "pending": 1,
+            "queued": 10,
+            "budget_yields": 20,
+            "pump_byte_limit": 2097152,
+            "pump_time_target_usec": 2000
+          }
+        },
+        {
+          "case": "garden_middle_arrival",
+          "temperature": "travel_process_cache_state_recorded",
+          "arrival_wall_ms": 854.454,
+          "frame": {
+            "count": 31,
+            "mean_ms": 25.889452,
+            "p95_ms": 89.007,
+            "p99_ms": 254.992,
+            "max_ms": 254.992,
+            "over_33_3_ms": 2,
+            "over_50_ms": 2
+          },
+          "loading_frames": 29,
+          "unfocused_frames": 0,
+          "terrain_after": {
+            "required": 20,
+            "ready": 20,
+            "resident": 30,
+            "bytes": 31457280,
+            "requests": 50,
+            "uploads": 49,
+            "pending": 1,
+            "queued": 4,
+            "budget_yields": 72,
+            "pump_byte_limit": 2097152,
+            "pump_time_target_usec": 2000
+          }
+        },
+        {
+          "case": "garden_middle_arrival",
+          "temperature": "travel_process_cache_state_recorded",
+          "arrival_wall_ms": 768.021,
+          "frame": {
+            "count": 32,
+            "mean_ms": 22.74075,
+            "p95_ms": 30.188,
+            "p99_ms": 219.632,
+            "max_ms": 219.632,
+            "over_33_3_ms": 1,
+            "over_50_ms": 1
+          },
+          "loading_frames": 30,
+          "unfocused_frames": 0,
+          "terrain_after": {
+            "required": 20,
+            "ready": 20,
+            "resident": 30,
+            "bytes": 31457280,
+            "requests": 132,
+            "uploads": 131,
+            "pending": 1,
+            "queued": 4,
+            "budget_yields": 177,
+            "pump_byte_limit": 2097152,
+            "pump_time_target_usec": 2000
+          }
+        }
+      ]
+    },
+    {
+      "run": "final",
+      "synchronous_startup_ms": 8399.095,
+      "arrivals": [
+        {
+          "case": "startup_arrival",
+          "temperature": "cold_process_cache",
+          "arrival_wall_ms": 644.209,
+          "frame": {
+            "count": 19,
+            "mean_ms": 27.329789,
+            "p95_ms": 162.167,
+            "p99_ms": 162.167,
+            "max_ms": 162.167,
+            "over_33_3_ms": 3,
+            "over_50_ms": 2
+          },
+          "loading_frames": 17,
+          "unfocused_frames": 0,
+          "terrain_after": {
+            "required": 12,
+            "ready": 12,
+            "resident": 13,
+            "bytes": 13631488,
+            "requests": 14,
+            "uploads": 13,
+            "pending": 1,
+            "queued": 10,
+            "budget_yields": 20,
+            "pump_byte_limit": 2097152,
+            "pump_time_target_usec": 2000
+          }
+        },
+        {
+          "case": "garden_middle_arrival",
+          "temperature": "travel_process_cache_state_recorded",
+          "arrival_wall_ms": 897.319,
+          "frame": {
+            "count": 33,
+            "mean_ms": 25.424697,
+            "p95_ms": 86.378,
+            "p99_ms": 262.609,
+            "max_ms": 262.609,
+            "over_33_3_ms": 2,
+            "over_50_ms": 2
+          },
+          "loading_frames": 31,
+          "unfocused_frames": 0,
+          "terrain_after": {
+            "required": 20,
+            "ready": 20,
+            "resident": 30,
+            "bytes": 31457280,
+            "requests": 47,
+            "uploads": 45,
+            "pending": 2,
+            "queued": 7,
+            "budget_yields": 66,
+            "pump_byte_limit": 2097152,
+            "pump_time_target_usec": 2000
+          }
+        }
+      ]
+    }
+  ],
+  "intermediate_soak": {
+    "runtime_build_id": "p60-3a7e6f5fee64",
+    "case": "garden_soak",
+    "seconds": 60.031112,
+    "frame": {
+      "count": 3046,
+      "mean_ms": 19.701478,
+      "p95_ms": 25.103,
+      "p99_ms": 30.77,
+      "max_ms": 41.728,
+      "over_33_3_ms": 14,
+      "over_50_ms": 0
+    },
+    "process_start_cadence_hz": 50.757613,
+    "simulation_hz": 120.00444,
+    "unfocused_frames": 0,
+    "terrain_before": {
+      "required": 20,
+      "ready": 20,
+      "resident": 30,
+      "bytes": 31457280,
+      "requests": 136,
+      "uploads": 136,
+      "pending": 0,
+      "queued": 0,
+      "budget_yields": 182,
+      "pump_byte_limit": 2097152,
+      "pump_time_target_usec": 2000
+    },
+    "terrain_after": {
+      "required": 20,
+      "ready": 20,
+      "resident": 30,
+      "bytes": 31457280,
+      "requests": 136,
+      "uploads": 136,
+      "pending": 0,
+      "queued": 0,
+      "budget_yields": 182,
+      "pump_byte_limit": 2097152,
+      "pump_time_target_usec": 2000
+    },
+    "memory_endpoint_bytes": {
+      "after": {
+        "static": 282429474,
+        "textures": 134069331,
+        "video": 147689115
+      },
+      "before": {
+        "static": 266005408,
+        "textures": 134069331,
+        "video": 147694243
+      }
+    },
+    "hud_preparation_endpoints": {
+      "after": {
+        "binding_builds": 4,
+        "card_layout_builds": 9,
+        "frame_layout_builds": 1,
+        "panel_geometry_builds": 9,
+        "retained_bindings": 4,
+        "retained_cards": 4,
+        "retained_text_metrics": 4,
+        "text_measurements": 702
+      },
+      "before": {
+        "binding_builds": 4,
+        "card_layout_builds": 9,
+        "frame_layout_builds": 1,
+        "panel_geometry_builds": 9,
+        "retained_bindings": 4,
+        "retained_cards": 4,
+        "retained_text_metrics": 4,
+        "text_measurements": 702
+      }
+    },
+    "interpretation": "Texture bytes and terrain residency/requests/uploads stayed unchanged. Static memory rose 16,424,066 bytes while the diagnostic retained growing raw sample arrays; this neither establishes a production leak nor proves stable production RAM."
+  },
+  "structural_evidence": {
+    "native_exact_rgba": {
+      "path": "docs/audit-implementation-20261011/paid-pixels-final.json",
+      "sha256": "e0ff1ffb518839e9179dff316bcf00a467408db597b2cb2cc5fcd0bf7111221a",
+      "status": "passed",
+      "comparisons": 614,
+      "paid_comparisons": 176,
+      "failed_comparisons": 0,
+      "sources_unchanged": true,
+      "candidate_outline_cache": {
+        "batches": 69,
+        "edge_mask_builds": 8389,
+        "edge_mask_hits": 28992,
+        "fallbacks": 0,
+        "hits": 21569,
+        "meshes": 69,
+        "phase_marks": 138,
+        "topologies": 8,
+        "topology_builds": 718,
+        "topology_hits": 1114,
+        "uploads": 69
+      }
+    },
+    "focused_tests": {
+      "path": "docs/audit-implementation-20261011/final-focused.log",
+      "paid_field_rendering_assertions": 6490,
+      "paid_field_rendering_failures": 0,
+      "hex_render_polygon_cache_assertions": 11254,
+      "hex_render_polygon_cache_failures": 0
+    },
+    "final_close_fire_cache_before": {
+      "batches": 60,
+      "edge_mask_builds": 441,
+      "edge_mask_hits": 11823,
+      "fallbacks": 0,
+      "hits": 11196,
+      "meshes": 60,
+      "phase_marks": 0,
+      "topologies": 8,
+      "topology_builds": 23,
+      "topology_hits": 409,
+      "uploads": 60
+    },
+    "final_close_fire_cache_after": {
+      "batches": 85,
+      "edge_mask_builds": 2469,
+      "edge_mask_hits": 25471,
+      "fallbacks": 0,
+      "hits": 19406,
+      "meshes": 85,
+      "phase_marks": 55,
+      "topologies": 8,
+      "topology_builds": 52,
+      "topology_hits": 564,
+      "uploads": 85
+    },
+    "edge_mask_contract": "At most 8 topologies x 512 masks. Reuse requires identity of the immutable count witness, a freshly computed live seam prefix and exact ordered fixed geometry. External maps/mutations fall back. Draw commands, geometry, order, widths, colors and authority are unchanged.",
+    "streaming_contract": "2 MiB admission/upload byte budget and a 2 ms between-operations target; indivisible validation/upload may exceed the target, then further admissions stop. This is not a hard per-frame time cap."
+  },
+  "remaining_hotspot": "Paid Court remains the largest measured individual draw layer. Final Mantle Court mean 5.166848 ms consists of geometry 0.108190, bundle 1.845938 and drawing/other 3.212721 ms; this scene was unfocused. Final close Fire visible-paid Court mean is 8.077180 ms versus 4.126629 ms for all draws including post-effect idle.",
+  "next_bounded_direction": "First obtain focused, same-camera, controlled full/light repeated samples before attributing regression. Then trial retaining one unchanged campus or HUD CanvasItem command layer separately from live paid Court; preserve exact geometry/order and bounded residency, verify RGBA, and retain only if repeated same-scene CPU/frame costs improve. Current layout caches do not eliminate native draw submission.",
+  "next_direction_engine_reference": {
+    "title": "Godot 4.6 custom drawing in 2D — Updating",
+    "url": "https://docs.godotengine.org/en/4.6/tutorials/2d/custom_drawing_in_2d.html#updating",
+    "checked_date": "2026-10-12",
+    "basis": "CanvasItem _draw commands are retained until queue_redraw requests another draw. Applying this mechanism to a separate campus or HUD layer remains a proposed experiment, with benefit on the game's Godot 4.7.1 build unmeasured."
+  }
+}

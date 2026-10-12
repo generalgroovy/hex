@@ -17,6 +17,9 @@ func run() -> int:
 	_test_spell_family_labels()
 	_test_all_payload_card_layouts()
 	_test_retained_card_layouts()
+	_test_retained_hud_text_and_bindings()
+	_test_retained_hud_frame()
+	_test_card_descriptor_invalidation()
 	_test_retained_panel_geometry()
 	_test_shared_top_third_portraits()
 	_test_quiet_authoritative_readiness()
@@ -30,6 +33,122 @@ func run() -> int:
 	_test_jump_preparation_geometry()
 	_test_multiline_session_geometry()
 	return finish("compact-combat-hud")
+
+
+func _test_retained_hud_text_and_bindings() -> void:
+	var hud := CompactCombatHud.new()
+	var cache = hud._layout_cache
+	var font := FontVariation.new()
+	font.base_font = ThemeDB.fallback_font
+	var state := PlayerState.new()
+	var before := state.canonical_values()
+	for role: StringName in [&"health", &"flux", &"stamina"]:
+		var amount := CompactCombatHud.resource_amount_label(state.health, state.health_maximum)
+		var expected := font.get_string_size(amount, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x
+		equal(cache.text_width(role, amount, 12, font), expected, "retained resource measurement matches the exact native font metric")
+	var measured: int = cache.text_measurements
+	for frame: int in 60:
+		for role: StringName in [&"health", &"flux", &"stamina"]: cache.text_width(role, "100/100", 12, font)
+	equal(cache.text_measurements, measured, "unchanged resource labels do not request repeated native measurements")
+	for value: int in [99_999, 1, 0, 100_000]:
+		var label := CompactCombatHud.resource_amount_label(value, state.health_maximum)
+		equal(cache.text_width(&"health", label, 12, font), font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x, "damage, fractional survival, defeat and full recovery refresh the exact displayed metric")
+	equal(state.canonical_values(), before, "retained text preparation cannot change resource authority")
+	cache.text_width(&"health", "100/100", 11, font)
+	equal(cache.text_width(&"health", "100/100", 11, font), font.get_string_size("100/100", HORIZONTAL_ALIGNMENT_LEFT, -1, 11).x, "font size is part of measurement invalidation")
+	measured = cache.text_measurements
+	font.emit_changed()
+	cache.text_width(&"health", "100/100", 11, font)
+	equal(cache.text_measurements, measured + 1, "in-place font edits invalidate retained metrics")
+	cache.text_width(&"health", "100/100", 11, ThemeDB.fallback_font)
+	equal(cache.text_measurements, measured + 2, "font replacement cannot reuse the prior font's metrics")
+	for index: int in 100: cache.text_width(StringName("arbitrary_%d" % index), str(index), 12)
+	check(cache._text_metrics.size() <= CompactCombatHud.LayoutCache.MAX_TEXT_METRICS, "external measurement roles cannot create unbounded history")
+	var long_text := "x".repeat(CompactCombatHud.LayoutCache.MAX_TEXT_LENGTH + 1)
+	equal(cache.text_width(&"long", long_text, 12), ThemeDB.fallback_font.get_string_size(long_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x, "oversized labels keep native measurement without retention")
+	check(not cache._text_metrics.has(&"long"), "oversized labels are not retained")
+	var preferences := PlayerPreferences.new()
+	for button: int in PlayerState.SPELL_BUTTON_COUNT:
+		equal(hud._button_binding_label(button, preferences), CompactCombatHud.button_binding_label(button, preferences), "retained default binding matches saved controls")
+	for layer: int in 3:
+		equal(hud._binding_layer_label(layer, preferences), CompactCombatHud.binding_layer_label(layer, preferences), "retained layer label matches saved controls")
+	var bindings: int = cache.binding_builds
+	for frame: int in 60:
+		for button: int in PlayerState.SPELL_BUTTON_COUNT: hud._button_binding_label(button, preferences)
+		for layer: int in 3: hud._binding_layer_label(layer, preferences)
+	equal(cache.binding_builds, bindings, "stable controls avoid repeated key and pad name formatting")
+	preferences.keyboard_bindings[&"spell_1"] = KEY_T
+	equal(hud._button_binding_label(0, preferences), "T", "in-place keyboard rebind immediately refreshes HUD")
+	preferences.keyboard_bindings[&"spell_1"] = 0
+	preferences.mouse_bindings[&"spell_1"] = MOUSE_BUTTON_XBUTTON1
+	equal(hud._button_binding_label(0, preferences), "MOUSE X1", "mouse fallback immediately follows a cleared keyboard binding")
+	preferences.prompt_device = ControlBindingEditor.DEVICE_CONTROLLER
+	preferences.controller_bindings[&"spell_1"] = {"kind": "button", "index": 0, "direction": 0}
+	equal(hud._button_binding_label(0, preferences), "PAD A", "device changes cannot retain keyboard prompts")
+	preferences.controller_bindings[&"spell_1"].index = 1
+	equal(hud._button_binding_label(0, preferences), "PAD B", "nested in-place controller rebind is observed")
+	preferences.controller_bindings[&"spell_1"].index = 1.0
+	equal(hud._button_binding_label(0, preferences), "-", "equal numeric value with invalid type cannot retain a valid controller prompt")
+	equal(hud._button_binding_label(0, null), "?", "missing preferences do not borrow the last player's binding")
+	equal(hud._binding_layer_label(1, PlayerPreferences.new()), CompactCombatHud.binding_layer_label(1, PlayerPreferences.new()), "preferences replacement uses the replacement controls")
+	equal(cache._bindings.size(), 6, "binding retention is limited to the six HUD actions")
+	cache.clear()
+	check(cache._bindings.is_empty() and cache._text_metrics.is_empty() and cache._layout.is_empty(), "reconfiguration clears all retained preparation")
+
+
+func _test_retained_hud_frame() -> void:
+	var cache = CompactCombatHud.LayoutCache.new()
+	var layout: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CompactCombatHud.DEFAULT_PATH)).layout
+	var frame: Dictionary = cache.frame_layout(Vector2(1280, 720), layout, 1, 112)
+	equal(frame.header, Rect2(16, 16, 312, 34), "header keeps its exact existing placement")
+	equal(frame.session, Rect2(1016, 16, 248, 34), "session keeps its exact existing placement")
+	equal(frame.resources, Rect2(16, 586, 270, 118), "resource panel keeps its exact existing placement")
+	equal(frame.layer_tab, Rect2(678, 610, 112, 20), "retained modifier tab keeps its exact placement")
+	equal(frame.cast_cue, Rect2(796, 610, 468, 20), "dynamic cast cue keeps its exact available width")
+	for button: int in 4:
+		equal(frame.spell_rectangles[button], Rect2(678 + button * 148, 634, 142, 70), "four-column draw positions match the prior path exactly")
+	for draw: int in 60: equal(cache.frame_layout(Vector2(1280, 720), layout, 1, 112), frame, "stable frame layout is reusable")
+	equal(cache.layout_builds, 1, "ordinary draws do not rebuild frame geometry")
+	check(frame.is_read_only() and frame.spell_rectangles.is_read_only(), "callers cannot mutate the retained frame or spell placements")
+	var compact: Dictionary = cache.frame_layout(Vector2(640, 360), layout, 4, 220)
+	equal(compact.spell_columns, 2, "large text in a small window preserves the responsive two-column improvement")
+	equal(compact.session, CompactCombatHud.session_panel(Vector2(640, 360), 16, 248, 34, 4), "changed standings preserve native multiline height")
+	for button: int in 4:
+		equal(compact.spell_rectangles[button], Rect2(334 + (button % 2) * 148, 198 + (button / 2) * 76, 142, 70), "responsive card coordinates remain exact")
+	for name: String in ["margin", "header_height", "header_width", "session_width", "resource_width", "resource_height", "spell_cell_width", "spell_cell_height", "spell_cell_gap"]:
+		var changed := layout.duplicate(true)
+		changed[name] += 1
+		var builds: int = cache.layout_builds
+		cache.frame_layout(Vector2(1280, 720), changed, 1, 112)
+		equal(cache.layout_builds, builds + 1, "authored " + name + " changes cannot reuse obsolete geometry")
+		cache.frame_layout(Vector2(1280, 720), layout, 1, 112)
+	for count: int in [0, 1, 6, 99]:
+		equal(cache.frame_layout(Vector2(1280, 720), layout, count, 112).session, CompactCombatHud.session_panel(Vector2(1280, 720), 16, 248, 34, count), "standings clamping stays identical")
+
+
+func _test_card_descriptor_invalidation() -> void:
+	var hud := CompactCombatHud.new()
+	var catalog := AbilityCatalog.new()
+	check(catalog.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "descriptor tests use the current live spell catalog")
+	var ability := catalog.ability_from_wire(140).duplicate(true)
+	var rectangle := Rect2(678, 634, 142, 70)
+	var font := FontVariation.new()
+	font.base_font = ThemeDB.fallback_font
+	var model := hud._spell_card_layout(0, ability, "1", rectangle, font)
+	check(model.is_read_only() and model.headings.is_read_only() and model.headings[0].is_read_only(), "retained card headings cannot be poisoned by a consumer")
+	var builds := hud._spell_card_layout_builds
+	ability["unrelated_diagnostic"] = {"sample": [1, 2, 3]}
+	hud._spell_card_layout(0, ability, "1", rectangle, font)
+	equal(hud._spell_card_layout_builds, builds, "unrelated combat metadata does not rebuild static text")
+	var changes := {"wire_id": 9999, "element_mask": 3, "element": "water", "delivery_kernel": "burst", "family": "heavy", "shape": "field", "runtime_status": "disabled", "flux_cost": 9}
+	for field: String in changes:
+		ability[field] = changes[field]
+		equal(hud._spell_card_layout(0, ability, "1", rectangle, font), CompactCombatHud.spell_card_model(ability, "1", rectangle, font), field + " immediately updates exactly the same card as uncached preparation")
+	builds = hud._spell_card_layout_builds
+	font.emit_changed()
+	hud._spell_card_layout(0, ability, "1", rectangle, font)
+	equal(hud._spell_card_layout_builds, builds + 1, "in-place font changes also refresh card heading placement")
+	equal(hud._spell_card_layout(0, {}, "1", rectangle, font), CompactCombatHud.spell_card_model({}, "1", rectangle, font), "cleared loadout immediately returns the exact empty card")
 
 
 func _test_retained_panel_geometry() -> void:

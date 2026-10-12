@@ -43,7 +43,10 @@ func run() -> int:
 						check(absf(float(frame.wall_lean_radians) + n.x * deg_to_rad(11.0)) < 0.00001, "rigid body lean is bounded and directed toward this wall, never toward the cursor")
 						equal(frame.pivot, Vector2(64, 104), "wall lean retains the exact original foot pivot")
 						equal(frame.offset, Vector2.ZERO, "wall presentation never translates the physical foot anchor")
-						check(not frame.has("mesh") and not frame.has("pixel_parts") and frame.components.is_empty(), "wall body is one rigid native key, without split limbs or hidden upright duplicate")
+						check(not frame.has("mesh") and not frame.has("pixel_parts") and frame.components.is_empty(), "wall body has no mesh deformation or hidden upright duplicate")
+						equal(frame.wall_parts.size(),3,"torso and two native foot regions partition the contact key")
+						equal(frame.wall_contact_offset,(-n*3).round(),"all wall normals have a visible planted foot offset")
+						check((frame.wall_contact_offset as Vector2).length()>0,"north/south walls cannot collapse to an ordinary running silhouette")
 						check(not frame.all_action_art_complete and not frame.independent_cast_pose, "reused contact art explicitly retains its authored-animation and casting-hand limitations")
 						var bounds: Rect2 = frame.body_bounds
 						for corner: Vector2 in [Vector2(-64, -104), Vector2(64, -104), Vector2(64, 24), Vector2(-64, 24)]:

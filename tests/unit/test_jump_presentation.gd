@@ -8,7 +8,32 @@ func run() -> int:
 	_test_release_jump()
 	_test_flight()
 	_test_takeoff()
+	_test_recovery_sampling()
 	return finish("jump-presentation")
+
+func _test_recovery_sampling() -> void:
+	var config := SimConfig.new(120)
+	for roll: bool in [false,true]:
+		var duration := config.milliseconds_to_ticks(MovementTuning.ROLL_DURATION_MS if roll else MovementTuning.AIR_DODGE_DURATION_MS)
+		for cadence: int in [2,4]: # Actual 60/30 FPS samples over the same120Hz authority.
+			var state := PlayerState.new()
+			state.spawn_protection_ticks=0
+			state.hop_mode=PlayerState.MovementMode.ROLL if roll else PlayerState.MovementMode.AIR_DODGE
+			var protected_frames := 0
+			var recovery_frames := 0
+			for elapsed: int in range(0,duration+cadence,cadence):
+				state.air_dodge_ticks=maxi(0,duration-elapsed)
+				var before := state.canonical_values()
+				var protected := CartoonChampionPresenter.protection_contract(state,config)
+				var recovery := CartoonChampionPresenter.evasion_recovery_contract(state,config)
+				check(not protected.active or recovery.is_empty(),"protection and vulnerable recovery shapes cannot overlap")
+				if protected.active: protected_frames+=1
+				if not recovery.is_empty():
+					recovery_frames+=1
+					equal(recovery.body_tint,Color.WHITE,"vulnerable frames retain full opaque body")
+				if state.air_dodge_ticks==0: check(recovery.is_empty() and not protected.active,"neither shape lingers after action expiry")
+				equal(state.canonical_values(),before,"30/60fps presentation cannot retime combat protection")
+			check(protected_frames>0 and recovery_frames>0,"both protection and vulnerable tail survive30/60fps observation")
 
 
 func _test_physical_height() -> void:

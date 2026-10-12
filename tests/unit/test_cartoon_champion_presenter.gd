@@ -23,7 +23,56 @@ func run() -> int:
 	_test_float_time_budget()
 	_test_directional_movement_trails()
 	_test_pixel_movement_layers()
+	_test_wall_contact_lifecycle()
 	return finish("cartoon-champion-presenter")
+
+
+func _test_wall_contact_lifecycle() -> void:
+	var config := SimConfig.new()
+	var first := PixelMovementEffects.new()
+	var second := PixelMovementEffects.new(first.library)
+	var actor := PlayerState.new()
+	actor.entity_id = 1
+	actor.wall_x = 1000
+	actor.wall_contact_id = 7
+	actor.wall_memory_ticks = config.milliseconds_to_ticks(MovementTuning.WALL_MEMORY_MS)
+	actor.hop_mode = PlayerState.MovementMode.WALL_KICK
+	actor.movement_commitment_ticks = config.milliseconds_to_ticks(MovementTuning.HOP_COMMITMENT_MS)
+	actor.air_vertical_velocity = 520000
+	var before := actor.canonical_values()
+	var contact := first.walljump_contact(actor,config,20,Vector2(100,100))
+	var other := second.walljump_contact(actor,config,20,Vector2(900,400))
+	equal(contact.get("anchor"),Vector2(82,100),"first world retains its own observed contact")
+	equal(other.get("anchor"),Vector2(882,400),"same entity ID in a separate scope retains another contact")
+	actor.wall_memory_ticks = 0
+	equal(first.walljump_contact(actor,config,22,Vector2(150,60)).get("anchor"),Vector2(82,100),"another world cannot overwrite first world's historical contact")
+	var camera_a := Transform2D(0,Vector2(-20,40))
+	var camera_b := Transform2D(0,Vector2(-80,10))
+	var fixed_world_contact: Vector2 = first.walljump_contact(actor,config,22,Vector2(150,60)).anchor
+	equal(camera_b*fixed_world_contact-camera_a*fixed_world_contact,Vector2(-60,-30),"a remembered world contact follows the canvas camera, not the moving body")
+	var neighbor := PlayerState.new()
+	neighbor.entity_id = 2
+	neighbor.wall_x = -1000
+	neighbor.wall_contact_id = 9
+	neighbor.wall_memory_ticks = config.milliseconds_to_ticks(MovementTuning.WALL_MEMORY_MS)
+	neighbor.hop_mode = PlayerState.MovementMode.WALL_KICK
+	neighbor.movement_commitment_ticks = actor.movement_commitment_ticks
+	neighbor.air_vertical_velocity = 520000
+	first.walljump_contact(neighbor,config,22,Vector2(300,300))
+	equal(first.walljump_contact(actor,config,23,Vector2(180,40)).get("anchor"),Vector2(82,100),"another entity cannot overwrite historical contact")
+	var library_before: RefCounted = first.library
+	var budget_before: Dictionary = first.library.decoration_stats()
+	first.clear_contacts()
+	check(first.walljump_contact(actor,config,23,Vector2(180,40)).is_empty(),"world reset clears near-time reused entity contact without manufacturing a new one")
+	equal(first.library,library_before,"contact reset preserves shared admitted art")
+	equal(first.library.decoration_stats(),budget_before,"contact reset cannot reset the shared decoration budget")
+	check(not second.walljump_contact(actor,config,23,Vector2(980,340)).is_empty(),"clearing one scope leaves the other scope's history intact")
+	var presenter := CartoonChampionPresenter.new()
+	presenter.pixel_movement = second
+	presenter.clear_motion_contacts()
+	check(second.walljump_contact(actor,config,23,Vector2(980,340)).is_empty(),"presenter lifecycle wrapper clears only its owned contact history")
+	actor.wall_memory_ticks = config.milliseconds_to_ticks(MovementTuning.WALL_MEMORY_MS)
+	equal(actor.canonical_values(),before,"contact sampling and lifecycle reset never change actor authority")
 
 
 func _test_top_third_portraits() -> void:

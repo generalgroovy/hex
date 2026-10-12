@@ -17,6 +17,15 @@ var _card_text_order: Array[Array] = []
 var _card_text_builds := 0
 var profile_enabled := false
 var profile_stages_us: Dictionary = {}
+var _arrival_prepared: Dictionary = {}
+var _arrival_required := 0
+var _arrival_prepared_mask := 0
+var _arrival_error := ""
+var _arrival_budget := 0
+var _configuration_generation := 0
+var _plaque_font: Font
+var _plaque_font_revision := 0
+var _plaque_builds := 0
 
 func configure(language: VisualLanguage) -> bool:
 	_ready = _ground.configure(language)
@@ -25,6 +34,9 @@ func configure(language: VisualLanguage) -> bool:
 	_card_text.clear()
 	_card_text_order.clear()
 	_card_text_builds = 0
+	_plaque_builds = 0
+	_configuration_generation += 1
+	cancel_arrival()
 	_pad_mesh = _build_pad_mesh()
 	return _ready
 
@@ -32,9 +44,126 @@ func set_render_detail(sample_limit: int = 1, inspect_full: bool = false) -> voi
 	_sample_limit = clampi(sample_limit, 1, Surface.MAX_SAMPLES)
 	_inspect_full = inspect_full
 
+
+func begin_frame() -> void:
+	_arrival_budget = 1
+	_arrival_prepared_mask = 0
+
+
+func prepare_arrival(entries: Array[Dictionary], required: int, reduced: bool) -> bool:
+	_arrival_error = ""
+	_arrival_required = clampi(required, 0, Surface.MAX_PLOTS)
+	if required < 0 or required > Surface.MAX_PLOTS or entries.size() > required:
+		return _arrival_fail("Element Garden presentation received an invalid arrival bound.")
+	if required > 0 and not _ready:
+		return _arrival_fail("Element Garden presentation is not configured.")
+	var font := ThemeDB.fallback_font
+	if required > 0 and font == null:
+		return _arrival_fail("Element Garden presentation has no current font.")
+	_observe_plaque_font(font)
+	var keys := {}
+	for entry: Dictionary in entries:
+		var mask: int = int(entry.get("mask", 0))
+		var court: Variant = entry.get("court")
+		if mask < 1 or mask > Surface.MAX_PLOTS or keys.has(mask) or not court is HexChemistryWorld:
+			return _arrival_fail("Element Garden presentation received an invalid current entry.")
+		var key: Array = [court.get_instance_id(), court.render_revision, court.value_revision,
+			String(entry.get("material", "")), String(entry.get("phase", "")), int(entry.get("tick", 0)),
+			String(entry.get("name", "")), reduced, _configuration_generation, _plaque_font_revision]
+		key.make_read_only()
+		keys[mask] = key
+	# Available requested entries only grow during unchanged preparation. Rekey
+	# or cancellation prunes old derived masks; no authoritative refs are kept.
+	_surface.retain(entries)
+	_retain_arrival_plaques(entries)
+	for mask: int in _arrival_prepared.keys():
+		if not keys.has(mask) or _arrival_prepared[mask] != keys[mask]: _arrival_prepared.erase(mask)
+	if _arrival_budget <= 0: return true
+	for entry: Dictionary in entries:
+		var mask := int(entry.mask)
+		if _arrival_prepared.has(mask): continue
+		_arrival_budget -= 1
+		if not _prepare_arrival_entry(entry, reduced):
+			if _arrival_error.is_empty(): _arrival_error = "Element Garden presentation preparation failed."
+			return false
+		_arrival_prepared[mask] = keys[mask]
+		_arrival_prepared_mask = mask
+		break
+	return true
+
+
+func _prepare_arrival_entry(entry: Dictionary, reduced: bool) -> bool:
+	# Empty/expired authority is a valid prepared view. It needs no mesh, but
+	# still has its ordinary plaque. No draw command or future phase is issued.
+	if _surface.prepare(entry, _ground, reduced).is_empty():
+		return _arrival_fail("Element Garden presentation could not prepare its current surface.")
+	_prepare_plaque(String(entry.get("name", "")), _plaque_font)
+	return true
+
+
+func arrival_status() -> Dictionary:
+	var prepared := _arrival_prepared.size()
+	return {"ready": _arrival_error.is_empty() and prepared == _arrival_required,
+		"required": _arrival_required, "prepared": prepared,
+		"remaining": maxi(0, _arrival_required - prepared), "error": _arrival_error,
+		"prepared_mask": _arrival_prepared_mask}
+
+
+func cancel_arrival(published_entries: Array[Dictionary] = []) -> void:
+	_arrival_prepared.clear()
+	_arrival_required = 0
+	_arrival_prepared_mask = 0
+	_arrival_error = ""
+	# Cancellation does not renew the current frame's construction allowance.
+	_surface.retain(published_entries)
+	_retain_arrival_plaques(published_entries)
+
+
+func _retain_arrival_plaques(entries: Array[Dictionary]) -> void:
+	# A canceled/rekeyed preparation may never accumulate old directory text.
+	# Ordinary draw keeps its existing finite raw/self-cycle label reuse.
+	var labels := {}
+	for entry: Dictionary in entries: labels[String(entry.get("name", ""))] = true
+	for label: String in _plaques.keys():
+		if not labels.has(label): _plaques.erase(label)
+
+
+func _arrival_fail(message: String) -> bool:
+	_arrival_error = message
+	return false
+
+
+func _observe_plaque_font(font: Font) -> void:
+	if font == _plaque_font: return
+	if _plaque_font != null and _plaque_font.changed.is_connected(_plaque_font_changed):
+		_plaque_font.changed.disconnect(_plaque_font_changed)
+	_plaque_font = font
+	if _plaque_font != null: _plaque_font.changed.connect(_plaque_font_changed)
+	_plaque_font_changed()
+
+
+func _plaque_font_changed() -> void:
+	_plaques.clear()
+	_arrival_prepared.clear()
+	_plaque_font_revision += 1
+
+
+func _prepare_plaque(label: String, font: Font) -> Dictionary:
+	if not _plaques.has(label):
+		var line := TextLine.new()
+		line.add_string(label, font, 14)
+		var label_width := minf(234.0, line.get_size().x + 20.0)
+		line.width = label_width - 20.0
+		line.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_plaques[label] = {"line": line, "width": label_width}
+		_plaque_builds += 1
+	return _plaques[label]
+
+
 func draw_ground(canvas: CanvasItem, entries: Array[Dictionary], reduced: bool) -> void:
 	if not _ready or canvas == null: return
 	var font := ThemeDB.fallback_font
+	_observe_plaque_font(font)
 	profile_stages_us.clear()
 	_surface.profile_enabled = profile_enabled
 	_surface.profile_stages_us.clear()
@@ -53,17 +182,11 @@ func draw_ground(canvas: CanvasItem, entries: Array[Dictionary], reduced: bool) 
 			_surface.draw(canvas, entry, _ground, reduced, _sample_limit)
 		started = _profile("surfaces", started)
 		var label := String(entry.get("name", ""))
-		if not _plaques.has(label):
-			var line := TextLine.new()
-			line.add_string(label, font, 14)
-			var label_width := minf(234.0, line.get_size().x + 20.0)
-			line.width = label_width - 20.0
-			line.alignment = HORIZONTAL_ALIGNMENT_CENTER
-			_plaques[label] = {"line": line, "width": label_width}
-		var width := float(_plaques[label].width)
+		var plaque_data := _prepare_plaque(label, font)
+		var width := float(plaque_data.width)
 		var plaque := Rect2(center + Vector2(-width * 0.5, 113), Vector2(width, 26))
 		canvas.draw_rect(plaque, Color("182a25f2"))
-		var line: TextLine = _plaques[label].line
+		var line: TextLine = plaque_data.line
 		line.draw(canvas.get_canvas_item(), plaque.position + Vector2(10, 18.0 - line.get_line_ascent()), Color("eee1b9"))
 		_profile("plaques", started)
 	if profile_enabled:
@@ -97,7 +220,7 @@ static func _build_pad_mesh() -> ArrayMesh:
 	return mesh
 
 static func card_lines(info: Dictionary, viewport: Vector2, font: Font) -> Array[String]:
-	var width := minf(372.0, viewport.x - 32.0) - 24.0
+	var width := _card_width(viewport) - 24.0
 	var lines: Array[String] = []
 	for text: String in _card_sections(info):
 		if not text.is_empty(): lines.append_array(TestingPanel._wrap(text, font, 12, width))
@@ -114,11 +237,14 @@ static func _card_sections(info: Dictionary) -> Array[String]:
 	if String(info.get("demonstration", "")) != "raw" or int(info.get("mask", 0)) == 2:
 		sections.append("Counter: " + String(info.get("counter", "")))
 	sections.append(String(info.get("timing", "")))
-	sections.append("Bounded, harmless exhibit. Your spells stay live. Menu > Spell Range tests full combat effects.")
+	sections.append("Harmless ground exhibit; actor statuses need paid damaging hits. Your spells stay live. Menu > Spell Range tests this mixture.")
 	return sections
 
+static func _card_width(viewport: Vector2) -> float:
+	return viewport.x-32 if viewport.x < 900 else minf(372.0,viewport.x-32.0)
+
 static func card_geometry(info: Dictionary, viewport: Vector2, font: Font, inspected_position: Vector2 = Vector2.ZERO, inspected_radius: float = 0.0) -> Dictionary:
-	var width := minf(372.0, viewport.x - 32.0)
+	var width := _card_width(viewport)
 	var titles := TestingPanel._wrap(String(info.get("name", "Element Garden")), font, 15, width - 24.0)
 	var body := card_lines(info, viewport, font)
 	return _place_card(width, titles, body, viewport, font, inspected_position, inspected_radius)
@@ -127,6 +253,7 @@ static func _place_card(width: float, titles: Array[String], body: Array[String]
 	var body_y := 26.0 + titles.size() * 19.0
 	var height := ceilf(body_y + maxi(0, body.size() - 1) * 17.0 + font.get_descent(12) + 12.0)
 	var box := Rect2(viewport.x - width - 16.0, 110.0, width, height)
+	if viewport.x < 900: box.position.y=maxf(54.0,minf(86.0,viewport.y-height-16.0))
 	if inspected_radius > 0.0:
 		var exhibit := Rect2(inspected_position - Vector2.ONE * inspected_radius, Vector2.ONE * inspected_radius * 2.0)
 		if box.intersects(exhibit): box.position.x = 16.0
@@ -143,7 +270,7 @@ func _wrapped_card_text(text: String, font: Font, size: int, width: float) -> Ar
 	return lines
 
 func inspection_geometry(info: Dictionary, viewport: Vector2, font: Font, inspected_position: Vector2 = Vector2.ZERO, inspected_radius: float = 0.0) -> Dictionary:
-	var width := minf(372.0, viewport.x - 32.0)
+	var width := _card_width(viewport)
 	var titles := _wrapped_card_text(String(info.get("name", "Element Garden")), font, 15, width - 24.0)
 	var body: Array[String] = []
 	# Sample every displayed string from this frame's authority. Only wrapping

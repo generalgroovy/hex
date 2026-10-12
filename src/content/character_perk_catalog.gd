@@ -70,14 +70,20 @@ static func definition(wire: int) -> Dictionary:
 	var result: Dictionary = ROWS[wire - 1].duplicate(true)
 	result.wire_id = wire
 	result.id = "character_" + String(result.champion_id)
+	var paired_timing: bool = result.effects.has("spell_startup_ratio") and result.effects.has("spell_cooldown_ratio")
 	var changes: Array[String] = []
 	for effect: String in result.effects:
 		var amount := (int(result.effects[effect]) - 1000) / 10.0
-		changes.append("%s %s%.0f%%" % [EFFECT_LABELS[effect], "+" if amount > 0 else "", amount])
+		var label := String(EFFECT_LABELS[effect])
+		if paired_timing: label = "startup" if effect=="spell_startup_ratio" else "cooldown"
+		changes.append("%s %s%.0f%%" % [label, "+" if amount > 0 else "", amount])
 	var windows: Array[String] = []
 	for token: String in String(result.condition).split("&"):
 		windows.append(String(CONDITION_LABELS.get(token, token)))
 	result.summary = ", ".join(windows) + ": " + "; ".join(changes) + "."
+	if paired_timing:
+		result.summary += " Both clocks must change."
+		result.window += " Both changes require a real whole-tick difference; otherwise neither applies to that spell."
 	return result
 
 

@@ -30,13 +30,11 @@ $runImport = $Tier -in @('Fast', 'Full', 'Release')
 $runSuites = $Tier -in @('Focused', 'Full', 'Release')
 $runBoot = $Tier -in @('Fast', 'Full', 'Release')
 $runAssetAudit = $Tier -in @('Full', 'Release')
-# The Garden-inclusive Full-v5 completed216 suites/6.26M assertions before its
-# 1200s watchdog, with ongoing progress and zero stderr. Preserve the complete
-# registry and per-suite timing; allow a bounded1800s Full-only workload budget.
-# The remaining21 suites and corrected menu fixture are separately diagnosed
-# before the full rerun. Capture/Focused defaults remain180s. This test
-# supervision budget is not a simulation frame-time or performance allowance.
-$suiteTimeoutSeconds = if ($Tier -eq 'Full') { 1800 } else { 180 }
+# Full and Release execute the same complete registry (the previous freeze took
+# about 28 minutes before the new full-map impairment and paid balance matrix).
+# Both need the same bounded supervision budget. Focused and boot checks retain
+# their smaller limits; this does not relax any simulation/performance budget.
+$suiteTimeoutSeconds = if ($Tier -in @('Full', 'Release')) { 2700 } else { 180 }
 # A fresh checkout must import all original art without a prepopulated cache.
 # Bound that one-time editor step separately; boot and suite budgets stay fixed.
 $importTimeoutSeconds = 600

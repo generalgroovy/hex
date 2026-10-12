@@ -1,0 +1,1535 @@
+{
+  "schema": "hex-retained-legacy-fill-comparison-v1",
+  "decision": "retain_three_call_change",
+  "decision_scope": "Measured benefit is raw Fire command submission in two native processes; exact pixels cover Water/Fire/Steam and controls. Not overall FPS, GPU/presentation, Garden or Mantle speed acceptance.",
+  "units": "CPU submission microseconds; paired delta is candidate minus reference; negative favors candidate",
+  "method": "64 measured pairs with32 actual draws in each order;2 warmup pairs excluded; processB starts opposite order and omits pixel readback. Descriptive statistics, no independent-sample confidence claim.",
+  "review": "Experience reviewed rendering and fallback; gameplay reviewed finite paid workload and timing-only mode; root accepted narrow retention.",
+  "limitations": [
+    "Garden workload.tick repeats the preceding Mantle tick2716; actual Garden draw uses entry.tick and active phase. Preserve original receipts; do not interpret2716 as Garden time.",
+    "A has prior pixel/cache history;B initializes from a fresh process. Exact per-case authority hashes and recorded region counts agree, but cache histories differ.",
+    "Strong first-draw/order effects remain, especially in unchanged Garden controls. Do not pool modes/orders without showing them.",
+    "Water/Steam have exact appearance/fallback coverage, but separate speed improvements were not measured.",
+    "The derived changed-fill count is source/region-based, not an instrumented submission counter."
+  ],
+  "runs": [
+    {
+      "raw_receipt": ".godot/legacy-fill-iteration-a/receipt.json",
+      "raw_sha256": "4e8f28932e7dd9ea806a55fb56c23d0a8d40e3ab0848a24303471eb64c09b90a",
+      "mode": "full",
+      "reverse_order": false,
+      "pixel_comparisons": 378,
+      "pixel_failures": 0,
+      "sources_unchanged": true,
+      "source_sha256": {
+        "res://.godot/iteration-20261012/compare-legacy-fill-submission.gd": "77e454da20f01d588291af88af02b0f3cfaa921e4d2c6f6d8cdd268a9fb7de07",
+        "res://content/abilities/foundation_abilities_v1.json": "2909419ec614172bce603c38f38a844a5b491fc676d5d81c9568d24b6dbc0bec",
+        "res://content/maps/sanctum_campus_g2_v1.json": "70b46882a541e871fba661d01061ff03789410337d8eee71edb31d7b01f41317",
+        "res://scripts/verify-paid-field-equivalence.gd": "8f1e0ea049050d1fb7a63cf81cc0f2ba8ccbccfe7b84c15adebb06e52e288630",
+        "res://src/app/element_garden_exhibition.gd": "d538f358ee883d0e6518ba71092cef7eeb90a6d384890fc85235831b084e9c5e",
+        "res://src/presentation/element_garden_presenter.gd": "60af7cd5ffc8f5f3ae9c90930ca11ae9e8d8443c91509755d940ea935e6457d8",
+        "res://src/presentation/element_garden_surface.gd": "403a462102b33e1ff852e115d34cf3d5136d0392f9e41b099c93194170dac18d",
+        "res://src/presentation/hex_court_presenter.gd": "3190aa2683205bfdd1ebcc297e1002b3f3e624e4b59a61ecf64b76889733b92c",
+        "res://src/presentation/hex_magic_glow.gd": "4dff9c0ae52cb3aaed3a507bec6d00a4cd6b885fd739cbddc4ba5b8ece8fbdca",
+        "res://src/presentation/hex_material_surface.gd": "6f2d3ca43e8e1eadfa3144a280c63d20138cdaaca8d5dda524ea7dbed66b0aae",
+        "res://src/presentation/hex_surface_glow_cache.gd": "435b2ee56b588e6bd43d1fc4aa29747c662d8533b9dae4cde369b022a6126a06",
+        "res://src/presentation/hex_water_material_presenter.gd": "487e0b674476f6fb125ee97a2b7136d8236c3f58b8cabf85d0b62f49c9bbc8c2",
+        "res://src/presentation/pixel_magic_library.gd": "4103a634ab1b46897a00fb88de0b5bd141962a96c6b73caa53410c8959d2fca5",
+        "res://src/presentation/retro_material_marks.gd": "18a0da897da90b31c12699bc40bc7dc3c7407a1e008bc481b3f81dadabfea942",
+        "res://src/sim/combat/combat_system.gd": "e37ed42da20ec1b603b36735c9e299a304ffff55071970a02ac6fe55d7bf15fc",
+        "res://src/sim/hex/hex_chemistry_world.gd": "5618b81316329bba8524022365db2f30a5f613603fe1e08b3abd98d18637a567",
+        "res://src/sim/hex/hex_expanded_delivery.gd": "629f4f80fe3b73e1cb09247917d4b651696759b24a772bc6845b6fed015f1318"
+      },
+      "reference_sha256": {
+        "res://.godot/iteration-20261012/retained-fill-reference/hex_court_presenter.before.gd": "7211f0aba37becc097355ef7b3eae60caa2a133d6156af3e00421cef2b5c5d05",
+        "res://.godot/iteration-20261012/retained-fill-reference/legacy_fill_reference.gd": "388b7987f73ce402f961c6221441dea10993e2822fc068351659df5dbe159cdc"
+      },
+      "fire": {
+        "attempts": 12,
+        "admitted": 12,
+        "refused": 0,
+        "matter_paid": 7200,
+        "fully_expired": true
+      },
+      "mantle": {
+        "attempts": 12,
+        "admitted": 12,
+        "refused": 0,
+        "matter_paid": 7200,
+        "ticks_run": 2717,
+        "fully_expired": true
+      },
+      "cases": [
+        {
+          "case": "fire/reducedfalse",
+          "reference_us": {
+            "count": 64,
+            "max": 12584,
+            "mean": 10346.578125,
+            "median": 10212.0,
+            "min": 8973,
+            "p95": 11953
+          },
+          "candidate_us": {
+            "count": 64,
+            "max": 14500,
+            "mean": 10440.0625,
+            "median": 10055.5,
+            "min": 9106,
+            "p95": 12034
+          },
+          "paired": {
+            "count": 64,
+            "mean_us": 93.484375,
+            "median_us": 89.5,
+            "p95_us": 1236.0,
+            "candidate_faster": 28
+          },
+          "candidate_first": {
+            "count": 32,
+            "mean_us": 225.28125,
+            "median_us": 349.0,
+            "p95_us": 1234.0,
+            "candidate_faster": 10
+          },
+          "reference_first": {
+            "count": 32,
+            "mean_us": -38.3125,
+            "median_us": -70.5,
+            "p95_us": 1261.0,
+            "candidate_faster": 18
+          },
+          "workload": {
+            "authority_hash": "11ac870613e1b81a454cd440123c03df92c608db847ac6f3c22e1baa4ecbbb90",
+            "changed_fill_calls_expected": 0,
+            "changed_fill_count_scope": "Exact paid Court legacy region count; native Garden surface bypasses Court drawing. Derived outside timed callbacks, not an instrumented draw-call counter.",
+            "legacy_region_count": 0,
+            "material_region_counts": {
+              "conflagration": 150
+            },
+            "matter_paid": 7200,
+            "mode": "paid",
+            "occupied_cells": 25,
+            "products": 6,
+            "reduced": false,
+            "tick": 371.0
+          },
+          "geometry_before_warmup": {
+            "candidate": {
+              "builds": 51,
+              "draws": 5207,
+              "fallbacks": 0,
+              "hits": 15935,
+              "meshes": 51,
+              "texture_prefixes": 8
+            },
+            "reference": {
+              "builds": 46,
+              "draws": 5207,
+              "fallbacks": 0,
+              "hits": 11827,
+              "meshes": 46,
+              "texture_prefixes": 8
+            }
+          },
+          "candidate_geometry_after": {
+            "builds": 51,
+            "draws": 13457,
+            "fallbacks": 0,
+            "hits": 34085,
+            "meshes": 51,
+            "texture_prefixes": 8
+          },
+          "reference_geometry_after": {
+            "builds": 46,
+            "draws": 13457,
+            "fallbacks": 0,
+            "hits": 29977,
+            "meshes": 46,
+            "texture_prefixes": 8
+          }
+        },
+        {
+          "case": "fire/reducedtrue",
+          "reference_us": {
+            "count": 64,
+            "max": 11621,
+            "mean": 9979.078125,
+            "median": 9964.0,
+            "min": 9061,
+            "p95": 11232
+          },
+          "candidate_us": {
+            "count": 64,
+            "max": 12058,
+            "mean": 10007.078125,
+            "median": 9927.5,
+            "min": 9023,
+            "p95": 11025
+          },
+          "paired": {
+            "count": 64,
+            "mean_us": 28.0,
+            "median_us": 121.5,
+            "p95_us": 1227.0,
+            "candidate_faster": 28
+          },
+          "candidate_first": {
+            "count": 32,
+            "mean_us": 266.34375,
+            "median_us": 358.5,
+            "p95_us": 1287.0,
+            "candidate_faster": 10
+          },
+          "reference_first": {
+            "count": 32,
+            "mean_us": -210.34375,
+            "median_us": -192.0,
+            "p95_us": 1221.0,
+            "candidate_faster": 18
+          },
+          "workload": {
+            "authority_hash": "11ac870613e1b81a454cd440123c03df92c608db847ac6f3c22e1baa4ecbbb90",
+            "changed_fill_calls_expected": 0,
+            "changed_fill_count_scope": "Exact paid Court legacy region count; native Garden surface bypasses Court drawing. Derived outside timed callbacks, not an instrumented draw-call counter.",
+            "legacy_region_count": 0,
+            "material_region_counts": {
+              "conflagration": 150
+            },
+            "matter_paid": 7200,
+            "mode": "paid",
+            "occupied_cells": 25,
+            "products": 6,
+            "reduced": true,
+            "tick": 371.0
+          },
+          "geometry_before_warmup": {
+            "candidate": {
+              "builds": 51,
+              "draws": 13707,
+              "fallbacks": 0,
+              "hits": 34635,
+              "meshes": 51,
+              "texture_prefixes": 8
+            },
+            "reference": {
+              "builds": 46,
+              "draws": 13707,
+              "fallbacks": 0,
+              "hits": 30527,
+              "meshes": 46,
+              "texture_prefixes": 8
+            }
+          },
+          "candidate_geometry_after": {
+            "builds": 51,
+            "draws": 21957,
+            "fallbacks": 0,
+            "hits": 52785,
+            "meshes": 51,
+            "texture_prefixes": 8
+          },
+          "reference_geometry_after": {
+            "builds": 46,
+            "draws": 21957,
+            "fallbacks": 0,
+            "hits": 48677,
+            "meshes": 46,
+            "texture_prefixes": 8
+          }
+        },
+        {
+          "case": "garden63/reducedfalse",
+          "reference_us": {
+            "count": 64,
+            "max": 290,
+            "mean": 99.5,
+            "median": 99.0,
+            "min": 40,
+            "p95": 167
+          },
+          "candidate_us": {
+            "count": 64,
+            "max": 186,
+            "mean": 93.5,
+            "median": 93.0,
+            "min": 39,
+            "p95": 172
+          },
+          "paired": {
+            "count": 64,
+            "mean_us": -6.0,
+            "median_us": -2.5,
+            "p95_us": 102.0,
+            "candidate_faster": 32
+          },
+          "candidate_first": {
+            "count": 32,
+            "mean_us": 92.28125,
+            "median_us": 89.5,
+            "p95_us": 131.0,
+            "candidate_faster": 0
+          },
+          "reference_first": {
+            "count": 32,
+            "mean_us": -104.28125,
+            "median_us": -97.0,
+            "p95_us": -81.0,
+            "candidate_faster": 32
+          },
+          "workload": {
+            "authority_hash": "b67c57ce655c8ae7a87cbfc780c5a6d5191d4a95ca8d14cb7c78d88aff448662",
+            "changed_fill_calls_expected": 0,
+            "changed_fill_count_scope": "Exact paid Court legacy region count; native Garden surface bypasses Court drawing. Derived outside timed callbacks, not an instrumented draw-call counter.",
+            "legacy_region_count": 0,
+            "mask": 63,
+            "material_region_counts": {
+              "compound_63": 28
+            },
+            "mode": "garden",
+            "phase": "active",
+            "reduced": false,
+            "tick": 2716.0
+          },
+          "geometry_before_warmup": {
+            "candidate": {
+              "builds": 141,
+              "draws": 37734,
+              "fallbacks": 0,
+              "hits": 89832,
+              "meshes": 141,
+              "texture_prefixes": 8
+            },
+            "reference": {
+              "builds": 131,
+              "draws": 37734,
+              "fallbacks": 0,
+              "hits": 85673,
+              "meshes": 131,
+              "texture_prefixes": 8
+            }
+          },
+          "candidate_geometry_after": {
+            "builds": 141,
+            "draws": 37734,
+            "fallbacks": 0,
+            "hits": 89832,
+            "meshes": 141,
+            "texture_prefixes": 8
+          },
+          "reference_geometry_after": {
+            "builds": 131,
+            "draws": 37734,
+            "fallbacks": 0,
+            "hits": 85673,
+            "meshes": 131,
+            "texture_prefixes": 8
+          }
+        },
+        {
+          "case": "garden63/reducedtrue",
+          "reference_us": {
+            "count": 64,
+            "max": 187,
+            "mean": 91.359375,
+            "median": 97.5,
+            "min": 38,
+            "p95": 158
+          },
+          "candidate_us": {
+            "count": 64,
+            "max": 159,
+            "mean": 86.96875,
+            "median": 94.5,
+            "min": 37,
+            "p95": 142
+          },
+          "paired": {
+            "count": 64,
+            "mean_us": -4.390625,
+            "median_us": -2.5,
+            "p95_us": 94.0,
+            "candidate_faster": 32
+          },
+          "candidate_first": {
+            "count": 32,
+            "mean_us": 84.0,
+            "median_us": 82.5,
+            "p95_us": 99.0,
+            "candidate_faster": 0
+          },
+          "reference_first": {
+            "count": 32,
+            "mean_us": -92.78125,
+            "median_us": -88.0,
+            "p95_us": -74.0,
+            "candidate_faster": 32
+          },
+          "workload": {
+            "authority_hash": "b67c57ce655c8ae7a87cbfc780c5a6d5191d4a95ca8d14cb7c78d88aff448662",
+            "changed_fill_calls_expected": 0,
+            "changed_fill_count_scope": "Exact paid Court legacy region count; native Garden surface bypasses Court drawing. Derived outside timed callbacks, not an instrumented draw-call counter.",
+            "legacy_region_count": 0,
+            "mask": 63,
+            "material_region_counts": {
+              "compound_63": 28
+            },
+            "mode": "garden",
+            "phase": "active",
+            "reduced": true,
+            "tick": 2716.0
+          },
+          "geometry_before_warmup": {
+            "candidate": {
+              "builds": 141,
+              "draws": 37734,
+              "fallbacks": 0,
+              "hits": 89832,
+              "meshes": 141,
+              "texture_prefixes": 8
+            },
+            "reference": {
+              "builds": 131,
+              "draws": 37734,
+              "fallbacks": 0,
+              "hits": 85673,
+              "meshes": 131,
+              "texture_prefixes": 8
+            }
+          },
+          "candidate_geometry_after": {
+            "builds": 141,
+            "draws": 37734,
+            "fallbacks": 0,
+            "hits": 89832,
+            "meshes": 141,
+            "texture_prefixes": 8
+          },
+          "reference_geometry_after": {
+            "builds": 131,
+            "draws": 37734,
+            "fallbacks": 0,
+            "hits": 85673,
+            "meshes": 131,
+            "texture_prefixes": 8
+          }
+        },
+        {
+          "case": "mantle/reducedfalse",
+          "reference_us": {
+            "count": 64,
+            "max": 10266,
+            "mean": 6639.90625,
+            "median": 6602.0,
+            "min": 5603,
+            "p95": 7598
+          },
+          "candidate_us": {
+            "count": 64,
+            "max": 7714,
+            "mean": 6602.5625,
+            "median": 6651.0,
+            "min": 5646,
+            "p95": 7437
+          },
+          "paired": {
+            "count": 64,
+            "mean_us": -37.34375,
+            "median_us": 93.5,
+            "p95_us": 681.0,
+            "candidate_faster": 29
+          },
+          "candidate_first": {
+            "count": 32,
+            "mean_us": 288.8125,
+            "median_us": 372.5,
+            "p95_us": 685.0,
+            "candidate_faster": 5
+          },
+          "reference_first": {
+            "count": 32,
+            "mean_us": -363.5,
+            "median_us": -442.0,
+            "p95_us": 611.0,
+            "candidate_faster": 24
+          },
+          "workload": {
+            "authority_hash": "1bdf85a42f960e1f1bea1f5b42aff2ad0ba704c54ddf7b854d16d22f314dcb13",
+            "changed_fill_calls_expected": 0,
+            "changed_fill_count_scope": "Exact paid Court legacy region count; native Garden surface bypasses Court drawing. Derived outside timed callbacks, not an instrumented draw-call counter.",
+            "legacy_region_count": 0,
+            "material_region_counts": {
+              "compound_63": 84
+            },
+            "matter_paid": 7200,
+            "mode": "mantle",
+            "occupied_cells": 28,
+            "products": 3,
+            "reduced": false,
+            "tick": 2123.0
+          },
+          "geometry_before_warmup": {
+            "candidate": {
+              "builds": 140,
+              "draws": 30118,
+              "fallbacks": 0,
+              "hits": 70623,
+              "meshes": 140,
+              "texture_prefixes": 8
+            },
+            "reference": {
+              "builds": 130,
+              "draws": 30118,
+              "fallbacks": 0,
+              "hits": 66492,
+              "meshes": 130,
+              "texture_prefixes": 8
+            }
+          },
+          "candidate_geometry_after": {
+            "builds": 140,
+            "draws": 33814,
+            "fallbacks": 0,
+            "hits": 79863,
+            "meshes": 140,
+            "texture_prefixes": 8
+          },
+          "reference_geometry_after": {
+            "builds": 130,
+            "draws": 33814,
+            "fallbacks": 0,
+            "hits": 75732,
+            "meshes": 130,
+            "texture_prefixes": 8
+          }
+        },
+        {
+          "case": "mantle/reducedtrue",
+          "reference_us": {
+            "count": 64,
+            "max": 8841,
+            "mean": 6805.734375,
+            "median": 6661.0,
+            "min": 6018,
+            "p95": 8081
+          },
+          "candidate_us": {
+            "count": 64,
+            "max": 8397,
+            "mean": 6705.53125,
+            "median": 6646.5,
+            "min": 5964,
+            "p95": 7667
+          },
+          "paired": {
+            "count": 64,
+            "mean_us": -100.203125,
+            "median_us": -131.0,
+            "p95_us": 1068.0,
+            "candidate_faster": 35
+          },
+          "candidate_first": {
+            "count": 32,
+            "mean_us": 388.09375,
+            "median_us": 362.5,
+            "p95_us": 1234.0,
+            "candidate_faster": 5
+          },
+          "reference_first": {
+            "count": 32,
+            "mean_us": -588.5,
+            "median_us": -497.0,
+            "p95_us": 139.0,
+            "candidate_faster": 30
+          },
+          "workload": {
+            "authority_hash": "1bdf85a42f960e1f1bea1f5b42aff2ad0ba704c54ddf7b854d16d22f314dcb13",
+            "changed_fill_calls_expected": 0,
+            "changed_fill_count_scope": "Exact paid Court legacy region count; native Garden surface bypasses Court drawing. Derived outside timed callbacks, not an instrumented draw-call counter.",
+            "legacy_region_count": 0,
+            "material_region_counts": {
+              "compound_63": 84
+            },
+            "matter_paid": 7200,
+            "mode": "mantle",
+            "occupied_cells": 28,
+            "products": 3,
+            "reduced": true,
+            "tick": 2123.0
+          },
+          "geometry_before_warmup": {
+            "candidate": {
+              "builds": 140,
+              "draws": 33870,
+              "fallbacks": 0,
+              "hits": 80003,
+              "meshes": 140,
+              "texture_prefixes": 8
+            },
+            "reference": {
+              "builds": 130,
+              "draws": 33870,
+              "fallbacks": 0,
+              "hits": 75872,
+              "meshes": 130,
+              "texture_prefixes": 8
+            }
+          },
+          "candidate_geometry_after": {
+            "builds": 140,
+            "draws": 37566,
+            "fallbacks": 0,
+            "hits": 89243,
+            "meshes": 140,
+            "texture_prefixes": 8
+          },
+          "reference_geometry_after": {
+            "builds": 130,
+            "draws": 37566,
+            "fallbacks": 0,
+            "hits": 85112,
+            "meshes": 130,
+            "texture_prefixes": 8
+          }
+        },
+        {
+          "case": "raw_fire/reducedfalse",
+          "reference_us": {
+            "count": 64,
+            "max": 9568,
+            "mean": 2873.5625,
+            "median": 2402.5,
+            "min": 1889,
+            "p95": 5233
+          },
+          "candidate_us": {
+            "count": 64,
+            "max": 5892,
+            "mean": 2452.828125,
+            "median": 2147.5,
+            "min": 1695,
+            "p95": 4273
+          },
+          "paired": {
+            "count": 64,
+            "mean_us": -420.734375,
+            "median_us": -387.5,
+            "p95_us": 188.0,
+            "candidate_faster": 52
+          },
+          "candidate_first": {
+            "count": 32,
+            "mean_us": -322.03125,
+            "median_us": -114.5,
+            "p95_us": 214.0,
+            "candidate_faster": 22
+          },
+          "reference_first": {
+            "count": 32,
+            "mean_us": -519.4375,
+            "median_us": -485.0,
+            "p95_us": 63.0,
+            "candidate_faster": 30
+          },
+          "workload": {
+            "authority_hash": "78c3c3e4fc3ecbe88132620651fbde18daed73b13970bd95ae80eaf373a70749",
+            "changed_fill_calls_expected": 13,
+            "changed_fill_count_scope": "Exact paid Court legacy region count; native Garden surface bypasses Court drawing. Derived outside timed callbacks, not an instrumented draw-call counter.",
+            "legacy_region_count": 13,
+            "material_region_counts": {
+              "fire": 13
+            },
+            "matter_paid": 600,
+            "mode": "paid",
+            "occupied_cells": 13,
+            "products": 0,
+            "reduced": false,
+            "tick": 23.0
+          },
+          "geometry_before_warmup": {
+            "candidate": {
+              "builds": 34,
+              "draws": 1582,
+              "fallbacks": 0,
+              "hits": 5922,
+              "meshes": 34,
+              "texture_prefixes": 8
+            },
+            "reference": {
+              "builds": 21,
+              "draws": 1582,
+              "fallbacks": 0,
+              "hits": 3577,
+              "meshes": 21,
+              "texture_prefixes": 8
+            }
+          },
+          "candidate_geometry_after": {
+            "builds": 34,
+            "draws": 1582,
+            "fallbacks": 0,
+            "hits": 6780,
+            "meshes": 34,
+            "texture_prefixes": 8
+          },
+          "reference_geometry_after": {
+            "builds": 21,
+            "draws": 1582,
+            "fallbacks": 0,
+            "hits": 3577,
+            "meshes": 21,
+            "texture_prefixes": 8
+          }
+        },
+        {
+          "case": "raw_fire/reducedtrue",
+          "reference_us": {
+            "count": 64,
+            "max": 2657,
+            "mean": 2220.328125,
+            "median": 2218.5,
+            "min": 1826,
+            "p95": 2567
+          },
+          "candidate_us": {
+            "count": 64,
+            "max": 2955,
+            "mean": 2007.640625,
+            "median": 2005.5,
+            "min": 1651,
+            "p95": 2468
+          },
+          "paired": {
+            "count": 64,
+            "mean_us": -212.6875,
+            "median_us": -190.5,
+            "p95_us": 154.0,
+            "candidate_faster": 44
+          },
+          "candidate_first": {
+            "count": 32,
+            "mean_us": 13.0625,
+            "median_us": 68.0,
+            "p95_us": 229.0,
+            "candidate_faster": 12
+          },
+          "reference_first": {
+            "count": 32,
+            "mean_us": -438.4375,
+            "median_us": -480.0,
+            "p95_us": -116.0,
+            "candidate_faster": 32
+          },
+          "workload": {
+            "authority_hash": "78c3c3e4fc3ecbe88132620651fbde18daed73b13970bd95ae80eaf373a70749",
+            "changed_fill_calls_expected": 13,
+            "changed_fill_count_scope": "Exact paid Court legacy region count; native Garden surface bypasses Court drawing. Derived outside timed callbacks, not an instrumented draw-call counter.",
+            "legacy_region_count": 13,
+            "material_region_counts": {
+              "fire": 13
+            },
+            "matter_paid": 600,
+            "mode": "paid",
+            "occupied_cells": 13,
+            "products": 0,
+            "reduced": true,
+            "tick": 23.0
+          },
+          "geometry_before_warmup": {
+            "candidate": {
+              "builds": 34,
+              "draws": 1582,
+              "fallbacks": 0,
+              "hits": 6806,
+              "meshes": 34,
+              "texture_prefixes": 8
+            },
+            "reference": {
+              "builds": 21,
+              "draws": 1582,
+              "fallbacks": 0,
+              "hits": 3577,
+              "meshes": 21,
+              "texture_prefixes": 8
+            }
+          },
+          "candidate_geometry_after": {
+            "builds": 34,
+            "draws": 1582,
+            "fallbacks": 0,
+            "hits": 7664,
+            "meshes": 34,
+            "texture_prefixes": 8
+          },
+          "reference_geometry_after": {
+            "builds": 21,
+            "draws": 1582,
+            "fallbacks": 0,
+            "hits": 3577,
+            "meshes": 21,
+            "texture_prefixes": 8
+          }
+        }
+      ]
+    },
+    {
+      "raw_receipt": ".godot/legacy-fill-iteration-b/receipt.json",
+      "raw_sha256": "c2b952648b511bee9fa595f63288a37dca2972f942260192f6c8d39490e11305",
+      "mode": "timing_only",
+      "reverse_order": true,
+      "pixel_comparisons": 0,
+      "pixel_failures": 0,
+      "sources_unchanged": true,
+      "source_sha256": {
+        "res://.godot/iteration-20261012/compare-legacy-fill-submission.gd": "77e454da20f01d588291af88af02b0f3cfaa921e4d2c6f6d8cdd268a9fb7de07",
+        "res://content/abilities/foundation_abilities_v1.json": "2909419ec614172bce603c38f38a844a5b491fc676d5d81c9568d24b6dbc0bec",
+        "res://content/maps/sanctum_campus_g2_v1.json": "70b46882a541e871fba661d01061ff03789410337d8eee71edb31d7b01f41317",
+        "res://scripts/verify-paid-field-equivalence.gd": "8f1e0ea049050d1fb7a63cf81cc0f2ba8ccbccfe7b84c15adebb06e52e288630",
+        "res://src/app/element_garden_exhibition.gd": "d538f358ee883d0e6518ba71092cef7eeb90a6d384890fc85235831b084e9c5e",
+        "res://src/presentation/element_garden_presenter.gd": "60af7cd5ffc8f5f3ae9c90930ca11ae9e8d8443c91509755d940ea935e6457d8",
+        "res://src/presentation/element_garden_surface.gd": "403a462102b33e1ff852e115d34cf3d5136d0392f9e41b099c93194170dac18d",
+        "res://src/presentation/hex_court_presenter.gd": "3190aa2683205bfdd1ebcc297e1002b3f3e624e4b59a61ecf64b76889733b92c",
+        "res://src/presentation/hex_magic_glow.gd": "4dff9c0ae52cb3aaed3a507bec6d00a4cd6b885fd739cbddc4ba5b8ece8fbdca",
+        "res://src/presentation/hex_material_surface.gd": "6f2d3ca43e8e1eadfa3144a280c63d20138cdaaca8d5dda524ea7dbed66b0aae",
+        "res://src/presentation/hex_surface_glow_cache.gd": "435b2ee56b588e6bd43d1fc4aa29747c662d8533b9dae4cde369b022a6126a06",
+        "res://src/presentation/hex_water_material_presenter.gd": "487e0b674476f6fb125ee97a2b7136d8236c3f58b8cabf85d0b62f49c9bbc8c2",
+        "res://src/presentation/pixel_magic_library.gd": "4103a634ab1b46897a00fb88de0b5bd141962a96c6b73caa53410c8959d2fca5",
+        "res://src/presentation/retro_material_marks.gd": "18a0da897da90b31c12699bc40bc7dc3c7407a1e008bc481b3f81dadabfea942",
+        "res://src/sim/combat/combat_system.gd": "e37ed42da20ec1b603b36735c9e299a304ffff55071970a02ac6fe55d7bf15fc",
+        "res://src/sim/hex/hex_chemistry_world.gd": "5618b81316329bba8524022365db2f30a5f613603fe1e08b3abd98d18637a567",
+        "res://src/sim/hex/hex_expanded_delivery.gd": "629f4f80fe3b73e1cb09247917d4b651696759b24a772bc6845b6fed015f1318"
+      },
+      "reference_sha256": {
+        "res://.godot/iteration-20261012/retained-fill-reference/hex_court_presenter.before.gd": "7211f0aba37becc097355ef7b3eae60caa2a133d6156af3e00421cef2b5c5d05",
+        "res://.godot/iteration-20261012/retained-fill-reference/legacy_fill_reference.gd": "388b7987f73ce402f961c6221441dea10993e2822fc068351659df5dbe159cdc"
+      },
+      "fire": {
+        "attempts": 12,
+        "admitted": 12,
+        "refused": 0,
+        "matter_paid": 7200,
+        "fully_expired": true
+      },
+      "mantle": {
+        "attempts": 12,
+        "admitted": 12,
+        "refused": 0,
+        "matter_paid": 7200,
+        "ticks_run": 2717,
+        "fully_expired": true
+      },
+      "cases": [
+        {
+          "case": "fire/reducedfalse",
+          "reference_us": {
+            "count": 64,
+            "max": 11294,
+            "mean": 9969.734375,
+            "median": 9836.0,
+            "min": 9025,
+            "p95": 10837
+          },
+          "candidate_us": {
+            "count": 64,
+            "max": 11741,
+            "mean": 10063.015625,
+            "median": 10005.5,
+            "min": 8944,
+            "p95": 11159
+          },
+          "paired": {
+            "count": 64,
+            "mean_us": 93.28125,
+            "median_us": 46.0,
+            "p95_us": 1029.0,
+            "candidate_faster": 30
+          },
+          "candidate_first": {
+            "count": 32,
+            "mean_us": 363.40625,
+            "median_us": 390.5,
+            "p95_us": 1114.0,
+            "candidate_faster": 7
+          },
+          "reference_first": {
+            "count": 32,
+            "mean_us": -176.84375,
+            "median_us": -286.5,
+            "p95_us": 708.0,
+            "candidate_faster": 23
+          },
+          "workload": {
+            "authority_hash": "11ac870613e1b81a454cd440123c03df92c608db847ac6f3c22e1baa4ecbbb90",
+            "changed_fill_calls_expected": 0,
+            "changed_fill_count_scope": "Exact paid Court legacy region count; native Garden surface bypasses Court drawing. Derived outside timed callbacks, not an instrumented draw-call counter.",
+            "legacy_region_count": 0,
+            "material_region_counts": {
+              "conflagration": 150
+            },
+            "matter_paid": 7200,
+            "mode": "paid",
+            "occupied_cells": 25,
+            "products": 6,
+            "reduced": false,
+            "tick": 371.0
+          },
+          "geometry_before_warmup": {
+            "candidate": {
+              "builds": 13,
+              "draws": 0,
+              "fallbacks": 0,
+              "hits": 1703,
+              "meshes": 13,
+              "texture_prefixes": 0
+            },
+            "reference": {
+              "builds": 0,
+              "draws": 0,
+              "fallbacks": 0,
+              "hits": 0,
+              "meshes": 0,
+              "texture_prefixes": 0
+            }
+          },
+          "candidate_geometry_after": {
+            "builds": 30,
+            "draws": 8250,
+            "fallbacks": 0,
+            "hits": 19836,
+            "meshes": 30,
+            "texture_prefixes": 1
+          },
+          "reference_geometry_after": {
+            "builds": 25,
+            "draws": 8250,
+            "fallbacks": 0,
+            "hits": 18125,
+            "meshes": 25,
+            "texture_prefixes": 1
+          }
+        },
+        {
+          "case": "fire/reducedtrue",
+          "reference_us": {
+            "count": 64,
+            "max": 13312,
+            "mean": 10183.265625,
+            "median": 10011.0,
+            "min": 8867,
+            "p95": 12726
+          },
+          "candidate_us": {
+            "count": 64,
+            "max": 14075,
+            "mean": 10179.21875,
+            "median": 9872.5,
+            "min": 8760,
+            "p95": 12496
+          },
+          "paired": {
+            "count": 64,
+            "mean_us": -4.046875,
+            "median_us": 43.0,
+            "p95_us": 714.0,
+            "candidate_faster": 30
+          },
+          "candidate_first": {
+            "count": 32,
+            "mean_us": -113.625,
+            "median_us": 40.0,
+            "p95_us": 714.0,
+            "candidate_faster": 15
+          },
+          "reference_first": {
+            "count": 32,
+            "mean_us": 105.53125,
+            "median_us": 62.5,
+            "p95_us": 1669.0,
+            "candidate_faster": 15
+          },
+          "workload": {
+            "authority_hash": "11ac870613e1b81a454cd440123c03df92c608db847ac6f3c22e1baa4ecbbb90",
+            "changed_fill_calls_expected": 0,
+            "changed_fill_count_scope": "Exact paid Court legacy region count; native Garden surface bypasses Court drawing. Derived outside timed callbacks, not an instrumented draw-call counter.",
+            "legacy_region_count": 0,
+            "material_region_counts": {
+              "conflagration": 150
+            },
+            "matter_paid": 7200,
+            "mode": "paid",
+            "occupied_cells": 25,
+            "products": 6,
+            "reduced": true,
+            "tick": 371.0
+          },
+          "geometry_before_warmup": {
+            "candidate": {
+              "builds": 30,
+              "draws": 8250,
+              "fallbacks": 0,
+              "hits": 19836,
+              "meshes": 30,
+              "texture_prefixes": 1
+            },
+            "reference": {
+              "builds": 25,
+              "draws": 8250,
+              "fallbacks": 0,
+              "hits": 18125,
+              "meshes": 25,
+              "texture_prefixes": 1
+            }
+          },
+          "candidate_geometry_after": {
+            "builds": 30,
+            "draws": 16500,
+            "fallbacks": 0,
+            "hits": 37986,
+            "meshes": 30,
+            "texture_prefixes": 1
+          },
+          "reference_geometry_after": {
+            "builds": 25,
+            "draws": 16500,
+            "fallbacks": 0,
+            "hits": 36275,
+            "meshes": 25,
+            "texture_prefixes": 1
+          }
+        },
+        {
+          "case": "garden63/reducedfalse",
+          "reference_us": {
+            "count": 64,
+            "max": 178,
+            "mean": 94.46875,
+            "median": 101.5,
+            "min": 40,
+            "p95": 162
+          },
+          "candidate_us": {
+            "count": 64,
+            "max": 238,
+            "mean": 96.28125,
+            "median": 103.5,
+            "min": 39,
+            "p95": 154
+          },
+          "paired": {
+            "count": 64,
+            "mean_us": 1.8125,
+            "median_us": -3.0,
+            "p95_us": 107.0,
+            "candidate_faster": 32
+          },
+          "candidate_first": {
+            "count": 32,
+            "mean_us": 94.96875,
+            "median_us": 94.0,
+            "p95_us": 123.0,
+            "candidate_faster": 0
+          },
+          "reference_first": {
+            "count": 32,
+            "mean_us": -91.34375,
+            "median_us": -92.0,
+            "p95_us": -66.0,
+            "candidate_faster": 32
+          },
+          "workload": {
+            "authority_hash": "b67c57ce655c8ae7a87cbfc780c5a6d5191d4a95ca8d14cb7c78d88aff448662",
+            "changed_fill_calls_expected": 0,
+            "changed_fill_count_scope": "Exact paid Court legacy region count; native Garden surface bypasses Court drawing. Derived outside timed callbacks, not an instrumented draw-call counter.",
+            "legacy_region_count": 0,
+            "mask": 63,
+            "material_region_counts": {
+              "compound_63": 28
+            },
+            "mode": "garden",
+            "phase": "active",
+            "reduced": false,
+            "tick": 2716.0
+          },
+          "geometry_before_warmup": {
+            "candidate": {
+              "builds": 114,
+              "draws": 23892,
+              "fallbacks": 0,
+              "hits": 56382,
+              "meshes": 114,
+              "texture_prefixes": 3
+            },
+            "reference": {
+              "builds": 109,
+              "draws": 23892,
+              "fallbacks": 0,
+              "hits": 54671,
+              "meshes": 109,
+              "texture_prefixes": 3
+            }
+          },
+          "candidate_geometry_after": {
+            "builds": 114,
+            "draws": 23892,
+            "fallbacks": 0,
+            "hits": 56382,
+            "meshes": 114,
+            "texture_prefixes": 3
+          },
+          "reference_geometry_after": {
+            "builds": 109,
+            "draws": 23892,
+            "fallbacks": 0,
+            "hits": 54671,
+            "meshes": 109,
+            "texture_prefixes": 3
+          }
+        },
+        {
+          "case": "garden63/reducedtrue",
+          "reference_us": {
+            "count": 64,
+            "max": 190,
+            "mean": 86.828125,
+            "median": 91.0,
+            "min": 38,
+            "p95": 150
+          },
+          "candidate_us": {
+            "count": 64,
+            "max": 215,
+            "mean": 88.203125,
+            "median": 113.5,
+            "min": 38,
+            "p95": 149
+          },
+          "paired": {
+            "count": 64,
+            "mean_us": 1.375,
+            "median_us": 63.5,
+            "p95_us": 95.0,
+            "candidate_faster": 31
+          },
+          "candidate_first": {
+            "count": 32,
+            "mean_us": 85.25,
+            "median_us": 84.5,
+            "p95_us": 114.0,
+            "candidate_faster": 0
+          },
+          "reference_first": {
+            "count": 32,
+            "mean_us": -82.5,
+            "median_us": -83.5,
+            "p95_us": -63.0,
+            "candidate_faster": 31
+          },
+          "workload": {
+            "authority_hash": "b67c57ce655c8ae7a87cbfc780c5a6d5191d4a95ca8d14cb7c78d88aff448662",
+            "changed_fill_calls_expected": 0,
+            "changed_fill_count_scope": "Exact paid Court legacy region count; native Garden surface bypasses Court drawing. Derived outside timed callbacks, not an instrumented draw-call counter.",
+            "legacy_region_count": 0,
+            "mask": 63,
+            "material_region_counts": {
+              "compound_63": 28
+            },
+            "mode": "garden",
+            "phase": "active",
+            "reduced": true,
+            "tick": 2716.0
+          },
+          "geometry_before_warmup": {
+            "candidate": {
+              "builds": 114,
+              "draws": 23892,
+              "fallbacks": 0,
+              "hits": 56382,
+              "meshes": 114,
+              "texture_prefixes": 3
+            },
+            "reference": {
+              "builds": 109,
+              "draws": 23892,
+              "fallbacks": 0,
+              "hits": 54671,
+              "meshes": 109,
+              "texture_prefixes": 3
+            }
+          },
+          "candidate_geometry_after": {
+            "builds": 114,
+            "draws": 23892,
+            "fallbacks": 0,
+            "hits": 56382,
+            "meshes": 114,
+            "texture_prefixes": 3
+          },
+          "reference_geometry_after": {
+            "builds": 109,
+            "draws": 23892,
+            "fallbacks": 0,
+            "hits": 54671,
+            "meshes": 109,
+            "texture_prefixes": 3
+          }
+        },
+        {
+          "case": "mantle/reducedfalse",
+          "reference_us": {
+            "count": 64,
+            "max": 10862,
+            "mean": 6478.078125,
+            "median": 6386.5,
+            "min": 5549,
+            "p95": 7231
+          },
+          "candidate_us": {
+            "count": 64,
+            "max": 8229,
+            "mean": 6412.40625,
+            "median": 6382.5,
+            "min": 5511,
+            "p95": 7214
+          },
+          "paired": {
+            "count": 64,
+            "mean_us": -65.671875,
+            "median_us": -79.0,
+            "p95_us": 893.0,
+            "candidate_faster": 35
+          },
+          "candidate_first": {
+            "count": 32,
+            "mean_us": 466.1875,
+            "median_us": 533.5,
+            "p95_us": 1134.0,
+            "candidate_faster": 5
+          },
+          "reference_first": {
+            "count": 32,
+            "mean_us": -597.53125,
+            "median_us": -528.0,
+            "p95_us": 68.0,
+            "candidate_faster": 30
+          },
+          "workload": {
+            "authority_hash": "1bdf85a42f960e1f1bea1f5b42aff2ad0ba704c54ddf7b854d16d22f314dcb13",
+            "changed_fill_calls_expected": 0,
+            "changed_fill_count_scope": "Exact paid Court legacy region count; native Garden surface bypasses Court drawing. Derived outside timed callbacks, not an instrumented draw-call counter.",
+            "legacy_region_count": 0,
+            "material_region_counts": {
+              "compound_63": 84
+            },
+            "matter_paid": 7200,
+            "mode": "mantle",
+            "occupied_cells": 28,
+            "products": 3,
+            "reduced": false,
+            "tick": 2123.0
+          },
+          "geometry_before_warmup": {
+            "candidate": {
+              "builds": 30,
+              "draws": 16500,
+              "fallbacks": 0,
+              "hits": 37986,
+              "meshes": 30,
+              "texture_prefixes": 1
+            },
+            "reference": {
+              "builds": 25,
+              "draws": 16500,
+              "fallbacks": 0,
+              "hits": 36275,
+              "meshes": 25,
+              "texture_prefixes": 1
+            }
+          },
+          "candidate_geometry_after": {
+            "builds": 114,
+            "draws": 20196,
+            "fallbacks": 0,
+            "hits": 47142,
+            "meshes": 114,
+            "texture_prefixes": 3
+          },
+          "reference_geometry_after": {
+            "builds": 109,
+            "draws": 20196,
+            "fallbacks": 0,
+            "hits": 45431,
+            "meshes": 109,
+            "texture_prefixes": 3
+          }
+        },
+        {
+          "case": "mantle/reducedtrue",
+          "reference_us": {
+            "count": 64,
+            "max": 11984,
+            "mean": 7484.765625,
+            "median": 6662.0,
+            "min": 5501,
+            "p95": 10949
+          },
+          "candidate_us": {
+            "count": 64,
+            "max": 11507,
+            "mean": 7543.78125,
+            "median": 6768.5,
+            "min": 5550,
+            "p95": 10941
+          },
+          "paired": {
+            "count": 64,
+            "mean_us": 59.015625,
+            "median_us": 64.0,
+            "p95_us": 906.0,
+            "candidate_faster": 31
+          },
+          "candidate_first": {
+            "count": 32,
+            "mean_us": 388.46875,
+            "median_us": 384.5,
+            "p95_us": 1975.0,
+            "candidate_faster": 9
+          },
+          "reference_first": {
+            "count": 32,
+            "mean_us": -270.4375,
+            "median_us": -401.5,
+            "p95_us": 603.0,
+            "candidate_faster": 22
+          },
+          "workload": {
+            "authority_hash": "1bdf85a42f960e1f1bea1f5b42aff2ad0ba704c54ddf7b854d16d22f314dcb13",
+            "changed_fill_calls_expected": 0,
+            "changed_fill_count_scope": "Exact paid Court legacy region count; native Garden surface bypasses Court drawing. Derived outside timed callbacks, not an instrumented draw-call counter.",
+            "legacy_region_count": 0,
+            "material_region_counts": {
+              "compound_63": 84
+            },
+            "matter_paid": 7200,
+            "mode": "mantle",
+            "occupied_cells": 28,
+            "products": 3,
+            "reduced": true,
+            "tick": 2123.0
+          },
+          "geometry_before_warmup": {
+            "candidate": {
+              "builds": 114,
+              "draws": 20196,
+              "fallbacks": 0,
+              "hits": 47142,
+              "meshes": 114,
+              "texture_prefixes": 3
+            },
+            "reference": {
+              "builds": 109,
+              "draws": 20196,
+              "fallbacks": 0,
+              "hits": 45431,
+              "meshes": 109,
+              "texture_prefixes": 3
+            }
+          },
+          "candidate_geometry_after": {
+            "builds": 114,
+            "draws": 23892,
+            "fallbacks": 0,
+            "hits": 56382,
+            "meshes": 114,
+            "texture_prefixes": 3
+          },
+          "reference_geometry_after": {
+            "builds": 109,
+            "draws": 23892,
+            "fallbacks": 0,
+            "hits": 54671,
+            "meshes": 109,
+            "texture_prefixes": 3
+          }
+        },
+        {
+          "case": "raw_fire/reducedfalse",
+          "reference_us": {
+            "count": 64,
+            "max": 4876,
+            "mean": 2428.796875,
+            "median": 2350.5,
+            "min": 1846,
+            "p95": 3133
+          },
+          "candidate_us": {
+            "count": 64,
+            "max": 3410,
+            "mean": 2183.0625,
+            "median": 2143.5,
+            "min": 1617,
+            "p95": 2954
+          },
+          "paired": {
+            "count": 64,
+            "mean_us": -245.734375,
+            "median_us": -226.0,
+            "p95_us": 114.0,
+            "candidate_faster": 48
+          },
+          "candidate_first": {
+            "count": 32,
+            "mean_us": -86.59375,
+            "median_us": -15.0,
+            "p95_us": 144.0,
+            "candidate_faster": 17
+          },
+          "reference_first": {
+            "count": 32,
+            "mean_us": -404.875,
+            "median_us": -473.0,
+            "p95_us": -17.0,
+            "candidate_faster": 31
+          },
+          "workload": {
+            "authority_hash": "78c3c3e4fc3ecbe88132620651fbde18daed73b13970bd95ae80eaf373a70749",
+            "changed_fill_calls_expected": 13,
+            "changed_fill_count_scope": "Exact paid Court legacy region count; native Garden surface bypasses Court drawing. Derived outside timed callbacks, not an instrumented draw-call counter.",
+            "legacy_region_count": 13,
+            "material_region_counts": {
+              "fire": 13
+            },
+            "matter_paid": 600,
+            "mode": "paid",
+            "occupied_cells": 13,
+            "products": 0,
+            "reduced": false,
+            "tick": 23.0
+          },
+          "geometry_before_warmup": {
+            "candidate": {
+              "builds": 0,
+              "draws": 0,
+              "fallbacks": 0,
+              "hits": 0,
+              "meshes": 0,
+              "texture_prefixes": 0
+            },
+            "reference": {
+              "builds": 0,
+              "draws": 0,
+              "fallbacks": 0,
+              "hits": 0,
+              "meshes": 0,
+              "texture_prefixes": 0
+            }
+          },
+          "candidate_geometry_after": {
+            "builds": 13,
+            "draws": 0,
+            "fallbacks": 0,
+            "hits": 845,
+            "meshes": 13,
+            "texture_prefixes": 0
+          },
+          "reference_geometry_after": {
+            "builds": 0,
+            "draws": 0,
+            "fallbacks": 0,
+            "hits": 0,
+            "meshes": 0,
+            "texture_prefixes": 0
+          }
+        },
+        {
+          "case": "raw_fire/reducedtrue",
+          "reference_us": {
+            "count": 64,
+            "max": 2708,
+            "mean": 2250.46875,
+            "median": 2259.5,
+            "min": 1844,
+            "p95": 2595
+          },
+          "candidate_us": {
+            "count": 64,
+            "max": 2577,
+            "mean": 1989.078125,
+            "median": 2032.5,
+            "min": 1630,
+            "p95": 2393
+          },
+          "paired": {
+            "count": 64,
+            "mean_us": -261.390625,
+            "median_us": -359.0,
+            "p95_us": 184.0,
+            "candidate_faster": 45
+          },
+          "candidate_first": {
+            "count": 32,
+            "mean_us": -4.09375,
+            "median_us": 48.5,
+            "p95_us": 292.0,
+            "candidate_faster": 13
+          },
+          "reference_first": {
+            "count": 32,
+            "mean_us": -518.6875,
+            "median_us": -548.0,
+            "p95_us": -268.0,
+            "candidate_faster": 32
+          },
+          "workload": {
+            "authority_hash": "78c3c3e4fc3ecbe88132620651fbde18daed73b13970bd95ae80eaf373a70749",
+            "changed_fill_calls_expected": 13,
+            "changed_fill_count_scope": "Exact paid Court legacy region count; native Garden surface bypasses Court drawing. Derived outside timed callbacks, not an instrumented draw-call counter.",
+            "legacy_region_count": 13,
+            "material_region_counts": {
+              "fire": 13
+            },
+            "matter_paid": 600,
+            "mode": "paid",
+            "occupied_cells": 13,
+            "products": 0,
+            "reduced": true,
+            "tick": 23.0
+          },
+          "geometry_before_warmup": {
+            "candidate": {
+              "builds": 13,
+              "draws": 0,
+              "fallbacks": 0,
+              "hits": 845,
+              "meshes": 13,
+              "texture_prefixes": 0
+            },
+            "reference": {
+              "builds": 0,
+              "draws": 0,
+              "fallbacks": 0,
+              "hits": 0,
+              "meshes": 0,
+              "texture_prefixes": 0
+            }
+          },
+          "candidate_geometry_after": {
+            "builds": 13,
+            "draws": 0,
+            "fallbacks": 0,
+            "hits": 1703,
+            "meshes": 13,
+            "texture_prefixes": 0
+          },
+          "reference_geometry_after": {
+            "builds": 0,
+            "draws": 0,
+            "fallbacks": 0,
+            "hits": 0,
+            "meshes": 0,
+            "texture_prefixes": 0
+          }
+        }
+      ]
+    }
+  ]
+}

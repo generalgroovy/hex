@@ -1,6 +1,9 @@
 class_name CharacterSelectionGrid
 extends RefCounted
 
+const Readable = preload("res://src/presentation/readable_reference_panel.gd")
+var readable_reader := Readable.new()
+
 
 const Model = preload("res://src/app/character_selection_model.gd")
 const Text = preload("res://src/presentation/player_compendium.gd")
@@ -583,3 +586,10 @@ static func _button(canvas: CanvasItem, font: Font, rectangle: Rect2, label: Str
 	canvas.draw_rect(rectangle, Color("202a23") if enabled else Color("171d19"))
 	canvas.draw_rect(rectangle, Color(BRASS, 0.6 if enabled else 0.28), false, 1)
 	_text(canvas, font, rectangle.position + Vector2(10, 22), label, 15, PAPER if enabled else MUTED)
+
+
+func draw_readable(canvas: CanvasItem, viewport: Vector2, availability: Dictionary = {}) -> void:
+	readable_reader.draw_gallery(canvas,viewport,self,availability)
+
+func handle_readable_event(event: InputEvent, pointer: Vector2, viewport: Vector2, availability: Dictionary = {}) -> int:
+	return readable_reader.handle_gallery(event,pointer,viewport,self,availability)

@@ -7,7 +7,8 @@ const Perks = preload("res://src/sim/entities/identity_perk_policy.gd")
 static func initialize(shot: ProjectileState, config: SimConfig) -> void:
 	var family := MixtureCatalog.family_for_wire(shot.source_wire_id)
 	if family in ["mantle","fuse"]: shot.delivery_damage_remaining = shot.damage
-	if family == "split": shot.delivery_ticks = config.milliseconds_to_ticks(250)
+	if family == "split":
+		shot.delivery_ticks = config.milliseconds_to_ticks(int(CombatTuning.cast_definition_view(shot.source_wire_id).get("split_delay_ms", 250)))
 	if family == "mantle":
 		shot.velocity_x = 0
 		shot.velocity_y = 0
@@ -120,15 +121,13 @@ static func apply_area(world: SimWorld, shot: ProjectileState, radius: int, quot
 		var point := Vector2i(target.position_x,target.position_y)
 		if (point-origin).length_squared() > (radius+target.radius)*(radius+target.radius): continue
 		if not SprayInterception.clear_ray(origin,point,world.collision,[],world.tick): continue
-		var wanted := mini(shot.delivery_damage_remaining,quote*shot.remaining_strength/maxi(1,shot.initial_strength))
-		var low := 0
-		var high := wanted*2+1
-		while low+1<high:
-			var mid := (low+high)/2
-			if Perks.scale(target,"incoming_damage_ratio",mid)<=wanted: low=mid
-			else: high=mid
+		var raw_quote := quote*shot.remaining_strength/maxi(1,shot.initial_strength)
+		# Preserve the authored quote; cap only the final, perk-scaled pool debit.
+		var ratio := Perks.ratio(target,"incoming_damage_ratio")
+		var maximum_quote := ((shot.delivery_damage_remaining+1)*1000-1)/ratio
+		var damage := mini(raw_quote,maximum_quote)
 		var before := target.health
-		if low<=0 or not PlayerResourcesSystem.damage(target,low,world.config): continue
+		if damage<=0 or not PlayerResourcesSystem.damage(target,damage,world.config): continue
 		var loss := before-target.health
 		shot.delivery_damage_remaining -= loss
 		shot.contact_entity_ids.append(target.entity_id)

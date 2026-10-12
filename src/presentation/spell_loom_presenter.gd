@@ -3,6 +3,9 @@ extends RefCounted
 
 const ElementGlyphRendererScript = preload("res://src/presentation/element_glyph_renderer.gd")
 const BindingLabels = preload("res://src/presentation/spell_binding_labels.gd")
+const IdentityPerkPolicy = preload("res://src/sim/entities/identity_perk_policy.gd")
+const StatusCatalog = preload("res://src/content/spell_status_catalog.gd")
+const Inspector = preload("res://src/presentation/spell_inspector_model.gd")
 const SUBTITLE := "Choose a slot. Combine elements. Choose how the spell travels."
 const SUBTITLE_POSITION := Vector2(48, 86)
 const LIBRARY_HEADING_POSITION := Vector2(SpellLoomEditor.MATRIX_LABEL_X, 96)
@@ -43,6 +46,8 @@ static func draw_panel(canvas: CanvasItem, editor: SpellLoomEditor, state: Playe
 	canvas.draw_rect(SpellLoomEditor.CLOSE_RECT, Color("31433d"))
 	text(canvas, SpellLoomEditor.CLOSE_RECT.position + Vector2(10, 23), "X", 17, ink)
 	if not editor.starter_preview_active():
+		canvas.draw_rect(SpellLoomEditor.COMPARE_RECT, Color(focus, 0.18 if editor.compare_equipped else 0.08))
+		text(canvas, SpellLoomEditor.COMPARE_RECT.position + Vector2(8, 23), "Compare: ON" if editor.compare_equipped else "Compare equipped", 12, ink)
 		canvas.draw_rect(SpellLoomEditor.STARTER_BUTTON_RECT, Color(focus, 0.10))
 		canvas.draw_rect(SpellLoomEditor.STARTER_BUTTON_RECT, Color(focus, 0.72), false, 1)
 		text(canvas, SpellLoomEditor.STARTER_BUTTON_RECT.position + Vector2(10, 23), "Use character starter kit", 12, ink)
@@ -110,17 +115,23 @@ static func draw_panel(canvas: CanvasItem, editor: SpellLoomEditor, state: Playe
 		payload_lines.append_array(_wrap_payload("Counter: " + String(payload.counter), 432))
 		for line: int in mini(4, payload_lines.size()):
 			text(canvas, Vector2(48, PAYLOAD_BASELINE + line * PAYLOAD_LINE_STEP), payload_lines[line], 12, muted, 432)
-	var metrics := spell_metrics(chosen)
+	var metrics := spell_metrics(chosen,state)
 	for metric_index: int in range(metrics.size()):
 		var at := Vector2(564 + (metric_index % 3) * 208, 513 + (metric_index / 3) * 26)
 		text(canvas, at, String(metrics[metric_index].label), 10, muted, 94)
 		text(canvas, at + Vector2(95, 0), String(metrics[metric_index].value), 12, ink, 108)
-	text(canvas, METRICS_HINT_POSITION, METRICS_HINT, METRICS_HINT_FONT_SIZE, muted, METRICS_HINT_WIDTH)
+	text(canvas, METRICS_HINT_POSITION, timing_note(chosen,state), METRICS_HINT_FONT_SIZE, muted, METRICS_HINT_WIDTH)
 	canvas.draw_line(Vector2(48, SpellLoomEditor.DETAIL_DIVIDER_Y), Vector2(1228, SpellLoomEditor.DETAIL_DIVIDER_Y), Color(muted, 0.3))
 	text(canvas, Vector2(48, 589), String(chosen.get("display_name", "Choose a spell")), 19, ink, 700)
 	text(canvas, Vector2(790, 589), "%s / %d Flux / %.2fs" % [family_label(AbilityCatalog._spell_family(chosen)), int(chosen.get("flux_cost", 0)), float(chosen.get("cooldown_ms", 0)) / 1000.0], 13, muted, 420)
-	text(canvas, Vector2(48, 610), family_detail(chosen), 12, ink, 940)
-	text(canvas, Vector2(48, 627), payload_detail(chosen), 12, muted, 940)
+	if editor.compare_equipped:
+		var comparison := Inspector.comparison(editor.selected_wire_id(),state.spell_wire_id(editor.selected_slot_index+1),state)
+		text(canvas,Vector2(48,610),comparison[0] + (" " + comparison[1] if comparison.size()>1 else ""),12,ink,940)
+		if comparison.size()>3: text(canvas,Vector2(48,627),comparison[2]+" "+comparison[3],12,muted,940)
+		text(canvas,Vector2(48,644),"Hit/pool are not sustained DPS. Fields are separate. Current timing can change before release.",11,muted,940)
+	else:
+		text(canvas, Vector2(48, 610), family_detail(chosen), 12, ink, 940)
+		text(canvas, Vector2(48, 627), payload_detail(chosen), 12, muted, 940)
 	_draw_feedback(canvas, editor, language, availability)
 	var assign_color := focus if assignment_enabled else muted
 	canvas.draw_rect(SpellLoomEditor.ASSIGN_RECT, Color(assign_color, 0.18 if assignment_enabled else 0.08))
@@ -154,7 +165,7 @@ static func _draw_assignment_preview(canvas: CanvasItem, editor: SpellLoomEditor
 	var current := catalog.ability_from_wire(state.spell_wire_id(editor.selected_slot_index + 1))
 	var chosen := catalog.ability_from_wire(editor.selected_wire_id())
 	text(canvas, box.position + Vector2(12, 16), title + (" / timers kept" if preview.kind == "swap" else ""), 12, focus, 408)
-	text(canvas, box.position + Vector2(12, 36), slot_display_name(state.spell_wire_id(editor.selected_slot_index + 1), current) + " → " + String(chosen.get("display_name", "Choose a spell")), 12, ink, 408)
+	text(canvas, box.position + Vector2(12, 36), slot_display_name(state.spell_wire_id(editor.selected_slot_index + 1), current) + " \u2192 " + String(chosen.get("display_name", "Choose a spell")), 12, ink, 408)
 
 
 static func _wrap_payload(copy: String, width: float) -> Array[String]:
@@ -170,23 +181,12 @@ static func _wrap_payload(copy: String, width: float) -> Array[String]:
 	return result
 
 
-static func spell_metrics(ability: Dictionary) -> Array[Dictionary]:
-	var definition := CombatTuning.cast_definition(int(ability.get("wire_id", 0)))
-	var speed := int(definition.get("speed", 0))
-	var family := String(definition.get("family", ""))
-	var reach := float(definition.get("range", 0)) / 1000.0
-	if reach <= 0.0:
-		reach = float(speed) * float(definition.get("lifetime_ms", 0)) / 1000000.0
-	var config := SimConfig.new()
-	var cycle_ticks := config.milliseconds_to_ticks(int(definition.get("startup_ms", 0))) + config.milliseconds_to_ticks(int(definition.get("cooldown_ms", 0)))
-	return [
-		{"label": "FLUX / CAST", "value": str(int(definition.get("flux_cost", 0)) / 1000)},
-		{"label": "STRENGTH", "value": str(int(definition.get("reaction_strength", 0)))},
-		{"label": "SPEED", "value": "Follows caster" if family == "mantle" else String.num(float(speed) / 1000.0, 1) + " px/s" if speed > 0 else "Instant fan"},
-		{"label": "FIRE EVERY", "value": "%.2f s min" % (float(cycle_ticks) / config.tick_rate)},
-		{"label": "SHARED POOL" if family in ["mantle", "fuse", "split"] else "DIRECT HIT", "value": String.num(float(definition.get("damage", 0)) / 1000.0, 2) + " HP"},
-		{"label": "DURATION" if family == "mantle" else "NOM. REACH", "value": "%.2f s" % (float(definition.get("lifetime_ms", 0)) / 1000.0) if family == "mantle" else "%.0f px" % reach},
-	]
+static func spell_metrics(ability: Dictionary, state: PlayerState = null) -> Array[Dictionary]:
+	return Inspector.metrics(int(ability.get("wire_id",0)),state)
+
+
+static func timing_note(ability: Dictionary, state: PlayerState) -> String:
+	return Inspector.timing_note(int(ability.get("wire_id",0)),state)
 
 
 static func _draw_starter_preview(canvas: CanvasItem, editor: SpellLoomEditor, language: VisualLanguage, preferences: PlayerPreferences = null, availability: Dictionary = {}) -> void:
@@ -370,9 +370,8 @@ static func family_detail(ability: Dictionary) -> String:
 static func payload_detail(ability: Dictionary) -> String:
 	var mask := int(ability.get("element_mask", 0))
 	var effects := PackedStringArray()
-	var names := {1: "Fractured: slower next startup", 2: "Burn: finite damage over time", 4: "Chilled: slower travel", 8: "Gust: bounded displacement", 16: "Revealed: visible through concealment", 32: "Withered: Health/Flux recovery blocked"}
-	for bit: int in [1, 2, 4, 8, 16, 32]:
-		if (mask & bit) != 0: effects.append(String(names[bit]))
+	for row: Dictionary in StatusCatalog.rows_for_mask(mask):
+		effects.append(String(row.summary))
 	if effects.size() > 3:
 		var compact := PackedStringArray()
 		for effect: String in effects: compact.append(effect.get_slice(":", 0))

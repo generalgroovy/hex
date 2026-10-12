@@ -40,6 +40,7 @@ func run() -> int:
 	equal(MovementGuideModel.entries(preferences, ControlBindingEditor.DEVICE_CONTROLLER).size(), rows.size(), "controller shares curriculum")
 	_test_height_and_costs()
 	_test_resource_summary()
+	_test_route_choices()
 	check(MovementGuideModel.entry_by_id("missing").is_empty(), "unknown technique fails closed")
 	check(MovementGuideModel.detail_lines({}).is_empty(), "empty details fail closed")
 	return finish("movement-guide-model")
@@ -95,3 +96,26 @@ func _test_resource_summary() -> void:
 	check(" ".join(lines).contains("%d ms without another notch" % InputRouter.WHEEL_GESTURE_QUIET_MS), "wheel timing derives from runtime")
 	state.movement_chain_reset_ticks = 0
 	check(MovementGuideModel.summary_lines(state)[1].contains("Next premium: 0%"), "expired chain no longer raises cost")
+
+
+func _test_route_choices() -> void:
+	var state := PlayerState.new()
+	state.movement_chain_count = 2
+	state.movement_chain_reset_ticks = 30
+	var preferences := PlayerPreferences.new()
+	preferences.keyboard_bindings[&"jump"] = KEY_J
+	var before := state.canonical_values()
+	var rows := MovementGuideModel.route_choices(state,preferences)
+	equal(rows.size(),3,"optional route choices teach three distinct purposes")
+	equal(rows[0].id,"open_brake","ordinary zero-action-cost route remains the first option")
+	equal(int(rows[0].next_cost),0,"free steering is not assigned an invented chain cost")
+	equal(int(rows[1].next_cost),MovementSystem._movement_action_cost(state,MovementTuning.HOP_COST),"wall approach next jump cost uses actual identity and chain policy")
+	equal(int(rows[2].next_cost),MovementSystem._movement_action_cost(state,MovementTuning.SLIDE_COST),"combat approach next slide uses the actual current cost")
+	check(String(rows[1].execution).contains("J"),"route instructions follow the rebound jump input")
+	for row: Dictionary in rows:
+		for key: String in ["title","execution","benefit","cost","counter","reference"]:
+			check(not String(row[key]).is_empty(),"route choice exposes "+key)
+		check(not row.moves.is_empty(),"optional reader can attach routes to relevant moves")
+	equal(state.canonical_values(),before,"cost comparison never changes movement authority")
+	rows[1].moves.clear()
+	check(not MovementGuideModel.route_choices(state,preferences)[1].moves.is_empty(),"route view rows are detached")

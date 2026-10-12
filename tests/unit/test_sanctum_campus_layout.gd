@@ -816,7 +816,38 @@ func _test_element_garden_geometry() -> void:
 	projected.erase("element_garden")
 	projected.activity_areas = (projected.activity_areas as Array).slice(0,23)
 	projected.travel_destinations = (projected.travel_destinations as Array).slice(0,12)
-	equal(CanonicalContent.sha256(projected), CanonicalContent.sha256(before), "garden addition preserves every previous district, wall, route, station, target, landmark and destination")
+	# The later district coach changed only these four instructional roles and
+	# their copy. Pin that authored delta separately, then restore only those two
+	# metadata fields for the independently frozen pre-Garden geometry witness.
+	var expected_practice := {
+		"tideglass-quays-contact": {
+			"practice_kind": "shore-approach",
+			"purpose": "Build speed along the shore, attach to the wall, then release a walljump; the broad shore route stays free.",
+		},
+		"verdant-reaches-contact": {
+			"practice_kind": "brake-and-rejoin",
+			"purpose": "Carry speed into the grove, brake to a controlled walk, then rejoin the loop; a wall route is optional.",
+		},
+		"basalt-foundry-contact": {
+			"practice_kind": "corner-and-cover",
+			"purpose": "Attach to a foundry wall, leave it with a different travel direction, then land ready to aim; take the open bypass when exposed.",
+		},
+		"starward-terraces-contact": {
+			"practice_kind": "cross-and-recover",
+			"purpose": "Cross the exposed terrace with a paid slide and jump, then land and let Stamina recover; the outer path offers a slower approach.",
+		},
+	}
+	equal(projected.movement_courses.size(), expected_practice.size(), "four existing district courses own the four authored practice roles")
+	for course: Dictionary in projected.movement_courses:
+		var course_id := String(course.get("id", ""))
+		check(expected_practice.has(course_id), "only the four explicitly authored course IDs may normalize their instructional metadata")
+		if not expected_practice.has(course_id): continue
+		var expected: Dictionary = expected_practice[course_id]
+		equal(course.get("practice_kind"), expected.practice_kind, "district course retains its distinct executable practice role: " + course_id)
+		equal(course.get("purpose"), expected.purpose, "district course copy names its authored action and ordinary alternative: " + course_id)
+		course.erase("practice_kind")
+		course.purpose = "Reach this real wall face, use Wall / Turn, then Jump to release; the outer loop needs no special move."
+	equal(CanonicalContent.sha256(projected), CanonicalContent.sha256(before), "garden addition and separately checked practice copy preserve every previous district, wall, route, station, target, landmark and destination")
 	var plots := layout.element_garden_plots()
 	equal(plots.size(), 63, "all six singleton and fifty-seven mixed ingredient sets have physical plots")
 	var counts := [0,0,0,0,0,0,0]

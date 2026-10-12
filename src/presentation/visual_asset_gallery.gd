@@ -77,13 +77,13 @@ func _draw() -> void:
 	draw_string(
 		ThemeDB.fallback_font,
 		Vector2(670, 39),
-		"NICO LAI Â· %s Â· %s Â· FRAME %d" % [animation_id.to_upper(), direction_id.to_upper(), frame_index],
+		"NICO LAI \u00b7 %s \u00b7 %s \u00b7 FRAME %d" % [animation_id.to_upper(), direction_id.to_upper(), frame_index],
 		HORIZONTAL_ALIGNMENT_LEFT,
 		-1.0,
 		14,
 		Color("55dbe0"),
 	)
-	draw_string(ThemeDB.fallback_font, Vector2(28, 61), "Presentation-only gallery Â· authoritative movement/collision remains in src/sim", HORIZONTAL_ALIGNMENT_LEFT, -1.0, 12, Color("b6a477"))
+	draw_string(ThemeDB.fallback_font, Vector2(28, 61), "Presentation-only gallery \u00b7 authoritative movement/collision remains in src/sim", HORIZONTAL_ALIGNMENT_LEFT, -1.0, 12, Color("b6a477"))
 
 	draw_rect(Rect2(16, 660, 1248, 48), Color("111514e8"), true)
 	draw_texture_rect_region(element_icons, Rect2(28, 672, 256, 32), Rect2(0, 0, 128, 16))

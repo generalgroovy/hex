@@ -12,7 +12,7 @@ func run() -> int:
 	check(abilities.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "compendium ability catalog loads")
 	var spell_help := " ".join(Compendium.spell_catalog_lines())
 	check(spell_help.contains("Fresh presses win") and spell_help.contains("lowest position wins"), "spell help teaches predictable fresh and held chord priority")
-	check(spell_help.contains("Rapid 600 / 1, Bolt 360 / 5, Heavy 180 / 15") and spell_help.contains("Field slows never increase power"), "spell comparison reports live inverse launch tradeoff without inventing slow damage")
+	check(spell_help.contains("Rapid 1440 / 1, Bolt 1260 / 5, Heavy 180 / 15") and spell_help.contains("HP damage is a separate value") and spell_help.contains("Field slows never increase power"), "spell comparison reports current tuned speed and clash strength while keeping damage separate from field slows")
 	var champions := ChampionCatalog.new()
 	check(champions.load_from_file("res://content/champions/foundation_champions_v1.json", abilities), "compendium champion catalog loads")
 	var roster := ChampionRosterPlan.new()

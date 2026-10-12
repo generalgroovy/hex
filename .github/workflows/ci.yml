@@ -1,7 +1,10 @@
-name: Windows foundation (manual)
+name: Windows foundation
 
 on:
   workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main]
 
 permissions:
   contents: read
@@ -18,6 +21,7 @@ jobs:
           scripts/test-current-build-summary.ps1
           scripts/current-build-summary.ps1 -CheckPath README.md
           scripts/test-runtime-build-identity.ps1
+          scripts/test-gameplay-profile.ps1
           scripts/runtime-build-identity.ps1 -Mode Check
       - name: Install pinned Godot
         shell: pwsh
@@ -36,7 +40,65 @@ jobs:
           & $binary --version
       - name: Headless import and tests
         shell: pwsh
-        run: scripts\test.ps1
+        run: |
+          if ('${{ github.event_name }}' -eq 'pull_request') {
+            scripts/test.ps1 -Tier Fast
+            $suites = @(
+              'runtime-build-identity', 'input-router', 'player-preferences',
+              'identity-perks', 'elemental-spell-expansion',
+              'element-garden-exhibition', 'local-navigation', 'spell-testing-tools',
+              'demo-result-integration', 'team-replication',
+              'projectile-speed-policy', 'hex-round-result',
+              'signature-progression', 'signature-rival',
+              'signature-recovery', 'session-transport', 'session-admission-deadline',
+              'district-practice-coach', 'paid-field-rendering',
+              'compact-combat-hud', 'cartoon-champion-presenter',
+              'pixel-cast-continuity', 'element-delivery-presentation',
+              'wellspring-terrain-stream',
+              'retained-campus-canvas', 'current-world-replay', 'diagnostic-replay',
+              'spell-inspector', 'range-target-scenario', 'element-audio',
+              'hex-avoidance-feedback'
+            )
+            # Arrival/navigation and current-world replay are now large enough
+            # to need a separate bounded run. Preserve every selected suite and
+            # the unchanged 180-second per-process Focused timeout.
+            $arrivalSuites = @('element-garden-exhibition', 'local-navigation', 'current-world-replay')
+            $otherSuites = @($suites | Where-Object { $_ -notin $arrivalSuites })
+            scripts/test.ps1 -Tier Focused -Suite $arrivalSuites
+            scripts/test.ps1 -Tier Focused -Suite $otherSuites
+          } else {
+            scripts/test.ps1 -Tier Full
+          }
       - name: Diff hygiene
         shell: pwsh
         run: git diff --check
+      - name: Collect validation evidence
+        if: always()
+        shell: pwsh
+        run: |
+          $destination = Join-Path $env:RUNNER_TEMP 'hex-validation-evidence'
+          New-Item -ItemType Directory -Path $destination -Force | Out-Null
+          $runs = Join-Path $env:GITHUB_WORKSPACE '.godot/windows-tests'
+          if (Test-Path -LiteralPath $runs) {
+            foreach ($run in Get-ChildItem -LiteralPath $runs -Directory) {
+              $target = Join-Path $destination $run.Name
+              New-Item -ItemType Directory -Path $target -Force | Out-Null
+              foreach ($file in Get-ChildItem -LiteralPath $run.FullName -File) {
+                if ($file.Name -match '\.(log|log\.err|json)$') { Copy-Item -LiteralPath $file.FullName -Destination $target }
+              }
+            }
+          }
+          $receipts = Join-Path $env:GITHUB_WORKSPACE '.godot/receipts'
+          if (Test-Path -LiteralPath $receipts) {
+            foreach ($file in Get-ChildItem -LiteralPath $receipts -File -Filter '*.json') {
+              Copy-Item -LiteralPath $file.FullName -Destination $destination
+            }
+          }
+      - name: Retain passing and failed validation evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7, pinned 2026-10-12
+        with:
+          name: hex-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/hex-validation-evidence/
+          retention-days: 14
+          if-no-files-found: warn

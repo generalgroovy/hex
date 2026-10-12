@@ -9,7 +9,24 @@ func run() -> int:
 	_test_finite_compact_labels()
 	_test_unknown_and_unbound()
 	_test_hidden_cast()
+	_test_active_device()
 	return finish("spell-binding-labels")
+
+
+func _test_active_device() -> void:
+	var preferences := PlayerPreferences.new()
+	var saved := preferences.to_dictionary().duplicate(true)
+	preferences.prompt_device = ControlBindingEditor.DEVICE_CONTROLLER
+	for slot: int in PlayerState.SPELL_SLOT_COUNT:
+		check(SpellLoomPresenter.slot_binding_label(slot, preferences).contains("PAD"), "active pad names its actual mapped spell chord")
+	preferences.controller_bindings[&"spell_1"] = PlayerPreferences.unbound_controller_binding()
+	equal(CompactCombatHud.button_binding_label(0, preferences), "-", "pad-unbound action cannot misleadingly advertise a keyboard substitute")
+	preferences.controller_bindings[&"spell_1"] = {"kind":"button", "index":JOY_BUTTON_A, "direction":0}
+	equal(CompactCombatHud.button_binding_label(0, preferences), "PAD A", "pad remap is read immediately")
+	preferences.controller_bindings = saved.controller_bindings.duplicate(true)
+	equal(preferences.to_dictionary(), saved, "active device is never persisted or alters saved mappings")
+	preferences.prompt_device = ControlBindingEditor.DEVICE_KEYBOARD
+	equal(CompactCombatHud.button_binding_label(0, preferences), "1", "keyboard return restores saved keyboard vocabulary")
 
 
 func _empty_preferences() -> PlayerPreferences:

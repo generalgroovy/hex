@@ -1,12 +1,14 @@
 class_name WellspringServiceDirectory
 extends RefCounted
 const GridNavigation = preload("res://src/app/ui_grid_navigation.gd")
+const ReadableDirectory = preload("res://src/presentation/readable_service_directory.gd")
 const MAX_DETAIL_LINES := 6
 ## A modal selection model only. The caller revalidates and dispatches one ID.
 
 var is_open := false
 var group_id := ""
 var selected_index := 0
+var readable_page := 0
 var entries: Array[Dictionary] = []
 var availability_by_station: Dictionary = {}
 var card_overrides_by_station: Dictionary = {}
@@ -61,6 +63,7 @@ func close() -> void:
 	_lines_by_station.clear()
 	status_text = ""
 	selected_index = 0
+	readable_page = 0
 	_hover_index = -1
 	details_visible = false
 	_stick_x_latched = false
@@ -144,6 +147,9 @@ func update(delta: float, pointer: Vector2, viewport_size: Vector2) -> void:
 	if input_source != "mouse":
 		return
 	var geometry := layout_for(viewport_size)
+	if bool(geometry.get("compact",false)):
+		details_visible = true
+		return
 	var index := WellspringServiceBuildings.hit_card(pointer, geometry["cards"])
 	if index != _hover_index:
 		status_text = ""
@@ -162,6 +168,12 @@ func handle_event(event: InputEvent, pointer: Vector2, viewport_size: Vector2) -
 	if InputMap.has_action(InputRouter.INTERACT_ACTION) and event.is_action_pressed(InputRouter.INTERACT_ACTION) and not event.is_echo() and not _reserved_navigation(event):
 		input_source = "controller" if event is InputEventJoypadButton or event is InputEventJoypadMotion else "keyboard"
 		return request_selected()
+	if bool(layout_for(viewport_size).get("compact",false)):
+		if event is InputEventJoypadButton or event is InputEventJoypadMotion: input_source = "controller"
+		elif event is InputEventKey: input_source = "keyboard"
+		elif event is InputEventMouseButton or event is InputEventMouseMotion: input_source = "mouse"
+		details_visible = true
+		return ReadableDirectory.handle_input(self,event,pointer,viewport_size)
 	if event is InputEventMouseMotion:
 		input_source = "mouse"
 		update(0.0, pointer, viewport_size)
@@ -253,6 +265,9 @@ func layout_for(viewport_size: Vector2) -> Dictionary:
 		return _geometry
 	_layout_viewport = viewport_size
 	_layout_count = entries.size()
+	if viewport_size.x < 700 or viewport_size.y < 500:
+		_geometry = ReadableDirectory.geometry(viewport_size)
+		return _geometry
 	var width := minf(760.0, maxf(240.0, viewport_size.x - 32.0))
 	var columns := WellspringServiceBuildings.card_columns(width - 32.0, entries.size())
 	var rows := ceili(float(maxi(1, entries.size())) / float(columns))
@@ -275,6 +290,9 @@ func draw(canvas: CanvasItem, viewport_size: Vector2) -> void:
 	if canvas == null or not is_open:
 		return
 	var geometry := layout_for(viewport_size)
+	if bool(geometry.get("compact",false)):
+		ReadableDirectory.draw(canvas,viewport_size,self)
+		return
 	var panel: Rect2 = geometry["panel"]
 	var font := ThemeDB.fallback_font
 	var group := WellspringServiceBuildings.group_definition(group_id)

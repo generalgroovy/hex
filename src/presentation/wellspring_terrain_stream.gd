@@ -12,6 +12,10 @@ const MAX_CHUNKS := 132
 const BASE_RESIDENT := 24
 const MAX_PENDING := 2
 const MAX_UPLOADS := 2
+const MAX_UPLOAD_BYTES := MAX_UPLOADS * CHUNK * CHUNK * 4
+const MAX_PUMP_USEC := 2000
+const MAX_PREFETCH_CHUNKS := 24
+const MAX_PREFETCH_BYTES := MAX_PREFETCH_CHUNKS * CHUNK * CHUNK * 4
 const MAX_BYTES := 6144 * 5376 * 4
 # Authoring provenance is checked by the bake-equivalence suite. Runtime uses
 # versioned signatures because exported GDScript may be remapped or compiled.
@@ -36,6 +40,7 @@ var textures: Dictionary[Vector2i, Texture2D] = {}
 var order: Array[Vector2i] = []
 var required: Array[Vector2i] = []
 var desired: Array[Vector2i] = []
+var prefetched: Array[Vector2i] = []
 var pending: Dictionary[Vector2i, String] = {}
 var queue: Array[Vector2i] = []
 var cache_bytes := 0
@@ -44,8 +49,20 @@ var hits := 0
 var requests := 0
 var overview_record: Dictionary = {}
 var _request_rect := Rect2()
+var _prefetch_rect := Rect2()
+var last_pump_usec := 0
+var last_pump_bytes := 0
+var budget_yields := 0
 var suspended := false
 var closed := false
+const PROFILE_STAGES := [&"ready_retrieval", &"pixel_validation", &"texture_creation", &"retention_trim", &"request_submission"]
+var profile_enabled := false
+var _profile_usec: Dictionary = {}
+var _profile_calls: Dictionary = {}
+var _request_started_usec: Dictionary[Vector2i, int] = {}
+var _completed_request_latency_usec := 0
+var _maximum_request_latency_usec := 0
+var _completed_profiled_requests := 0
 
 
 func configure(document: Dictionary, expected_signature: String, expected_canvas: Vector2i) -> bool:
@@ -62,12 +79,18 @@ func configure(document: Dictionary, expected_signature: String, expected_canvas
 	order.clear()
 	required.clear()
 	desired.clear()
+	prefetched.clear()
 	queue.clear()
 	overview_record.clear()
 	cache_bytes = 0
 	_request_rect = Rect2()
+	_prefetch_rect = Rect2()
+	last_pump_usec = 0
+	last_pump_bytes = 0
+	budget_yields = 0
 	suspended = false
 	closed = false
+	reset_profile()
 	canvas_size = Vector2i.ZERO
 	if String(document.get("version", "")) != VERSION or String(document.get("signature", "")) != expected_signature or expected_signature.length() != 64:
 		return _fail("Terrain bake does not match the map, art and compositor contract; regenerate it")
@@ -117,63 +140,164 @@ func request_view(view: Rect2) -> void:
 	suspended = false
 	_request_rect = view
 	required = ids_for(view)
+	_rebuild_demand()
+
+
+func prefetch_view(view: Rect2) -> void:
+	# Intent only: safe from a map draw callback. It neither wakes a suspended
+	# stream nor grants travel/readiness, and never starts a decode or upload.
+	if closed or suspended or records.is_empty() or view == _prefetch_rect: return
+	_prefetch_rect = view
+	prefetched = ids_for(view)
+	_sort_nearest(prefetched, view.get_center())
+	if prefetched.size() > MAX_PREFETCH_CHUNKS: prefetched.resize(MAX_PREFETCH_CHUNKS)
+	_rebuild_demand()
+
+
+func clear_prefetch() -> void:
+	if prefetched.is_empty() and not _prefetch_rect.has_area(): return
+	prefetched.clear()
+	_prefetch_rect = Rect2()
+	_rebuild_demand()
+
+
+func _rebuild_demand() -> void:
 	desired = required.duplicate()
-	var neighbors := ids_for(view.grow(CHUNK))
+	var neighbors := ids_for(_request_rect.grow(CHUNK)) if _request_rect.has_area() else []
 	# Nearest unseen tiles first. Stable coordinate tie breaking makes the
 	# preparation order independent of Dictionary iteration and frame rate.
-	var center := view.get_center()
-	neighbors.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
-		var da := (Vector2(a * CHUNK) + Vector2.ONE * CHUNK / 2.0).distance_squared_to(center)
-		var db := (Vector2(b * CHUNK) + Vector2.ONE * CHUNK / 2.0).distance_squared_to(center)
-		if is_equal_approx(da, db): return a.y < b.y or (a.y == b.y and a.x < b.x)
-		return da < db)
+	_sort_nearest(neighbors, _request_rect.get_center())
 	for id: Vector2i in neighbors:
 		if desired.has(id): continue
 		desired.append(id)
+	# Current view and its movement halo always win. Destination retention adds
+	# at most24 native tiles/24MiB within the existing whole-campus ceiling.
+	for id: Vector2i in prefetched:
+		if not desired.has(id): desired.append(id)
 	queue.clear()
 	for id: Vector2i in desired:
 		if not textures.has(id) and not pending.has(id): queue.append(id)
 	_trim()
 
 
-func pump(upload_budget: int = MAX_UPLOADS) -> int:
+static func _sort_nearest(ids: Array, center: Vector2) -> void:
+	ids.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+		var da := (Vector2(a * CHUNK) + Vector2.ONE * CHUNK / 2.0).distance_squared_to(center)
+		var db := (Vector2(b * CHUNK) + Vector2.ONE * CHUNK / 2.0).distance_squared_to(center)
+		if is_equal_approx(da, db): return a.y < b.y or (a.y == b.y and a.x < b.x)
+		return da < db)
+
+
+func pump(upload_budget: int = MAX_UPLOADS, time_budget_usec: int = MAX_PUMP_USEC, byte_budget: int = MAX_UPLOAD_BYTES) -> int:
+	last_pump_usec = 0
+	last_pump_bytes = 0
 	if closed: return 0
 	if suspended:
 		_drain_ready()
 		return 0
 	var completed := 0
 	var budget := clampi(upload_budget, 0, MAX_UPLOADS)
-	for id: Vector2i in pending.keys():
+	var usec_limit := clampi(time_budget_usec, 0, MAX_PUMP_USEC)
+	var byte_limit := clampi(byte_budget, 0, MAX_UPLOAD_BYTES)
+	if budget == 0 or usec_limit == 0 or byte_limit == 0: return 0
+	var started := _clock_usec()
+	# Pending order can predate a changed destination. Required/current demand
+	# takes precedence when multiple decoded results become ready together.
+	var admission_order: Array = pending.keys()
+	admission_order.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return _demand_rank(a) < _demand_rank(b))
+	for id: Vector2i in admission_order:
 		if completed >= budget: break
+		if _clock_usec() - started >= usec_limit:
+			budget_yields += 1
+			break
 		var path: String = pending[id]
 		var status := _request_status(path)
 		if status == ResourceLoader.THREAD_LOAD_IN_PROGRESS: continue
 		if status != ResourceLoader.THREAD_LOAD_LOADED:
 			# FAILED still owns a ResourceLoader token; final teardown collects
 			# it. INVALID has no live request token to collect.
-			if status == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE: pending.erase(id)
+			if status == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
+				pending.erase(id)
+				_request_started_usec.erase(id)
 			_fail("Unable to decode prepared terrain: " + path)
 			continue
+		var bytes := int(records[id].size[0]) * int(records[id].size[1]) * 4
+		if desired.has(id) and last_pump_bytes + bytes > byte_limit:
+			budget_yields += 1
+			continue
+		var retrieval_started := _clock_usec() if profile_enabled else 0
+		if profile_enabled and _request_started_usec.has(id):
+			var latency := maxi(0, retrieval_started - _request_started_usec[id])
+			_completed_request_latency_usec += latency
+			_maximum_request_latency_usec = maxi(_maximum_request_latency_usec, latency)
+			_completed_profiled_requests += 1
 		var image := _take_ready(path)
+		_record_profile(&"ready_retrieval", retrieval_started)
+		_request_started_usec.erase(id)
 		pending.erase(id)
 		# A teleport may supersede a request while its bounded decode finishes.
 		# Drain it without retaining or uploading irrelevant old-view pixels.
 		if not desired.has(id): continue
-		if not valid_image(image, records[id]):
+		var validation_started := _clock_usec() if profile_enabled else 0
+		var pixels_valid := valid_image(image, records[id])
+		_record_profile(&"pixel_validation", validation_started)
+		if not pixels_valid:
 			_fail("Prepared terrain pixel validation failed: " + path)
 			continue
 		_admit(id, image)
+		last_pump_bytes += bytes
 		completed += 1
 	while _stream_error.is_empty() and pending.size() < MAX_PENDING and not queue.is_empty() and budget > 0:
+		if _clock_usec() - started >= usec_limit:
+			budget_yields += 1
+			break
 		var id: Vector2i = queue.pop_front()
 		if textures.has(id) or pending.has(id) or not desired.has(id): continue
 		var path: String = records[id].path
-		if _start_request(path) != OK:
+		var request_started := _clock_usec() if profile_enabled else 0
+		var request_error := _start_request(path)
+		_record_profile(&"request_submission", request_started)
+		if request_error != OK:
 			_fail("Could not queue prepared terrain: " + path)
 			continue
 		pending[id] = path
+		if profile_enabled: _request_started_usec[id] = request_started
 		requests += 1
+	# A single native validation/upload is indivisible; it may overrun the time
+	# target. No second admission/request starts after that overrun. Byte/count
+	# limits are strict, including the first upload; bytes below one tile wait.
+	last_pump_usec = maxi(0, _clock_usec() - started)
 	return completed
+
+
+func _clock_usec() -> int:
+	return Time.get_ticks_usec()
+
+
+func reset_profile() -> void:
+	_profile_usec.clear()
+	_profile_calls.clear()
+	_request_started_usec.clear()
+	_completed_request_latency_usec = 0
+	_maximum_request_latency_usec = 0
+	_completed_profiled_requests = 0
+
+
+func _record_profile(stage: StringName, started: int) -> void:
+	if not profile_enabled or stage not in PROFILE_STAGES: return
+	_profile_usec[stage] = int(_profile_usec.get(stage, 0)) + maxi(0, _clock_usec() - started)
+	_profile_calls[stage] = int(_profile_calls.get(stage, 0)) + 1
+
+
+func profile_status() -> Dictionary:
+	return {"enabled": profile_enabled, "elapsed_usec": _profile_usec.duplicate(), "calls": _profile_calls.duplicate(),
+		"completed_request_latency_usec": _completed_request_latency_usec, "maximum_request_latency_usec": _maximum_request_latency_usec, "completed_profiled_requests": _completed_profiled_requests,
+		"scope": "Optional aggregate CPU elapsed intervals; scheduling waits may be included. Ready retrieval, exact pixel validation, texture creation and trimming are separate. Request-to-ready latency includes worker decode, polling and main-thread scheduling; it is not pure decode CPU time. Texture creation includes driver work, not GPU execution. Reset excludes request latency for requests already pending. Five fixed stage keys, at most two pending timestamps, no sample history."}
+
+
+func _demand_rank(id: Vector2i) -> int:
+	var rank := desired.find(id)
+	return rank if rank >= 0 else MAX_CHUNKS
 
 
 func suspend() -> bool:
@@ -182,8 +306,10 @@ func suspend() -> bool:
 	suspended = true
 	required.clear()
 	desired.clear()
+	prefetched.clear()
 	queue.clear()
 	_request_rect = Rect2()
+	_prefetch_rect = Rect2()
 	_drain_ready()
 	return pending.is_empty()
 
@@ -195,8 +321,10 @@ func _drain_ready() -> void:
 		if request_status == ResourceLoader.THREAD_LOAD_LOADED:
 			_take_ready(path)
 			pending.erase(id)
+			_request_started_usec.erase(id)
 		elif request_status == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
 			pending.erase(id)
+			_request_started_usec.erase(id)
 		elif request_status == ResourceLoader.THREAD_LOAD_FAILED:
 			_fail("Unable to decode prepared terrain: " + path)
 
@@ -210,13 +338,16 @@ func finish_shutdown() -> void:
 	closed = true
 	required.clear()
 	desired.clear()
+	prefetched.clear()
 	queue.clear()
 	_request_rect = Rect2()
+	_prefetch_rect = Rect2()
 	for id: Vector2i in pending.keys():
 		var path: String = pending[id]
 		if _request_status(path) != ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
 			_finish_request(path)
 		pending.erase(id)
+		_request_started_usec.erase(id)
 	textures.clear()
 	order.clear()
 	cache_bytes = 0
@@ -250,7 +381,13 @@ func status() -> Dictionary:
 	var ready := 0
 	for id: Vector2i in required:
 		if textures.has(id): ready += 1
-	return {"ready": ready, "required": required.size(), "pending": pending.size(), "queued": queue.size(), "resident": textures.size(), "bytes": cache_bytes, "uploads": uploads, "requests": requests, "suspended": suspended, "closed": closed, "error": _stream_error}
+	var prefetch_ready := 0
+	for id: Vector2i in prefetched:
+		if textures.has(id): prefetch_ready += 1
+	return {"ready": ready, "required": required.size(), "pending": pending.size(), "queued": queue.size(), "resident": textures.size(), "bytes": cache_bytes, "uploads": uploads, "requests": requests, "suspended": suspended, "closed": closed, "error": _stream_error,
+		"prefetch_required": prefetched.size(), "prefetch_ready": prefetch_ready, "prefetch_byte_limit": MAX_PREFETCH_BYTES,
+		"pump_usec": last_pump_usec, "pump_bytes": last_pump_bytes, "pump_time_target_usec": MAX_PUMP_USEC, "pump_byte_limit": MAX_UPLOAD_BYTES, "budget_yields": budget_yields,
+		"profile": profile_status() if profile_enabled else null}
 
 
 func load_immediate(id: Vector2i) -> Texture2D:
@@ -275,14 +412,19 @@ func load_immediate(id: Vector2i) -> Texture2D:
 
 func _admit(id: Vector2i, image: Image) -> void:
 	if textures.has(id): return
+	var upload_started := _clock_usec() if profile_enabled else 0
 	textures[id] = ImageTexture.create_from_image(image)
+	_record_profile(&"texture_creation", upload_started)
 	order.append(id)
-	cache_bytes += image.get_data().size()
+	# valid_image already established mip-free RGBA8 and hashed its exact bytes.
+	# Do not copy the full pixel buffer again merely for accounting.
+	cache_bytes += image.get_width() * image.get_height() * 4
 	uploads += 1
 	_trim()
 
 
 func _trim() -> void:
+	var trim_started := _clock_usec() if profile_enabled else 0
 	var limit := mini(MAX_CHUNKS, maxi(BASE_RESIDENT, desired.size()))
 	for id: Vector2i in order.duplicate():
 		if textures.size() <= limit: break
@@ -291,6 +433,7 @@ func _trim() -> void:
 		cache_bytes -= texture.get_width() * texture.get_height() * 4
 		textures.erase(id)
 		order.erase(id)
+	_record_profile(&"retention_trim", trim_started)
 
 
 static func valid_image(image: Image, record: Dictionary) -> bool:

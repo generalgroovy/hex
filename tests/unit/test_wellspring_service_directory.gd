@@ -13,6 +13,7 @@ func run() -> int:
 	_test_live_detail_lines()
 	_test_disabled_team_policy()
 	_test_live_team_hearth()
+	_test_reflow_directory()
 	return finish("wellspring-service-directory")
 
 
@@ -204,6 +205,9 @@ func _test_mouse_delay_and_responsive_geometry() -> void:
 		var geometry := directory.layout_for(viewport)
 		var panel: Rect2 = geometry["panel"]
 		check(Rect2(Vector2.ZERO, viewport).encloses(panel), "directory stays inside supported viewport")
+		if bool(geometry.get("compact",false)):
+			check(panel.encloses(geometry.open) and panel.encloses(geometry.next), "narrow directory exposes selected action and navigation")
+			continue
 		var cards: Array[Rect2] = geometry["cards"]
 		equal(cards.size(), 6, "all six session actions remain visible together")
 		for index: int in range(cards.size()):
@@ -240,3 +244,41 @@ func _test_availability_and_bad_content() -> void:
 			duplicate.append(entry.duplicate(true))
 			break
 	check(not directory.open_group("farflow", duplicate), "duplicate action records fail closed")
+
+
+func _test_reflow_directory() -> void:
+	var stations := _stations()
+	var original := CanonicalContent.sha256(stations)
+	for viewport: Vector2 in [Vector2(640,360),Vector2(853.333,480)]:
+		var directory := WellspringServiceDirectory.new()
+		check(directory.open_group("farflow",stations),"small directory opens every existing service")
+		var geo := directory.layout_for(viewport)
+		check(bool(geo.get("compact",false)),"insufficient logical height selects the same readable draw and input geometry")
+		check(Rect2(Vector2.ZERO,viewport).encloses(geo.panel),"service panel stays inside the supported text-size viewport")
+		for key: String in ["previous","next","body","detail_previous","detail_next","open","close"]:
+			check((geo.panel as Rect2).encloses(geo[key]),"every service control remains visible and clickable")
+		check(not (geo.body as Rect2).intersects(geo.detail_previous),"long service details cannot overlap pagination")
+		var click := InputEventMouseButton.new()
+		click.button_index=MOUSE_BUTTON_LEFT
+		click.pressed=true
+		var visited := {}
+		for index: int in directory.entries.size():
+			visited[directory.selected_station_id()]=true
+			equal(directory.handle_event(click,geo.next.get_center(),viewport),"","pointer selection never dispatches a service")
+		equal(visited.size(),6,"mouse alone can reach every Farflow service at150percent")
+		equal(directory.selected_index,0,"selected service navigation wraps intentionally")
+		var id := directory.selected_station_id()
+		directory.availability_by_station[id]={"enabled":false,"reason":"Host only; no request is admitted."}
+		equal(directory.handle_event(click,geo.open.get_center(),viewport),"","reflow cannot bypass disabled service authority")
+		check(directory.selected_detail_lines().has(directory.selected_disabled_reason()),"disabled explanation stays readable in the paginated body")
+		directory.availability_by_station.clear()
+		equal(directory.handle_event(click,geo.open.get_center(),viewport),id,"explicit pointer Open returns the same existing station request")
+		directory.handle_event(_button(JOY_BUTTON_DPAD_DOWN),Vector2.ZERO,viewport)
+		equal(directory.selected_index,1,"controller can browse narrow service view")
+		equal(directory.handle_event(_button(JOY_BUTTON_A),Vector2.ZERO,viewport),directory.selected_station_id(),"controller accept requests only the selected service")
+		directory.readable_page=4
+		directory.handle_event(_key(KEY_DOWN),Vector2.ZERO,viewport)
+		equal(directory.readable_page,0,"new selected service starts on its own first detail page")
+		directory.handle_event(click,geo.close.get_center(),viewport)
+		check(not directory.is_open,"pointer Close remains reachable at maximum text size")
+	equal(CanonicalContent.sha256(stations),original,"reflow does not mutate services or campus authority")

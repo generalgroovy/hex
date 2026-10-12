@@ -1,13 +1,23 @@
 # H.E.X. friend-session networking
 
-Status: current source boundary, October 11, 2026; experimental friend-session support, not physical Internet acceptance.
+Status: current source boundary, October 12, 2026; experimental friend-session
+support. Current local impairment evidence is separate from physical Internet
+acceptance and frame-rate qualification.
 
-The current gameplay source is **p60-be3efd332e1a**, using protocol **60** and
+The current audit implementation retains protocol **60** and
 SessionSnapshot schema **24**. Sessions have an eight-player cap, a 120 Hz
 authoritative simulation and 60 Hz transport snapshots. Rendering is independent
 of those rates. The [specification](../SPECIFICATION.md#authority-and-scope)
 owns the full wire contract; the [resume](../.agent/HEX-RESUME.md) identifies
 qualified source/packages and measured limits.
+
+The [runtime manifest](../content/runtime/runtime_build_identity_v1.json) is the
+generated production-byte identity; it must be regenerated and checked after
+source freeze before a changed build is qualified. The preserved
+`p60-d8e6ea1cd808` portable precedes the
+[October 12 implementation](implementation-20261012/README.md). Its Full receipt
+and historical FPS do not qualify these changes. Matching protocol numbers alone
+do not make different source builds compatible.
 
 ## Joining the same game
 
@@ -47,14 +57,43 @@ packing may compress or fragment a logical snapshot. An MTU claim concerns
 every actual transmitted datagram, not the size of an uncompressed dictionary.
 Complete state and epoch/refusal checks must survive the round trip.
 
+Unadmitted ENet connections now have a five-second HELLO deadline. A silent
+peer cannot occupy one of the seven guest slots indefinitely. Admission removes
+the deadline; ordinary disconnect/reconnect reservations retain their behavior.
+The first successfully sent refusal receives one bounded delivery grace so a
+client can read the reason even at the deadline. Repeated malformed HELLOs do
+not renew that grace. Expiry creates neither an actor nor a return reservation.
+The `session-admission-deadline` test fills all seven real local ENet slots,
+checks refusal delivery and reclamation, then admits an ordinary guest.
+
 ## Evidence and remaining boundaries
 
-The be3 [Full receipt](performance-qualification-20261010/full-v5.json) includes
-the registered networking, snapshot, prediction and real local-process tests.
-Those checks establish their named fixtures; they do not certify sustained
-eight-player frame time, a second physical PC, Internet reachability or human
-multiplayer acceptance. The [performance report](performance-implementation-20261010.md)
-also records heavy-field and cold-loading limits relevant to play.
+The current [network impairment fixture](../tests/network/test_network_impairment.gd)
+uses real ENet loopback and the concrete Wellspring publication path. It runs
+four deterministic profiles at both **two and eight players**: delay, jitter,
+unreliable snapshot/correction loss, and an outage followed by recovery and an
+actual reconnect. Tick-based delay/loss is injected before the real socket-send
+boundary; reliable command order is preserved. Actors step ordinary paid combat.
+
+After recovery, every client must match the host's complete canonical world hash
+and local predicted actor scalars, acknowledge the final input sequence and empty
+its pending inputs. The fixture records transient prediction-history overflow
+before reconciliation can clear it, requires the outage to exercise that bound,
+checks bounded injected queues, and rejects actual socket-send failures. Reconnect
+must retain the same actor identity. Root's strict focused run passed **34,192
+assertions with empty stderr** across those eight cases.
+
+These are bounded local correctness and recovery witnesses. Injected simulation
+ticks are not measured Internet RTT, localhost runs are not a second physical PC,
+and capture/send timings are not frame time or sustained eight-player throughput.
+The current candidate still needs its own Full and packaged journey gates; older
+[d8 qualification](audit-implementation-20261011/README.md) and
+[be3 Full receipt](performance-qualification-20261010/full-v5.json) remain historical.
+
+An experimental producer-only encoded-size witness preserved exact packet bytes
+but showed no reliable timing benefit in the controlled probe. It was rejected
+and the production patch reverted: producer consumption still validates the
+current snapshot's encoded size. No network speedup is claimed from this work.
 
 When network/state behavior changes, preserve strict validation and deterministic
 replay, run affected suites, and perform the appropriate real-process journey

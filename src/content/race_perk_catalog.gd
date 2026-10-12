@@ -42,7 +42,7 @@ const DEFINITIONS: Dictionary = {
 		"id": "race_charged_focus", "ancestry": "gnome", "name": "Charged Focus",
 		"summary": "High Flux starts casts 10% faster; that spell's cooldown is 10% longer if Flux stays high at release.",
 		"condition": "high_flux", "effects": {"spell_startup_ratio": 900, "spell_cooldown_ratio": 1100},
-		"window": "Startup checks two-thirds Flux before payment; that spell's cooldown checks the threshold at release.",
+		"window": "Startup checks two-thirds Flux before payment; that spell's cooldown checks the threshold at release. Both timing changes require a real whole-tick difference; otherwise neither applies to that spell.",
 		"counter": "Bait the quicker opening, then contest the longer wait before that spell can repeat.", "reference": APEX_GUIDE,
 	},
 	"hobbit": {
@@ -154,7 +154,7 @@ const DEFINITIONS: Dictionary = {
 		"id": "race_last_air_gambit", "ancestry": "demon", "name": "Last Air Gambit",
 		"summary": "After a completed air dodge, airborne casts start 10% faster; airborne release adds 15% to that spell's cooldown.",
 		"condition": "airborne_spent_dodge", "effects": {"spell_startup_ratio": 900, "spell_cooldown_ratio": 1150},
-		"window": "Dodge timer must have ended. Startup checks airborne spent dodge at admission; that spell's cooldown checks again at release. Landing clears it.",
+		"window": "Dodge timer must have ended. Startup checks airborne spent dodge at admission; that spell's cooldown checks again at release. Landing clears it. Both timing changes require a real whole-tick difference; otherwise neither applies to that spell.",
 		"counter": "Contest the longer wait for that spell when a second dodge is unavailable.", "reference": APEX_GUIDE,
 	},
 	"angel": {

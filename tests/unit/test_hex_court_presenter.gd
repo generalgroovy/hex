@@ -1245,5 +1245,27 @@ func _test_resident_outline_meshes() -> void:
 	equal(presenter.outline_cache_stats().fallbacks, 1, "overflow submits existing complete triangles; it never drops a hazard boundary")
 	equal(presenter.outline_cache_stats().meshes, Presenter.OUTLINE_BATCH_LIMIT, "overflow rendering allocates no extra retained mesh")
 	canvas.free()
+	# Warm every newer retained path before reset so a missing clear cannot pass
+	# merely because that cache/counter was still at its initial zero value.
+	var fixed := PackedVector2Array()
+	for point: Vector2i in HexGrid.vertices(Vector2i.ZERO): fixed.append(Vector2(point))
+	var region := {"material": "conflagration", "footprint_id": 1, "phase": "active", "danger": true,
+		"intensity": 1000, "owner_key": 1, "expiry_tick": 720, "decay_tick": 650,
+		"fixed_polygon": fixed, "polygon": polygon}
+	var grouped := {Vector2i.ZERO: [region]}
+	presenter._region_edge_counts(grouped)
+	var counts: Dictionary = presenter._region_edge_counts(grouped)
+	equal(presenter._region_exposed_edges(region, counts), 63, "reset fixture exercises a retained six-edge mask")
+	var layout: Dictionary = presenter._region_layout(polygon)
+	presenter._fire_phase_mark(polygon, "cooling", false, layout.center, float(layout.clearance) - 2.5)
+	var expected_reset := {
+		"batches": 0, "meshes": 0, "uploads": 0, "hits": 0, "fallbacks": 0,
+		"topologies": 0, "topology_hits": 0, "topology_builds": 0,
+		"edge_mask_hits": 0, "edge_mask_builds": 0, "phase_marks": 0,
+	}
+	var populated: Dictionary = presenter.outline_cache_stats()
+	for counter: String in expected_reset:
+		check(int(populated[counter]) > 0, "reset fixture first populates " + counter)
 	check(not presenter.configure(null), "failed setup remains fail-closed after resident drawing")
-	equal(presenter.outline_cache_stats(), {"batches": 0, "meshes": 0, "uploads": 0, "hits": 0, "fallbacks": 0}, "setup clears geometry/resources/counters without retaining another content generation")
+	equal(presenter.outline_cache_stats(), expected_reset, "setup clears every geometry/resource/counter without retaining another content generation")
+	check(presenter._boundary_topology_order.is_empty() and presenter._boundary_mask_counts.is_empty() and presenter._boundary_masks.is_empty(), "setup also releases topology eviction order and active immutable count/mask witnesses")

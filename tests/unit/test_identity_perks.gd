@@ -22,7 +22,10 @@ func run() -> int:
 	_test_thresholds_and_guards()
 	_test_damage_and_recovery_hooks()
 	_test_movement_hooks()
+	_test_gust_push_hooks()
+	_test_timed_slow_window()
 	_test_cast_timing_hooks()
+	_test_effective_tick_tradeoffs()
 	_test_all_character_prediction_and_snapshots()
 	_write_report()
 	return finish("identity-perks")
@@ -100,6 +103,92 @@ func _test_catalog_and_windows() -> void:
 	copied.effects.incoming_damage_ratio = 1
 	equal(int(Races.definition("dwarf").effects.incoming_damage_ratio), 930, "public nested metadata cannot mutate runtime ancestry effects")
 	check(Races.definition("unknown").is_empty() and Races.ancestry_for_wire(999) == "", "unknown ancestry and wire have no invented perk")
+
+
+func _test_gust_push_hooks() -> void:
+	# Prepared status-boundary probes cover every advertised push modifier.
+	# The elemental suite separately witnesses an ordinary paid projectile hit.
+	var rows := Races.all()
+	rows.append_array(Characters.all())
+	var covered := 0
+	var wire := MixtureCatalog.wire_for(8, "rapid")
+	for row: Dictionary in rows:
+		if not row.effects.has("knockback_ratio"): continue
+		covered += 1
+		var champion_wire := _wire_for_ancestry(String(row.ancestry)) if row.has("ancestry") else int(row.wire_id)
+		for enabled: bool in [true, false]:
+			for direction: Vector2i in [Vector2i(1000, 0), Vector2i(-600, 800), Vector2i(600, -800)]:
+				var state := _actor(champion_wire)
+				state.spawn_protection_ticks = 0
+				check(Scenarios.prepare(state, String(row.condition)), "Gust prepares complete push window: " + String(row.id))
+				if not enabled: _disable_first_condition(state, String(row.condition))
+				equal(Perks.condition_matches(state, String(row.condition)), enabled, "Gust tests the actual active or inactive window")
+				# These representatives have no second active push modifier.
+				var expected_ratio := int(row.effects.knockback_ratio) if enabled else 1000
+				equal(Perks.ratio(state, "knockback_ratio"), expected_ratio, "independent authored push ratio is selected before contact")
+				var before := Vector2i(state.velocity_x, state.velocity_y)
+				var air_before := Vector2i(state.air_velocity_x, state.air_velocity_y)
+				var expected := Vector2i(direction.x*80*expected_ratio/1000, direction.y*80*expected_ratio/1000)
+				var control_before := state.control_state
+				var control_ticks_before := state.control_ticks
+				SpellStatusPolicy.apply_hit(state, wire, 1000, 99, 99, 3000, config, direction)
+				check(SpellStatusPolicy.active(state, 3), "eligible status boundary admits Gust")
+				equal(Vector2i(state.velocity_x, state.velocity_y)-before, expected, "Gust scales both ground axes from the one pre-impulse window: " + String(row.id))
+				equal(Vector2i(state.air_velocity_x, state.air_velocity_y)-air_before, expected, "Gust shares the same exact scaled air impulse")
+				equal(state.control_state, control_before, "Gust does not introduce forced control")
+				equal(state.control_ticks, control_ticks_before, "Gust does not add stun or extend existing control")
+				SpellStatusPolicy.apply_hit(state, wire, 1001, 99, 99, 3000, config, -direction)
+				equal(Vector2i(state.velocity_x, state.velocity_y)-before, expected, "active Gust refresh cannot add a reversed shove")
+				equal(Vector2i(state.air_velocity_x, state.air_velocity_y)-air_before, expected, "refresh cannot add another air shove")
+	equal(covered, 6, "all three ancestry and three personal push modifiers reach Gust")
+	var neutral := _actor(7, false)
+	neutral.spawn_protection_ticks = 0
+	neutral.velocity_x = 1_999_999
+	neutral.velocity_y = -1_999_999
+	neutral.air_velocity_x = -1_999_999
+	neutral.air_velocity_y = 1_999_999
+	SpellStatusPolicy.apply_hit(neutral, wire, 1000, 99, 99, 3000, config, Vector2i(600, -800))
+	equal(Vector2i(neutral.velocity_x, neutral.velocity_y), Vector2i(2_000_000, -2_000_000), "neutral Gust retains both saturation bounds")
+	equal(Vector2i(neutral.air_velocity_x, neutral.air_velocity_y), Vector2i(-1_951_999, 1_935_999), "opposite existing momentum receives the unchanged neutral impulse")
+
+
+func _test_timed_slow_window() -> void:
+	# Prepared boundary checks complement the ordinary paid Water/Black Ice
+	# routes in the elemental suite. Neither low speed nor terrain tint is state.
+	var state := _actor(21)
+	state.spawn_protection_ticks = 0
+	equal(String(Characters.definition(21).champion_id), "urzh", "timed-slow boundary uses the real Urzh identity")
+	check(not Perks.condition_matches(state, "grounded&slowed"), "stationary Urzh has no invented slow window")
+	SpellStatusPolicy.apply_hit(state, MixtureCatalog.wire_for(4, "rapid"), 1000, 99, 99, 3000, config, Vector2i(1000, 0))
+	equal(SpellStatusPolicy.movement_ratio(state), 880, "prepared Water boundary creates the real positive Chill slow")
+	equal(Perks.ratio(state, "incoming_damage_ratio"), 900, "grounded Chill reaches the existing defensive tradeoff")
+	equal(Perks.ratio(state, "spell_startup_ratio"), 1150, "grounded Chill retains its existing casting penalty")
+	state.air_height = 36_000
+	check(not Perks.condition_matches(state, "grounded&slowed"), "airborne Chilled Urzh has no grounded resistance")
+	state.air_height = 0
+	var offset := 2*SpellStatusPolicy.STRIDE
+	state.spell_status_values[offset+1] = 0
+	check(not Perks.condition_matches(state, "slowed"), "positive duration with zero Chill potency is not slowed")
+	state.spell_status_values[offset+1] = 120
+	state.spell_status_values[offset] = 0
+	check(not Perks.condition_matches(state, "slowed"), "expired Chill with stale potency is not slowed")
+	state.spell_status_values.fill(0)
+	state.control_state = PlayerState.ControlState.SLOWED
+	state.control_ticks = 30
+	state.slow_ratio = 650
+	check(Perks.condition_matches(state, "grounded&slowed"), "positive original timed control slow remains eligible")
+	state.slow_ratio = 1000
+	check(not Perks.condition_matches(state, "slowed"), "full-speed control label grants no defensive benefit")
+	state.slow_ratio = 650
+	state.control_ticks = 0
+	check(not Perks.condition_matches(state, "slowed"), "expired control slow grants no defensive benefit")
+	state.control_state = PlayerState.ControlState.FREE
+	state.slow_ratio = 1000
+	for tick: int in 60:
+		MovementSystem.step(state, SimCommand.new(tick, state.entity_id, 1000, 0), config, arena, 750)
+	check(state.velocity_x > 0, "untimed reduced ground target produces real ordinary movement")
+	check(not Perks.condition_matches(state, "slowed"), "occupancy-only ground target ratio is outside the timed-status contract")
+	equal(Perks.ratio(state, "incoming_damage_ratio"), 1000, "terrain-only movement cannot grant Urzh resistance")
 
 
 func _disable_first_condition(state: PlayerState, condition: String) -> void:
@@ -313,6 +402,60 @@ func _test_repeat_admission(state: PlayerState, wire: int, other_wire: int, tran
 	CombatSystem.step_player(independent, SimCommand.new(0, 1, 0, 0, 0, SimCommand.PRESSED_SPELL_2), config, 1000, 2000, arena, [], transition)
 	equal(independent.pending_cast_wire_id, other_wire, "another ready spell admits while the modified spell remains on cooldown")
 	equal(independent.spell_cooldown_for_wire(wire), released_cooldown - 1, "another spell cannot clear or restart the modified repeat wait")
+
+
+func _test_effective_tick_tradeoffs() -> void:
+	var rapid_wire := int(abilities.ability(abilities.spell_id_at("fire", "rapid")).wire_id)
+	var rapid := CombatTuning.cast_definition(rapid_wire)
+	var transition := ActionTransitionPolicy.new()
+	check(transition.load_from_file(), "quantized timing test uses real cast gates")
+	var rows: Array[Dictionary] = Races.all()
+	rows.append_array(Characters.all())
+	var pairs := 0
+	for row: Dictionary in rows:
+		var effects: Dictionary = row.effects
+		if not effects.has("spell_startup_ratio") or not effects.has("spell_cooldown_ratio"): continue
+		pairs += 1
+		var champion_wire := _wire_for_ancestry(String(row.ancestry)) if row.has("ancestry") else int(row.wire_id)
+		var state := _actor(champion_wire)
+		check(Scenarios.prepare(state, String(row.condition)), "paired timing window prepares: " + String(row.name))
+		check(state.place_proven_spell(0, rapid_wire), "actual Rapid equips for paired timing regression")
+		var timing := Perks.spell_timing(state, rapid, config)
+		check(timing.suppressed_pairs.has(String(row.name)), "one-tick Rapid suppresses both halves of " + String(row.name))
+		equal(int(timing.startup_ticks), config.milliseconds_to_ticks(int(rapid.startup_ms)), "suppressed bargain cannot add a fake faster startup")
+		equal(int(timing.cooldown_ticks), config.milliseconds_to_ticks(int(rapid.cooldown_ms)), "suppressed bargain cannot grant or charge a free repeat modifier")
+		var flux_before := state.flux
+		CombatSystem.step_player(state, SimCommand.new(0, 1, 0, 0, 0, SimCommand.PRESSED_SPELL_1), config, 1000, 2000, arena, [], transition)
+		equal(state.pending_cast_ticks, int(timing.startup_ticks), "actual admission uses quantized projection")
+		equal(state.flux, flux_before - int(rapid.flux_cost), "suppression never discounts the spell itself")
+		var release_timing := Perks.spell_timing(state, rapid, config)
+		CombatSystem.step_player(state, SimCommand.new(1, 1), config, 1000, 2000, arena, [], transition)
+		equal(state.spell_cooldown_for_wire(rapid_wire), int(release_timing.cooldown_ticks), "real release uses the complete paired policy")
+	check(pairs >= 5, "every authored paired timing bargain was exercised")
+	# Falling Ribbon and the ancestry both affect Grace's repeat clock. The
+	# suppressed ancestry must leave that separate aerial steering tradeoff intact.
+	var stacked := _actor(4)
+	check(Scenarios.prepare(stacked, "airborne_descending&high_flux"), "stacked personal timing window prepares")
+	var stacked_timing := Perks.spell_timing(stacked, rapid, config)
+	equal(int(stacked_timing.cooldown_ratio), Perks.ratio(stacked, "spell_cooldown_ratio"), "independent personal timing retains ordinary stacking")
+	check(Perks.ratio(stacked, "air_steering_ratio") > 1000, "timing filter cannot remove a personal movement benefit")
+	# Observe every existing form under a real Gnome window; nothing depends on
+	# special wire IDs and the slower Fractured startup uses the same integer order.
+	var gnome := _actor(10)
+	check(Scenarios.prepare(gnome, "high_flux"), "Gnome high-Flux projection prepares")
+	for family: String in ["bolt", "heavy", "rapid", "spray", "mantle", "fuse", "split", "rebound"]:
+		var wire := int(abilities.ability(abilities.spell_id_at("fire", family)).wire_id)
+		var definition := CombatTuning.cast_definition(wire)
+		for status_ratio: int in [1000, 1080]:
+			var view := Perks.spell_timing(gnome, definition, config, status_ratio)
+			if view.suppressed_pairs.is_empty():
+				check(int(view.startup_ticks) < int(view.base_startup_ticks) and int(view.cooldown_ticks) > int(view.base_cooldown_ticks), "effective Gnome bargain has both real directions for " + family)
+			else:
+				equal(int(view.startup_ticks), int(view.base_startup_ticks), "ineligible form keeps its status-aware startup")
+				equal(int(view.cooldown_ticks), int(view.base_cooldown_ticks), "ineligible form keeps its repeat clock")
+	var neutral := Perks.spell_timing(null, rapid, config)
+	equal(int(neutral.startup_ticks), 1, "null projection is neutral and cannot invent instant casts")
+	check(neutral.suppressed_pairs.is_empty(), "null projection cannot claim an active perk")
 
 
 func _test_all_character_prediction_and_snapshots() -> void:

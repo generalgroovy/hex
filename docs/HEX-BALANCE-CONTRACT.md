@@ -1,10 +1,12 @@
 # H.E.X. balance and distinctness contract
 
-Status: current design contract, updated October 9, 2026; **not a claim of completed balance**.
+Status: current design contract, updated October 12, 2026; **not a claim of completed balance**.
 The implementation queue remains `.agent/OVERHAUL-IMPLEMENTATION.md`.
 [Historical October 7 fix/audit evidence](balance-evidence-20261007/README.md):
 its Full and portable gates passed; native Loom information was readable at 1280x720,
-but 960x540 small text is degraded. No complete balance acceptance follows.
+but 960x540 small text was degraded in that historical build. The later
+[comprehensive reading pass](implementation-20261012/experience.md) supplies
+separate compact/200% native evidence; neither establishes complete balance.
 The [current handoff](../.agent/HEX-RESUME.md) owns exact qualification and package
 status. The [expanded combat record](element-expansion-evidence-20261009/combat-design.md)
 and [progression/Range record](element-expansion-evidence-20261009/progression-testing-design.md)
@@ -84,7 +86,7 @@ mixed terminal can form its named terrain reaction from its finite paid source.
 | Spray | Immediate close fan and interception | Short reach, clipped rays and low per-target damage |
 | Mantle | Approach for touch damage while leaving finite paid trail pieces | 1.4 s lifetime, one touch per enemy, 16 Health shared direct pool; it is not armor |
 | Fuse | Plant an area threat after travel | Full 600 ms warning, cover/height checks, 20 Health shared direct blast pool |
-| Split | Commit to two diverging branches after 250 ms | Splits once; divides the original direct damage and material; capacity can postpone it |
+| Split | Commit to two diverging branches after ten flight ticks at 120 Hz (77 ms authored, rounded to 83.3 ms) | Splits once; divides the original direct damage and material; capacity can postpone it |
 | Rebound | Use a wall angle to change approach | At most two banks; no homing, extra damage, material or lifetime |
 
 Additional ingredients add 15% of the family's base Flux cost each, rounded
@@ -97,8 +99,8 @@ not just the number of ingredients or the largest theoretical hit.
 |---|---|---|
 | Earth: Fractured Focus | Future cast preparation is 8% longer | Does not retime an already paid cast or its cooldown |
 | Fire: Burning | Damage from one finite pool | At most 2.4 Health from a hit; refresh replaces a pool rather than adding stacks; protection stops pulses |
-| Water: Chilled | Ordinary ground target speed is 88% | Uses the stronger existing slow, not a multiplied stack; air steering stays unchanged |
-| Air: Gusted | One directional 80 px/s shove when the window begins | No stun; refreshing an active window cannot shove again |
+| Water: Chilled | Ordinary ground target speed is 88% | Shares the stronger terrain/Chill reduction; separate timed control slows still apply. Air steering stays unchanged |
+| Air: Gusted | One directional base 80 px/s shove when the window begins; active push-resistance/vulnerability passives scale that impulse | No stun; refreshing an active window cannot shove again |
 | Light: Revealed | Makes the target available to visibility rules | Solid walls still occlude; no through-wall targeting claim |
 | Dark: Withered | Blocks otherwise ready Health/Flux recovery | Stamina recovery and ordinary wait clocks remain separate |
 

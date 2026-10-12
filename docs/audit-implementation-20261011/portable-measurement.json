@@ -1,0 +1,5042 @@
+{
+  "schema_version": 1,
+  "status": "measured",
+  "scope": "Actual named release EXE/PCK; engine one-second FPS observations include cold startup and output logging. Not a frame-present trace, input-latency measurement, GPU timer, or sustained casting certification. Twelve finite slot-1 attempts use ordinary cooldown/Flux rules; refusals and idle after sequence/expiry remain in the sample. No resource refill or current-source engine is used. Exit mode is recorded per case: engine-iteration-limit uses --quit-after; normal-window-close sends a close request to this owned process after the requested wall time and requires the application safe-close marker. Requested engine iterations are not seconds or verified displayed-frame counts; they are null in normal-close mode. Win32 foreground ownership and main-window visibility/minimization are sampled roughly every500ms after process launch; unavailable handles are null, not proof of a hidden window. Visibility does not prove unobscured presentation.",
+  "pack_directory": "C:\\Users\\sende\\Projects\\hex\\exports\\hex-audit-overhaul-20261011\\windows",
+  "output_directory": "C:\\Users\\sende\\Projects\\hex\\.godot\\audit-overhaul-20261011\\portable-normal-close-final",
+  "wrapper_sha256": "3edb3ac1e021e618cd7b6a01faf12cc9ff8b4f2bf589d9fbb7117d0574670a06",
+  "expected_release_identity": {
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate.",
+    "build_id": "p60-d8e6ea1cd808",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "protocol_version": 60,
+    "record_count": 3412,
+    "runtime_source_sha256": "d8e6ea1cd808ee4e43ca93fb45c1af414ba4f714df399e4b973ac76aaaccedf3",
+    "schema_version": 1,
+    "scope_id": "production-runtime-source-v1",
+    "snapshot_schema": 24,
+    "status": "candidate_generated_not_promoted"
+  },
+  "payload_before": {
+    "exe_sha256": "04baf75cc1d69dd93eb709533ecab4fd7770bb8a530645717017a06a9d9809fc",
+    "pack_sha256": "50c92cf937b072245da5df80aca97f21959ab180ecab1388215a524fa526ca24",
+    "build_state_sha256": "604268ddf2db56debbef0966f7d76fcff45b7d5ba219d48602286cffab94a0de"
+  },
+  "payload_after": {
+    "exe_sha256": "04baf75cc1d69dd93eb709533ecab4fd7770bb8a530645717017a06a9d9809fc",
+    "pack_sha256": "50c92cf937b072245da5df80aca97f21959ab180ecab1388215a524fa526ca24",
+    "build_state_sha256": "604268ddf2db56debbef0966f7d76fcff45b7d5ba219d48602286cffab94a0de"
+  },
+  "payload_unchanged": true,
+  "available_memory_before": {
+    "observed_utc": "2026-10-12T07:39:12.7664144Z",
+    "available_mb": 850.54,
+    "error": null
+  },
+  "available_memory_after": {
+    "observed_utc": "2026-10-12T07:42:20.5625237Z",
+    "available_mb": 1399.62,
+    "error": null
+  },
+  "requested_cases": [
+    "hearth",
+    "garden-entry",
+    "paid-fire-bolt",
+    "paid-all-six-mantle"
+  ],
+  "cases": [
+    {
+      "case": "hearth",
+      "status": "measured",
+      "started_utc": "2026-10-12T07:39:12.8474730Z",
+      "process_wall_seconds": 48.4972036,
+      "engine_iterations_requested": null,
+      "watchdog_seconds": 180,
+      "arguments": [
+        "--print-fps",
+        "--windowed",
+        "--resolution",
+        "1280x720",
+        "--",
+        "--fullbody-art",
+        "--pixel-cast",
+        "--no-lan-discovery",
+        "--capture-spawn=1536,880"
+      ],
+      "requested_spawn_px": [
+        1536,
+        880
+      ],
+      "requested_wire_id": 0,
+      "finite_sequence_attempts_requested": 0,
+      "admitted_cast_events": 0,
+      "refused_cast_events": 0,
+      "memory_before": {
+        "observed_utc": "2026-10-12T07:39:12.8471526Z",
+        "available_mb": 813.93,
+        "error": null
+      },
+      "memory_after": {
+        "observed_utc": "2026-10-12T07:40:01.3865865Z",
+        "available_mb": 1076.57,
+        "error": null
+      },
+      "stderr_bytes": 0,
+      "validation_errors": [],
+      "observations": {
+        "fps_summary": {
+          "sample_count": 28,
+          "mean_reported_fps": 59.82142857142857,
+          "minimum_reported_fps": 59.0,
+          "maximum_reported_fps": 60.0
+        },
+        "fps_samples": [
+          {
+            "line_number": 12,
+            "fps": 59.0,
+            "reported_mspf": 16.94,
+            "raw": "Project FPS: 59 (16.94 mspf)"
+          },
+          {
+            "line_number": 13,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 14,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 15,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 16,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 17,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 18,
+            "fps": 59.0,
+            "reported_mspf": 16.94,
+            "raw": "Project FPS: 59 (16.94 mspf)"
+          },
+          {
+            "line_number": 19,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 20,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 21,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 22,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 23,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 24,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 25,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 26,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 27,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 28,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 29,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 30,
+            "fps": 59.0,
+            "reported_mspf": 16.94,
+            "raw": "Project FPS: 59 (16.94 mspf)"
+          },
+          {
+            "line_number": 31,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 32,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 33,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 34,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 35,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 36,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 37,
+            "fps": 59.0,
+            "reported_mspf": 16.94,
+            "raw": "Project FPS: 59 (16.94 mspf)"
+          },
+          {
+            "line_number": 38,
+            "fps": 59.0,
+            "reported_mspf": 16.94,
+            "raw": "Project FPS: 59 (16.94 mspf)"
+          },
+          {
+            "line_number": 41,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          }
+        ],
+        "chemistry_observations": [],
+        "combat_observations": [],
+        "runtime_identities": [
+          {
+            "line_number": 8,
+            "build_id": "p60-d8e6ea1cd808",
+            "runtime_source_sha256": "d8e6ea1cd808ee4e43ca93fb45c1af414ba4f714df399e4b973ac76aaaccedf3"
+          }
+        ],
+        "parse_errors": []
+      },
+      "scope": "Actual named release EXE/PCK; engine one-second FPS observations include cold startup and output logging. Not a frame-present trace, input-latency measurement, GPU timer, or sustained casting certification. Twelve finite slot-1 attempts use ordinary cooldown/Flux rules; refusals and idle after sequence/expiry remain in the sample. No resource refill or current-source engine is used. Exit mode is recorded per case: engine-iteration-limit uses --quit-after; normal-window-close sends a close request to this owned process after the requested wall time and requires the application safe-close marker. Requested engine iterations are not seconds or verified displayed-frame counts; they are null in normal-close mode. Win32 foreground ownership and main-window visibility/minimization are sampled roughly every500ms after process launch; unavailable handles are null, not proof of a hidden window. Visibility does not prove unobscured presentation.",
+      "requested_window_style": "Normal",
+      "exit_mode": "normal-window-close",
+      "close_after_seconds_requested": 45,
+      "safe_close_logged": true,
+      "window_observations": [
+        {
+          "elapsed_ms": 303,
+          "foreground_process_matches": false,
+          "main_window_available": false,
+          "main_window_visible": null,
+          "main_window_minimized": null,
+          "error": null
+        },
+        {
+          "elapsed_ms": 913,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 1438,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 1967,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 2482,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 2986,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 3518,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 4034,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 4552,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 5057,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 5564,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 6081,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 6590,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 7098,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 7618,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 8136,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 8665,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 9179,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 9695,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 10200,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 10707,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 11212,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 11717,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 12221,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 12740,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 13244,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 13747,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 14254,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 14756,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 15260,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 15765,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 16282,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 16795,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 17297,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 17813,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 18328,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 18859,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 19376,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 19880,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 20383,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 20899,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 21402,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 21906,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 22408,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 22910,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 23412,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 24164,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 24681,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 25200,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 25704,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 26205,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 26708,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 27214,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 27719,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 28223,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 28740,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 29256,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 29773,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 30276,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 30791,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 31308,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 31823,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 32329,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 32846,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 33352,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 33869,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 34373,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 34889,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 35396,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 35913,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 36416,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 36919,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 37421,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 37923,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 38424,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 38926,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 39427,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 39929,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 40457,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 40959,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 41488,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 42254,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 42769,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 43272,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 43773,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 44276,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 44806,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 45326,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        }
+      ]
+    },
+    {
+      "case": "garden-entry",
+      "status": "measured",
+      "started_utc": "2026-10-12T07:40:01.9443727Z",
+      "process_wall_seconds": 45.6291859,
+      "engine_iterations_requested": null,
+      "watchdog_seconds": 180,
+      "arguments": [
+        "--print-fps",
+        "--windowed",
+        "--resolution",
+        "1280x720",
+        "--",
+        "--fullbody-art",
+        "--pixel-cast",
+        "--no-lan-discovery",
+        "--capture-spawn=4880,720"
+      ],
+      "requested_spawn_px": [
+        4880,
+        720
+      ],
+      "requested_wire_id": 0,
+      "finite_sequence_attempts_requested": 0,
+      "admitted_cast_events": 0,
+      "refused_cast_events": 0,
+      "memory_before": {
+        "observed_utc": "2026-10-12T07:40:01.9442445Z",
+        "available_mb": 1096.73,
+        "error": null
+      },
+      "memory_after": {
+        "observed_utc": "2026-10-12T07:40:47.6783986Z",
+        "available_mb": 1396.34,
+        "error": null
+      },
+      "stderr_bytes": 0,
+      "validation_errors": [],
+      "observations": {
+        "fps_summary": {
+          "sample_count": 31,
+          "mean_reported_fps": 60.0,
+          "minimum_reported_fps": 60.0,
+          "maximum_reported_fps": 60.0
+        },
+        "fps_samples": [
+          {
+            "line_number": 12,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 13,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 14,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 15,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 16,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 17,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 18,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 19,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 20,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 21,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 22,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 23,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 24,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 25,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 26,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 27,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 28,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 29,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 30,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 31,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 32,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 33,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 34,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 35,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 36,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 37,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 38,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 39,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 40,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 41,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 42,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          }
+        ],
+        "chemistry_observations": [],
+        "combat_observations": [],
+        "runtime_identities": [
+          {
+            "line_number": 8,
+            "build_id": "p60-d8e6ea1cd808",
+            "runtime_source_sha256": "d8e6ea1cd808ee4e43ca93fb45c1af414ba4f714df399e4b973ac76aaaccedf3"
+          }
+        ],
+        "parse_errors": []
+      },
+      "scope": "Actual named release EXE/PCK; engine one-second FPS observations include cold startup and output logging. Not a frame-present trace, input-latency measurement, GPU timer, or sustained casting certification. Twelve finite slot-1 attempts use ordinary cooldown/Flux rules; refusals and idle after sequence/expiry remain in the sample. No resource refill or current-source engine is used. Exit mode is recorded per case: engine-iteration-limit uses --quit-after; normal-window-close sends a close request to this owned process after the requested wall time and requires the application safe-close marker. Requested engine iterations are not seconds or verified displayed-frame counts; they are null in normal-close mode. Win32 foreground ownership and main-window visibility/minimization are sampled roughly every500ms after process launch; unavailable handles are null, not proof of a hidden window. Visibility does not prove unobscured presentation.",
+      "requested_window_style": "Normal",
+      "exit_mode": "normal-window-close",
+      "close_after_seconds_requested": 45,
+      "safe_close_logged": true,
+      "window_observations": [
+        {
+          "elapsed_ms": 264,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 766,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 1272,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 1779,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 2287,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 2805,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 3311,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 3815,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 4323,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 4830,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 5347,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 5864,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 6367,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 6884,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 7387,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 7891,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 8395,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 8899,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 9404,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 9920,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 10438,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 10956,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 11461,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 11979,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 12482,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 12984,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 13488,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 13990,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 14508,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 15024,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 15526,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 16030,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 16532,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 17037,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 17540,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 18043,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 18548,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 19049,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 19551,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 20053,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 20558,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 21061,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 21564,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 22078,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 22595,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 23098,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 23602,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 24104,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 24606,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 25109,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 25624,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 26125,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 26626,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 27130,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 27633,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 28135,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 28651,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 29169,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 29669,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 30183,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 30699,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 31215,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 31717,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 32232,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 32748,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 33277,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 33779,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 34283,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 34789,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 35292,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 35795,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 36296,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 36800,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 37329,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 37831,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 38334,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 38836,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 39339,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 39843,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 40350,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 40851,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 41367,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 41867,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 42382,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 42887,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 43392,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 43897,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 44399,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 44901,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 45404,
+          "foreground_process_matches": false,
+          "main_window_available": false,
+          "main_window_visible": null,
+          "main_window_minimized": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "case": "paid-fire-bolt",
+      "status": "measured",
+      "started_utc": "2026-10-12T07:40:48.1513731Z",
+      "process_wall_seconds": 45.6403813,
+      "engine_iterations_requested": null,
+      "watchdog_seconds": 180,
+      "arguments": [
+        "--print-fps",
+        "--windowed",
+        "--resolution",
+        "1280x720",
+        "--",
+        "--fullbody-art",
+        "--pixel-cast",
+        "--no-lan-discovery",
+        "--capture-spawn=1536,880",
+        "--capture-pointer=1736,880",
+        "--capture-spell-wires=145",
+        "--capture-cast-slot=1",
+        "--capture-spell-sequence=1,1,1,1,1,1,1,1,1,1,1,1"
+      ],
+      "requested_spawn_px": [
+        1536,
+        880
+      ],
+      "requested_wire_id": 145,
+      "finite_sequence_attempts_requested": 12,
+      "admitted_cast_events": 12,
+      "refused_cast_events": 0,
+      "memory_before": {
+        "observed_utc": "2026-10-12T07:40:48.1512764Z",
+        "available_mb": 1379.46,
+        "error": null
+      },
+      "memory_after": {
+        "observed_utc": "2026-10-12T07:41:33.8522960Z",
+        "available_mb": 1418.52,
+        "error": null
+      },
+      "stderr_bytes": 0,
+      "validation_errors": [],
+      "observations": {
+        "fps_summary": {
+          "sample_count": 31,
+          "mean_reported_fps": 55.645161290322584,
+          "minimum_reported_fps": 31.0,
+          "maximum_reported_fps": 60.0
+        },
+        "fps_samples": [
+          {
+            "line_number": 40,
+            "fps": 34.0,
+            "reported_mspf": 29.41,
+            "raw": "Project FPS: 34 (29.41 mspf)"
+          },
+          {
+            "line_number": 50,
+            "fps": 31.0,
+            "reported_mspf": 32.25,
+            "raw": "Project FPS: 31 (32.25 mspf)"
+          },
+          {
+            "line_number": 51,
+            "fps": 33.0,
+            "reported_mspf": 30.3,
+            "raw": "Project FPS: 33 (30.30 mspf)"
+          },
+          {
+            "line_number": 52,
+            "fps": 35.0,
+            "reported_mspf": 28.57,
+            "raw": "Project FPS: 35 (28.57 mspf)"
+          },
+          {
+            "line_number": 53,
+            "fps": 40.0,
+            "reported_mspf": 25.0,
+            "raw": "Project FPS: 40 (25.00 mspf)"
+          },
+          {
+            "line_number": 54,
+            "fps": 53.0,
+            "reported_mspf": 18.86,
+            "raw": "Project FPS: 53 (18.86 mspf)"
+          },
+          {
+            "line_number": 55,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 56,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 57,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 58,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 59,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 60,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 61,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 62,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 63,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 64,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 65,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 66,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 67,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 68,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 69,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 70,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 71,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 72,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 73,
+            "fps": 59.0,
+            "reported_mspf": 16.94,
+            "raw": "Project FPS: 59 (16.94 mspf)"
+          },
+          {
+            "line_number": 74,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 75,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 76,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 77,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 78,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 79,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          }
+        ],
+        "chemistry_observations": [],
+        "combat_observations": [
+          {
+            "line_number": 13,
+            "simulation_tick": 2,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 2 pending 145/8 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 14,
+            "simulation_tick": 10,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1000,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 10 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1000,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 15,
+            "simulation_tick": 34,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 34 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 16,
+            "simulation_tick": 42,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1001,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 42 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1001,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 17,
+            "simulation_tick": 63,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_position": "(1736000, 880000)",
+                "projectile_id": 1000,
+                "type": "projectile_expired",
+                "wall_id": 0
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 63 pending 0/0 projectiles 1 fields 0 events [{\"contact_position\":\"(1736000, 880000)\",\"projectile_id\":1000,\"type\":\"projectile_expired\",\"wall_id\":0}]"
+          },
+          {
+            "line_number": 18,
+            "simulation_tick": 66,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 66 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 19,
+            "simulation_tick": 74,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1002,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 74 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1002,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 20,
+            "simulation_tick": 81,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_kind": "field",
+                "contact_quantization_outside": false,
+                "field_source_id": 1000,
+                "first_remaining": 0,
+                "matched_strength": 5,
+                "other_wire_id": 145,
+                "owner_id": 1,
+                "projectile_id": 1001,
+                "reaction_id": 1,
+                "recipe_wire_id": 309,
+                "second_remaining": 0,
+                "source_wire_id": 145,
+                "type": "hex_clash",
+                "x": 1691751,
+                "y": 880000
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 81 pending 0/0 projectiles 1 fields 0 events [{\"contact_kind\":\"field\",\"contact_quantization_outside\":false,\"field_source_id\":1000,\"first_remaining\":0,\"matched_strength\":5,\"other_wire_id\":145,\"owner_id\":1,\"projectile_id\":1001,\"reaction_id\":1,\"recipe_wire_id\":309,\"second_remaining\":0,\"source_wire_id\":145,\"type\":\"hex_clash\",\"x\":1691751,\"y\":880000}]"
+          },
+          {
+            "line_number": 21,
+            "simulation_tick": 98,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 98 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 22,
+            "simulation_tick": 106,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1003,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 106 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1003,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 23,
+            "simulation_tick": 127,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_position": "(1736000, 880000)",
+                "projectile_id": 1002,
+                "type": "projectile_expired",
+                "wall_id": 0
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 127 pending 0/0 projectiles 1 fields 0 events [{\"contact_position\":\"(1736000, 880000)\",\"projectile_id\":1002,\"type\":\"projectile_expired\",\"wall_id\":0}]"
+          },
+          {
+            "line_number": 24,
+            "simulation_tick": 130,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 130 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 25,
+            "simulation_tick": 138,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1004,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 138 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1004,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 26,
+            "simulation_tick": 145,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_kind": "field",
+                "contact_quantization_outside": false,
+                "field_source_id": 1002,
+                "first_remaining": 0,
+                "matched_strength": 5,
+                "other_wire_id": 145,
+                "owner_id": 1,
+                "projectile_id": 1003,
+                "reaction_id": 2,
+                "recipe_wire_id": 309,
+                "second_remaining": 0,
+                "source_wire_id": 145,
+                "type": "hex_clash",
+                "x": 1691751,
+                "y": 880000
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 145 pending 0/0 projectiles 1 fields 0 events [{\"contact_kind\":\"field\",\"contact_quantization_outside\":false,\"field_source_id\":1002,\"first_remaining\":0,\"matched_strength\":5,\"other_wire_id\":145,\"owner_id\":1,\"projectile_id\":1003,\"reaction_id\":2,\"recipe_wire_id\":309,\"second_remaining\":0,\"source_wire_id\":145,\"type\":\"hex_clash\",\"x\":1691751,\"y\":880000}]"
+          },
+          {
+            "line_number": 27,
+            "simulation_tick": 162,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 162 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 28,
+            "simulation_tick": 170,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1005,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 170 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1005,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 29,
+            "simulation_tick": 191,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_position": "(1736000, 880000)",
+                "projectile_id": 1004,
+                "type": "projectile_expired",
+                "wall_id": 0
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 191 pending 0/0 projectiles 1 fields 0 events [{\"contact_position\":\"(1736000, 880000)\",\"projectile_id\":1004,\"type\":\"projectile_expired\",\"wall_id\":0}]"
+          },
+          {
+            "line_number": 30,
+            "simulation_tick": 194,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 194 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 31,
+            "simulation_tick": 202,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1006,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 202 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1006,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 32,
+            "simulation_tick": 209,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_kind": "field",
+                "contact_quantization_outside": false,
+                "field_source_id": 1004,
+                "first_remaining": 0,
+                "matched_strength": 5,
+                "other_wire_id": 145,
+                "owner_id": 1,
+                "projectile_id": 1005,
+                "reaction_id": 3,
+                "recipe_wire_id": 309,
+                "second_remaining": 0,
+                "source_wire_id": 145,
+                "type": "hex_clash",
+                "x": 1691751,
+                "y": 880000
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 209 pending 0/0 projectiles 1 fields 0 events [{\"contact_kind\":\"field\",\"contact_quantization_outside\":false,\"field_source_id\":1004,\"first_remaining\":0,\"matched_strength\":5,\"other_wire_id\":145,\"owner_id\":1,\"projectile_id\":1005,\"reaction_id\":3,\"recipe_wire_id\":309,\"second_remaining\":0,\"source_wire_id\":145,\"type\":\"hex_clash\",\"x\":1691751,\"y\":880000}]"
+          },
+          {
+            "line_number": 33,
+            "simulation_tick": 226,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 226 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 34,
+            "simulation_tick": 234,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1007,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 234 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1007,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 35,
+            "simulation_tick": 255,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_position": "(1736000, 880000)",
+                "projectile_id": 1006,
+                "type": "projectile_expired",
+                "wall_id": 0
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 255 pending 0/0 projectiles 1 fields 0 events [{\"contact_position\":\"(1736000, 880000)\",\"projectile_id\":1006,\"type\":\"projectile_expired\",\"wall_id\":0}]"
+          },
+          {
+            "line_number": 36,
+            "simulation_tick": 258,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 258 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 37,
+            "simulation_tick": 266,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1008,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 266 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1008,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 38,
+            "simulation_tick": 273,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_kind": "field",
+                "contact_quantization_outside": false,
+                "field_source_id": 1006,
+                "first_remaining": 0,
+                "matched_strength": 5,
+                "other_wire_id": 145,
+                "owner_id": 1,
+                "projectile_id": 1007,
+                "reaction_id": 4,
+                "recipe_wire_id": 309,
+                "second_remaining": 0,
+                "source_wire_id": 145,
+                "type": "hex_clash",
+                "x": 1691751,
+                "y": 880000
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 273 pending 0/0 projectiles 1 fields 0 events [{\"contact_kind\":\"field\",\"contact_quantization_outside\":false,\"field_source_id\":1006,\"first_remaining\":0,\"matched_strength\":5,\"other_wire_id\":145,\"owner_id\":1,\"projectile_id\":1007,\"reaction_id\":4,\"recipe_wire_id\":309,\"second_remaining\":0,\"source_wire_id\":145,\"type\":\"hex_clash\",\"x\":1691751,\"y\":880000}]"
+          },
+          {
+            "line_number": 39,
+            "simulation_tick": 290,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 290 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 41,
+            "simulation_tick": 298,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1009,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 298 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1009,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 42,
+            "simulation_tick": 319,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_position": "(1736000, 880000)",
+                "projectile_id": 1008,
+                "type": "projectile_expired",
+                "wall_id": 0
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 319 pending 0/0 projectiles 1 fields 0 events [{\"contact_position\":\"(1736000, 880000)\",\"projectile_id\":1008,\"type\":\"projectile_expired\",\"wall_id\":0}]"
+          },
+          {
+            "line_number": 43,
+            "simulation_tick": 322,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 322 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 44,
+            "simulation_tick": 330,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1010,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 330 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1010,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 45,
+            "simulation_tick": 337,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_kind": "field",
+                "contact_quantization_outside": false,
+                "field_source_id": 1008,
+                "first_remaining": 0,
+                "matched_strength": 5,
+                "other_wire_id": 145,
+                "owner_id": 1,
+                "projectile_id": 1009,
+                "reaction_id": 5,
+                "recipe_wire_id": 309,
+                "second_remaining": 0,
+                "source_wire_id": 145,
+                "type": "hex_clash",
+                "x": 1691751,
+                "y": 880000
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 337 pending 0/0 projectiles 1 fields 0 events [{\"contact_kind\":\"field\",\"contact_quantization_outside\":false,\"field_source_id\":1008,\"first_remaining\":0,\"matched_strength\":5,\"other_wire_id\":145,\"owner_id\":1,\"projectile_id\":1009,\"reaction_id\":5,\"recipe_wire_id\":309,\"second_remaining\":0,\"source_wire_id\":145,\"type\":\"hex_clash\",\"x\":1691751,\"y\":880000}]"
+          },
+          {
+            "line_number": 46,
+            "simulation_tick": 354,
+            "pending_wire_id": 145,
+            "pending_ticks": 8,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 354 pending 145/8 projectiles 1 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 47,
+            "simulation_tick": 362,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 2,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1011,
+                "type": "projectile_spawned",
+                "wire_id": 145
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 362 pending 0/0 projectiles 2 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1011,\"type\":\"projectile_spawned\",\"wire_id\":145}]"
+          },
+          {
+            "line_number": 48,
+            "simulation_tick": 383,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_position": "(1736000, 880000)",
+                "projectile_id": 1010,
+                "type": "projectile_expired",
+                "wall_id": 0
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 383 pending 0/0 projectiles 1 fields 0 events [{\"contact_position\":\"(1736000, 880000)\",\"projectile_id\":1010,\"type\":\"projectile_expired\",\"wall_id\":0}]"
+          },
+          {
+            "line_number": 49,
+            "simulation_tick": 401,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "contact_kind": "field",
+                "contact_quantization_outside": false,
+                "field_source_id": 1010,
+                "first_remaining": 0,
+                "matched_strength": 5,
+                "other_wire_id": 145,
+                "owner_id": 1,
+                "projectile_id": 1011,
+                "reaction_id": 6,
+                "recipe_wire_id": 309,
+                "second_remaining": 0,
+                "source_wire_id": 145,
+                "type": "hex_clash",
+                "x": 1691751,
+                "y": 880000
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 401 pending 0/0 projectiles 0 fields 0 events [{\"contact_kind\":\"field\",\"contact_quantization_outside\":false,\"field_source_id\":1010,\"first_remaining\":0,\"matched_strength\":5,\"other_wire_id\":145,\"owner_id\":1,\"projectile_id\":1011,\"reaction_id\":6,\"recipe_wire_id\":309,\"second_remaining\":0,\"source_wire_id\":145,\"type\":\"hex_clash\",\"x\":1691751,\"y\":880000}]"
+          }
+        ],
+        "runtime_identities": [
+          {
+            "line_number": 8,
+            "build_id": "p60-d8e6ea1cd808",
+            "runtime_source_sha256": "d8e6ea1cd808ee4e43ca93fb45c1af414ba4f714df399e4b973ac76aaaccedf3"
+          }
+        ],
+        "parse_errors": []
+      },
+      "scope": "Actual named release EXE/PCK; engine one-second FPS observations include cold startup and output logging. Not a frame-present trace, input-latency measurement, GPU timer, or sustained casting certification. Twelve finite slot-1 attempts use ordinary cooldown/Flux rules; refusals and idle after sequence/expiry remain in the sample. No resource refill or current-source engine is used. Exit mode is recorded per case: engine-iteration-limit uses --quit-after; normal-window-close sends a close request to this owned process after the requested wall time and requires the application safe-close marker. Requested engine iterations are not seconds or verified displayed-frame counts; they are null in normal-close mode. Win32 foreground ownership and main-window visibility/minimization are sampled roughly every500ms after process launch; unavailable handles are null, not proof of a hidden window. Visibility does not prove unobscured presentation.",
+      "requested_window_style": "Normal",
+      "exit_mode": "normal-window-close",
+      "close_after_seconds_requested": 45,
+      "safe_close_logged": true,
+      "window_observations": [
+        {
+          "elapsed_ms": 259,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 766,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 1272,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 1779,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 2286,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 2792,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 3300,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 3804,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 4310,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 4814,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 5317,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 5829,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 6339,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 6842,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 7344,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 7849,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 8352,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 8855,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 9358,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 9874,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 10375,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 10879,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 11382,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 11884,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 12402,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 12919,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 13436,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 13965,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 14467,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 14970,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 15476,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 15978,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 16483,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 16996,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 17526,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 18030,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 18531,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 19049,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 19551,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 20056,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 20571,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 21072,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 21573,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 22075,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 22578,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 23080,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 23582,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 24088,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 24605,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 25108,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 25611,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 26132,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 26634,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 27152,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 27656,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 28159,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 28664,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 29167,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 29674,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 30190,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 30691,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 31209,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 31713,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 32242,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 32758,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 33261,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 33778,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 34294,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 34799,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 35301,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 35804,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 36306,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 36836,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 37337,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 37839,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 38344,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 38846,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 39348,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 39851,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 40354,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 40871,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 41387,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 41890,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 42393,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 42911,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 43414,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 43929,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 44445,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 44949,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 45465,
+          "foreground_process_matches": false,
+          "main_window_available": false,
+          "main_window_visible": null,
+          "main_window_minimized": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "case": "paid-all-six-mantle",
+      "status": "measured",
+      "started_utc": "2026-10-12T07:41:34.3264829Z",
+      "process_wall_seconds": 45.6454581,
+      "engine_iterations_requested": null,
+      "watchdog_seconds": 180,
+      "arguments": [
+        "--print-fps",
+        "--windowed",
+        "--resolution",
+        "1280x720",
+        "--",
+        "--fullbody-art",
+        "--pixel-cast",
+        "--no-lan-discovery",
+        "--capture-spawn=1536,880",
+        "--capture-pointer=1736,880",
+        "--capture-spell-wires=1319",
+        "--capture-cast-slot=1",
+        "--capture-spell-sequence=1,1,1,1,1,1,1,1,1,1,1,1"
+      ],
+      "requested_spawn_px": [
+        1536,
+        880
+      ],
+      "requested_wire_id": 1319,
+      "finite_sequence_attempts_requested": 12,
+      "admitted_cast_events": 12,
+      "refused_cast_events": 0,
+      "memory_before": {
+        "observed_utc": "2026-10-12T07:41:34.3263678Z",
+        "available_mb": 1390.84,
+        "error": null
+      },
+      "memory_after": {
+        "observed_utc": "2026-10-12T07:42:20.0866678Z",
+        "available_mb": 1427.65,
+        "error": null
+      },
+      "stderr_bytes": 0,
+      "validation_errors": [],
+      "observations": {
+        "fps_summary": {
+          "sample_count": 31,
+          "mean_reported_fps": 46.74193548387097,
+          "minimum_reported_fps": 38.0,
+          "maximum_reported_fps": 60.0
+        },
+        "fps_samples": [
+          {
+            "line_number": 17,
+            "fps": 50.0,
+            "reported_mspf": 20.0,
+            "raw": "Project FPS: 50 (20.00 mspf)"
+          },
+          {
+            "line_number": 18,
+            "fps": 44.0,
+            "reported_mspf": 22.72,
+            "raw": "Project FPS: 44 (22.72 mspf)"
+          },
+          {
+            "line_number": 21,
+            "fps": 40.0,
+            "reported_mspf": 25.0,
+            "raw": "Project FPS: 40 (25.00 mspf)"
+          },
+          {
+            "line_number": 23,
+            "fps": 39.0,
+            "reported_mspf": 25.64,
+            "raw": "Project FPS: 39 (25.64 mspf)"
+          },
+          {
+            "line_number": 25,
+            "fps": 38.0,
+            "reported_mspf": 26.31,
+            "raw": "Project FPS: 38 (26.31 mspf)"
+          },
+          {
+            "line_number": 28,
+            "fps": 39.0,
+            "reported_mspf": 25.64,
+            "raw": "Project FPS: 39 (25.64 mspf)"
+          },
+          {
+            "line_number": 29,
+            "fps": 40.0,
+            "reported_mspf": 25.0,
+            "raw": "Project FPS: 40 (25.00 mspf)"
+          },
+          {
+            "line_number": 32,
+            "fps": 38.0,
+            "reported_mspf": 26.31,
+            "raw": "Project FPS: 38 (26.31 mspf)"
+          },
+          {
+            "line_number": 35,
+            "fps": 38.0,
+            "reported_mspf": 26.31,
+            "raw": "Project FPS: 38 (26.31 mspf)"
+          },
+          {
+            "line_number": 36,
+            "fps": 40.0,
+            "reported_mspf": 25.0,
+            "raw": "Project FPS: 40 (25.00 mspf)"
+          },
+          {
+            "line_number": 39,
+            "fps": 38.0,
+            "reported_mspf": 26.31,
+            "raw": "Project FPS: 38 (26.31 mspf)"
+          },
+          {
+            "line_number": 41,
+            "fps": 39.0,
+            "reported_mspf": 25.64,
+            "raw": "Project FPS: 39 (25.64 mspf)"
+          },
+          {
+            "line_number": 43,
+            "fps": 38.0,
+            "reported_mspf": 26.31,
+            "raw": "Project FPS: 38 (26.31 mspf)"
+          },
+          {
+            "line_number": 46,
+            "fps": 39.0,
+            "reported_mspf": 25.64,
+            "raw": "Project FPS: 39 (25.64 mspf)"
+          },
+          {
+            "line_number": 47,
+            "fps": 39.0,
+            "reported_mspf": 25.64,
+            "raw": "Project FPS: 39 (25.64 mspf)"
+          },
+          {
+            "line_number": 50,
+            "fps": 39.0,
+            "reported_mspf": 25.64,
+            "raw": "Project FPS: 39 (25.64 mspf)"
+          },
+          {
+            "line_number": 53,
+            "fps": 38.0,
+            "reported_mspf": 26.31,
+            "raw": "Project FPS: 38 (26.31 mspf)"
+          },
+          {
+            "line_number": 54,
+            "fps": 39.0,
+            "reported_mspf": 25.64,
+            "raw": "Project FPS: 39 (25.64 mspf)"
+          },
+          {
+            "line_number": 55,
+            "fps": 42.0,
+            "reported_mspf": 23.8,
+            "raw": "Project FPS: 42 (23.80 mspf)"
+          },
+          {
+            "line_number": 56,
+            "fps": 45.0,
+            "reported_mspf": 22.22,
+            "raw": "Project FPS: 45 (22.22 mspf)"
+          },
+          {
+            "line_number": 57,
+            "fps": 52.0,
+            "reported_mspf": 19.23,
+            "raw": "Project FPS: 52 (19.23 mspf)"
+          },
+          {
+            "line_number": 58,
+            "fps": 55.0,
+            "reported_mspf": 18.18,
+            "raw": "Project FPS: 55 (18.18 mspf)"
+          },
+          {
+            "line_number": 59,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 60,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 61,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 62,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 63,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 64,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 65,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 66,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          },
+          {
+            "line_number": 67,
+            "fps": 60.0,
+            "reported_mspf": 16.66,
+            "raw": "Project FPS: 60 (16.66 mspf)"
+          }
+        ],
+        "chemistry_observations": [],
+        "combat_observations": [
+          {
+            "line_number": 13,
+            "simulation_tick": 2,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 2 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 14,
+            "simulation_tick": 14,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1000,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 14 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1000,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 15,
+            "simulation_tick": 195,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 195 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 16,
+            "simulation_tick": 207,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1001,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 207 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1001,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 19,
+            "simulation_tick": 388,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 388 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 20,
+            "simulation_tick": 400,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1002,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 400 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1002,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 22,
+            "simulation_tick": 581,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 581 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 24,
+            "simulation_tick": 593,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1003,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 593 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1003,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 26,
+            "simulation_tick": 774,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 774 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 27,
+            "simulation_tick": 786,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1004,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 786 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1004,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 30,
+            "simulation_tick": 967,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 967 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 31,
+            "simulation_tick": 979,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1005,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 979 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1005,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 33,
+            "simulation_tick": 1160,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1160 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 34,
+            "simulation_tick": 1172,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1006,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1172 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1006,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 37,
+            "simulation_tick": 1353,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1353 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 38,
+            "simulation_tick": 1365,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1007,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1365 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1007,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 40,
+            "simulation_tick": 1546,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1546 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 42,
+            "simulation_tick": 1558,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1008,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1558 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1008,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 44,
+            "simulation_tick": 1739,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1739 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 45,
+            "simulation_tick": 1751,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1009,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1751 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1009,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 48,
+            "simulation_tick": 1932,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1932 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 49,
+            "simulation_tick": 1944,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1010,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 1944 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1010,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 51,
+            "simulation_tick": 2125,
+            "pending_wire_id": 1319,
+            "pending_ticks": 12,
+            "projectile_count": 0,
+            "field_count": 0,
+            "events": [
+              {
+                "entity_id": 1,
+                "type": "cast_started",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 2125 pending 1319/12 projectiles 0 fields 0 events [{\"entity_id\":1,\"type\":\"cast_started\",\"wire_id\":1319}]"
+          },
+          {
+            "line_number": 52,
+            "simulation_tick": 2137,
+            "pending_wire_id": 0,
+            "pending_ticks": 0,
+            "projectile_count": 1,
+            "field_count": 0,
+            "events": [
+              {
+                "lane_angle_degrees": 0,
+                "lane_count": 1,
+                "lane_index": 0,
+                "owner_id": 1,
+                "projectile_id": 1011,
+                "type": "projectile_spawned",
+                "wire_id": 1319
+              }
+            ],
+            "raw": "FLUX2 spell capture: tick 2137 pending 0/0 projectiles 1 fields 0 events [{\"lane_angle_degrees\":0,\"lane_count\":1,\"lane_index\":0,\"owner_id\":1,\"projectile_id\":1011,\"type\":\"projectile_spawned\",\"wire_id\":1319}]"
+          }
+        ],
+        "runtime_identities": [
+          {
+            "line_number": 8,
+            "build_id": "p60-d8e6ea1cd808",
+            "runtime_source_sha256": "d8e6ea1cd808ee4e43ca93fb45c1af414ba4f714df399e4b973ac76aaaccedf3"
+          }
+        ],
+        "parse_errors": []
+      },
+      "scope": "Actual named release EXE/PCK; engine one-second FPS observations include cold startup and output logging. Not a frame-present trace, input-latency measurement, GPU timer, or sustained casting certification. Twelve finite slot-1 attempts use ordinary cooldown/Flux rules; refusals and idle after sequence/expiry remain in the sample. No resource refill or current-source engine is used. Exit mode is recorded per case: engine-iteration-limit uses --quit-after; normal-window-close sends a close request to this owned process after the requested wall time and requires the application safe-close marker. Requested engine iterations are not seconds or verified displayed-frame counts; they are null in normal-close mode. Win32 foreground ownership and main-window visibility/minimization are sampled roughly every500ms after process launch; unavailable handles are null, not proof of a hidden window. Visibility does not prove unobscured presentation.",
+      "requested_window_style": "Normal",
+      "exit_mode": "normal-window-close",
+      "close_after_seconds_requested": 45,
+      "safe_close_logged": true,
+      "window_observations": [
+        {
+          "elapsed_ms": 262,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 766,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 1274,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 1780,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 2288,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 2795,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 3300,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 3808,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 4317,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 4823,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 5330,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 5835,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 6353,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 6859,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 7375,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 7878,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 8383,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 8899,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 9403,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 9907,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 10436,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 10940,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 11456,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 11972,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 12479,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 12983,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 13487,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 14003,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 14518,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 15034,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 15537,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 16039,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 16544,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 17050,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 17567,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 18083,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 18588,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 19103,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 19616,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 20132,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 20634,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 21137,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 21654,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 22184,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 22685,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 23200,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 23705,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 24206,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 24722,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 25251,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 25756,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 26258,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 26774,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 27278,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 27780,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 28280,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 28797,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 29313,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 29830,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 30347,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 30862,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 31379,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 31894,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 32398,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 32915,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 33434,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 33951,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 34465,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 34966,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 35472,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 36001,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 36503,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 37017,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 37534,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 38049,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 38565,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 39078,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 39582,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 40085,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 40587,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 41103,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 41606,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 42124,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 42641,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 43156,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 43660,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 44166,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 44683,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        },
+        {
+          "elapsed_ms": 45212,
+          "foreground_process_matches": true,
+          "main_window_available": true,
+          "main_window_visible": true,
+          "main_window_minimized": false,
+          "error": null
+        }
+      ]
+    }
+  ],
+  "error": null,
+  "engine_helper_sha256": "7d490617f6a90b46661d713355d6721f7869852f5a4958b58fde439a4b8fe3d3"
+}

@@ -64,7 +64,8 @@ static func attacking_command(trial_world: SimWorld, ready: bool = false) -> Sim
 	if jump_cycle == 0 or jump_cycle == 62: pressed |= SimCommand.PRESSED_JUMP
 	# Approximate projectile travel plus startup from observable current state.
 	# No projectile inspection, future rival inputs, or authority edits.
-	var lead_ms := clampi(distance * 1000 / 345600 + 55, 55, 450)
+	var cast_speed := int(CombatTuning.cast_definition(player.spell_wire_ids[2]).speed)
+	var lead_ms := clampi(distance * 1000 / maxi(1,cast_speed) + 55, 55, 450)
 	var target := Vector2i(opponent.position_x, opponent.position_y) + Vector2i(opponent.velocity_x, opponent.velocity_y) * lead_ms / 1000
 	var aim := target - Vector2i(player.position_x, player.position_y)
 	return SimCommand.new(trial_world.tick, 1, movement.x, movement.y, held, pressed, aim.x, aim.y, target.x, target.y)

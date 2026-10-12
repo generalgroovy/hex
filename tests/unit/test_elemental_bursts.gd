@@ -16,7 +16,7 @@ func run() -> int:
 	_test_retired_bursts_fail_live_weaving()
 	_test_archived_projectile_data_remains_well_formed()
 	_test_readable_runtime_projectile_travel_at_120_hz()
-	_test_inverse_launch_strength_and_family_tradeoffs()
+	_test_launch_speed_and_family_tradeoffs()
 	return finish("elemental-bursts")
 
 
@@ -97,10 +97,10 @@ func _test_readable_runtime_projectile_travel_at_120_hz() -> void:
 	# Exact current values are independent of the implementation. The preceding
 	# checkpoint above supplies an A/B reach and reaction-time positive control.
 	var current_tuning := {
-		"arc-primary": [360_000, 3200, 12_000, 8000], "rillshot": [360_000, 2880, 14_000, 9000],
-		"cinderbolt": [360_000, 2924, 16_000, 10_000], "eclipse-disc": [360_000, 3468, 18_000, 11_000],
+		"rillshot": [1_260_000, 823, 14_000, 9000],
+		"cinderbolt": [1_260_000, 836, 16_000, 10_000], "eclipse-disc": [1_260_000, 991, 18_000, 11_000],
 	}
-	var current_families := {"heavy": [180_000, 4000, 30_000, 24_000], "rapid": [600_000, 1080, 4000, 3000], "bolt": [360_000, 3200, 16_000, 10_000]}
+	var current_families := {"heavy": [180_000, 4000, 30_000, 24_000], "rapid": [1_440_000, 450, 4000, 3000], "bolt": [1_260_000, 915, 16_000, 10_000]}
 	var catalog := _catalog()
 	var projectile_count := 0
 	# This historical A/B oracle covers the original six singleton Bolt/Heavy/
@@ -128,29 +128,30 @@ func _test_readable_runtime_projectile_travel_at_120_hz() -> void:
 		var lifetime_ms := int(definition.get("lifetime_ms", 0))
 		equal([speed, lifetime_ms, int(definition.radius), int(definition.damage)], expected, ability_id + " compiles its exact authored speed, lifetime, collision radius and damage")
 		var baseline := _sample_projectile_travel(definition, int(before[0]), int(before[1]))
-		var candidate := _sample_projectile_travel(definition, speed, lifetime_ms)
+		var candidate := _sample_projectile_travel(definition, speed, lifetime_ms, int(definition.get("range", -1)))
 		check(bool(candidate["expired"]), ability_id + " expires on the authoritative projectile path")
 		if family == "heavy":
 			check(int(candidate.reaction_ticks) > int(baseline.reaction_ticks), "the stronger Heavy gives strictly more time to react across300 world units")
 		elif family == "rapid":
 			check(int(candidate.reaction_ticks) < int(baseline.reaction_ticks), "the lighter precision Rapid visibly reaches300 world units sooner")
 		else:
-			equal(int(candidate.reaction_ticks), 100, "every Bolt has the same middle-speed300px travel time at120Hz")
+			equal(int(candidate.reaction_ticks), 29, "every1260px/s Bolt crosses300px in29 full120Hz travel ticks")
 		check(absi(int(candidate["travel"]) - int(baseline["travel"])) <= 5000, ability_id + " preserves terminal reach within five world units")
 	equal(projectile_count, 18, "all six Bolts, six Heavies, and six Rapids are independently checked")
 
 
-func _test_inverse_launch_strength_and_family_tradeoffs() -> void:
+func _test_launch_speed_and_family_tradeoffs() -> void:
 	var catalog := _catalog()
 	for element: String in AbilityCatalog.DISPLAY_ELEMENT_IDS:
 		var bolt := CombatTuning.cast_definition(int(catalog.ability(catalog.spell_id_at(element, "bolt")).wire_id))
 		var heavy := CombatTuning.cast_definition(int(catalog.ability(catalog.spell_id_at(element, "heavy")).wire_id))
 		var rapid := CombatTuning.cast_definition(int(catalog.ability(catalog.spell_id_at(element, "rapid")).wire_id))
 		var spray := CombatTuning.cast_definition(int(catalog.ability(catalog.spell_id_at(element, "spray")).wire_id))
-		for definition: Dictionary in [rapid, bolt, heavy]:
-			# This is authored launch tuning, not a per-tick 1/current-speed buff.
-			# Reaction strength is conserved chemistry stock, separate from HP damage.
-			equal(int(definition.speed) * (int(definition.reaction_strength) + 5), 3_600_000, "all18 effective travelling spells obey speed_px_s=3600/(strength+5)")
+		# Faster travelling families keep their prior finite chemistry strength;
+		# launch speed no longer follows the superseded inverse-strength formula.
+		equal([int(rapid.speed), int(rapid.reaction_strength)], [1_440_000, 1], "Rapid changes launch speed without increasing strength")
+		equal([int(bolt.speed), int(bolt.reaction_strength)], [1_260_000, 5], "Bolt changes launch speed without increasing strength")
+		equal([int(heavy.speed), int(heavy.reaction_strength)], [180_000, 15], "Heavy retains its deliberate slow strong commitment")
 		check(int(rapid.speed) > int(bolt.speed) and int(bolt.speed) > int(heavy.speed), "lighter families are strictly faster for every element")
 		check(int(rapid.radius) * 3 <= int(bolt.radius) and int(heavy.radius) >= int(bolt.radius) + 12_000, "all families have meaningful actual collider-size separation")
 		check(int(rapid.damage) < int(bolt.damage) and int(bolt.damage) < int(heavy.damage), "speed advantage trades away direct hit damage")
@@ -168,10 +169,13 @@ func _test_inverse_launch_strength_and_family_tradeoffs() -> void:
 		equal(int(spray.radius), 10_000, "Spray ray-cover probe is independently bounded")
 
 
-func _sample_projectile_travel(definition: Dictionary, speed: int, lifetime_ms: int) -> Dictionary:
+func _sample_projectile_travel(definition: Dictionary, speed: int, lifetime_ms: int, remaining_distance: int = -1) -> Dictionary:
 	var config := SimConfig.new(120)
 	var collision := CollisionWorld.new(3_000_000, 1_200_000)
 	var projectile := ProjectileState.new(9900, 1, 1, int(definition.get("wire_id", 0)), int(definition.get("element_wire_id", 0)), Vector2i(500_000, 600_000), Vector2i(speed, 0), int(definition.get("radius", 0)), int(definition.get("damage", 0)), config.milliseconds_to_ticks(lifetime_ms))
+	# Passive travel fixture only: historical rows retain their lifetime-only
+	# envelope; current rows also exercise the ordinary finite distance consumer.
+	projectile.remaining_distance = remaining_distance
 	var active: Array[ProjectileState] = [projectile]
 	var no_players: Array[PlayerState] = []
 	var events: Array[Dictionary] = []

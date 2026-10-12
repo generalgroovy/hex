@@ -195,10 +195,13 @@ static func _spray_contact_visible(pulse: Dictionary, witness: Dictionary, colli
 
 
 static func _eligible(shot: ProjectileState, target: PlayerState, config: SimConfig) -> bool:
-	return target.entity_id != shot.owner_id and target.team_id != shot.team_id \
-		and target.health > 0 and target.spawn_protection_ticks == 0 \
+	return _hostile_target(shot,target) \
 		and not MovementSystem.is_combat_intangible(target, config) \
 		and not MovementSystem.avoids_ordinary_projectiles(target)
+
+
+static func _hostile_target(shot: ProjectileState, target: PlayerState) -> bool:
+	return target.entity_id!=shot.owner_id and target.team_id!=shot.team_id and target.health>0 and target.spawn_protection_ticks==0
 
 
 static func _ordered(a: Dictionary, b: Dictionary) -> bool:
@@ -388,6 +391,13 @@ static func advance(world: SimWorld) -> void:
 			if bool(outcome.get("accepted", false)):
 				_record_field_clash(world, shot, int(field.wire), int(event.second), interval.point, outcome, bool(interval.get("quantization_outside", false)))
 				if int(outcome.first.post_strength) == 0: ended[shot.entity_id] = true
+			continue
+		if event.kind == "avoid":
+			# The same ordered swept witness as a hit, after earlier walls, fields,
+			# clashes and targets. Observation cannot move or consume this shot.
+			var target := world.player(int(event.second))
+			if target!=null and _hostile_target(shot,target) and not _eligible(shot,target,world.config):
+				target.last_event = "evaded_projectile"
 			continue
 		var center := _plan_point(plan, float(event.fraction))
 		shot.position_x = center.x
@@ -596,12 +606,12 @@ static func _enqueue_path(plan: Dictionary, world: SimWorld, queue: Workset.Orde
 		queue.append(event)
 	var shot: ProjectileState = plan.shot
 	for actor: PlayerState in world.players:
-		if not _eligible(shot, actor, world.config): continue
+		if not _hostile_target(shot,actor): continue
 		var local := ContinuousContact.circle_toi(plan.start, plan.finish, Vector2i(actor.position_x, actor.position_y), shot.radius + actor.radius)
 		var fraction := float(plan.time) + (1.0 - float(plan.time)) * local
 		if local < 0 or fraction > float(plan.terminal_fraction): continue
 		var event := common.duplicate()
-		event.merge({"kind": "actor", "fraction": fraction, "priority": 2, "second": actor.entity_id})
+		event.merge({"kind": "actor" if _eligible(shot,actor,world.config) else "avoid", "fraction": fraction, "priority": 2, "second": actor.entity_id})
 		queue.append(event)
 	for field: Dictionary in _field_contacts(plan, world, prepared_fields):
 		var fraction := float(plan.time) + (1.0 - float(plan.time)) * float(field.fraction)

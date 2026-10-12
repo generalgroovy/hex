@@ -3,6 +3,16 @@ extends RefCounted
 ## Authored rival identities. Wire allocation belongs to MixtureCatalog.
 
 const Mixtures = preload("res://src/content/mixture_catalog.gd")
+const TELLS := {
+	"bolt":"Bolt line: sidestep its committed aim, then punish the pause.",
+	"heavy":"Heavy shell: leave the facing line and its splash; cover stops the flight.",
+	"rapid":"Three short Rapid bursts: read each new facing line and cross during the gaps.",
+	"spray":"Close Spray fan: leave the cone or put solid cover between you.",
+	"mantle":"Contact Mantle: keep space from the approach and avoid the paid trail.",
+	"fuse":"Ground Fuse: leave the committed landing point before its delayed blast.",
+	"split":"Split pattern: read the parent line, then weave between its finite branches.",
+	"rebound":"Rebound: watch the wall-facing bank line as well as the direct lane.",
+}
 const ASSIGNMENTS := [
 	["oh_tipi", 6, "fuse"], ["s_wayne", 48, "rebound"],
 	["red_baron", 6, "heavy"], ["grace_reava", 28, "mantle"],
@@ -46,7 +56,7 @@ static func definition(champion_id: String, champions: ChampionCatalog, abilitie
 		var spell := abilities.ability(spell_id)
 		var mixture := Mixtures.definition(mask)
 		if spell.is_empty() or mixture.is_empty() or not CombatTuning.is_runtime_wire_id(wire): return {}
-		var warning := "Delayed Fuse: leave its marked blast before detonation." if family == "fuse" else "Read the facing line, move during the windup, then punish the pause."
+		var warning := String(TELLS.get(family, ""))
 		return {"id": champion_id, "champion_id": champion_id,
 			"champion_wire_id": int(champion.wire_id), "name": String(champion.display_name),
 			"signature_wire": wire, "signature_id": spell_id,

@@ -1,0 +1,66 @@
+{
+  "schema": "hex-unapplied-t7-review-v1",
+  "status": "source-reviewed-unapplied",
+  "qualifying_runtime": "p60-1e084a50a029",
+  "patches": [
+    {
+      "path": "sim-world/sim-world-cumulative.patch",
+      "bytes": 7213,
+      "sha256": "9c141ad04a72efb5f5b236e35d0adab2bbd2793a449f138e28ff31db0b2dc3a9"
+    },
+    {
+      "path": "profiler/profiler-completed-stages.patch",
+      "bytes": 43586,
+      "sha256": "4a34219a656e9bc380e6fa9274bc904afd2df3df38c3fede6820deab20523122"
+    },
+    {
+      "path": "gameplay-tests.patch",
+      "bytes": 21833,
+      "sha256": "b74a5db3879f0b8044c7ca8982b26da1178dbcce9ee0414940f97c02fef46d18"
+    }
+  ],
+  "canonical_guards": [
+    {
+      "path": "src/sim/core/sim_world.gd",
+      "expected_sha256": "9c10e37bed4261e4f44a85c5c31017550246a266450e8722dda12c32bb37aee6",
+      "actual_sha256": "9c10e37bed4261e4f44a85c5c31017550246a266450e8722dda12c32bb37aee6"
+    },
+    {
+      "path": "scripts/profile-gameplay.gd",
+      "expected_sha256": "fcd56f52e0b0926527f9f57d5bca347624570a0743579b9b7944802a95f35af0",
+      "actual_sha256": "fcd56f52e0b0926527f9f57d5bca347624570a0743579b9b7944802a95f35af0"
+    },
+    {
+      "path": "scripts/profile-gameplay.ps1",
+      "expected_sha256": "028cb60d88163d7084dad53ca3b47ee0845c01ffece63094c34d82d0c4c30baa",
+      "actual_sha256": "028cb60d88163d7084dad53ca3b47ee0845c01ffece63094c34d82d0c4c30baa"
+    },
+    {
+      "path": "scripts/test-gameplay-profile.ps1",
+      "expected_sha256": "9e9864b56d4dce504616e5ac9384432ad495a79025c3e4949cb5ea9a57e43379",
+      "actual_sha256": "9e9864b56d4dce504616e5ac9384432ad495a79025c3e4949cb5ea9a57e43379"
+    }
+  ],
+  "new_test_canonical_exists": false,
+  "technical_review": {
+    "source": "Exact successful-only commit and eight failed exits reviewed; string identity, fixed nine detached lanes, no new clock calls.",
+    "profiler": "Explicit full-only capture; raw count/time/boundary coverage independently checked; guarded normal/failure/finalize ending; no whole-process equality claim.",
+    "tests": "Bounded real paid off/on authority and wire comparison, actual0/1/8 catch-up, legacy optional stage, failed prefix, reset/world/JSON identity and early-spike fixtures source-reviewed."
+  },
+  "peer_reviews": [
+    "gameplay approved SimWorld and profiler draft",
+    "experience approved SimWorld and ran isolated consumer checks"
+  ],
+  "consumer_checks": {
+    "godot_parse_or_native": "not run; requires coordinated application of SimWorld and gameplay-test drafts",
+    "portable_assertions": 8,
+    "profile_assertions": 133,
+    "observation_assertions": 35,
+    "total_assertions": 239,
+    "arming_assertions": 63,
+    "kind": "isolated pure PowerShell; no engine"
+  },
+  "engine_validation": "NOT RUN; no Godot parse, execution, native measurement, performance acceptance or current runtime change",
+  "application": "Root decision only after current Full/package qualification and sufficient remaining check budget. Proposed suite ID completed-step-profile is not registered.",
+  "cost_scope": "Completed-stage sums omit cumulative commit and snapshot bookkeeping and other Bootstrap work. Enabled observer overhead must be measured; no FPS improvement is claimed."
+}

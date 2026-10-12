@@ -14,19 +14,165 @@ class MissingWorldOwner extends Node:
 	var world: SimWorld
 
 
+class GuideInputHarness extends "res://src/app/bootstrap.gd":
+	func _ready() -> void:
+		set_process(false)
+		set_process_unhandled_input(true)
+	func _draw() -> void:
+		pass
+
+
 func run() -> int:
 	abilities = AbilityCatalog.new()
 	check(abilities.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "testing tools use live abilities")
 	_test_controller_lifecycle()
+	_test_nonmodal_guide_pointer_handoff()
 	_test_range()
 	_test_developer()
 	_test_panel()
 	_test_panel_feedback()
+	_test_range_scenario_controls()
 	_test_intro_layout()
 	_test_challenge_layout()
 	_test_introduction()
 	_test_paid_intro_events()
+	_test_tactical_gates()
 	return finish("spell-testing-tools")
+
+
+func _test_nonmodal_guide_pointer_handoff() -> void:
+	InputRouter.ensure_input_map()
+	var saved_events := {}
+	for action: StringName in PlayerPreferences.DEFAULT_MOUSE_BINDINGS:
+		saved_events[action]=InputMap.action_get_events(action).duplicate()
+	var previous_mouse_mode := Input.mouse_mode
+	for intent: String in ["skip","details"]:
+		for remapped: bool in [false,true]:
+			var viewport := SubViewport.new()
+			viewport.size=Vector2i(960,540) if intent=="details" else Vector2i(1280,720)
+			viewport.render_target_update_mode=SubViewport.UPDATE_DISABLED
+			viewport.handle_input_locally=true
+			(Engine.get_main_loop() as SceneTree).root.add_child(viewport)
+			var game := GuideInputHarness.new()
+			game.preferences_persistence_allowed=false
+			game.preference_overrides_are_transient=true
+			game.world=_world()
+			game.world.player().flux_recovery_per_second=0
+			game.player_preferences=PlayerPreferences.new()
+			game.player_preferences.ui_text_percent=200 if intent=="details" else 100
+			game.controls_editor=ControlBindingEditor.new()
+			game.spell_loom_editor=SpellLoomEditor.new()
+			game.player_compendium=game.PlayerCompendiumScript.new()
+			game.character_selection_grid=game.CharacterSelectionGridScript.new()
+			game.input_router=InputRouter.new()
+			game.element_expansion.game=game
+			game.local_navigation.configure(game)
+			viewport.add_child(game)
+			viewport.notify_mouse_entered()
+			var binding: StringName=&"spell_1" if remapped else &"punch"
+			if remapped:
+				game.player_preferences.mouse_bindings[&"punch"]=0
+				game.player_preferences.mouse_bindings[&"spell_1"]=MOUSE_BUTTON_LEFT
+			check(game.input_router.configure_mouse_bindings(game.player_preferences.mouse_bindings),"guide handoff uses a valid current mouse map")
+			check(game.element_expansion.guide.start(game.world),"pointer route begins with actual optional guidance")
+			check(not game._gameplay_input_blocked(),"guide alone is nonmodal before the click")
+			var logical: Vector2=Vector2(viewport.size)/game._ui_scale()
+			var box: Rect2=game.element_expansion.guide.skip_rect(logical,ThemeDB.fallback_font) if intent=="skip" else game.element_expansion.guide.geometry(logical,ThemeDB.fallback_font).details
+			var click := InputEventMouseButton.new()
+			click.button_index=MOUSE_BUTTON_LEFT
+			click.pressed=true
+			click.position=box.get_center()*game._ui_scale()
+			var before := game.world.state_hash()
+			Input.parse_input_event(click)
+			Input.flush_buffered_events()
+			viewport.push_input(click,true)
+			check(viewport.is_input_handled(),"actual inherited input consumes guide "+intent)
+			equal(game.world.state_hash(),before,"guide click cannot itself mutate gameplay authority")
+			check(game.input_router.quarantined_actions.has(binding),"consumed guide click quarantines its live physical binding")
+			equal(game.controls_input_guard_frames,2,"guide click uses the existing two-frame handoff")
+			equal(game.element_expansion.guide.active,intent!="skip","Skip and Details retain their distinct guide intent")
+			if intent=="details": check(game.element_expansion.guide.detail_page,"compact pointer opens the existing explanation")
+			var actor: PlayerState=game.world.player()
+			var initial_flux := actor.flux
+			for sample: int in 6:
+				var command: SimCommand=game._sample_gameplay_command(game.world.tick,Vector2.ZERO,Vector2.RIGHT,game._gameplay_input_blocked())
+				check(not command.has_pressed(SimCommand.PRESSED_SPELL_1),"held UI pointer never becomes a spell during or after guard")
+				check(not game.input_router._paid_action_down(binding),"held UI pointer remains quarantined after guard")
+				check(game.world.step([command]),"ordinary paid world accepts neutral UI handoff commands")
+				game.controls_input_guard_frames=maxi(0,game.controls_input_guard_frames-1)
+			equal(actor.flux,initial_flux,"holding a consumed guide pointer spends no Flux")
+			equal(int(game.world.hex_court.metrics.matter_paid),0,"holding guide controls admits no paid source")
+			click=click.duplicate()
+			click.pressed=false
+			Input.parse_input_event(click); Input.flush_buffered_events(); viewport.push_input(click,true)
+			var release: SimCommand=game._sample_gameplay_command(game.world.tick,Vector2.ZERO,Vector2.RIGHT,false)
+			check(not release.has_pressed(SimCommand.PRESSED_SPELL_1),"release cannot manufacture a spell")
+			check(game.world.step([release]),"release advances through ordinary world")
+			check(not game.input_router.quarantined_actions.has(binding),"actual release rearms the physical binding")
+			click=click.duplicate()
+			click.position=Vector2(viewport.size.x-8,8)
+			click.pressed=true
+			Input.parse_input_event(click); Input.flush_buffered_events(); viewport.push_input(click,true)
+			var fresh: SimCommand=game._sample_gameplay_command(game.world.tick,Vector2.ZERO,Vector2.RIGHT,false)
+			check(game.input_router._paid_action_down(binding),"fresh world click is available normally")
+			equal(fresh.has_pressed(SimCommand.PRESSED_SPELL_1),remapped,"only a live remapped spell creates a spell edge; default Punch remains dormant")
+			check(game.world.step([fresh]),"fresh world click uses the ordinary paid command path")
+			if remapped:
+				equal(initial_flux-actor.flux,int(CombatTuning.cast_definition_view(actor.spell_wire_id(1)).flux_cost),"first deliberate fresh spell pays exactly once")
+				check(actor.pending_cast_wire_id==actor.spell_wire_id(1),"fresh paid admission owns the configured spell")
+			else: equal(actor.flux,initial_flux,"dormant Punch binding invents no combat authority")
+			click=click.duplicate()
+			click.pressed=false
+			Input.parse_input_event(click); Input.flush_buffered_events(); viewport.push_input(click,true)
+			game.world=null
+			viewport.free()
+	for action: StringName in saved_events:
+		Input.action_release(action)
+		InputMap.action_erase_events(action)
+		for event: InputEvent in saved_events[action]: InputMap.action_add_event(action,event)
+	Input.mouse_mode=previous_mouse_mode
+
+func _test_tactical_gates() -> void:
+	var world := _world()
+	var guide := Intro.new()
+	world.player().movement_chain_count=2
+	check(guide.start_tactical(world),"advanced lessons are explicitly optional")
+	world.tick+=1
+	check(not guide.observe(world,[],{}),"a pre-existing chain is not a newly executed lesson")
+	world.player().movement_chain_count=3
+	world.tick+=1
+	check(guide.observe(world,[],{}),"a newly admitted linked action advances the chain gate")
+	var wire := Mixtures.wire_for(63,"fuse")
+	world.tick+=1
+	check(not guide.observe(world,[{"type":"cast_started","entity_id":1,"wire_id":wire}],{}),"casting a mixed spell without consequence is insufficient")
+	world.tick+=1
+	var before := world.state_hash()
+	check(guide.observe(world,[{"type":"projectile_hit","owner_id":1,"target_id":2,"source_wire_id":wire,"damage":500}],{}),"paid mixed damaging contact advances consequence gate")
+	equal(world.state_hash(),before,"tactical observation cannot grant damage or spend resources")
+	world.tick+=1
+	world.player().last_event="evaded_projectile"
+	check(not guide.observe(world,[],{"challenge":false}),"safe Range avoidance cannot replace the rival counter lesson")
+	world.player().last_event="walk"
+	world.tick+=1
+	guide.observe(world,[],{"challenge":true})
+	world.player().last_event="evaded_projectile"
+	world.tick+=1
+	check(guide.observe(world,[],{"challenge":true}),"actual fresh rival avoidance advances the counter gate")
+	world.tick+=1
+	check(not guide.observe(world,[],{"earned":true,"saved":false}),"unsaved reward remains an explicit recovery task")
+	world.tick+=1
+	check(guide.observe(world,[],{"earned":true,"saved":true}),"clean earned saved receipt completes lessons")
+	check(guide.complete and not guide.active,"completion relinquishes the teaching overlay")
+	# Isolate the observer's real ground-event schema. Product creation/payment
+	# is exercised by Hex chemistry suites, rather than claimed by this fixture.
+	check(guide.start_tactical(world),"ground observer restarts explicitly")
+	guide.step=1
+	world.hex_court.products[99001]={"owner":1,"recipe_wire_id":HexRecipePolicy.recipe_wire_for_mask(6)}
+	world.tick+=1
+	check(not guide.observe(world,[{"type":"hex_pressure","owner_id":2,"entity_id":2,"product_id":99001,"amount":75}],{}),"another owner's mixed product cannot satisfy local consequence")
+	world.tick+=1
+	check(guide.observe(world,[{"type":"hex_pressure","owner_id":1,"entity_id":2,"product_id":99001,"amount":75}],{}),"owned mixed product amount/entity_id counts without inventing a single source spell")
+	world.hex_court.products.erase(99001)
 
 
 func _world() -> SimWorld:
@@ -152,31 +298,32 @@ func _test_panel() -> void:
 			for family: String in Mixtures.FAMILIES:
 				var source := CombatTuning.cast_definition(Mixtures.wire_for(mask, family))
 				var teaching := TestingPanelScript.spell_paragraphs(mixture, family)
-				equal(teaching.size(), 5, "every selected delivery shows ingredients, payment/timing, hit status, field and counter")
 				var ingredients := PackedStringArray()
 				for element: String in mixture.elements: ingredients.append(AbilityCatalog.element_display_name(element))
-				equal(teaching[0], "INGREDIENTS: " + " + ".join(ingredients), "Range retains every actual canonical ingredient display name")
-				equal(teaching[1], "%d Flux | %.2fs prepare | %.2fs cooldown" % [int(source.flux_cost) / 1000, float(source.startup_ms) / 1000.0, float(source.cooldown_ms) / 1000.0], "Range quotes compiled cost/timers with fixed-unit and millisecond conversions")
-				for channel: int in SpellStatusPolicy.BITS.size():
-					equal(teaching[2].contains(SpellStatusPolicy.NAMES[channel]), (mask & SpellStatusPolicy.BITS[channel]) != 0, "hit status names match only actual selected ingredients")
-				check(teaching[2].begins_with("ON DAMAGING HIT:"), "hit statuses are explicitly separate from terrain field formation")
-				equal(teaching.slice(3), paragraphs, "complete source field purpose and counter survive extra spell teaching")
+				check(teaching.has("Ingredients: "+" + ".join(ingredients)), "Range retains every canonical ingredient")
+				equal(teaching[0], ("Two matching paid sources: " if (mask & (mask-1))==0 else "Payload field: ")+String(mixture.purpose), "field trigger and purpose precede the ingredient list")
+				equal(teaching[1], "Counter: "+String(mixture.counter), "complete counter stays prominent")
+				var config := SimConfig.new()
+				check(teaching.has("Base: %.2fs prepare / %.2fs cooldown." % [float(config.milliseconds_to_ticks(int(source.startup_ms)))/config.tick_rate,float(config.milliseconds_to_ticks(int(source.cooldown_ms)))/config.tick_rate]), "Range quotes actual quantized base timers")
+				var statuses := preload("res://src/content/spell_status_catalog.gd").rows_for_mask(mask)
+				for status: Dictionary in statuses:
+					check(teaching.has("On damaging hit: "+String(status.summary)+". "+String(status.detail)), "every actual hit status has separate accurate detail")
 				var font := ThemeDB.fallback_font
 				var right: Rect2 = geometry.right
-				var y := right.position.y + 74
-				var last_bottom := right.position.y + 29 + right.size.y
-				var footer_top := (geometry.panel as Rect2).end.y - 102 - font.get_ascent(12)
+				var first_y := right.position.y+74
+				var count := maxi(1,floori(((geometry.panel as Rect2).end.y-136-first_y)/18))
+				var lines: Array[String] = []
 				for paragraph: String in teaching:
-					var wrapped := TestingPanelScript._wrap(paragraph, font, 12, right.size.x - 8)
-					equal(" ".join(wrapped), paragraph, "Range wrapping never drops metadata or a counter")
-					for line: String in wrapped:
-						var extent := font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 12)
-						var bounds := Rect2(Vector2(right.position.x, y - font.get_ascent(12)), extent)
-						check(extent.x <= right.size.x - 8 and (geometry.panel as Rect2).encloses(bounds), "all504 actual metadata glyphs fit the readable12px column")
-						check(bounds.position.y >= last_bottom and bounds.end.y <= footer_top - 4, "all504 explanations clear delivery controls, other lines and exact footer glyph bounds at both sizes")
-						last_bottom = bounds.end.y
-						y += 18
-					y += 4
+					var wrapped := TestingPanelScript._wrap(paragraph,font,12,right.size.x-8)
+					equal(" ".join(wrapped),paragraph,"pagination preserves every word")
+					lines.append_array(wrapped)
+				for index: int in lines.size():
+					var extent := font.get_string_size(lines[index],HORIZONTAL_ALIGNMENT_LEFT,-1,12)
+					var y := first_y+(index%count)*18
+					var bounds := Rect2(Vector2(right.position.x,y-font.get_ascent(12)),extent)
+					check(extent.x<=right.size.x-8 and (geometry.panel as Rect2).encloses(bounds),"all504 metadata glyphs fit on their accessible detail pages")
+					check(bounds.end.y<(geometry.details_previous as Rect2).position.y,"every detail page clears its paging controls")
+
 		for index: int in Mixtures.FAMILIES.size():
 			var rect := TestingPanelScript.family_rect(index, geometry.right)
 			check((geometry.panel as Rect2).encloses(rect), "all eight delivery targets fit their four-column two-row block")
@@ -204,6 +351,16 @@ func _test_panel() -> void:
 	var dev := Dev.new()
 	dev.enter(true, true)
 	panel.open_developer(dev.view())
+	for id: String in ["record_replay","export_replay"]:
+		var index := -1
+		for candidate: int in panel._rows.size():
+			if panel._rows[candidate].id==id: index=candidate; break
+		check(index>=0,"diagnostic recording action appears in Developer rows")
+		panel.selected_index=index
+		panel.pane=0
+		equal(panel.handle_input(_key(KEY_ENTER),Vector2(960,540)),{"action":id},"real Developer row activation returns one diagnostic intent")
+		check(not bool(panel._rows[index].toggle),"diagnostic record/export cannot become continuous cheat toggles")
+
 	var click := InputEventMouseButton.new()
 	click.pressed = true
 	click.button_index = MOUSE_BUTTON_LEFT
@@ -212,6 +369,84 @@ func _test_panel() -> void:
 	var viewport := Vector2(960, 540)
 	var intro := Intro.new()
 	check(Rect2(Vector2.ZERO, viewport).encloses(intro.skip_rect(viewport, ThemeDB.fallback_font)), "nonmodal Skip stays on screen")
+
+
+func _test_range_scenario_controls() -> void:
+	var panel := TestingPanelScript.new()
+	check(panel.open_range(abilities),"scenario controls live inside existing Range")
+	var scenario := {"active":true,"moving":false,"firing":false,"size":"Medium","elapsed_ticks":120,"statistics":{"player_casts":2,"player_flux":4000,"target_casts":0,"target_flux":0,"damage_to_target":3000,"damage_to_player":0,"direct_damage":3000,"ground_damage":0,"status_damage":0},"scope":"Current paid session only."}
+	panel.set_range_scenario(scenario)
+	scenario.moving=true
+	check(not panel._range_scenario.moving,"scenario view cannot be changed through caller alias")
+	var viewport := Vector2(480,270)
+	panel.readable=true
+	panel.handle_input(_key(KEY_T),viewport)
+	check(panel.range_setup_open,"keyboard opens Setup without a new world or menu")
+	for index: int in 4:
+		panel.range_setup_index=index
+		equal(panel.handle_input(_key(KEY_ENTER),viewport),{"action":String(TestingPanelScript.ScenarioPanel.ACTIONS[index])},"each setup control dispatches one validated-owner intent")
+	var back := InputEventJoypadButton.new()
+	back.pressed=true;back.button_index=JOY_BUTTON_B
+	panel.handle_input(back,viewport)
+	check(not panel.range_setup_open and panel.is_open,"Back returns to Range, preserving the selected mixture")
+	for size: Vector2 in [Vector2(480,270),Vector2(960,540)]:
+		var geo := TestingPanelScript.ScenarioPanel.geometry(size)
+		for key: String in ["body","back","previous","next"]: check((geo.panel as Rect2).encloses(geo[key]),"setup reading and navigation fit at200percent")
+		var labels := TestingPanelScript.ScenarioPanel.labels(panel._range_scenario)
+		panel.range_setup_open=true
+		for index: int in 4:
+			var rect: Rect2=geo.controls[index]
+			check((geo.panel as Rect2).encloses(rect),"every pointer target stays in visible panel")
+			check(ThemeDB.fallback_font.get_string_size(labels[index],HORIZONTAL_ALIGNMENT_LEFT,-1,13).x<=rect.size.x-16,"complete control label fits actual readable font")
+			var click := InputEventMouseButton.new()
+			click.button_index=MOUSE_BUTTON_LEFT;click.pressed=true;click.position=rect.get_center()
+			equal(panel.handle_input(click,size),{"action":String(TestingPanelScript.ScenarioPanel.ACTIONS[index])},"painted target and emitted intent use the same geometry")
+		for text: String in TestingPanelScript.ScenarioPanel.paragraphs(panel._range_scenario):
+			var wrapped := panel._wrap(text,ThemeDB.fallback_font,14,geo.body.size.x)
+			equal(" ".join(wrapped),text,"statistics pagination preserves complete evidence scope")
+		panel.detail_page=0
+		panel.handle_input(_key(KEY_PERIOD),size)
+		equal(panel.detail_page,1,"physical-key details navigation reaches every statistics paragraph")
+	# Every compact-only browsing control is reached through its drawn More target.
+	panel.range_setup_index=0
+	var compact := TestingPanelScript.ScenarioPanel.geometry(viewport)
+	var more := InputEventMouseButton.new()
+	more.button_index=MOUSE_BUTTON_LEFT;more.pressed=true;more.position=compact.more.get_center()
+	panel.handle_input(more,viewport)
+	equal(panel.range_setup_index,4,"More exposes existing refill/reset tools")
+	panel.handle_input(more,viewport)
+	equal(panel.range_setup_index,8,"More exposes guide and delivery controls")
+	var delivery_before: int=panel.family_index
+	more.position=compact.controls[3].get_center()
+	equal(panel.handle_input(more,viewport),{},"delivery selection never issues a world mutation")
+	equal(panel.family_index,posmod(delivery_before+1,8),"actual visible Setup target changes the selected delivery")
+	more.position=compact.more.get_center()
+	panel.handle_input(more,viewport)
+	equal(panel.range_setup_index,12,"More exposes both mixture controls")
+	var mixture_before: int=panel.selected_index
+	more.position=compact.controls[1].get_center()
+	panel.handle_input(more,viewport)
+	equal(panel.selected_index,posmod(mixture_before+1,panel._rows.size()),"last Setup page retains pointer mixture selection")
+	panel.range_setup_open=false
+	panel.pane=0;panel.tool_index=0
+	panel.handle_input(_key(KEY_TAB),viewport)
+	panel.handle_input(_key(KEY_TAB),viewport)
+	equal(panel.tool_index,2,"entering the compact footer focuses the visible Equip action")
+	panel.handle_input(_key(KEY_DOWN),viewport)
+	equal(panel.tool_index,3,"keyboard focuses the drawn Tools action")
+	equal(panel.handle_input(_key(KEY_ENTER),viewport),{},"visible Tools activation cannot emit a hidden refill intent")
+	check(panel.range_setup_open,"keyboard Tools opens the same Setup as pointer")
+	panel.handle_input(back,viewport)
+	var down := InputEventJoypadButton.new()
+	down.pressed=true;down.button_index=JOY_BUTTON_DPAD_DOWN
+	for expected: int in [4,2,3]:
+		panel.handle_input(down,viewport)
+		equal(panel.tool_index,expected,"controller footer wraps only visible Equip/Tools/Close")
+	var accept := InputEventJoypadButton.new()
+	accept.pressed=true;accept.button_index=JOY_BUTTON_A
+	equal(panel.handle_input(accept,viewport),{},"controller Tools dispatch cannot spend a refill tool")
+	check(panel.range_setup_open,"controller Tools opens the same Setup")
+	check(not panel._range_scenario.moving and not panel._range_scenario.firing,"UI intents do not optimistically mutate authoritative scenario state")
 
 
 func _test_panel_feedback() -> void:
@@ -310,7 +545,7 @@ func _test_challenge_layout() -> void:
 			check(box.encloses(bounds), "every full signature title fits its actual16px font")
 		var longest_notice: Rect2 = notices.notice_layout(viewport, "Practice feedback. ".repeat(40)).rect
 		check(not box.intersects(longest_notice) and box.position.y >= longest_notice.end.y + 8, "bounded three-line notices cannot collide with challenge instructions")
-		for footer: String in ["Esc / Back: return · Shift+F6: rivals · Shift+F5: tools", "DEV PRACTICE · Esc: return · Shift+F5: tools"]:
+		for footer: String in ["Esc / Back: return Ãƒâ€šÃ‚Â· Shift+F6: rivals Ãƒâ€šÃ‚Â· Shift+F5: tools", "DEV PRACTICE Ãƒâ€šÃ‚Â· Esc: return Ãƒâ€šÃ‚Â· Shift+F5: tools"]:
 			var bounds := Rect2(box.position + Vector2(14, 76 - font.get_ascent(11)), font.get_string_size(footer, HORIZONTAL_ALIGNMENT_LEFT, -1, 11))
 			check(box.encloses(bounds), "return, next rival and developer keys remain fully readable")
 

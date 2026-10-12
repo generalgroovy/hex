@@ -4,10 +4,8 @@ extends RefCounted
 
 const Trial = preload("res://src/app/solo_duel_trial.gd")
 const Rival = preload("res://src/app/solo_duel_rival.gd")
-const WINDUP_TICKS := 96
-const PRESSURE_TICKS := 84
-const PAUSE_TICKS := 180
-const CYCLE_TICKS := WINDUP_TICKS + PRESSURE_TICKS + PAUSE_TICKS
+const Policy = preload("res://src/app/signature_rival_policy.gd")
+const DamageEvent = preload("res://src/sim/combat/combat_damage_event.gd")
 
 var trial := Trial.new()
 var definition: Dictionary = {}
@@ -55,15 +53,7 @@ func reset() -> void:
 
 func status(world_tick: int) -> Dictionary:
 	if definition.is_empty(): return {}
-	var elapsed := maxi(0, world_tick - trial.start_tick)
-	if elapsed < Rival.READY_END:
-		return {"phase": "ready", "cue": "Read the signature, then defeat the rival to learn it.", "remaining_ticks": Rival.READY_END - elapsed, "telegraph": "", "break": false}
-	var phase_tick := posmod(elapsed - Rival.READY_END, CYCLE_TICKS)
-	if phase_tick < WINDUP_TICKS:
-		return {"phase": "windup", "cue": "Contact Mantle: keep space while the rival approaches." if String(definition.family) == "mantle" else String(definition.tell), "remaining_ticks": WINDUP_TICKS - phase_tick, "telegraph": String(definition.family), "break": false}
-	if phase_tick < WINDUP_TICKS + PRESSURE_TICKS:
-		return {"phase": "pressure", "cue": String(definition.spell_name) + " attempt; normal Flux and cooldown checks still apply.", "remaining_ticks": WINDUP_TICKS + PRESSURE_TICKS - phase_tick, "telegraph": String(definition.family), "break": false}
-	return {"phase": "recover", "cue": "No new casts during this pause; existing shots and fields remain dangerous.", "remaining_ticks": CYCLE_TICKS - phase_tick, "telegraph": "", "break": true}
+	return Policy.status(world_tick, trial.start_tick, String(definition.family))
 
 
 func command(world: SimWorld) -> SimCommand:
@@ -78,23 +68,34 @@ func command(world: SimWorld) -> SimCommand:
 	var move := Vector2i.ZERO
 	var held := 0
 	var pressed := 0
-	var elapsed := world.tick - trial.start_tick - Rival.READY_END
-	if elapsed >= 0:
-		var phase_tick := posmod(elapsed, CYCLE_TICKS)
-		if phase_tick == 0:
+	var family := String(definition.family)
+	var current := status(world.tick)
+	var delivery: Dictionary = Policy.PROFILES.get(family, {})
+	if current.is_empty() or delivery.is_empty(): return null
+	var spell := CombatTuning.cast_definition_view(int(definition.signature_wire))
+	var phase := String(current.phase)
+	if phase in ["windup", "pressure"]:
+		var phase_tick := int(current.cycle_tick)
+		var pressure_tick := phase_tick-int(delivery.windup)
+		var position := Vector2i(opponent.position_x, opponent.position_y)
+		var inside := trial.court.has_point(position)
+		var committing := phase_tick >= int(delivery.windup)-Policy.COMMIT_TICKS
+		# Rapid's next line is committed at the start of a full tell-length gap.
+		# Existing finite shots remain dangerous, but no paid shot retargets.
+		var rapid_new_line := family=="rapid" and phase=="pressure" and pressure_tick in [Policy.RAPID_BURST_TICKS,Policy.RAPID_PERIOD_TICKS+Policy.RAPID_BURST_TICKS]
+		if phase_tick <= int(delivery.windup)-Policy.COMMIT_TICKS or rapid_new_line:
 			_locked_target = Vector2i(player.position_x, player.position_y)
-			aim = _locked_target - Vector2i(opponent.position_x, opponent.position_y)
-		var close_mantle := String(definition.family) == "mantle"
-		var separation := Vector2i(player.position_x - opponent.position_x, player.position_y - opponent.position_y)
-		if phase_tick == WINDUP_TICKS and (not close_mantle or separation.length_squared() <= 100000 * 100000):
-			pressed = SimCommand.SPELL_PRESSED_BITS[_signature_slot - 1]
-		if String(definition.family) == "rapid" and phase_tick >= WINDUP_TICKS and phase_tick < WINDUP_TICKS + 60:
-			held = SimCommand.SPELL_HELD_BITS[_signature_slot - 1]
-		if close_mantle and phase_tick < WINDUP_TICKS + PRESSURE_TICKS:
-			move = SimCommand._normalized_direction(separation.x, separation.y) if separation.length_squared() > 38000 * 38000 else Vector2i.ZERO
-		elif phase_tick >= WINDUP_TICKS + 30 and phase_tick < WINDUP_TICKS + PRESSURE_TICKS:
-			move = Rival._movement(opponent, player, trial.court, floori(float(elapsed) / float(CYCLE_TICKS)))
-	var target := _locked_target if String(definition.family) == "fuse" else Vector2i(-1, -1)
+			aim = Policy.committed_aim(position, _locked_target, spell, world.collision) if phase_tick == int(delivery.windup)-Policy.COMMIT_TICKS else _locked_target-position
+		if inside and pressure_tick == 0 and Policy.can_attempt(opponent, player, spell):
+			pressed = SimCommand.SPELL_PRESSED_BITS[_signature_slot-1]
+		if inside and family == "rapid" and phase == "pressure" and posmod(pressure_tick,Policy.RAPID_PERIOD_TICKS) < Policy.RAPID_BURST_TICKS and Policy.can_attempt(opponent, player, spell):
+			held = SimCommand.SPELL_HELD_BITS[_signature_slot-1]
+		# The final facing tell is stationary. Mantle must pursue to demonstrate
+		# actual paid contact; ranged forms may strafe after their startup releases.
+		var can_move := not inside or family == "mantle" or (phase == "windup" and not committing) or (phase == "pressure" and pressure_tick >= maxi(30,world.config.milliseconds_to_ticks(int(spell.startup_ms))+1))
+		if can_move:
+			move = Policy.movement(opponent, player, trial.court, world.collision, family, int(current.cycle_index), phase == "pressure")
+	var target := _locked_target if family == "fuse" else Vector2i(-1, -1)
 	return SimCommand.new(world.tick, opponent.entity_id, move.x, move.y, held, pressed, aim.x, aim.y, target.x, target.y)
 
 
@@ -105,8 +106,8 @@ func observe(world: SimWorld, progression: SignatureProgression, offline: bool, 
 	_last_tick = world.tick
 	var owned_defeat := false
 	for event: Dictionary in world.combat_events:
-		if int(event.get("owner_id", 0)) != 1 or int(event.get("target_id", 0)) != 2: continue
-		if int(event.get("damage", 0)) > 0: _paid_damage = true
+		if int(event.get("owner_id", 0)) != 1 or DamageEvent.target_id(event) != 2: continue
+		if DamageEvent.amount(event) > 0: _paid_damage = true
 		if String(event.get("type", "")) == "champion_defeated": owned_defeat = true
 	if not trial.observe(world): return false
 	if trial.is_finished() and not _reward_checked:

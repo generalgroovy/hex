@@ -9,6 +9,8 @@ var areas: Array[Dictionary] = []
 var districts: Array[Dictionary] = []
 var connections: Array[Dictionary] = []
 var buildings: Array[Dictionary] = []
+var courses: Array[Dictionary] = []
+var _route_cache: Dictionary = {}
 var world_bounds := Rect2()
 var player_position := Vector2.ZERO
 var location_visible := true
@@ -24,6 +26,8 @@ func configure(layout: SanctumCampusLayout) -> bool:
 	districts.clear()
 	connections.clear()
 	buildings.clear()
+	courses.clear()
+	_route_cache.clear()
 	world_bounds = Rect2()
 	last_error = ""
 	if layout == null or layout.content_hash.is_empty() or layout.canvas_size.x <= 0 or layout.canvas_size.y <= 0:
@@ -48,6 +52,7 @@ func configure(layout: SanctumCampusLayout) -> bool:
 	for value: Dictionary in layout.data.get("districts", []): districts.append(value.duplicate(true))
 	for value: Dictionary in layout.data.get("connections", []): connections.append(value.duplicate(true))
 	for value: Dictionary in layout.data.get("buildings", []): buildings.append(value.duplicate(true))
+	for value: Dictionary in layout.data.get("movement_courses",[]): courses.append(value.duplicate(true))
 	world_bounds = bounds
 	return true
 
@@ -120,6 +125,69 @@ func current_location() -> String:
 				label = String(row.get("label", ""))
 		if not label.is_empty(): return label
 	return "Open paths"
+
+
+func district_at(point: Vector2) -> String:
+	var selected := ""
+	var smallest := INF
+	for district: Dictionary in districts:
+		var rect := Rect2(SanctumCampusLayout._parse_bounds(district.get("bounds",[])))
+		if rect.has_point(point) and rect.get_area()<smallest:
+			selected=String(district.id)
+			smallest=rect.get_area()
+	return selected
+
+
+func selected_route() -> Dictionary:
+	# Runner's Vision supplies the optional destination guidance precedent.
+	# These are authored district connections, never an invented collision-safe
+	# polyline through buildings or a fastest-route claim.
+	# https://www.ea.com/amp/news/runners-vision-in-mirrors-edge-catalyst
+	if not is_open or not location_visible or not world_bounds.has_point(player_position): return {}
+	var origin := district_at(player_position)
+	var target := district_at(destination_position(selected_index))
+	if origin.is_empty() or target.is_empty(): return {}
+	var key := origin+"/"+target
+	if _route_cache.has(key): return (_route_cache[key] as Dictionary).duplicate(true)
+	var queue: Array[String]=[origin]
+	var previous := {origin:{}}
+	while not queue.is_empty() and not previous.has(target):
+		var current := queue.pop_front() as String
+		for connection: Dictionary in connections:
+			var other := String(connection.to) if String(connection.from)==current else String(connection.from) if String(connection.to)==current else ""
+			if other.is_empty() or previous.has(other): continue
+			previous[other]={"district":current,"connection":String(connection.id)}
+			queue.append(other)
+	if not previous.has(target): return {}
+	var path: Array[String]=[]
+	var district_ids: Array[String]=[target]
+	var cursor := target
+	while cursor!=origin:
+		path.push_front(String(previous[cursor].connection))
+		cursor=String(previous[cursor].district)
+		district_ids.push_front(cursor)
+	var labels := PackedStringArray()
+	for id: String in district_ids:
+		for row: Dictionary in districts:
+			if String(row.id)==id: labels.append(String(row.label).capitalize());break
+	var result := {"connection_ids":path,"district_ids":district_ids,"description":"Already in the destination district." if path.is_empty() else "District connections: "+" > ".join(labels)+". Choose your local approach around real cover."}
+	_route_cache[key]=result
+	return result.duplicate(true)
+
+
+func selected_context() -> Array[String]:
+	if not message.is_empty(): return [message]
+	var destination := selected_destination()
+	if destination.is_empty(): return []
+	var values: Array[String]=[String(destination.detail)]
+	var id := district_at(destination_position(selected_index))
+	for row: Dictionary in courses:
+		if String(row.get("district",""))==id:
+			values.append("Optional route: "+String(row.get("purpose","")))
+			break
+	var route := selected_route()
+	if not route.is_empty(): values.append(String(route.description))
+	return values
 
 
 func request_travel() -> Dictionary:

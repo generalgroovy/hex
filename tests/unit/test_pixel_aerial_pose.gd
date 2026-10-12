@@ -93,6 +93,7 @@ func run() -> int:
 	invalid_state.float_ticks = 1
 	equal(Aerial.pose_ticks(invalid_state, null), 0.0, "missing configuration fails closed before any time conversion")
 	equal(Aerial.pose_ticks(invalid_state, SimConfig.new(0)), 0.0, "invalid zero-rate configuration cannot divide the flight phase by zero")
+	_test_independent_airborne_hands(presenter,catalog,config)
 	return finish("pixel-aerial-pose")
 
 
@@ -175,3 +176,45 @@ func _test_flight_clock(presenter: RefCounted, id: String, state: PlayerState, c
 		state.air_vertical_velocity = 0 if exit_kind == "grounded" else 200_000
 		var ended: Dictionary = presenter.frame(id, state, 11, config, 0.0)
 		check(ended.get("aerial_pose", "") != "open_flight", "timer/release/exhaustion/landing removes flight on the exact query: " + exit_kind)
+
+
+func _test_independent_airborne_hands(presenter: RefCounted, catalog: ChampionCatalog, config: SimConfig) -> void:
+	var wire := MixtureCatalog.wire_for(2,"heavy")
+	for id: String in ["s_wayne","oh_tipi","red_baron","grace_reava"]:
+		var actor := PlayerState.new(1)
+		check(catalog.apply_to_player(actor,id),"cast posture prototype uses small/middle/large/flier profiles")
+		actor.spawn_protection_ticks=0
+		actor.air_height=42000
+		actor.air_vertical_velocity=250000
+		actor.hop_mode=PlayerState.MovementMode.DOUBLE_JUMP
+		actor.movement_mode=PlayerState.MovementMode.DOUBLE_JUMP
+		if actor.flight_capable:
+			actor.air_floating=true
+			actor.float_ticks=config.milliseconds_to_ticks(actor.float_max_duration_ms)
+		for facing: Vector2i in EightDirectionResolver.FIXED_VECTORS:
+			actor.aim_x=facing.x
+			actor.aim_y=facing.y
+			actor.pending_cast_wire_id=0
+			actor.cast_recovery_ticks=0
+			var plain: Dictionary=presenter.frame(id,actor,0,config,0)
+			for reduced: bool in [false,true]:
+				actor.pending_cast_wire_id=wire
+				actor.pending_cast_ticks=config.milliseconds_to_ticks(int(CombatTuning.cast_definition_view(wire).startup_ms))
+				var before := actor.canonical_values()
+				var gather: Dictionary=presenter.frame(id,actor,0,config,0,reduced)
+				check(gather.get("independent_cast_pose",false),"paid startup has independent native hands in the air")
+				equal(gather.cast_arm_parts.size(),2,"bounded arm overlay adds exactly two registered native regions")
+				equal(gather.aerial_pose,plain.aerial_pose,"casting preserves the true tuck or flight silhouette")
+				if not reduced: equal(gather.pixel_parts,plain.pixel_parts,"casting never replaces or retimes movement anatomy")
+				for part: Dictionary in gather.cast_arm_parts:
+					check(Rect2(Vector2.ZERO,Vector2(1024,512)).encloses(part.source),"all eight native hand sources stay within admitted atlas")
+				equal(actor.canonical_values(),before,"hand pose reads cannot alter paid clocks or direction")
+				actor.pending_cast_ticks=1
+				var extend: Dictionary=presenter.frame(id,actor,0,config,0,reduced)
+				equal(extend.cast_pose_phase,"extend","late real startup selects extended hand key")
+				actor.pending_cast_wire_id=0
+				actor.cast_recovery_ticks=1
+				var settle: Dictionary=presenter.frame(id,actor,0,config,0,reduced)
+				equal(settle.cast_pose_phase,"settle","last real recovery tick selects settle key")
+				actor.cast_recovery_ticks=0
+				check(not presenter.frame(id,actor,999,config,0,reduced).has("cast_arm_parts"),"hands cannot linger past actual recovery expiry")

@@ -498,14 +498,25 @@ func _check_chemistry_outer_capture_equivalence(world: SimWorld, label: String) 
 
 
 func _advance_to_rich_capture(world: SimWorld) -> Dictionary:
+	var followup_requested := false
 	for step: int in range(560):
-		var slot := 0 if step in [0, 160, 260] else 1 if step in [100, 190] else -1
+		var slot := 0 if step in [0, 160, 260] else 1 if step == 100 else -1
+		var actor := world.player(1)
+		# The faster Water Bolt finishes this same 230 px route before the old
+		# tick 190 followup. Observe its live flight and ordinary recovery instead;
+		# request Fire only once, without changing aim, resources or authority.
+		if step > 160 and slot < 0 and not followup_requested and not world.projectiles.is_empty() and not world.hex_court.products.is_empty() and actor.pending_cast_wire_id == 0 and actor.cast_recovery_ticks == 0 and actor.spell_cooldown_for_wire(actor.spell_wire_id(2)) == 0:
+			slot = 1
+			followup_requested = true
 		var pressed := int(SimCommand.SPELL_PRESSED_BITS[slot]) if slot >= 0 else 0
-		var command := SimCommand.new(step, 1, 0, 0, 0, pressed, 0, -1000, 640_000, 480_000)
+		var command := SimCommand.new(world.tick, 1, 0, 0, 0, pressed, 0, -1000, 640_000, 480_000)
 		check(world.step([command]), "paid production command advances at tick %d" % step)
 		var pending := world.player(1).pending_cast_wire_id > 0
 		if pending and not world.projectiles.is_empty() and not world.hex_court.products.is_empty():
-			return Snapshot.capture(world)
+			var snapshot := Snapshot.capture(world)
+			if not snapshot.is_empty():
+				print("PAID RICH CAPTURE: tick=%d pending=%d flights=%d products=%d matter_paid=%d" % [world.tick, actor.pending_cast_wire_id, world.projectiles.size(), world.hex_court.products.size(), int(world.hex_court.metrics.matter_paid)])
+			return snapshot
 	return {}
 
 

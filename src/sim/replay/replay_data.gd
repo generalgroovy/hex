@@ -28,6 +28,8 @@ func verify() -> Dictionary:
 		return {"ok": false, "tick": -1, "error": "replay protocol version mismatch"}
 	if not SimConfig.is_supported_tick_rate(tick_rate):
 		return {"ok": false, "tick": -1, "error": "unsupported replay tick rate"}
+	if map_id != SimWorld.MAP_ID or map_hash != SimWorld.MAP_HASH:
+		return {"ok": false, "tick": -1, "error": "legacy replay map identity mismatch; current worlds require CurrentWorldReplay"}
 	if commands.size() != expected_hashes.size():
 		return {"ok": false, "tick": -1, "error": "replay command/hash length mismatch"}
 	var world := SimWorld.new(tick_rate, seed)

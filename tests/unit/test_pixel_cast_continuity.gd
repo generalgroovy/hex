@@ -25,6 +25,7 @@ func run() -> int:
 	_test_pose_matrix(presenter)
 	_test_interruptions_and_fallback(presenter)
 	_test_action_keys(presenter)
+	_test_flier_action_cast_layer(presenter)
 	_test_rigid_action_transitions(presenter)
 	_test_full_roster_registration(presenter, ids)
 	_test_missing_action_bank(presenter)
@@ -158,24 +159,106 @@ func _test_action_keys(presenter: RefCounted) -> void:
 	check(bank != null, "continuity fixture retains admitted authored jump keys")
 	if bank == null: return
 	var config := SimConfig.new(120)
-	for id: String in BODY_IDS:
-		var state := _state("walk", 4)
-		state.movement_mode = PlayerState.MovementMode.HOP
-		state.hop_mode = PlayerState.MovementMode.HOP
-		state.hop_ticks = 12
-		state.air_height = 24000
-		state.air_vertical_velocity = 30000
-		state.pending_cast_wire_id = CombatTuning.RILLSHOT_WIRE_ID
-		state.pending_cast_ticks = _startup_ticks(state.pending_cast_wire_id, config)
-		var before: Dictionary = presenter.frame(id, state, 40.0, config, 0.25)
-		state.cast_recovery_ticks = 1
-		var authority := state.canonical_values()
-		var overlap: Dictionary = presenter.frame(id, state, 40.0, config, 0.25)
-		equal(overlap, before, "native aerial assembly priority and pixels are unchanged by cast overlap")
-		AerialChecks.assert_frame(self, overlap, presenter.pixel_pilot, id, "jump", 4)
-		check(not overlap.get("independent_cast_pose", false), "continuity does not invent an airborne upper-body pose")
-		check(not overlap.get("all_action_art_complete", true), "held keys do not claim complete animation coverage")
-		equal(state.canonical_values(), authority, "air-key query cannot alter actual airborne exposure")
+	var abilities := AbilityCatalog.new()
+	var champions := ChampionCatalog.new()
+	check(abilities.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "aerial layer fixture loads actual spell definitions")
+	check(champions.load_from_file(CATALOG, abilities), "aerial layer fixture loads actual size and flight identities")
+	var wire := CombatTuning.RILLSHOT_WIRE_ID
+	var startup := _startup_ticks(wire, config)
+	check(startup > 1, "aerial layer fixture separates declared gather and extend startup samples")
+	# This is declared timer/geometry coverage. The separate paid-chain test and
+	# native jump/cast capture retain real admission and motion evidence.
+	for id: String in ["s_wayne", "oh_tipi", "red_baron", "grace_reava"]:
+		for aim: int in 8:
+			for reduced: bool in [false, true]:
+				var state := _state("walk", aim)
+				check(champions.apply_to_player(state, id), "aerial layer fixture applies a real small/middle/large/flier kit")
+				equal(state.flight_capable, id == "grace_reava", "four-body prototype uses the intended actual flight capability")
+				state.spawn_protection_ticks = 0
+				state.movement_mode = PlayerState.MovementMode.HOP
+				state.hop_mode = PlayerState.MovementMode.HOP
+				state.hop_ticks = 12
+				state.air_height = 24000
+				state.air_vertical_velocity = 30000
+				if state.flight_capable:
+					state.air_floating = true
+					state.float_ticks = config.milliseconds_to_ticks(state.float_max_duration_ms)
+				var action := "fly" if state.flight_capable else "jump"
+				var authority := state.canonical_values()
+				var plain: Dictionary = presenter.frame(id, state, 40.0, config, 0.25, reduced)
+				AerialChecks.assert_frame(self, plain, presenter.pixel_pilot, id, action, aim)
+				equal(state.canonical_values(), authority, "plain aerial query preserves its real kit and body authority")
+				for cast_phase: String in ["gather", "extend", "release", "settle"]:
+					state.pending_cast_wire_id = wire if cast_phase in ["gather", "extend"] else 0
+					state.pending_cast_ticks = startup if cast_phase == "gather" else (1 if cast_phase == "extend" else 0)
+					state.cast_recovery_ticks = config.milliseconds_to_ticks(45) + 1 if cast_phase == "release" else (1 if cast_phase == "settle" else 0)
+					authority = state.canonical_values()
+					var posed: Dictionary = presenter.frame(id, state, 40.0, config, 0.25, reduced)
+					AerialChecks.assert_frame(self, posed, presenter.pixel_pilot, id, action, aim, cast_phase, reduced)
+					for key: String in ["pixel_parts", "texture", "source_region", "head_destination", "action", "aim_index", "travel_index", "aerial_pose", "pose_key", "second_jump_tuck", "display_height", "offset", "motion_phase"]:
+						equal(posed.get(key), plain.get(key), "separate hands cannot retime, replace or re-register movement anatomy: " + key)
+					equal(presenter.frame(id, state, 9000.0, config, 0.875, reduced), posed, "unrelated render time cannot move held aerial body or hands")
+					equal(state.canonical_values(), authority, "cast-layer geometry query cannot alter resources, clocks, flight or protection")
+					if cast_phase == "gather":
+						state.cast_recovery_ticks = 1
+						authority = state.canonical_values()
+						equal(presenter.frame(id, state, 40.0, config, 0.25, reduced), posed, "recovery overlap preserves the full descriptor at the same pending gather phase")
+						equal(state.canonical_values(), authority, "recovery overlap query leaves authoritative windows unchanged")
+				state.pending_cast_wire_id = 0
+				state.pending_cast_ticks = 0
+				state.cast_recovery_ticks = 0
+				authority = state.canonical_values()
+				var expired: Dictionary = presenter.frame(id, state, 9000.0, config, 0.875, reduced)
+				AerialChecks.assert_frame(self, expired, presenter.pixel_pilot, id, action, aim)
+				equal(expired, plain, "ending both cast windows removes every hand descriptor and restores the exact plain aerial frame")
+				equal(state.canonical_values(), authority, "expired hand query preserves all remaining body authority")
+
+
+func _test_flier_action_cast_layer(presenter: RefCounted) -> void:
+	var config := SimConfig.new(120)
+	var abilities := AbilityCatalog.new()
+	var champions := ChampionCatalog.new()
+	check(abilities.load_from_file("res://content/abilities/foundation_abilities_v1.json"),"flier cast matrix loads actual abilities")
+	check(champions.load_from_file(CATALOG,abilities),"flier cast matrix loads actual identity")
+	var wire := CombatTuning.RILLSHOT_WIRE_ID
+	var startup := _startup_ticks(wire,config)
+	# Declared timer/geometry matrix; the native fixture supplies paid admission.
+	for action: String in AerialChecks.BALL_ACTIONS:
+		for aim: int in 8:
+			for reduced: bool in [false,true]:
+				var state := _motion_state(action,aim,aim)
+				check(champions.apply_to_player(state,"grace_reava"),"matrix applies actual flight-capable identity")
+				check(state.flight_capable and not state.air_floating,"ordinary airborne pose cannot imply active flight")
+				equal(Fullbody.action_for_state(state),action,"matrix retains requested real airborne action")
+				var plain: Dictionary=presenter.frame("grace_reava",state,40.0,config,0.25,reduced)
+				check(plain.get("pixel_action_key",false) and not plain.has("cast_arm_parts"),"ordinary flier body remains the exact authored action key")
+				for phase: String in ["gather","extend","release","settle"]:
+					state.pending_cast_wire_id=wire if phase in ["gather","extend"] else 0
+					state.pending_cast_ticks=startup if phase=="gather" else (1 if phase=="extend" else 0)
+					state.cast_recovery_ticks=config.milliseconds_to_ticks(45)+1 if phase=="release" else (1 if phase=="settle" else 0)
+					var authority := state.canonical_values()
+					var posed: Dictionary=presenter.frame("grace_reava",state,40.0,config,0.25,reduced)
+					var expected_bounds: Rect2=AerialChecks._assert_cast_layer(self,posed,presenter.pixel_pilot,"grace_reava",aim,Rect2(-64,-104,128,128),phase,reduced)
+					equal(posed.get("body_bounds"),expected_bounds,"flier body plus hands uses independent exact union bounds")
+					for key: String in ["components","texture","action","aim_index","travel_index","display_height","offset","motion_phase","pixel_action_key","all_action_art_complete"]:
+						equal(posed.get(key),plain.get(key),"flier hand layer never alters original body: "+key)
+					check(not posed.get("procedural_pixel_pose",false) and not posed.get("all_action_art_complete",true),"layer never claims flight or complete new action art")
+					equal(state.canonical_values(),authority,"flier hand layer cannot change cast payment, movement or protection")
+					posed.cast_arm_parts[0].at=Vector2(999,999)
+					var fresh: Dictionary=presenter.frame("grace_reava",state,40.0,config,0.25,reduced)
+					AerialChecks._assert_cast_layer(self,fresh,presenter.pixel_pilot,"grace_reava",aim,Rect2(-64,-104,128,128),phase,reduced)
+				state.pending_cast_wire_id=0; state.pending_cast_ticks=0; state.cast_recovery_ticks=0
+				var expired: Dictionary=presenter.frame("grace_reava",state,40.0,config,0.25,reduced)
+				equal(expired,plain,"ending paid windows restores exact authored flier body without stale mutable layers")
+				for key: String in ["cast_arm_parts","cast_arm_texture","cast_pose_phase","cast_arm_native_pixels"]:
+					check(not expired.has(key),"expired flier removes hand metadata: "+key)
+	for action: String in ["idle","land","hit","stunned","defeated"]:
+		var state := _motion_state(action,0,0)
+		check(champions.apply_to_player(state,"grace_reava"),"negative cast matrix applies actual flier")
+		if action=="defeated": state.health=0
+		state.pending_cast_wire_id=wire; state.pending_cast_ticks=startup
+		var frame: Dictionary=presenter.frame("grace_reava",state,40.0,config,0.25)
+		check(not frame.has("cast_arm_parts"),"ordinary ground/interrupted/dead frame gains no additive aerial hands: "+action)
 
 
 func _test_rigid_action_transitions(presenter: RefCounted) -> void:

@@ -14,6 +14,8 @@ func run() -> int:
 		for mode: int in [SessionRound.Mode.DUOS, SessionRound.Mode.TRIOS]:
 			_test_departed_ledger_replication(mode, hex_enabled)
 			_test_score_result_event_replication(mode, hex_enabled)
+	for permanent: bool in [false, true]:
+		_test_paid_hearth_contact_identity(permanent)
 	return finish("team-replication")
 
 
@@ -468,3 +470,107 @@ func _entry(decoded: Dictionary, entity_id: int) -> Dictionary:
 		if int(entry.entity_id) == entity_id:
 			return entry
 	return {}
+
+
+func _test_paid_hearth_contact_identity(permanent: bool) -> void:
+	var world := SimWorld.new(120, 752, CollisionWorld.new(1280000, 960000))
+	check(champions.apply_to_player(world.player(), "oh_tipi"), "contact lifecycle starts with an authored host profile")
+	check(HexCourtPractice.configure(world, abilities, false), "contact lifecycle uses actual finite HEX authority")
+	world.player().position_x = 640000
+	world.player().position_y = 480000
+	var session := AuthoritativeSession.new()
+	check(session.bind(world, champions, Vector2i(613, 480), "Host", [{"entity_id":2, "name":"Original"}, {"entity_id":3, "name":"Witness"}], "sparring_circle"), "contact lifecycle binds a genuine hostile Hearth charter")
+	var actor := world.player()
+	var original := world.player(2)
+	var witness := world.player(3)
+	if original == null or witness == null: return
+	# Initial setup only: the peer-2 spawn is naturally 45 px from the host.
+	# A second already-touched actor proves selective, rather than global, reset.
+	witness.position_x = 595000
+	witness.position_y = 480000
+	for state: PlayerState in world.players:
+		state.health_recovery_per_second = 0
+		state.flux_recovery_per_second = 0
+		state.spawn_protection_ticks = 0
+	var wire := MixtureCatalog.wire_for(16, "mantle")
+	check(actor.place_proven_spell(0, wire), "Hearth lifecycle equips ordinary Light Mantle")
+	var initial_flux := actor.flux
+	var initial_health := original.health
+	var witness_health := witness.health
+	var source := world.next_projectile_id
+	var paid_casts := 0
+	var observed_hits: Array[int] = []
+	var shot: ProjectileState = null
+	for step: int in 64:
+		check(world.step([SimCommand.new(world.tick, 1, 0, 0, 0, SimCommand.PRESSED_SPELL_1 if step == 0 else 0)]), "ordinary paid Hearth Mantle reaches actual initial contact")
+		for event: Dictionary in world.combat_events:
+			if String(event.get("type", "")) == "cast_started": paid_casts += 1
+			if String(event.get("type", "")) == "projectile_hit":
+				equal(int(event.projectile_id), source, "initial contacts use the one real paid source")
+				observed_hits.append(int(event.target_id))
+		if observed_hits.size() == 2 and world.projectiles.size() == 1:
+			shot = world.projectiles[0]
+			break
+	check(shot != null, "bounded paid route observes a surviving Mantle after two actual contacts")
+	if shot == null: return
+	equal(observed_hits, [2, 3], "initial shared pool hits both hostile actors in stable order")
+	equal(initial_health-original.health, 4000, "original peer takes the actual Mantle touch")
+	equal(witness_health-witness.health, 4000, "unaffected peer owns its own actual initial touch")
+	equal(shot.delivery_damage_remaining, 8000, "two real touches leave exactly half the finite pool")
+	equal(Array(shot.contact_entity_ids), [2, 3], "one-touch history is produced by real paid contacts")
+	equal(initial_flux-actor.flux, int(CombatTuning.cast_definition_view(wire).flux_cost), "real Mantle pays its authored positive Flux once")
+	equal(int(world.hex_court.metrics.matter_paid), 600, "the lifecycle fixture owns exactly one paid material stock")
+	_assert_replication(session, "paid Hearth before identity boundary")
+	var before_values := shot.canonical_values()
+	var prefix_size := before_values.size()-shot.contact_entity_ids.size()-1
+	var unchanged_values := before_values.slice(0, prefix_size)
+	var before_ledger: Dictionary = world.hex_court.ledger_for_source(source).duplicate(true)
+	var before_tick := world.tick
+	var original_instance := original.get_instance_id()
+	if permanent:
+		equal(session.remove_peers([{"entity_id":2}]), 1, "permanent departure removes the old actor through session authority")
+		check(world.player(2) == null, "permanent departure actually destroys the roster instance")
+		equal(Array(shot.contact_entity_ids), [3], "permanent departure removes only its old contact identity")
+		equal(session.register_peers([{"entity_id":2, "name":"Replacement"}]), 1, "Hearth accepts a fresh actor using the vacated ID")
+	else:
+		equal(session.suspend_peers([{"entity_id":2, "reserved":true}]), 1, "temporary transport loss suspends the existing actor")
+		equal(Array(shot.contact_entity_ids), [2, 3], "reserved suspension preserves every already-paid contact")
+		equal(session.register_peers([{"entity_id":2, "name":"Original", "resumed":true}]), 1, "reserved reconnect resumes the same actor")
+	var returned := world.player(2)
+	check(returned != null, "lifecycle boundary returns a live Hearth actor")
+	if returned == null: return
+	equal(returned.get_instance_id() == original_instance, not permanent, "only permanent removal creates a new actor instance")
+	equal(session.session_round.phase, SessionRound.Phase.HEARTH, "identity boundary does not fabricate or reset a scored round")
+	equal(world.tick, before_tick, "departure/rejoin does not advance a spell clock")
+	equal(shot.canonical_values().slice(0, shot.canonical_values().size()-shot.contact_entity_ids.size()-1), unchanged_values, "identity cleanup changes no projectile geometry, strength, budget, timer or graze field")
+	equal(world.hex_court.ledger_for_source(source), before_ledger, "identity cleanup preserves the surviving caster's paid ledger exactly")
+	equal(world.next_projectile_id, source+1, "identity cleanup allocates no new paid projectile")
+	check(world.projectiles.size() == 1 and world.projectiles[0] == shot, "the same real paid Mantle survives the roster boundary")
+	_assert_replication(session, "paid Hearth after identity boundary")
+	var returned_health := returned.health
+	var after_hits: Array[int] = []
+	for step: int in 12:
+		check(world.step([]), "same finite paid Mantle continues normally after the identity boundary")
+		for event: Dictionary in world.combat_events:
+			if String(event.get("type", "")) == "cast_started": paid_casts += 1
+			if String(event.get("type", "")) != "projectile_hit": continue
+			equal(int(event.projectile_id), source, "post-boundary touch comes from the original paid trajectory")
+			equal(int(event.owner_id), 1, "post-boundary touch retains original caster ownership")
+			equal(int(event.source_wire_id), wire, "post-boundary touch retains the same paid payload")
+			after_hits.append(int(event.target_id))
+	equal(after_hits, [2] if permanent else [], "only a genuinely new Hearth actor can receive another one-time touch")
+	equal(returned_health-returned.health, 4000 if permanent else 0, "actual post-boundary Health loss follows actor-instance lifetime")
+	equal(witness.health, witness_health-4000, "unchanged peer never receives another touch")
+	equal(shot.delivery_damage_remaining, 4000 if permanent else 8000, "a new actor consumes remaining pool rather than refilling it")
+	equal(Array(shot.contact_entity_ids), [2, 3], "both paths retain exact one-touch history for their current actors")
+	equal(paid_casts, 1, "departure or reserved reconnect never authorizes another cast")
+	equal(initial_flux-actor.flux, int(CombatTuning.cast_definition_view(wire).flux_cost), "no boundary grants or spends extra caster Flux")
+	equal(int(world.hex_court.metrics.matter_paid), 600, "new actor contact cannot mint another material source")
+	check(world.hex_court.conservation_valid(), "actor identity cleanup preserves all finite paid matter")
+	_assert_replication(session, "paid Hearth after observed replacement contact")
+	for step: int in 200:
+		if world.projectiles.is_empty(): break
+		check(world.step([]), "original Mantle lifetime expires naturally after both lifecycle paths")
+	check(world.projectiles.is_empty(), "neither lifecycle path extends the original paid Mantle lifetime")
+	equal(shot.delivery_damage_remaining, 4000 if permanent else 8000, "unspent direct pool never grows during natural expiry")
+	check(world.hex_court.conservation_valid(), "natural retirement retains finite ownership after actor reuse")

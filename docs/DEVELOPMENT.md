@@ -1,13 +1,39 @@
 # H.E.X. development on Windows
 
-Status: current source-development guide, October 11, 2026. Git contains source and relevant assets/evidence; local exports are separate.
+Status: current source-development guide, October 12, 2026. Git contains source and relevant assets/evidence; local exports are separate.
 
 Use the repository root containing `project.godot` and `hex.cmd`. Do not run
 development commands from a wrapper folder or an extracted portable. Current
-qualified gameplay source is **p60-be3efd332e1a**: protocol 60, SessionSnapshot 24,
-120 Hz, six ingredients, 63 compositions, eight deliveries and 504 spells.
+working source contains the audit changes after `791b00a` on `codex/hex-screen-smoothness-20261011`:
+protocol 60, SessionSnapshot 24, 120 Hz, six ingredients, 63 compositions, eight
+deliveries and 504 spells. The [implementation record](implementation-20261012/README.md)
+owns new checks and measurements; the previous d8 and be3 portables stay preserved.
 The [resume](../.agent/HEX-RESUME.md) owns exact identities and qualification;
 the [specification](../SPECIFICATION.md) owns behavior.
+
+## Select the current working source
+
+The October 11 presentation checkpoint is commit `791b00a`; `main` remains at
+`95ca630` as of this documentation refresh. Inspect local changes before switching
+branches. Preserve them without a reset, clean or automatic stash.
+
+For a clean checkout, update the existing presentation branch or create its
+local tracking branch when it is first selected:
+
+```powershell
+git status --short --branch
+git fetch origin
+git switch codex/hex-screen-smoothness-20261011
+# First selection only, if no local branch exists:
+# git switch --track origin/codex/hex-screen-smoothness-20261011
+git pull --ff-only
+```
+
+This selects the committed checkpoint without merging it into `main`. Local
+audit edits are additional work; a pull cannot obtain uncommitted files. Use the
+[implementation record](implementation-20261012/README.md) for the current changes.
+The earlier Linux evidence remains in the
+[presentation checkpoint](presentation-checkpoint-20261011/README.md).
 
 ## Prerequisites
 
@@ -57,11 +83,113 @@ uses isolated userdata. The [player guide](PLAYER-GUIDE.md) owns controls.
 
 Focused runs require named stable suite IDs. Full runs the complete registry,
 import, canonical identity checks and bounded boot. The editor import has a
-separate 600-second limit for cold checkouts; the Full suite has an 1800-second
-limit. Focused suites and boot retain their 180-second limits. These supervision
+separate 600-second limit for cold checkouts; the Full suite has a 2700-second
+limit, shared with Release because both run the entire registry. Focused suites
+and boot retain their 180-second limits. These supervision
 budgets are not frame-time allowances. Engine workflows share an execution guard.
 Do not start parallel Godot imports, tests, captures, profiles or exports against
 one checkout or delete a guard journal to bypass its owner.
+
+Pull-request CI runs the source-only checks, pinned-engine Fast and a named
+foundation subset. Manual and main-branch workflows run Full. Local results do
+not prove that a remote workflow ran. Console log previews retain the last
+2,000 lines with long lines abbreviated; error/warning validation still scans
+the original complete logs, which are kept on disk. CI retains top-level run logs
+and receipts for fourteen days on success or failure, excluding isolated profiles.
+
+## Measure changes
+
+Run profiles alone after source identity is frozen and import is complete:
+
+```powershell
+.\scripts\profile-gameplay.ps1 -OutputDirectory .godot/profile-new-run `
+  -Profiles low -Cases hearth_idle,garden_middle,paid_all_six_mantle,movement_boundary,paid_fire_bolt_close `
+  -SecondsPerCase 10 -FrameLimit 60 -Width 1280 -Height 720
+.\scripts\test-gameplay-profile.ps1
+```
+
+Each output directory must be new. The wrapper validates the owned native window,
+physical client dimensions, foreground state and paid workload as well as source
+identity before and after. Preserve a failed admission check as failed evidence.
+A configured 60 FPS limit and a 120 Hz
+simulation are separate from measured presentation intervals.
+
+For sustained ordinary casting, select `paid_fire_bolt_sustained` and
+`paid_all_six_mantle_sustained`; use `-SoakSeconds` for a longer workload.
+These cases do not refill resources or bypass cooldowns. Compare admitted
+casts, active/idle intervals, visible-field draw costs, process/draw stages,
+streaming counters and actual simulated ticks. A finite twelve-shot burst
+followed by idle frames is not sustained pressure. Cold startup/travel rows
+stay separate from warmed play. Match renderer, actual dimensions, quality,
+observer mode, frame limit, focus and fixture route when comparing runs.
+Report attempts, admissions and refusals separately: ordinary finite resources
+can legitimately refuse some Mantle attempts. The
+[current smoothness evidence](smoothness-20261012/performance.md) separates the
+qualified 845f baseline, intermediate 46fca full-observer comparison and
+light-observer control. Court/world batching and its style memo were later
+withdrawn after slower isolated native measurements; preserve those results
+and qualify the resulting source separately. The final `p60-be680e20d70e`
+foreground attempt expired before Start and recorded no gameplay cases;
+its setup timeout and wrapper duration are not performance measurements.
+The final source's [clean Full regression](smoothness-20261012/full-final.json)
+passed independently; it does not close the foreground-performance gate.
+The newer [1e084 foreground record](iteration-20261012/foreground-current-record.json)
+passes manual Start, exact client size, sampled focus and unchanged-source checks.
+Its five-minute setup allowance gives the player time to start; measured focus
+requirements are unchanged. Warm Garden/Fire/Mantle p95 engine intervals remain
+29.420/49.174/51.784 ms, so this is not sustained 60 FPS acceptance. The
+[iteration ledger](iteration-20261012/README.md) owns current Full/package status.
+`-ReferenceCampus` selects the immediate campus drawing path for an identical
+workload comparison. The source profiler explicitly opts into retained drawing
+otherwise. Ordinary game/portable launches keep immediate drawing; opt into the
+unqualified experiment with `--retained-campus`. Full observation separately records retained-child draw work;
+`-LightObserver` bounds instrumentation overhead. Neither a lower parent draw
+timer nor equal simulation hashes establishes faster presented frames.
+
+For isolated renderer work, require exact pixels against a frozen predecessor
+for appearance-preserving changes and separate visual review for intended
+simplification. Alternate measured callback order explicitly and verify the
+actual order; moving scene-tree children alone does not establish redraw order.
+Keep native helpers unchanged while queued/running and preserve their exact
+executed bytes if a later scope correction is necessary. The
+[presentation evidence](smoothness-20261012/experience.md) records bounded
+actual-path trails, projectile/glyph submission costs and a paid sampled route;
+its helper timings and declared sampling cadence are not measured gameplay FPS.
+
+Measure a freshly verified portable with the actual release executable:
+
+```powershell
+.\scripts\measure-portable.ps1 -PackDirectory exports/<RunId>/windows `
+  -OutputDirectory .godot/portable-new-run `
+  -Cases hearth,garden-entry,paid-fire-bolt,paid-all-six-mantle `
+  -CloseAfterSeconds 45 -VisibleWindow
+```
+
+Replace `<RunId>` with the actual package folder. The optional normal-close mode
+sends a close request only to its owned child, requires the application's safe-close
+marker, and preserves strict warning/error and watchdog checks. Without
+`-CloseAfterSeconds`, the existing engine-iteration limit remains the default.
+Paid cases must record all twelve attempts and at least one admitted cast.
+The emitted one-second FPS samples include finite casting and idle periods;
+they are not frame-present intervals or sustained-load certification. The receipt
+records focus observations and payload/helper hashes. Preserve failed exit-path
+results alongside successful normal-close evidence.
+
+`balance-audit` exercises all spell records and twenty ordinary paid scenarios.
+The report reconciles direct, ground and status losses with target Health;
+its six-second cast window plus three-second drain does not rank long-term DPS
+or establish competitive balance. Signature, recovery, district-route and
+admission-deadline regressions use their corresponding stable suite IDs. The
+joined signature journey covers optional lessons, a real protected projectile
+crossing, three district victories, saved rewards, reload and ordinary paid use.
+Prepared passive fixtures exercise all 51 passives; their setup is not a claim
+about how frequently those conditions arise in a match.
+
+`current-world-replay` checks a bounded trusted-map snapshot plus exact commands,
+per-tick hashes and the first divergence. Developer recording is optional, local
+and limited to 60 seconds. Continuous cheats are refused; out-of-tick changes
+stop recording. `network-impairment` uses actual two/eight-player ENet loopback
+with injected delays, loss and outage; it does not replace a physical Internet test.
 
 ## Identity and asset preparation
 
@@ -117,8 +245,9 @@ rendered measurements or human acceptance.
 `exports/`, `.godot/` and local profiles are intentionally excluded from Git.
 Links to old local packages describe preserved local artifacts, not GitHub
 downloads. A source commit/push is not a GitHub binary release, installer or
-automatic update. The October 11 request authorizes source cleanup/publication;
-record the actual remote commit result separately from earlier game validation.
+automatic update. The [implementation record](implementation-20261012/README.md)
+separates current source, export, payload and normal-close qualification; the earlier
+presentation checkpoint retains its original evidence and limits.
 
 ## Evidence and history
 
@@ -128,7 +257,10 @@ producer or duplicate only after proving its dependency boundary and preserving
 needed provenance. A filename containing `legacy`, `reference` or an old date
 does not establish that it is unused.
 
-The [performance report](performance-implementation-20261010.md) links the be3
+The [implementation record](implementation-20261012/README.md) owns current checks.
+The earlier [presentation checkpoint](presentation-checkpoint-20261011/README.md)
+keeps its failed complete run and corrected focused run as historical evidence. The
+[previous performance report](performance-implementation-20261010.md) links the be3
 Full, native, package and visible-window receipts, including remaining
 heavy-field/cold-loading limits. Those are measurements of frozen bytes, not
 claims about a later source change.

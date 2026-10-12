@@ -11,6 +11,9 @@ func run() -> int:
 	_test_lifecycle_and_privacy()
 	_test_limits_and_rates()
 	_test_visibility_interior()
+	_test_corner_and_reverse_history()
+	_test_fixed_record_pool()
+	_test_paid_movement_route()
 	return finish("character-movement-trail")
 
 
@@ -196,3 +199,153 @@ func _test_visibility_interior() -> void:
 	probe_count[0] = 0
 	check(not Trails.segment_visible(Vector2.ZERO, Vector2(16.0005, 0), counted), "even a subpixel excess is rejected before it can need a tenth probe")
 	equal(probe_count[0], 0, "over-limit boundary geometry makes no visibility calls")
+
+
+func _test_corner_and_reverse_history() -> void:
+	var actor := _actor()
+	var trails := Trails.new()
+	var delta := 1.0 / 60.0
+	_observe(trails, actor, Vector2.ZERO, delta)
+	_observe(trails, actor, Vector2(4, 0), delta)
+	actor.velocity_x = 0
+	actor.velocity_y = 240_000
+	_observe(trails, actor, Vector2(4, 4), delta)
+	equal(trails.segment_count(), 1, "a turn consumes the same fixed-time emission opportunity")
+	var corner = trails.tracks[1].segments[0]
+	equal(corner.start, Vector2(4, 0), "turn starts at the actual corner, never the old sampling anchor")
+	equal(corner.finish, Vector2(4, 4), "turn ends at the displayed anchor")
+	_observe(trails, actor, Vector2(4, 8), delta)
+	actor.velocity_y = -240_000
+	_observe(trails, actor, Vector2(4, 4), delta)
+	equal(trails.segment_count(), 2, "ordinary reversal retains prior visible history")
+	var reversed = trails.tracks[1].segments[1]
+	equal(reversed.start, Vector2(4, 8), "reversal starts at the witnessed turning point")
+	equal(reversed.finish, Vector2(4, 4), "reversal records actual displacement, independently of aim")
+	_observe(trails, actor, Vector2(4, 4), delta)
+	actor.velocity_x = 240_000
+	actor.velocity_y = 0
+	_observe(trails, actor, Vector2(8, 4), delta)
+	_observe(trails, actor, Vector2(12, 4), delta)
+	var resumed = trails.tracks[1].segments.back()
+	equal(resumed.start, Vector2(4, 4), "idle then turn cannot join to the preceding moving leg")
+	equal(resumed.finish, Vector2(12, 4), "collinear motion still retains a useful sampled stroke")
+	for rate: int in [30, 60, 120, 240]:
+		for speed: float in [240.0, 900.0, 1800.0]:
+			trails = Trails.new()
+			actor = _actor()
+			var point := Vector2.ZERO
+			var legs: Array[Vector2] = [point]
+			var direction := Vector2.RIGHT
+			delta = 1.0 / float(rate)
+			actor.velocity_x = roundi(speed * SimConfig.FIXED_SCALE)
+			_observe(trails, actor, point, delta)
+			var last_leg_start := point
+			for frame: int in 48:
+				if frame > 0 and frame % 6 == 0:
+					legs.append(point)
+					last_leg_start = point
+					# Includes repeated sharp bends and a full reversal.
+					direction = [Vector2.RIGHT, Vector2.DOWN, Vector2.UP, Vector2.LEFT][(frame / 6) % 4]
+				actor.velocity_x = roundi(direction.x * speed * SimConfig.FIXED_SCALE)
+				actor.velocity_y = roundi(direction.y * speed * SimConfig.FIXED_SCALE)
+				point += direction * speed * delta
+				_observe(trails, actor, point, delta)
+				for segment in trails.tracks[1].segments:
+					var witnessed := _contained_by_leg(segment.start, segment.finish, last_leg_start, point)
+					for index: int in legs.size() - 1:
+						witnessed = witnessed or _contained_by_leg(segment.start, segment.finish, legs[index], legs[index + 1])
+					check(witnessed, "every stroke lies within a witnessed straight leg at%dHz/%.0fpx speed" % [rate, speed])
+				check(trails.segment_count() <= 6, "rapid bends and high speed never add subdivisions beyond fixed slots")
+
+
+func _contained_by_leg(start: Vector2, finish: Vector2, a: Vector2, b: Vector2) -> bool:
+	var lane := b - a
+	var length := lane.length()
+	if length <= 0.0: return false
+	var direction := lane / length
+	for point: Vector2 in [start, finish]:
+		var offset := point - a
+		if absf(offset.cross(direction)) > 0.02 or offset.dot(direction) < -0.02 or offset.dot(direction) > length + 0.02: return false
+	return true
+
+
+func _record_ids(trails: RefCounted) -> Array[int]:
+	var ids: Array[int] = []
+	var all_tracks: Array = trails._free_tracks.duplicate()
+	all_tracks.append_array(trails.tracks.values())
+	for track in all_tracks:
+		ids.append(track.get_instance_id())
+		for segment in track.slots: ids.append(segment.get_instance_id())
+	ids.sort()
+	return ids
+
+
+func _test_fixed_record_pool() -> void:
+	var trails := Trails.new()
+	var initial := _record_ids(trails)
+	equal(initial.size(), 56, "one presenter owns exactly eight tracks and48 reusable strokes")
+	for cycle: int in 6:
+		var actors: Array[PlayerState] = []
+		for index: int in 8:
+			var actor := _actor(cycle * 8 + index + 1)
+			actor.velocity_x = 900_000
+			actors.append(actor)
+		for frame: int in 24:
+			trails.begin_frame(1.0 / 60.0)
+			for actor: PlayerState in actors:
+				trails.observe(actor, actor, Vector2(frame * 15, actor.entity_id * 100), 68.0)
+			trails.end_frame()
+			equal(_record_ids(trails), initial, "expiry and replacement reuse the same fixed stroke objects")
+		trails.begin_frame(1.0 / 60.0, false)
+		equal(trails.tracks.size(), 0, "reduced effects clears all visible actor histories")
+		equal(_record_ids(trails), initial, "scene/reduced reset keeps the same bounded record allocation")
+		for track in trails._free_tracks:
+			equal(track.count, 0, "free track has no accessible active history")
+			for segment in track.slots:
+				check(not segment.active and segment.start == Vector2.ZERO and segment.finish == Vector2.ZERO, "recycled records clear old actor geometry")
+
+
+func _test_paid_movement_route() -> void:
+	var abilities := AbilityCatalog.new()
+	var champions := ChampionCatalog.new()
+	check(abilities.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "paid trail fixture loads actual abilities")
+	check(champions.load_from_file("res://content/champions/foundation_champions_v1.json", abilities), "paid trail fixture loads actual champion profiles")
+	var world := SimWorld.new(120, 172, CollisionWorld.new(10_000_000, 10_000_000))
+	var actor := world.player()
+	check(champions.apply_to_player(actor, "oh_tipi"), "paid trail follows a real non-flying character")
+	actor.reset_for_spawn(Vector2i(5_000_000, 5_000_000))
+	var initial_stamina := actor.stamina
+	var minimum_stamina := initial_stamina
+	var saw_slide := false
+	var saw_air := false
+	var saw_air_dodge := false
+	var saw_chain := false
+	var trail_frames := 0
+	var trails := Trails.new()
+	var ids := _record_ids(trails)
+	for tick: int in 180:
+		var previous := Vector2(actor.position_x, actor.position_y) / float(SimConfig.FIXED_SCALE)
+		var previous_height := actor.air_height
+		var move := Vector2i(1000, 0) if tick < 55 else (Vector2i(0, -1000) if tick < 105 else Vector2i.ZERO)
+		var held := SimCommand.HELD_SPRINT if tick < 40 else 0
+		var pressed := SimCommand.PRESSED_SLIDE if tick == 40 else (SimCommand.PRESSED_JUMP if tick == 45 else (SimCommand.PRESSED_EVADE if tick == 55 else 0))
+		check(world.step([SimCommand.new(world.tick, 1, move.x, move.y, held, pressed, -1000, 0)]), "trail route advances ordinary paid sprint, slide, jump and evade commands")
+		saw_slide = saw_slide or actor.slide_ticks > 0
+		saw_air = saw_air or actor.is_airborne()
+		saw_air_dodge = saw_air_dodge or actor.air_dodge_ticks > 0
+		saw_chain = saw_chain or actor.movement_chain_count >= 3
+		minimum_stamina = mini(minimum_stamina, actor.stamina)
+		var current := Vector2(actor.position_x, actor.position_y) / float(SimConfig.FIXED_SCALE)
+		var jump := JumpPresentation.sample(actor, world.config, 0.5, false, previous_height)
+		# The local body's displayed foot anchor includes interpolation and lift,
+		# exactly as Bootstrap composes its admitted sprite anchor.
+		var anchor := previous.lerp(current, 0.5) + Vector2(0, float(MovementTuning.PLAYER_RADIUS) / 1000.0 * 0.58 - float(jump.body_lift_pixels))
+		var before := world.state_hash()
+		_observe(trails, actor, anchor, 1.0 / 120.0)
+		equal(world.state_hash(), before, "display sampling never changes authoritative paid movement state")
+		equal(_record_ids(trails), ids, "real paid action transitions reuse the exact fixed record pool")
+		if trails.segment_count() > 0: trail_frames += 1
+		check(trails.segment_count() <= 6, "paid chained movement cannot expand trail draw or visibility work")
+	check(saw_slide and saw_air and saw_air_dodge and saw_chain, "fixture witnesses actual admitted slide, jump and air-dodge chain rather than seeded action timers")
+	check(minimum_stamina < initial_stamina and actor.stamina >= 0, "ordinary route pays finite stamina without a refill")
+	check(trail_frames >= 30, "real displayed action route produces a persistent but bounded visible wake")

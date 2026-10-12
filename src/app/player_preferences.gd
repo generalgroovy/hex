@@ -173,6 +173,10 @@ const DEFAULT_KEYBOARD_BINDINGS: Dictionary[StringName, int] = {
 	&"adjust_pov_angle": KEY_F9,
 	&"adjust_pov_range": KEY_F10,
 	&"adjust_camera_zoom": KEY_F11,
+	&"aim_left": 0,
+	&"aim_right": 0,
+	&"aim_up": 0,
+	&"aim_down": 0,
 }
 const SCHEMA_V4_DEFAULT_MOUSE_BINDINGS: Dictionary[StringName, int] = {
 	&"primary": MOUSE_BUTTON_LEFT,
@@ -227,6 +231,7 @@ const DEFAULT_MOUSE_BINDINGS: Dictionary[StringName, int] = {
 	&"spell_4": 0,
 	&"spell_layer_ctrl": 0,
 	&"spell_layer_alt": 0,
+	&"aim_left": 0, &"aim_right": 0, &"aim_up": 0, &"aim_down": 0,
 }
 const SCHEMA_V11_DEFAULT_CONTROLLER_BINDINGS: Dictionary = {
 	&"practice_trace": {"kind": "none", "index": -1, "direction": 0},
@@ -275,6 +280,10 @@ const DEFAULT_CONTROLLER_BINDINGS: Dictionary = {
 	&"spell_4": {"kind": "button", "index": JOY_BUTTON_DPAD_LEFT, "direction": 0},
 	&"spell_layer_ctrl": {"kind": "button", "index": JOY_BUTTON_LEFT_SHOULDER, "direction": 0},
 	&"spell_layer_alt": {"kind": "button", "index": JOY_BUTTON_RIGHT_SHOULDER, "direction": 0},
+	&"aim_left": {"kind":"axis","index":JOY_AXIS_RIGHT_X,"direction":-1},
+	&"aim_right": {"kind":"axis","index":JOY_AXIS_RIGHT_X,"direction":1},
+	&"aim_up": {"kind":"axis","index":JOY_AXIS_RIGHT_Y,"direction":-1},
+	&"aim_down": {"kind":"axis","index":JOY_AXIS_RIGHT_Y,"direction":1},
 }
 
 var movement_reference: String = MOVEMENT_WORLD_RELATIVE
@@ -308,6 +317,11 @@ var high_contrast: bool = false
 var sound_volume_percent: int = 30
 var render_quality: String = "low"
 var frame_limit: int = 60
+var movement_deadzone_percent: int = 25
+var aim_deadzone_percent: int = 25
+var ui_text_percent: int = 100
+# Session-only input vocabulary; never replaces or persists a user's bindings.
+var prompt_device: int = ControlBindingEditor.DEVICE_KEYBOARD
 var farflow_join_address: String = DEFAULT_FARFLOW_JOIN_ADDRESS
 var migration_notices: Array[Dictionary] = []
 var last_error: String = ""
@@ -332,6 +346,10 @@ func reset_to_defaults() -> void:
 	sound_volume_percent = 30
 	render_quality = "low"
 	frame_limit = 60
+	ui_text_percent = 100
+	movement_deadzone_percent = 25
+	aim_deadzone_percent = 25
+	prompt_device = ControlBindingEditor.DEVICE_KEYBOARD
 	farflow_join_address = DEFAULT_FARFLOW_JOIN_ADDRESS
 	migration_notices.clear()
 	last_error = ""
@@ -385,6 +403,16 @@ func apply_dictionary(data: Dictionary) -> bool:
 	var requested_limit: Variant = data.get("frame_limit", 60)
 	if not _is_whole_number(requested_limit) or float(requested_limit) not in [0.0, 60.0, 120.0]:
 		last_error = "frame_limit must be 0, 60 or 120"
+		return false
+	var requested_move_deadzone: Variant = data.get("movement_deadzone_percent",25)
+	var requested_aim_deadzone: Variant = data.get("aim_deadzone_percent",25)
+	for value: Variant in [requested_move_deadzone,requested_aim_deadzone]:
+		if not _is_whole_number(value) or float(value)<5 or float(value)>50:
+			last_error = "Movement and aim deadzones must be whole percentages from 5 to 50"
+			return false
+	var requested_text: Variant = data.get("ui_text_percent", 100)
+	if not _is_whole_number(requested_text) or float(requested_text) not in [100.0, 125.0, 150.0, 200.0]:
+		last_error = "ui_text_percent must be 100, 125, 150 or 200"
 		return false
 	var requested_pov_mode: String = str(data.get("pov_mode", ""))
 	var requested_direction_indicator: Variant = data.get("direction_indicator", true)
@@ -487,6 +515,10 @@ func apply_dictionary(data: Dictionary) -> bool:
 	for action: StringName in DEFAULT_KEYBOARD_BINDINGS:
 		if not requested_bindings.has(action):
 			requested_bindings[action] = int(schema_defaults.get(action, 0))
+	# Add optional digital aim without taking keys from an older custom layout.
+	if not binding_data.is_empty():
+		for action: StringName in [&"aim_left",&"aim_right",&"aim_up",&"aim_down"]:
+			if not binding_data.has(action): requested_bindings[action] = 0
 	requested_bindings.erase(&"toggle_tick_rate")
 	if requested_schema == 1:
 		if requested_bindings[&"jump"] == LEGACY_DEFAULT_KEYBOARD_BINDINGS[&"jump"]:
@@ -629,6 +661,14 @@ func apply_dictionary(data: Dictionary) -> bool:
 	for action: StringName in DEFAULT_CONTROLLER_BINDINGS:
 		if not requested_controller_bindings.has(action):
 			requested_controller_bindings[action] = unbound_controller_binding()
+	for action: StringName in [&"aim_left",&"aim_right",&"aim_up",&"aim_down"]:
+		if not controller_binding_data.has(action):
+			var aim_binding: Dictionary = DEFAULT_CONTROLLER_BINDINGS[action].duplicate()
+			for other_action: StringName in requested_controller_bindings:
+				if other_action != action and requested_controller_bindings[other_action] == aim_binding:
+					aim_binding = unbound_controller_binding()
+					break
+			requested_controller_bindings[action] = aim_binding
 	if requested_schema < 10:
 		for action: StringName in requested_controller_bindings:
 			if action != &"evade" and requested_controller_bindings[action] == requested_controller_bindings[&"evade"]:
@@ -662,6 +702,9 @@ func apply_dictionary(data: Dictionary) -> bool:
 	sound_volume_percent = requested_sound_volume
 	render_quality = requested_quality
 	frame_limit = int(requested_limit)
+	ui_text_percent = int(requested_text)
+	movement_deadzone_percent = int(requested_move_deadzone)
+	aim_deadzone_percent = int(requested_aim_deadzone)
 	farflow_join_address = requested_farflow_join_address
 	migration_notices = requested_migration_notices.duplicate(true)
 	last_error = ""
@@ -690,6 +733,9 @@ func to_dictionary() -> Dictionary:
 		"sound_volume_percent": sound_volume_percent,
 		"render_quality": render_quality,
 		"frame_limit": frame_limit,
+		"ui_text_percent": ui_text_percent,
+		"movement_deadzone_percent":movement_deadzone_percent,
+		"aim_deadzone_percent":aim_deadzone_percent,
 		"farflow_join_address": farflow_join_address,
 	}
 
@@ -951,15 +997,15 @@ static func default_keyboard_bindings_for_schema(schema: int) -> Dictionary[Stri
 
 
 static func _is_complete_keyboard_layout(bindings: Dictionary, expected: Dictionary[StringName, int], allow_additive_unbound_melee: bool = true) -> bool:
-	# A marker-stripping older reader can retain the two additive unbound
-	# actions written by S4. They carry no custom key choice. Only these exact
+	# A marker-stripping older reader can retain additive unbound melee/aim
+	# actions. They carry no custom key choice. Only these exact
 	# additions may accompany a complete historical keyboard layout; mouse
 	# layouts and any nonzero/custom/unknown additions remain strict.
 	for raw_action: Variant in bindings:
 		var action := StringName(str(raw_action))
 		if expected.has(action):
 			continue
-		if not allow_additive_unbound_melee or action not in [&"punch", &"kick"] or bindings[raw_action] != 0:
+		if not allow_additive_unbound_melee or action not in [&"punch", &"kick", &"aim_left", &"aim_right", &"aim_up", &"aim_down"] or bindings[raw_action] != 0:
 			return false
 	for action: StringName in expected:
 		if not bindings.has(action) or bindings[action] != expected[action]:

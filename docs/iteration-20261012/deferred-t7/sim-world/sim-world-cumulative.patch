@@ -1,0 +1,160 @@
+diff --git a/src/sim/core/sim_world.gd b/src/sim/core/sim_world.gd
+index 5f23238..1e79ffc 100644
+--- a/src/sim/core/sim_world.gd
++++ b/src/sim/core/sim_world.gd
+@@ -29,6 +29,81 @@ var hex_court: RefCounted = null # Explicit solo migration world; never co-simul
+ var profile_enabled := false # Diagnostic only; excluded from authority/snapshots.
+ var profile_stages_us: Dictionary = {}
+ 
++# Explicit, full-observer diagnostics. Reuses the existing stage timestamps;
++# never contributes to authority, snapshots, or the default/light observer path.
++const PROFILE_CUMULATIVE_STAGES: Array[String] = [
++	"surfaces_expiry", "command_order", "movement_cast_admission", "spray_contacts",
++	"projectile_contacts", "terminal_deposits", "actor_product_effects",
++	"chemistry_exposure", "finalize",
++]
++var _profile_cumulative_enabled := false
++var _profile_cumulative_epoch: int = 0
++var _profile_cumulative_attempted_steps: int = 0
++var _profile_cumulative_completed_steps: int = 0
++var _profile_cumulative_failed_steps: int = 0
++var _profile_cumulative_elapsed_us: Dictionary = {}
++var _profile_cumulative_executions: Dictionary = {}
++
++
++func profile_cumulative_begin() -> bool:
++	if not profile_enabled:
++		return false
++	profile_cumulative_reset()
++	_profile_cumulative_enabled = true
++	return true
++
++
++func profile_cumulative_end() -> void:
++	_profile_cumulative_enabled = false
++
++
++func profile_cumulative_reset() -> void:
++	_profile_cumulative_epoch += 1
++	_profile_cumulative_attempted_steps = 0
++	_profile_cumulative_completed_steps = 0
++	_profile_cumulative_failed_steps = 0
++	_profile_cumulative_elapsed_us.clear()
++	_profile_cumulative_executions.clear()
++	for label: String in PROFILE_CUMULATIVE_STAGES:
++		_profile_cumulative_elapsed_us[label] = 0
++		_profile_cumulative_executions[label] = 0
++
++
++func profile_cumulative_snapshot() -> Dictionary:
++	# Caller-owned fixed-size copies; no live dictionary or authority reference.
++	var elapsed_us: Dictionary = {}
++	var executions: Dictionary = {}
++	for label: String in PROFILE_CUMULATIVE_STAGES:
++		elapsed_us[label] = int(_profile_cumulative_elapsed_us.get(label, 0))
++		executions[label] = int(_profile_cumulative_executions.get(label, 0))
++	return {
++		"schema": "hex.sim.completed-stages.v1", "enabled": _profile_cumulative_enabled,
++		"profile_enabled": profile_enabled, "world_id": str(get_instance_id()),
++		"epoch": _profile_cumulative_epoch, "tick": tick, "hex_mode": hex_court != null,
++		"attempted_steps": _profile_cumulative_attempted_steps,
++		"completed_steps": _profile_cumulative_completed_steps,
++		"failed_steps": _profile_cumulative_failed_steps,
++		"elapsed_us": elapsed_us, "executions": executions,
++	}
++
++
++func _profile_cumulative_failed(epoch: int) -> bool:
++	if epoch > 0 and epoch == _profile_cumulative_epoch and _profile_cumulative_enabled and profile_enabled:
++		_profile_cumulative_failed_steps += 1
++	return false
++
++
++func _profile_cumulative_commit(epoch: int) -> void:
++	if epoch != _profile_cumulative_epoch or not _profile_cumulative_enabled or not profile_enabled:
++		return
++	# Commit only after tick/finalize succeeds. A failed step's already measured
++	# prefixes remain in the legacy last-step output, never in these totals.
++	for label: String in PROFILE_CUMULATIVE_STAGES:
++		if profile_stages_us.has(label):
++			_profile_cumulative_elapsed_us[label] += int(profile_stages_us[label])
++			_profile_cumulative_executions[label] += 1
++	_profile_cumulative_completed_steps += 1
++
+ 
+ func _profile_stage(label: String, started: int) -> int:
+ 	if not profile_enabled: return 0
+@@ -75,14 +150,18 @@ func player(entity_id: int = 1) -> PlayerState:
+ 
+ 
+ func step(commands: Array[SimCommand]) -> bool:
++	var cumulative_epoch := 0
++	if profile_enabled and _profile_cumulative_enabled:
++		cumulative_epoch = _profile_cumulative_epoch
++		_profile_cumulative_attempted_steps += 1
+ 	if not is_valid():
+-		return false
++		return _profile_cumulative_failed(cumulative_epoch)
+ 	var profile_started := Time.get_ticks_usec() if profile_enabled else 0
+ 	if profile_enabled: profile_stages_us.clear()
+ 	if hex_court != null:
+ 		if not deposits.is_empty() or not reactions.is_empty() or not fields.is_empty():
+ 			last_error = "hex court rejects concurrent legacy chemistry state"
+-			return false
++			return _profile_cumulative_failed(cumulative_epoch)
+ 		hex_court.expire_at(tick)
+ 		hex_court.fracture_products(tick)
+ 		if not (collision is HexCollisionWorld):
+@@ -91,7 +170,7 @@ func step(commands: Array[SimCommand]) -> bool:
+ 		hex_court.collision = collision.base_world
+ 		if not collision.set_hex_surfaces(hex_court, tick):
+ 			last_error = "invalid trusted hex physics topology"
+-			return false
++			return _profile_cumulative_failed(cumulative_epoch)
+ 		hex_court.move_products(tick, collision)
+ 	profile_started = _profile_stage("surfaces_expiry", profile_started)
+ 	var ordered: Array[SimCommand] = commands.duplicate()
+@@ -102,13 +181,13 @@ func step(commands: Array[SimCommand]) -> bool:
+ 	for command: SimCommand in ordered:
+ 		if command.tick != tick:
+ 			last_error = "command tick %d does not match world tick %d" % [command.tick, tick]
+-			return false
++			return _profile_cumulative_failed(cumulative_epoch)
+ 		if commands_by_entity.has(command.entity_id):
+ 			last_error = "duplicate command for entity %d at tick %d" % [command.entity_id, tick]
+-			return false
++			return _profile_cumulative_failed(cumulative_epoch)
+ 		if player(command.entity_id) == null:
+ 			last_error = "unknown entity %d" % command.entity_id
+-			return false
++			return _profile_cumulative_failed(cumulative_epoch)
+ 		commands_by_entity[command.entity_id] = command
+ 	var ordered_players: Array[PlayerState] = players.duplicate()
+ 	ordered_players.sort_custom(func(left: PlayerState, right: PlayerState) -> bool: return left.entity_id < right.entity_id)
+@@ -176,7 +255,7 @@ func step(commands: Array[SimCommand]) -> bool:
+ 	profile_started = _profile_stage("movement_cast_admission", profile_started)
+ 	if hex_court != null:
+ 		HexProjectileCombat.resolve_sprays(self)
+-		if not last_error.is_empty(): return false
++		if not last_error.is_empty(): return _profile_cumulative_failed(cumulative_epoch)
+ 	else:
+ 		SprayInterception.resolve(self)
+ 		CombatSystem.resolve_instant_casts(players, config, collision, combat_events, reactions, tick)
+@@ -186,7 +265,7 @@ func step(commands: Array[SimCommand]) -> bool:
+ 	projectiles.sort_custom(func(left: ProjectileState, right: ProjectileState) -> bool: return left.entity_id < right.entity_id)
+ 	if hex_court != null:
+ 		HexProjectileCombat.advance(self)
+-		if not last_error.is_empty(): return false
++		if not last_error.is_empty(): return _profile_cumulative_failed(cumulative_epoch)
+ 	else:
+ 		var owner_material_slots := _owner_material_slots()
+ 		projectiles = CombatSystem.advance_projectiles(projectiles, players, config, collision, combat_events, reactions, tick, _free_material_slots(), owner_material_slots)
+@@ -216,6 +295,8 @@ func step(commands: Array[SimCommand]) -> bool:
+ 		TrainingTargetSystemScript.step_target(state, config)
+ 	tick += 1
+ 	_profile_stage("finalize", profile_started)
++	if cumulative_epoch > 0:
++		_profile_cumulative_commit(cumulative_epoch)
+ 	return true
+ 
+ 

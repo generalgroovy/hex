@@ -890,7 +890,7 @@ func _test_marker_stripped_mouse() -> void:
 	explicit_unbound[&"kick"] = 0
 	profile["mouse_bindings"] = explicit_unbound
 	check(prefs.apply_dictionary(JSON.parse_string(JSON.stringify(profile))), "marker-stripped mouse map loads")
-	equal(prefs.mouse_bindings, explicit_unbound, "explicit mouse unbinds survive keyboard-only default recognition")
+	equal(prefs.mouse_bindings, _with_s4_unbound_mouse(explicit_unbound), "explicit mouse unbinds survive keyboard-only default recognition")
 	equal(prefs.mouse_bindings[&"punch"], 0, "mouse Punch cannot be silently rebound")
 	equal(prefs.mouse_bindings[&"kick"], 0, "mouse Kick cannot be silently rebound")
 
@@ -899,6 +899,8 @@ func _with_s4_unbound_keyboard(bindings: Dictionary) -> Dictionary:
 	var result := bindings.duplicate()
 	result[&"punch"] = 0
 	result[&"kick"] = 0
+	for action: StringName in InputRouter.AIM_ACTIONS:
+		if not result.has(action): result[action]=0
 	return result
 
 
@@ -906,6 +908,8 @@ func _with_s4_unbound_mouse(bindings: Dictionary) -> Dictionary:
 	var result := bindings.duplicate()
 	result[&"punch"] = 0
 	result[&"kick"] = 0
+	for action: StringName in InputRouter.AIM_ACTIONS:
+		if not result.has(action): result[action]=0
 	return result
 
 
@@ -913,6 +917,10 @@ func _with_s4_unbound_controller(bindings: Dictionary) -> Dictionary:
 	var result := bindings.duplicate(true)
 	result[&"punch"] = PlayerPreferences.unbound_controller_binding()
 	result[&"kick"] = PlayerPreferences.unbound_controller_binding()
+	# Right-stick aim already existed outside the serialized map. The additive
+	# descriptors expose those same controls without changing a custom action.
+	for action: StringName in InputRouter.AIM_ACTIONS:
+		if not result.has(action): result[action]=PlayerPreferences.DEFAULT_CONTROLLER_BINDINGS[action].duplicate()
 	return result
 
 

@@ -11,6 +11,7 @@ const MAX_FRAME_SECONDS := 0.1
 const MAX_SEGMENT_PIXELS := 16.0
 const SNAP_DISTANCE_PIXELS := 72.0
 const MIN_SPEED_PIXELS := 24.0
+const COLLINEAR_TOLERANCE_PIXELS := 0.01
 const VISIBILITY_STEP_PIXELS := 2.0
 const MAX_VISIBILITY_PROBES_PER_SEGMENT := 9
 const MAX_FRAME_VISIBILITY_PROBES := MAX_TRACKS * MAX_SEGMENTS_PER_ACTOR * MAX_VISIBILITY_PROBES_PER_SEGMENT
@@ -28,6 +29,17 @@ class Segment:
 	var strength := 0.0
 	var height := 68.0
 	var side_sign := -1.0
+	var active := false
+
+	func reset() -> void:
+		start = Vector2.ZERO
+		finish = Vector2.ZERO
+		age = 0.0
+		lifetime = 0.12
+		strength = 0.0
+		height = 68.0
+		side_sign = -1.0
+		active = false
 
 
 class Track:
@@ -40,21 +52,98 @@ class Track:
 	var observed_frame := -1
 	var moving := false
 	var next_side := -1.0
-	var segments: Array[Segment] = []
+	var slots: Array[Segment] = []
+	var order := PackedInt32Array()
+	var count := 0
+	# Detached ordering view for diagnostics; records are the live fixed slots.
+	# The hot path walks slots directly without allocating this inspection list.
+	var segments: Array[Segment]:
+		get:
+			var result: Array[Segment] = []
+			for index: int in count: result.append(slots[order[index]])
+			return result
+
+	func _init() -> void:
+		order.resize(MAX_SEGMENTS_PER_ACTOR)
+		for index: int in MAX_SEGMENTS_PER_ACTOR: slots.append(Segment.new())
+
+	func reset() -> void:
+		point = Vector2.ZERO
+		sample_point = Vector2.ZERO
+		sample_seconds = 0.0
+		champion_wire_id = 0
+		spawn_protection_ticks = 0
+		observed_frame = -1
+		moving = false
+		next_side = -1.0
+		clear_segments()
+
+	func clear_segments() -> void:
+		count = 0
+		for segment: Segment in slots: segment.reset()
+
+	func age_segments(delta: float) -> void:
+		var retained := 0
+		for index: int in count:
+			var slot := order[index]
+			var segment: Segment = slots[slot]
+			segment.age += delta
+			if segment.age >= segment.lifetime:
+				segment.reset()
+			else:
+				order[retained] = slot
+				retained += 1
+		count = retained
+
+	func next_segment() -> Segment:
+		var slot := -1
+		if count == MAX_SEGMENTS_PER_ACTOR:
+			slot = order[0]
+			for index: int in count - 1: order[index] = order[index + 1]
+			count -= 1
+		else:
+			for index: int in MAX_SEGMENTS_PER_ACTOR:
+				if not slots[index].active:
+					slot = index
+					break
+		if slot < 0: return null
+		var segment: Segment = slots[slot]
+		segment.reset()
+		segment.active = true
+		order[count] = slot
+		count += 1
+		return segment
 
 
 var tracks: Dictionary[int, Track] = {}
 var _frame := 0
 var _delta := 0.0
 var _enabled := false
+var _free_tracks: Array[Track] = []
+var _stale_ids := PackedInt64Array()
+
+
+func _init() -> void:
+	# Exactly eight tracks and 48 stroke records for this presenter's lifetime.
+	# Speed, frame rate, turns and scene resets cannot grow the record pool.
+	for index: int in MAX_TRACKS: _free_tracks.append(Track.new())
+	_stale_ids.resize(MAX_TRACKS)
 
 
 func clear() -> void:
+	for entity_id: int in tracks:
+		var track: Track = tracks[entity_id]
+		track.reset()
+		_free_tracks.append(track)
 	tracks.clear()
 
 
 func forget(entity_id: int) -> void:
+	var track: Track = tracks.get(entity_id)
+	if track == null: return
 	tracks.erase(entity_id)
+	track.reset()
+	_free_tracks.append(track)
 
 
 # Exactly once per presentation update, not per redraw or portrait query.
@@ -67,12 +156,8 @@ func begin_frame(delta_seconds: float, enabled: bool = true) -> void:
 	if not _enabled:
 		clear()
 		return
-	for track: Track in tracks.values():
-		for index: int in range(track.segments.size() - 1, -1, -1):
-			var segment: Segment = track.segments[index]
-			segment.age += _delta
-			if segment.age >= segment.lifetime:
-				track.segments.remove_at(index)
+	for entity_id: int in tracks:
+		(tracks[entity_id] as Track).age_segments(_delta)
 
 
 # The caller supplies the SAME world-space foot/body anchor displayed this
@@ -99,7 +184,7 @@ func observe(authority: PlayerState, motion: PlayerState, display_anchor: Vector
 	if track == null:
 		if tracks.size() >= MAX_TRACKS:
 			return
-		track = Track.new()
+		track = _free_tracks.pop_back()
 		track.point = display_anchor
 		track.sample_point = display_anchor
 		track.champion_wire_id = authority.champion_wire_id
@@ -120,18 +205,24 @@ func observe(authority: PlayerState, motion: PlayerState, display_anchor: Vector
 	var plausible_distance := minf(SNAP_DISTANCE_PIXELS, speed * _delta * 2.0 + 3.0)
 	var discontinuity := skipped_frame or travel.length() > plausible_distance
 	if discontinuity:
-		track.segments.clear()
+		track.clear_segments()
 	var moving := _eligible_motion(motion)
 	# Stationary/blocked bodies and held preparation leave only a brief fading
 	# wake. Aim changes and backwards prediction corrections cannot make one.
 	var advanced := moving and track.moving and not discontinuity \
 		and travel.length_squared() > 0.01 and travel.dot(velocity) > 0.0
 	if advanced:
+		# Accumulate only a witnessed straight leg. A turn keeps prior strokes,
+		# but never joins anchors across the corner or adds distance-based work.
+		var pending := track.point - track.sample_point
+		if pending.length_squared() > 0.000001 and (pending.dot(travel) <= 0.0 \
+				or absf(pending.cross(travel)) > COLLINEAR_TOLERANCE_PIXELS * travel.length()):
+			track.sample_point = track.point
 		track.sample_seconds += _delta
 		if track.sample_seconds + 0.000001 >= SAMPLE_SECONDS:
 			var span := display_anchor - track.sample_point
 			if span.length_squared() >= 1.0:
-				var segment := Segment.new()
+				var segment := track.next_segment()
 				segment.finish = display_anchor
 				segment.start = display_anchor - span.limit_length(MAX_SEGMENT_PIXELS)
 				segment.height = clampf(display_height, 40.0, 80.0)
@@ -140,9 +231,6 @@ func observe(authority: PlayerState, motion: PlayerState, display_anchor: Vector
 				var displayed_speed := minf(speed, travel.length() / _delta)
 				segment.strength = _strength(motion, displayed_speed)
 				segment.lifetime = _lifetime(motion)
-				if track.segments.size() >= MAX_SEGMENTS_PER_ACTOR:
-					track.segments.pop_front()
-				track.segments.append(segment)
 			track.sample_point = display_anchor
 			track.sample_seconds = 0.0
 	else:
@@ -155,18 +243,21 @@ func observe(authority: PlayerState, motion: PlayerState, display_anchor: Vector
 # Call after the local/remote actor pass. This also removes actor tracks when
 # their body was culled, hidden, disconnected, or excluded by a modal screen.
 func end_frame() -> void:
-	for entity_id: int in tracks.keys():
+	var count := 0
+	for entity_id: int in tracks:
 		if tracks[entity_id].observed_frame != _frame:
-			tracks.erase(entity_id)
+			_stale_ids[count] = entity_id
+			count += 1
+	for index: int in count: forget(_stale_ids[index])
 
 
 func segment_count(entity_id: int = -1) -> int:
 	if entity_id >= 0:
 		var track: Track = tracks.get(entity_id)
-		return track.segments.size() if track != null else 0
+		return track.count if track != null else 0
 	var count := 0
-	for track: Track in tracks.values():
-		count += track.segments.size()
+	for id: int in tracks:
+		count += tracks[id].count
 	return count
 
 
@@ -180,8 +271,8 @@ func draw_actor(canvas: CanvasItem, entity_id: int, point_visible: Callable = Ca
 	if track == null or track.observed_frame != _frame:
 		return 0
 	var count := 0
-	for index: int in range(track.segments.size()):
-		var segment: Segment = track.segments[index]
+	for index: int in track.count:
+		var segment: Segment = track.slots[track.order[index]]
 		var direction := (segment.finish - segment.start).normalized()
 		var side := Vector2(-direction.y, direction.x) * segment.height * 0.10
 		var lift := Vector2(0.0, -segment.height * 0.36)

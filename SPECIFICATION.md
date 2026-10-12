@@ -1,9 +1,29 @@
 # H.E.X. current design contract
 
-Status: **current contract, including the October 11, 2026 presentation checkpoint.**
-Implementation and qualification are separate. Exact source/package evidence and
-remaining checks are recorded in the [resume](.agent/HEX-RESUME.md) and
-[presentation checkpoint](docs/presentation-checkpoint-20261011/README.md).
+Status: **stable local October 12, 2026 build p60-1e084a50a029; work paused at the user's request.**
+The [iteration record](docs/iteration-20261012/README.md) binds the frozen source
+and matching Windows portable. Its clean [Full run](docs/iteration-20261012/full-final.json)
+passed 261 suites / 7,543,825 assertions with zero failures and stderr, including
+the 120 Hz boot check. Separate [package/archive](docs/iteration-20261012/delivery-files.json),
+[133-image terrain](docs/iteration-20261012/terrain-pack.json) and
+[five-case portable lifecycle](docs/iteration-20261012/portable-lifecycle.json) checks passed.
+Use the [launcher](exports/hex-iteration-20261012/windows/PLAY-HEX.cmd) or
+[Windows x64 ZIP](exports/hex-iteration-20261012/HEX-p60-1e084a50a029-Windows-x64.zip)
+(161,159,896 bytes; 153.7 MiB).
+
+The [foreground record](docs/iteration-20261012/foreground-current-record.json)
+passes manual Start, sampled focus, client-size and unchanged-source checks.
+Warm Garden/Fire/Mantle p95 engine intervals remain 29.420/49.174/51.784 ms;
+steady 60 FPS and human gameplay acceptance remain open. The reviewed
+[T7 diagnostics](docs/iteration-20261012/deferred-t7) are unapplied and outside this build.
+
+The [be680 fallback](exports/hex-smoothness-20261012/windows/PLAY-HEX.cmd) and its
+[smoothness record](docs/smoothness-20261012/README.md) remain preserved, alongside
+p60-845f85b5253e, p60-d8e6ea1cd808 and p60-be3efd332e1a. The earlier 845f build's
+196 UI captures belong to its [comprehensive record](docs/implementation-20261012/README.md).
+The earlier [presentation checkpoint](docs/presentation-checkpoint-20261011/README.md)
+also remains historical. Evidence qualifies its recorded bytes. The [resume](.agent/HEX-RESUME.md)
+owns exact source/package identity and remaining acceptance.
 
 H.E.X. (Help, Everything eXploded!) is a movement-led, top-down elemental combat
 sandbox for Windows. Its depth comes from movement execution, finite resources,
@@ -31,7 +51,7 @@ The [player guide](docs/PLAYER-GUIDE.md), [roster](docs/CURRENT-CAST.md) and
 | Chemistry | 63 bounded reactions: six self-pairs and every distinct subset of two through six elements; stationary whole-hex impact fields |
 | Grid | 24 px face-to-face; 59,466 eligible Wellspring cells; topology cap 65,536 and selection cap 511; unchanged 64 paid casts / 32 products |
 | Wire | Protocol 60 / SessionSnapshot 24 / SessionRound 2 / HexWorldSnapshot 5 / HexChemistrySnapshot 5; mixture/delivery state, finite reaction provenance and local prediction context |
-| Delivery | Latest tested source and existing portable/installer are distinct; exact paths and evidence live in the resume |
+| Delivery | Stable local p60-1e084a50a029 passed Full, package, terrain and portable lifecycle checks. Source foreground timing is admitted; steady 60 FPS, installer and publication remain unqualified. Work is paused; exact evidence lives in the resume |
 
 The October 11 presentation revision expands the character-centered 360-degree
 view to cover every viewport corner, including camera lead, world edges and
@@ -106,7 +126,17 @@ cooldown, Stamina and Flux admission remain authoritative.
 
 Spell startup samples the pre-payment admission state; that spell's cooldown
 duration samples the release state. A condition changing during a cast never retimes its existing
-windup. Defensive posture is sampled before a hit interrupts movement. Actual
+windup. For a perk pairing startup and cooldown changes, both must change the
+spell's actual whole-tick timers in their promised directions; otherwise neither
+timing factor from that perk applies to that spell in that sampled window.
+Ancestry is evaluated before the personal perk, including already accepted
+factors and the current startup status. This prevents a one-tick startup from
+receiving a real drawback with no benefit, or a free cooldown benefit whose
+startup drawback rounds away. The [shared timing policy](src/sim/entities/identity_perk_policy.gd)
+supplies the same effective ticks and suppressed pairs to casting and inspection.
+An active condition alone does not promise an effective timing change.
+
+Defensive posture is sampled before a hit interrupts movement. Actual
 Health loss, including mitigation and lethal clamping, is the reported hit value.
 Movement prediction carries the identity and resource/cast context needed to
 evaluate the same windows; protocol 60 rejects incompatible prediction and reaction layouts.
@@ -116,8 +146,11 @@ not equal viability or human acceptance of all fifty-one choices.
 ## Movement and resources
 
 Aim and travel are independent. Keyboard input resolves eight normalized
-directions; analog movement/aim remains continuous. Presentation never delays
-input or changes authoritative momentum.
+directions; analog movement/aim remains continuous. Separate radial movement
+and aim deadzones are persisted independently. Four remappable digital aim
+actions default unbound, preserving established custom keys; input quarantine
+uses the same radial threshold after focus/menu changes. Presentation never
+delays input or changes authoritative momentum.
 
 | Action | Contract |
 |---|---|
@@ -183,7 +216,7 @@ Spell-owned cooldowns survive equipment changes and swaps.
 | Heavy | 15 | Larger committed impact and area control; fresh press |
 | Rapid | 1 | Low-strength repeated pressure/interception; repeats while held |
 | Spray | 3 | Short cover-aware fan with finite ingredient and interception; fresh press |
-| Mantle | Compiled definition | Short-lived close-contact coverage following its owner; approach and spacing matter |
+| Mantle | Compiled definition | Short-lived close-contact coverage following its owner, with a finite paid ground trail; approach and spacing matter |
 | Fuse | Compiled definition | Land a delayed explosive; visible warning precedes its finite blast |
 | Split | Compiled definition | One paid shot divides into a bounded set of branches; branches share finite matter |
 | Rebound | Compiled definition | A bounded number of wall banks opens angles; no homing or unlimited bounces |
@@ -198,14 +231,19 @@ Field and Vector Lance remain disabled in selection and live admission.
 Use compiled definitions for damage, speed, reach, cost, startup and cooldown;
 do not duplicate stale numeric tables in the documentation.
 
-The original Rapid, Bolt and Heavy families use a bounded inverse launch tradeoff:
-`speed_px_per_second = 3600 / (reaction_strength + 5)` gives Rapid600/1,
-Bolt360/5 and Heavy180/15. This is compiled launch data, not per-tick division
-or a claim that HP damage equals chemical/interception strength. Slowing a
-projectile through a field does not increase its payload, damage or blast area;
-strength subtraction still consumes finite paid matter. Heavy's120px-radius
-blast and Spray's90-degree fan trade coverage for paid startup, cadence and
-exposure. Bolt remains a focused hit, not a new radial-damage attack.
+The smoothness follow-up gives Rapid, Bolt, Split and Rebound clear-flight
+launch speeds above the current 900 px/s movement cap. Heavy and Fuse retain
+their deliberately slower delivery roles. The old inverse-strength speed
+formula is superseded; chemical strength, damage, cost and casting cadence
+remain independent of this travel change. Explicit finite muzzle-to-terminal
+range preserves each spell's prior nominal reach, and a nearer locked cursor
+endpoint remains binding. Split and Rebound inherit that remaining path budget;
+Split's earlier deadline preserves its near-muzzle fork distance. The
+[current travel policy](docs/smoothness-20261012/gameplay.md) records exact
+compiled values and paid counter tests, not a universal speed ratio borrowed
+from another game. Frostway still slows displacement without increasing payload,
+damage or blast area. Heavy's120px-radius blast and Spray's90-degree fan trade
+coverage for paid startup, cadence and exposure. Bolt remains a focused hit.
 
 Fresh explicit spell presses have priority, including refusal. Otherwise, the
 lowest held repeat-enabled position is selected; a held single-press spell does
@@ -238,6 +276,32 @@ Stamina-paid bare attacks with different contact/knockback tradeoffs, and Flux-p
 elemental infusion that deposits only on valid contact, never a free miss-field.
 Enable only after end-to-end admission, cost, contact and prediction acceptance.
 Art never gates current spellcasting.
+
+### On-hit actor statuses
+
+The live [status policy](src/sim/combat/spell_status_policy.gd) applies each
+included ingredient's channel only after positive actual Health loss to a living
+enemy. Owner/team contacts, lethal hits, spawn protection and timed dodge
+protection apply no status. Mixed hits use the full ingredient set, independently
+of the representative element used for color.
+
+| Ingredient | Status | Current effect and bound |
+|---|---|---|
+| Water | Chilled | Slows ground target speed; takes the stronger existing slow without multiplying them and does not reduce air steering |
+| Fire | Burning | Pulses from one finite damage pool; actual Health loss spends that pool and protection blocks pulses |
+| Air | Gusted | One bounded directional shove when its window begins; no launch, stun or repeated shove on refresh |
+| Earth | Fractured Focus | Lengthens a future cast's startup; never retimes an already paid cast or changes its cooldown |
+| Light | Revealed | Helps visibility consumers reveal the target while preserving opaque cover |
+| Dark | Withered | Blocks ready recovery while active; the practical ordinary-hit benefit is Flux denial, because damage already delays Health recovery longer than this status. Stamina and independent recovery waits remain separate |
+
+Six fixed, nonstacking channels retain one source of attribution per ingredient.
+Reapplication may refresh finite duration; it cannot add Burning pools or repeat
+Gusted's shove while that channel remains active. Status damage cannot create
+another status or material. Direct damage, actor statuses, raw deposits and
+reaction fields remain distinct effects. Use compiled definitions and the policy
+for exact potency/timing; the [combat decision record](docs/element-expansion-evidence-20261009/combat-design.md)
+explains the bounds and the [player guide](docs/PLAYER-GUIDE.md#ingredients-choose-the-payload-delivery-chooses-how-it-arrives)
+teaches the differences.
 
 ## Elements and chemistry
 
@@ -330,6 +394,10 @@ travel, with stronger slide/dodge accents. These are presentation only, not
 copied bodies or elemental residue; they fade within 120–180 ms and are cleared
 on discontinuity, invisibility, scene reset, menus or Reduced Effects. Retained
 history is bounded to eight actors and six strokes each; stationary bodies do not emit.
+Fixed records are recycled. A bend or reversal starts a new witnessed leg while
+older strokes fade; sampling never joins a chord across the turn or subdivides
+an arbitrarily long movement into extra work. Each segment is capped at 16 px;
+the eight-actor draw budget is 96 line calls and 432 current-visibility probes.
 
 Decorative projectile tails and idle affinity orbits remain disabled.
 The admitted Mantle trail draws from that same paid source's finite matter;
@@ -345,6 +413,16 @@ dedicated menu signs/huts. Every option independently checks reach, permissions
 and current availability. Keep normal routes, movement chains, recoverable
 practice targets and safe exits; apparent paths must match collision.
 
+Four district routes add optional observation of existing actions: Tideglass
+checks a paid sprint into its named wallrun and a real walljump release;
+Verdant checks gained speed, braking and a controlled walking rejoin; Basalt
+checks its named wall, a changed airborne exit and landing behind actual solid
+cover after commitment; Starward checks paid Slide, Slide-Jump and natural
+Stamina recovery. Their [local coach](src/presentation/district_practice_coach.gd)
+does not move the actor, pay costs, refill or grant rewards. Leaving a district,
+changing actor/world, teleporting or entering an excluded practice context
+resets that route's evidence. Ordinary walking bypasses remain available.
+
 The 24 px chemistry grid shares one canonical origin. Terrain/cap art uses it,
 but existing worldbone/practice walls still use their admitted collision
 geometry. Decorative hexes do not imply a completed all-hex physical migration.
@@ -358,6 +436,10 @@ collision, progression or saves. Their boundaries clip spread deliberately;
 Spell Range tests full effects. Only visible plots remain resident (at most 63).
 Nearby cards show actual phases, ingredients, effects and counters; real player
 spells remain live and render above the harmless exhibits.
+Spatial reuse keys the exact visible rectangle and observer position; it retains
+only plot membership and nearest identity. Phase, timing, danger and the bounded
+restart queue remain live. Clear/reconfiguration invalidate those spatial keys,
+and return from a distant view creates fresh exhibition authorities.
 
 | Mode | Admission / intent |
 |---|---|
@@ -368,9 +450,9 @@ spells remain live and render above the harmless exhibits.
 | Trios | Exactly six; 3v3 |
 | Solo Duel Trial | Separate offline, 72-second paid-rival challenge; disclosed temporary kit |
 | Signature Challenges | Thirty offline rivals; unique paid mixture/delivery signatures, earned only from clean authoritative victory |
-| Spell Range | All 504 spell definitions; temporary twelve-slot loaners, explicit refill/reset/clear, no automatic casting or save |
+| Spell Range | All 504 spell definitions; temporary twelve-slot loaners, optional target Setup and observer statistics, explicit refill/reset/clear, no automatic casting or save |
 | Element Garden | Offline Wellspring ground exhibits, 63 plots and a named map arrival; nearby explanation without another control |
-| Optional Introduction | Skippable nonmodal observation of actual movement, jump, payment, recovery and a mixed Range cast |
+| Optional Introduction | Skippable nonmodal basics; optional tactical continuation observes an accepted paid chain, mixed damaging contact, rival avoidance and a clean earned/saved result |
 | Developer tools | Explicit offline session; all-spell override, protection, Flux/Stamina/cooldown tools and pause rival commands; no earned rewards |
 
 Resolve every defeat from a completed tick before choosing a winner; equal
@@ -383,19 +465,48 @@ planned windup, cyan PAUSE during the actual recovery beat after paid cast start
 and recovery finish. Six static segments count down on the policy clock. PAUSE
 means no new rival casts, not safety: existing shots and fields remain dangerous.
 The badge follows ordinary actor visibility and never exposes a hidden opponent.
+Signature Challenges separately use [delivery-specific command profiles](src/app/signature_rival_policy.gd):
+the final facing tell commits its aim before attack, Rapid separates three short
+bursts with gaps, Spray approaches its actual reach, Mantle pursues paid contact,
+Fuse commits a landing point, and Rebound chooses a clear bank from real collision
+geometry when available. Family tells come from the same catalog as the visible
+challenge explanation. Recovery requests no new casts; existing threats remain
+live. Ordinary costs, cooldowns, collision and finite matter still govern every
+attempt. A clean signature reward requires both owned positive damage and the
+owned authoritative defeat; paid ground pressure counts alongside direct and
+status damage. Demonstration, a damaging contact or a Developer victory alone
+does not earn a spell. The optional learning path recommends Wa Bidi in
+Conservatory Gap Court, Oh Tipi in Tideglass Fuse Court and S. Wayne in Basalt
+Bank Court. Each uses its real district collision setup. Earned records choose
+the next suggestion; all thirty rivals remain selectable with no new gate.
+
 Round end and permanent departure expire owned temporary material through the
 ledger without a refund or removal of permanent terrain; surviving provenance
 must remain valid. Hidden enemies must not leak through labels or cues.
+
+The [offline balance diagnostic](scripts/balance-audit-model.gd) records the
+complete 504-spell, 30-character and 63-recipe definitions plus 23 bounded
+full-simulation experiments. They compare single/pair/all-six payloads and
+twelve-position rotations against open, moving and covered targets, including
+paid led Split hits and legal reflected Rebound hits with miss/blocked controls, with six
+seconds of paid commands followed by three seconds observing lingering effects.
+Direct, status and ground damage are reconciled with actual target Health loss;
+self-damage, Flux pressure, status exposure and peak entity counts remain
+separate measurements. Initial practice durability is disclosed and no resources
+are granted during a run. These experiments establish diagnostic correctness,
+not sustainable DPS, a PvP ranking or balanced encounter feel.
 
 Gallery inspection is separate from Attune confirmation, which restores that
 character's saved weave or its starter kit if uncustomized. Loom inspection must agree with highlighted element/family/filter,
 preview replacement versus swap, and show real costs/readiness. No-op equipment
 requests do not send commands. Menus own focus without pausing the world.
 Compact cards show essentials; Details contains full source-derived rules.
-The Gallery exposes all 30 champions at once in six columns and five rows,
+The wide Gallery exposes all 30 champions at once in six columns and five rows,
 sorted Small, Middle, Large and then name. Race is descriptive, not a column
 or pagination system. Navigation follows the visible grid; size shortcuts move
-focus without hiding anyone. Canonical catalog order and network IDs do not change.
+focus without hiding anyone. The enlarged Gallery reads one selected identity
+with full paginated facts and optional portrait/facing controls; previous/next
+reaches the same catalog. Canonical catalog order and network IDs do not change.
 The Gallery overview identifies actual paid flight versus double jump before
 Attune. Its twelve-slot starter explanation and saved-weave wording must agree
 with live restoration; an identity acknowledgement is not proof a guest's weave
@@ -407,22 +518,46 @@ Normal Loom starts with the selected slot's ingredients and four core forms.
 More Forms exposes all eight deliveries. Ingredient buttons compose an exact
 mixture filter; family filters and bounded pages expose every definition without
 filling the screen. Locked signatures explain the rival and the free Range route.
+Loom and Range share one read-only inspector for base/current timing, Flux,
+direct/shared damage, nominal reach, field purpose and counters. Optional
+equipped comparison labels its basis and damage-pool limits; it never presents
+those values as sustained DPS. Preparation uses the admission condition before
+payment, while cooldown is sampled at release. Large text keeps identity and
+current costs visible while full detail pages retain the qualifications. Wider
+reading layouts pin the selected spell name; comparison details name the equipped
+and selected spells before numerical deltas. Cast-cycle display converts the sum
+of authoritative startup and cooldown ticks once, preserving the true rounded
+cycle. Whole Flux costs use compact integers; fractional milli-unit costs remain
+exact. The enlarged Controls label Aim cue retains the existing aim-highlight
+toggle and input route.
 The Range uses the same validated weave transaction with persistence disabled.
 Changing loaners preserves spell-owned cooldowns. Restoring a weave on the same
 actor preserves the later of its current and elapsed original cooldowns. Leaving
 the practice world restores the original weave in a fresh ordinary world; it
-does not carry practice-world timers into that new world.
+does not carry practice-world timers into that new world. The nearest Element
+Garden plot can seed the selected Range mixture without equipping or casting it.
+Optional Setup selects target motion, paid firing and body size; these actions
+do not refill resources. Statistics separately observe accepted casts, Flux,
+target/player damage and target direct/status/ground components. Resetting these
+observations does not reset the target behavior clock or combat state.
 
 Signature progression is separate from preferences and saved weaves. Read-only
-loading, bounded versioned records, exact pre-save backup and verified staged
-replacement preserve existing bytes. Save failure is visible; a new spell can
+loading, bounded versioned records, exact pre-save backup, verified rolling
+last-good backup and verified staged replacement preserve existing bytes.
+Missing or invalid current progress exposes explicit recovery; recovery preserves
+a damaged current copy and merges session-earned records. It never silently
+replaces progress with defaults or overwrites a valid current save. Save failure is visible; a new spell can
 remain available this session without falsely claiming it was saved. A cheated
 attempt stays ineligible even if the player disables its tools before victory.
 All sandbox characters remain available; no character-unlock grind is invented.
 Developer overrides end at a world/network transition. Pausing rival commands
 does not stop existing motion, startup, projectiles or fields. Resetting/clearing
 uses explicit local actions and finite material retirement, never a time-scale
-change or an unbounded source. See the [progression/testing decision record](docs/element-expansion-evidence-20261009/progression-testing-design.md).
+change or an unbounded source. Explicit offline diagnostic recording captures
+at most sixty seconds of completed command frames with continuous cheats off.
+World changes or out-of-tick mutation stop recording and preserve its completed
+prefix. Export writes a unique local bounded file, performs no upload and reports
+deterministic verification as pending. See the [progression/testing decision record](docs/element-expansion-evidence-20261009/progression-testing-design.md).
 
 ## Visual and audio contract
 
@@ -475,8 +610,10 @@ forced control or protection expiry. Timed dodge protection uses a translucent
 body with split marks and discrete remaining-window pips; spawn protection uses
 an opaque body and a separate shield. Recovery restores the ordinary body on
 the exact vulnerable sample. Reduced effects retain the same state meaning.
-See the [animation decision record](docs/reference-refinement-evidence-20261009/animation-followup.md)
-for measured cadence, established precedents and current qualification.
+See the [current experience ledger](docs/implementation-20261012/experience.md)
+for the four-body motion fixtures and current review limits; the
+[earlier animation decision record](docs/reference-refinement-evidence-20261009/animation-followup.md)
+retains its original cadence measurements and precedents.
 
 The single 75% gameplay zoom uses subtle bounded look/velocity lead; reduced
 motion removes anticipatory pan. Screen-cardinal floors use the approved
@@ -523,8 +660,12 @@ application epoch publish atomically after successful preparation; refusal
 preserves the previous world and pending commands. Never publish stale state
 after callback mutation or count diagnostic render actors as network capacity.
 
-Menu → Performance owns Low/Standard presentation detail and a 60/120/unlimited
-frame limit. New and migrated preferences default to Low and 60. Low reduces
+Menu → Display & text size owns Low/Standard presentation detail, a
+60/120/unlimited frame limit and 100/125/150/200% reading text. Supported panels
+reflow, including Gallery and every Compendium category. At the smallest layout,
+selected identity and useful facts remain visible; optional controls and complete
+text pages preserve pointer/keyboard/controller access. New and migrated
+preferences default to Low and 60. Low reduces
 optional glows and decorative Garden samples while every paid footprint, phase,
 ownership cue and essential warning remains available. Reduced Motion/Effects
 retains its independent accessibility setting. Simulation cadence stays 120 Hz.
@@ -540,6 +681,10 @@ small inset raised core and ground shadow. These details stay inside existing
 material bounds; warning, contact and expiry geometry retain simulation
 authority. District floor details are compiled once and spatially culled, with
 route centers, buildings and travel arrival pockets left clear.
+Six immutable normalized sector templates serve the 63 mixtures; changing
+vertices, palette colors and UVs remain local to each submission. Public model
+arrays remain detached. The two redundant decorative rim arcs are removed,
+while ingredient, delivery, Fuse deadline and physical-contact cues remain.
 
 Elemental sound uses three cached variations for each cast/contact identity,
 four fixed voices and one voice reserved for confirmed contacts. Short attack,
@@ -555,18 +700,48 @@ Leaving the campus stops queued demand and polls completed work without waiting.
 Final teardown collects outstanding load handles. Rejected asset replacement
 preserves the existing owner, map identity and resident textures.
 
+Successful offline map travel into the Element Garden stages at most one funded
+exhibit and one exact visual entry per process frame. Detached entries preserve
+their initial authority phase. Publication requires the complete current funded,
+geometry/label and terrain sets; progress counts all three. Resize, world/mode
+changes and cancellation invalidate stale readiness, with at most 63 retained
+exhibit courts. Font changes invalidate prepared labels. Ordinary walking keeps
+its existing admission path without an arrival input gate. This distributes
+arrival work across frames; it does not promise a fixed millisecond budget or
+less total CPU. The [paired and actual-game evidence](docs/iteration-20261012/README.md)
+records the measured tradeoff and preserved failure cases.
+
 Static Range stone, Garden plot geometry, material outlines and unchanged HUD
 layout reuse bounded resident data. Painter order, alpha, native coordinates,
 direct source mutation and cache overflow require explicit comparison controls.
 Paid-field geometry conversion retains at most 512 exact fixed/expected polygon
 pairs and returns detached geometry. Dynamic phase, stock, owner and lifetime
-remain fresh. Retro fill/mark meshes retain at most 512 six-vertex polygons;
+remain fresh. The October 12 Court/world batching and style-memo experiment
+was withdrawn after paired native submission measurements were slower; it is
+not part of the retained implementation. The exact Garden spatial memo and
+projectile/trail changes remain separate optimizations.
+Retro fill/mark meshes retain at most 512 six-vertex polygons;
 Standard surface glow retains at most 256 polygon entries and 512 meshes.
 Retained mesh capacity uses the original drawing fallback without evicting RIDs
 that may still be referenced. Compatible same-cell boundary deduplication is
 limited to 64 temporary keys and never merges paid effects or their lifetimes.
-The current implementation and its limits are recorded in the
-[October 10 performance report](docs/performance-implementation-20261010.md).
+The [October 10 performance report](docs/performance-implementation-20261010.md)
+records the earlier field-rendering changes and their frozen measurements.
+The [October 12 implementation record](docs/implementation-20261012/README.md)
+owns subsequent implementation, completed source/package checks and remaining
+performance and human acceptance.
+The [smoothness measurements](docs/smoothness-20261012/performance.md) preserve
+the qualified 845f baseline and intermediate 46fca full/light-observer runs.
+The slower isolated ground-rendering experiment was withdrawn. The subsequent
+be680 build passed its own Full/package gates, while its foreground attempt
+expired before Start and recorded no gameplay. The current
+[1e084 foreground record](docs/iteration-20261012/foreground-current-record.json)
+is admitted on its exact source; its warm intervals still exceed the 60 FPS
+budget. Full-observer and light-observer intervals remain distinct, and only
+matched workloads support comparisons. Retained campus drawing stays opt-in
+through `--retained-campus`; moving-Garden measurements rejected its promotion
+to the default. The [iteration record](docs/iteration-20261012/README.md) separates
+arrival peak reduction from total CPU cost and records remaining acceptance.
 
 Measure setup, memory, complete capture/encoding/application and p95/p99/cold
 tails under real paid loads. A faster helper, correct headless simulation or

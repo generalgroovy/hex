@@ -4,6 +4,34 @@ extends FluxTestSuite
 const BootstrapScript: Script = preload("res://src/app/bootstrap.gd")
 
 
+func _test_prompt_device() -> void:
+	var router := InputRouter.new()
+	var pad := InputEventJoypadButton.new()
+	pad.button_index = JOY_BUTTON_A
+	pad.pressed = true
+	check(router.observe_prompt_device(pad), "deliberate pad press switches the teaching vocabulary")
+	equal(router.prompt_device, ControlBindingEditor.DEVICE_CONTROLLER, "pad hints are selected independently of aiming")
+	var drift := InputEventJoypadMotion.new()
+	drift.axis_value = 0.2
+	check(not router.observe_prompt_device(drift), "stick noise does not switch labels")
+	var mouse := InputEventMouseMotion.new()
+	mouse.relative = Vector2(1, 1)
+	check(not router.observe_prompt_device(mouse), "tiny pointer drift cannot steal pad prompts")
+	var key := InputEventKey.new()
+	key.keycode = KEY_SPACE
+	key.pressed = true
+	key.echo = true
+	check(not router.observe_prompt_device(key), "held key echo does not steal pad prompts")
+	key.echo = false
+	check(router.observe_prompt_device(key), "fresh keyboard press restores keyboard and mouse prompts")
+	drift.axis_value = -0.7
+	check(router.observe_prompt_device(drift), "deliberate stick direction selects pad prompts")
+	pad.pressed = false
+	check(not router.observe_prompt_device(pad), "button release cannot manufacture another device change")
+	mouse.relative = Vector2(5, 0)
+	check(router.observe_prompt_device(mouse), "deliberate pointer travel restores mouse and keyboard prompts")
+
+
 func run() -> int:
 	for action: StringName in [&"jump", &"primary", &"active_1", &"sprint", &"slide", &"evade", &"technique", &"punch", &"kick", &"interact", &"emote", &"spell_1", &"spell_2", &"spell_3", &"spell_4", &"spell_layer_ctrl", &"spell_layer_alt", &"adjust_camera_zoom"]:
 		if InputMap.has_action(action):
@@ -44,6 +72,7 @@ func run() -> int:
 	equal(InputRouter.selected_spell_slot_index(3, false, true), 11, "Alt+4 selects position 12")
 	equal(InputRouter.selected_spell_slot_index(1, true, true), 9, "Alt deterministically wins a dual-modifier chord")
 	_test_press_edge_resilience()
+	_test_prompt_device()
 	_test_qv_physical_press_paths()
 	_test_evade_neutral_threshold_and_rearm()
 	_test_evade_device_events_and_unbound()
@@ -63,6 +92,7 @@ func run() -> int:
 	check(InputMap.action_get_events(&"active_1").size() >= 2, "Active one preserves E and its controller button")
 	check(InputMap.action_get_events(InputRouter.SPECTATE_NEXT_ACTION).size() >= 2, "spectator focus supports Tab and controller D-pad right")
 	_test_capture_pointer_parser()
+	_test_accessible_aim_and_deadzones()
 	_test_aim_endpoint()
 	_test_twelve_position_controller_events()
 	return finish("input-router")
@@ -783,3 +813,51 @@ func _test_capture_pointer_parser() -> void:
 	check(BootstrapScript.is_transient_preference_argument("--pov-mode=cone"), "capture POV override is explicitly transient")
 	check(BootstrapScript.is_transient_preference_argument("--camera-zoom=50"), "capture camera override is explicitly transient")
 	check(not BootstrapScript.is_transient_preference_argument("--session-port=24922"), "ordinary session arguments do not suppress preference persistence")
+
+
+func _test_accessible_aim_and_deadzones() -> void:
+	var router := InputRouter.new()
+	var prefs := PlayerPreferences.new()
+	prefs.movement_deadzone_percent=40
+	prefs.aim_deadzone_percent=10
+	prefs.keyboard_bindings[&"aim_up"]=KEY_I
+	router.configure_keyboard_bindings(prefs.keyboard_bindings)
+	router.configure_controller_bindings(prefs.controller_bindings)
+	router.configure_accessibility(prefs)
+	for action: StringName in [&"move_left",&"move_right",&"move_up",&"move_down"]+InputRouter.AIM_ACTIONS: Input.action_release(action)
+	var left := InputEventJoypadMotion.new()
+	left.axis=JOY_AXIS_LEFT_X
+	left.axis_value=0.3
+	_deliver_movement_event(router,left)
+	var right := InputEventJoypadMotion.new()
+	right.axis=JOY_AXIS_RIGHT_Y
+	right.axis_value=0.2
+	_deliver_movement_event(router,right)
+	var command := router.sample(0,Vector2.ZERO,Vector2.LEFT)
+	equal(command.move_x,0,"movement drift cannot borrow the lower aim deadzone")
+	equal(Vector2i(command.aim_x,command.aim_y),Vector2i(0,1000),"aim accepts a deliberate tilt below movement threshold")
+	left.axis_value=0.0
+	right.axis_value=0.0
+	_deliver_movement_event(router,left)
+	_deliver_movement_event(router,right)
+	_deliver_movement_event(router,_physical_key_event(KEY_I,true))
+	command=router.sample(1,Vector2.ZERO,Vector2.RIGHT)
+	equal(Vector2i(command.aim_x,command.aim_y),Vector2i(0,-1000),"real remappable keyboard aim reaches the command")
+	equal(command.aim_target_x,-1,"digital aim uses the same directional endpoint as a stick")
+	router.discard_transient_movement_input()
+	command=router.sample(2,Vector2.ZERO,Vector2.RIGHT)
+	check(router.quarantined_actions.has(&"aim_up"),"menu-held digital aim stays quarantined")
+	_deliver_movement_event(router,_physical_key_event(KEY_I,false))
+	router.sample(3,Vector2.ZERO,Vector2.RIGHT)
+	check(not router.quarantined_actions.has(&"aim_up"),"neutral release rearms digital aim")
+	prefs.aim_deadzone_percent=25
+	router.configure_accessibility(prefs)
+	for action: StringName in [&"aim_right",&"aim_down"]: Input.action_press(action,0.2)
+	router.discard_transient_movement_input()
+	check(router.quarantined_actions.has(&"aim_right") and router.quarantined_actions.has(&"aim_down"),"radial diagonal aim is quarantined even below each axis threshold")
+	for action: StringName in InputRouter.AIM_ACTIONS: Input.action_release(action)
+	router.sample(4,Vector2.ZERO,Vector2.RIGHT)
+	check(router.quarantined_actions.is_empty(),"neutral diagonal releases every modal aim quarantine")
+	prefs=PlayerPreferences.new()
+	router.configure_keyboard_bindings(prefs.keyboard_bindings)
+	router.configure_accessibility(prefs)

@@ -36,6 +36,8 @@ var floor_labels: Array[Dictionary] = []
 var floor_mark_count := 0
 var floor_guide_builds := 0
 var floor_guide_hash := ""
+var retained_generation := 0
+const RETAINED_LAYER_COUNT := 6
 
 
 func configure(visual_language: VisualLanguage) -> bool:
@@ -93,6 +95,18 @@ static func terrain_preparation_rect(visible: Rect2) -> Rect2:
 	return visible.grow(160.0)
 
 
+func prefetch_terrain_view(visible: Rect2) -> void:
+	if illustrated_kit == null: return
+	if not visible.has_area() or not visible.position.is_finite() or not visible.end.is_finite():
+		clear_terrain_prefetch()
+		return
+	illustrated_kit.prefetch_ground_view(terrain_preparation_rect(visible))
+
+
+func clear_terrain_prefetch() -> void:
+	if illustrated_kit != null: illustrated_kit.clear_ground_prefetch()
+
+
 func suspend_terrain() -> bool:
 	return illustrated_kit == null or illustrated_kit.suspend_ground()
 
@@ -125,37 +139,58 @@ func draw(
 	practice_details: bool = true,
 	court_context: String = "",
 ) -> void:
+	for layer: int in RETAINED_LAYER_COUNT:
+		draw_retained_layer(canvas, layout, layer, presentation_tick, focus_world_position, reduced_effects, station_titles, visible_world_rect, practice_details, court_context)
+
+
+func retained_source() -> SanctumCampusRenderer:
+	return self
+
+
+func can_draw_campus(layout: SanctumCampusLayout) -> bool:
+	return illustrated_kit != null and illustrated_kit.ground_ready() and layout != null and illustrated_kit.campus == layout
+
+
+func draw_retained_layer(canvas: CanvasItem, layout: SanctumCampusLayout, layer: int, presentation_tick: int, focus_world_position: Vector2, reduced_effects: bool, station_titles: bool, visible_world_rect: Rect2, practice_details: bool, court_context: String) -> void:
+	# Exact original painter order, shared by the immediate reference path and
+	# independently retained CanvasItems. No simulation or visibility admission.
 	if illustrated_kit == null or not illustrated_kit.ground_ready() or layout == null or illustrated_kit.campus != layout:
 		return
-	illustrated_kit.draw_ground(canvas, visible_world_rect)
-	environment_details.draw(canvas, visible_world_rect)
-	_draw_activity_areas(canvas, layout, focus_world_position, visible_world_rect, practice_details)
-	if visible_in_world_rect(Rect2(SanctumCampusLayout._parse_bounds(layout.arena_definition.get("bounds", []))).grow(8), visible_world_rect):
-		_draw_arena(canvas, layout.arena_definition, court_context)
-	for building_value: Variant in layout.data.get("buildings", []):
-		var building: Dictionary = building_value
-		if visible_in_world_rect(building_visual_bounds(building), visible_world_rect):
-			illustrated_kit.draw_building(canvas, building, focus_world_position)
-	for landmark_value: Variant in layout.data.get("landmarks", []):
-		var landmark: Dictionary = landmark_value
-		if not visible_in_world_rect(landmark_visual_bounds(landmark), visible_world_rect): continue
-		if bool(landmark.get("worldbone", false)):
-			illustrated_kit.draw_landmark(canvas, landmark, focus_world_position, presentation_tick, reduced_effects)
-		elif bool(landmark.get("fast_travel", false)):
-			_draw_waypoint_inlay(canvas, layout, landmark)
-	var drawn_groups := {}
-	for station_value: Variant in layout.data.get("stations", []):
-		var station: Dictionary = station_value
-		var group := String(station.get("service_group", station["id"]))
-		if drawn_groups.has(group):
-			continue
-		drawn_groups[group] = true
-		if visible_in_world_rect(station_visual_bounds(station), visible_world_rect):
-			illustrated_kit.draw_station(canvas, station, presentation_tick, reduced_effects, focus_world_position, station_titles)
-	for district_value: Variant in layout.data.get("districts", []):
-		var district: Dictionary = district_value
-		if visible_in_world_rect(district_label_bounds(district), visible_world_rect):
-			_draw_district_label(canvas, district)
+	match layer:
+		0:
+			illustrated_kit.draw_ground(canvas, visible_world_rect)
+			environment_details.draw(canvas, visible_world_rect)
+		1:
+			_draw_activity_areas(canvas, layout, focus_world_position, visible_world_rect, practice_details)
+			if visible_in_world_rect(Rect2(SanctumCampusLayout._parse_bounds(layout.arena_definition.get("bounds", []))).grow(8), visible_world_rect):
+				_draw_arena(canvas, layout.arena_definition, court_context)
+		2:
+			for building_value: Variant in layout.data.get("buildings", []):
+				var building: Dictionary = building_value
+				if visible_in_world_rect(building_visual_bounds(building), visible_world_rect):
+					illustrated_kit.draw_building(canvas, building, focus_world_position)
+		3:
+			for landmark_value: Variant in layout.data.get("landmarks", []):
+				var landmark: Dictionary = landmark_value
+				if not visible_in_world_rect(landmark_visual_bounds(landmark), visible_world_rect): continue
+				if bool(landmark.get("worldbone", false)):
+					illustrated_kit.draw_landmark(canvas, landmark, focus_world_position, presentation_tick, reduced_effects)
+				elif bool(landmark.get("fast_travel", false)):
+					_draw_waypoint_inlay(canvas, layout, landmark)
+		4:
+			var drawn_groups := {}
+			for station_value: Variant in layout.data.get("stations", []):
+				var station: Dictionary = station_value
+				var group := String(station.get("service_group", station["id"]))
+				if drawn_groups.has(group): continue
+				drawn_groups[group] = true
+				if visible_in_world_rect(station_visual_bounds(station), visible_world_rect):
+					illustrated_kit.draw_station(canvas, station, presentation_tick, reduced_effects, focus_world_position, station_titles)
+		5:
+			for district_value: Variant in layout.data.get("districts", []):
+				var district: Dictionary = district_value
+				if visible_in_world_rect(district_label_bounds(district), visible_world_rect):
+					_draw_district_label(canvas, district)
 
 
 static func visible_in_world_rect(visual_bounds: Rect2, visible_world_rect: Rect2) -> bool:
@@ -321,6 +356,7 @@ func _fail(message: String) -> bool:
 
 
 func _clear_floor_guides() -> void:
+	retained_generation += 1
 	floor_guide_data.clear()
 	floor_ink.clear()
 	floor_trim.clear()

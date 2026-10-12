@@ -159,12 +159,15 @@ static func draw_material_motion(canvas: CanvasItem, language: VisualLanguage, c
 
 
 static func draw(canvas: CanvasItem, language: VisualLanguage, center: Vector2, element_id: String, radius: float, color: Color, direction: Vector2 = Vector2.UP) -> bool:
-	var glyph := contract(language, element_id)
-	if canvas == null or glyph.is_empty() or radius <= 0.0:
+	if canvas == null or language == null or radius <= 0.0:
 		return false
+	# Submission needs the live shape only. The public diagnostic contract also
+	# prepares topology/cadence and a detached dictionary, none of which is drawn.
+	# Read the language each call so direct edits retain their existing behavior.
+	var shape := language.element_shape(element_id)
 	var forward := direction.normalized() if direction.length_squared() > 0.0 else Vector2.UP
 	var side := forward.orthogonal()
-	match String(glyph["shape"]):
+	match shape:
 		"block_fracture":
 			var square := PackedVector2Array([center - forward * radius - side * radius, center - forward * radius + side * radius, center + forward * radius + side * radius, center + forward * radius - side * radius])
 			canvas.draw_polyline(_closed(square), color, 1.5, false)

@@ -4,8 +4,8 @@ extends FluxTestSuite
 const CATALOG_PATH: String = "res://content/abilities/foundation_abilities_v1.json"
 # Frozen historical signatures still guard unrelated simulation fields. The
 # authorized projectile-family balance fields are normalized below and tested
-# exactly by elemental-bursts and spell-delivery-expansion, including live
-# collision size, inverse launch-strength ordering, paid cadence and reach.
+# exactly by elemental-bursts, spell-delivery-expansion and
+# projectile-speed-policy, including collision size, paid cadence and reach.
 const CANDIDATE_DEFINITION_SIGNATURES: Dictionary = {
 	101: "5f0485be6169c4621f9f2c4b9b7b57ba966e42814c1a1c1ad33c426d48546011",
 	140: "32693d70069c7083b26c36666cb5ad48864691476da0188a1d7e8b6203b5476e",
@@ -123,7 +123,11 @@ func _before_tempo(definition: Dictionary, wire: int) -> Dictionary:
 	}
 	var previous := definition.duplicate(true)
 	previous.merge(values[wire], true)
-	if wire != 141: previous.erase("repeat_while_held")
+	if wire != 141:
+		previous.erase("repeat_while_held")
+		# Historical projectile definitions used only a lifetime. The new finite
+		# muzzle range is independently exact-checked by projectile-speed-policy.
+		previous.erase("range")
 	return previous
 
 

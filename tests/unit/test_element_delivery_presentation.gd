@@ -3,6 +3,7 @@ extends FluxTestSuite
 const Effects = preload("res://src/presentation/pixel_spell_effects.gd")
 const Status = preload("res://src/presentation/element_status_presenter.gd")
 const Geometry = preload("res://src/presentation/pixel_effect_geometry.gd")
+const MagicLibrary = preload("res://src/presentation/pixel_magic_library.gd")
 
 
 func run() -> int:
@@ -53,6 +54,7 @@ func run() -> int:
 	_test_delivery_boundaries(config)
 	_test_fuse_countdown_readability(config)
 	_test_status(config, language)
+	_test_status_protection_clearance(config, language)
 	return finish("element-delivery-presentation")
 
 
@@ -201,13 +203,83 @@ func _test_status(config: SimConfig, language: VisualLanguage) -> void:
 	check(Status.model(protected, config, language).is_empty(), "rejected protected hit cannot manufacture ailment visuals")
 
 
+func _test_status_protection_clearance(config: SimConfig, language: VisualLanguage) -> void:
+	# Composition geometry only. The native paid status/roll fixture supplies the
+	# separate actual-input/timer witness; these declared states do not claim it.
+	var manifest: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://assets/sprites/pixel_cast_v1/manifest.json"))
+	var heights: Array[int]=[]
+	for row: Dictionary in manifest.characters:
+		var height := int(row.display_height)
+		check(height in [58,63,68],"status clearance covers every currently admitted body height")
+		if height not in heights: heights.append(height)
+	heights.sort()
+	equal(heights,[58,63,68],"clearance matrix includes all three authored body sizes")
+	var actor := PlayerState.new(2)
+	actor.team_id=2
+	actor.spawn_protection_ticks=0
+	SpellStatusPolicy.apply_hit(actor,MixtureCatalog.wire_for(63,"bolt"),700,1,1,4000,config,Vector2i.ZERO)
+	var library: RefCounted=MagicLibrary.default_library()
+	check(library.asset_count()>0,"spawn crest clearance uses the actual admitted pixel stamp")
+	# Current admitted pixel frame builders all have zero offset. Keep the real
+	# Bootstrap shadow-to-body anchor difference rather than treating them alike.
+	var sprite_offset := Vector2(0,float(MovementTuning.PLAYER_RADIUS)/1000.0*0.58)
+	for height: int in heights:
+		for reduced: bool in [false,true]:
+			for kind: String in ["none","roll","air_dodge","spawn"]:
+				actor.air_dodge_ticks=0;actor.air_height=0;actor.spawn_protection_ticks=0
+				if kind in ["roll","air_dodge"]:
+					actor.hop_mode=PlayerState.MovementMode.ROLL if kind=="roll" else PlayerState.MovementMode.AIR_DODGE
+					actor.movement_mode=actor.hop_mode
+					actor.air_height=10000 if kind=="air_dodge" else 0
+					actor.air_dodge_ticks=config.milliseconds_to_ticks(MovementTuning.ROLL_DURATION_MS if kind=="roll" else MovementTuning.AIR_DODGE_DURATION_MS)
+				elif kind=="spawn": actor.spawn_protection_ticks=1
+				var before := actor.canonical_values()
+				var protection := CartoonChampionPresenter.protection_contract(actor,config,reduced,float(height))
+				equal(bool(protection.active),kind!="none","clearance keeps protected and unprotected semantics separate")
+				var occupied: Array[Rect2]=[]
+				for points: PackedVector2Array in protection.badge_lines:
+					occupied.append(_status_stroke_bounds(points,sprite_offset,2.5))
+				if kind=="spawn":
+					var shield: PackedVector2Array=protection.shield
+					var center := sprite_offset+(shield[0]+shield[1])*0.5+Vector2(0,4)
+					var sample: Dictionary=library.sample(MagicLibrary.movement_asset_id("protection_badge",reduced),0)
+					check(not sample.is_empty(),"actual spawn badge remains admitted in each effects profile")
+					if not sample.is_empty(): occupied.append(Rect2(center+(sample.local_rect as Rect2).position,(sample.local_rect as Rect2).size))
+				if int(protection.budget_pips)>0:
+					for pip: int in 3:
+						occupied.append(Rect2(sprite_offset+Vector2(13+pip*5,-float(height)-15),Vector2(4,5)).grow(1))
+				for count: int in range(1,7):
+					for index: int in count:
+						var center := Vector2((float(index)-float(count-1)*0.5)*15.0,Status.BADGE_ROW_Y)
+						var plate := Rect2(center-Vector2(6,7),Vector2(12,14))
+						check(plate.is_finite() and absf(center.x)<=37.5,"all six status slots retain a finite centered row without extra icons")
+						for protected_rect: Rect2 in occupied:
+							check(not plate.intersects(protected_rect,true),"status plate cannot cover protected crest or remaining-window pips")
+							for zoom: float in [0.75,1.0]:
+								check(not Rect2(plate.position*zoom,plate.size*zoom).intersects(Rect2(protected_rect.position*zoom,protected_rect.size*zoom),true),"protection clearance survives both supported capture scales")
+					equal(Status.model(actor,config,language).size(),6,"layout never removes an existing ailment to make room for protection")
+				equal(actor.canonical_values(),before,"composition queries cannot alter protection or status clocks")
+	var canvas := Node2D.new()
+	var before := actor.canonical_values()
+	for invalid: Vector2 in [Vector2(INF,0),Vector2(0,NAN)]:
+		Status.draw(canvas,actor,invalid,config,language)
+	equal(actor.canonical_values(),before,"nonfinite anchors return before any CanvasItem command or authority change")
+	canvas.free()
+
+
+static func _status_stroke_bounds(points: PackedVector2Array,offset: Vector2,half_width: float) -> Rect2:
+	var rect := Rect2(points[0]+offset,Vector2.ZERO)
+	for point: Vector2 in points: rect=rect.expand(point+offset)
+	return rect.grow(half_width)
+
+
 static func _shot(wire: int, definition: Dictionary, config: SimConfig) -> ProjectileState:
 	var shot := ProjectileState.new(1, 1, 1, wire, int(definition.element_wire_id), Vector2i(200000, 200000), Vector2i(300000, 0), int(definition.radius), int(definition.damage), config.milliseconds_to_ticks(int(definition.lifetime_ms)))
 	shot.initial_strength = int(definition.reaction_strength)
 	shot.remaining_strength = shot.initial_strength
 	shot.source_cast_id = 700
 	shot.delivery_damage_remaining = shot.damage
-	shot.delivery_ticks = config.milliseconds_to_ticks(250) if String(definition.family) == "split" else 0
+	shot.delivery_ticks = config.milliseconds_to_ticks(int(definition.get("split_delay_ms", 250))) if String(definition.family) == "split" else 0
 	shot.remaining_bounces = int(definition.get("remaining_bounces", 0))
 	return shot
 

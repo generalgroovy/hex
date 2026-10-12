@@ -32,6 +32,7 @@ func run() -> int:
 	_test_layout_and_intents()
 	_test_readable_wrapped_copy()
 	_test_modal_close_input()
+	_test_reflow_selection()
 	return finish("hex-playground-panel")
 
 
@@ -304,3 +305,46 @@ func _modal_test_event(case: Dictionary, node: PlaygroundInputHarness) -> InputE
 	var geometry := Playground.layout(node.HEX_PLAYGROUND_RECT, node._reduced_effects_enabled())
 	click.position = (geometry.close as Rect2).get_center() * node._ui_scale()
 	return click
+
+
+func _test_reflow_selection() -> void:
+	var script := preload("res://src/presentation/readable_chemistry_demo.gd")
+	for viewport: Vector2 in [Vector2(640,360),Vector2(853.333,480),Vector2(960,540)]:
+		var model = script.new()
+		var geo: Dictionary = script.geometry(viewport)
+		check(Rect2(Vector2.ZERO,viewport).encloses(geo.panel),"reflow demo fits the supported small window at150percent")
+		for key: String in ["previous_first","next_first","previous_second","next_second","body","detail_previous","detail_next"]:
+			check((geo.panel as Rect2).encloses(geo[key]),"demo ingredient and detail targets remain on screen")
+		check(not (geo.body as Rect2).intersects(geo.detail_previous),"demo detail text has a separate pagination lane")
+		var pointer := InputEventMouseButton.new()
+		pointer.pressed=true
+		pointer.button_index=MOUSE_BUTTON_LEFT
+		var pair := Playground.DEFAULT_PAIR
+		var seen := {}
+		for ingredient: int in 6:
+			pointer.position=geo.next_first.get_center()
+			var intent: Dictionary=model.handle_input(pointer,viewport,pair)
+			equal(intent.get("action"),"select_hex_pair","ingredient pointer emits only a selection")
+			pair=intent.selected_pair
+			seen[pair.x]=true
+		equal(seen.size(),6,"pointer can visit every first ingredient without paying or resetting")
+		for index: int in 5:
+			check((geo.panel as Rect2).encloses(geo.buttons[index]),"every demo action remains reachable")
+			pointer.position=(geo.buttons[index] as Rect2).get_center()
+			var intent: Dictionary=model.handle_input(pointer,viewport,pair)
+			equal(intent.get("action"),script.ACTIONS[index],"compact action preserves the existing dispatcher intent")
+			if index==0: check(intent.requires_paid_casts and not intent.direct_effect_injection,"compact Run still describes an ordinary paid demo")
+		var pad := InputEventJoypadButton.new()
+		pad.pressed=true
+		pad.button_index=JOY_BUTTON_DPAD_DOWN
+		equal(model.handle_input(pad,viewport,pair),{},"controller focus alone cannot run a demo")
+		equal(model.focus,1,"controller can select the second ingredient")
+		pad.button_index=JOY_BUTTON_A
+		equal(model.handle_input(pad,viewport,pair).get("action"),"select_hex_pair","controller accept on ingredient remains selection only")
+		pad.button_index=JOY_BUTTON_DPAD_DOWN
+		model.handle_input(pad,viewport,pair)
+		for index: int in 5:
+			pad.button_index=JOY_BUTTON_A
+			equal(model.handle_input(pad,viewport,pair).get("action"),script.ACTIONS[index],"controller reaches every explicit demo action")
+			pad.button_index=JOY_BUTTON_DPAD_RIGHT
+			equal(model.handle_input(pad,viewport,pair),{},"changing the focused tool cannot execute it")

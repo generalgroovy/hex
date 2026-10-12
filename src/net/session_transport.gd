@@ -29,6 +29,9 @@ const MAX_QUEUED_INPUTS: int = MAX_REMOTE_CLIENTS * MAX_QUEUED_INPUTS_PER_PEER
 # the eight-player one-MTU envelope while remaining generous in the compact HUD.
 const MAX_PLAYER_NAME_LENGTH: int = 15
 const CONNECT_TIMEOUT_MS: int = 5_000
+# Physical ENet connections have the same bounded admission window as clients.
+# They own no player/entity/return reservation until a valid HELLO is admitted.
+const HELLO_TIMEOUT_MS: int = CONNECT_TIMEOUT_MS
 const RECONNECT_WINDOW_MS: int = 15_000
 const ADMIN_DISCONNECT_GRACE_MS: int = 250
 # Host authority ends after ADMIN_DISCONNECT_GRACE_MS. The physical ENet peer
@@ -168,6 +171,8 @@ var remote_build_id: String = ""
 var _runtime_identity_configured: bool = false
 var _hello_sent: bool = false
 var _connect_started_ms: int = 0
+var _hello_deadline_by_peer: Dictionary[int, int] = {}
+var _hello_rejection_grace_by_peer: Dictionary[int, bool] = {}
 var _server_disconnect_pending: bool = false
 var _snapshot_assemblies: Dictionary[int, Dictionary] = {}
 var world_epoch: int = 0
@@ -284,6 +289,7 @@ func start_host(
 		return _fail("Could not host UDP port %d (error %d)" % [port, error])
 	peer = candidate
 	peer.transfer_mode = MultiplayerPeer.TRANSFER_MODE_RELIABLE
+	peer.peer_connected.connect(_on_host_peer_connected)
 	peer.peer_disconnected.connect(_on_peer_disconnected)
 	mode = Mode.HOSTING
 	session_signature = signature
@@ -373,6 +379,10 @@ func poll() -> void:
 			break
 	if peer == null:
 		return
+	if is_host():
+		# Drain the bounded packet batch first: an on-time HELLO already queued
+		# by ENet can complete admission before its physical slot is reclaimed.
+		_expire_pending_hellos(Time.get_ticks_msec())
 	var queued_packets_remain: bool = (
 		packets_processed == MAX_PACKETS_PER_POLL
 		and peer.get_available_packet_count() > 0
@@ -941,6 +951,8 @@ func _handle_hello(sender_id: int, packet: Dictionary) -> void:
 		return
 	if resumed:
 		reconnect_reservations.erase(consumed_reconnect_token)
+	_hello_deadline_by_peer.erase(sender_id)
+	_hello_rejection_grace_by_peer.erase(sender_id)
 	accepted_peer_ids.append(sender_id)
 	accepted_peer_ids.sort()
 	entity_by_peer[sender_id] = entity_id
@@ -1048,7 +1060,18 @@ func _handle_reject(packet: Dictionary) -> void:
 func _send_reject(target_peer_id: int, code: String) -> bool:
 	if not REJECT_CODES.has(code):
 		return false
-	return _send_to(target_peer_id, {"kind": PACKET_REJECT, "code": code, "host_build_id": build_id})
+	var sent := _send_to(target_peer_id, {"kind": PACKET_REJECT, "code": code, "host_build_id": build_id})
+	if sent: _grant_hello_rejection_grace(target_peer_id, Time.get_ticks_msec())
+	return sent
+
+
+func _grant_hello_rejection_grace(peer_id: int, now_ms: int) -> void:
+	if not is_host() or not _hello_deadline_by_peer.has(peer_id) or _hello_rejection_grace_by_peer.has(peer_id): return
+	# A reliable refusal arriving at the admission deadline must have time to
+	# reach its client. Only the first refusal can grant this bounded grace;
+	# malformed packet floods cannot keep renewing an occupied socket.
+	_hello_deadline_by_peer[peer_id] = maxi(_hello_deadline_by_peer[peer_id], now_ms + ADMIN_DELIVERY_GRACE_MS)
+	_hello_rejection_grace_by_peer[peer_id] = true
 
 
 func _send_to(
@@ -1409,8 +1432,31 @@ static func _pair_key(epoch: int, tick: int) -> int:
 	return (epoch << 32) | tick
 
 
+func _on_host_peer_connected(peer_id: int) -> void:
+	if is_host() and peer_id > SERVER_PEER_ID and not accepted_peer_ids.has(peer_id):
+		# Repeated packets/events never extend an unadmitted connection's lease.
+		if not _hello_deadline_by_peer.has(peer_id):
+			_hello_deadline_by_peer[peer_id] = Time.get_ticks_msec() + HELLO_TIMEOUT_MS
+
+
+func _expire_pending_hellos(now_ms: int) -> int:
+	if not is_host() or peer == null:
+		return 0
+	var expired: Array[int] = []
+	for peer_id: int in _hello_deadline_by_peer:
+		if now_ms >= _hello_deadline_by_peer[peer_id]: expired.append(peer_id)
+	expired.sort()
+	for peer_id: int in expired:
+		_hello_deadline_by_peer.erase(peer_id)
+		_hello_rejection_grace_by_peer.erase(peer_id)
+		if not accepted_peer_ids.has(peer_id): peer.disconnect_peer(peer_id, true)
+	return expired.size()
+
+
 func _on_peer_disconnected(peer_id: int) -> void:
 	if is_host():
+		_hello_deadline_by_peer.erase(peer_id)
+		_hello_rejection_grace_by_peer.erase(peer_id)
 		administrative_delivery_deadline_by_peer.erase(peer_id)
 		var entity_id: int = entity_by_peer.get(peer_id, 0)
 		var disconnected_name: String = name_by_peer.get(peer_id, "Traveller")
@@ -1500,6 +1546,8 @@ func _close_peer() -> void:
 	administrative_delivery_deadline_by_peer = {}
 	_hello_sent = false
 	_connect_started_ms = 0
+	_hello_deadline_by_peer.clear()
+	_hello_rejection_grace_by_peer.clear()
 	_server_disconnect_pending = false
 	world_epoch = 0
 

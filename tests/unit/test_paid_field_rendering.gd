@@ -14,6 +14,8 @@ func run() -> int:
 	_test_fresh_dynamic_seams()
 	_test_region_preparation_current_inputs()
 	_test_grouped_boundary_counts()
+	_test_retained_boundary_inputs()
+	_test_retained_exposed_edges()
 	_test_retained_surface_glow()
 	return finish("paid-field-rendering")
 
@@ -259,6 +261,121 @@ func _test_grouped_boundary_counts() -> void:
 	equal(current._region_edge_counts(compound),before._region_edge_counts(compound),"six distinct paid Mantle footprints retain frozen unified boundary counts")
 	equal(current._region_edge_counts(compound).keys(),before._region_edge_counts(compound).keys(),"six distinct paid Mantle footprints retain exact boundary insertion order")
 	equal(current._region_edge_counts(compound),before._region_edge_counts(one_compound),"compatible same-cell Mantle footprints count one side rather than six")
+
+func _test_retained_boundary_inputs() -> void:
+	var current := Court.new()
+	var before := BeforeCourt.new()
+	var row := current._prepare_region(_source_region(), "conflagration", _polygon())
+	var grouped := {Vector2i.ZERO: [row]}
+	var initial := current._region_edge_counts(grouped)
+	equal(initial, before._region_edge_counts(grouped), "retained topology begins with independently frozen boundary counts")
+	check(initial.is_read_only(), "cached count maps cannot be changed by consumers")
+	var builds: int = current.outline_cache_stats().topology_builds
+	for frame: int in 8:
+		equal(current._region_edge_counts(grouped), initial, "stable current topology reuses exact original counts")
+	equal(current.outline_cache_stats().topology_builds, builds, "stable boundary preparation does not rebuild its map")
+	equal(current.outline_cache_stats().topology_hits, 8, "retained boundary path records actual warm reuse")
+	for index: int in 20:
+		row.owner_key = {"team": index, "owner": 1}
+		row.phase = "forming" if index % 2 == 0 else "decaying"
+		row.danger = index % 3 == 0
+		equal(current._region_edge_counts(grouped), before._region_edge_counts(grouped), "owner, phase and danger mutations cannot reuse a stale boundary")
+		check(int(current.outline_cache_stats().topologies) <= Court.BOUNDARY_TOPOLOGY_LIMIT, "topology snapshots retain at most eight bounded entries")
+	var changed: PackedVector2Array = row.fixed_polygon
+	changed[0] += Vector2(2000, 1000)
+	row.fixed_polygon = changed
+	equal(current._region_edge_counts(grouped), before._region_edge_counts(grouped), "same-size direct polygon mutation invalidates retained topology")
+	for mutation: int in 16:
+		row.fixed_polygon[0] += Vector2(1, 2)
+		equal(current._region_edge_counts(grouped), before._region_edge_counts(grouped), "in-place polygon mutation never poisons a retained key")
+		check(int(current.outline_cache_stats().topologies) <= Court.BOUNDARY_TOPOLOGY_LIMIT, "mutated caller polygons cannot strand entries outside FIFO eviction")
+	grouped.clear()
+	equal(current._region_edge_counts(grouped), {}, "removed fields leave no cached boundary behind")
+	for index: int in 530:
+		var polygon := _polygon(Vector2(index * 53.25, 10.75))
+		var layout: Dictionary = current._region_layout(polygon)
+		var marks: PackedVector2Array = current._fire_phase_mark(polygon, "cooling", false, layout.center, float(layout.clearance) - 2.5)
+		var untouched := marks.duplicate()
+		marks[0] += Vector2.ONE
+		equal(current._fire_phase_mark(polygon, "cooling", false, layout.center, float(layout.clearance) - 2.5), untouched, "caller-edited stroke cannot poison another draw's retained geometry")
+	check(int(current.outline_cache_stats().phase_marks) <= 512, "static Fire strokes have a fixed512 entry ceiling")
+
+
+func _reference_exposed_edges(before: RefCounted, region: Dictionary, counts: Dictionary) -> int:
+	# Frozen pre-cache edge keys provide an independent witness of the original
+	# six per-edge visibility decisions, including their original vertex order.
+	var polygon: PackedVector2Array = region.fixed_polygon
+	var result := 0
+	for index: int in (region.polygon as PackedVector2Array).size():
+		var key: String = before._region_edge_key(region, polygon[index], polygon[(index + 1) % polygon.size()])
+		if int(counts.get(key, 0)) <= 1: result |= 1 << index
+	return result
+
+
+func _test_retained_exposed_edges() -> void:
+	var current := Court.new()
+	var before := BeforeCourt.new()
+	var grouped := {}
+	var cells: Array[Vector2i] = [Vector2i.ZERO]
+	cells.append_array(Grid.neighbors(Vector2i.ZERO))
+	for cell: Vector2i in cells:
+		var fixed := PackedVector2Array()
+		var pixels := PackedVector2Array()
+		for point: Vector2i in Grid.vertices(cell):
+			fixed.append(Vector2(point)); pixels.append(Vector2(point) / 1000.0)
+		var source := _source_region()
+		source.polygon = fixed
+		var row := current._prepare_region(source, "conflagration", pixels)
+		grouped[cell] = [row, row.duplicate(true), row.duplicate(true)]
+	var counts: Dictionary = current._region_edge_counts(grouped)
+	equal(current._region_exposed_edges(grouped[Vector2i.ZERO][0], counts), 0, "surrounded center retains zero exposed edges rather than treating zero as a cache miss")
+	var builds: int = current.outline_cache_stats().edge_mask_builds
+	for frame: int in 8:
+		counts = current._region_edge_counts(grouped)
+		for cell: Vector2i in grouped:
+			for row: Dictionary in grouped[cell]:
+				equal(current._region_exposed_edges(row, counts), _reference_exposed_edges(before, row, counts), "every overlapping draw uses the exact independently witnessed edge mask")
+	equal(current.outline_cache_stats().edge_mask_builds, builds, "stable topology computes no extra edge masks across frames or compatible overlaps")
+	check(int(current.outline_cache_stats().edge_mask_hits) >= 169, "warm draw path actually uses retained masks including zero masks")
+
+	var selected: Dictionary = grouped[Vector2i(1,0)][0]
+	for field: String in ["owner_key", "phase", "danger", "material", "expiry_tick", "intensity", "decay_tick"]:
+		selected[field] = {"owner": 7} if field == "owner_key" else "decaying" if field == "phase" else false if field == "danger" else "cinderveil" if field == "material" else 712
+		# A direct diagnostic mutation must not use a mask belonging to its former
+		# owner/phase/material even before the caller rebuilds the boundary map.
+		equal(current._region_exposed_edges(selected, counts), _reference_exposed_edges(before, selected, counts), "direct changed " + field + " keeps current prefix semantics")
+		counts = current._region_edge_counts(grouped)
+		equal(counts, before._region_edge_counts(grouped), "current changed " + field + " retains frozen seam counts")
+		for cell: Vector2i in grouped:
+			for row: Dictionary in grouped[cell]:
+				equal(current._region_exposed_edges(row, counts), _reference_exposed_edges(before, row, counts), "rebuilt masks immediately reflect " + field + " on both sides")
+	selected.owner_key.owner = 11
+	equal(current._region_exposed_edges(selected, counts), _reference_exposed_edges(before, selected, counts), "in-place generic owner mutation cannot keep the previous mask")
+	selected.fixed_polygon.reverse()
+	selected.polygon.reverse()
+	equal(current._region_exposed_edges(selected, counts), _reference_exposed_edges(before, selected, counts), "reversed geometry preserves exact current edge-index decisions")
+	counts = current._region_edge_counts(grouped)
+
+	var external := counts.duplicate()
+	external.clear()
+	var hits: int = current.outline_cache_stats().edge_mask_hits
+	equal(current._region_exposed_edges(selected, external), 63, "an external count dictionary uses its own edges instead of retained topology")
+	equal(current.outline_cache_stats().edge_mask_hits, hits, "external count maps never enter the retained path")
+	selected.fixed_polygon[0] += Vector2(10, 20)
+	equal(current._region_exposed_edges(selected, counts), _reference_exposed_edges(before, selected, counts), "caller-edited polygon cannot poison a retained mask key")
+	for entry: Dictionary in current._boundary_topologies.values():
+		check(entry.is_read_only() and (entry.counts as Dictionary).is_read_only() and (entry.masks as Dictionary).is_read_only(), "retained masks and their exact count witness are immutable")
+		var retained_polygons := 0
+		for polygons: Dictionary in entry.masks.values():
+			check(polygons.is_read_only(), "nested per-prefix mask maps are immutable")
+			retained_polygons += polygons.size()
+		check(retained_polygons <= Court.BOUNDARY_TOPOLOGY_ROWS, "each retained topology has at most512 edge masks")
+	current._region_edge_counts({})
+	equal(current._boundary_masks.size(), 0, "removed fields release the active retained mask view")
+	equal(current._region_exposed_edges(selected, counts), _reference_exposed_edges(before, selected, counts), "old count witness remains exact after active topology is cleared")
+	current.configure(null)
+	equal(current.outline_cache_stats().edge_mask_builds, 0, "reconfiguration clears retained mask diagnostics and storage")
+
 
 func _test_retained_surface_glow() -> void:
 	var current := GlowCache.new()

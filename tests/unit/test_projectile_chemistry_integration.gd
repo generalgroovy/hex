@@ -290,12 +290,22 @@ func _test_extreme_cursor_snapshot() -> void:
 	check(not world.projectiles.is_empty(), "maximum accepted diagonal cursor releases a real paid projectile")
 	if world.projectiles.is_empty():
 		return
-	check(world.projectiles[0].remaining_distance > SessionSnapshot.MAX_ABSOLUTE_POSITION, "diagonal range exceeds one coordinate-axis bound")
+	var authored_range := int(CombatTuning.cast_definition(int(bolts[3])).range)
+	check(world.projectiles[0].remaining_distance > 0 and world.projectiles[0].remaining_distance <= authored_range, "extreme diagonal cursor still obeys the paid spell's finite authored range")
 	var packet := HexWorldSnapshot.capture(world)
 	check(HexWorldSnapshot.prepare(packet, world) != null, "maximum legal cursor distance cannot invalidate complete world snapshots")
 	var replica := _world()
 	check(HexWorldSnapshot.restore(packet, replica), "remote receives the admitted extreme-range projectile")
 	if not replica.projectiles.is_empty():
 		equal(replica.projectiles[0].remaining_distance, world.projectiles[0].remaining_distance, "diagonal distance retains exact authoritative fixed-point units")
+	# Passive wire-bound fixture, distinct from the paid release above: legacy
+	# and restored state may still carry the protocol's full diagonal envelope.
+	world.projectiles[0].remaining_distance = SessionSnapshot.MAX_PROJECTILE_REMAINING_DISTANCE
+	var boundary_packet := HexWorldSnapshot.capture(world)
+	check(not boundary_packet.is_empty(), "exact finite diagonal wire boundary still captures")
+	check(HexWorldSnapshot.prepare(boundary_packet, world) != null, "exact finite diagonal wire boundary still decodes")
+	check(HexWorldSnapshot.restore(boundary_packet, replica), "passive diagonal boundary restores without changing wire support")
+	if not replica.projectiles.is_empty():
+		equal(replica.projectiles[0].remaining_distance, SessionSnapshot.MAX_PROJECTILE_REMAINING_DISTANCE, "passive maximum distance retains every fixed-point unit")
 	world.projectiles[0].remaining_distance = SessionSnapshot.MAX_PROJECTILE_REMAINING_DISTANCE + 1
 	check(HexWorldSnapshot.capture(world).is_empty(), "distance beyond the finite diagonal envelope still fails closed")

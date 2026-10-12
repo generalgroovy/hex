@@ -1,6 +1,22 @@
 # H.E.X. — Help, Everything eXploded!
 
-Status: **presentation checkpoint p60-33606f016138, paused at the user's request on October 11, 2026.** This branch adds screen-wide sight, stable terrain-buffer handoffs, camera timing fixes, dimensional projectiles, district floor details and revised sound. See the [checkpoint, checks and remaining work](docs/presentation-checkpoint-20261011/README.md). The previously qualified portable is still p60-be3efd332e1a; its [performance measurements](docs/performance-implementation-20261010.md) do not qualify this newer source.
+Status: **paused at the user's requested stable checkpoint, October 12, 2026.**
+Current source and local Windows portable are **p60-1e084a50a029** on
+`codex/hex-screen-smoothness-20261011`. The [iteration record](docs/iteration-20261012/README.md)
+documents the multi-agent implementation, independent reviews and measurements.
+Its [Full run](docs/iteration-20261012/full-final.json) passed **261 suites /
+7,543,825 assertions**, zero failures and stderr, plus the 120 Hz boot check.
+The matching portable passed archive, terrain and five-case lifecycle checks.
+
+This checkpoint includes faster bounded projectiles, actual-path movement trails,
+readability and perk/damage fixes, and staged Element Garden preparation.
+The [foreground recording](docs/iteration-20261012/foreground-current-record.json)
+passes admission, but warm Garden/Fire/Mantle p95 engine intervals remain
+**29.420/49.174/51.784 ms**: steady 60 FPS is not achieved. Preparation staging
+reduces measured peak work while increasing total CPU in the paired cases.
+Previous working portables and failed evidence remain preserved. The
+[single queue](.agent/OVERHAUL-IMPLEMENTATION.md) and [resume](.agent/HEX-RESUME.md)
+record remaining work; the next profiling change is reviewed and unapplied.
 
 A movement-led elemental combat sandbox in Godot. Move and aim independently,
 build a twelve-slot spell weave, combine finite elemental effects, and learn a
@@ -8,14 +24,19 @@ rival's signature by defeating them. Start with a short optional introduction,
 then experiment in a Range that can lend every spell. Explore seven Wellspring
 districts and use the compact world map to travel between thirteen named places.
 
-[Player guide](docs/PLAYER-GUIDE.md) · [Documentation map](docs/README.md) ·
-[Design contract](SPECIFICATION.md) · [Qualification and known limits](docs/performance-implementation-20261010.md)
+[Player guide](docs/PLAYER-GUIDE.md) · [Design goals and implementation state](docs/CORE-GAME-DESIGN.md) ·
+[Design contract](SPECIFICATION.md) · [Current checks and remaining work](.agent/OVERHAUL-IMPLEMENTATION.md) ·
+[Documentation map](docs/README.md)
 
 ## Install or play on Windows
 
 This Git repository contains the game source, required art, tests and qualification
 evidence. Exported EXE/PCK/ZIP files and local profiles are excluded from Git;
 cloning the repository does not download a prebuilt portable.
+
+The current source is on `codex/hex-screen-smoothness-20261011`. `main` remains at `95ca630`
+with the earlier be3 runtime. Use the [development guide](docs/DEVELOPMENT.md)
+to select and update the intended branch before launching from source.
 
 To run a checkout, install **PowerShell 7.2 or later** and the pinned
 **Godot 4.7.1 stable Windows runtime**. Open PowerShell in the repository and point
@@ -34,7 +55,39 @@ For an independent portable, install matching Windows export templates and run
 `.\hex.cmd package -PixelCast`. Each run creates a fresh folder under `exports/`.
 See [development and verification](docs/DEVELOPMENT.md) for checks and packaging.
 
-The locally qualified October 10 portable is preserved at
+The latest qualified local portable is **p60-1e084a50a029**:
+
+- [Launch H.E.X.](exports/hex-iteration-20261012/windows/PLAY-HEX.cmd)
+- [Windows x64 ZIP](exports/hex-iteration-20261012/HEX-p60-1e084a50a029-Windows-x64.zip) — **153.7 MiB** (161,159,896 bytes). Extract the ZIP before launching.
+
+The [package receipt](docs/iteration-20261012/package.json) and
+[delivery checks](docs/iteration-20261012/delivery-files.json) verify the
+export/archive identities. The [terrain check](docs/iteration-20261012/terrain-pack.json)
+verified 133 exact images with 2,062 checks. The
+[portable lifecycle check](docs/iteration-20261012/portable-lifecycle.json)
+passed five cases with normal window closes and empty stderr, retaining the same
+isolated preferences and unchanged package. Fire and all-six Mantle each completed
+12 accepted paid casts with no refusals. These checks do not establish smooth frame
+times, physical input, competitive balance or installer acceptance.
+
+The preceding **p60-be680e20d70e** portable remains available through its
+[launcher](exports/hex-smoothness-20261012/windows/PLAY-HEX.cmd) and
+[qualification record](docs/smoothness-20261012/README.md).
+
+The qualified comprehensive build **p60-845f85b5253e** remains available through
+its [launcher](exports/hex-comprehensive-20261012/windows/PLAY-HEX.cmd) or
+[ZIP](exports/hex-comprehensive-20261012/HEX-p60-845f85b5253e-Windows-x64.zip)
+(161,146,185 bytes), with its own [qualification record](docs/implementation-20261012/README.md).
+
+The preserved d8 audit portable is a historical fallback at
+`exports/hex-audit-overhaul-20261011/windows/PLAY-HEX.cmd`; its ZIP is
+`exports/hex-audit-overhaul-20261011/HEX-p60-d8e6ea1cd808-Windows-x64.zip`
+(153.6 MiB, **p60-d8e6ea1cd808**). Full passed 251 suites / 7,081,662 assertions;
+the actual export passed archive, terrain, startup and normal-close checks.
+Heavy casting still falls below 60 FPS in the recorded finite release cases;
+see the [measurement limits](docs/audit-implementation-20261011/native-performance.md).
+
+The qualified October 10 portable is preserved at
 `exports/hex-smooth-fields-20261010/windows/PLAY-HEX.cmd`; its ZIP is
 `exports/hex-smooth-fields-20261010/HEX-p60-be3efd332e1a-Windows-x64.zip`
 (153.5 MiB). These are local artifact paths, not GitHub download links. Earlier
@@ -43,9 +96,10 @@ fallbacks with their original evidence.
 
 The portable needs no Git, Godot installation or administrator permission.
 Keep `hex.exe` and `hex.pck` together. The launcher enables the reviewed pixel
-presentation; opening the EXE directly retains skeleton mode. Use **1280×720**
-for comfortable supporting text. Menus also fit **960×540**, where small text
-and fine glyphs remain compact.
+presentation; opening the EXE directly retains skeleton mode. In the current
+candidate, **1280×720** offers the wider spell overview. At **960×540**, supported reading panels
+reflow. The October 12 source and portable include a 200% reading size and separate
+movement/aim deadzones; those changes are not contained in the preserved d8 portable.
 
 Extract each version into its own folder. Saved controls and personal weaves
 use the compatible `Godot/app_userdata/FLUX 2` location. Older elemental weaves
@@ -62,8 +116,11 @@ backup, while inspection or cancellation does not replace saved data.
    temporary loaner in slot 1 and cast it yourself. Reset/refill tools are explicit.
 3. Use **Menu → World map** to reach the Academy, then open **Spell Loom** at its
    door to build your own twelve-position weave.
-   Combine ingredient filters; **More Forms** reveals the four additional
-   deliveries. Read Swap/Replace before confirming, or drag a card onto a slot.
+   Combine ingredient filters. In the wide overview, **More Forms** reveals
+   the additional deliveries and cards can be dragged onto slots. The compact
+   reading view uses **Options** for form arrows and **Browse** at the smallest
+   layout; choose a spell/slot and use **Assign**.
+   Read Swap/Replace before confirming.
 4. Open **Signature Challenges / Shift+F6**. Read the rival's spell and counter,
    then defeat them through normal combat to learn it. **Esc / controller Back**
    returns; the challenge card keeps the other useful shortcuts visible.
@@ -84,14 +141,14 @@ Current source: 30 playable profiles, 504 spells.
 | Characters | 30 profiles, three body sizes, 21 ancestry passives and 30 personal passives through existing controls; flying ancestries use a deliberate second airborne Jump to start finite flight |
 | Ingredients | Water with Ice effects, Fire with Charge effects, Air, Earth, Light and Dark |
 | Spells | 63 nonempty ingredient sets × eight deliveries = **504 spells**; twelve equipped positions, four buttons across normal/Ctrl/Alt layers |
-| Deliveries | Bolt, Heavy, Rapid, Spray, **Mantle** contact/trail, **Fuse** delayed area blast, **Split** bounded branches and **Rebound** wall banks |
+| Deliveries | Bolt, Heavy, Rapid, Spray, **Mantle** contact/paid trail, **Fuse** delayed area blast, **Split** bounded branches and **Rebound** wall banks |
 | Statuses | Fractured Focus, Burning, Chilled, Gusted, Revealed and Withered; finite duration, explicit hit admission and bounded refresh |
 | Chemistry | 63 bounded reactions, each named and finite, covering self-pairs and every distinct combination from two through six elements; situational effects and counters |
 | Practice and progression | Optional introduction, all-spell Range, 30 earned rival signatures and clearly marked offline Developer tools |
 | World | Seven Wellspring districts with **59,466 eligible chemistry cells**; familiar services and practice courts plus Tideglass Quays, Verdant Reaches, Basalt Foundry and Starward Terraces |
 | Navigation | One compact Menu, a world overview, current location and thirteen named travel destinations; offline free-exploration travel preserves resources, cooldowns and weave |
 | Element Garden | 63 physical plots in Tideglass show six raw materials plus all 63 finite reaction identities; harmless bounded loops with nearby explanations, while player spells remain live |
-| Presentation | Slower held poses, tucked non-flying jumps, clearer wall contact and protection, elevated spell/character cues, terrain contact and shadows |
+| Presentation | Slower held poses, tucked non-flying jumps, clear wall contact/protection, screen-wide sight with cover, stable terrain handoffs, faceted spells with grounded shadows, district floor motifs and distinct sound |
 | Engine | 120 Hz authoritative simulation; 60 Hz transport snapshots; configured cadence, not measured performance |
 
 All 30 sandbox characters are already available. Thirty particular signature
@@ -108,9 +165,12 @@ The Range explains these differences at selection time.
 
 Saved custom bindings take priority. **Controls** shows keyboard/controller
 equivalents and supports rebinding, sound, Reduced Effects/Motion and an aim arrow.
-**Menu → Performance** selects Low/Standard visual detail and
-a 60/120/unlimited frame limit. Low and 60 FPS are the defaults; movement and
+**Menu → Display & text size** selects Low/Standard visual detail,
+a 60/120/unlimited frame limit and 100/125/150/200% text. Low and 60 FPS are the defaults; movement and
 spell simulation remain at 120 Hz. Reduced-motion accessibility is separate.
+Compact Gallery/Compendium **Options / O / controller Back** reveals browsing
+controls and the focused ingredient; Back returns to reading and B closes.
+Separate movement/aim deadzones and optional digital aim bindings live in Controls.
 
 | Action | Keyboard / mouse |
 |---|---|
@@ -143,54 +203,49 @@ Temporary Range/Developer weaves do not overwrite the player's saved weave.
 
 ## Evidence, design and limits
 
-The previous p60-be3efd332e1a build's [Full v5 gate](docs/performance-qualification-20261010/full-v5.json)
-passed **244 suites / 6,880,581 assertions**, with zero failures and zero
-stderr. The final field-rendering pass matched **614 exact RGBA comparisons**,
-including actual paid overlapping fields and retained glow. Earlier material/HUD
-and complete 469-cell Range comparisons retain their separate 541-case evidence.
-The compact Performance menu was inspected at 1280×720 and 960×540. The final
-portable passed native launch/safe close, exact ZIP membership and hashes, and
-all **132 terrain chunks plus the overview** decoded exactly from its PCK.
-
-Visible release measurements on this Ryzen 3 7320U/Radeon PC, at 1280×720 with
-Low detail and a 60 FPS limit, recorded the following engine-FPS observations:
-
-| Workload | October 9 portable mean | Final portable mean | Final observed range |
-|---|---:|---:|---:|
-| Hearth | 24.57 FPS | 57.64 FPS | 46–60 FPS |
-| Element Garden entry | 2.75 FPS | 59.00 FPS | 56–61 FPS |
-| Twelve nearby paid Fire Bolts | Not measured in this comparison | 49.13 FPS | 21–60 FPS |
-| Twelve paid all-six Mantles | Not measured in this comparison | 38.71 FPS | 36–50 FPS |
-
-These sequential runs include every one-second engine observation, finite casting
-and subsequent idle time. Durations and background load differ; the table is not
-a controlled speedup ratio, sustained-battle average or physical frame-present
-trace. The [performance report](docs/performance-implementation-20261010.md)
-records the raw evidence, native frame-time tails, package checks and limits.
-
-The preceding October 9 expansion has its own historical qualification:
-237 suites / 6,615,478 assertions, an integrated teaching journey with
-125 checkpoints, a map journey with 6,766 checkpoints and 96 reviewed native
-images. Those are retained as [expansion history](docs/element-expansion-evidence-20261009/integration.md),
-not presented as new captures of the performance build. Full tests use a
-bounded suite watchdog; test duration does not establish a gameplay frame budget.
+The [October 12 iteration record](docs/iteration-20261012/README.md)
+tracks the current code changes, independent reviews, completed checks and remaining
+acceptance work.
+The [preserved October 11 audit](docs/audit-implementation-20261011/README.md)
+retains the qualified d8 source and portable evidence. The
+[resume](.agent/HEX-RESUME.md) identifies the exact runtime and local portable.
+Complete-suite results, native timing measurements, visual checks and package
+checks have separate evidence; none substitutes for player acceptance.
 
 Three specialist agents and the integration owner reviewed one another's work.
-The [decision records](docs/element-expansion-evidence-20261009/integration.md#ownership-and-independent-review)
-connect the implementation to Magicka/Noita composition, Mega Man signature
-learning, Capcom practice modes, movement-shooter controls and readable action
-presentation. They distinguish established examples from H.E.X. tuning hypotheses.
-The [map design and review record](docs/large-wellspring-evidence-20261009/map-overview.md)
-connects named destinations and explicit travel to established map navigation,
-while preserving the limits of scripted native evidence.
+The preceding comprehensive work added shared spell comparisons, paid encounter and learning
+journeys, readable input routes, rolling save recovery and bounded diagnostics.
+Its reading repair keeps the selected spell name visible in wider Loom
+layouts, names both comparison sides before their values, and uses a fitting
+Aim cue label in enlarged Controls. Its 196-frame native gate and
+185,185-assertion final focused UI gate passed; these do not establish physical
+input acceptance or smooth frame times.
+The preserved October 11 audit also retains a failed native baseline that rendered
+1290×730 instead of its requested size; that failure remains diagnostic evidence.
+Current profiling validates actual dimensions and window observations throughout
+each measured case; the implementation record distinguishes valid measurements
+from attempts that fail those conditions.
 
-- **Balance and feel need human playtesting.** Coverage and finite budgets do not establish equal competitive viability across every combination or character.
-- **Wayfinding needs human playtesting.** Native maps, arrival checks and scripted walks do not establish that all seven districts are interesting or easy to learn.
-- **The simulation is 2D with depth presentation.** Thirty identities have held action keys, not complete authored animation cycles for every action.
-- **Heavy fields still miss 60 FPS.** In the final instrumented native test, all-six Mantle averaged 28.17 ms between process starts on Low, with a 36.25 ms p95. At 150 visible region records, nearby Fire still averaged about 38 ms. The report distinguishes these intervals from actual portable FPS and physical presentation; the 120 Hz simulation contract is unchanged.
-- **Startup and travel still prepare assets.** Final native startup took about 5.54 seconds and Garden travel contained 140–177 ms frame intervals. Terrain is baked and streamed within explicit budgets; warm-play measurements exclude cold preparation.
-- **Multiplayer is experimental.** Everyone must use the same exact build. Eight players is a configured cap, not dense-capacity certification; physical two-PC and different-home acceptance remain open. Internet relay is not deployed.
-- **Delivery is local and unsigned.** No public release, new installer or automatic updater was created.
+The [design basis](docs/implementation-20261012/README.md#design-basis-and-acceptance)
+connects those choices to established game-development practice. The current
+[technical audit](docs/iteration-20261012/technical-audit.md) records the Garden
+staging precedent, measured tradeoffs and deferred profiling work. The earlier
+[composition and progression decisions](docs/element-expansion-evidence-20261009/integration.md)
+and [map decisions](docs/large-wellspring-evidence-20261009/map-overview.md)
+retain their original rationale. Magicka/Noita composition, Mega Man signature
+learning, movement-shooter controls and readable action presentation are
+references to adapt and test, not proof of H.E.X. balance or fun.
+
+- **Balance, movement feel and wayfinding need human play.** Finite budgets and complete definition coverage do not establish equal competitive usefulness or intuitive routes.
+- **The simulation is 2D with depth presentation.** Thirty identities have held action keys; complete authored cycles for every action remain unfinished. Native protection/jump fixtures test presentation correctness separately.
+- **Steady 60 FPS is not achieved.** The [current foreground record](docs/iteration-20261012/foreground-current-record.json) reports Garden/Fire/Mantle p95 engine intervals of 29.420/49.174/51.784 ms. It is an admitted full-observer source recording, not GPU/present or packaged-performance acceptance. Earlier [measurements](docs/smoothness-20261012/performance.md) retain their original source scope. Retained campus drawing remains opt-in after its moving-Garden comparison regressed.
+- **Multiplayer is experimental.** All participants need the same exact build. Eight players is a cap, not dense-capacity certification; physical two-PC and different-home acceptance remain open. No Internet relay is deployed.
+- **The portable remains local and unsigned.** Source, tests, documentation and relevant receipts are checkpointed on the presentation branch; exported binaries and personal profiles remain excluded. Original assets and earlier working builds are preserved.
+
+The [earlier presentation checkpoint](docs/presentation-checkpoint-20261011/README.md)
+and [October 10 performance report](docs/performance-implementation-20261010.md)
+keep their own Full attempts, native measurements and package receipts. Those
+historical results do not qualify later changes.
 
 ## Development and documentation
 
@@ -210,8 +265,9 @@ Use the pinned **Godot 4.7.1** runtime from the actual repository root:
 
 [Specification](SPECIFICATION.md) owns current rules, [the player guide](docs/PLAYER-GUIDE.md)
 owns teaching, [the resume](.agent/HEX-RESUME.md) owns exact source/package state,
-and [the implementation record](.agent/OVERHAUL-IMPLEMENTATION.md) records this
-completed batch and separate product-acceptance boundaries.
+and [the implementation queue](.agent/OVERHAUL-IMPLEMENTATION.md) owns remaining
+acceptance work. The [audit record](docs/audit-implementation-20261011/README.md)
+links implemented changes, independent reviews and qualification.
 [The playtest route](docs/HEX-PLAYTEST.md) covers physical input, movement,
 counterplay and experimental host/join use. [All 30 portraits](reference/art/portraits_20261008/index.html)
 remain available offline.
@@ -219,7 +275,7 @@ remain available offline.
 The [source-publication record](docs/source-publication-20261011/README.md)
 describes the retained source, removed redundant files, exact-byte evidence rules
 and checkout validation. Git history identifies the publication commit;
-the runtime identity above identifies the game independently of documentation edits.
+the runtime identity in the resume identifies the game independently of documentation edits.
 
 Superseded element contracts and continuation plans now point to the current
 documents and retain exact historical copies. Preserve dirty work, original art,

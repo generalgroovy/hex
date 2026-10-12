@@ -14,7 +14,38 @@ func run() -> int:
 	_test_input(layout)
 	_test_layout(layout)
 	_test_compendium_request()
+	_test_selected_route(layout)
 	return finish("wellspring-map")
+
+
+func _test_selected_route(layout: SanctumCampusLayout) -> void:
+	var panel := MapPanel.new()
+	check(panel.open(layout,layout.spawn*SimConfig.FIXED_SCALE),"route cues use validated authored world")
+	var source := JSON.stringify(layout.data)
+	var connection_ids := {}
+	for row: Dictionary in layout.data.connections: connection_ids[String(row.id)]=true
+	for selected: int in panel.model.destinations.size():
+		panel.model.select(selected)
+		var route := panel.model.selected_route()
+		check(not route.is_empty(),"every actual destination resolves a district connection route")
+		for id: String in route.get("connection_ids",[]): check(connection_ids.has(id),"cue highlights only an authored connection")
+		var snapshot := route.duplicate(true)
+		route.connection_ids.clear()
+		equal(panel.model.selected_route(),snapshot,"retained route result is detached")
+		for viewport: Vector2 in [Vector2(480,270),Vector2(960,540)]:
+			var detail: Rect2=MapPanel.geometry(viewport).detail
+			var info := panel.detail_projection(ThemeDB.fallback_font,detail)
+			var rendered: Array=[]
+			for page: int in int(info.pages):
+				var current := panel.detail_projection(ThemeDB.fallback_font,detail)
+				rendered.append_array(current.lines)
+				for line: String in current.lines: check(ThemeDB.fallback_font.get_string_size(line,HORIZONTAL_ALIGNMENT_LEFT,-1,14).x<=detail.size.x,"route advice stays within its real reading width")
+				panel.handle_input(_pad(JOY_BUTTON_Y),viewport)
+			check(rendered.size()>=info.all_lines.size(),"controller can expose every purpose and route paragraph")
+			panel.detail_page=0
+	panel.set_location_visible(false)
+	check(panel.model.selected_route().is_empty(),"practice scene cannot invent a campus route from local coordinates")
+	equal(JSON.stringify(layout.data),source,"route and page interactions cannot edit geometry or travel authority")
 
 
 func _test_projection(layout: SanctumCampusLayout) -> void:

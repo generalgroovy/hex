@@ -124,6 +124,10 @@ func _compile_definition(ability: Dictionary, catalog: AbilityCatalog) -> Dictio
 				"hit_control_slow_ratio": 1000,
 				"remaining_bounces": int(ability.get("remaining_bounces", 0)),
 			})
+			if ability.has("range"):
+				definition["range"] = int(ability.range)
+			if ability.has("split_delay_ms"):
+				definition["split_delay_ms"] = int(ability.split_delay_ms)
 			if ability.has("blast_radius"):
 				definition["blast_radius"] = int(ability["blast_radius"])
 				definition["blast_damage"] = int(ability["blast_damage"])

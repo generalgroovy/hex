@@ -3,6 +3,7 @@ extends RefCounted
 ## Fixed 18px skull calibration; 58/63/68px anatomy is baked, never fitted per pose.
 
 const PATH := "res://assets/sprites/fullbody_cast_v1/"
+const CastHands = preload("res://src/presentation/pixel_cast_hands.gd")
 const AerialPose = preload("res://src/presentation/pixel_aerial_pose.gd")
 const WallPose = preload("res://src/presentation/pixel_wallrun_pose.gd")
 const PixelFlipbook = preload("res://src/presentation/pixel_flipbook_presenter.gd")
@@ -384,6 +385,7 @@ func frame(id: String, state: PlayerState, tick: float, config: SimConfig, locom
 				Vector2(state.wall_x, state.wall_y), velocity != Vector2i.ZERO, reduced_motion)
 			if not wall_frame.is_empty():
 				wall_frame["cast_overlay_requested"] = casting
+				if casting: CastHands.decorate(wall_frame,state,pixel_pilot.textures.get(id),config,reduced_motion)
 				return wall_frame
 		# Explicit authority gates; the DOUBLE_JUMP adapter alone never means flight.
 		# Non-fliers keep their compact tuck throughout voluntary jump descent.
@@ -392,6 +394,7 @@ func frame(id: String, state: PlayerState, tick: float, config: SimConfig, locom
 			var aerial: Dictionary = pixel_pilot.aerial_frame(id, action, aim, travel, pose_tick, state.air_vertical_velocity, reduced_motion, state.hop_mode == PlayerState.MovementMode.DOUBLE_JUMP)
 			if not aerial.is_empty():
 				aerial["cast_overlay_requested"] = casting
+				if casting: CastHands.decorate(aerial,state,pixel_pilot.textures.get(id),config,reduced_motion)
 				return aerial
 		var pixel_cast_weight := cast_weight
 		if casting and state.pending_cast_wire_id > 0 and state.cast_recovery_ticks > 0:
@@ -402,6 +405,12 @@ func frame(id: String, state: PlayerState, tick: float, config: SimConfig, locom
 			pixel_cast_weight = maxf(pixel_cast_weight,recovery_weight)
 		var fixed_frame: Dictionary = pixel_pilot.frame(id,action,aim,travel,phase,casting,pixel_cast_weight,reduced_motion)
 		if not fixed_frame.is_empty():
+			# A flier's ordinary rise/fall keeps its painted body after wall release.
+			# Keep the already-admitted cast's hand phase across that pose change;
+			# this does not grant flight or compose a second registered upper body.
+			if casting and state.is_airborne() and state.flight_capable and action in AerialPose.BALL_ACTIONS \
+					and bool(fixed_frame.get("pixel_action_key",false)) and not bool(fixed_frame.get("independent_cast_pose",false)):
+				CastHands.decorate(fixed_frame,state,pixel_pilot.textures.get(id),config,reduced_motion)
 			return fixed_frame
 		var rigid_fallback: Dictionary = pixel_pilot.rigid_fallback_frame(id,action,aim,travel,phase,casting)
 		if not rigid_fallback.is_empty():
@@ -843,6 +852,7 @@ static func apply_secondary_pose(target: Dictionary, anchors: Dictionary, amount
 static func draw_frame(canvas: CanvasItem, frame: Dictionary, anchor: Vector2, tint: Color = Color.WHITE) -> void:
 	if frame.get("pixel_body_pilot",false):
 		PixelFlipbook.draw_frame(canvas,frame,anchor,tint)
+		CastHands.draw(canvas,frame,anchor,tint)
 		return
 	var at := anchor-PIVOT
 	if frame.has("mesh"):

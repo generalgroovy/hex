@@ -1323,6 +1323,10 @@ func _draw_wall_attachment(canvas: CanvasItem, state: PlayerState, body_anchor: 
 		canvas.draw_line(start, start + tangent * 4.0, Color(light if segment < int(contact.segments) else ink, 0.92), 2.0)
 
 
+func clear_motion_contacts() -> void:
+	pixel_movement.clear_contacts()
+
+
 func _draw_pixel_movement_accent(canvas: CanvasItem, state: PlayerState, ground_anchor: Vector2, age: int, reduced: bool, config: SimConfig, body_anchor: Vector2 = Vector2.INF) -> void:
 	if state.health <= 0 or config == null:
 		return
@@ -1348,7 +1352,14 @@ func _draw_evasion_contour(
 	reduced: bool,
 	body_height: float = 68.0,
 ) -> void:
-	if state.health <= 0 or (state.spawn_protection_ticks <= 0 and not MovementSystem.is_combat_intangible(state, config)):
+	if state.health <= 0: return
+	if state.spawn_protection_ticks <= 0 and not MovementSystem.is_combat_intangible(state, config):
+		var recovery := evasion_recovery_contract(state,config)
+		if not recovery.is_empty():
+			for line: PackedVector2Array in recovery.lines:
+				var points := _offset(line,ground_anchor)
+				canvas.draw_polyline(points,Color("181c22"),4.0)
+				canvas.draw_polyline(points,Color("e9bc7f"),2.0)
 		return
 	var contract := protection_contract(state, config, reduced, body_height)
 	if not bool(contract["active"]):
@@ -1380,6 +1391,13 @@ func _draw_evasion_contour(
 			var box := Rect2(ground_anchor+Vector2(13+index*5,top),Vector2(4,5))
 			canvas.draw_rect(box.grow(1),Color(ink,0.98))
 			if index < int(contract["budget_pips"]): canvas.draw_rect(box,Color.WHITE)
+
+
+static func evasion_recovery_contract(state: PlayerState, config: SimConfig) -> Dictionary:
+	# Two low flat bars mean the opaque, vulnerable tail of an admitted evade.
+	# They never linger after the authoritative action, even at a low frame rate.
+	if state == null or config == null or state.health <= 0 or state.air_dodge_ticks <= 0 or state.spawn_protection_ticks > 0 or MovementSystem.is_combat_intangible(state,config): return {}
+	return {"kind":"vulnerable_recovery","body_tint":Color.WHITE,"lines":[PackedVector2Array([Vector2(-15,4),Vector2(-5,4)]),PackedVector2Array([Vector2(5,4),Vector2(15,4)])]}
 
 
 static func protection_contract(state: PlayerState, config: SimConfig, _reduced: bool = false, body_height: float = 68.0) -> Dictionary:

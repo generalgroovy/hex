@@ -1,6 +1,9 @@
 class_name PlayerCompendium
 extends RefCounted
 
+const Readable = preload("res://src/presentation/readable_reference_panel.gd")
+var readable_reader := Readable.new()
+
 
 # This is a read-only projection: navigation cannot equip a spell, select a
 # champion, pause the shared world or change any authoritative gameplay value.
@@ -63,6 +66,9 @@ var _cache_key := ""
 var _summary_maximum := -1
 var _summary_recovery := -1
 var _summary_chain := -1
+var _route_choices: Array[Dictionary]=[]
+var _reading_preferences: PlayerPreferences
+var _route_projection := Vector2i(-1,-1)
 var _stick_x_latched := false
 var _stick_y_latched := false
 
@@ -81,6 +87,9 @@ func open_panel(selected_tab: int, preferences: PlayerPreferences, state: Player
 	_stick_x_latched = false
 	_stick_y_latched = false
 	device = input_device
+	_reading_preferences=preferences
+	_route_choices=Guide.route_choices(state,preferences,device)
+	_route_projection=Vector2i(-1,-1)
 	movement_rows = Guide.entries(preferences, device)
 	summary = Guide.summary_lines(state)
 	_summary_maximum = -1
@@ -91,6 +100,13 @@ func open_panel(selected_tab: int, preferences: PlayerPreferences, state: Player
 func refresh_status(state: PlayerState) -> void:
 	if state == null:
 		return
+	# Binding prose is stable for this open session. Only exact displayed prices
+	# invalidate it; no rebuilding all sixteen guide rows on every draw tick.
+	var projection := Vector2i(MovementSystem._movement_action_cost(state,MovementTuning.HOP_COST),MovementSystem._movement_action_cost(state,MovementTuning.SLIDE_COST))
+	if projection!=_route_projection:
+		_route_projection=projection
+		_route_choices=Guide.route_choices(state,_reading_preferences,device)
+		_cache_key=""
 	var chain := mini(state.movement_chain_count, MovementTuning.MOVEMENT_CHAIN_MAXIMUM_STEPS) if state.movement_chain_reset_ticks > 0 else 0
 	if _summary_maximum == state.stamina_maximum and _summary_recovery == state.stamina_recovery_per_second and _summary_chain == chain:
 		return
@@ -305,6 +321,12 @@ func detail_paragraphs() -> Array[String]:
 		if movement_rows.is_empty():
 			return result
 		result = Guide.detail_lines(movement_rows[selected_row])
+		for route: Dictionary in _route_choices:
+			if String(movement_rows[selected_row].id) not in route.moves: continue
+			result.append("Optional route: "+String(route.title))
+			result.append(String(route.execution))
+			result.append(String(route.benefit)+" "+String(route.cost))
+			result.append("Tradeoff: "+String(route.counter))
 		result.append("")
 		result.append("SHARED MOVEMENT RULES")
 		for line: String in summary:
@@ -893,3 +915,10 @@ static func unified_chemistry_primer() -> Array[String]:
 		"To make a larger combination, add a distinct paid ingredient to a formed product. Material is consumed and transferred, not duplicated; a six-element result still has finite quantity and lifetime. Use Combine to inspect its damage trigger and counter before casting.",
 		"Both pair orders share stable recipe identity: 21 pair/self recipes and 42 combinations of three to six distinct elements. The live eight-player session uses one shared chemistry authority and reset epoch.",
 	]
+
+
+func draw_readable(canvas: CanvasItem, viewport: Vector2) -> void:
+	readable_reader.draw_compendium(canvas,viewport,self)
+
+func handle_readable_event(event: InputEvent, pointer: Vector2, viewport: Vector2) -> void:
+	readable_reader.handle_compendium(event,pointer,viewport,self)

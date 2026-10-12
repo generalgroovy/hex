@@ -3,6 +3,7 @@ extends RefCounted
 ## reference is accepted. Exhibition stock is explicit; it is not a player cast.
 const Mixtures = preload("res://src/content/mixture_catalog.gd")
 const Policy = preload("res://src/sim/hex/hex_recipe_policy.gd")
+const ExhibitCourt = preload("res://src/app/element_garden_court.gd")
 const MAX_RESIDENT := 63
 const PLOT_RADIUS := 180.0
 const INSPECTION_RADIUS := 200.0
@@ -27,6 +28,20 @@ var _frame_restart_budget := -1
 var _restart_queue: Array[int] = []
 var _admission_bounds := Rect2()
 var _inspection_bounds := Rect2()
+var _visible_view := Rect2()
+var _visible_masks: Array[int] = []
+var _nearest_observer := Vector2.INF
+var _nearest_cached_mask := 0
+var _selection_memo := ExhibitCourt.SelectionMemo.new()
+var _configuration_generation := 0
+var _arrival_active := false
+var _arrival_view := Rect2()
+var _arrival_observer := Vector2.ZERO
+var _arrival_masks: Array[int] = []
+var _arrival_staged: Dictionary = {}
+var _arrival_first_step: Dictionary = {}
+var _arrival_error := ""
+var _frame_prepare_budget := 0
 
 
 func configure(plot_rows: Array) -> bool:
@@ -71,10 +86,18 @@ func configure(plot_rows: Array) -> bool:
 func clear() -> void:
 	# Suspend transient exhibitions across mode/world transitions; retain the
 	# validated map directory so returning to Wellspring can start fresh loops.
+	_configuration_generation += 1
+	cancel_arrival()
+	_frame_prepare_budget = 0
 	_resident.clear()
+	_selection_memo.clear()
 	_inspected_mask = 0
 	_frame_restart_budget = -1
 	_restart_queue.clear()
+	_visible_view = Rect2()
+	_visible_masks = []
+	_nearest_observer = Vector2.INF
+	_nearest_cached_mask = 0
 	last_error = ""
 
 
@@ -117,6 +140,11 @@ func nearest_info(observer: Vector2) -> Dictionary:
 
 
 func _nearest_mask(observer: Vector2) -> int:
+	# Catch-up steps and the inspection card often ask about the same point.
+	# Cache only the spatial answer; phase, timing and effect copy stay live.
+	if observer == _nearest_observer: return _nearest_cached_mask
+	_nearest_observer = observer
+	_nearest_cached_mask = 0
 	# Inclusive outer edges preserve the existing <= inspection-distance rule.
 	if not _inspection_bounds.has_area() or observer.x < _inspection_bounds.position.x or observer.y < _inspection_bounds.position.y or observer.x > _inspection_bounds.end.x or observer.y > _inspection_bounds.end.y:
 		return 0
@@ -127,7 +155,21 @@ func _nearest_mask(observer: Vector2) -> int:
 		if candidate <= distance:
 			nearest = int(row.mask)
 			distance = candidate
+	_nearest_cached_mask = nearest
 	return nearest
+
+
+func _visible_in(view_rect: Rect2) -> Array[int]:
+	# Exact rectangle equality preserves inclusive-edge admission and every
+	# visible plot. No quantization, padding, camera delay or exhibition state.
+	if view_rect == _visible_view: return _visible_masks
+	var result: Array[int] = []
+	for row: Dictionary in _plots:
+		if Rect2(row.center - Vector2.ONE * PLOT_RADIUS, Vector2.ONE * PLOT_RADIUS * 2).intersects(view_rect, true): result.append(int(row.mask))
+	result.make_read_only()
+	_visible_view = view_rect
+	_visible_masks = result
+	return _visible_masks
 
 
 func begin_frame() -> void:
@@ -135,23 +177,106 @@ func begin_frame() -> void:
 	# not multiply with catch-up steps; direct simulation fixtures retain a
 	# one-restart-per-step fallback when no presentation frame is supplied.
 	_frame_restart_budget = RESTARTS_PER_FRAME
+	_frame_prepare_budget = 1
+
+
+func configuration_generation() -> int:
+	return _configuration_generation
+
+
+func request_arrival(view_rect: Rect2, observer: Vector2) -> bool:
+	if _plots.size() != 63 or not _finite_view(view_rect, observer):
+		cancel_arrival()
+		_arrival_error = "Element Garden requires a configured finite arrival view."
+		return _fail(_arrival_error)
+	if _arrival_active and _arrival_view == view_rect:
+		_arrival_observer = observer
+		return true
+	# Only a committed app travel calls this seam. Ordinary walking never does.
+	cancel_arrival()
+	_arrival_active = true
+	_arrival_view = view_rect
+	_arrival_observer = observer
+	_arrival_masks.assign(_visible_in(view_rect))
+	# The committed view has left these mutable courts behind. Retire them
+	# before staging so resident + unpublished courts can never exceed 63.
+	for mask: int in _resident.keys():
+		if mask not in _arrival_masks:
+			_resident.erase(mask)
+			_restart_queue.erase(mask)
+	return true
+
+
+func prepare_arrival() -> bool:
+	if not _arrival_active: return false
+	if _frame_prepare_budget <= 0: return true
+	for mask: int in _arrival_masks:
+		if _resident.has(mask) or _arrival_staged.has(mask): continue
+		_frame_prepare_budget -= 1
+		var entry := _new_entry(mask)
+		if entry.is_empty():
+			var failure := last_error
+			cancel_arrival()
+			_arrival_error = failure
+			return false
+		_arrival_staged[mask] = entry
+		break
+	return true
+
+
+func arrival_status() -> Dictionary:
+	var prepared := 0
+	for mask: int in _arrival_masks:
+		if _resident.has(mask) or _arrival_staged.has(mask): prepared += 1
+	return {"active": _arrival_active, "ready": _arrival_active and prepared == _arrival_masks.size(), "required": _arrival_masks.size(), "prepared": prepared, "remaining": _arrival_masks.size() - prepared, "error": _arrival_error, "total_courts": _resident.size() + _arrival_staged.size()}
+
+
+func publish_arrival() -> bool:
+	if not bool(arrival_status().ready): return false
+	for mask: int in _arrival_masks:
+		if _resident.has(mask): continue
+		_resident[mask] = _arrival_staged[mask]
+		_arrival_staged.erase(mask)
+		_arrival_first_step[mask] = true
+	_inspected_mask = _nearest_mask(_arrival_observer)
+	_arrival_active = false
+	_arrival_masks.clear()
+	_arrival_view = Rect2()
+	_arrival_error = ""
+	last_error = ""
+	return true
+
+
+func cancel_arrival() -> void:
+	_arrival_active = false
+	_arrival_staged.clear()
+	_arrival_first_step.clear()
+	_arrival_masks.clear()
+	_arrival_view = Rect2()
+	_arrival_error = ""
+
+
+static func _finite_view(view_rect: Rect2, observer: Vector2) -> bool:
+	return view_rect.has_area() and is_finite(view_rect.position.x) and is_finite(view_rect.position.y) and is_finite(view_rect.end.x) and is_finite(view_rect.end.y) and is_finite(observer.x) and is_finite(observer.y)
 
 
 func step(view_rect: Rect2, observer: Vector2) -> bool:
 	if _plots.size() != 63: return _fail("Element Garden has not been configured.")
-	if not view_rect.has_area() or not is_finite(view_rect.position.x) or not is_finite(view_rect.position.y) or not is_finite(view_rect.end.x) or not is_finite(view_rect.end.y) or not is_finite(observer.x) or not is_finite(observer.y): return _fail("Element Garden requires a finite visible view.")
+	if not _finite_view(view_rect, observer): return _fail("Element Garden requires a finite visible view.")
+	# Direct callers retain synchronous admission. App staging must publish
+	# atomically before resuming simulation; partial work is never half shown.
+	if _arrival_active: cancel_arrival()
 	# Most Wellspring frames are nowhere near a teaching plot. Exact per-plot
 	# admission remains unchanged inside this conservative envelope; departing
 	# views still retire every exhibition and queued repeat immediately.
 	if not _admission_bounds.intersects(view_rect, true):
 		_resident.clear()
+		_arrival_first_step.clear()
 		_restart_queue.clear()
 		_inspected_mask = _nearest_mask(observer)
 		last_error = ""
 		return true
-	var visible: Array[int] = []
-	for row: Dictionary in _plots:
-		if Rect2(row.center - Vector2.ONE * PLOT_RADIUS, Vector2.ONE * PLOT_RADIUS * 2).intersects(view_rect, true): visible.append(int(row.mask))
+	var visible := _visible_in(view_rect)
 	# Never silently show empty visible plots. Supported map/camera geometry
 	# fits the finite authored count, including enlarged desktop windows.
 	if visible.size() > MAX_RESIDENT: return _fail("Element Garden view exceeds its visible exhibition budget.")
@@ -161,12 +286,17 @@ func step(view_rect: Rect2, observer: Vector2) -> bool:
 		if mask not in visible:
 			_resident.erase(mask)
 			_restart_queue.erase(mask)
+			_arrival_first_step.erase(mask)
 	for mask: int in visible:
 		if not _resident.has(mask):
 			var entry := _new_entry(mask)
 			if entry.is_empty(): return false
 			_resident[mask] = entry
 		else:
+			# Ordinary first admission emits tick zero during this very step.
+			# Published arrivals are already drawable, but must consume that same
+			# admission step once before their clocks start advancing.
+			if _arrival_first_step.erase(mask): continue
 			var entry: Dictionary = _resident[mask]
 			entry.tick = int(entry.tick) + 1
 			var court: HexChemistryWorld = entry.court
@@ -199,13 +329,29 @@ func render_entries() -> Array[Dictionary]:
 	for row: Dictionary in _plots:
 		var mask := int(row.mask)
 		if not _resident.has(mask): continue
-		var entry: Dictionary = _resident[mask]
-		result.append({"mask": mask, "center": row.center, "court": entry.court, "tick": int(entry.tick), "phase": _phase(entry), "name": row.name if entry.mode == "raw" else row.recipe_name, "ingredients": row.ingredients, "material": entry.material, "cycle": int(entry.cycle), "decay": int(entry.decay), "inspected": mask == _inspected_mask})
+		result.append(_render_entry(mask, _resident[mask]))
 	return result
 
 
+func arrival_render_entries() -> Array[Dictionary]:
+	# Explicit preparation reads the same projection, without making detached
+	# courts visible or advancing their funded first cycle. Metadata is fresh;
+	# the borrowed court is read only by presentation, as in render_entries.
+	var result: Array[Dictionary] = []
+	if not _arrival_active: return result
+	for mask: int in _arrival_masks:
+		if _resident.has(mask): result.append(_render_entry(mask, _resident[mask]))
+		elif _arrival_staged.has(mask): result.append(_render_entry(mask, _arrival_staged[mask]))
+	return result
+
+
+func _render_entry(mask: int, entry: Dictionary) -> Dictionary:
+	var row: Dictionary = _by_mask[mask]
+	return {"mask": mask, "center": row.center, "court": entry.court, "tick": int(entry.tick), "phase": _phase(entry), "name": row.name if entry.mode == "raw" else row.recipe_name, "ingredients": row.ingredients, "material": entry.material, "cycle": int(entry.cycle), "decay": int(entry.decay), "inspected": mask == _inspected_mask}
+
+
 func _new_entry(mask: int) -> Dictionary:
-	var court := HexChemistryWorld.new()
+	var court := ExhibitCourt.new(_selection_memo)
 	var center: Vector2 = _by_mask[mask].center
 	if not court.configure_geometry(Vector2i(center * 1000.0), HexGrid.disk(Vector2i.ZERO, TOPOLOGY_RADIUS)):
 		_fail("Element Garden could not prepare bounded exhibit topology.")

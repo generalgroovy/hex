@@ -3,6 +3,7 @@ extends RefCounted
 ## Catalog-derived temporary weave. A selection never fires or persists a spell.
 
 const Mixtures = preload("res://src/content/mixture_catalog.gd")
+const Tactics = preload("res://src/content/recipe_tactical_catalog.gd")
 var active := false
 var last_error := ""
 var selected_mask := 1
@@ -25,6 +26,10 @@ func begin(actor: PlayerState, offline: bool, world_tick: int = 0) -> bool:
 	active = true
 	last_error = ""
 	return true
+
+
+func original_wire(slot: int = 1) -> int:
+	return int(_original_wires[slot - 1]) if active and slot >= 1 and slot <= _original_wires.size() else 0
 
 
 func preview(mask: int, family: String, abilities: AbilityCatalog) -> Dictionary:
@@ -89,6 +94,19 @@ static func entries(abilities: AbilityCatalog) -> Array[Dictionary]:
 			result.append({"wire": wire, "mask": int(mixture.element_mask), "family": family,
 				"name": String(spell.get("display_name", "")), "purpose": String(mixture.get("purpose", "")), "counter": String(mixture.get("counter", ""))})
 	return result
+
+
+static func garden_preset(plot: Dictionary, family: String = "bolt") -> Dictionary:
+	# The harmless exhibition supplies only selection. Its stock, timers and
+	# products never enter the paid Range world.
+	var mask := int(plot.get("mask",0))
+	if mask<1 or mask>63 or Mixtures.wire_for(mask,family)<=0: return {}
+	var decision := Tactics.definition(mask)
+	if decision.is_empty(): return {}
+	return {"mask":mask,"family":family,"wire":Mixtures.wire_for(mask,family),
+		"name":String(decision.name),"trigger":String(decision.trigger_label),
+		"try":String(decision.counter_scenario.action),"requires_paid_cast":true,
+		"notice":"Range opens with this plot selected. Equip its temporary loaner, then use normal paid casts to test hits and ground effects."}
 
 
 func _same_actor(actor: PlayerState) -> bool:

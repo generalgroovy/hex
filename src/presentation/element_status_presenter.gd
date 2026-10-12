@@ -7,6 +7,7 @@ const ELEMENTS: Array[String] = ["earth", "fire", "water", "wind", "light", "dar
 const LABELS: Array[String] = ["FOCUS", "BURN", "CHILL", "GUST", "SEEN", "WITHER"]
 const STRIDE := 8
 const MAX_BADGES := 6
+const BADGE_ROW_Y := -88.0 # Stable clearance above the largest admitted protection crest.
 
 
 static func model(actor: PlayerState, config: SimConfig, language: VisualLanguage) -> Array[Dictionary]:
@@ -40,7 +41,7 @@ static func draw(canvas: CanvasItem, actor: PlayerState, screen_pos: Vector2, co
 	var badges := model(actor, config, language)
 	for index: int in badges.size():
 		var badge: Dictionary = badges[index]
-		var center := screen_pos + Vector2((float(index) - float(badges.size() - 1) * 0.5) * 15.0, -77.0)
+		var center := screen_pos + Vector2((float(index) - float(badges.size() - 1) * 0.5) * 15.0, BADGE_ROW_Y)
 		# Open corner plates cannot be confused with the closed spawn shield or
 		# split body slashes used for actual combat intangibility.
 		canvas.draw_rect(Rect2(center - Vector2(6, 7), Vector2(12, 14)), Color(0.025, 0.035, 0.035, 0.90))

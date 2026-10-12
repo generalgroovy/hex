@@ -10,7 +10,13 @@ const CharacterSelectionGridScript = preload("res://src/presentation/character_s
 const ChampionAttunementScript = preload("res://src/app/champion_attunement.gd")
 const ChemistryCoach = preload("res://src/presentation/chemistry_practice_coach.gd")
 const MovementCoach = preload("res://src/presentation/movement_practice_coach.gd")
+const DistrictCoach = preload("res://src/presentation/district_practice_coach.gd")
+const ReadingPolicy = preload("res://src/presentation/ui_reading_policy.gd")
+const DamageEvent = preload("res://src/sim/combat/combat_damage_event.gd")
 const ElementAudioScript = preload("res://src/presentation/element_audio.gd")
+const ReadableLoom = preload("res://src/presentation/readable_spell_loom.gd")
+const ReadableControls = preload("res://src/presentation/readable_controls.gd")
+const ReadableChemistryDemo = preload("res://src/presentation/readable_chemistry_demo.gd")
 const ReconciliationOrderBufferScript = preload("res://src/net/reconciliation_order_buffer.gd")
 const SoloDuelTrial = preload("res://src/app/solo_duel_trial.gd")
 const SoloDuelRival = preload("res://src/app/solo_duel_rival.gd")
@@ -60,9 +66,17 @@ const POV_TERRAIN_SHADE := Color(0.66, 0.66, 0.66, 1.0)
 const PovTerrainBackdrop = preload("res://src/presentation/pov_terrain_backdrop.gd")
 const PovTerrainBatch = preload("res://src/presentation/pov_terrain_batch.gd")
 const RenderQuality = preload("res://src/presentation/render_quality.gd")
+const RetainedCampus = preload("res://src/presentation/retained_campus_canvas.gd")
+var retained_campus: RetainedCampus
+var retained_campus_ready := false
+var retained_campus_enabled := false
 var pov_terrain_batch := PovTerrainBatch.new()
 var terrain_loading: bool = false
 var terrain_loading_error: String = ""
+var element_garden_arrival_pending := false
+var element_garden_arrival_error := ""
+var _element_garden_arrival_world_id := 0
+var _element_garden_arrival_generation := 0
 var diagnostic_render_profile := false
 var diagnostic_draw_stages_us: Dictionary = {}
 var _visibility_frame_active := false
@@ -77,6 +91,8 @@ var local_navigation := preload("res://src/app/local_navigation_controller.gd").
 var element_garden := preload("res://src/app/element_garden_exhibition.gd").new()
 var element_garden_presenter := preload("res://src/presentation/element_garden_presenter.gd").new()
 var element_audio: ElementAudioScript
+var readable_loom := ReadableLoom.new()
+var readable_chemistry_demo := ReadableChemistryDemo.new()
 var input_router: InputRouter
 var hub_definition: HubDefinition
 var campus_layout: SanctumCampusLayout
@@ -161,6 +177,7 @@ var station_notice_seconds: float = 0.0
 var selected_champion_id: String = "oh_tipi"
 var station_activation_device := ControlBindingEditor.DEVICE_KEYBOARD
 var movement_practice_device := ControlBindingEditor.DEVICE_KEYBOARD
+var district_practice := DistrictCoach.new()
 var join_address: String = "127.0.0.1"
 var join_address_editor_open: bool = false
 var join_address_editor_text: String = ""
@@ -315,6 +332,11 @@ func _ready() -> void:
 		push_error("Wellspring illustrated campus could not load: %s" % campus_renderer.last_error)
 		get_tree().quit(1)
 		return
+	# Pixel correctness passed; measured benefit still needs an admitted native
+	# comparison. Keep the established renderer as the ordinary launch default.
+	retained_campus_enabled = OS.get_cmdline_user_args().has("--retained-campus") and not OS.get_cmdline_user_args().has("--reference-campus")
+	retained_campus = RetainedCampus.new()
+	add_child(retained_campus)
 	_configure_pov_terrain_backdrop()
 	interaction_presenter = WellspringInteractionPresenter.new()
 	if not interaction_presenter.configure(visual_language, campus_layout):
@@ -557,10 +579,19 @@ func _notification(what: int) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if world == null:
 		return
+	if input_router != null and player_preferences != null:
+		var changed := input_router.observe_prompt_device(event)
+		player_preferences.prompt_device = input_router.prompt_device
+		if changed and element_expansion != null and element_expansion.guide.active: element_expansion.refresh_guide_bindings()
 	if input_router != null and _gameplay_input_blocked():
 		input_router.observe_input_event(event)
 		input_router.discard_transient_movement_input()
 	if not application_input_active:
+		return
+	if element_garden_arrival_pending:
+		# Loading input must not open hidden menus, Range or developer routes.
+		# Window-close requests remain handled by _notification.
+		get_viewport().set_input_as_handled()
 		return
 	if local_navigation.blocks_gameplay() and local_navigation.handle_input(event):
 		get_viewport().set_input_as_handled()
@@ -596,7 +627,12 @@ func _unhandled_input(event: InputEvent) -> void:
 	# Binding capture and the other editors retain priority over fixed UI keys.
 	if controls_editor != null and not controls_editor.is_open:
 		if player_compendium.is_open:
-			player_compendium.handle_event(event, ThemeDB.fallback_font, get_viewport().get_mouse_position() / _compendium_scale())
+			if _readable_ui():
+				var pointer := get_viewport().get_mouse_position() / _ui_scale()
+				if event is InputEventMouse: pointer = event.position / _ui_scale()
+				player_compendium.handle_readable_event(event, pointer, get_viewport_rect().size / _ui_scale())
+			else:
+				player_compendium.handle_event(event, ThemeDB.fallback_font, get_viewport().get_mouse_position() / _compendium_scale())
 			if player_compendium.consume_map_request():
 				player_compendium.close_panel()
 				local_navigation.open_map()
@@ -619,6 +655,24 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	var handled := false
 	var bindings_changed := false
+	if _readable_ui() and not controls_editor.capturing and event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var action := ReadableControls.pointer_action(event.position/_ui_scale(),get_viewport_rect().size/_ui_scale(),controls_editor)
+		match action:
+			"bind": controls_editor.begin_capture()
+			"unbind": bindings_changed = controls_editor.unbind_selected(player_preferences)
+			"restore": controls_editor.reset_bindings(player_preferences); bindings_changed = true
+			"close": _close_controls_editor()
+			"effects": _toggle_reduced_effects_preference()
+			"contrast": _toggle_high_contrast_preference()
+			"sound_down": _adjust_sound_volume(-10)
+			"sound_up": _adjust_sound_volume(10)
+			"mute": _adjust_sound_volume(0,true)
+			"aim": _toggle_direction_indicator()
+		if bindings_changed: _commit_control_bindings()
+		controls_input_guard_frames = 2
+		get_viewport().set_input_as_handled()
+		queue_redraw()
+		return
 	if controls_editor.capturing:
 		if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
 			controls_editor.cancel_capture()
@@ -771,6 +825,9 @@ func _handle_join_address_input(event: InputEvent) -> void:
 
 
 func _handle_spell_loom_input(event: InputEvent) -> void:
+	if _readable_ui():
+		readable_loom.handle_input(self,event)
+		return
 	if not pending_weave_request.is_empty():
 		var close_requested: bool = event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE
 		close_requested = close_requested or (event is InputEventJoypadButton and event.pressed and event.button_index == JOY_BUTTON_B)
@@ -830,6 +887,8 @@ func _handle_spell_loom_input(event: InputEvent) -> void:
 				_submit_spell_loom_choice()
 			KEY_HOME:
 				spell_loom_editor.prepare_starter_preview(_local_player_state(), champion_catalog, ability_catalog)
+			KEY_C:
+				spell_loom_editor.compare_equipped = not spell_loom_editor.compare_equipped
 		handled = true
 	elif event is InputEventMouseMotion:
 		spell_loom_editor.pointer_move((event as InputEventMouseMotion).position / _loom_scale())
@@ -877,6 +936,8 @@ func _handle_spell_loom_input(event: InputEvent) -> void:
 				_submit_spell_loom_choice()
 			JOY_BUTTON_X:
 				spell_loom_editor.prepare_starter_preview(_local_player_state(), champion_catalog, ability_catalog)
+			JOY_BUTTON_RIGHT_STICK:
+				spell_loom_editor.compare_equipped = not spell_loom_editor.compare_equipped
 			JOY_BUTTON_B:
 				_close_spell_loom_editor()
 		handled = true
@@ -887,6 +948,7 @@ func _handle_spell_loom_input(event: InputEvent) -> void:
 
 
 func _exit_tree() -> void:
+	_cancel_element_garden_arrival()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	# Final teardown consumes the at-most-two outstanding background resources.
 	# Normal movement and Range transitions only poll completed requests.
@@ -903,8 +965,12 @@ func _exit_tree() -> void:
 
 func _process(delta: float) -> void:
 	if world == null:
+		_cancel_element_garden_arrival()
+		if retained_campus != null: retained_campus.deactivate()
+		retained_campus_ready = false
 		return
 	element_garden.begin_frame()
+	element_garden_presenter.begin_frame()
 	if session_transport != null:
 		session_transport.poll()
 		_sync_session_transport()
@@ -922,12 +988,14 @@ func _process(delta: float) -> void:
 		_advance_safe_quit()
 		return
 	_prepare_terrain_frame()
+	_prepare_element_garden_arrival_frame()
 	# Offline arrival waits for exact ground, without a catch-up burst afterward.
 	# Hosting and clients continue authority even if local art is still loading.
-	if terrain_loading and session_transport != null and session_transport.mode == SessionTransport.Mode.OFFLINE:
+	if _area_loading() and session_transport != null and session_transport.mode == SessionTransport.Mode.OFFLINE:
 		accumulator_seconds = 0.0
 		input_router.discard_transient_movement_input()
 		if element_audio != null: element_audio.silence()
+		_prepare_retained_campus()
 		queue_redraw()
 		return
 	_update_reconnect_smoke(delta)
@@ -996,6 +1064,7 @@ func _process(delta: float) -> void:
 		accumulator_seconds = 0.0
 		_prepare_active_character_pages()
 		_advance_player_camera(delta, controls_blocking)
+		_prepare_retained_campus()
 		queue_redraw()
 		return
 	var fixed_delta: float = 1.0 / float(tick_rate)
@@ -1012,6 +1081,7 @@ func _process(delta: float) -> void:
 			_sync_session_transport()
 			if world != catch_up_world or not session_transport.is_host():
 				_advance_player_camera(delta, controls_blocking)
+				_prepare_retained_campus()
 				queue_redraw()
 				return
 		previous_position = current_position
@@ -1111,12 +1181,16 @@ func _process(delta: float) -> void:
 				var practice_command := _solo_rival_command()
 				if practice_command != null:
 					commands.append(practice_command)
+			elif element_expansion.training.active:
+				var range_command: SimCommand = element_expansion.range_target_command()
+				if range_command != null: commands.append(range_command)
 			if session_transport.is_host():
 				commands = authoritative_session.commands_for_tick(command)
 			if not world.step(commands):
 				push_error(world.last_error)
 				set_process(false)
 				break
+			element_expansion.after_paid_step(commands)
 			element_expansion.after_step()
 			_update_element_garden()
 			if interception_practice_active and solo_trial.is_running() and not element_expansion.challenge_active:
@@ -1126,6 +1200,7 @@ func _process(delta: float) -> void:
 					_solo_trial_input_handoff()
 			if session_transport.is_host() and authoritative_session.practice_countdown_completed():
 				if _begin_shared_practice():
+					_prepare_retained_campus()
 					queue_redraw()
 					return
 				push_error("Shared practice could not begin")
@@ -1139,6 +1214,7 @@ func _process(delta: float) -> void:
 				_update_steward_smoke()
 				if authoritative_session.round_return_due():
 					if _return_to_hearth():
+						_prepare_retained_campus()
 						queue_redraw()
 						return
 					push_error("Shared round could not return to the Hearth")
@@ -1191,7 +1267,32 @@ func _process(delta: float) -> void:
 	# camera before the fixed steps made it follow the previous frame's feet,
 	# introducing a changing screen-space offset during catch-up and acceleration.
 	_advance_player_camera(delta, controls_blocking)
+	_prepare_retained_campus()
 	queue_redraw()
+
+
+func _prepare_retained_campus() -> void:
+	retained_campus_ready = false
+	if retained_campus == null: return
+	if not retained_campus_enabled or world == null or _area_loading() or _is_hex_practice():
+		retained_campus.deactivate()
+		return
+	var alpha := clampf(accumulator_seconds * float(tick_rate), 0.0, 1.0)
+	var focus := _camera_focus_position(previous_position.lerp(current_position, alpha))
+	var origin := _camera_origin(focus)
+	var visual_tick := MinimalChampionMotion.tick_at_visual_rate(world.tick, tick_rate, alpha)
+	var context := _campus_court_context()
+	var world_transform := Transform2D(0.0, Vector2.ONE * _camera_zoom_scale(), 0.0, PixelPresentation.snapped_canvas_origin(origin, PlayerCameraRig.ZOOM_PERCENT))
+	retained_campus.profile_enabled = diagnostic_render_profile
+	retained_campus_ready = retained_campus.present(campus_renderer, campus_layout, roundi(visual_tick), focus, _reduced_effects_enabled(), true, Rect2(origin, get_viewport_rect().size / _camera_zoom_scale()), true, context, world_transform)
+
+
+func _campus_court_context() -> String:
+	if element_expansion.challenge_active:
+		var proving := SanctumCampusLayout._parse_bounds(campus_layout.arena_definition.bounds)
+		var fixed_proving := Rect2i(proving.position * SimConfig.FIXED_SCALE, proving.size * SimConfig.FIXED_SCALE)
+		return SanctumCampusRenderer.SIGNATURE_CHALLENGE_CONTEXT if element_expansion.challenge.trial.court == fixed_proving else ""
+	return SanctumCampusRenderer.SOLO_DUEL_CONTEXT if interception_practice_active else ""
 
 
 func _update_character_gaits(delta: float) -> void:
@@ -1274,15 +1375,18 @@ func _element_garden_available() -> bool:
 func _update_element_garden() -> void:
 	if not _element_garden_available():
 		element_garden.clear()
+		_cancel_element_garden_arrival()
 		return
 	var observer := _player_position()
 	var origin := _camera_origin(_camera_focus_position(observer))
 	element_garden.step(Rect2(origin, get_viewport_rect().size / _camera_zoom_scale()), observer)
+	_element_garden_arrival_world_id = 0
+	_element_garden_arrival_generation = 0
 
 func _draw() -> void:
 	if world == null:
 		return
-	if terrain_loading:
+	if _area_loading():
 		_draw_terrain_loading()
 		return
 	_begin_visibility_frame()
@@ -1299,8 +1403,8 @@ func _draw() -> void:
 	if _is_hex_practice():
 		draw_rect(get_viewport_rect(), Color("25331f"))
 	_set_world_transform(camera_origin)
-	if not _is_hex_practice():
-		var court_context := SanctumCampusRenderer.SIGNATURE_CHALLENGE_CONTEXT if element_expansion.challenge_active else (SanctumCampusRenderer.SOLO_DUEL_CONTEXT if interception_practice_active else "")
+	if not _is_hex_practice() and not retained_campus_ready:
+		var court_context := _campus_court_context()
 		campus_renderer.draw(self, campus_layout, roundi(visual_tick), camera_focus_position, _reduced_effects_enabled(), true, Rect2(camera_origin, get_viewport_rect().size / _camera_zoom_scale()), true, court_context)
 	stage_started = _record_draw_stage("campus_and_setup", stage_started)
 	if _element_garden_available():
@@ -1493,17 +1597,19 @@ func _draw() -> void:
 		draw_set_transform(Vector2.ZERO)
 	if hex_playground_open:
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE * _ui_scale())
-		HexPlaygroundPanel.draw(self, HEX_PLAYGROUND_RECT, hex_playground_pair, _reduced_effects_enabled())
+		_draw_hex_playground_panel()
 		draw_set_transform(Vector2.ZERO)
 	if show_visual_specimen:
 		VisualSpecimen.draw(self, visual_language, get_viewport_rect().size, world.tick)
 	if player_compendium != null and player_compendium.is_open:
-		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE * _compendium_scale())
-		player_compendium.draw(self, ThemeDB.fallback_font)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE * (_ui_scale() if _readable_ui() else _compendium_scale()))
+		if _readable_ui(): player_compendium.draw_readable(self, get_viewport_rect().size / _ui_scale())
+		else: player_compendium.draw(self, ThemeDB.fallback_font)
 		draw_set_transform(Vector2.ZERO)
 	if _character_gallery_open():
-		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE * _compendium_scale())
-		character_selection_grid.draw(self, ThemeDB.fallback_font, _gallery_selection_availability(_local_player_state()))
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE * (_ui_scale() if _readable_ui() else _compendium_scale()))
+		if _readable_ui(): character_selection_grid.draw_readable(self, get_viewport_rect().size / _ui_scale(), _gallery_selection_availability(_local_player_state()))
+		else: character_selection_grid.draw(self, ThemeDB.fallback_font, _gallery_selection_availability(_local_player_state()))
 		draw_set_transform(Vector2.ZERO)
 	if service_directory.is_open:
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE * _ui_scale())
@@ -1560,14 +1666,15 @@ func _movement_practice_view() -> Dictionary:
 		return {}
 	for activity: Dictionary in campus_layout.data.get("activity_areas", []):
 		if String(activity.get("id", "")) == "south-movement-loop":
-			return MovementCoach.sample(state, player_preferences,
+			var south := MovementCoach.sample(state, player_preferences,
 				SanctumCampusLayout._parse_bounds(activity.get("bounds", [])), movement_practice_device)
-	return {}
+			if not south.is_empty(): return south
+	return district_practice.view(state,player_preferences)
 
 
 func _draw_practice_coach() -> void:
 	var trial_scale := _ui_scale()
-	if element_expansion.challenge_active: return
+	if element_expansion.challenge_active or element_expansion.guide.active: return
 	if interception_practice_active and solo_trial.phase != SoloDuelTrial.IDLE:
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE * trial_scale)
 		SoloTrialPanel.draw_live(self, solo_trial, SoloDuelRival.status(world.tick, int(interception_practice_setup.start_tick)))
@@ -1616,6 +1723,9 @@ func _draw_practice_coach() -> void:
 
 
 func _draw_controls_editor() -> void:
+	if _readable_ui():
+		ReadableControls.draw(self,get_viewport_rect().size/_ui_scale(),controls_editor,player_preferences)
+		return
 	var panel := ControlBindingEditor.PANEL_RECT
 	draw_rect(Rect2(Vector2.ZERO, Vector2(1280, 720)), Color("060907a8"), true)
 	draw_rect(panel, Color(PANEL_COLOR, 0.97), true)
@@ -1674,10 +1784,16 @@ func _draw_controls_editor() -> void:
 func _draw_spell_loom_editor() -> void:
 	var state := _local_player_state()
 	var requested := _loom_presented_request(state)
+	if _readable_ui():
+		readable_loom.draw(self,get_viewport_rect().size/_loom_scale(),spell_loom_editor,state,ability_catalog,player_preferences,_loom_assignment_availability(state,requested,spell_loom_editor.starter_preview_active()),readable_loom.page)
+		return
 	SpellLoomPresenter.draw_panel(self, spell_loom_editor, state, ability_catalog, visual_language, player_preferences, _loom_assignment_availability(state, requested, spell_loom_editor.starter_preview_active()))
 
 
 func _ingest_combat_cues(events: Array[Dictionary]) -> void:
+	if element_audio != null and world != null: element_audio.begin_batch(world.tick)
+	# Consequences get the first admission opportunity before cast chatter.
+	for event: Dictionary in events: _ingest_consequence_audio(event)
 	for event: Dictionary in events:
 		if String(event.get("type", "")) == "spray_intercepted":
 			var contact_point := Vector2(int(event.get("x", 0)), int(event.get("y", 0))) / 1000.0
@@ -1771,6 +1887,7 @@ func _ingest_combat_cues(events: Array[Dictionary]) -> void:
 		combat_cues.append(cue)
 	while combat_cues.size() > 24:
 		combat_cues.pop_front()
+	if element_audio != null: element_audio.end_batch()
 
 
 func _ingest_element_audio(event: Dictionary) -> void:
@@ -1798,6 +1915,17 @@ func _ingest_element_audio(event: Dictionary) -> void:
 		if not visible_world.has_point(target_position):
 			return # Off-screen hits do not become an extra source of information.
 	element_audio.ingest(event, world.tick, actor.entity_id, ability_catalog, true)
+
+
+func _ingest_consequence_audio(event: Dictionary) -> void:
+	if element_audio == null or world == null or _gameplay_input_blocked() or _is_spectating(): return
+	var actor := _local_player_state()
+	if actor == null: return
+	if session_transport != null and session_transport.is_connected_client() and actor.entity_id != session_transport.local_entity_id: return
+	if DamageEvent.target_id(event) == actor.entity_id and DamageEvent.amount(event) > 0:
+		element_audio.consequence("damage",world.tick)
+	elif String(event.get("type","")) == "cast_refused" and int(event.get("entity_id",0)) == actor.entity_id:
+		element_audio.consequence("refused",world.tick)
 
 
 func _ingest_magic_release(event: Dictionary) -> void:
@@ -3016,10 +3144,10 @@ func _observe_movement_practice_device(event: InputEvent) -> void:
 		movement_practice_device = ControlBindingEditor.DEVICE_CONTROLLER
 
 
-func _open_player_compendium(selected_tab: int, device: int = ControlBindingEditor.DEVICE_KEYBOARD) -> void:
+func _open_player_compendium(selected_tab: int, device: int = -1) -> void:
 	if player_compendium == null or join_address_editor_open or controls_editor.is_open or spell_loom_editor.is_open or _character_gallery_open():
 		return
-	player_compendium.open_panel(selected_tab, player_preferences, _local_player_state(), device)
+	player_compendium.open_panel(selected_tab, player_preferences, _local_player_state(), player_preferences.prompt_device if device < 0 else device)
 	expanded_station_id = ""
 	controls_input_guard_frames = 2
 	queue_redraw()
@@ -3030,7 +3158,7 @@ func _character_gallery_open() -> bool:
 
 
 func _gameplay_input_blocked() -> bool:
-	return terrain_loading or local_navigation.blocks_gameplay() or element_expansion.blocks_gameplay() or solo_trial_menu_open or (interception_practice_active and solo_trial.blocks_gameplay()) or service_directory.is_open or hex_playground_open or hex_playground_demo.is_active() or not application_input_active or join_address_editor_open or (controls_editor != null and controls_editor.is_open) or (spell_loom_editor != null and spell_loom_editor.is_open) or (player_compendium != null and player_compendium.is_open) or _character_gallery_open() or controls_input_guard_frames > 0
+	return _area_loading() or local_navigation.blocks_gameplay() or element_expansion.blocks_gameplay() or solo_trial_menu_open or (interception_practice_active and solo_trial.blocks_gameplay()) or service_directory.is_open or hex_playground_open or hex_playground_demo.is_active() or not application_input_active or join_address_editor_open or (controls_editor != null and controls_editor.is_open) or (spell_loom_editor != null and spell_loom_editor.is_open) or (player_compendium != null and player_compendium.is_open) or _character_gallery_open() or controls_input_guard_frames > 0
 
 
 func _sample_gameplay_command(tick: int, player_position: Vector2, pointer_position: Vector2, controls_blocking: bool) -> SimCommand:
@@ -3065,11 +3193,12 @@ func _open_character_gallery() -> void:
 
 func _handle_character_gallery_input(event: InputEvent) -> void:
 	_reconcile_character_attunement()
-	var pointer := get_viewport().get_mouse_position() / _compendium_scale()
+	var gallery_scale := _ui_scale() if _readable_ui() else _compendium_scale()
+	var pointer := get_viewport().get_mouse_position() / gallery_scale
 	if event is InputEventMouse:
-		pointer = event.position / _compendium_scale()
+		pointer = event.position / gallery_scale
 	var availability: Dictionary = _gallery_selection_availability(_local_player_state())
-	var requested_wire: int = character_selection_grid.handle_event(event, ThemeDB.fallback_font, pointer, availability)
+	var requested_wire: int = character_selection_grid.handle_readable_event(event, pointer, get_viewport_rect().size / gallery_scale, availability) if _readable_ui() else character_selection_grid.handle_event(event, ThemeDB.fallback_font, pointer, availability)
 	if requested_wire > 0:
 		# Recheck at the submit boundary. The host remains authoritative, while a
 		# local state transition cannot leave a synthetic pending selection behind.
@@ -3124,6 +3253,8 @@ func _gallery_selection_availability(state: PlayerState) -> Dictionary:
 
 
 func _loom_scale() -> float:
+	if _readable_ui():
+		return _ui_scale()
 	return loom_scale_for(get_viewport_rect().size)
 
 
@@ -3251,6 +3382,8 @@ func _commit_control_bindings() -> void:
 	if not applied:
 		controls_editor.status_message = "Binding rejected; safe runtime map retained."
 		return
+	input_router.configure_accessibility(player_preferences)
+	if element_expansion != null: element_expansion.refresh_guide_bindings()
 	if not _save_player_preferences_if_persistent():
 		controls_editor.status_message = "Binding works now but could not be saved."
 		push_warning(player_preferences.last_error)
@@ -3744,6 +3877,8 @@ func _handle_demo_result_input(event: InputEvent) -> bool:
 		dismiss = not layout.is_empty() and (layout.close as Rect2).has_point(event.position)
 	if not dismiss: return false
 	hex_playground_demo.dismiss_result()
+	controls_input_guard_frames = 2
+	if input_router != null: input_router.discard_transient_movement_input()
 	get_viewport().set_input_as_handled()
 	queue_redraw()
 	return true
@@ -4252,6 +4387,7 @@ func _start_match_world(requested_tick_rate: int, prepared_trial_world: SimWorld
 	if not input_router.configure_controller_bindings(player_preferences.controller_bindings):
 		push_error("Invalid controller bindings reached match startup")
 		return false
+	input_router.configure_accessibility(player_preferences)
 	accumulator_seconds = 0.0
 	dropped_time_seconds = 0.0
 	clamped_frame_time_seconds = 0.0
@@ -5318,17 +5454,75 @@ func _apply_performance_preferences() -> void:
 	RenderQuality.set_profile(player_preferences.render_quality)
 	Engine.max_fps = player_preferences.frame_limit
 	element_garden_presenter.set_render_detail(RenderQuality.garden_sample_limit(), false)
+	if input_router != null: input_router.configure_accessibility(player_preferences)
 
 
 func _change_performance_preferences(changes: Dictionary) -> bool:
 	var candidate := player_preferences.to_dictionary()
 	for key: String in changes:
-		if key not in ["render_quality", "frame_limit"]: return false
+		if key not in ["render_quality", "frame_limit", "ui_text_percent", "movement_deadzone_percent", "aim_deadzone_percent"]: return false
 		candidate[key] = changes[key]
 	if not player_preferences.apply_dictionary(candidate): return false
 	_apply_performance_preferences()
 	queue_redraw()
 	return _save_player_preferences_if_persistent()
+
+
+func _area_loading() -> bool:
+	return terrain_loading or element_garden_arrival_pending
+
+
+func _request_element_garden_arrival() -> void:
+	_cancel_element_garden_arrival()
+	if not _element_garden_available() or element_expansion.challenge_active or hex_playground_demo.is_active(): return
+	element_garden_arrival_pending = true
+	_element_garden_arrival_world_id = world.get_instance_id()
+	_element_garden_arrival_generation = element_garden.configuration_generation()
+	# Establish exact required counts before the first possible overlay draw.
+	var observer := _player_position()
+	var origin := _camera_origin(_camera_focus_position(current_position))
+	if not element_garden.request_arrival(Rect2(origin, get_viewport_rect().size / _camera_zoom_scale()), observer):
+		var failure: String = element_garden.last_error
+		_cancel_element_garden_arrival()
+		element_garden_arrival_error = failure
+
+
+func _cancel_element_garden_arrival() -> void:
+	element_garden_arrival_pending = false
+	element_garden_arrival_error = ""
+	_element_garden_arrival_world_id = 0
+	_element_garden_arrival_generation = 0
+	element_garden.cancel_arrival()
+	element_garden_presenter.cancel_arrival(element_garden.render_entries())
+
+
+func _prepare_element_garden_arrival_frame() -> void:
+	if _element_garden_arrival_world_id != 0:
+		if not _element_garden_available() or element_expansion.challenge_active or hex_playground_demo.is_active() or world.get_instance_id() != _element_garden_arrival_world_id or element_garden.configuration_generation() != _element_garden_arrival_generation:
+			_cancel_element_garden_arrival()
+			return
+	if not element_garden_arrival_pending: return
+	var observer := _player_position()
+	var origin := _camera_origin(_camera_focus_position(current_position))
+	var view := Rect2(origin, get_viewport_rect().size / _camera_zoom_scale())
+	if not element_garden.request_arrival(view, observer) or not element_garden.prepare_arrival():
+		# A failed exhibit cannot keep an endless loading overlay. The ordinary
+		# step retains its existing error/fallback path; no ground error is forged.
+		var failure: String = element_garden.last_error
+		_cancel_element_garden_arrival()
+		element_garden_arrival_error = failure
+		return
+	var arrival: Dictionary = element_garden.arrival_status()
+	if not element_garden_presenter.prepare_arrival(element_garden.arrival_render_entries(), int(arrival.required), _reduced_effects_enabled()):
+		var failure := String(element_garden_presenter.arrival_status().error)
+		_cancel_element_garden_arrival()
+		element_garden_arrival_error = failure
+		return
+	# A ready Garden stays detached while ground is still loading. Resize and
+	# zoom changes can then rekey the final view before any exhibit is published.
+	if not terrain_loading and bool(arrival.ready) and bool(element_garden_presenter.arrival_status().ready):
+		if element_garden.publish_arrival():
+			element_garden_arrival_pending = false
 
 
 func _prepare_terrain_frame() -> void:
@@ -5355,8 +5549,17 @@ func _draw_terrain_loading() -> void:
 	if not terrain_loading_error.is_empty():
 		draw_string(ThemeDB.fallback_font, center + Vector2(-320, 26), "Restart H.E.X. from its complete portable folder.", HORIZONTAL_ALIGNMENT_CENTER, 640, 14, Color("acbebd"))
 	else:
-		var status := campus_renderer.terrain_status()
-		var fraction := clampf(float(status.get("ready", 0)) / maxf(1.0, float(status.get("required", 1))), 0.0, 1.0)
+		var status: Dictionary = campus_renderer.terrain_status() if campus_renderer != null else {}
+		var ready_count := int(status.get("ready", 0))
+		var required_count := int(status.get("required", 0))
+		if element_garden_arrival_pending:
+			var arrival: Dictionary = element_garden.arrival_status()
+			var visual: Dictionary = element_garden_presenter.arrival_status()
+			ready_count += int(arrival.prepared) + mini(int(arrival.required), int(visual.prepared))
+			# Both prerequisites exist from the initial request, even before the
+			# first visual pump has run. Completion cannot precede preparation.
+			required_count += int(arrival.required) * 2
+		var fraction := clampf(float(ready_count) / maxf(1.0, float(required_count)), 0.0, 1.0)
 		draw_rect(Rect2(center + Vector2(-110, 20), Vector2(220, 3)), Color("305157"))
 		draw_rect(Rect2(center + Vector2(-110, 20), Vector2(220 * fraction, 3)), Color("b8b780"))
 
@@ -5428,6 +5631,8 @@ func _reset_motion_history() -> void:
 	camera_focus_entity = -1
 	actor_motion_history.clear()
 	character_movement_trail.clear()
+	if cartoon_champion_presenter != null:
+		cartoon_champion_presenter.clear_motion_contacts()
 	actor_motion_history.capture(world.players)
 	var actor := _local_player_state()
 	previous_air_height = actor.air_height if actor != null else 0
@@ -5527,7 +5732,7 @@ func _camera_zoom_scale() -> float:
 
 
 func _ui_scale() -> float:
-	return ui_scale_for(get_viewport_rect().size)
+	return ui_scale_for(get_viewport_rect().size) * (float(player_preferences.ui_text_percent)/100.0 if player_preferences != null else 1.0)
 
 
 static func ui_scale_for(viewport_size: Vector2) -> float:
@@ -5737,42 +5942,61 @@ func _prepare_client_hex_context(predictor: ClientPrediction, candidate: SimWorl
 	return predictor.prepare_hex_context(candidate)
 
 
+func _draw_hex_playground_panel() -> void:
+	if _readable_ui():
+		readable_chemistry_demo.draw(self,get_viewport_rect().size/_ui_scale(),hex_playground_pair)
+	else:
+		HexPlaygroundPanel.draw(self,HEX_PLAYGROUND_RECT,hex_playground_pair,_reduced_effects_enabled())
+
+
 func _handle_hex_playground_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
-		hex_playground_open = false
+	var intent: Dictionary = {}
+	if _readable_ui():
+		var logical_event: InputEvent = event
+		if event is InputEventMouseButton:
+			var pointer_event: InputEventMouseButton = event.duplicate()
+			pointer_event.position = event.position/_ui_scale()
+			logical_event = pointer_event
+		intent = readable_chemistry_demo.handle_input(logical_event,get_viewport_rect().size/_ui_scale(),hex_playground_pair)
+	elif event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+		intent = {"action":"close_hex_playground"}
 	elif event is InputEventJoypadButton and event.pressed and event.button_index in [JOY_BUTTON_B, JOY_BUTTON_BACK]:
-		hex_playground_open = false
+		intent = {"action":"close_hex_playground"}
 	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var intent := HexPlaygroundPanel.intent_at(event.position / _ui_scale(), HEX_PLAYGROUND_RECT, hex_playground_pair, _reduced_effects_enabled())
-		match String(intent.get("action", "")):
-			"select_hex_pair": hex_playground_pair = intent.selected_pair
-			"close_hex_playground": hex_playground_open = false
-			"open_chemistry_help":
-				hex_playground_open = false
-				_open_player_compendium(PlayerCompendiumScript.CHEMISTRY)
-			"open_spell_loom":
-				hex_playground_open = false
-				_open_spell_loom_editor()
-				spell_loom_editor.status_message = "Inspect any spell here. Stand beside the Spell Loom to seal changes."
-			"launch_paid_hex_demo":
-				if (session_transport.mode != SessionTransport.Mode.OFFLINE and not session_transport.is_host()) or (session_transport.is_host() and authoritative_session.session_round.phase != SessionRound.Phase.HEARTH):
-					station_notice = "Guided casts are available to the host during free practice. Guests can cast their own weave."
-				else:
-					if hex_playground_demo.begin(world, session_transport.local_entity_id, hex_playground_pair.x, hex_playground_pair.y, ability_catalog):
-						hex_playground_open = false
-						_reset_motion_history()
-					station_notice = hex_playground_demo.status()
-				station_notice_seconds = 5.0
-			"reset_hex_playground_area":
-				if (session_transport.mode != SessionTransport.Mode.OFFLINE and not session_transport.is_host()) or (session_transport.is_host() and authoritative_session.session_round.phase != SessionRound.Phase.HEARTH):
-					station_notice = "The host can reset Wellspring during free practice."
-				elif _restart_shared_seed(tick_rate):
-					station_notice = "Wellspring reset. Weaves retained; paid fields and practice targets cleared."
-				station_notice_seconds = 5.0
+		intent = HexPlaygroundPanel.intent_at(event.position / _ui_scale(),HEX_PLAYGROUND_RECT,hex_playground_pair,_reduced_effects_enabled())
+	_apply_hex_playground_intent(intent)
 	controls_input_guard_frames = 2
 	input_router.discard_transient_movement_input()
 	get_viewport().set_input_as_handled()
 	queue_redraw()
+
+
+func _apply_hex_playground_intent(intent: Dictionary) -> void:
+	match String(intent.get("action", "")):
+		"select_hex_pair": hex_playground_pair = intent.selected_pair
+		"close_hex_playground": hex_playground_open = false
+		"open_chemistry_help":
+			hex_playground_open = false
+			_open_player_compendium(PlayerCompendiumScript.CHEMISTRY)
+		"open_spell_loom":
+			hex_playground_open = false
+			_open_spell_loom_editor()
+			spell_loom_editor.status_message = "Inspect any spell here. Stand beside the Spell Loom to seal changes."
+		"launch_paid_hex_demo":
+			if (session_transport.mode != SessionTransport.Mode.OFFLINE and not session_transport.is_host()) or (session_transport.is_host() and authoritative_session.session_round.phase != SessionRound.Phase.HEARTH):
+				station_notice = "Guided casts are available to the host during free practice. Guests can cast their own weave."
+			else:
+				if hex_playground_demo.begin(world, session_transport.local_entity_id, hex_playground_pair.x, hex_playground_pair.y, ability_catalog):
+					hex_playground_open = false
+					_reset_motion_history()
+				station_notice = hex_playground_demo.status()
+			station_notice_seconds = 5.0
+		"reset_hex_playground_area":
+			if (session_transport.mode != SessionTransport.Mode.OFFLINE and not session_transport.is_host()) or (session_transport.is_host() and authoritative_session.session_round.phase != SessionRound.Phase.HEARTH):
+				station_notice = "The host can reset Wellspring during free practice."
+			elif _restart_shared_seed(tick_rate):
+				station_notice = "Wellspring reset. Weaves retained; paid fields and practice targets cleared."
+			station_notice_seconds = 5.0
 
 
 func _pov_hex_occluder_polygons(camera_origin: Vector2) -> Array[PackedVector2Array]:
@@ -5784,3 +6008,7 @@ func _pov_hex_occluder_polygons(camera_origin: Vector2) -> Array[PackedVector2Ar
 			polygon.append(Vector2(vertex) / SimConfig.FIXED_SCALE * _camera_zoom_scale() + PixelPresentation.snapped_canvas_origin(camera_origin, PlayerCameraRig.ZOOM_PERCENT))
 		result.append(polygon)
 	return result
+
+
+func _readable_ui() -> bool:
+	return player_preferences != null and ReadingPolicy.needs_reflow(get_viewport_rect().size,player_preferences.ui_text_percent)

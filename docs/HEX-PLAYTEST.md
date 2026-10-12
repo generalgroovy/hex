@@ -1,21 +1,31 @@
 # H.E.X. playtest route
 
-Status: human playtest route for the locally qualified 504-spell, enlarged-Wellspring
-build `p60-6d80c3bce71e`. The [central handoff](../.agent/HEX-RESUME.md)
-and [README](../README.md) identify its exact source, portable package and executed
-checks. This route records the remaining human acceptance work.
+Status: current human playtest route for the October 11 audit implementation.
+The [central handoff](../.agent/HEX-RESUME.md) and
+[audit record](audit-implementation-20261011/README.md)
+identify exact source, packages and executed checks. This route
+describes acceptance work; it does not claim that the playtests below have run.
 
 This route checks understandable choices and useful counters. Automated tests
 establish the recorded behavior; a player session must still establish feel,
 readability and balance. Record the exact build, character, control setup and
-Normal/Reduced Effects setting with each finding.
+normal/Reduced Effects setting with each finding. Also record platform, viewport,
+fixed 75% gameplay framing, Low/Standard detail, frame limit and window focus.
 
 ## Start and recover
 
 The [README](../README.md#install-or-play-on-windows) owns launch links. A
 qualified portable needs its entire extracted folder and `PLAY-HEX.cmd`.
-Development source uses `scripts/run.cmd --pixel-cast` with pinned Godot 4.7.1.
+Development source uses `hex.cmd play --fullbody-art --pixel-cast` with pinned Godot 4.7.1.
 Prefer 1280×720 for the current text and native pixel inspection.
+
+Also try 960×540 with 100% and 150% text in **Display & text size**. Open the
+Menu, Controls, Loom, Range, map, Chemistry demos and service directory. Reach
+the final page using pointer and controller, read every selected description,
+then switch input devices and confirm that prompts follow. Gallery and
+Compendium retain their fitted reference views; inspect their smallest text
+separately. Check the explicit Retry/Recover progress actions if a controlled
+disposable save fixture reports an error; do not corrupt a personal save.
 
 Walk with WASD and aim with the mouse. Saved bindings take precedence; inspect
 Controls for keyboard and controller equivalents. F opens a nearby service and
@@ -88,7 +98,7 @@ Compare a Small, Middle and Large non-flyer, then Grace Riva and a winged race.
 | First Jump, release, then airborne second press/hold with a flyer | First Jump remains ordinary. Only the second press buys finite flight with the original open body and held wing keys, each lasting 200 ms. The central face and torso stay stable. Release, exhaustion, expiry or landing ends the pose immediately; repeated input cannot refill its airborne allowance. |
 | Directional B in the air, then a deliberate V turn after commitment | The paid redirect uses remaining momentum and the existing dodge timer. It grants no extra immunity or free air action. |
 | Fresh C during an early air dodge and actual landing | The existing fast-fall wavedash route works; it does not also purchase the new landing Slide. |
-| Ground roll / air dodge / freshly spawned actor | Spawn protection keeps an opaque body and shield markers. Timed dodge protection makes the body translucent with split marks, slashes and remaining-window pips. Recovery immediately restores opacity and removes those cues. Compare over stone and earth at 100% and 75% zoom. Ordinary jumps and flight grant no immunity; none of these cues imply passing through walls. |
+| Ground roll / air dodge / freshly spawned actor | Spawn protection keeps an opaque body and shield markers. Timed dodge protection makes the body translucent with split marks, slashes and remaining-window pips. Recovery immediately restores opacity and removes those cues. Compare over stone and earth at the fixed 75% gameplay framing. Ordinary jumps and flight grant no immunity; none of these cues imply passing through walls. |
 | Repeat with Reduced Effects and Reduced Motion | Reduced Motion holds the upright tuck and open wing pose. Essential attack and protection distinctions remain, including exact protected/recovery boundaries. Slower footwork and held keys do not add input delay. |
 
 The [expanded native review](element-expansion-evidence-20261009/native-review.md) and [preceding animation review](reference-refinement-evidence-20261009/animation-followup-native-review.md)
@@ -227,6 +237,34 @@ connects the rival-weapon loop to Mega Man and the optional lesson/Range separat
 to Street Fighter's practice tools. The [combat evidence](element-expansion-evidence-20261009/combat-design.md)
 records the Magicka, Noita and Gungeon techniques. Those precedents guide these
 questions; they do not answer whether this build feels fair or understandable.
+
+## Current presentation and smoothness checks
+
+1. Move, reverse and turn across terrain-buffer boundaries; resize the window and
+   try wide views and world edges. Watch for blank strips, stale terrain, flicker
+   and camera/body disagreement. Confirm screen corners remain visible while
+   opaque walls, solid cover and concealment still hide the appropriate actors.
+2. Compare single-element and mixed projectiles at the fixed 75% gameplay framing,
+   with Reduced Effects both ways. Inspect the retained 100%/75% diagnostic
+   sheets separately; they are harness render scales, not selectable gameplay zooms.
+   Read element identity, depth, travel direction,
+   forming/active/fading phase and actual contact footprint during movement.
+   Dense effects must not obscure escape space or an opponent's warning.
+3. Walk the Academy, Tideglass, Verdant, Foundry and Starward routes. Floor details
+   should help identify a place without reading as damage, blocking a route or
+   covering the landing/arrival point. Listen to casts and contacts at the default
+   30% and a comfortable personal volume; identify missed cues or fatiguing repeats.
+4. For an engineering comparison, reproduce the checkpoint's Hearth, Garden,
+   all-six Mantle, movement-boundary and close-Fire cases on the same platform,
+   rendered viewport, settings, focus and workload. Record admitted casts, expiry
+   and idle periods, mean/p95 intervals and slow tails. Measure cold startup and
+   travel separately. Do not compare Windows portable FPS directly to Linux
+   callback intervals or label the old baseline as a current-source result.
+
+The [checkpoint](presentation-checkpoint-20261011/README.md) preserves native
+fixtures and the Linux baseline. A final-source matched profile, a clean Full
+rerun and a newly qualified Windows portable remain outstanding. Complete those
+checks before making a stronger smoothness or delivery claim.
 
 ## Match and delivery checks
 

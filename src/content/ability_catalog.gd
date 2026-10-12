@@ -384,6 +384,11 @@ func _validate_playable_simulation(ability: Dictionary) -> bool:
 	match shape:
 		"projectile":
 			required_positive.append_array(["speed", "damage", "lifetime_ms"])
+			if ability.has("range"):
+				required_positive.append("range")
+			if ability.has("split_delay_ms"):
+				if _spell_family(ability) != "split" or not _bounded_integer(ability.split_delay_ms, 1, 250) or int(ability.split_delay_ms) >= int(ability.get("lifetime_ms", 0)):
+					return _fail("only Split owns a bounded delay shorter than its flight: %s" % ability_id)
 			if _spell_family(ability) in ["heavy", "fuse"]:
 				if not _bounded_integer(ability.get("blast_radius"), 1000, 120000) or not _bounded_integer(ability.get("blast_damage"), 1, 100000):
 					return _fail("Heavy needs a bounded blast: %s" % ability_id)

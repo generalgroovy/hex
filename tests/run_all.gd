@@ -3,6 +3,17 @@ extends SceneTree
 
 
 const SUITES: Array[Script] = [
+	preload("res://tests/unit/test_projectile_speed_policy.gd"),
+	preload("res://tests/unit/test_movement_route_decisions.gd"),
+	preload("res://tests/network/test_network_impairment.gd"),
+	preload("res://tests/unit/test_diagnostic_replay.gd"),
+	preload("res://tests/unit/test_perk_benefit_audit.gd"),
+	preload("res://tests/replay/test_current_world_replay.gd"),
+	preload("res://tests/unit/test_spell_inspector.gd"),
+	preload("res://tests/unit/test_session_admission_deadline.gd"),
+	preload("res://tests/unit/test_signature_recovery.gd"),
+	preload("res://tests/unit/test_signature_rival.gd"),
+	preload("res://tests/unit/test_district_practice_coach.gd"),
 	preload("res://tests/unit/test_hex_render_polygon_cache.gd"),
 	preload("res://tests/unit/test_projectile_surface_depth.gd"),
 	preload("res://tests/unit/test_wellspring_environment_details.gd"),
@@ -13,6 +24,9 @@ const SUITES: Array[Script] = [
 	preload("res://tests/unit/test_performance_presentation.gd"),
 	preload("res://tests/unit/test_hex_stone_floor.gd"),
 	preload("res://tests/unit/test_wellspring_terrain_stream.gd"),
+	preload("res://tests/unit/test_retained_campus_canvas.gd"),
+	preload("res://tests/unit/test_range_target_scenario.gd"),
+	preload("res://tests/unit/test_hex_avoidance_feedback.gd"),
 	preload("res://tests/unit/test_element_garden_exhibition.gd"),
 	preload("res://tests/unit/test_large_world_rendering.gd"),
 	preload("res://tests/unit/test_local_navigation.gd"),

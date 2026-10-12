@@ -19,6 +19,11 @@ func ready() -> bool:
 	return library != null and library.asset_count() > 0
 
 
+func clear_contacts() -> void:
+	# World/session history only. Shared art and the current frame budget survive.
+	_wall_contacts.clear()
+
+
 func stamp(canvas: CanvasItem, effect: String, anchor: Vector2, age: int, reduced: bool, angle: float = 0.0, opacity: float = 1.0) -> bool:
 	if effect in ["slide_trail", "slide_dust", "air_dash_afterimage_mask"]:
 		return true # Handled intentionally; never resurrect fallback trails.

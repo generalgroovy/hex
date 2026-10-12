@@ -457,7 +457,7 @@ before payment, later Heavy Flux refusals natural. Mixed still over8.333ms;
 no sustained120Hz, renderedFPS, human fun or physical network claim.
 
 Initial Full91/462,658/0 in98.525s preserved before fixture guard. Final
-Full91/462,661/0 in90.542s, stderr0, source gates and120Hz boot passed. Strict
+Full91/462,661/0 in90.542s, stderr0, source gates and 120 Hz boot passed. Strict
 Windows export; SHA-matched copied EXE/PCK boot outside checkout passed with
 isolated settings, no source path/LAN discovery. New runnable developer build:
 `C:\Users\sende\AppData\Local\FLUX-dev\playtests\counterplay-practice-20260909\flux2.exe`.
@@ -512,7 +512,7 @@ Pixel pack validator20,484/0, no pixel/recipe/phase change. Evidence.gdignore
 added so review PNGs do not become editor imports.
 
 Final Full89 suites/462,144 assertions,0failures/stderr,87.624s; current-state,
-inventory, doctor, import and120Hz source boot passed. Strict Windows export
+inventory, doctor, import and 120 Hz source boot passed. Strict Windows export
 passed; exact EXE/PCK copied outside checkout and booted without --path or LAN.
 Playable folder: LOCALAPPDATA/FLUX-dev/playtests/sandbox-impact-20260909.
 PCK66,202,680bytes SHA256 bbd3268bb1c2de012b2283f04b74d42b83a50ee352bf24066fcd7ca13d23c7b7.
@@ -541,7 +541,7 @@ for opaque checkerboard and nonalternating arms, no promotion. Integration/Full
 and packaged evidence initially pending; final results follow. No publication or release.
 
 Final integrated Full passed88 suites/441,503assertions,0failures/stderr,94.794s;
-source check, asset audit, import, doctor and120Hz boot passed. Combat4,359focused,
+source check, asset audit, import, doctor and 120 Hz boot passed. Combat4,359focused,
 coach4,086focused; six feedback and13 full-gameplay1280x720 captures reviewed.
 Paid Fire/Water lesson ticks23/45/73/325/385 verify matter/form/active/decay/expiry.
 Integration caught and fixed missing-guest-actor fallback; no coaching host state.
@@ -650,7 +650,7 @@ top-third portraits. Movement is a16-row table; Chemistry a complete8x8matrix,
 with source-derived values, concise selection summaries and full Details retained.
 
 Final integrated Full:87 suites/431,965 assertions,0failures/stderr,79.362s;
-strict import and120Hz boot. Additional fixed-volume10,830; neutral builder1,119;
+strict import and 120 Hz boot. Additional fixed-volume10,830; neutral builder1,119;
 compactUI3,548; gait/prediction72,315; portrait43,707 focused assertions passed.
 Review validator138/42cases and batch scaffolder2,812/58cases passed on both
 PowerShell7 and WindowsPowerShell5. Actual compact movement/chemistry720p captures
@@ -713,7 +713,7 @@ Retained probe evidence is linked from the character-page checkpoint.
 ## 2026-09-08 - material footprints and clarified body hurtboxes
 
 H2 verified source:87 suites /419,354 assertions, no failures/stderr, strict import
-and120Hz boot in84.792s. Final user clarification: distinct core stats and
+and 120 Hz boot in84.792s. Final user clarification: distinct core stats and
 15/18/21px hurt radii, identical18px wall clearance. Existing serializedradius
 owns combat; physical consumers are explicit shared clearance. No schema change.
 Removed chemistry/Field/Spray perimeter overlays; clipped native material remains
@@ -812,7 +812,7 @@ selection, no-op attunement, modal input and complete starter-kit matrix pass
 focused checks. New Oh Tipi images remain opaque-matte/contact-QA drafts and are
 not live sprites. No commit/push/installer or sustained120FPS acceptance.
 
-Final Full90/398091 passes with zero failures/warnings/stderr and120Hz source
+Final Full90/398091 passes with zero failures/warnings/stderr and 120 Hz source
 boot. Exact-selection loopback450 assertions, three body classes/24directions;
 Farflow host/guest/late guest, reconnect/rematch pass.785 strict art-import tests
 pass but actual opaque drafts correctly fail import. Receipts/screenshots are
@@ -5177,3 +5177,191 @@ import while retaining the evidence in Git. See the
 [source publication record](../docs/source-publication-20261011/README.md) for
 the tested commit, receipt summary, preserved failure and remote Full workflow.
 Existing portable payloads and personal saves remain local and unchanged.
+
+## 2026-10-11 -- presentation branch pull and current documentation
+
+The user selected the newest presentation branch for the pull/documentation
+request. The clean Windows checkout now tracks
+`codex/hex-screen-smoothness-20261011` at
+`791b00aacc06dd96cff732a984199ec217868d56`; `git pull --ff-only` confirmed it
+up to date. `main` remains at `95ca630`. This request updates documentation;
+the paused presentation implementation and export work did not resume.
+
+Reconciled current goals, source state, README, player/developer/network/ability
+guides, passive guide and human playtest route. The specification now explicitly
+records all six on-hit status channels and Mantle's paid trail. The design
+overview distinguishes implemented movement, spell, identity, teaching, world,
+UI and presentation capabilities from remaining human/performance acceptance.
+Condensed the resume and single queue, retaining detailed history through the
+original checkpoint, performance and publication records.
+
+Two specialists audited and cross-reviewed the docs. Review corrected fixed
+75% gameplay framing versus 100%/75% diagnostic scales, the retained 30% sound
+preference versus quieter cast clips, and the exact failed-Full/corrected-focused
+qualification boundary. The current runtime is p60-33606f016138; the previously
+qualified Windows portable remains p60-be3efd332e1a. No new portable or overall
+FPS gain is claimed.
+
+Source-only verification passed: canonical runtime identity (3,392 records),
+43 retired paths absent / 789 live files / 13 contract claims, and current-state
+content/documentation invariants. Independent audit matched all 51 checkpoint
+artifacts and 18 native receipt source hashes. The twelve refreshed current docs
+had 179 resolving local Markdown links and 13 linked heading anchors; diff
+whitespace checks passed. The current-state report is local at
+`.godot/docs-refresh-20261011/current-state.json`.
+
+Runtime files, tests, original evidence, assets and local packages were not
+changed. No engine, native profile, export or multiplayer run was performed for
+this documentation-only update. Remaining qualification is in the single queue.
+
+## 2026-10-11–12 -- parallel audit implementation
+
+The user explicitly resumed implementation of the cross-reviewed audit. Three
+specialist agents worked on gameplay, experience and performance; each reviewed
+another workstream. Root integrated the changes and serialized engine runs.
+Existing dirty documentation, personal profiles, original art and prior packages
+were preserved. Changes remain local after `791b00a` on the presentation branch.
+
+The candidate adds whole-tick paired perk decisions, eight paid rival patterns,
+ground-damage reward attribution, actual movement-route observers and bounded
+combat experiments. Compact text layouts, device-aware prompts, optional
+tactical teaching, explicit progression recovery, clearer protection/recovery
+and bounded consequence audio strengthen player feedback. Silent ENet admission
+slots expire with one bounded refusal-delivery grace. Full/Release supervision
+now accommodates the complete suite; pull requests and full CI use distinct tiers.
+
+Rendering retains immutable topology, exposed-edge masks, HUD layout/text metrics
+and binding labels with exact invalidation. Terrain admission has time/byte/count
+budgets and bounded destination prefetch. The final mask refinement passed 614
+exact pixel comparisons, including 176 real paid-sequence comparisons. Native
+UI fixtures contain 64 frames and character fixtures 21 images. These do not
+establish human feel or balance.
+
+Frozen runtime: **p60-d8e6ea1cd808**, 3,412 records, Protocol 60 / Snapshot 24.
+The [implementation record](../docs/audit-implementation-20261011/README.md)
+owns the complete-suite and package receipts. The
+[performance report](../docs/audit-implementation-20261011/native-performance.md)
+retains the failed viewport baseline and both candidate measurements. No overall
+mean frame-time gain or consistent 60 FPS is established; final source timing
+also has focus, available-memory and camera differences. The 60-second Garden
+soak belongs only to intermediate `p60-3a7e6f5fee64`.
+
+Independent review checked the final field-cache invariants, save recovery,
+compact menu instructions and all 15 raw performance-artifact hashes. Current
+source and asset checks, final identity/import, focused regression and document
+link results are recorded separately from full-suite/export completion. No
+commit, push, main merge or publication was performed by this batch.
+
+Final October 12 qualification: the clean Full rerun passed **251 suites /
+7,081,662 assertions**, zero failures and stderr, including import/identity and
+120 Hz boot. Both first-run legacy-expectation failures and their independently
+reviewed test-only repairs remain preserved. The fresh p60-d8e6ea1cd808 Windows
+portable is `exports/hex-audit-overhaul-20261011/windows/PLAY-HEX.cmd`; its ZIP
+is 153.6 MiB. Exact ZIP/payload/PCK identity checks and all 132 terrain chunks
+plus overview passed, and the older portable's nine payload checksums still match.
+
+Actual release iteration-limit runs completed all paid casts but reported
+audio-stream/playback objects at exit. A separate normal window-close probe
+passed on unchanged game bytes. The measurement helper now has an opt-in bounded
+normal-close mode; all four 45-second cases passed with zero warnings/stderr,
+safe-close markers and all twelve paid casts in each combat case. Visible-window
+samples were foreground. Emitted FPS means were 59.82/60.00/55.65/46.74 for
+Hearth/Garden/Fire/Mantle; finite casts and idle periods do not establish sustained
+60 FPS. Both failure evidence and normal-close evidence remain. A specialist
+reviewed the helper's watchdog, ownership, default compatibility and strict gates.
+The game runtime did not change after Full. PR checks now include thirteen
+registered focused suites; no GitHub CI execution is claimed. The older
+PLAYER-EXPERIENCE-OVERHAUL contract is explicitly historical, preserving its body.
+
+## October 12 comprehensive follow-up — final qualification running
+
+Implemented all twenty audit workstreams with gameplay, experience and technical
+specialists plus independent peer/root review. Current frozen runtime is
+p60-549a9365d5cd (3,436 production records), separate from the preserved d8
+portable. The single queue and docs/implementation-20261012 own this batch.
+Shared spell comparison, 200% compact/pad Options, finite Range scenarios,
+three-district paid learning/reward persistence, movement/animation/audio,
+rolling recovery, current-world replay and full-map ENet impairment are integrated.
+Final UI gates: 2,734 presentation and 58,094 spell-tool assertions; 196 native
+frames, 68 at 200%, all routes and authority preservation passed. Motion coverage
+has 630 normal and 315 reduced samples; an existing Grace fallback-art fragment
+is recorded rather than concealed. Source measurement policy has 147 passing
+assertions, including an explicit Start event and strict independent Windows gates.
+
+The retained campus experiment passed pixel/invalidation gates but remains opt-in
+because actual comparisons failed foreground, viewport or Start admission. The
+producer-size witness experiment had no reliable timing gain and was reverted.
+No speedup or sustained60FPS claim is established. All failed evidence is retained.
+Full is running in .godot/windows-tests/250e732181b04ff1984997ee239696d7;
+no new portable, commit, push or publication is yet claimed. Original art,
+personal profiles and prior working packages remain preserved.
+
+### Final qualification repairs, October 12
+
+The complete 85b1 Full reached all 260 suites and 7,217,428 assertions, with
+636 failures across nine suites and empty stderr. Its receipt is preserved as
+full-second-failed.json. Independent reviewers traced the failures to obsolete
+airborne-hand assertions, corrupted Unicode unbound markers, one old navigation
+expectation, and shared Flux/cast-cycle display formatting. Four reviewed patches
+preserve the original body geometry and all504 independent spell metrics, add
+exact hand-layer/expiry checks, restore text and sum integer ticks before division.
+The 4f73 candidate passed all13 affected/neighbor suites:1,967,421 assertions,
+zero failures/stderr. Fresh196 native UI frames passed structural/authority gates;
+visual review additionally found a clipped aim label and missing spell identities
+in the wide comparison. Those bounded UI corrections precede the next Full freeze.
+All earlier receipts, original assets, profiles and packages remain preserved.
+
+### October 12 comprehensive delivery complete
+
+Final frozen runtime p60-845f85b5253e (3,436 records) passed a clean Full:
+260 suites / 7,331,212 assertions / zero failures or stderr, with import,
+post-import identity and 120 Hz boot. Raw run: 18b42abf09814ca6ac5307595d7d50c1.
+Final UI verification passed 185,185 focused assertions and 196 native frames,
+including 68 at 200% text; root and two peers visually reviewed the repaired
+Aim cue and named/pinned spell comparisons.
+
+Fresh portable: exports/hex-comprehensive-20261012/windows/PLAY-HEX.cmd.
+ZIP: HEX-p60-845f85b5253e-Windows-x64.zip, 161,146,185 bytes;
+SHA256 e25f8e3e5abbf0c3a678b66b2ef1aa51b3f16a5f7de8996dfc8679f287e30539.
+Export/native smoke, all ten payload/ZIP members and unchanged d8 fallback passed.
+All 132 terrain chunks plus overview decoded exactly from a mounted isolated PCK
+copy: 2,062 checks, zero stderr. Five actual executable normal-close/reopen cases
+passed on one isolated profile. Fire and all-six Mantle each admitted twelve paid
+casts with zero refusals; preferences stayed byte-identical and package hashes
+were unchanged. Caller APPDATA restored. Hidden-window close and unrelated-event
+parser failures were preserved; reviewed harness-only repairs preceded the clean
+five-case retry. Compact receipts live in docs/implementation-20261012.
+
+All twenty implementation workstreams received peer/root review and current docs
+were reconciled. Performance remains OPEN; retained campus stays opt-in and the
+producer-size experiment remains reverted. No foreground-qualified comparison,
+overall speedup, constant 60 FPS or subjective feel/balance acceptance is claimed.
+Complete authored animation cycles, a larger campaign, physical-device/network
+acceptance and natural passive/recipe differentiation remain explicit product work.
+No commit, push, merge, publication or personal-profile change was performed.
+
+### October 12 stable iteration checkpoint and requested pause
+
+User requested pause at the next stable game state and repository/documentation
+update. Runtime p60-1e084a50a029, 3,438 records, is frozen. Full passed 261 suites /
+7,543,825 assertions with zero failures/stderr and 120 Hz boot. Separate fresh
+package/archive, 133-image/2,062-check terrain and five-case portable lifecycle
+gates pass. Fire and all-six Mantle each admit 12 paid casts with 0 refusals;
+preferences stay byte-identical. The first lifecycle run's extra post-sequence
+casts invalidate that controlled workload; its receipt/log are retained, and the
+unchanged repeat passes. No runtime change was made to satisfy the retry.
+
+Current portable: exports/hex-iteration-20261012/windows/PLAY-HEX.cmd.
+ZIP 161,159,896 bytes; SHA256 f035d5c4272d3af2345ff6dc16406f76e3020dea723bd5c7f3c5252784308c54.
+Current source foreground admission passes, but warm Garden/Fire/Mantle p95
+29.420/49.174/51.784 ms does not meet steady 60 FPS. Garden cold preparation is
+staged with exact first-visible content; peak CPU improves while total CPU rises.
+
+Three specialists cross-reviewed all implemented slices and the next T7 diagnostic.
+T7 is archived under docs/iteration-20261012/deferred-t7 and remains UNAPPLIED;
+239 isolated PowerShell assertions pass, Godot/native/cost gates are unrun.
+The unused withdrawn batching oracle/UID moved to ignored local evidence.
+Current README, guide, design contract, evidence index, queue and resume are
+reconciled; historical profiles, failed evidence and prior qualified builds remain.
+The stable branch update is authorized; no merge, binary release, installer or
+personal-profile change is requested. Stop implementation until the user resumes.

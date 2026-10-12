@@ -55,8 +55,16 @@ func _fixture(mutable_geometry: bool) -> Dictionary:
 	# The same paid command schedule used by the full-world snapshot fixture
 	# creates a Steam product, a surviving flight and another paid startup.
 	# The guest adds separate ordinary Fire ground, away from that reaction.
+	var followup_requested := false
 	for step: int in range(560):
-		var slot := 0 if step in [0, 160, 260] else 1 if step in [100, 190] else -1
+		var slot := 0 if step in [0, 160, 260] else 1 if step == 100 else -1
+		var host := world.player(1)
+		# Faster Bolts finish this same short route before the old tick 190
+		# followup. Submit one Fire request while flight survives after recovery,
+		# preserving the scheduled Water requests and ordinary paid authority.
+		if step > 160 and slot < 0 and not followup_requested and not world.projectiles.is_empty() and not court.products.is_empty() and host.pending_cast_wire_id == 0 and host.cast_recovery_ticks == 0 and host.spell_cooldown_for_wire(fire_wire) == 0:
+			slot = 1
+			followup_requested = true
 		var pressed := int(SimCommand.SPELL_PRESSED_BITS[slot]) if slot >= 0 else 0
 		var commands: Array[SimCommand] = [
 			SimCommand.new(world.tick, 1, 0, 0, 0, pressed, 0, -1000, 640_000, 480_000),

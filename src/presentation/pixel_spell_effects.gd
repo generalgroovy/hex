@@ -97,7 +97,7 @@ static func _templates_for(count: int) -> Array[Dictionary]:
 			material_offsets.append(point * 8.0)
 			var value := 0.64 + light * 0.36
 			material_colors.append(Color(value, value, value, 0.72))
-		var template := {"points": points, "indices": indices, "start": start, "end": end,
+		var template := {"points": points, "surface_units": surface, "indices": indices, "start": start, "end": end,
 			"glyph_unit": Vector2.from_angle((start + end) * 0.5) * (0.58 if count > 1 else 0.0),
 			"lighting": lighting, "material_offsets": material_offsets, "material_colors": material_colors}
 		template.make_read_only()
@@ -115,13 +115,50 @@ static func projectile_depth_model(model: Dictionary) -> Dictionary:
 	# Lift an inset painted body, never the projectile or its contact marks.
 	# The body plus offset and every shadow vertex remain inside the old core.
 	var lift := minf(3.0, radius * 0.18)
-	var shadow := PackedVector2Array()
+	var shadow := _projectile_shadow_points(center, radius)
 	var template: Dictionary = _templates_for(1)[0]
-	for point: Vector2 in template.points:
-		shadow.append(center + Vector2(point.x * 0.82, 0.45 + point.y * 0.25) * radius)
-	shadow.append(center + Vector2(0, radius * 0.45))
 	return {"center": center - Vector2(0, lift), "radius": radius - lift, "lift": lift, "shadow": shadow,
 		"shadow_indices": (template.indices as PackedInt32Array).duplicate()}
+
+
+# Internal live-draw helpers borrow immutable normalized templates only for this
+# submission. Public model APIs above still return detached diagnostic buffers.
+# World points, vertex colors and UVs remain local; no changing paid state is kept.
+static func _surface_points(template: Dictionary, center: Vector2, radius: float) -> PackedVector2Array:
+	var units: PackedVector2Array = template.surface_units
+	var points := PackedVector2Array()
+	points.resize(units.size())
+	for index: int in units.size(): points[index] = center + units[index] * radius
+	return points
+
+
+static func _surface_colors(template: Dictionary, color: Color) -> PackedColorArray:
+	var lighting: PackedFloat32Array = template.lighting
+	var colors := PackedColorArray()
+	colors.resize(lighting.size())
+	var shade := color.darkened(0.56)
+	var light := color.lightened(0.18)
+	for index: int in lighting.size(): colors[index] = Color(shade.lerp(light, lighting[index]), 0.92)
+	return colors
+
+
+static func _material_uvs(template: Dictionary, source: Rect2, pivot: Vector2, texture_size: Vector2) -> PackedVector2Array:
+	var offsets: PackedVector2Array = template.material_offsets
+	var uvs := PackedVector2Array()
+	uvs.resize(offsets.size())
+	for index: int in offsets.size(): uvs[index] = (source.position + pivot + offsets[index]) / texture_size
+	return uvs
+
+
+static func _projectile_shadow_points(center: Vector2, radius: float) -> PackedVector2Array:
+	var units: PackedVector2Array = _templates_for(1)[0].points
+	var points := PackedVector2Array()
+	points.resize(units.size() + 1)
+	for index: int in units.size():
+		var point := units[index]
+		points[index] = center + Vector2(point.x * 0.82, 0.45 + point.y * 0.25) * radius
+	points[units.size()] = center + Vector2(0, radius * 0.45)
+	return points
 
 
 static func material_geometry_stats() -> Dictionary:
@@ -227,31 +264,36 @@ func draw_expanded_projectile(canvas: CanvasItem, model: Dictionary, language: V
 			for point: Vector2 in boundary: elevated.append(point + lift)
 			canvas.draw_polyline(elevated, Color(0.035, 0.045, 0.045, 0.85), 3.0)
 			canvas.draw_polyline(elevated, Color(bright, 0.62), 1.0)
-		for sector: Dictionary in mixture_layout(int(model.mask), center, radius * 0.75):
-			Glyph.draw(canvas, language, sector.glyph_anchor, sector.element, 4.0, language.element_color(sector.element, "bright"))
+		var glyph_templates := _templates_for(elements.size())
+		for index: int in elements.size():
+			var element := String(elements[index])
+			var anchor := center + (glyph_templates[index].glyph_unit as Vector2) * (radius * 0.75)
+			Glyph.draw(canvas, language, anchor, element, 4.0, language.element_color(element, "bright"))
 		for index: int in 4:
 			var at := center + Vector2(float(index) * 5.0 - 9.0, radius * 0.60)
 			canvas.draw_rect(Rect2(at, Vector2(4, 2)), Color(bright, 0.95 if float(index) < float(model.pool_ratio) * 4.0 else 0.16))
 		return true
-	var depth := projectile_depth_model(model)
-	if depth.is_empty(): return false
-	var body_center: Vector2 = depth.center
-	var body_radius := float(depth.radius)
-	RenderingServer.canvas_item_add_triangle_array(canvas.get_canvas_item(), depth.shadow_indices, depth.shadow,
+	if not center.is_finite() or not is_finite(core_radius) or core_radius <= 0.0: return false
+	var lift := minf(3.0, core_radius * 0.18)
+	var body_center := center - Vector2(0, lift)
+	var body_radius := core_radius - lift
+	var shadow_template: Dictionary = _templates_for(1)[0]
+	RenderingServer.canvas_item_add_triangle_array(canvas.get_canvas_item(), shadow_template.indices, _projectile_shadow_points(center, core_radius),
 		PackedColorArray([Color(0.018, 0.025, 0.025, 0.38)]), PackedVector2Array(), PackedInt32Array(), PackedFloat32Array())
-	for sector: Dictionary in mixture_sectors(int(model.mask), body_center, body_radius):
-		var color := language.element_color(sector.element, "base")
-		var shade := color.darkened(0.56)
-		var light := color.lightened(0.18)
-		var colors := PackedColorArray()
-		for weight: float in sector.lighting: colors.append(Color(shade.lerp(light, weight), 0.92))
-		RenderingServer.canvas_item_add_triangle_array(canvas.get_canvas_item(), sector.indices, sector.surface_points,
+	var templates := _templates_for(elements.size())
+	for index: int in elements.size():
+		var element := String(elements[index])
+		var template: Dictionary = templates[index]
+		var points := _surface_points(template, body_center, body_radius)
+		var colors := _surface_colors(template, language.element_color(element, "base"))
+		RenderingServer.canvas_item_add_triangle_array(canvas.get_canvas_item(), template.indices, points,
 			colors, PackedVector2Array(), PackedInt32Array(), PackedFloat32Array())
-		_draw_mixture_material(canvas, sector, int(model.age), bool(model.reduced))
+		_draw_mixture_material(canvas, element, template, points, int(model.age), bool(model.reduced))
 		if core_radius >= 9.0:
-			Glyph.draw(canvas, language, sector.glyph_anchor, sector.element, minf(3.5, core_radius * 0.16), language.element_color(sector.element, "bright"))
-	canvas.draw_arc(body_center, body_radius * 0.85, -2.75, -0.65, 14, Color(0.93, 0.94, 0.86, 0.78), 1.0)
-	canvas.draw_arc(body_center, body_radius * 0.85, 0.20, 1.80, 12, Color(0.025, 0.03, 0.04, 0.68), minf(2.0, body_radius * 0.15))
+			var anchor := body_center + (template.glyph_unit as Vector2) * body_radius
+			Glyph.draw(canvas, language, anchor, element, minf(3.5, core_radius * 0.16), language.element_color(element, "bright"))
+	# Per-vertex illumination already describes the raised core. Avoid two
+	# competing decorative rim arcs; ingredient and delivery marks stay primary.
 	_draw_delivery_mark(canvas, model, bright, body_center, body_radius)
 	if bool(model.armed):
 		# A separate monochrome clock stays legible beneath mixed ingredient glyphs.
@@ -275,19 +317,18 @@ func draw_expanded_projectile(canvas: CanvasItem, model: Dictionary, language: V
 	return true
 
 
-func _draw_mixture_material(canvas: CanvasItem, sector: Dictionary, age: int, reduced: bool) -> void:
+func _draw_mixture_material(canvas: CanvasItem, element: String, template: Dictionary, points: PackedVector2Array, age: int, reduced: bool) -> void:
 	if not ready(): return
-	var frame: Dictionary = library.sample(asset_id(String(sector.element), "flight", reduced), age)
+	var frame: Dictionary = library.sample(asset_id(element, "flight", reduced), age)
 	var texture := frame.get("texture") as Texture2D
 	if texture == null or not frame.get("region") is Rect2: return
 	var source: Rect2 = frame.region
 	var pivot: Vector2 = frame.get("pivot", frame.get("pivot_px", Vector2.ZERO))
-	var uvs := PackedVector2Array()
-	# Unit offsets are independent of world position and changing paid strength.
-	# Avoid both distant-coordinate UV jitter and a triangulation for every draw.
-	for offset: Vector2 in sector.material_offsets: uvs.append((source.position + pivot + offset) / texture.get_size())
-	RenderingServer.canvas_item_add_triangle_array(canvas.get_canvas_item(), sector.indices, sector.surface_points,
-		sector.material_colors, uvs, PackedInt32Array(), PackedFloat32Array(), texture.get_rid())
+	var uvs := _material_uvs(template, source, pivot, texture.get_size())
+	# Submit borrowed immutable topology/colors directly, with this draw's points
+	# and UVs. Nothing escapes to a caller or depends on position-keyed caches.
+	RenderingServer.canvas_item_add_triangle_array(canvas.get_canvas_item(), template.indices, points,
+		template.material_colors, uvs, PackedInt32Array(), PackedFloat32Array(), texture.get_rid())
 
 
 static func _draw_delivery_mark(canvas: CanvasItem, model: Dictionary, bright: Color, center: Vector2, body_radius: float) -> void:

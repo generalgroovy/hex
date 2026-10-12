@@ -7,6 +7,7 @@ func run() -> int:
 	_test_material_geometry()
 	_test_delivery_depth()
 	_test_detached_templates()
+	_test_live_submission_geometry()
 	return finish("projectile-surface-depth")
 
 
@@ -104,3 +105,42 @@ func _test_detached_templates() -> void:
 	modified.shadow_indices[0] = 999
 	modified.shadow[0] = Vector2(999, 999)
 	equal(Effects.projectile_depth_model(model), original, "ground-shadow diagnostics never expose cached triangle ownership")
+
+
+func _test_live_submission_geometry() -> void:
+	var language := VisualLanguage.new()
+	check(language.load_from_file(), "live material submission uses the current validated palette")
+	var source := Rect2(48, 72, 24, 24)
+	var pivot := Vector2(12, 12)
+	var texture_size := Vector2(192, 144)
+	for mask: int in range(1, 64):
+		var elements := Effects.mixture_elements(mask)
+		var templates := Effects._templates_for(elements.size())
+		var unchanged := var_to_bytes(templates)
+		for center: Vector2 in [Vector2(7.25, 11.75), Vector2(19200.25, 15360.75)]:
+			for radius: float in [0.5, 3.0, 9.0, 18.0, 36.0]:
+				var diagnostic := Effects.mixture_sectors(mask, center, radius)
+				for index: int in elements.size():
+					var template: Dictionary = templates[index]
+					var points := Effects._surface_points(template, center, radius)
+					equal(points, diagnostic[index].surface_points, "live world vertices exactly match detached reference geometry for all63 mixtures")
+					equal(template.indices, diagnostic[index].indices, "live submission retains exact independently validated triangle connectivity")
+					check(points.size() == (33 if elements.size() == 1 else 14), "live buffers retain fixed authored tessellation regardless of speed, position or strength")
+					var color := language.element_color(elements[index], "base")
+					var colors := Effects._surface_colors(template, color)
+					var uvs := Effects._material_uvs(template, source, pivot, texture_size)
+					equal(colors.size(), points.size(), "every live vertex retains illumination")
+					equal(uvs.size(), points.size(), "every live vertex retains its material coordinates")
+					for vertex: int in points.size():
+						var weight := float(diagnostic[index].lighting[vertex])
+						var expected_color := Color(color.darkened(0.56).lerp(color.lightened(0.18), weight), 0.92)
+						equal(colors[vertex], expected_color, "live body shading retains the previous exact color calculation")
+						equal(uvs[vertex], (source.position + pivot + diagnostic[index].material_offsets[vertex]) / texture_size, "live UVs retain exact atlas crop without position or strength drift")
+					# Mutating transient output must not mutate shared normalized templates.
+					points[0] = Vector2.INF
+					colors[0] = Color.TRANSPARENT
+					uvs[0] = Vector2.INF
+				var expected_depth := Effects.projectile_depth_model({"center": center, "core_radius": radius})
+				equal(Effects._projectile_shadow_points(center, radius), expected_depth.shadow, "live flattened shadow retains detached depth-model geometry")
+			equal(var_to_bytes(templates), unchanged, "drawing submissions and detached diagnostics cannot retain or mutate live paid state")
+	check(int(Effects.material_geometry_stats().template_sets) <= 6, "the live fast path has only six geometry template sets, never position-keyed caches")

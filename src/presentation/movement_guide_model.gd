@@ -180,6 +180,36 @@ static func category_for(id: String) -> String:
 	return "expression"
 
 
+static func route_choices(state: PlayerState = null, preferences: PlayerPreferences = null, device: int = ControlBindingEditor.DEVICE_KEYBOARD) -> Array[Dictionary]:
+	# Optional curriculum: compare reasons to use a route, not a speed ranking.
+	# Prices are base examples and one current next-action projection. Complete
+	# routes recheck gates and apply chain premiums on each actual admission.
+	var bindings := {}
+	for row: Dictionary in entries(preferences,device): bindings[String(row.id)] = String(row.binding)
+	var next_jump := MovementSystem._movement_action_cost(state,MovementTuning.HOP_COST) if state!=null else MovementTuning.HOP_COST
+	var next_slide := MovementSystem._movement_action_cost(state,MovementTuning.SLIDE_COST) if state!=null else MovementTuning.SLIDE_COST
+	return [
+		{"id":"open_brake","title":"Open lane · keep your reserve","moves":["move","sprint","landing_cut"],
+			"execution":"Release movement to brake on ground, or press against travel to stop sooner. In air, release coasts; counter-steering brakes.",
+			"benefit":"Spend no action Stamina while choosing a safer firing position.",
+			"cost":"Ordinary steering and braking: 0 Stamina. Sprint drains only while admitted.","next_cost":0,
+			"counter":"No immunity or instant turn. Start braking before the next hostile lane or solid wall.",
+			"reference":"https://www.gamedeveloper.com/design/designer-interview-getting-i-titanfall-i-s-controls-just-right"},
+		{"id":"wall_release","title":"Wall approach · choose an exit","moves":["jump","wall_run","wall_jump","air_turn","double_jump"],
+			"execution":"Tap %s to approach airborne; hold it with along-wall movement to run. Release toward open ground to kick outward; then steer or use a remaining air action." % bindings.jump,
+			"benefit":"Change the approach angle using actual geometry, then leave the predictable wall lane.",
+			"cost":"Base jump %s + wallrun %s + walljump %s Stamina; chain premiums add cost. Next jump now: %s; admission is rechecked." % [_units(MovementTuning.HOP_COST),_units(MovementTuning.WALL_SKIM_COST),_units(MovementTuning.HOP_COST),_units(next_jump)],"next_cost":next_jump,
+			"counter":"Wallrun is exposed. Same-wall lockout and spent air budgets persist; ordinary walking remains the free alternate route.",
+			"reference":"https://www.gamedeveloper.com/design/designer-interview-getting-i-titanfall-i-s-controls-just-right"},
+		{"id":"combat_reentry","title":"Combat re-entry · buy a lane change","moves":["slide","slide_jump","air_dodge","wave_dash","fast_fall","roll"],
+			"execution":"Build speed with %s; press %s to slide. After %d ms tap %s to carry into a jump, then use %s with direction for a paid dodge after commitment. Aim and cast independently." % [bindings.sprint,bindings.slide,MovementTuning.SLIDE_JUMP_MINIMUM_COMMITMENT_MS,bindings.jump,bindings.air_dodge],
+			"benefit":"Cross one firing lane low, gain height, then redirect toward a new attack angle.",
+			"cost":"Base slide %s + slide jump %s + air dodge %s Stamina, plus sprint/chain costs. Next slide now: %s; spells separately spend Flux." % [_units(MovementTuning.SLIDE_COST),_units(MovementTuning.SLIDE_JUMP_COST),_units(MovementTuning.AIR_DODGE_COST),_units(next_slide)],"next_cost":next_slide,
+			"counter":"Floor effects still hit the slide. Only the dodge opening is immune; land outside the next shot and keep reserve for the exit.",
+			"reference":"https://www.gamedeveloper.com/design/q-a-the-guns-and-dungeons-of-i-enter-the-gungeon-i-"},
+	]
+
+
 static func _intent_for(id: String) -> Dictionary:
 	match id:
 		"move":

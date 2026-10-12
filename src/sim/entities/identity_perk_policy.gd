@@ -35,6 +35,53 @@ static func scale(state: PlayerState, effect: String, amount: int) -> int:
 	return maxi(1, amount * ratio(state, effect) / 1000)
 
 
+static func spell_timing(state: PlayerState, definition: Dictionary, config: SimConfig, status_startup_ratio: int = 1000) -> Dictionary:
+	# A paired timing bargain must change both actual timers. In particular a
+	# one-tick Rapid cannot buy faster startup by accepting a real repeat penalty.
+	# Process ancestry then character, preserving the ordinary stacking order.
+	# This is a current-window projection: admission and release call it separately.
+	var startup_ms := int(definition.get("startup_ms", 0))
+	var cooldown_ms := int(definition.get("cooldown_ms", 0))
+	var startup_ratio := 1000
+	var cooldown_ratio := 1000
+	var suppressed: Array[String] = []
+	if state != null and state.champion_wire_id > 0 and state.health > 0 and state.actor_kind == PlayerState.ActorKind.CHAMPION:
+		for row: Dictionary in [Races.raw_definition(Races.ancestry_for_wire(state.champion_wire_id)), Characters.raw_definition(state.champion_wire_id)]:
+			if not condition_matches(state, String(row.get("condition", ""))): continue
+			var effects: Dictionary = row.get("effects", {})
+			var startup_factor := int(effects.get("spell_startup_ratio", 1000))
+			var cooldown_factor := int(effects.get("spell_cooldown_ratio", 1000))
+			var next_startup := clampi(startup_ratio * startup_factor / 1000, MIN_RATIO, MAX_RATIO)
+			var next_cooldown := clampi(cooldown_ratio * cooldown_factor / 1000, MIN_RATIO, MAX_RATIO)
+			if startup_factor != 1000 and cooldown_factor != 1000:
+				var startup_changes := _timer_changes(startup_ms, startup_ratio, next_startup, startup_factor, config, status_startup_ratio)
+				var cooldown_changes := _timer_changes(cooldown_ms, cooldown_ratio, next_cooldown, cooldown_factor, config)
+				if not startup_changes or not cooldown_changes:
+					suppressed.append(String(row.get("name", "Timing perk")))
+					continue
+			startup_ratio = next_startup
+			cooldown_ratio = next_cooldown
+	return {"startup_ratio": startup_ratio, "cooldown_ratio": cooldown_ratio,
+		"base_startup_ticks": _timing_ticks(startup_ms, 1000, config, status_startup_ratio),
+		"base_cooldown_ticks": _timing_ticks(cooldown_ms, 1000, config),
+		"startup_ticks": _timing_ticks(startup_ms, startup_ratio, config, status_startup_ratio),
+		"cooldown_ticks": _timing_ticks(cooldown_ms, cooldown_ratio, config),
+		"suppressed_pairs": suppressed}
+
+
+static func _timer_changes(milliseconds: int, before_ratio: int, after_ratio: int, factor: int, config: SimConfig, status_ratio: int = 1000) -> bool:
+	var before := _timing_ticks(milliseconds, before_ratio, config, status_ratio)
+	var after := _timing_ticks(milliseconds, after_ratio, config, status_ratio)
+	return after < before if factor < 1000 else after > before
+
+
+static func _timing_ticks(milliseconds: int, timing_ratio: int, config: SimConfig, status_ratio: int = 1000) -> int:
+	if milliseconds <= 0 or config == null: return 0
+	var scaled_ms := maxi(1, milliseconds * timing_ratio / 1000)
+	scaled_ms = maxi(1, scaled_ms * status_ratio / 1000)
+	return config.milliseconds_to_ticks(scaled_ms)
+
+
 static func active_rows(state: PlayerState) -> Array[Dictionary]:
 	var rows: Array[Dictionary] = []
 	if state == null or state.health <= 0 or state.actor_kind != PlayerState.ActorKind.CHAMPION:
@@ -83,6 +130,6 @@ static func _matches(state: PlayerState, token: String) -> bool:
 		"flight_active": return state.is_airborne() and state.flight_capable and state.air_floating and state.float_ticks > 0
 		"wallrunning": return state.is_airborne() and state.wall_skim_ticks > 0
 		"landing": return grounded and state.landing_ticks > 0
-		"slowed": return state.control_state == PlayerState.ControlState.SLOWED and state.control_ticks > 0
+		"slowed": return (state.control_state == PlayerState.ControlState.SLOWED and state.control_ticks > 0 and state.slow_ratio < 1000) or SpellStatusPolicy.movement_ratio(state) < 1000
 		"impact_recovery": return state.impact_recovery_ticks > 0
 	return false

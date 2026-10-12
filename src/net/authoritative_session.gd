@@ -194,6 +194,9 @@ func remove_peers(events: Array[Dictionary]) -> int:
 							var graze_index := shot.grazed_entity_ids.find(entity_id)
 							if graze_index >= 0:
 								shot.grazed_entity_ids.remove_at(graze_index)
+							var contact_index := shot.contact_entity_ids.find(entity_id)
+							if contact_index >= 0:
+								shot.contact_entity_ids.remove_at(contact_index)
 					if world.collision is HexCollisionWorld:
 						world.collision.set_hex_surfaces(world.hex_court, world.tick)
 				world.players.remove_at(index)

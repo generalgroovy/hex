@@ -1,0 +1,968 @@
+{
+  "schema": "hex-retained-campus-descriptive-comparison-v1",
+  "decision": "keep_existing_opt_in_for_whole_game_trial",
+  "scope": "Independent descriptive recomputation of isolated CPU submission work. Each candidate total includes prepare plus parent callback plus actual disjoint retained child draw timers. Readiness, snapshots and pixel readback are excluded. These are not frame intervals, GPU time or physical presentation evidence; no production/default change follows from this comparison.",
+  "limitations": [
+    "Shared renderer/font/terrain state produces strong order effects in camera-moving cases.",
+    "Run A had full pixel warmup; separate reverse run B was timing only. Two warmup pairs are excluded from each 64-pair sample.",
+    "Scenes contain real campus terrain and painter witnesses, without live paid fields, actors, HUD or Garden exhibition surfaces.",
+    "Stationary means advancing tick at fixed camera, not a paused world. Reduced stationary legitimately requests zero child redraws.",
+    "No qualified foreground whole-game comparison exists for this option; default remains immediate."
+  ],
+  "all_watched_sources_match_between_runs": true,
+  "watched_source_count": 21,
+  "runs": {
+    "a": {
+      "receipt_path": ".godot/retained-campus-iteration-a/receipt.json",
+      "receipt_bytes": 801282,
+      "receipt_sha256": "dc25c3bfd792cea17b9b31a3667f0955d5fb49c5cbdc02096cc6203608078cb1",
+      "mode": "pixels_and_timing",
+      "reverse_order": false,
+      "exact_pixel_count": 36,
+      "pixel_mismatches": 0,
+      "source_before": {
+        "res://.godot/iteration-20261012/compare-retained-campus-submission.gd": "07e998bfd1eb013f233070d14c5da185c48681a33ccd39bf5141665b576e1c8a",
+        "res://art_batches/wellspring_style_v2/ground_style.gd": "d04027b69fbdd119480c5bc71a09463d4820086c6c0bd30ca698811a04bc6bb5",
+        "res://assets/environment/wellspring_ground_v1/manifest.tres": "c731c8432e09a9bf8ecab48f4f2c47a30829a45c862c4d85ab505fe318d989bb",
+        "res://content/maps/sanctum_campus_g2_v1.json": "70b46882a541e871fba661d01061ff03789410337d8eee71edb31d7b01f41317",
+        "res://content/presentation/wellspring_floor_guides_v1.json": "e9fa8e6ce1074c1359b1d52d9687a0543807d9bbbd48005b38a4e0736c45e012",
+        "res://content/visual/visual_language_v1.json": "7b248f724f4698701b39ffd25779ccbfbdc4117dbc00c6858a40e8e59ef25ce5",
+        "res://content/visual/wellspring_illustrated_v1.json": "ea6ab4420fb69328a954d8aae0db7b411203ee78f4c198dd64cd077d25e1053d",
+        "res://project.godot": "17c68ea0840a04e489f72c64de92f0d0738251695be584b0c560ddd844caf5ab",
+        "res://scripts/verify-retained-campus.gd": "1debc7960d4b6d86c6a60a9dd22f9806dbdd37d0a1b029e2ff7057200e785ed2",
+        "res://src/content/sanctum_campus_layout.gd": "e6a20c05ef797e796afbf82bf02de62b6b4fd8ecbc55666d5a77d36320c9d293",
+        "res://src/presentation/hex_environment_layout.gd": "906a429c233b76e5ac06c5c77619a2a7393cc56f965d36a00ce97f3c909e7698",
+        "res://src/presentation/pixel_map_library.gd": "02b2d41e082bee3fd2d037939cadbe8f6db556e6aa6a780eaacc9c7370366882",
+        "res://src/presentation/practice_wall_skin.gd": "033f969b4df76e80e17760ca1d577e7e9f51b2ba6d90f406de181a8312e2ea7f",
+        "res://src/presentation/render_quality.gd": "e1c3390480693d94ee0653e87cc4a4987769ef1c3b931ea84da5500fc3f19498",
+        "res://src/presentation/retained_campus_canvas.gd": "6933119d00dbd6c7bc90019f1c97fc71662953a494193f7524af21f99333f006",
+        "res://src/presentation/sanctum_campus_renderer.gd": "16a0f64295444dc2a7ffc2876d091317445bcc4d5dadef40adee8fc19a564ed5",
+        "res://src/presentation/visual_language.gd": "71a8cf338a174b892baae96b97b71cd091c59af4ef05f02953f83a126bf9a880",
+        "res://src/presentation/wellspring_district_style.gd": "5c3611361ce6654950ba8ed9c6aaaeb24b910556b054ea678dc8859061a929de",
+        "res://src/presentation/wellspring_environment_details.gd": "e50de7e1119084e62d4417b340c3a09854f71f0dc5ec58a966877a1876a40fe4",
+        "res://src/presentation/wellspring_illustrated_kit.gd": "b06daddfca2c636cdb9f0ae6a170dfc3c806876fc4ce87a8d905de3cd7cd2e8d",
+        "res://src/presentation/wellspring_terrain_stream.gd": "83c1ee7a896ca60a92f2b691c9c7cfd54faff32fffdc33d84181e38ccdcdf0ca"
+      },
+      "source_unchanged": true,
+      "bounds": {
+        "max_saved_mismatch_images": 8,
+        "max_trace_rows_per_pair": 8,
+        "measured_pairs_per_case": 64,
+        "retained_layers": 6,
+        "timing_cases": 8,
+        "viewports": 2,
+        "warmup_pairs_per_case": 2
+      },
+      "cases": {
+        "garden/moving_return/reducedfalse": {
+          "reference_us": {
+            "count": 64,
+            "mean": 389.53125,
+            "median": 426.5,
+            "p95": 566,
+            "min": 237,
+            "max": 684
+          },
+          "retained_us": {
+            "count": 64,
+            "mean": 461.15625,
+            "median": 492.5,
+            "p95": 686,
+            "min": 290,
+            "max": 751
+          },
+          "paired_delta_us": {
+            "count": 64,
+            "mean": 71.625,
+            "median": 102.5,
+            "p95": 328,
+            "min": -227,
+            "max": 342
+          },
+          "candidate_first_delta_us": {
+            "count": 32,
+            "mean": 265.625,
+            "median": 270.0,
+            "p95": 339,
+            "min": 102,
+            "max": 342
+          },
+          "candidate_second_delta_us": {
+            "count": 32,
+            "mean": -122.375,
+            "median": -134.0,
+            "p95": 60,
+            "min": -227,
+            "max": 129
+          },
+          "slower_pairs": 34,
+          "mean_prepare_us": 88.421875,
+          "mean_parent_us": 3.59375,
+          "mean_children_us": 369.140625,
+          "scene_center": [
+            4736.0,
+            1152.0
+          ],
+          "motion": "moving_return",
+          "tick_policy": "advance_two_per_pair",
+          "source_tick_first": 124,
+          "source_tick_last": 250
+        },
+        "garden/moving_return/reducedtrue": {
+          "reference_us": {
+            "count": 64,
+            "mean": 399.234375,
+            "median": 416.0,
+            "p95": 682,
+            "min": 223,
+            "max": 728
+          },
+          "retained_us": {
+            "count": 64,
+            "mean": 489.453125,
+            "median": 514.5,
+            "p95": 827,
+            "min": 286,
+            "max": 888
+          },
+          "paired_delta_us": {
+            "count": 64,
+            "mean": 90.21875,
+            "median": 117.5,
+            "p95": 338,
+            "min": -194,
+            "max": 381
+          },
+          "candidate_first_delta_us": {
+            "count": 32,
+            "mean": 278.28125,
+            "median": 288.0,
+            "p95": 359,
+            "min": 68,
+            "max": 381
+          },
+          "candidate_second_delta_us": {
+            "count": 32,
+            "mean": -97.84375,
+            "median": -118.5,
+            "p95": 111,
+            "min": -194,
+            "max": 167
+          },
+          "slower_pairs": 36,
+          "mean_prepare_us": 90.9375,
+          "mean_parent_us": 4.15625,
+          "mean_children_us": 394.359375,
+          "scene_center": [
+            4736.0,
+            1152.0
+          ],
+          "motion": "moving_return",
+          "tick_policy": "advance_two_per_pair",
+          "source_tick_first": 124,
+          "source_tick_last": 250
+        },
+        "garden/stationary_animated/reducedfalse": {
+          "reference_us": {
+            "count": 64,
+            "mean": 459.53125,
+            "median": 459.5,
+            "p95": 632,
+            "min": 348,
+            "max": 663
+          },
+          "retained_us": {
+            "count": 64,
+            "mean": 139.109375,
+            "median": 127.5,
+            "p95": 240,
+            "min": 78,
+            "max": 357
+          },
+          "paired_delta_us": {
+            "count": 64,
+            "mean": -320.421875,
+            "median": -334.5,
+            "p95": -128,
+            "min": -535,
+            "max": -91
+          },
+          "candidate_first_delta_us": {
+            "count": 32,
+            "mean": -264.5,
+            "median": -287.5,
+            "p95": -116,
+            "min": -447,
+            "max": -91
+          },
+          "candidate_second_delta_us": {
+            "count": 32,
+            "mean": -376.34375,
+            "median": -363.5,
+            "p95": -313,
+            "min": -535,
+            "max": -304
+          },
+          "slower_pairs": 0,
+          "mean_prepare_us": 85.5,
+          "mean_parent_us": 4.6875,
+          "mean_children_us": 48.921875,
+          "scene_center": [
+            4736.0,
+            1152.0
+          ],
+          "motion": "stationary_animated",
+          "tick_policy": "advance_two_per_pair",
+          "source_tick_first": 124,
+          "source_tick_last": 250
+        },
+        "garden/stationary_animated/reducedtrue": {
+          "reference_us": {
+            "count": 64,
+            "mean": 464.546875,
+            "median": 455.5,
+            "p95": 602,
+            "min": 388,
+            "max": 655
+          },
+          "retained_us": {
+            "count": 64,
+            "mean": 81.734375,
+            "median": 80.0,
+            "p95": 109,
+            "min": 62,
+            "max": 124
+          },
+          "paired_delta_us": {
+            "count": 64,
+            "mean": -382.8125,
+            "median": -373.5,
+            "p95": -331,
+            "min": -563,
+            "max": -302
+          },
+          "candidate_first_delta_us": {
+            "count": 32,
+            "mean": -366.25,
+            "median": -357.5,
+            "p95": -314,
+            "min": -512,
+            "max": -302
+          },
+          "candidate_second_delta_us": {
+            "count": 32,
+            "mean": -399.375,
+            "median": -383.5,
+            "p95": -338,
+            "min": -563,
+            "max": -332
+          },
+          "slower_pairs": 0,
+          "mean_prepare_us": 77.203125,
+          "mean_parent_us": 4.53125,
+          "mean_children_us": 0.0,
+          "scene_center": [
+            4736.0,
+            1152.0
+          ],
+          "motion": "stationary_animated",
+          "tick_policy": "advance_two_per_pair",
+          "source_tick_first": 124,
+          "source_tick_last": 250
+        },
+        "hearth/moving_return/reducedfalse": {
+          "reference_us": {
+            "count": 64,
+            "mean": 1665.578125,
+            "median": 1692.0,
+            "p95": 2368,
+            "min": 723,
+            "max": 2449
+          },
+          "retained_us": {
+            "count": 64,
+            "mean": 1771.90625,
+            "median": 1758.5,
+            "p95": 2470,
+            "min": 701,
+            "max": 4875
+          },
+          "paired_delta_us": {
+            "count": 64,
+            "mean": 106.328125,
+            "median": 42.0,
+            "p95": 573,
+            "min": -870,
+            "max": 3600
+          },
+          "candidate_first_delta_us": {
+            "count": 32,
+            "mean": 198.65625,
+            "median": 111.0,
+            "p95": 1179,
+            "min": -870,
+            "max": 3600
+          },
+          "candidate_second_delta_us": {
+            "count": 32,
+            "mean": 14.0,
+            "median": 0.5,
+            "p95": 338,
+            "min": -337,
+            "max": 757
+          },
+          "slower_pairs": 37,
+          "mean_prepare_us": 113.609375,
+          "mean_parent_us": 6.84375,
+          "mean_children_us": 1651.453125,
+          "scene_center": [
+            1536.0,
+            880.0
+          ],
+          "motion": "moving_return",
+          "tick_policy": "advance_two_per_pair",
+          "source_tick_first": 124,
+          "source_tick_last": 250
+        },
+        "hearth/moving_return/reducedtrue": {
+          "reference_us": {
+            "count": 64,
+            "mean": 982.609375,
+            "median": 1012.5,
+            "p95": 1295,
+            "min": 673,
+            "max": 1566
+          },
+          "retained_us": {
+            "count": 64,
+            "mean": 1021.90625,
+            "median": 1073.5,
+            "p95": 1291,
+            "min": 718,
+            "max": 1547
+          },
+          "paired_delta_us": {
+            "count": 64,
+            "mean": 39.296875,
+            "median": -27.5,
+            "p95": 426,
+            "min": -418,
+            "max": 435
+          },
+          "candidate_first_delta_us": {
+            "count": 32,
+            "mean": 288.15625,
+            "median": 369.5,
+            "p95": 433,
+            "min": -293,
+            "max": 435
+          },
+          "candidate_second_delta_us": {
+            "count": 32,
+            "mean": -209.5625,
+            "median": -246.5,
+            "p95": 2,
+            "min": -418,
+            "max": 244
+          },
+          "slower_pairs": 31,
+          "mean_prepare_us": 85.109375,
+          "mean_parent_us": 3.125,
+          "mean_children_us": 933.671875,
+          "scene_center": [
+            1536.0,
+            880.0
+          ],
+          "motion": "moving_return",
+          "tick_policy": "advance_two_per_pair",
+          "source_tick_first": 124,
+          "source_tick_last": 250
+        },
+        "hearth/stationary_animated/reducedfalse": {
+          "reference_us": {
+            "count": 64,
+            "mean": 1380.234375,
+            "median": 1273.0,
+            "p95": 2058,
+            "min": 985,
+            "max": 2444
+          },
+          "retained_us": {
+            "count": 64,
+            "mean": 220.375,
+            "median": 196.0,
+            "p95": 356,
+            "min": 123,
+            "max": 421
+          },
+          "paired_delta_us": {
+            "count": 64,
+            "mean": -1159.859375,
+            "median": -1032.5,
+            "p95": -810,
+            "min": -2089,
+            "max": -719
+          },
+          "candidate_first_delta_us": {
+            "count": 32,
+            "mean": -1100.59375,
+            "median": -995.5,
+            "p95": -773,
+            "min": -2001,
+            "max": -719
+          },
+          "candidate_second_delta_us": {
+            "count": 32,
+            "mean": -1219.125,
+            "median": -1066.5,
+            "p95": -900,
+            "min": -2089,
+            "max": -899
+          },
+          "slower_pairs": 0,
+          "mean_prepare_us": 94.09375,
+          "mean_parent_us": 4.796875,
+          "mean_children_us": 121.484375,
+          "scene_center": [
+            1536.0,
+            880.0
+          ],
+          "motion": "stationary_animated",
+          "tick_policy": "advance_two_per_pair",
+          "source_tick_first": 124,
+          "source_tick_last": 250
+        },
+        "hearth/stationary_animated/reducedtrue": {
+          "reference_us": {
+            "count": 64,
+            "mean": 1091.71875,
+            "median": 1059.0,
+            "p95": 1362,
+            "min": 935,
+            "max": 1675
+          },
+          "retained_us": {
+            "count": 64,
+            "mean": 81.953125,
+            "median": 81.0,
+            "p95": 108,
+            "min": 62,
+            "max": 141
+          },
+          "paired_delta_us": {
+            "count": 64,
+            "mean": -1009.765625,
+            "median": -975.5,
+            "p95": -885,
+            "min": -1580,
+            "max": -847
+          },
+          "candidate_first_delta_us": {
+            "count": 32,
+            "mean": -994.15625,
+            "median": -979.0,
+            "p95": -864,
+            "min": -1272,
+            "max": -847
+          },
+          "candidate_second_delta_us": {
+            "count": 32,
+            "mean": -1025.375,
+            "median": -974.5,
+            "p95": -920,
+            "min": -1580,
+            "max": -912
+          },
+          "slower_pairs": 0,
+          "mean_prepare_us": 77.375,
+          "mean_parent_us": 4.578125,
+          "mean_children_us": 0.0,
+          "scene_center": [
+            1536.0,
+            880.0
+          ],
+          "motion": "stationary_animated",
+          "tick_policy": "advance_two_per_pair",
+          "source_tick_first": 124,
+          "source_tick_last": 250
+        }
+      }
+    },
+    "b": {
+      "receipt_path": ".godot/retained-campus-iteration-b/receipt.json",
+      "receipt_bytes": 791430,
+      "receipt_sha256": "55e9562ef7bd520b2c2564a524474a3324aaa4bb95f5289599962ecc10adcb5e",
+      "mode": "timing_only",
+      "reverse_order": true,
+      "exact_pixel_count": 0,
+      "pixel_mismatches": 0,
+      "source_before": {
+        "res://.godot/iteration-20261012/compare-retained-campus-submission.gd": "07e998bfd1eb013f233070d14c5da185c48681a33ccd39bf5141665b576e1c8a",
+        "res://art_batches/wellspring_style_v2/ground_style.gd": "d04027b69fbdd119480c5bc71a09463d4820086c6c0bd30ca698811a04bc6bb5",
+        "res://assets/environment/wellspring_ground_v1/manifest.tres": "c731c8432e09a9bf8ecab48f4f2c47a30829a45c862c4d85ab505fe318d989bb",
+        "res://content/maps/sanctum_campus_g2_v1.json": "70b46882a541e871fba661d01061ff03789410337d8eee71edb31d7b01f41317",
+        "res://content/presentation/wellspring_floor_guides_v1.json": "e9fa8e6ce1074c1359b1d52d9687a0543807d9bbbd48005b38a4e0736c45e012",
+        "res://content/visual/visual_language_v1.json": "7b248f724f4698701b39ffd25779ccbfbdc4117dbc00c6858a40e8e59ef25ce5",
+        "res://content/visual/wellspring_illustrated_v1.json": "ea6ab4420fb69328a954d8aae0db7b411203ee78f4c198dd64cd077d25e1053d",
+        "res://project.godot": "17c68ea0840a04e489f72c64de92f0d0738251695be584b0c560ddd844caf5ab",
+        "res://scripts/verify-retained-campus.gd": "1debc7960d4b6d86c6a60a9dd22f9806dbdd37d0a1b029e2ff7057200e785ed2",
+        "res://src/content/sanctum_campus_layout.gd": "e6a20c05ef797e796afbf82bf02de62b6b4fd8ecbc55666d5a77d36320c9d293",
+        "res://src/presentation/hex_environment_layout.gd": "906a429c233b76e5ac06c5c77619a2a7393cc56f965d36a00ce97f3c909e7698",
+        "res://src/presentation/pixel_map_library.gd": "02b2d41e082bee3fd2d037939cadbe8f6db556e6aa6a780eaacc9c7370366882",
+        "res://src/presentation/practice_wall_skin.gd": "033f969b4df76e80e17760ca1d577e7e9f51b2ba6d90f406de181a8312e2ea7f",
+        "res://src/presentation/render_quality.gd": "e1c3390480693d94ee0653e87cc4a4987769ef1c3b931ea84da5500fc3f19498",
+        "res://src/presentation/retained_campus_canvas.gd": "6933119d00dbd6c7bc90019f1c97fc71662953a494193f7524af21f99333f006",
+        "res://src/presentation/sanctum_campus_renderer.gd": "16a0f64295444dc2a7ffc2876d091317445bcc4d5dadef40adee8fc19a564ed5",
+        "res://src/presentation/visual_language.gd": "71a8cf338a174b892baae96b97b71cd091c59af4ef05f02953f83a126bf9a880",
+        "res://src/presentation/wellspring_district_style.gd": "5c3611361ce6654950ba8ed9c6aaaeb24b910556b054ea678dc8859061a929de",
+        "res://src/presentation/wellspring_environment_details.gd": "e50de7e1119084e62d4417b340c3a09854f71f0dc5ec58a966877a1876a40fe4",
+        "res://src/presentation/wellspring_illustrated_kit.gd": "b06daddfca2c636cdb9f0ae6a170dfc3c806876fc4ce87a8d905de3cd7cd2e8d",
+        "res://src/presentation/wellspring_terrain_stream.gd": "83c1ee7a896ca60a92f2b691c9c7cfd54faff32fffdc33d84181e38ccdcdf0ca"
+      },
+      "source_unchanged": true,
+      "bounds": {
+        "max_saved_mismatch_images": 8,
+        "max_trace_rows_per_pair": 8,
+        "measured_pairs_per_case": 64,
+        "retained_layers": 6,
+        "timing_cases": 8,
+        "viewports": 2,
+        "warmup_pairs_per_case": 2
+      },
+      "cases": {
+        "garden/moving_return/reducedfalse": {
+          "reference_us": {
+            "count": 64,
+            "mean": 345.75,
+            "median": 338.0,
+            "p95": 494,
+            "min": 220,
+            "max": 541
+          },
+          "retained_us": {
+            "count": 64,
+            "mean": 429.703125,
+            "median": 460.5,
+            "p95": 584,
+            "min": 286,
+            "max": 684
+          },
+          "paired_delta_us": {
+            "count": 64,
+            "mean": 83.953125,
+            "median": 101.5,
+            "p95": 336,
+            "min": -181,
+            "max": 402
+          },
+          "candidate_first_delta_us": {
+            "count": 32,
+            "mean": 299.1875,
+            "median": 296.5,
+            "p95": 398,
+            "min": 222,
+            "max": 402
+          },
+          "candidate_second_delta_us": {
+            "count": 32,
+            "mean": -131.28125,
+            "median": -135.0,
+            "p95": -93,
+            "min": -181,
+            "max": -19
+          },
+          "slower_pairs": 32,
+          "mean_prepare_us": 85.640625,
+          "mean_parent_us": 2.71875,
+          "mean_children_us": 341.34375,
+          "scene_center": [
+            4736.0,
+            1152.0
+          ],
+          "motion": "moving_return",
+          "tick_policy": "advance_two_per_pair",
+          "source_tick_first": 124,
+          "source_tick_last": 250
+        },
+        "garden/moving_return/reducedtrue": {
+          "reference_us": {
+            "count": 64,
+            "mean": 359.859375,
+            "median": 398.5,
+            "p95": 511,
+            "min": 221,
+            "max": 608
+          },
+          "retained_us": {
+            "count": 64,
+            "mean": 428.015625,
+            "median": 459.0,
+            "p95": 596,
+            "min": 285,
+            "max": 680
+          },
+          "paired_delta_us": {
+            "count": 64,
+            "mean": 68.15625,
+            "median": 113.0,
+            "p95": 299,
+            "min": -207,
+            "max": 330
+          },
+          "candidate_first_delta_us": {
+            "count": 32,
+            "mean": 256.46875,
+            "median": 260.0,
+            "p95": 326,
+            "min": 67,
+            "max": 330
+          },
+          "candidate_second_delta_us": {
+            "count": 32,
+            "mean": -120.15625,
+            "median": -135.0,
+            "p95": 88,
+            "min": -207,
+            "max": 138
+          },
+          "slower_pairs": 34,
+          "mean_prepare_us": 83.953125,
+          "mean_parent_us": 3.171875,
+          "mean_children_us": 340.890625,
+          "scene_center": [
+            4736.0,
+            1152.0
+          ],
+          "motion": "moving_return",
+          "tick_policy": "advance_two_per_pair",
+          "source_tick_first": 124,
+          "source_tick_last": 250
+        },
+        "garden/stationary_animated/reducedfalse": {
+          "reference_us": {
+            "count": 64,
+            "mean": 436.1875,
+            "median": 433.5,
+            "p95": 544,
+            "min": 312,
+            "max": 688
+          },
+          "retained_us": {
+            "count": 64,
+            "mean": 128.71875,
+            "median": 120.5,
+            "p95": 226,
+            "min": 81,
+            "max": 307
+          },
+          "paired_delta_us": {
+            "count": 64,
+            "mean": -307.46875,
+            "median": -320.0,
+            "p95": -112,
+            "min": -473,
+            "max": -71
+          },
+          "candidate_first_delta_us": {
+            "count": 32,
+            "mean": -258.84375,
+            "median": -285.5,
+            "p95": -107,
+            "min": -473,
+            "max": -71
+          },
+          "candidate_second_delta_us": {
+            "count": 32,
+            "mean": -356.09375,
+            "median": -355.5,
+            "p95": -289,
+            "min": -452,
+            "max": -282
+          },
+          "slower_pairs": 0,
+          "mean_prepare_us": 77.90625,
+          "mean_parent_us": 3.796875,
+          "mean_children_us": 47.015625,
+          "scene_center": [
+            4736.0,
+            1152.0
+          ],
+          "motion": "stationary_animated",
+          "tick_policy": "advance_two_per_pair",
+          "source_tick_first": 124,
+          "source_tick_last": 250
+        },
+        "garden/stationary_animated/reducedtrue": {
+          "reference_us": {
+            "count": 64,
+            "mean": 455.28125,
+            "median": 451.5,
+            "p95": 511,
+            "min": 391,
+            "max": 673
+          },
+          "retained_us": {
+            "count": 64,
+            "mean": 79.265625,
+            "median": 78.0,
+            "p95": 97,
+            "min": 63,
+            "max": 108
+          },
+          "paired_delta_us": {
+            "count": 64,
+            "mean": -376.015625,
+            "median": -369.5,
+            "p95": -332,
+            "min": -587,
+            "max": -307
+          },
+          "candidate_first_delta_us": {
+            "count": 32,
+            "mean": -362.96875,
+            "median": -358.5,
+            "p95": -316,
+            "min": -453,
+            "max": -307
+          },
+          "candidate_second_delta_us": {
+            "count": 32,
+            "mean": -389.0625,
+            "median": -383.5,
+            "p95": -337,
+            "min": -587,
+            "max": -334
+          },
+          "slower_pairs": 0,
+          "mean_prepare_us": 75.234375,
+          "mean_parent_us": 4.03125,
+          "mean_children_us": 0.0,
+          "scene_center": [
+            4736.0,
+            1152.0
+          ],
+          "motion": "stationary_animated",
+          "tick_policy": "advance_two_per_pair",
+          "source_tick_first": 124,
+          "source_tick_last": 250
+        },
+        "hearth/moving_return/reducedfalse": {
+          "reference_us": {
+            "count": 64,
+            "mean": 1879.328125,
+            "median": 1793.5,
+            "p95": 2614,
+            "min": 704,
+            "max": 15713
+          },
+          "retained_us": {
+            "count": 64,
+            "mean": 1692.203125,
+            "median": 1837.0,
+            "p95": 2409,
+            "min": 771,
+            "max": 2895
+          },
+          "paired_delta_us": {
+            "count": 64,
+            "mean": -187.125,
+            "median": 18.5,
+            "p95": 391,
+            "min": -13484,
+            "max": 439
+          },
+          "candidate_first_delta_us": {
+            "count": 32,
+            "mean": 146.9375,
+            "median": 123.0,
+            "p95": 415,
+            "min": -196,
+            "max": 439
+          },
+          "candidate_second_delta_us": {
+            "count": 32,
+            "mean": -521.1875,
+            "median": -62.5,
+            "p95": 203,
+            "min": -13484,
+            "max": 290
+          },
+          "slower_pairs": 35,
+          "mean_prepare_us": 113.25,
+          "mean_parent_us": 6.625,
+          "mean_children_us": 1572.328125,
+          "scene_center": [
+            1536.0,
+            880.0
+          ],
+          "motion": "moving_return",
+          "tick_policy": "advance_two_per_pair",
+          "source_tick_first": 124,
+          "source_tick_last": 250
+        },
+        "hearth/moving_return/reducedtrue": {
+          "reference_us": {
+            "count": 64,
+            "mean": 957.0,
+            "median": 1014.0,
+            "p95": 1177,
+            "min": 671,
+            "max": 1426
+          },
+          "retained_us": {
+            "count": 64,
+            "mean": 1048.109375,
+            "median": 1099.5,
+            "p95": 1321,
+            "min": 747,
+            "max": 1572
+          },
+          "paired_delta_us": {
+            "count": 64,
+            "mean": 91.109375,
+            "median": 137.0,
+            "p95": 424,
+            "min": -332,
+            "max": 472
+          },
+          "candidate_first_delta_us": {
+            "count": 32,
+            "mean": 345.8125,
+            "median": 367.0,
+            "p95": 431,
+            "min": 116,
+            "max": 472
+          },
+          "candidate_second_delta_us": {
+            "count": 32,
+            "mean": -163.59375,
+            "median": -207.5,
+            "p95": 51,
+            "min": -332,
+            "max": 158
+          },
+          "slower_pairs": 36,
+          "mean_prepare_us": 88.8125,
+          "mean_parent_us": 3.40625,
+          "mean_children_us": 955.890625,
+          "scene_center": [
+            1536.0,
+            880.0
+          ],
+          "motion": "moving_return",
+          "tick_policy": "advance_two_per_pair",
+          "source_tick_first": 124,
+          "source_tick_last": 250
+        },
+        "hearth/stationary_animated/reducedfalse": {
+          "reference_us": {
+            "count": 64,
+            "mean": 1348.140625,
+            "median": 1221.0,
+            "p95": 2104,
+            "min": 900,
+            "max": 2221
+          },
+          "retained_us": {
+            "count": 64,
+            "mean": 202.84375,
+            "median": 192.5,
+            "p95": 303,
+            "min": 123,
+            "max": 401
+          },
+          "paired_delta_us": {
+            "count": 64,
+            "mean": -1145.296875,
+            "median": -1059.5,
+            "p95": -727,
+            "min": -1936,
+            "max": -597
+          },
+          "candidate_first_delta_us": {
+            "count": 32,
+            "mean": -1125.90625,
+            "median": -1009.0,
+            "p95": -699,
+            "min": -1936,
+            "max": -597
+          },
+          "candidate_second_delta_us": {
+            "count": 32,
+            "mean": -1164.6875,
+            "median": -1088.0,
+            "p95": -797,
+            "min": -1923,
+            "max": -779
+          },
+          "slower_pairs": 0,
+          "mean_prepare_us": 87.34375,
+          "mean_parent_us": 4.484375,
+          "mean_children_us": 111.015625,
+          "scene_center": [
+            1536.0,
+            880.0
+          ],
+          "motion": "stationary_animated",
+          "tick_policy": "advance_two_per_pair",
+          "source_tick_first": 124,
+          "source_tick_last": 250
+        },
+        "hearth/stationary_animated/reducedtrue": {
+          "reference_us": {
+            "count": 64,
+            "mean": 1139.0,
+            "median": 1077.0,
+            "p95": 1482,
+            "min": 915,
+            "max": 2027
+          },
+          "retained_us": {
+            "count": 64,
+            "mean": 81.75,
+            "median": 81.5,
+            "p95": 96,
+            "min": 67,
+            "max": 113
+          },
+          "paired_delta_us": {
+            "count": 64,
+            "mean": -1057.25,
+            "median": -995.0,
+            "p95": -912,
+            "min": -1922,
+            "max": -828
+          },
+          "candidate_first_delta_us": {
+            "count": 32,
+            "mean": -1018.46875,
+            "median": -978.5,
+            "p95": -901,
+            "min": -1422,
+            "max": -828
+          },
+          "candidate_second_delta_us": {
+            "count": 32,
+            "mean": -1096.03125,
+            "median": -1024.5,
+            "p95": -917,
+            "min": -1922,
+            "max": -912
+          },
+          "slower_pairs": 0,
+          "mean_prepare_us": 77.234375,
+          "mean_parent_us": 4.515625,
+          "mean_children_us": 0.0,
+          "scene_center": [
+            1536.0,
+            880.0
+          ],
+          "motion": "stationary_animated",
+          "tick_policy": "advance_two_per_pair",
+          "source_tick_first": 124,
+          "source_tick_last": 250
+        }
+      }
+    }
+  }
+}

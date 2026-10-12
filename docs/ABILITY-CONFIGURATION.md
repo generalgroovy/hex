@@ -2,7 +2,7 @@
 
 Status: current configuration guide, October 11, 2026. The specification and validated runtime catalogs own the rules.
 
-The current gameplay source is **p60-be3efd332e1a**: six ingredients, 63 nonempty
+The current source keeps six ingredients, 63 nonempty
 ingredient sets, eight delivery families and **504 runtime spell definitions**.
 The effective ability catalog retains 542 records; disabled historical entries
 are not selectable spells. Qualification applies to the exact source and package

@@ -41,10 +41,13 @@ static func apply_hit(target: PlayerState, wire: int, source: int, owner: int, t
 			for index: int in STRIDE: target.spell_status_values[offset+index] = row[index]
 		if channel == 3 and not was_active:
 			# One immediate bounded push; no launch state, stun, or refreshed shove.
-			target.velocity_x = clampi(target.velocity_x + direction.x*80,-2_000_000,2_000_000)
-			target.velocity_y = clampi(target.velocity_y + direction.y*80,-2_000_000,2_000_000)
-			target.air_velocity_x = clampi(target.air_velocity_x + direction.x*80,-2_000_000,2_000_000)
-			target.air_velocity_y = clampi(target.air_velocity_y + direction.y*80,-2_000_000,2_000_000)
+			# Sample once before the push itself closes a stationary perk window.
+			var impulse := Perks.scale(target,"knockback_ratio",80_000)
+			var push := Vector2i(direction.x*impulse/1000,direction.y*impulse/1000)
+			target.velocity_x = clampi(target.velocity_x + push.x,-2_000_000,2_000_000)
+			target.velocity_y = clampi(target.velocity_y + push.y,-2_000_000,2_000_000)
+			target.air_velocity_x = clampi(target.air_velocity_x + push.x,-2_000_000,2_000_000)
+			target.air_velocity_y = clampi(target.air_velocity_y + push.y,-2_000_000,2_000_000)
 
 static func advance(state: PlayerState, config: SimConfig, events: Array[Dictionary], damage_enabled: bool = true) -> void:
 	if state.spell_status_values.size() != VALUE_COUNT: return
@@ -66,15 +69,13 @@ static func advance(state: PlayerState, config: SimConfig, events: Array[Diction
 		if state.spawn_protection_ticks > 0 or MovementSystem.is_combat_intangible(state,config): continue
 		var remaining := int(state.spell_status_values[offset+2])
 		if remaining <= 0: continue
-		var desired := mini(remaining,400)
-		var low := 0
-		var high := desired*2+1
-		while low+1 < high:
-			var mid := (low+high)/2
-			if Perks.scale(state,"incoming_damage_ratio",mid) <= desired: low = mid
-			else: high = mid
+		# Resistance/vulnerability applies once to the authored 400-unit pulse.
+		# Only the actual Health debit is capped by the finite remaining pool.
+		var ratio := Perks.ratio(state,"incoming_damage_ratio")
+		var maximum_quote := ((remaining+1)*1000-1)/ratio
+		var damage := mini(400,maximum_quote)
 		var before := state.health
-		if low <= 0 or not PlayerResourcesSystem.damage(state,low,config): continue
+		if damage <= 0 or not PlayerResourcesSystem.damage(state,damage,config): continue
 		var loss := before-state.health
 		state.spell_status_values[offset+2] -= loss
 		events.append({"type":"spell_status_hit","owner_id":int(state.spell_status_values[offset+4]),"source_wire_id":int(state.spell_status_values[offset+6]),"target_id":state.entity_id,"damage":loss,"status":"burning"})

@@ -149,8 +149,19 @@ var _surface_palette_compatible := false
 const REGION_LAYOUT_LIMIT := 512
 const REGION_GEOMETRY_LIMIT := 512
 const CELL_BOUNDARY_DUPLICATE_LIMIT := 64
+const BOUNDARY_TOPOLOGY_LIMIT := 8
+const BOUNDARY_TOPOLOGY_ROWS := 512
 var _region_layouts: Dictionary = {}
 var _edge_prefixes: Dictionary = {}
+var _boundary_topologies: Dictionary = {}
+var _boundary_topology_order: Array = []
+var _boundary_topology_hits := 0
+var _boundary_topology_builds := 0
+var _boundary_mask_counts: Dictionary = {}
+var _boundary_masks: Dictionary = {}
+var _boundary_mask_hits := 0
+var _boundary_mask_builds := 0
+var _fire_phase_marks: Dictionary = {}
 var _pixel_region_polygons: Dictionary = {}
 var _pixel_region_builds := 0
 var _pixel_region_hits := 0
@@ -179,6 +190,15 @@ func configure(shared_language: VisualLanguage) -> bool:
 	_surface_palette_compatible = false
 	_region_layouts.clear()
 	_edge_prefixes.clear()
+	_boundary_topologies.clear()
+	_boundary_topology_order.clear()
+	_boundary_topology_hits = 0
+	_boundary_topology_builds = 0
+	_boundary_mask_counts = {}
+	_boundary_masks = {}
+	_boundary_mask_hits = 0
+	_boundary_mask_builds = 0
+	_fire_phase_marks.clear()
 	_pixel_region_polygons.clear()
 	_pixel_region_builds = 0
 	_pixel_region_hits = 0
@@ -762,6 +782,7 @@ func _draw_mirror_product(canvas: CanvasItem, regions_by_cell: Dictionary, mater
 	var base := _language.reaction_color(material, "base")
 	var bright := _language.reaction_color(material, "bright")
 	var dark := _language.reaction_color(material, "dark")
+	var surface_styles: Dictionary = {}
 	for cell: Vector2i in regions_by_cell:
 		for region: Dictionary in regions_by_cell[cell]:
 			var active: bool = region.phase == "active"
@@ -769,7 +790,10 @@ func _draw_mirror_product(canvas: CanvasItem, regions_by_cell: Dictionary, mater
 			var intensity := clampf(float(region.intensity) / 1000.0, 0.1, 1.5)
 			var opacity := ((0.19 if reduced else 0.25) + 0.06 * intensity) * (0.45 if decaying else 1.0)
 			_draw_retained_region_fill(canvas, region.polygon, Color(base, opacity))
-			var surface_style := {"dark": dark, "base": base, "bright": bright, "phase": String(region.phase)}
+			var phase_key := String(region.phase)
+			if not surface_styles.has(phase_key):
+				surface_styles[phase_key] = {"dark": dark, "base": base, "bright": bright, "phase": phase_key}
+			var surface_style: Dictionary = surface_styles[phase_key]
 			var painted := _draw_material_surface(canvas, material, region, surface_style, tick, reduced)
 			_draw_region_outline(canvas, region, counts, Color(bright if active else dark, 0.80 if active else 0.50), 2.0)
 			var layout := _region_layout(region.polygon)
@@ -823,7 +847,7 @@ func _draw_water(canvas: CanvasItem, _views: Dictionary, regions_by_cell: Dictio
 	for cell: Vector2i in regions_by_cell:
 		for region: Dictionary in regions_by_cell[cell]:
 			var style := _water_region_style(region, reduced)
-			canvas.draw_colored_polygon(region.polygon, Color(style.base, style.fill_opacity))
+			_draw_retained_region_fill(canvas, region.polygon, Color(style.base, style.fill_opacity))
 			var painted := water_motifs_enabled and _draw_material_surface(canvas, "water", region, style, tick, reduced)
 			_draw_region_outline(canvas, region, edge_counts, Color(style.edge, style.edge_opacity), style.edge_width)
 			var seed := _cell_seed(cell, int(region.footprint_id) * 401)
@@ -836,7 +860,7 @@ func _draw_fire(canvas: CanvasItem, _views: Dictionary, regions_by_cell: Diction
 	for cell: Vector2i in regions_by_cell:
 		for region: Dictionary in regions_by_cell[cell]:
 			var style := _fire_region_style(region, reduced)
-			canvas.draw_colored_polygon(region.polygon, Color(style.base, style.fill_opacity))
+			_draw_retained_region_fill(canvas, region.polygon, Color(style.base, style.fill_opacity))
 			var painted := _draw_material_surface(canvas, "fire", region, style, tick, reduced)
 			_draw_region_outline(canvas, region, edge_counts, Color(style.edge, style.edge_opacity), style.edge_width)
 			var seed := _cell_seed(cell, int(region.footprint_id) * 809)
@@ -850,7 +874,7 @@ func _draw_steam(canvas: CanvasItem, views: Dictionary, regions_by_cell: Diction
 		var heat := int((views.get(cell, {}) as Dictionary).get("steam_heat", 1000))
 		for region: Dictionary in regions_by_cell[cell]:
 			var style := _steam_region_style(region, heat, reduced)
-			canvas.draw_colored_polygon(region.polygon, Color(style.base, style.fill_opacity))
+			_draw_retained_region_fill(canvas, region.polygon, Color(style.base, style.fill_opacity))
 			var painted := _draw_material_surface(canvas, "steam", region, style, tick, reduced)
 			_draw_region_outline(canvas, region, edge_counts, Color(style.dark, style.edge_opacity), style.edge_width)
 			if bool(style.danger):
@@ -1315,11 +1339,17 @@ func _steam_region_style(region: Dictionary, heat: int, reduced: bool) -> Dictio
 
 
 func _region_edge_counts(regions_by_cell: Dictionary) -> Dictionary:
-	var counts: Dictionary = {}
+	# Keep only exact presentation topology. Fresh prefixes still read current
+	# owner, danger, phase and the material's lifetime rules on every call. This
+	# avoids six string joins/count lookups per unchanged region per draw without
+	# retaining any simulation view or deciding whether a region is alive.
+	_boundary_mask_counts = {}
+	_boundary_masks = {}
+	var topology: Array = []
+	var cacheable := true
 	for cell: Vector2i in regions_by_cell:
 		# Overlapping compatible records in one cell are one side of a boundary,
 		# not neighboring coverage. Keep each record's draw/lifetime independent.
-		var cell_edges: Dictionary = {}
 		var cell_regions: Dictionary = {}
 		for region: Dictionary in regions_by_cell[cell]:
 			var fixed_polygon: PackedVector2Array = region.fixed_polygon
@@ -1331,12 +1361,53 @@ func _region_edge_counts(regions_by_cell: Dictionary) -> Dictionary:
 			if cell_regions.has(identity): continue
 			if fixed_polygon.size() == 6 and cell_regions.size() < CELL_BOUNDARY_DUPLICATE_LIMIT:
 				cell_regions[identity] = true
-			for segment: String in _boundary_segments(fixed_polygon):
-				var key := prefix + segment
-				if cell_edges.has(key):
-					continue
-				cell_edges[key] = true
-				counts[key] = int(counts.get(key, 0)) + 1
+			topology.append([cell, prefix, fixed_polygon])
+			cacheable = cacheable and fixed_polygon.size() == 6 and topology.size() <= BOUNDARY_TOPOLOGY_ROWS
+	# One compound-key lookup: has() followed by [] hashed every row twice.
+	var retained: Variant = _boundary_topologies.get(topology) if cacheable else null
+	if retained is Dictionary:
+		_boundary_topology_hits += 1
+		_boundary_mask_counts = retained.counts
+		_boundary_masks = retained.masks
+		return _boundary_mask_counts
+	var counts: Dictionary = {}
+	var cell_edges: Dictionary = {}
+	var previous_cell := Vector2i(2147483647, 2147483647)
+	for row: Array in topology:
+		if row[0] != previous_cell:
+			cell_edges.clear()
+			previous_cell = row[0]
+		for segment: String in _boundary_segments(row[2]):
+			var key: String = row[1] + segment
+			if cell_edges.has(key): continue
+			cell_edges[key] = true
+			counts[key] = int(counts.get(key, 0)) + 1
+	if cacheable and not topology.is_empty():
+		for row: Array in topology:
+			if not _finite_boundary(row[2]): return counts
+			row[2] = (row[2] as PackedVector2Array).duplicate()
+			row.make_read_only()
+		topology.make_read_only()
+		counts.make_read_only()
+		var masks: Dictionary = {}
+		for row: Array in topology:
+			var prefix: String = row[1]
+			var polygons: Dictionary = masks.get(prefix, {})
+			if not polygons.has(row[2]):
+				polygons[row[2]] = _count_exposed_edges(prefix, row[2], counts, 6)
+				_boundary_mask_builds += 1
+			masks[prefix] = polygons
+		for polygons: Dictionary in masks.values(): polygons.make_read_only()
+		masks.make_read_only()
+		var entry := {"counts": counts, "masks": masks}
+		entry.make_read_only()
+		if _boundary_topology_order.size() == BOUNDARY_TOPOLOGY_LIMIT:
+			_boundary_topologies.erase(_boundary_topology_order.pop_front())
+		_boundary_topology_order.append(topology)
+		_boundary_topologies[topology] = entry
+		_boundary_mask_counts = counts
+		_boundary_masks = masks
+		_boundary_topology_builds += 1
 	return counts
 
 
@@ -1423,7 +1494,8 @@ func _region_edge_prefix(region: Dictionary) -> String:
 	var key: Array = [material, String(region.phase), bool(region.danger), owner_cache_key,
 		int(region.footprint_id) if legacy else 0, int(region.intensity) if legacy else 0,
 		int(region.get("expiry_tick", 0)) if legacy else 0, int(region.get("decay_tick", 0)) if material == "cinderveil" else 0]
-	if _edge_prefixes.has(key): return _edge_prefixes[key]
+	var retained_prefix: String = _edge_prefixes.get(key, "")
+	if not retained_prefix.is_empty(): return retained_prefix
 	var owner_key := JSON.stringify(owner_value) if scalar_owner else String(owner_cache_key)
 	var result: String
 	if String(region.material) == "cinderveil":
@@ -1445,15 +1517,36 @@ func _region_edge_prefix(region: Dictionary) -> String:
 
 func _draw_region_outline(canvas: CanvasItem, region: Dictionary, edge_counts: Dictionary, color: Color, width: float) -> void:
 	var polygon: PackedVector2Array = region.polygon
-	var prefix := _region_edge_prefix(region)
-	var segments := _boundary_segments(region.fixed_polygon)
-	var exposed := 0
-	for index: int in polygon.size():
-		if int(edge_counts.get(prefix + segments[index], 0)) <= 1:
-			exposed |= 1 << index
+	var exposed := _region_exposed_edges(region, edge_counts)
 	if exposed == 0: return
 	var points := _outline_batch_points(polygon, width, exposed)
 	if not points.is_empty(): _submit_outline(canvas, points, color)
+
+
+func _region_exposed_edges(region: Dictionary, edge_counts: Dictionary) -> int:
+	# Counts and masks are one immutable topology result. Fresh owner/phase/danger
+	# prefixes and exact vertex order are still required for every region. Generic
+	# callers passing their own count map always execute the original calculation.
+	var prefix := _region_edge_prefix(region)
+	var fixed_polygon: PackedVector2Array = region.fixed_polygon
+	var vertex_count: int = (region.polygon as PackedVector2Array).size()
+	if vertex_count == 6 and is_same(edge_counts, _boundary_mask_counts):
+		var polygons: Variant = _boundary_masks.get(prefix)
+		if polygons is Dictionary:
+			var retained: int = polygons.get(fixed_polygon, -1)
+			if retained >= 0:
+				_boundary_mask_hits += 1
+				return retained
+	return _count_exposed_edges(prefix, fixed_polygon, edge_counts, vertex_count)
+
+
+func _count_exposed_edges(prefix: String, fixed_polygon: PackedVector2Array, edge_counts: Dictionary, vertex_count: int) -> int:
+	var segments := _boundary_segments(fixed_polygon)
+	var exposed := 0
+	for index: int in vertex_count:
+		if int(edge_counts.get(prefix + segments[index], 0)) <= 1:
+			exposed |= 1 << index
+	return exposed
 
 
 func _outline_batch_points(polygon: PackedVector2Array, width: float, exposed: int) -> PackedVector2Array:
@@ -1461,7 +1554,8 @@ func _outline_batch_points(polygon: PackedVector2Array, width: float, exposed: i
 	# Flatten only that single region: no material, owner, cell or painter-order
 	# sorting. Fresh edge counts still decide the mask after every phase/change.
 	var key: Array = [polygon, width, exposed]
-	if _outline_batches.has(key): return _outline_batches[key]
+	var retained_points: Variant = _outline_batches.get(key)
+	if retained_points is PackedVector2Array: return retained_points
 	var points := PackedVector2Array()
 	var geometry := _boundary_triangles(polygon, width)
 	for index: int in polygon.size():
@@ -1515,7 +1609,10 @@ func _resident_outline_mesh(points: PackedVector2Array) -> ArrayMesh:
 
 func outline_cache_stats() -> Dictionary:
 	return {"batches": _outline_batches.size(), "meshes": _outline_meshes.size(),
-		"uploads": _outline_mesh_uploads, "hits": _outline_mesh_hits, "fallbacks": _outline_mesh_fallbacks}
+		"uploads": _outline_mesh_uploads, "hits": _outline_mesh_hits, "fallbacks": _outline_mesh_fallbacks,
+		"topologies": _boundary_topologies.size(), "topology_hits": _boundary_topology_hits, "topology_builds": _boundary_topology_builds,
+		"edge_mask_hits": _boundary_mask_hits, "edge_mask_builds": _boundary_mask_builds,
+		"phase_marks": _fire_phase_marks.size()}
 
 
 static func _inward_edge_triangles(polygon: PackedVector2Array, edge_index: int, width: float, centroid: Vector2 = Vector2.INF) -> Array[PackedVector2Array]:
@@ -1577,21 +1674,12 @@ func _draw_fire_region_mark(canvas: CanvasItem, polygon: PackedVector2Array, pha
 	if radius < 3.5:
 		return
 	if phase == "ignition":
-		var warning := PackedVector2Array([
-			(center + Vector2(-radius * 0.58, radius * 0.34)).round(),
-			(center + Vector2(0.0, -radius * 0.54)).round(),
-			(center + Vector2(radius * 0.58, radius * 0.34)).round(),
-		])
+		var warning := _fire_phase_mark(polygon, phase, reduced, center, radius)
 		canvas.draw_polyline(warning, Color(dark, 0.78), 4.0, false)
 		canvas.draw_polyline(warning, Color(danger, 0.98), 2.0, false)
 		return
 	if phase == "cooling":
-		var ember_width := radius * (0.42 if reduced else 0.56)
-		var ember := PackedVector2Array([
-			(center + Vector2(-ember_width, radius * 0.22)).round(),
-			(center + Vector2(-ember_width * 0.10, radius * 0.06)).round(),
-			(center + Vector2(ember_width, radius * 0.24)).round(),
-		])
+		var ember := _fire_phase_mark(polygon, phase, reduced, center, radius)
 		canvas.draw_polyline(ember, Color(dark, 0.88), 3.0, false)
 		canvas.draw_polyline(ember, Color(bright, 0.68), 1.0, false)
 		return
@@ -1620,6 +1708,32 @@ func _draw_fire_region_mark(canvas: CanvasItem, polygon: PackedVector2Array, pha
 		(center + Vector2(radius * 0.18, radius * 0.26)).round(),
 	])
 	canvas.draw_colored_polygon(spark, bright)
+
+
+func _fire_phase_mark(polygon: PackedVector2Array, phase: String, reduced: bool, center: Vector2, radius: float) -> PackedVector2Array:
+	# Static warning/ember strokes have no tick, owner or palette dependency.
+	# Include the exact derived geometry for diagnostic/subclass callers too.
+	var key: Array = [polygon, phase, reduced, center, radius]
+	if _fire_phase_marks.has(key): return (_fire_phase_marks[key] as PackedVector2Array).duplicate()
+	var points := PackedVector2Array()
+	if phase == "ignition":
+		points = PackedVector2Array([
+			(center + Vector2(-radius * 0.58, radius * 0.34)).round(),
+			(center + Vector2(0.0, -radius * 0.54)).round(),
+			(center + Vector2(radius * 0.58, radius * 0.34)).round(),
+		])
+	elif phase == "cooling":
+		var ember_width := radius * (0.42 if reduced else 0.56)
+		points = PackedVector2Array([
+			(center + Vector2(-ember_width, radius * 0.22)).round(),
+			(center + Vector2(-ember_width * 0.10, radius * 0.06)).round(),
+			(center + Vector2(ember_width, radius * 0.24)).round(),
+		])
+	if not points.is_empty() and _fire_phase_marks.size() < REGION_LAYOUT_LIMIT and polygon.size() == 6 and _finite_boundary(polygon) and center.is_finite() and is_finite(radius):
+		key[0] = polygon.duplicate()
+		key.make_read_only()
+		_fire_phase_marks[key] = points.duplicate()
+	return points
 
 
 func _draw_steam_region_mark(canvas: CanvasItem, polygon: PackedVector2Array, dark: Color, bright: Color, danger: Color, phase: String, tick: float, seed: int, reduced: bool, harmful: bool, source_phase: String = "active", surface_painted: bool = false) -> void:

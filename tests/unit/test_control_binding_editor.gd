@@ -17,7 +17,7 @@ func _test_navigation_and_capture() -> void:
 	check(editor.is_open, "editor opens explicitly")
 	equal(editor.selected_action(), &"move_left", "editor begins on first gameplay action")
 	editor.move_selection(-1, -1)
-	equal(editor.selected_action(), &"practice_retry", "row navigation wraps across all spell buttons and layers")
+	equal(editor.selected_action(), &"aim_down", "row navigation wraps across all spell buttons, layers, and aim actions")
 	equal(editor.selected_device, ControlBindingEditor.DEVICE_CONTROLLER, "device navigation wraps")
 	equal(editor.visible_action_indices().front(), ControlBindingEditor.ACTIONS.size() - ControlBindingEditor.VISIBLE_ROWS, "wrapped spell selection scrolls the first visible row")
 	equal(editor.visible_action_indices().back(), ControlBindingEditor.ACTIONS.size() - 1, "scrolled editor keeps the selected spell-layer row visible")

@@ -31,6 +31,7 @@ const DETAIL_DIVIDER_Y: float = 565.0
 const ASSIGN_RECT := Rect2(1018, 624, 210, 38)
 const CLOSE_RECT := Rect2(1200, 34, 34, 32)
 const STARTER_BUTTON_RECT := Rect2(960, 66, 220, 34)
+const COMPARE_RECT := Rect2(748, 66, 198, 34)
 const STARTER_PREVIEW_RECT := Rect2(88, 52, 1104, 620)
 const STARTER_PREVIEW_APPLY_RECT := Rect2(858, 614, 142, 38)
 const STARTER_PREVIEW_CANCEL_RECT := Rect2(1016, 614, 142, 38)
@@ -61,6 +62,8 @@ var pointer_position := Vector2.ZERO
 var dragging: bool = false
 var starter_preview: Dictionary = {}
 var focus_area: String = "spells"
+var reading_options_open := false
+var compare_equipped: bool = false
 
 
 func open_editor(state: PlayerState = null, catalog: AbilityCatalog = null) -> void:
@@ -109,6 +112,9 @@ func move_selection(slot_delta: int, spell_delta: int) -> void:
 func select_at(position: Vector2) -> bool:
 	if starter_preview_active():
 		return false
+	if COMPARE_RECT.has_point(position):
+		compare_equipped = not compare_equipped
+		return true
 	var filter := element_filter_at(position)
 	if filter >= 0:
 		toggle_element_filter(ELEMENT_FILTERS[filter])

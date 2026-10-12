@@ -19,6 +19,7 @@ func blocks_gameplay() -> bool:
 	return menu_open or map_panel.is_open or performance_panel.is_open
 
 func close() -> void:
+	if game != null and game.campus_renderer != null: game.campus_renderer.clear_terrain_prefetch()
 	menu_open = false
 	map_panel.close()
 	performance_panel.close()
@@ -45,21 +46,39 @@ func entries() -> Array[Dictionary]:
 			{"id": "duel", "label": "Practice duel", "hint": ""},
 		])
 	rows.append_array([
+		{"id": "expansion-tactics", "label": "Tactical lessons", "hint": ""},
 		{"id": "compendium", "label": "Compendium", "hint": "F4"},
 		{"id": "controls", "label": "Controls & settings", "hint": ""},
-		{"id": "performance", "label": "Performance", "hint": ""},
+		{"id": "performance", "label": "Display & text size", "hint": ""},
 		{"id": "expansion-developer", "label": "Developer tools", "hint": "Shift+F5"},
 	])
+	var progress: Dictionary = game.element_expansion.progression.view()
+	if game.element_expansion.guide.active: rows.append({"id":"expansion-guide-details","label":"Guide action / explanation","hint":""})
+	if bool(progress.get("can_retry_save",false)): rows.append({"id":"expansion-retry-save","label":"Retry progress save","hint":"Unsaved"})
+	if bool(progress.get("can_recover_backup",false)): rows.append({"id":"expansion-recover-save","label":"Recover progress backup","hint":""})
 	if not game.element_expansion.offline():
 		rows = rows.filter(func(row: Dictionary) -> bool: return String(row.id) in ["map", "compendium", "controls", "performance"])
 	return rows
 
 static func menu_rect(viewport: Vector2, count: int) -> Rect2:
-	var size := Vector2(360, 82 + count * 34)
+	var size := Vector2(minf(360,viewport.x-24), 82 + mini(count,menu_page_size(viewport)) * 34)
 	return Rect2((viewport - size) * 0.5, size)
 
 static func row_rect(viewport: Vector2, count: int, index: int) -> Rect2:
-	return Rect2(menu_rect(viewport, count).position + Vector2(14, 48 + index * 34), Vector2(332, 30))
+	var panel := menu_rect(viewport,count)
+	return Rect2(panel.position + Vector2(14, 48 + posmod(index,menu_page_size(viewport)) * 34), Vector2(panel.size.x-28, 30))
+
+static func menu_page_size(viewport: Vector2) -> int:
+	return maxi(1,floori((viewport.y-106)/34))
+
+static func page_rect(viewport: Vector2, count: int, direction: int) -> Rect2:
+	var panel := menu_rect(viewport,count)
+	return Rect2(panel.end-Vector2(100 if direction < 0 else 54,32),Vector2(40,24))
+
+func visible_menu_indices(viewport: Vector2, count: int) -> Array:
+	var size := menu_page_size(viewport)
+	var first := floori(float(selected) / size) * size
+	return range(first,mini(count,first+size))
 
 func open_menu() -> void:
 	if game == null or game.world == null: return
@@ -95,6 +114,7 @@ func travel_availability() -> Dictionary:
 	return {"enabled": true, "reason": ""}
 
 func travel(destination_id: String) -> bool:
+	if game != null: game._cancel_element_garden_arrival()
 	var available := travel_availability()
 	if not bool(available.enabled):
 		map_panel.set_availability(available)
@@ -143,6 +163,7 @@ func travel(destination_id: String) -> bool:
 	game.station_notice_seconds = 2.0
 	close()
 	_handoff()
+	game._request_element_garden_arrival()
 	return true
 
 func handle_input(event: InputEvent) -> bool:
@@ -186,9 +207,14 @@ func handle_input(event: InputEvent) -> bool:
 			elif absf(event.axis_value) > 0.6 and not _stick_latched:
 				selected = posmod(selected + (1 if event.axis_value > 0 else -1), rows.size())
 				_stick_latched = true
-		elif transformed is InputEventMouseButton and transformed.pressed and transformed.button_index == MOUSE_BUTTON_LEFT:
-			for index: int in rows.size():
-				if row_rect(viewport, rows.size(), index).has_point(transformed.position): selected = index; confirm = true; break
+		elif transformed is InputEventMouseButton and transformed.pressed:
+			if transformed.button_index in [MOUSE_BUTTON_WHEEL_UP,MOUSE_BUTTON_WHEEL_DOWN]: selected = posmod(selected+(-1 if transformed.button_index==MOUSE_BUTTON_WHEEL_UP else 1),rows.size())
+			elif transformed.button_index == MOUSE_BUTTON_LEFT:
+				if rows.size()>menu_page_size(viewport) and page_rect(viewport,rows.size(),-1).has_point(transformed.position): selected=posmod(selected-menu_page_size(viewport),rows.size())
+				elif rows.size()>menu_page_size(viewport) and page_rect(viewport,rows.size(),1).has_point(transformed.position): selected=posmod(selected+menu_page_size(viewport),rows.size())
+				else:
+					for index: int in visible_menu_indices(viewport,rows.size()):
+						if row_rect(viewport, rows.size(), index).has_point(transformed.position): selected = index; confirm = true; break
 		if confirm: activate(String(rows[selected].id))
 		return true
 	# Existing modal/capture input and custom gameplay bindings keep priority.
@@ -232,6 +258,12 @@ func draw(canvas: CanvasItem, font: Font, viewport: Vector2) -> void:
 		map_panel.set_location_visible(not game._is_hex_practice())
 		if actor != null: map_panel.update_position(Vector2i(actor.position_x, actor.position_y))
 		map_panel.set_availability(travel_availability())
+		var target := map_panel.model.selected_destination()
+		if not target.is_empty() and game.campus_renderer != null:
+			var point: Array = target.get("position",[])
+			if point.size() == 2:
+				var view_size: Vector2 = game.get_viewport_rect().size / game._camera_zoom_scale()
+				game.campus_renderer.prefetch_terrain_view(Rect2(Vector2(float(point[0]),float(point[1]))-view_size*0.5,view_size))
 		map_panel.draw(canvas, font, viewport)
 		return
 	if menu_open:
@@ -241,12 +273,18 @@ func draw(canvas: CanvasItem, font: Font, viewport: Vector2) -> void:
 		canvas.draw_rect(rect, Color("6a9394"), false, 1)
 		canvas.draw_string(font, rect.position + Vector2(16, 29), "MENU", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color("eee0b8"))
 		canvas.draw_string(font, rect.position + Vector2(246, 28), "Esc / B: close", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("acbebd"))
-		for index: int in rows.size():
+		for index: int in visible_menu_indices(viewport,rows.size()):
 			var row := row_rect(viewport, rows.size(), index)
 			if selected == index: canvas.draw_rect(row, Color("305157"))
 			canvas.draw_string(font, row.position + Vector2(10, 21), String(rows[index].label), HORIZONTAL_ALIGNMENT_LEFT, 220, 15, Color("eee0b8"))
-			canvas.draw_string(font, row.position + Vector2(228, 20), String(rows[index].hint), HORIZONTAL_ALIGNMENT_RIGHT, 94, 11, Color("acbebd"))
-		canvas.draw_string(font, rect.position + Vector2(16, rect.size.y - 13), "↑ ↓ select · Enter / A open", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("acbebd"))
+			if game.player_preferences.prompt_device != ControlBindingEditor.DEVICE_CONTROLLER:
+				canvas.draw_string(font, row.position + Vector2(228, 20), String(rows[index].hint), HORIZONTAL_ALIGNMENT_RIGHT, 94, 11, Color("acbebd"))
+		canvas.draw_string(font, rect.position + Vector2(16, rect.size.y - 13), "↑ ↓ / wheel select · Enter / A", HORIZONTAL_ALIGNMENT_LEFT, 238, 12, Color("acbebd"))
+		if rows.size()>menu_page_size(viewport):
+			for direction: int in [-1,1]:
+				var page := page_rect(viewport,rows.size(),direction)
+				canvas.draw_rect(page,Color("305157"))
+				canvas.draw_string(font,page.position+Vector2(15,17),"<" if direction<0 else ">",HORIZONTAL_ALIGNMENT_LEFT,20,13,Color("eee0b8"))
 	elif not game._gameplay_input_blocked() and not game.element_expansion.challenge_active:
 		canvas.draw_rect(MENU_ENTRY, Color("14242cd9"))
 		canvas.draw_string(font, MENU_ENTRY.position + Vector2(10, 19), "MENU · Esc / Back", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("eee0b8"))

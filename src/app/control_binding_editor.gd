@@ -30,8 +30,10 @@ const ACTIONS: Array[StringName] = [
 	&"spell_layer_alt",
 	&"practice_trace",
 	&"practice_retry",
+	&"aim_left", &"aim_right", &"aim_up", &"aim_down",
 ]
 const ACTION_LABELS: Dictionary[StringName, String] = {
+	&"aim_left":"AIM LEFT", &"aim_right":"AIM RIGHT", &"aim_up":"AIM UP", &"aim_down":"AIM DOWN",
 	&"move_left": "MOVE LEFT",
 	&"move_right": "MOVE RIGHT",
 	&"move_up": "MOVE UP",
@@ -123,7 +125,7 @@ func select_cell(position: Vector2) -> bool:
 
 func begin_capture() -> void:
 	capturing = true
-	status_message = "Press a %s input · Esc cancels" % DEVICE_LABELS[selected_device].to_lower()
+	status_message = "Press a %s input \u00b7 Esc cancels" % DEVICE_LABELS[selected_device].to_lower()
 
 
 func visible_action_indices() -> Array[int]:
@@ -218,7 +220,7 @@ func capture_event(event: InputEvent, preferences: PlayerPreferences) -> bool:
 func binding_label(action: StringName, device: int, preferences: PlayerPreferences) -> String:
 	if device == DEVICE_KEYBOARD:
 		var keycode: int = int(preferences.keyboard_bindings.get(action, 0))
-		return "—" if keycode == 0 else OS.get_keycode_string(keycode)
+		return "\u2014" if keycode == 0 else OS.get_keycode_string(keycode)
 	if device == DEVICE_MOUSE:
 		return _mouse_label(int(preferences.mouse_bindings.get(action, 0)))
 	var descriptor: Dictionary = preferences.controller_bindings.get(action, PlayerPreferences.unbound_controller_binding())
@@ -292,7 +294,7 @@ func _ensure_selection_visible() -> void:
 static func _mouse_label(button: int) -> String:
 	match button:
 		0:
-			return "—"
+			return "\u2014"
 		MOUSE_BUTTON_LEFT:
 			return "LEFT BUTTON"
 		MOUSE_BUTTON_RIGHT:
@@ -315,11 +317,11 @@ static func _controller_label(descriptor: Dictionary) -> String:
 	var kind := String(descriptor.get("kind", "none"))
 	var index := int(descriptor.get("index", -1))
 	if kind == "none":
-		return "—"
+		return "\u2014"
 	if kind == "axis":
 		var axis_names := ["LEFT X", "LEFT Y", "RIGHT X", "RIGHT Y", "LEFT TRIGGER", "RIGHT TRIGGER"]
 		var axis_name: String = axis_names[index] if index >= 0 and index < axis_names.size() else "AXIS %d" % index
-		return "%s %s" % [axis_name, "−" if int(descriptor.get("direction", 0)) < 0 else "+"]
+		return "%s %s" % [axis_name, "\u2212" if int(descriptor.get("direction", 0)) < 0 else "+"]
 	var button_names := ["SOUTH / A", "EAST / B", "WEST / X", "NORTH / Y", "BACK", "GUIDE", "START", "L STICK", "R STICK", "L SHOULDER", "R SHOULDER", "DPAD UP", "DPAD DOWN", "DPAD LEFT", "DPAD RIGHT"]
 	return button_names[index] if index >= 0 and index < button_names.size() else "BUTTON %d" % index
 
