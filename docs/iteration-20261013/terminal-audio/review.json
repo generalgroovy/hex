@@ -1,0 +1,119 @@
+{
+  "schema": "hex.terminal-audio-independent-review.v1",
+  "decision": "CONFIRMED_REPAIR_DRAFT_PENDING",
+  "canonical_changed": false,
+  "receipt_sha256": "af4584410ee518bdde6ea0024be863b0e90cabab47f8878a1b3a68b41e86c751",
+  "checks": 2728,
+  "source_hashes_verified": 30,
+  "native_stderr_bytes": 0,
+  "actual_admissions": {
+    "player": 13,
+    "rival": 6
+  },
+  "paid_metrics": {
+    "admitted": 19,
+    "deposited": 9,
+    "exposure_queries": 691,
+    "matter_consumed": 10200,
+    "matter_expired": 600,
+    "matter_paid": 11400,
+    "modifiers": 0,
+    "reactions": 12,
+    "refused": 0,
+    "requested": 19
+  },
+  "terminal": {
+    "admitted_confirmed": 1,
+    "age_before_first_us": 1075,
+    "confirmed_voice_playing_at_stop": true,
+    "empty_pool_prepared": true,
+    "first_stop": {
+      "at_us": 39065426,
+      "last_clip": "result_confirmed",
+      "occupied_before": [
+        0,
+        0,
+        0,
+        903
+      ],
+      "playing_before": [
+        false,
+        false,
+        false,
+        true
+      ]
+    },
+    "freeze_callbacks": 3,
+    "intended_clip_us": 220000,
+    "packet_sha256": "dd8b66b91db6dd5c729f3384505e126fab3937ab631522ed49958da2b51f17d0",
+    "playing_after_first": 0,
+    "playing_before": 1,
+    "reward": {
+      "new": true,
+      "notice": "Arcstorm Rapid learned.",
+      "ok": true,
+      "saved": true,
+      "wire": 1138
+    },
+    "save_sha256": "cd3fd4868e5cf44716f546e1201699081d19625976afecb09783d8782ef40a9e",
+    "stop_age_us": 1202,
+    "stop_calls_delta": 1,
+    "tick": 876,
+    "world_hash": "0c50e7193478e7b3502a963707a37edcfdcc856c6ed9c61eef4e6a6978e67677"
+  },
+  "synthetic_eligibility_controls": [
+    {
+      "admitted_delta": 1,
+      "mode": "focus_lost",
+      "playing_after_admission": 1,
+      "playing_after_stop": 0,
+      "synthetic_presentation_rearm": true
+    },
+    {
+      "admitted_delta": 1,
+      "mode": "menu",
+      "playing_after_admission": 1,
+      "playing_after_stop": 0,
+      "synthetic_presentation_rearm": true
+    },
+    {
+      "admitted_delta": 0,
+      "mode": "muted",
+      "playing_after_admission": 0,
+      "playing_after_stop": 0,
+      "synthetic_presentation_rearm": true
+    },
+    {
+      "admitted_delta": 1,
+      "mode": "trial_handoff_reset",
+      "playing_after_admission": 1,
+      "playing_after_stop": 0,
+      "synthetic_presentation_rearm": true
+    }
+  ],
+  "final_lethal_events": [
+    {
+      "damage": 260,
+      "owner_id": 1,
+      "source_wire_id": 145,
+      "status": "burning",
+      "target_id": 2,
+      "type": "spell_status_hit"
+    },
+    {
+      "owner_id": 1,
+      "projectile_id": 0,
+      "target_id": 2,
+      "type": "champion_defeated"
+    }
+  ],
+  "limits": [
+    "One genuine paid full-health encounter and existing winning commands; minimal direct Bootstrap binding, not full startup.",
+    "Actual Dummy playback stop timing, not listening comfort or mix quality.",
+    "Primary deliberately empties the audio pool; normal occupied-pool behavior requires the repair gate.",
+    "Alternate focus/menu/mute/reset controls rearm presentation notice only over the genuine saved reward, not another earned victory.",
+    "Failed A/B probes reached no encounter and are preserved separately; no ignored error was accepted.",
+    "Only owned earned-progress.json is archived; no isolated APPDATA/profile/log folders."
+  ],
+  "repair_policy": "Capture admission eligibility before observation changes trial state; preserve already-admitted finite tails only in otherwise eligible actual finished-result freeze; external blocks/READY/new-admission guards unchanged."
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "completed_at_utc": "2026-10-13T16:20:44.3976952Z",
+  "tier": "focused",
+  "result": "failed",
+  "failure": "Godot emitted a script/import/runtime error.",
+  "source": {
+    "current_state_path": ".godot/windows-tests/7e7acf0a39b64a05a1f3d0cac66a88db/current-state.json",
+    "asset_inventory_path": null,
+    "head": "b57451465a46a33da19e279184b69f3d7579e8bb",
+    "branch": "codex/hex-screen-smoothness-20261011",
+    "dirty": true,
+    "current_state_sha256": "4aa2b431a1cf7e928478ddb583820e1f3e631da854131d180a861ed51f5c2b4c",
+    "asset_inventory_sha256": null
+  },
+  "requested_suite_ids": [
+    "element-audio",
+    "spell-testing-tools"
+  ],
+  "supervision": {
+    "default_engine_timeout_seconds": 180,
+    "import_timeout_seconds": 600,
+    "suite_timeout_seconds": 180
+  },
+  "isolation": {
+    "appdata_path": ".godot/windows-tests/7e7acf0a39b64a05a1f3d0cac66a88db/isolated-roaming",
+    "scope": "Godot import, suite and boot user data; packaging retains its own isolation policy",
+    "caller_appdata_restored": true
+  },
+  "executed": {
+    "current_state_check": true,
+    "asset_inventory": false,
+    "doctor": true,
+    "import": false,
+    "post_import_identity_check": false,
+    "deterministic_suite_runner": true,
+    "suite_count": 2,
+    "assertion_count": 85368,
+    "suites": [
+      {
+        "id": "spell-testing-tools",
+        "assertions": 58488,
+        "failures": 0
+      },
+      {
+        "id": "element-audio",
+        "assertions": 26880,
+        "failures": 1
+      }
+    ],
+    "boot_120_hz": false,
+    "package_and_installer": false
+  },
+  "duration_ms": 93403,
+  "stderr_bytes": 0,
+  "logs": [
+    {
+      "path": ".godot/windows-tests/7e7acf0a39b64a05a1f3d0cac66a88db/suite.log",
+      "sha256": "658e7c1d968479ffdf01bd3934bf4ea69383b0a49a2adff6c5b5f0a46061dd1c",
+      "stderr_bytes": 0
+    }
+  ]
+}

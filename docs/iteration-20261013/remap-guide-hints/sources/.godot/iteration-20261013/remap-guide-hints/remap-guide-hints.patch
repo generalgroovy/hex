@@ -1,0 +1,237 @@
+--- a/src/app/element_expansion_controller.gd
++++ b/src/app/element_expansion_controller.gd
+@@ -233,7 +233,12 @@
+ 		game._start_match(game.tick_rate)
+ 	refresh_guide_bindings()
+ 	guide.start(game.world)
+-	show_notice("Introduction started. F5 or the Skip button ends it at any time.")
++	show_notice("Introduction started. F5 or the Skip button ends it at any time." if shortcut_available(KEY_F5) else "Introduction started. Menu > Skip introduction or the Skip button ends it.")
++
++
++func shortcut_available(key: int) -> bool:
++	# The existing input priority is also the source for displayed convenience hints.
++	return game != null and game.player_preferences != null and not game.player_preferences.keyboard_bindings.values().has(key)
+ 
+ 
+ func refresh_guide_bindings() -> void:
+@@ -245,7 +250,7 @@
+ 		var label: String = bindings.action_label(StringName(direction), preferences)
+ 		moves.append(label if not label.is_empty() else "Unbound")
+ 	var jump: String = bindings.action_label(&"jump", preferences)
+-	guide.configure_bindings({"move": "/".join(moves), "jump": jump if not jump.is_empty() else "Jump (unbound)", "cast": SpellLoomPresenter.slot_binding_label(0, preferences), "range": "Menu > Spell Range" if preferences.prompt_device == ControlBindingEditor.DEVICE_CONTROLLER else "F6 / Spell Range", "skip": "Menu > Skip introduction" if preferences.prompt_device == ControlBindingEditor.DEVICE_CONTROLLER else "F5 / Skip guide"})
++	guide.configure_bindings({"move": "/".join(moves), "jump": jump if not jump.is_empty() else "Jump (unbound)", "cast": SpellLoomPresenter.slot_binding_label(0, preferences), "range": "Menu > Spell Range" if preferences.prompt_device == ControlBindingEditor.DEVICE_CONTROLLER or not shortcut_available(KEY_F6) else "F6 / Spell Range", "skip": "Menu > Skip introduction" if preferences.prompt_device == ControlBindingEditor.DEVICE_CONTROLLER or not shortcut_available(KEY_F5) else "F5 / Skip guide"})
+ 
+ 
+ func handle_input(event: InputEvent) -> bool:
+@@ -272,7 +277,7 @@
+ 		var key: int = event.physical_keycode if event.physical_keycode != 0 else event.keycode
+ 		for entry: Array in ENTRIES:
+ 			# A pre-existing custom gameplay binding keeps priority over convenience keys.
+-			if key == int(entry[3]) and event.shift_pressed == bool(entry[4]) and not game.player_preferences.keyboard_bindings.values().has(key):
++			if key == int(entry[3]) and event.shift_pressed == bool(entry[4]) and shortcut_available(key):
+ 				if String(entry[0]) == "expansion-introduction" and guide != null and bool(guide.view().get("active", false)): guide.stop()
+ 				else: activate(String(entry[0]))
+ 				return true
+@@ -468,9 +473,9 @@
+ 	if developer.active and not challenge_active:
+ 		canvas.draw_rect(Rect2(viewport.x - 296, 422, 280, 44), Color("4b2344ee"))
+ 		canvas.draw_string(font, Vector2(viewport.x - 286, 440), "DEV SESSION | no earned progress", HORIZONTAL_ALIGNMENT_LEFT, 264, 13, Color("ffc5e4"))
+-		canvas.draw_string(font, Vector2(viewport.x - 286, 457), "Shift+F5 opens overrides and Leave Developer", HORIZONTAL_ALIGNMENT_LEFT, 264, 11, Color("eadfc3"))
++		canvas.draw_string(font, Vector2(viewport.x - 286, 457), ("Shift+F5 opens overrides and Leave Developer" if shortcut_available(KEY_F5) else "Menu > Developer tools"), HORIZONTAL_ALIGNMENT_LEFT, 264, 11, Color("eadfc3"))
+ 	elif training.active:
+-		canvas.draw_string(font, Vector2(viewport.x - 296, 444), "RANGE | F6 change spell · return restores weave", HORIZONTAL_ALIGNMENT_LEFT, 282, 11, Color("77dddc"))
++		canvas.draw_string(font, Vector2(viewport.x - 296, 444), ("RANGE | F6 change spell · return restores weave" if shortcut_available(KEY_F6) else "RANGE | Menu: spell · return restores weave"), HORIZONTAL_ALIGNMENT_LEFT, 282, 11, Color("77dddc"))
+ 	if challenge_active:
+ 		var status := challenge.status(game.world.tick)
+ 		var text := String(challenge.reward.get("notice", "")) if challenge.trial.is_finished() else String(status.get("cue", ""))
+@@ -483,7 +488,7 @@
+ 			if y > box.end.y - 20: break
+ 			canvas.draw_string(font, Vector2(box.position.x + 14, y), line, HORIZONTAL_ALIGNMENT_LEFT, width, 12, Color("77dddc"))
+ 			y += 16
+-		var footer := "Esc / Back: return · then Menu for rivals, tools and saves" if viewport.x < 900 or game.player_preferences.prompt_device == ControlBindingEditor.DEVICE_CONTROLLER else "DEV PRACTICE · Esc: return · Shift+F5: tools" if developer.active else "Esc / Back: return · Shift+F6: rivals · Shift+F5: tools"
++		var footer := "Esc / Back: return · then Menu for rivals, tools and saves" if viewport.x < 900 or game.player_preferences.prompt_device == ControlBindingEditor.DEVICE_CONTROLLER or not shortcut_available(KEY_F5) or (not developer.active and not shortcut_available(KEY_F6)) else "DEV PRACTICE · Esc: return · Shift+F5: tools" if developer.active else "Esc / Back: return · Shift+F6: rivals · Shift+F5: tools"
+ 		canvas.draw_string(font, box.position + Vector2(14, box.size.y-6), footer, HORIZONTAL_ALIGNMENT_LEFT, width, 11, Color("b8c1bf"))
+ 		if challenge.trial.is_finished():
+ 			var progress := progression.view()
+--- a/src/app/local_navigation_controller.gd
++++ b/src/app/local_navigation_controller.gd
+@@ -30,8 +30,8 @@
+ 	if game == null: return rows
+ 	if game._is_hex_practice():
+ 		rows.append_array([
+-			{"id": "expansion-introduction", "label": "Skip introduction" if game.element_expansion.guide.active else "Introduction", "hint": "F5"},
+-			{"id": "expansion-range", "label": "Change Range spell", "hint": "F6"},
++			{"id": "expansion-introduction", "label": "Skip introduction" if game.element_expansion.guide.active else "Introduction", "hint": "F5" if game.element_expansion.shortcut_available(KEY_F5) else ""},
++			{"id": "expansion-range", "label": "Change Range spell", "hint": "F6" if game.element_expansion.shortcut_available(KEY_F6) else ""},
+ 			{"id": "loom", "label": "Spell Loom", "hint": ""},
+ 			{"id": "characters", "label": "Characters", "hint": ""},
+ 			{"id": "reset_court", "label": "Reset practice court", "hint": ""},
+@@ -39,9 +39,9 @@
+ 		])
+ 	else:
+ 		rows.append_array([
+-			{"id": "expansion-introduction", "label": "Skip introduction" if game.element_expansion.guide.active else "Introduction", "hint": "F5"},
+-			{"id": "expansion-range", "label": "Spell Range", "hint": "F6"},
+-			{"id": "expansion-challenges", "label": "Signature Challenges", "hint": "Shift+F6"},
++			{"id": "expansion-introduction", "label": "Skip introduction" if game.element_expansion.guide.active else "Introduction", "hint": "F5" if game.element_expansion.shortcut_available(KEY_F5) else ""},
++			{"id": "expansion-range", "label": "Spell Range", "hint": "F6" if game.element_expansion.shortcut_available(KEY_F6) else ""},
++			{"id": "expansion-challenges", "label": "Signature Challenges", "hint": "Shift+F6" if game.element_expansion.shortcut_available(KEY_F6) else ""},
+ 			{"id": "chemistry", "label": "Chemistry demos", "hint": ""},
+ 			{"id": "duel", "label": "Practice duel", "hint": ""},
+ 		])
+@@ -50,7 +50,7 @@
+ 		{"id": "compendium", "label": "Compendium", "hint": "F4"},
+ 		{"id": "controls", "label": "Controls & settings", "hint": ""},
+ 		{"id": "performance", "label": "Display & text size", "hint": ""},
+-		{"id": "expansion-developer", "label": "Developer tools", "hint": "Shift+F5"},
++		{"id": "expansion-developer", "label": "Developer tools", "hint": "Shift+F5" if game.element_expansion.shortcut_available(KEY_F5) else ""},
+ 	])
+ 	var progress: Dictionary = game.element_expansion.progression.view()
+ 	if game.element_expansion.guide.active: rows.append({"id":"expansion-guide-details","label":"Guide action / explanation","hint":""})
+--- a/tests/unit/test_spell_testing_tools.gd
++++ b/tests/unit/test_spell_testing_tools.gd
+@@ -27,6 +27,7 @@
+ 	check(abilities.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "testing tools use live abilities")
+ 	_test_controller_lifecycle()
+ 	_test_nonmodal_guide_pointer_handoff()
++	_test_remapped_convenience_hints()
+ 	_test_range()
+ 	_test_developer()
+ 	_test_panel()
+@@ -680,3 +681,136 @@
+ 		"progression": controller.progression.view().duplicate(true),
+ 		"notice": controller.notice,
+ 	}
++
++
++func _test_remapped_convenience_hints() -> void:
++	InputRouter.ensure_input_map()
++	var saved_events := {}
++	for action: StringName in InputMap.get_actions():
++		saved_events[action] = InputMap.action_get_events(action).duplicate()
++	var previous_mouse_mode := Input.mouse_mode
++	for mapping: Dictionary in [{"key":KEY_F5,"shift":false},{"key":KEY_F5,"shift":true},{"key":KEY_F6,"shift":false},{"key":KEY_F6,"shift":true}]:
++		var keycode: int = int(mapping.key)
++		var viewport := SubViewport.new()
++		viewport.size = Vector2i(1280, 720)
++		viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
++		viewport.handle_input_locally = true
++		(Engine.get_main_loop() as SceneTree).root.add_child(viewport)
++		var game := GuideInputHarness.new()
++		game.preferences_persistence_allowed = false
++		game.preference_overrides_are_transient = true
++		game.world = _world()
++		game.ability_catalog = abilities
++		game.player_preferences = PlayerPreferences.new()
++		game.session_transport = SessionTransport.new()
++		game.controls_editor = ControlBindingEditor.new()
++		game.spell_loom_editor = SpellLoomEditor.new()
++		game.player_compendium = game.PlayerCompendiumScript.new()
++		game.character_selection_grid = game.CharacterSelectionGridScript.new()
++		game.input_router = InputRouter.new()
++		game.element_expansion.game = game
++		game.local_navigation.configure(game)
++		viewport.add_child(game)
++		check(game.input_router.configure_keyboard_bindings(game.player_preferences.keyboard_bindings), "remap hint fixture starts from current supported defaults")
++		game.element_expansion.refresh_guide_bindings()
++		equal(game.element_expansion.guide._bindings.skip, "F5 / Skip guide", "default guide keeps the existing F5 label")
++		equal(game.element_expansion.guide._bindings.range, "F6 / Spell Range", "default guide keeps the existing F6 label")
++		game.controls_editor.open_editor()
++		game.controls_editor.selected_action_index = ControlBindingEditor.ACTIONS.find(&"spell_1")
++		game.controls_editor.selected_device = ControlBindingEditor.DEVICE_KEYBOARD
++		game.controls_editor.begin_capture()
++		_hint_key(viewport, keycode, true)
++		equal(game.player_preferences.keyboard_bindings[&"spell_1"], keycode, "real editor capture accepts a supported convenience-key remap")
++		_hint_key(viewport, keycode, false)
++		_hint_key(viewport, KEY_ESCAPE, true)
++		_hint_key(viewport, KEY_ESCAPE, false)
++		check(not game.controls_editor.is_open, "actual Escape closes binding editor before gameplay")
++		_hint_neutral_steps(game, 4)
++		# Open the actual Menu and choose its Introduction row through key events.
++		game.local_navigation.open_menu()
++		_hint_key(viewport, KEY_DOWN, true)
++		_hint_key(viewport, KEY_DOWN, false)
++		_hint_key(viewport, KEY_ENTER, true)
++		_hint_key(viewport, KEY_ENTER, false)
++		check(game.element_expansion.guide.active and not game.local_navigation.menu_open, "Menu remains a working route to Introduction after remapping")
++		_hint_neutral_steps(game, 4)
++		var before := game.world.state_hash()
++		game.element_expansion.refresh_guide_bindings()
++		var rows: Array[Dictionary] = game.local_navigation.entries()
++		for row: Dictionary in rows:
++			if String(row.id) in ["expansion-introduction", "expansion-developer"]:
++				equal(String(row.hint), "" if keycode == KEY_F5 else ("F5" if String(row.id) == "expansion-introduction" else "Shift+F5"), "F5 and shifted F5 hints match gameplay ownership")
++			if String(row.id) in ["expansion-range", "expansion-challenges"]:
++				equal(String(row.hint), "" if keycode == KEY_F6 else ("F6" if String(row.id) == "expansion-range" else "Shift+F6"), "F6 and shifted F6 hints match gameplay ownership")
++		equal(game.element_expansion.guide._bindings.skip, "Menu > Skip introduction" if keycode == KEY_F5 else "F5 / Skip guide", "guide advertises an available Skip route")
++		equal(game.element_expansion.guide._bindings.range, "Menu > Spell Range" if keycode == KEY_F6 else "F6 / Spell Range", "guide advertises an available Range route")
++		if keycode == KEY_F5: check(not game.element_expansion.notice.contains("F5"), "initial lesson notice does not repeat an unavailable shortcut")
++		equal(game.world.state_hash(), before, "label projection cannot mutate paid authority")
++		var actor: PlayerState = game.world.player()
++		var flux_before := actor.flux
++		var matter_before := int(game.world.hex_court.metrics.matter_paid)
++		_hint_key(viewport, keycode, true, bool(mapping.shift))
++		var command: SimCommand = game._sample_gameplay_command(game.world.tick, Vector2.ZERO, Vector2.RIGHT, game._gameplay_input_blocked())
++		check(command.has_pressed(SimCommand.PRESSED_SPELL_1), "fresh remapped key still routes to its actual gameplay action")
++		check(game.element_expansion.guide.active and not game.element_expansion.panel.is_open and not game.element_expansion.developer.active, "remapped key and Shift variant cannot secretly Skip or open Range/rivals/tools")
++		check(game.world.step([command]), "remapped action reaches the ordinary paid world")
++		equal(flux_before - actor.flux, int(CombatTuning.cast_definition_view(actor.spell_wire_id(1)).flux_cost), "remapped spell pays its exact ordinary cost")
++		check(int(game.world.hex_court.metrics.matter_paid) > matter_before, "remapped action creates actual paid-source ownership")
++		var started := 0
++		for event: Dictionary in game.world.combat_events:
++			if String(event.get("type", "")) == "cast_started" and int(event.get("entity_id", 0)) == actor.entity_id: started += 1
++		equal(started, 1, "one deliberate remapped press admits one real cast")
++		_hint_key(viewport, keycode, false, bool(mapping.shift))
++		_hint_neutral_steps(game, 1)
++		# The existing fallback is actionable; no direct guide-stop call is used.
++		game.local_navigation.open_menu()
++		_hint_key(viewport, KEY_DOWN, true)
++		_hint_key(viewport, KEY_DOWN, false)
++		_hint_key(viewport, KEY_ENTER, true)
++		_hint_key(viewport, KEY_ENTER, false)
++		check(not game.element_expansion.guide.active, "Menu Skip works while the gameplay remap is retained")
++		game.controls_editor.reset_bindings(game.player_preferences)
++		game._commit_control_bindings()
++		game.element_expansion.refresh_guide_bindings()
++		equal(game.element_expansion.guide._bindings.skip, "F5 / Skip guide", "restoring defaults restores original Skip hint")
++		equal(game.element_expansion.guide._bindings.range, "F6 / Spell Range", "restoring defaults restores original Range hint")
++		_hint_neutral_steps(game, 4)
++		var default_matter := int(game.world.hex_court.metrics.matter_paid)
++		_hint_key(viewport, KEY_F5, true)
++		_hint_key(viewport, KEY_F5, false)
++		check(game.element_expansion.guide.active, "restored default F5 actually opens the Introduction again")
++		_hint_neutral_steps(game, 4)
++		_hint_key(viewport, KEY_F5, true)
++		_hint_key(viewport, KEY_F5, false)
++		check(not game.element_expansion.guide.active, "restored default F5 actually performs its advertised Skip action")
++		equal(int(game.world.hex_court.metrics.matter_paid), default_matter, "restored convenience key does not become another paid cast")
++		game.player_preferences.prompt_device = ControlBindingEditor.DEVICE_CONTROLLER
++		game.element_expansion.refresh_guide_bindings()
++		equal(game.element_expansion.guide._bindings.skip, "Menu > Skip introduction", "controller retains its existing available Menu route")
++		equal(game.element_expansion.guide._bindings.range, "Menu > Spell Range", "controller Range fallback remains unchanged")
++		game.world = null
++		viewport.free()
++	for action: StringName in saved_events:
++		Input.action_release(action)
++		InputMap.action_erase_events(action)
++		for event: InputEvent in saved_events[action]: InputMap.action_add_event(action, event)
++	Input.mouse_mode = previous_mouse_mode
++
++
++func _hint_key(viewport: SubViewport, keycode: int, pressed: bool, shifted: bool = false) -> void:
++	var event := InputEventKey.new()
++	event.physical_keycode = keycode
++	event.keycode = keycode
++	event.pressed = pressed
++	event.shift_pressed = shifted
++	Input.parse_input_event(event)
++	Input.flush_buffered_events()
++	viewport.push_input(event, true)
++
++
++func _hint_neutral_steps(game: Node, count: int) -> void:
++	for index: int in count:
++		var command: SimCommand = game._sample_gameplay_command(game.world.tick, Vector2.ZERO, Vector2.RIGHT, game._gameplay_input_blocked())
++		check(not command.has_pressed(SimCommand.PRESSED_SPELL_1), "handoff/release does not become a paid action")
++		check(game.world.step([command]), "handoff guard expires through ordinary neutral steps")
++		game.controls_input_guard_frames = maxi(0, game.controls_input_guard_frames - 1)

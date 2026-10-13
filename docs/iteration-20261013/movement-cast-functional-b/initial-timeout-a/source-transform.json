@@ -1,0 +1,131 @@
+{
+  "schema": "hex-movement-cast-source-transform-v1",
+  "source": "res://src/sim/core/sim_world.gd",
+  "source_sha256": "2a8e32069c800d70644f222d4ce1e2378e3b2c79991e7e5d58b4de2df4548a1e",
+  "source_bytes": 29033,
+  "method_sha256_normalized": "7560835136ef1f24caf6ba6be0106e6caba79635059eab43f3abb58be51fe70a",
+  "observed_sha256": "18e0c8baed1c3a89a7f7f86dc55dbdd9246993e49f261eac27428cfd828fd4fe",
+  "marker": "# MC_OBSERVER",
+  "inserted_lines": 22,
+  "insertions": [
+    {
+      "where": "after",
+      "anchor": "func step(commands: Array[SimCommand]) -> bool:",
+      "lines": [
+        "\t_mc_reset_step()"
+      ]
+    },
+    {
+      "where": "before",
+      "anchor": "\t\tif hex_court != null:\n\t\t\thex_paths[state.entity_id]",
+      "lines": [
+        "\t\t_mc_open()",
+        "\t\tmc_actors_entered += 1"
+      ]
+    },
+    {
+      "where": "after",
+      "anchor": "\t\t\t_idle_defeated(state)",
+      "lines": [
+        "\t\t\t_mc_close(0)",
+        "\t\t\tmc_dead_at_entry += 1"
+      ]
+    },
+    {
+      "where": "after",
+      "anchor": "\t\tif command == null:",
+      "lines": [
+        "\t\t\tmc_missing_command += 1"
+      ]
+    },
+    {
+      "where": "after",
+      "anchor": "\t\tSpellStatusPolicy.advance(state,config,combat_events)",
+      "lines": [
+        "\t\t_mc_close(0)",
+        "\t\tif state.health <= 0: mc_dead_after_status += 1"
+      ]
+    },
+    {
+      "where": "before",
+      "anchor": "\t\treaction_movement.begin_actor(Vector2i(state.position_x, state.position_y), MovementTuning.PLAYER_RADIUS)\n\t\tReactionMovementWorld.clear_stale_contact",
+      "lines": [
+        "\t\t_mc_open()"
+      ]
+    },
+    {
+      "where": "after",
+      "anchor": "\t\tvar braking_ratio := 1000",
+      "lines": [
+        "\t\t_mc_close(1)"
+      ]
+    },
+    {
+      "where": "before",
+      "anchor": "\t\t\tvar modifiers := HexProductEffects.pre_movement",
+      "lines": [
+        "\t\t\t_mc_open()"
+      ]
+    },
+    {
+      "where": "after",
+      "anchor": "\t\t\tbraking_ratio = int(modifiers.braking_ratio)",
+      "lines": [
+        "\t\t\t_mc_close(2)"
+      ]
+    },
+    {
+      "where": "before",
+      "anchor": "\t\tground_ratio = mini(ground_ratio,SpellStatusPolicy.movement_ratio(state))",
+      "lines": [
+        "\t\t_mc_open()"
+      ]
+    },
+    {
+      "where": "after",
+      "anchor": "\t\tMovementSystem.step(state, command, config, reaction_movement, ground_ratio, acceleration_ratio, braking_ratio)",
+      "lines": [
+        "\t\t_mc_close(3)",
+        "\t\t_mc_open()"
+      ]
+    },
+    {
+      "where": "after",
+      "anchor": "\t\t\tadmission_offer = _cast_admission_offer(state.entity_id)",
+      "lines": [
+        "\t\t\tmc_admission_offers += 1"
+      ]
+    },
+    {
+      "where": "before",
+      "anchor": "\t\tvar spawned: Variant = CombatSystem.step_player(",
+      "lines": [
+        "\t\t_mc_close(4)",
+        "\t\t_mc_open()"
+      ]
+    },
+    {
+      "where": "after",
+      "anchor": "\t\t\tstate, command, config, next_projectile_id, next_field_id, collision, combat_events, transition_policy, capacity.x, capacity.y, hex_court\n\t\t)",
+      "lines": [
+        "\t\t_mc_close(5)",
+        "\t\t_mc_open()"
+      ]
+    },
+    {
+      "where": "after",
+      "anchor": "\t\t\tif released:",
+      "lines": [
+        "\t\t\t\tmc_release_results += 1"
+      ]
+    },
+    {
+      "where": "after",
+      "anchor": "\t\t_store_combat_result(spawned)",
+      "lines": [
+        "\t\t_mc_close(6)"
+      ]
+    }
+  ],
+  "scope": "Only added diagnostic statements. Every original step line remains exact after CRLF normalization and marked-line removal. Seven lanes reset per attempted step; both death continues close setup first. Existing nine-stage clocks/cumulative collection remain unchanged."
+}

@@ -1,50 +1,94 @@
 # October 13 experience evidence and next action
 
-Current state: canonical source is frozen at **`p61-500be306a26a`**. Root reports
-clean Full validation: **265 suites / 7,572,978 assertions / zero failures and
-empty stderr**. The [fresh package](delivery-500be/package.json),
-[archive verification](delivery-500be/delivery-files.json) and
-[exported-terrain gate](delivery-500be/terrain/terrain-pack.json) have passed.
-The [untouched portable lifecycle retry](portable-lifecycle-500be-passed-b/receipt.json)
-passes all five cases, with twelve Fire and twelve all-six Mantle admissions,
-zero refusals, empty stderr and preserved package/preferences. The linked
-[independent delivery review](delivery-review-500be/review.json) passes 3,784
-checks. This is the current qualified local portable; sustained foreground
-acceptance remains open. T7 complete-step instrumentation, the bounded paid-startup
-witness with an honest unknown fallback, and the protection-only lower HUD row
-are applied. Their focused/native evidence below remains scoped to the exact
-sources and workloads tested; Full and package qualification are separate.
-Preserve commit `1068759`, the qualified `p60-1e084a50a029` portable, original art,
-personal profiles and all failed evidence.
+**Paused at the user's requested qualified checkpoint.** The reviewed seven-file
+audio, remap-hint and tactical-copy batch has passed coherent Full and fresh
+delivery qualification. No audit, implementation, experiment or foreground run
+is active; further work requires a user resume. Root owns the final repository
+handoff. The [occupied-membership prototype](deferred-occupied-membership/README.md)
+remains source only, unapplied and unexecuted.
+
+Current source is **`p61-7804a23eb300`**, with runtime hash
+`7804a23eb300582ede154ca1083664f6c4200a51fa6539c6ddb2810068972120`
+and 3,444 records. Current-state validation passes. The
+[usability checkpoint](usability-checkpoint/README.md) preserves the exact
+seven-file application, both reviewed test-only repair chains and all failed
+and successful receipts. Independent byte verification maps the final canonical
+files to the original reviewed application plus those bounded fixture repairs;
+original LF/CRLF conventions are retained. Runtime policy remained unchanged
+through the fixture corrections.
+
+The last passing affected-suite results are **local navigation 3,817**, **signature
+progression 6,311**, **spell testing tools 58,488**, and **element audio 26,898**
+assertions, all with zero failures in their respective suite results. Audio's
+[focused-c receipt](usability-checkpoint/focused-c/receipt.json) passes with empty
+stderr. These 95,514 assertions span three focused runs; the first two overall
+runs remain failed and fully preserved. Their fixes only supply the missing test
+alias/host enum, type the neutral command array, and target the map model's actual
+open-state owner with explicit diagnostic readback. **Full now passes on `7804`:
+265 suites / 7,573,807 assertions / zero failures and empty stderr, including the
+120 Hz boot check.** All four affected suites also pass within this coherent
+Full with the same counts. Root's receipt SHA is
+`f14bb161efb6007f00ee6a1da4e1178aaac995d98dc798987473acb324978c85`;
+the [Full archive and independent review](full-7804/README.md) preserve its exact
+source linkage. **Fresh delivery also passes**: all 18 archive checks, 133 exact
+terrain images / 2,064 checks, and five normal-close/reopen lifecycle cases with
+twelve Fire and twelve all-six Mantle admissions, zero refusals or extra outcomes.
+The [independent delivery review](delivery-review-7804/review.json) passes **3,789
+checks**. These gates preserve their package/lifecycle scope; they do not establish
+new foreground performance, audible comfort or physical-input acceptance.
+
+The current qualified source and local portable are **`p61-7804a23eb300`**:
+[Launch H.E.X.](../../exports/hex-checkpoint-20261013-7804/windows/PLAY-HEX.cmd) or
+[download the local Windows ZIP](../../exports/hex-checkpoint-20261013-7804/HEX-p61-7804a23eb300-Windows-x64.zip)
+(161,188,342 bytes; 153.7 MiB). These are local paths; binaries are excluded from
+Git. The [package evidence](delivery-7804/README.md) and delivery review identify
+the exact bytes. Preserve the immediately preceding
+[qualified `500be` portable](delivery-review-500be/review.json), its
+[launcher](../../exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd), commit
+`1068759`, the earlier `p60-1e084a50a029` build, original art, personal profiles
+and all failed evidence. Sustained foreground acceptance remains open and the
+last admitted measurement belongs to `500be`, not this newer portable.
+
+The integrated batch makes three bounded corrections:
+
+- Remapped F5/F6 and Shift shortcut hints follow the existing ownership rule and
+  retain the Menu fallback. The historical [prototype fit gate](remap-guide-hints/README.md)
+  passes 1,192 checks across 12 contexts and 36 PNGs; the integrated supported-remap and paid-input
+  regression now passes within the 58,488-assertion spell-tool suite.
+- Terminal confirmation eligibility is captured before victory observation, and
+  already-admitted finite audio tails can finish while the finished result is
+  the sole blocker. External focus, menu, rearm, spectator, mute and reset guards
+  remain. The [original paid reproduction](terminal-audio/README.md) passes 2,728
+  integrity checks and proves the premature stop; the separate
+  [prototype repair gate](terminal-audio/repair/README.md) passes 2,762 checks,
+  empty stderr and 34 source pins. Its two voices finish naturally after
+  331.832 ms without stop calls. The integrated unit matrix now passes within
+  the 26,898-assertion audio suite; the failed fixture attempts remain archived.
+- The tactical Sprint→Slide instruction now explicitly says **press and release
+  Jump**. Its [prototype guide-fit gate](tactical-jump-copy/README.md) passes 90
+  checks in four contexts. The integrated paired ordinary paid-gesture
+  regression passes within the 6,311-assertion signature-progression suite.
+
+The archived prototype receipts remain pinned to the exact sources they tested.
+Their fit, Dummy-audio lifecycle and prepared/native controls do not establish
+physical-input feel, listening comfort, full-boot behavior or performance for the
+new integrated source. T7 instrumentation, the bounded paid-startup witness with
+an honest unknown fallback, and the protection-only lower HUD row were already
+applied before this batch.
 
 The [prefix-key experiment](prefix-key-shape/README.md) and
-[crowded paid-ground trail preflight](trail-crowded/README.md) are **withdrawn**:
-correctness passed, but useful active-work savings did not survive order/tail
-controls. The [terminal coach probe](coach-terminal/README.md) did not reproduce
-the suspected terminal edge, so it establishes no coach defect and justifies no
-fix. The recent sustained foreground setup expired without Start and collected
-no gameplay; it does not replace the separate admitted `500be` diagnostic.
-
-The remapped-shortcut hint draft remains unapplied. Its
-[native menu/guide fit gate](remap-guide-hints/README.md) passes 1,192 checks across
-12 contexts and 36 PNGs with empty stderr. Source, hash and sampled visual
-review approve root integration after the frozen-source probes; the actual
-supported-remap/paid-input regression still requires execution after application.
-Next are root's functional gates for the ignored terminal-audio reproduction and
-seven-interval simulation attribution in
-[Technical's ledger](technical.md#next-diagnostic-prompt-split-movement-and-cast-work).
-Root has authorized these isolated diagnostics and the unapplied hint patch;
-canonical source stays frozen.
-No new cache, balance change or runtime edit is authorized by this document.
-Physical-input feel, listening, authored
-animation completeness and human counter recognition remain acceptance gaps,
-not automatically source defects. Root owns all engines/integration; Experience
-owns this ledger, with Gameplay correctness and Technical cost/lifecycle review.
+[crowded trail preflight](trail-crowded/README.md) remain **withdrawn**: useful
+active-work savings did not survive order and tail controls. The
+[terminal coach probe](coach-terminal/README.md) did not reproduce its suspected
+edge and justifies no fix. Recent sustained foreground setup timeouts collected
+no gameplay and do not replace the separate admitted `500be` diagnostic. The completed simulation-attribution evidence and its observer limits are recorded
+in [Technical's ledger](technical.md).
+No further rendering experiment is authorized without a user resume.
 
 The initial ranking, alternatives and implementation checkpoints below are
-**historical decision/evidence records**. Later executed results supersede their
-then-pending wording; they are retained to explain choices and failed attempts,
-not to reopen completed or rejected tasks.
+**historical decision/evidence records**. This current-state lead supersedes their
+then-pending wording without altering archived prototype claims. They explain
+choices and failed attempts; they do not reopen completed, rejected or deferred work.
 
 ## Historical initial ranking
 
@@ -969,7 +1013,8 @@ source review established only the proposal. Root subsequently authorized
 Technical to prepare its ignored helper; Experience will review exact timers and
 cleanup, and no execution or runtime change is implied.
 
-The ignored remap patch is now frozen and Gameplay source-approved at
+Historical source-review checkpoint, superseded for native fit by the current
+1,192-check archive linked above: the ignored remap patch was frozen and Gameplay source-approved at
 `93628c4843e11611f0420222d568c07ced1e635b9d9f483abdfac66869e9cc16`.
 Its three current canonical files remain byte-identical to the pinned `before/`
 copies, and an independent Python hunk reconstruction reproduces every proposed
@@ -983,8 +1028,40 @@ native fallback fit checks are all still pending. No canonical patch is applied.
 
 ## Bounded audio audit: terminal confirmation lifetime
 
-**One source-supported issue selected for a future paid reproduction; no audio
-code, assets or settings changed.** The ordinary audio path is deliberately
+**Current result: the paid native reproduction confirms the defect, and the
+ignored repair passes its separate native lifecycle gate. Canonical audio and
+gameplay are unchanged; combined integration and the proposed unit matrix are
+still pending.** The [exact archive](terminal-audio/README.md) preserves the successful
+2,728-check probe, all 30 watched inputs, both failed pre-encounter fixtures and
+the owned earned-save bytes. The actual WaBidi victory at tick 876 follows 13
+player and six rival paid admissions, with 98,000 owned loss and zero refusals;
+its final lethal event is a 260-point Burning pulse. Arcstorm Rapid (wire 1138)
+is genuinely earned and saved. Three inherited frozen callbacks retain the
+world, strict terminal packet and save. The confirmation is active at the
+recorded stop, 1,202 microseconds into its 220,000-microsecond clip. Synthetic
+notice-rearm controls separately establish the admission/stop policy; they are
+not additional earned victories. Dummy proves actual voice lifecycle, not
+listening comfort or physical focus.
+
+Root accepted the bounded proposed policy: allow already-admitted finite tails
+to finish only through an otherwise eligible actual offline result freeze,
+while every existing external blocker and READY phase still stop them. Sample
+admission eligibility before the trial becomes finished; consume denied reward
+notices once so regain never replays them. The ignored patch adds no mixer state,
+voices, sounds, authority fields or protocol changes. Both peers approved the
+exact source. The [repair archive](terminal-audio/repair/README.md) preserves
+2,762 passing checks, 34 verified source pins and empty stderr. Two actual voices
+remain active through the first frozen callbacks, then finish naturally at
+331,832 microseconds / 24 observations, with zero stop calls; six external
+controls deny new confirmation and retain no-replay behavior. The first repair
+fixture failed after its successful natural-expiry segment because it omitted
+SpectatorFocus; its complete failed evidence is preserved, and the only repair
+initializes that real owner. Alternate native controls are synthetic notice
+rearms, so the pending unit matrix must still distinguish prior blocking from
+the newly terminal transition. The remap patch touches other methods in the
+same controller; integration must preserve both reviewed changes.
+
+**Historical source audit and fixture chronology follow.** The ordinary audio path is deliberately
 local and non-positional. Bootstrap checks source ownership and visible contact
 targets before admission (`bootstrap.gd:1902–1940`); ElementAudio bounds playback
 to four voices and eight queued cues, coalesces duplicate keys and preserves
@@ -1060,3 +1137,111 @@ also records `last_error` and requires unchanged world state/hostile teams acros
 binding. It remains an ignored fixture correction awaiting a fresh root gate,
 not audio-defect evidence. Dummy-backed playing/stop calls cannot establish
 listening comfort, physical focus or full-boot behavior. No repair is applied.
+
+## Tactical Sprint→Slide instruction: unapplied consistency correction
+
+The independently available tactical lesson asks the player to release Jump
+without first asking for the press that creates jump preparation. The smallest
+draft inserts only **“press and ”** into the existing bound-key sentence.
+Gameplay reviewed the entry-state trace and exact one-literal patch
+`ed96d00e1fbd088d1704c27c03dbfbf094b15f14d067cfca47193c8e96bc7639`.
+The paired regression draft runs two ordinary 48-tick paid practice routes:
+release without a prior press must not invent a jump, while a fresh press and
+release must create the actual paid slide-jump and lesson progress. Every-step
+strict packets, conservation, shared-prefix equality and the neutral arm's
+resource-recovery control remain required. This is command semantics, not
+physical input evidence.
+
+Both peers approved the separate guide-only fit helper `81f07e0a…` and wrapper
+`b8da1d86…`: four default-keyboard contexts, 960×540 / 1280×720 at 100% / 200%,
+actual bound label, wrapping, draw path, panel/button bounds and world purity.
+The [executed native fit](tactical-jump-copy/README.md) passes **90 checks**, all
+15 source pins and all four image hashes, with empty stderr. Independent visual
+review of every image found the full instruction readable without clipping or
+button overlap. The proposed paid regression remains pending root integration.
+Remapped and controller labels, full HUD, movement animation and frame rate are
+outside that fit claim. The existing canonical movement guide already teaches the complete
+gesture; no new mechanic, control or explanatory UI is proposed.
+
+## Deferred source-only experiment: same-call occupied membership
+
+**Deferred on the user's stop request, before parser or engine execution.**
+The [compact archive](deferred-occupied-membership/README.md) preserves twelve
+exact input files (228,005 bytes), source pins and the separate review limits.
+Root had selected the repeated occupied-cell query/filter/sort between
+`_prepare_court(court, false)` and `_prepare_draw_bundle` as a bounded
+experiment. This is distinct from the withdrawn style cache and prefix-key
+shape. The approximately 1.74 ms containing bundle is not attributed cost for
+this operation; a benefit is still unproven.
+
+Both peers approved a conservative source contract. Only the exact presenter
+and court scripts, actual non-base draw and an already-NEAREST canvas filter
+can reuse the just-prepared selection. A changed filter keeps the old path
+because its setter can emit a synchronous property-list callback. The helper
+consumes a one-call actual-court ID before any downstream virtual work; no court
+reference, new geometry cache or cross-tick authority is retained. Direct calls,
+base/Range, generic/derived courts and derived presenters preserve the old
+query. Existing profiling subclasses therefore retain predecessor work, an
+explicit limit on any later isolated result.
+
+Experience's ignored candidate `22376c66…` and pristine 22-case driver
+`f211bdcd…` received Technical's exact transform/paid-route review; the
+conservative semantic contract received Gameplay review. Gameplay froze the
+separate compatibility driver at `ed6d912c…`, with pin manifest `76ce6722…`.
+Experience reviewed its final orphan-owner cleanup and source-pin recheck;
+Technical has not independently reread that final functional checkpoint.
+No runner wrapper was written. The intended timer includes the script/filter
+checks and scalar scope operations. The prepared compatibility cases include
+real setter callback mutation/reentry, same-value positive,
+direct/base/legacy/generic/derived and live-replacement controls; native
+reachability remains untested. The same previously reviewed ordinary paid routes, complete snapshots,
+actual alternating callbacks, both effects modes, phase/owner/zoom controls and
+first/final pixels remain in the timing driver. Any explicitly authorized future resumption must refresh dependencies after
+the UI integration, pass the separate functional gate and run both native
+process orders with all tails retained. The prototype must be withdrawn if its
+benefit is not repeatable or a control regresses. None of those gates ran. No
+production edit, observer-wide improvement or frame-rate claim is implied.
+
+## Deferred performance prompt: one existing mesh lookup
+
+**Proposal only; no candidate or canonical rendering edit is authorized here.**
+The current `_resident_outline_mesh` at `hex_court_presenter.gd:1592` checks
+`_outline_meshes.has(points)` and then retrieves `_outline_meshes[points]` on
+every hit. Both operations search the same existing PackedVector2Array key.
+The independently measured mesh helper was about 111–130 microseconds in the
+dense/Mantle controls; the inclusive outline parent was about 1.03–1.52 ms.
+Only the smaller helper is the relevant opportunity. This does not support a
+new geometry cache, changing key shape, or treating the whole outline cost as
+recoverable.
+
+The smallest exact-semantics experiment would retrieve a Variant once, then
+accept `retained != null or _outline_meshes.has(points)`, increment the same hit
+counter and return that same value through the existing typed return. Ordinary
+nonnull mesh hits avoid the second lookup. A missing or deliberately stored
+null entry still performs the existence test, preserving the current null-hit
+fallback and counters. Do not use `as ArrayMesh` to silently turn a wrong-type
+entry into a miss. Keep hit-before-validation order, the shared 512-entry cap,
+duplicated stored key, source-owned mesh/RID lifetime and all cold construction
+unchanged. Miss overhead could increase; this is a hypothesis to measure.
+
+Only if explicitly selected in a future resumed cycle would Experience own an
+ignored method-only prototype; Gameplay reviews null/owner/mutation and cap semantics; Technical
+reviews clocks, source transformation and order effects. Direct controls should
+cover cold miss, warm identity hit, a caller-mutated points array, a stored null,
+a still-resident hit after saturation and a rejected overflow. Preserve the
+typed-return contract by source equality rather than deliberately triggering
+engine errors in the clean gate. Reuse the already qualified 22 paid native
+cases, unchanged normal/reduced, phase, camera, owner and geometric controls.
+Both fresh process orders must compare pristine whole-draw calls, verified
+actual callback order, exact first/final pixels and source/authority/cache
+counters. Keep miss/warm classifications and all tails. Withdraw unless a
+repeatable whole-draw benefit survives these controls; neither a shorter source
+expression nor pixel equality establishes performance.
+
+Godot's [Dictionary reference](https://docs.godotengine.org/en/4.6/classes/class_dictionary.html#class-dictionary-method-get)
+documents the nullable `get` result and distinct presence query. Riot's
+[League profiling account](https://www.riotgames.com/en/news/profiling-real-world-performance-league)
+supports measuring the concrete workload and preserving appearance before
+accepting an optimization. Both were reopened October 13. Neither source
+predicts H.E.X.'s gain, and this does not revive the withdrawn prefix or broad
+metadata/style experiments.

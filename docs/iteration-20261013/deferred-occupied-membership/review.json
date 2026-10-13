@@ -1,0 +1,68 @@
+{
+  "schema": "hex.deferred-occupied-membership-review.v1",
+  "status": "DEFERRED_SOURCE_ONLY_UNAPPLIED_UNEXECUTED",
+  "reason": "User requested stopping at the next stable checkpoint; root deferred this experiment before parser or engine execution.",
+  "checkpoint": {
+    "build": "p61-500be306a26a",
+    "source_checkpoint_commit": "5e84ee4",
+    "canonical_presenter_sha256": "3190aa2683205bfdd1ebcc297e1002b3f3e624e4b59a61ecf64b76889733b92c",
+    "canonical_presenter_matches_preserved_before": true
+  },
+  "frozen_hashes": {
+    "candidate_court.gd": "22376c664780c244249dc0ed5285d67cd0d677e7f69151e594845dfa2a67da6a",
+    "compare-occupied-membership.gd": "f211bdcd9e70ebf5ad581c7606c63e0eac6a83aaf9dc74c9c9594832e98ddab1",
+    "verify-membership-contract.gd": "ed6d912cf6660bddfb2347b6714defc3f9d6ecf372d0e0957a2881ba193fabf8",
+    "functional-source-pins.json": "76ce67224280cf463edad262c2bc9a759cdd614b1874a381b2b6d14062bac7f9",
+    "hex_court_presenter.before.gd": "3190aa2683205bfdd1ebcc297e1002b3f3e624e4b59a61ecf64b76889733b92c"
+  },
+  "reviews": {
+    "candidate_and_pristine_timing_driver": {
+      "experience": "authored and source reviewed",
+      "technical": "exact transformations and paid-driver equivalence reviewed",
+      "gameplay": "conservative semantic contract reviewed; owns separate compatibility fixture",
+      "root": "conservative scope approved before stop request"
+    },
+    "functional_driver": {
+      "gameplay": "authored and frozen at ed6d912c",
+      "experience": "source-only review including final orphan-board cleanup and source-pin recheck; no identified blocker",
+      "technical": "final ed6d912c cleanup checkpoint not independently reread; no final functional-source approval claimed"
+    }
+  },
+  "executed": {
+    "parser": false,
+    "functional_native": false,
+    "paid_native_timing_forward": false,
+    "paid_native_timing_reverse": false,
+    "production_application": false
+  },
+  "wrapper": {
+    "exists": false,
+    "note": "Technical confirmed wrapper had not been written; no wrapper hash or partial implementation exists."
+  },
+  "intended_gates": {
+    "prepared_functional_cases": 10,
+    "functional_pngs": 22,
+    "functional_viewports_created_and_freed_expected": 18,
+    "paid_cases_per_process": 22,
+    "timed_cases_per_process": 12,
+    "measured_pairs_per_timed_case": 32,
+    "warmups_per_timed_case": 4,
+    "paid_pngs_per_process": 44,
+    "process_orders": 2
+  },
+  "limits": [
+    "All counts above are planned assertions, not completed results.",
+    "No measured saving, pixel equivalence, native callback reachability, lifecycle success or performance acceptance is claimed.",
+    "Candidate only reuses same-call occupied selection under exact presenter/court, nonbase and already-NEAREST guards; it adds no cross-tick cache.",
+    "Existing profiling presenter subclasses deliberately retain the predecessor path.",
+    "The containing bundle measurement does not establish the cost of the duplicated operation."
+  ],
+  "restore": {
+    "payload_count": 12,
+    "canonical_source_and_asset_pins_count": 65,
+    "pins_verified_here": "Only the five named frozen inputs and canonical renderer equality were rechecked for this compact archive; the 65-input manifest is preserved, not an executed receipt.",
+    "dependency_policy": "Canonical sources and assets are not duplicated. Recover them from the source checkpoint and verify every recorded hash. Restore ignored inputs to their source_path only in an explicitly authorized future cycle.",
+    "after_ui_integration": "Reconcile source pins against the newly qualified revision and repeat source reviews before any parsing. Do not weaken the exact predecessor or transform guards.",
+    "execution_policy": "Root must authorize resumption, provide a fresh owned-output wrapper, pass parser and native compatibility gates, then run both pristine paid timing orders. No automatic execution or promotion."
+  }
+}

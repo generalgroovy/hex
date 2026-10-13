@@ -1,0 +1,29 @@
+--- a/tests/unit/test_element_audio.gd
++++ b/tests/unit/test_element_audio.gd
+@@ -586,7 +586,7 @@
+ 	check(node._gameplay_input_blocked() and not node._audio_tails_blocked(true),"both aliases of finished trial are excluded only from audio stop")
+ 	var blocks: Array = [
+ 		[node,"terrain_loading",true], [node,"element_garden_arrival_pending",true],
+-		[node.local_navigation,"menu_open",true], [node.local_navigation.map_panel,"is_open",true], [node.local_navigation.performance_panel,"is_open",true],
++		[node.local_navigation,"menu_open",true], [node.local_navigation.map_panel.model,"is_open",true], [node.local_navigation.performance_panel,"is_open",true],
+ 		[node.element_expansion.panel,"is_open",true], [node,"solo_trial_menu_open",true], [node.service_directory,"is_open",true],
+ 		[node,"hex_playground_open",true], [node.hex_playground_demo,"_phase",HexPlaygroundDemo.PHASE_READY_FIRST],
+ 		[node,"application_input_active",false], [node,"join_address_editor_open",true],
+@@ -594,11 +594,15 @@
+ 		[node,"controls_input_guard_frames",2],
+ 	]
+ 	for row: Array in blocks:
++		var blocker_label := String(row[0].get_script().resource_path) + "." + String(row[1])
+ 		var old: Variant = row[0].get(row[1])
+ 		row[0].set(row[1],row[2])
+-		check(node._gameplay_input_blocked() and node._input_blocked(true) and node._audio_tails_blocked(true),"external blocker still stops result audio: "+String(row[1]))
++		equal(row[0].get(row[1]),row[2],"prepared blocker reaches its actual owner: "+blocker_label)
++		if row[0] == node.local_navigation.map_panel.model:
++			equal(node.local_navigation.map_panel.is_open,bool(row[2]),"map panel delegates the prepared model open state")
++		check(node._gameplay_input_blocked() and node._input_blocked(true) and node._audio_tails_blocked(true),"external blocker still stops result audio: "+blocker_label)
+ 		row[0].set(row[1],old)
+-		check(not node._audio_tails_blocked(true),"removing external block returns to finite-tail policy: "+String(row[1]))
++		check(not node._audio_tails_blocked(true),"removing external block returns to finite-tail policy: "+blocker_label)
+ 	node.session_transport.mode = SessionTransport.Mode.HOSTING
+ 	check(node._audio_tails_blocked(true),"non-offline terminal does not obtain frozen-result exception")
+ 	node.session_transport.mode = SessionTransport.Mode.CLIENT

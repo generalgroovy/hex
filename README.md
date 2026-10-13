@@ -1,35 +1,32 @@
 # H.E.X. — Help, Everything eXploded!
 
-Status: **active development, October 13, 2026; qualified local portable available.**
-Current source **p61-500be306a26a** on `codex/hex-screen-smoothness-20261011` includes complete-step
-diagnostics, truthful cast timing, same-step defeated-cast cleanup, compact HUD
-identity and bounded worker terrain validation. The earlier terrain slicing
-experiment was withdrawn after it lengthened arrival waits. The
-[active iteration](docs/iteration-20261013/README.md)
-records its passed focused/native checks and current source measurements.
-[Full](docs/iteration-20261013/full-500be/review.json) passes 265 suites /
-7,572,978 assertions with zero failures/stderr. The fresh package, archive and
-133-image terrain checks and five-case normal-close/reopen repeat pass.
-The [independent delivery review](docs/iteration-20261013/delivery-review-500be/review.json)
-reconciles 3,784 checks across the exact source, raw test logs and package bytes.
-The earlier failed lifecycle record is retained.
+Status: **paused at the qualified October 13, 2026 checkpoint, at the user's request.**
+Current source and local portable are **p61-7804a23eb300** on
+`codex/hex-screen-smoothness-20261011`. The closing batch fixes victory audio
+tails, remapped F5/F6 hints and the movement lesson's Jump press/release instruction.
+Earlier improvements include faster bounded projectiles, actual-path trails,
+paid defeat cleanup, compact HUD identity and bounded worker terrain validation.
 
-The latest qualified local Windows portable is **p61-500be306a26a**. Its source
-checkpoint is `5e84ee4` on the presentation branch; `main` is unchanged. The
-previous **p60-1e084a50a029** portable and its
-[qualification record](docs/iteration-20261012/README.md) remain preserved.
+[Full validation](docs/iteration-20261013/full-7804/README.md) passes
+**265 suites / 7,573,807 assertions**, with zero failures/error output and a
+120 Hz boot. The fresh package passes archive, exact exported-terrain and
+five-case normal-close/reopen checks. The
+[delivery review](docs/iteration-20261013/delivery-review-7804/review.json)
+links those results to the exact source and package bytes. The previous
+**p61-500be306a26a** portable remains preserved; `main` is unchanged.
 
-This checkpoint includes faster bounded projectiles, actual-path movement trails,
-readability and perk/damage fixes, and staged Element Garden preparation.
-The [current source foreground recording](docs/iteration-20261013/foreground-500be-allsteps/review.json)
-passes admission, with warm Garden/default Fire/Mantle p95 engine intervals of
-**24.743/28.217/39.999 ms**. Steady 60 FPS is not established. This diagnostic
-includes observer overhead and differs from the earlier sustained-casting route;
-it is not a matched improvement claim or a portable performance measurement.
-The sustained follow-up expired before Start and remains an open gate.
-Previous working portables and failed evidence remain preserved. The
-[single queue](.agent/OVERHAUL-IMPLEMENTATION.md) and [resume](.agent/HEX-RESUME.md)
-record remaining work. Each receipt qualifies only its recorded source or package.
+Smooth 60 FPS remains an open goal. The
+[last admitted foreground recording](docs/iteration-20261013/foreground-500be-allsteps/review.json)
+belongs to **500be**, with Garden/default Fire/Mantle p95 engine intervals of
+24.743/28.217/39.999 ms. It includes observer overhead and is not a matched
+speedup or a performance measurement of this newer portable. Both sustained
+follow-ups expired before Start and measured no gameplay.
+
+The [iteration record](docs/iteration-20261013/README.md),
+[single queue](.agent/OVERHAUL-IMPLEMENTATION.md) and
+[resume handoff](.agent/HEX-RESUME.md) record completed, withdrawn and deferred
+work. No new audit, experiment or foreground run is active. User saves, original
+art, older working builds and useful failed evidence remain preserved.
 
 A movement-led elemental combat sandbox in Godot. Move and aim independently,
 build a twelve-slot spell weave, combine finite elemental effects, and learn a
@@ -68,55 +65,31 @@ For an independent portable, install matching Windows export templates and run
 `.\hex.cmd package -PixelCast`. Each run creates a fresh folder under `exports/`.
 See [development and verification](docs/DEVELOPMENT.md) for checks and packaging.
 
-The latest qualified local portable is **p61-500be306a26a**:
+The qualified local portable is **p61-7804a23eb300**:
 
-- [Launch H.E.X.](exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd)
-- [Windows x64 ZIP](exports/hex-iteration-20261013-500be/HEX-p61-500be306a26a-Windows-x64.zip) — **153.7 MiB** (161,186,435 bytes). Extract the ZIP before launching.
+- [Launch H.E.X.](exports/hex-checkpoint-20261013-7804/windows/PLAY-HEX.cmd)
+- [Windows x64 ZIP](exports/hex-checkpoint-20261013-7804/HEX-p61-7804a23eb300-Windows-x64.zip) — **153.7 MiB** (161,188,342 bytes). Extract before launching.
 
-The [package receipt](docs/iteration-20261013/delivery-500be/package.json) and
-[delivery checks](docs/iteration-20261013/delivery-500be/delivery-files.json) verify the
-export/archive identities. The [terrain check](docs/iteration-20261013/delivery-500be/terrain/terrain-pack.json)
-verified 133 exact images with 2,064 checks. The
-[portable lifecycle check](docs/iteration-20261013/portable-lifecycle-500be-passed-b/receipt.json)
-passed five cases with normal window closes and empty stderr, retaining the same
-isolated preferences and unchanged package. Fire and all-six Mantle each completed
-12 accepted paid casts with no refusals. These checks do not establish smooth frame
-times, physical input, competitive balance or installer acceptance.
+The [package and archive evidence](docs/iteration-20261013/delivery-7804/README.md)
+verifies the export and all 18 archive checks. Exported terrain passes 2,064
+checks over 133 exact images. The five-case lifecycle run covers Hearth,
+Garden, paid Fire, paid all-six Mantle and reopening with unchanged isolated
+preferences. Fire and Mantle each complete twelve accepted casts with no
+refusals or extra outcomes. These gates establish their recorded lifecycle and
+content checks; frame pacing and human gameplay acceptance remain separate.
 
-The prior **p60-1e084a50a029** portable remains available through its
-[launcher](exports/hex-iteration-20261012/windows/PLAY-HEX.cmd) and
-[qualification record](docs/iteration-20261012/README.md).
-
-The preceding **p60-be680e20d70e** portable remains available through its
-[launcher](exports/hex-smoothness-20261012/windows/PLAY-HEX.cmd) and
-[qualification record](docs/smoothness-20261012/README.md).
-
-The qualified comprehensive build **p60-845f85b5253e** remains available through
-its [launcher](exports/hex-comprehensive-20261012/windows/PLAY-HEX.cmd) or
-[ZIP](exports/hex-comprehensive-20261012/HEX-p60-845f85b5253e-Windows-x64.zip)
-(161,146,185 bytes), with its own [qualification record](docs/implementation-20261012/README.md).
-
-The preserved d8 audit portable is a historical fallback at
-`exports/hex-audit-overhaul-20261011/windows/PLAY-HEX.cmd`; its ZIP is
-`exports/hex-audit-overhaul-20261011/HEX-p60-d8e6ea1cd808-Windows-x64.zip`
-(153.6 MiB, **p60-d8e6ea1cd808**). Full passed 251 suites / 7,081,662 assertions;
-the actual export passed archive, terrain, startup and normal-close checks.
-Heavy casting still falls below 60 FPS in the recorded finite release cases;
-see the [measurement limits](docs/audit-implementation-20261011/native-performance.md).
-
-The qualified October 10 portable is preserved at
-`exports/hex-smooth-fields-20261010/windows/PLAY-HEX.cmd`; its ZIP is
-`exports/hex-smooth-fields-20261010/HEX-p60-be3efd332e1a-Windows-x64.zip`
-(153.5 MiB). These are local artifact paths, not GitHub download links. Earlier
-d649 performance, October 9 expansion and p59 animation builds remain local
-fallbacks with their original evidence.
+The previous **p61-500be306a26a** remains available through its
+[launcher](exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd) and
+[qualification](docs/iteration-20261013/delivery-review-500be/review.json).
+The [documentation map](docs/README.md) links older preserved builds.
+These are local artifact paths, not GitHub downloads.
 
 The portable needs no Git, Godot installation or administrator permission.
 Keep `hex.exe` and `hex.pck` together. The launcher enables the reviewed pixel
 presentation; opening the EXE directly retains skeleton mode. In the current
-candidate, **1280×720** offers the wider spell overview. At **960×540**, supported reading panels
-reflow. The October 12 source and portable include a 200% reading size and separate
-movement/aim deadzones; those changes are not contained in the preserved d8 portable.
+build, **1280×720** offers the wider spell overview. At **960×540**, supported
+reading panels reflow. A 200% reading size and separate movement/aim deadzones
+are available in Controls.
 
 Extract each version into its own folder. Saved controls and personal weaves
 use the compatible `Godot/app_userdata/FLUX 2` location. Older elemental weaves
@@ -124,6 +97,9 @@ receive a slot-by-slot migration preview; Apply preserves the original-file
 backup, while inspection or cancellation does not replace saved data.
 
 ## Start with five minutes
+
+Shortcuts below are defaults. If you remap F5 or F6 to gameplay, use the Menu
+route shown by the guide; the game hides convenience hints that no longer work.
 
 1. Choose **Introduction / F5**. Move, release a prepared jump, pay for a cast,
    watch Flux recover, then try a mixture. **Skip guide / F5** ends it at any time.

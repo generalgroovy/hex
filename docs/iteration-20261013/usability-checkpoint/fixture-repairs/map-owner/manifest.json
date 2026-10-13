@@ -1,0 +1,34 @@
+{
+  "schema": "hex.audio-map-owner-fixture-repair.v1",
+  "status": "UNAPPLIED_TEST_ONLY_SOURCE_REVIEW_PENDING",
+  "runtime_source": "p61-7804a23eb300",
+  "file": {
+    "path": "tests/unit/test_element_audio.gd",
+    "before_sha256": "13a955fdd6dd2222bd9db962debc0d08c70f6b1026f19801d5e32687c28e35ca",
+    "proposed_sha256": "2538bc57115f2d84f418181fe24d94f98e0be6f165c3529c1ad3c88be920902c",
+    "newline": "CRLF"
+  },
+  "patch_sha256": "a99c7e19fea03630ea6e53010f895449f01c49a206de3fde64a723667d43c18a",
+  "failure_receipt": {
+    "path": ".godot/iteration-20261013/ui-integration/focused-b.json",
+    "sha256": "c72a9d4c1b4a9e0179011e8580144c4acfcab4b632aec9a2276b0579efc29b36"
+  },
+  "original_failed_session": ".godot/windows-tests/7e7acf0a39b64a05a1f3d0cac66a88db",
+  "source_pins": {
+    "src/presentation/wellspring_map_panel.gd": "31bda44e1ba1f20d8ac3ab990cc94ea1b2a106ef682ed227832c68460a9f857f",
+    "src/app/wellspring_map_model.gd": "dc39030e559bf12704f59399b37d660e526328502cbf6281a9bbfb9ff6909732",
+    "src/app/local_navigation_controller.gd": "3de822cf2aa8c6e453183bf51dac147c12110026c7cd581c53a8829a1a36cc59",
+    "tests/support/element_audio_harness.gd": "ed0833005e6985f47c53176d4f25141bda53aa9fff1edf5d0d7dbc5d651681d2",
+    "src/app/bootstrap.gd": "e1cb562cf19813f02be52f8b57902f0cff4742b9a811d2924e184491b85038a5"
+  },
+  "scope": [
+    "Map panel is_open is getter-only; write the actual model-owned prepared field.",
+    "Add actual owner and delegated wrapper readback before unchanged blocker assertions.",
+    "Use unique script-path/property labels; preserve restoring every owner and all admission/authority assertions."
+  ],
+  "executed": {
+    "canonical_edit": false,
+    "engine": false,
+    "parser": false
+  }
+}

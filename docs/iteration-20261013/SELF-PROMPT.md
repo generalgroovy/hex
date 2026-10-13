@@ -1,5 +1,12 @@
 # October 13 iterative implementation brief
 
+**Status: PAUSED at the requested stable checkpoint after qualification and documentation.**
+Closing source p61-7804a23eb300 passes Full and fresh delivery. The contiguous
+timing set and reviewed audio/remap/tactical batch are complete. Further work
+requires a user resume. The unexecuted occupied-membership proposal and further
+audits are deferred. The original brief below records the completed cycle;
+its quota target and historical task assignments do not authorize restarting.
+
 The user explicitly resumed the all-aspects audit and implementation cycle.
 Start from clean commit 106875954a8b7f11710961c3a6d425e71798b77d and preserve
 qualified runtime p60-1e084a50a029 and its portable. Entry included usage is
@@ -47,7 +54,7 @@ Agents may prepare disjoint code/probes; root alone runs engines and integrates.
 ## Iteration procedure
 
 T7 is applied and its paid authority, zero/one/eight-step accounting, native
-lifecycle and opposite-order observer-cost checks have passed. Current source
+lifecycle and opposite-order observer-cost checks have passed. Then-qualified source
 p61-500be306a26a also has a qualified manual-start foreground record with complete
 step accounting. Preserve the raw measurement and observer limits; do not repeat
 the implementation or confuse instrumentation with an FPS improvement.
@@ -61,7 +68,7 @@ the rejected broad Court cache or default retained campus without new evidence.
 The startup witness, same-step defeated-cast cleanup, bounded worker terrain
 validation and redundant idle HUD name removal are integrated. Coherent source
 p61-500be306a26a now passes Full and all fresh package/lifecycle gates; 3,784
-independent review checks link the raw evidence. It is the current local play
+independent review checks link the raw evidence. It was the then-current local play
 link, with the previous build preserved. The single queue owns exact gate state.
 
 The completed review ring withdrew both crowded trail preflight and smaller
@@ -70,7 +77,7 @@ optional-coach probe did not reach its terminal scenario and justified no fix.
 Production worker routes and current foreground attribution are independently
 archived. Preserve these decisions; do not repeat their original task prompts.
 
-The next ring is deliberately bounded:
+The completed ring was deliberately bounded (historical brief, not a new queue):
 
 1. Root: preserve the passed Full/package/archive/terrain/shared-profile
    qualification on p61-500be306a26a and pushed source checkpoint 5e84ee4.
@@ -91,9 +98,9 @@ The next ring is deliberately bounded:
    missing human/device acceptance from a code defect. Record counterevidence and
    stop weak hypotheses before they expand scope.
 
-Prefer concrete correctness, readability and teaching fixes over feature growth.
-Reassess all-domain priorities after each integrated slice. Full qualification
-is reserved for coherent freezes, not repeated after every small edit.
+The ring completed the remap, audio and tactical instruction integration,
+all six timing runs, coherent Full/delivery qualification and documentation. Future work requires a user
+resume and starts from the single queue, not these historical instructions.
 
 ## Operating and evidence boundaries
 

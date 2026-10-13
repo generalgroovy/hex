@@ -3,6 +3,7 @@ extends FluxTestSuite
 const Elements = preload("res://src/content/element_rules.gd")
 const Audio = preload("res://src/presentation/element_audio.gd")
 const Harness = preload("res://tests/support/element_audio_harness.gd")
+const SoloDuelTrial = preload("res://src/app/solo_duel_trial.gd")
 const CONTACTS := {"bolt": "projectile_hit", "spray": "spray_hit", "field": "field_triggered", "beam": "beam_fired"}
 const LIVE_CONTACTS := {"bolt": "projectile_hit", "heavy": "projectile_hit", "rapid": "projectile_hit", "spray": "spray_hit"}
 var catalog := AbilityCatalog.new()
@@ -18,6 +19,7 @@ func run() -> int:
 	_test_playback_clock_occupancy()
 	_test_owned_voice_cleanup()
 	_test_inherited_bootstrap_gates()
+	_test_result_audio_policy()
 	_test_controls_header_and_sound_input()
 	_test_real_paid_casts_and_contacts()
 	_test_consequence_bank()
@@ -556,3 +558,90 @@ func _test_real_paid_casts_and_contacts() -> void:
 			check(saw_start and saw_contact, "%s/%s obtains both real startup and target confirmation" % [element, family])
 			check(node.element_audio.players.is_empty(), "real gameplay evidence uses no playback device")
 			node.cleanup_fixture()
+
+
+class PreparedAudioResult:
+	extends "res://src/app/signature_challenge_session.gd"
+	# Eligibility-only branch fixture. The native gate supplies the paid victory.
+	func observe(_world: SimWorld, _progression: SignatureProgression, _offline: bool, _developer_active: bool = false) -> bool:
+		trial.phase = Trial.VICTORY
+		reward = {"ok":true,"saved":true,"notice":"Prepared audio eligibility result."}
+		return true
+
+
+func _test_result_audio_policy() -> void:
+	var node := Harness.new()
+	check(node.configure_fixture(catalog,cached_clips),"result policy uses actual inherited Bootstrap blockers")
+	node.element_expansion.game = node
+	node.interception_practice_active = true
+	node.element_expansion.challenge_active = true
+	node.solo_trial = node.element_expansion.challenge.trial
+	var initial_hash := node.world.state_hash()
+	for phase: String in [SoloDuelTrial.IDLE,SoloDuelTrial.READY,SoloDuelTrial.ACTIVE,SoloDuelTrial.VICTORY,SoloDuelTrial.DEFEATED,SoloDuelTrial.TIMEOUT,SoloDuelTrial.LEFT_COURT,SoloDuelTrial.UNAVAILABLE]:
+		node.solo_trial.phase = phase # Explicit prepared presentation phase, not earned authority.
+		var expected_block := phase not in [SoloDuelTrial.IDLE,SoloDuelTrial.ACTIVE]
+		equal(node._gameplay_input_blocked(),expected_block,"all original trial phases retain gameplay blocking: "+phase)
+		equal(node._audio_tails_blocked(node._gameplay_input_blocked()),phase==SoloDuelTrial.READY,"only actual finished offline result may preserve existing tails: "+phase)
+	node.solo_trial.phase = SoloDuelTrial.VICTORY
+	check(node._gameplay_input_blocked() and not node._audio_tails_blocked(true),"both aliases of finished trial are excluded only from audio stop")
+	var blocks: Array = [
+		[node,"terrain_loading",true], [node,"element_garden_arrival_pending",true],
+		[node.local_navigation,"menu_open",true], [node.local_navigation.map_panel.model,"is_open",true], [node.local_navigation.performance_panel,"is_open",true],
+		[node.element_expansion.panel,"is_open",true], [node,"solo_trial_menu_open",true], [node.service_directory,"is_open",true],
+		[node,"hex_playground_open",true], [node.hex_playground_demo,"_phase",HexPlaygroundDemo.PHASE_READY_FIRST],
+		[node,"application_input_active",false], [node,"join_address_editor_open",true],
+		[node.controls_editor,"is_open",true], [node.spell_loom_editor,"is_open",true], [node.player_compendium,"is_open",true], [node.character_selection_grid,"is_open",true],
+		[node,"controls_input_guard_frames",2],
+	]
+	for row: Array in blocks:
+		var blocker_label := String(row[0].get_script().resource_path) + "." + String(row[1])
+		var old: Variant = row[0].get(row[1])
+		row[0].set(row[1],row[2])
+		equal(row[0].get(row[1]),row[2],"prepared blocker reaches its actual owner: "+blocker_label)
+		if row[0] == node.local_navigation.map_panel.model:
+			equal(node.local_navigation.map_panel.is_open,bool(row[2]),"map panel delegates the prepared model open state")
+		check(node._gameplay_input_blocked() and node._input_blocked(true) and node._audio_tails_blocked(true),"external blocker still stops result audio: "+blocker_label)
+		row[0].set(row[1],old)
+		check(not node._audio_tails_blocked(true),"removing external block returns to finite-tail policy: "+blocker_label)
+	node.session_transport.mode = SessionTransport.Mode.HOSTING
+	check(node._audio_tails_blocked(true),"non-offline terminal does not obtain frozen-result exception")
+	node.session_transport.mode = SessionTransport.Mode.CLIENT
+	node.session_transport.accepted = true
+	node.spectator_focus.active = true
+	node.spectator_focus.focus_entity_id = 1
+	check(node._is_spectating() and node._audio_tails_blocked(false),"spectator stops voices even without an input block")
+	node.spectator_focus.reset()
+	node.session_transport.mode = SessionTransport.Mode.OFFLINE
+	node.interception_practice_active = false
+	check(node._audio_tails_blocked(true),"inactive trial cannot grant an audio exception")
+	node.interception_practice_active = true
+	# Fresh synthetic pre-observe eligibility per branch; native reproduction
+	# independently supplies a genuine full-health paid victory and saved reward.
+	for mode: String in ["eligible","focus","menu","guard","spectator","muted"]:
+		var challenge := PreparedAudioResult.new()
+		challenge.trial.phase = SoloDuelTrial.ACTIVE
+		node.element_expansion.challenge = challenge
+		node.solo_trial = challenge.trial
+		node.element_expansion._last_reward = ""
+		node.application_input_active = mode!="focus"
+		node.local_navigation.menu_open = mode=="menu"
+		node.controls_input_guard_frames = 2 if mode=="guard" else 0
+		node.session_transport.mode = SessionTransport.Mode.CLIENT if mode=="spectator" else SessionTransport.Mode.OFFLINE
+		node.spectator_focus.active = mode=="spectator"
+		node.spectator_focus.focus_entity_id = 1
+		node.element_audio.silence()
+		node.element_audio.set_volume(0 if mode=="muted" else 30)
+		var admitted_before: int = node.element_audio.admitted_count
+		node.element_expansion.after_step()
+		equal(node.element_audio.admitted_count-admitted_before,1 if mode=="eligible" else 0,"pre-observe eligibility governs confirmation: "+mode)
+		check(not node.element_expansion._last_reward.is_empty(),"denied notice is still consumed: "+mode)
+		node.application_input_active = true
+		node.local_navigation.menu_open = false
+		node.controls_input_guard_frames = 0
+		node.session_transport.mode = SessionTransport.Mode.OFFLINE
+		node.spectator_focus.reset()
+		node.element_audio.set_volume(30)
+		node.element_expansion.after_step()
+		equal(node.element_audio.admitted_count-admitted_before,1 if mode=="eligible" else 0,"regain does not replay consumed terminal notice: "+mode)
+	equal(node.world.state_hash(),initial_hash,"all prepared presentation-policy controls preserve simulation state")
+	node.cleanup_fixture()

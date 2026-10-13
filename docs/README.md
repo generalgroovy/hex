@@ -1,30 +1,30 @@
 # H.E.X. documentation map
 
-Status: **active development, October 13, 2026**, on
-codex/hex-screen-smoothness-20261011. The [active iteration](iteration-20261013/README.md)
-owns current source and qualified portable **p61-500be306a26a**. Full, fresh
-package/archive, exported terrain and the normal-close lifecycle repeat pass.
-The [independent review](iteration-20261013/delivery-review-500be/review.json)
-reconciles 3,784 checks, including 265 Full suites / 7,572,978 assertions with
-zero failures/stderr and 120 Hz boot. The sustained foreground stress gate stays
-open; its last setup expired without Start. The earlier **p60-1e084a50a029**
-[portable and qualification](iteration-20261012/README.md) remain preserved.
+Status: **paused at the qualified October 13 checkpoint**, on
+`codex/hex-screen-smoothness-20261011`. Current source and local portable are
+**p61-7804a23eb300**. [Full](iteration-20261013/full-7804/README.md) passes
+265 suites / 7,573,807 assertions, zero failures/error output and 120 Hz boot.
+The [fresh delivery record](iteration-20261013/delivery-7804/README.md) and
+[independent review](iteration-20261013/delivery-review-7804/review.json)
+link package/archive, 133-image terrain and five-case lifecycle checks.
 
-Use the [current launcher](../exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd)
-or [Windows x64 ZIP](../exports/hex-iteration-20261013-500be/HEX-p61-500be306a26a-Windows-x64.zip)
-(161,186,435 bytes; 153.7 MiB). These local binaries are excluded from Git.
-The [foreground record](iteration-20261013/foreground-500be-allsteps/review.json) passes
-admission but does not establish sustained 60 FPS. The
+Use the [current launcher](../exports/hex-checkpoint-20261013-7804/windows/PLAY-HEX.cmd)
+or [Windows x64 ZIP](../exports/hex-checkpoint-20261013-7804/HEX-p61-7804a23eb300-Windows-x64.zip)
+(161,188,342 bytes; 153.7 MiB). Local binaries are excluded from Git.
+The [500be fallback](../exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd)
+and [qualification](iteration-20261013/delivery-review-500be/review.json) remain.
+
+The [500be foreground record](iteration-20261013/foreground-500be-allsteps/review.json)
+belongs to that older source and does not establish steady 60 FPS. The
 [resume](../.agent/HEX-RESUME.md) owns exact identities; the
 [single queue](../.agent/OVERHAUL-IMPLEMENTATION.md) owns deferred work.
-The [T7 patch archive](iteration-20261012/deferred-t7/README.md) preserves the reviewed
-proposal now applied to the qualified p61 portable; it is outside the p60 fallback.
+Implementation is paused; further audits and experiments require a user resume.
 
-Previous [be680](smoothness-20261012/README.md),
+Earlier [1e084](iteration-20261012/README.md),
+[be680](smoothness-20261012/README.md),
 [845f](implementation-20261012/README.md) and
-[d8](audit-implementation-20261011/README.md) records and portables are preserved.
-Their checks qualify their original bytes. The 845f record owns its 196 UI
-captures; current Garden/animation comparisons have their own narrower scope.
+[d8](audit-implementation-20261011/README.md) records and portables remain
+preserved. Their checks qualify their original bytes.
 
 Start with the document that owns your question. The repository retains older
 designs, experiments and release receipts, but they do not override the current
@@ -37,7 +37,7 @@ contract or qualify a newer build.
 | Earlier presentation implementation, cross-reviews and recorded checks | [October 11 presentation checkpoint](presentation-checkpoint-20261011/README.md) |
 | Run from source, build, and local portable paths | [Project README](../README.md); [development guide](DEVELOPMENT.md) |
 | Source publication and repository cleanup | [October 11 publication record](source-publication-20261011/README.md) |
-| Current performance qualification and earlier measurements | [Current source foreground review](iteration-20261013/foreground-500be-allsteps/review.json); [current attribution and limits](iteration-20261013/technical.md); [prior portable source record](iteration-20261012/foreground-current-record.json); [preceding measurements](smoothness-20261012/performance.md); [historical diagnosis](performance-assessment-20261010/assessment.md) |
+| Performance qualification and earlier measurements | [Last admitted 500be foreground review](iteration-20261013/foreground-500be-allsteps/review.json); [attribution and limits](iteration-20261013/technical.md); [prior portable source record](iteration-20261012/foreground-current-record.json); [preceding measurements](smoothness-20261012/performance.md); [historical diagnosis](performance-assessment-20261010/assessment.md) |
 | Controls, first session, mixtures, learning and testing | [Player guide](PLAYER-GUIDE.md) |
 | Larger world, compact Menu and thirteen travel destinations | [Player guide](PLAYER-GUIDE.md#find-a-place-and-travel); [map decisions](large-wellspring-evidence-20261009/map-overview.md); [layout](large-wellspring-evidence-20261009/layout-design.md); [environment](large-wellspring-evidence-20261009/environment.md) |
 | Physical ground fields for every ingredient set | [Visit the Element Garden](PLAYER-GUIDE.md#walk-the-element-garden); [garden design and evidence](large-wellspring-evidence-20261009/element-garden.md) |
@@ -103,7 +103,7 @@ it is **not a clean Full rerun**. Its Linux native fixtures establish their
 sampled rendering only. The preserved d8 audit has separate Windows native UI,
 character and gameplay measurements in its [record](audit-implementation-20261011/README.md).
 The [October 12 implementation record](implementation-20261012/README.md) owns
-current source checks and qualification. Clean Full and final focused/native UI
+its historical source checks and qualification. Clean Full and final focused/native UI
 checks and separate package/terrain/lifecycle gates passed for `p60-845f85b5253e`.
 The lifecycle fixture retained the same isolated preferences, recorded five normal
 closes with empty stderr, and accepted 12 paid Fire and 12 paid all-six Mantle

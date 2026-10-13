@@ -1,32 +1,21 @@
 # H.E.X. current design contract
 
-Status: **active October 13 development; qualified local portable p61-500be306a26a.**
-The [active iteration](docs/iteration-20261013/README.md) owns current checks.
-The latest qualified local portable is **p61-500be306a26a**. Its clean
-[Full run](docs/iteration-20261013/full-500be/review.json) passed 265 suites /
-7,572,978 assertions with zero failures/stderr and the 120 Hz boot check.
-The [independent delivery review](docs/iteration-20261013/delivery-review-500be/review.json)
-links the matching package/archive, 133-image terrain and five-case normal-close
-lifecycle evidence. Use the [launcher](exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd)
-or [Windows x64 ZIP](exports/hex-iteration-20261013-500be/HEX-p61-500be306a26a-Windows-x64.zip)
-(161,186,435 bytes; 153.7 MiB). The prior p60-1e084a50a029 build remains preserved.
+Status: **paused at the qualified October 13 checkpoint, p61-7804a23eb300.**
+The [iteration](docs/iteration-20261013/README.md) owns implementation and checks.
+The closing batch repairs victory audio tails, remapped hints and Jump teaching.
+[Full](docs/iteration-20261013/full-7804/README.md) passes 265 suites / 7,573,807
+assertions with zero failures/error output and 120 Hz boot. The
+[delivery review](docs/iteration-20261013/delivery-review-7804/review.json) links
+the matching package/archive, 133-image terrain and five-case lifecycle checks.
+Use the [launcher](exports/hex-checkpoint-20261013-7804/windows/PLAY-HEX.cmd);
+the prior 500be portable and all older working builds remain preserved.
 
-The [foreground record](docs/iteration-20261013/foreground-500be-allsteps/review.json)
-passes manual Start, sampled focus, client-size and unchanged-source checks.
-Warm Garden/default Fire/Mantle p95 engine intervals are 24.743/28.217/39.999 ms.
-The workload differs from the earlier sustained Fire route, so this is not a
-matched speedup. Steady 60 FPS and human gameplay acceptance remain open. The
-reviewed [T7 diagnostics](docs/iteration-20261012/deferred-t7) are applied to p61,
-with focused and native observer-cost checks; they remain outside the
-preserved p60 portable.
-
-The [be680 fallback](exports/hex-smoothness-20261012/windows/PLAY-HEX.cmd) and its
-[smoothness record](docs/smoothness-20261012/README.md) remain preserved, alongside
-p60-845f85b5253e, p60-d8e6ea1cd808 and p60-be3efd332e1a. The earlier 845f build's
-196 UI captures belong to its [comprehensive record](docs/implementation-20261012/README.md).
-The earlier [presentation checkpoint](docs/presentation-checkpoint-20261011/README.md)
-also remains historical. Evidence qualifies its recorded bytes. The [resume](.agent/HEX-RESUME.md)
-owns exact source/package identity and remaining acceptance.
+The [last admitted foreground record](docs/iteration-20261013/foreground-500be-allsteps/review.json)
+belongs to 500be: Garden/default Fire/Mantle p95 engine intervals are
+24.743/28.217/39.999 ms. Its workload differs from earlier sustained Fire, so it
+does not establish a matched speedup. Newer builds require their own measurement.
+Steady 60 FPS and human gameplay acceptance remain open. The
+[resume](.agent/HEX-RESUME.md) owns exact source/package identity and limits.
 
 H.E.X. (Help, Everything eXploded!) is a movement-led, top-down elemental combat
 sandbox for Windows. Its depth comes from movement execution, finite resources,
@@ -54,7 +43,7 @@ The [player guide](docs/PLAYER-GUIDE.md), [roster](docs/CURRENT-CAST.md) and
 | Chemistry | 63 bounded reactions: six self-pairs and every distinct subset of two through six elements; stationary whole-hex impact fields |
 | Grid | 24 px face-to-face; 59,466 eligible Wellspring cells; topology cap 65,536 and selection cap 511; unchanged 64 paid casts / 32 products |
 | Wire | Protocol 61 / SessionSnapshot 24 / SessionRound 2 / HexWorldSnapshot 5 / HexChemistrySnapshot 5; protocol 61 clears defeated actors' unfired reservations in the same completed Hex step as paid-source retirement |
-| Delivery | Current p61-500be306a26a passes Full, package/archive, terrain and five-case portable lifecycle checks. Preserved p60-1e084a50a029 retains its own qualification. Current source foreground timing is admitted for the default workloads; sustained stress, steady 60 FPS, installer and publication remain unqualified. Exact evidence lives in the resume |
+| Delivery | Current p61-7804a23eb300 passes Full, package/archive, exact exported terrain and five-case portable lifecycle checks. Previous working builds remain preserved. The last admitted foreground timing belongs to 500be and covers default workloads only; sustained stress, steady 60 FPS, installer and binary publication remain unqualified. Exact evidence lives in the resume |
 
 The October 11 presentation revision expands the character-centered 360-degree
 view to cover every viewport corner, including camera lead, world edges and
@@ -633,6 +622,11 @@ information, while the existing fan, element color and impact art own identity.
 Local sound is feedback, not another sensor: confirmed eligible on-screen
 contacts and local casts, four bounded voices, controlled peak and reusable
 clips; mute, focus loss, menus and exit silence it. Volume defaults to 30%.
+An otherwise eligible offline victory may let its already-admitted finite
+confirmation and contact tails finish through the result freeze. Eligibility
+is captured before the result adds its own blocker; other menus, loading,
+READY, spectator, focus loss, mute and reset retain their stop behavior.
+Denied confirmation notices are consumed and cannot replay on return.
 Listening comfort, low-resolution readability and accessibility remain separate
 acceptance gates; the custom-drawn UI is not certified screen-reader accessible.
 
@@ -737,14 +731,16 @@ The [smoothness measurements](docs/smoothness-20261012/performance.md) preserve
 the qualified 845f baseline and intermediate 46fca full/light-observer runs.
 The slower isolated ground-rendering experiment was withdrawn. The subsequent
 be680 build passed its own Full/package gates, while its foreground attempt
-expired before Start and recorded no gameplay. The current
+expired before Start and recorded no gameplay. The preserved
 [1e084 foreground record](docs/iteration-20261012/foreground-current-record.json)
 is admitted on its exact source; its warm intervals still exceed the 60 FPS
 budget. Full-observer and light-observer intervals remain distinct, and only
 matched workloads support comparisons. Retained campus drawing stays opt-in
 through `--retained-campus`; moving-Garden measurements rejected its promotion
-to the default. The [iteration record](docs/iteration-20261012/README.md) separates
-arrival peak reduction from total CPU cost and records remaining acceptance.
+to the default. The [October 12 record](docs/iteration-20261012/README.md) separates
+arrival peak reduction from total CPU cost. The
+[October 13 record](docs/iteration-20261013/README.md) owns current qualification
+and remaining acceptance.
 
 Measure setup, memory, complete capture/encoding/application and p95/p99/cold
 tails under real paid loads. A faster helper, correct headless simulation or

@@ -1,0 +1,152 @@
+{
+  "schema": "hex.usability-checkpoint-review.v1",
+  "status": "INTEGRATED_AFFECTED_SUITES_PASS_FULL_AND_DELIVERY_PENDING",
+  "runtime_identity": {
+    "schema_version": 1,
+    "status": "candidate_generated_not_promoted",
+    "scope_id": "production-runtime-source-v1",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "protocol_version": 61,
+    "snapshot_schema": 24,
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "record_count": 3444,
+    "runtime_source_sha256": "7804a23eb300582ede154ca1083664f6c4200a51fa6539c6ddb2810068972120",
+    "build_id": "p61-7804a23eb300",
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate."
+  },
+  "application": {
+    "receipt_sha256": "fa350a7ca0120df8c1911626b0ac5ec9d9348659bad182a55855c66c83beaa06",
+    "manifest_sha256": "41bfb21ea5e832c744cf1880a90c2804af654c00e77e9ff0099dff57cd4deeca",
+    "exact_applied_files": 7,
+    "preserved_newline_conventions": true
+  },
+  "test_only_repairs": [
+    {
+      "path": "fixture-repairs/aliases-and-command-array",
+      "patch_sha256": "792f08b603b8f562c63a617cc8b1bdfcba8e953ad6d391c47821c343e0b7e72d",
+      "manifest_sha256": "31ae35af94cb1e54a047eff399f7636c169a77f59bd22ea72278079048040641",
+      "application_sha256": "dc60d9890d7cfdcf3c87229d2b0300ae406e0af2da792d2711c2e433641d6a09",
+      "historical_status": "Original proposal wording is preserved; later application receipt passes."
+    },
+    {
+      "path": "fixture-repairs/map-owner",
+      "patch_sha256": "a99c7e19fea03630ea6e53010f895449f01c49a206de3fde64a723667d43c18a",
+      "manifest_sha256": "b610cdc4054d72a3ab49329aa21982b86e3c4b2ce235f507265de960dc4a9c6d",
+      "application_sha256": "9d3146b7948aa00e700bb4d918e01b18e5193e92771a65e177a824a6c119c5b7",
+      "historical_status": "Original proposal wording is preserved; later application receipt passes."
+    }
+  ],
+  "final_seven_file_mapping": [
+    {
+      "canonical_path": "src/app/bootstrap.gd",
+      "archive_path": "application/applied/src/app/bootstrap.gd",
+      "sha256": "e1cb562cf19813f02be52f8b57902f0cff4742b9a811d2924e184491b85038a5",
+      "original_newline": "LF"
+    },
+    {
+      "canonical_path": "src/app/element_expansion_controller.gd",
+      "archive_path": "application/applied/src/app/element_expansion_controller.gd",
+      "sha256": "42877b8900674aa181d8c2f993a01283ed40bd6f1a9a7c7a973ca82c44475119",
+      "original_newline": "LF"
+    },
+    {
+      "canonical_path": "src/app/local_navigation_controller.gd",
+      "archive_path": "application/applied/src/app/local_navigation_controller.gd",
+      "sha256": "3de822cf2aa8c6e453183bf51dac147c12110026c7cd581c53a8829a1a36cc59",
+      "original_newline": "LF"
+    },
+    {
+      "canonical_path": "src/app/optional_introduction.gd",
+      "archive_path": "application/applied/src/app/optional_introduction.gd",
+      "sha256": "3fdd6012b56d7a8669d832ef582976b68a61de0ca1b468256d95b87bb70ec56a",
+      "original_newline": "LF"
+    },
+    {
+      "canonical_path": "tests/unit/test_element_audio.gd",
+      "archive_path": "focused-c/inputs/test_element_audio.gd",
+      "sha256": "2538bc57115f2d84f418181fe24d94f98e0be6f165c3529c1ad3c88be920902c",
+      "original_newline": "CRLF"
+    },
+    {
+      "canonical_path": "tests/unit/test_signature_progression.gd",
+      "archive_path": "application/applied/tests/unit/test_signature_progression.gd",
+      "sha256": "fafd6fb1414d101113792babd8d8935a52c5e48bf89da9932b7ea27f9027b9f6",
+      "original_newline": "LF"
+    },
+    {
+      "canonical_path": "tests/unit/test_spell_testing_tools.gd",
+      "archive_path": "failed-focused-b/inputs/test_spell_testing_tools.gd",
+      "sha256": "7c90f29549bb51a9c2d87ead53ef6c7905edef447746ba6ac8f78005abdf87db",
+      "original_newline": "CRLF"
+    }
+  ],
+  "preserved_failure_manifest_hashes": {
+    "failed-focused-a": "e541c49c94236d5b8c0eb68afdccd5aee7f0a90bc989754119b6e70d2c1c35df",
+    "failed-focused-b": "60388e4d4a715be9e1ac98b5e7d214801f02c5465fb69d7a5764ee125369fb02"
+  },
+  "last_passing_affected_suite_results": [
+    {
+      "run": "failed-focused-a",
+      "id": "local-navigation",
+      "assertions": 3817,
+      "failures": 0,
+      "stderr_bytes": 14607,
+      "overall_run_result": "failed"
+    },
+    {
+      "run": "failed-focused-a",
+      "id": "signature-progression",
+      "assertions": 6311,
+      "failures": 0,
+      "stderr_bytes": 14607,
+      "overall_run_result": "failed"
+    },
+    {
+      "run": "failed-focused-b",
+      "id": "spell-testing-tools",
+      "assertions": 58488,
+      "failures": 0,
+      "stderr_bytes": 0,
+      "overall_run_result": "failed"
+    },
+    {
+      "run": "focused-c",
+      "id": "element-audio",
+      "assertions": 26898,
+      "failures": 0,
+      "stderr_bytes": 0,
+      "overall_run_result": "passed"
+    }
+  ],
+  "passing_affected_suite_assertions_across_runs": 95514,
+  "focused_c": {
+    "receipt_sha256": "3173e9e188e4580744852ee6db7fd08d0ada8cd1a18bf5e16e82363882de8373",
+    "assertions": 26898,
+    "failures": 0,
+    "stderr_bytes": 0,
+    "runner_duration_ms": 83123,
+    "suite_reported_duration_ms": 3596,
+    "caller_appdata_restored": true
+  },
+  "prior_prototype_patch_references": {
+    "terminal-audio/repair/draft/terminal-audio-policy.patch": "4421c1c6866ec9fa403810d0feeb240d6559c271b2c51673286c2c6f442a3580",
+    "remap-guide-hints/sources/.godot/iteration-20261013/remap-guide-hints/remap-guide-hints.patch": "93628c4843e11611f0420222d568c07ced1e635b9d9f483abdfac66869e9cc16",
+    "tactical-jump-copy/sources/.godot/iteration-20261013/tactical-jump-copy/tactical-jump-copy.patch": "ed96d00e1fbd088d1704c27c03dbfbf094b15f14d067cfca47193c8e96bc7639",
+    "tactical-jump-copy/draft/gameplay-tests/tactical-jump-tests.patch": "94a4c41ced59e703f9bf22b7d7a257a8b9b6e4c89f23cf202e92277fe58a4a11"
+  },
+  "scope": [
+    "Exact seven-file application and both test-only repair chains independently verified against preserved bytes and current canonical files.",
+    "Passing affected-suite subresults span three runs; first two overall receipts remain failed with original logs/stderr unchanged.",
+    "No claim of a single clean four-suite session or completed Full validation.",
+    "Fixture repairs change only aliases/enum/typed array and prepared map-owner setup/readback/labels; no runtime policy or assertion is weakened.",
+    "No7804 delivery or sustained foreground qualification here;500be remains the qualified playable portable.",
+    "Earlier prototype/native evidence retains its source pins and listening/physical input/performance limits.",
+    "No isolated APPDATA/profile, runtime binary or generated art copied."
+  ],
+  "pending": [
+    "Root coherent Full gate",
+    "Any separately authorized7804 delivery qualification",
+    "Final stop-at-stable documentation and repository push"
+  ],
+  "archive_review": "Experience verification complete; Gameplay independent review requested separately."
+}

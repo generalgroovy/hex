@@ -1,10 +1,16 @@
 # H.E.X. single implementation queue
 
-Status: **ACTIVE after the user's October 13 resumption**, with a 1% remaining
-included-usage cutoff. Current qualified portable is p61-500be306a26a; the stable
-p60-1e084a50a029 fallback is preserved. Source checkpoint 5e84ee4 is pushed.
-The [current iteration](../docs/iteration-20261013/README.md) and
-[self-prompt](../docs/iteration-20261013/SELF-PROMPT.md) own new work.
+Status: **PAUSED at the user's October 13 checkpoint request.**
+Current source and qualified local portable are **p61-7804a23eb300** on
+`codex/hex-screen-smoothness-20261011`. Full passes 265 suites / 7,573,807
+assertions; fresh package/archive, 133-image terrain and five-case lifecycle
+checks pass. The prior 500be and older working builds remain preserved.
+The checkpoint documentation and single queue are reconciled.
+No new audit, implementation, experiment or foreground run starts
+without a user resume. The earlier 1% allowance target is superseded.
+The [iteration](../docs/iteration-20261013/README.md),
+[resume](HEX-RESUME.md) and [self-prompt](../docs/iteration-20261013/SELF-PROMPT.md)
+record the completed review ring and exact evidence.
 
 ## Current cycle
 
@@ -12,7 +18,7 @@ The [current iteration](../docs/iteration-20261013/README.md) and
 - [x] Write the recursive self-prompt and assign technical/gameplay/experience review streams.
 - [x] Apply T7 and pass focused/PowerShell checks and paired native observer-cost controls.
 - [x] Finish T7 enclosing profiler lifecycle: normal, inherited failure and report-I/O failure pass.
-- [x] Run current-source completed-step attribution with qualified manual foreground admission: p61-500be306a26a passes all five cases, 95 available Windows foreground samples and unchanged-source checks.
+- [x] Run completed-step attribution on the then-frozen p61-500be306a26a source: all five cases, 95 available Windows foreground samples and unchanged-source checks pass. Later source does not inherit those measurements.
 - [x] Repair committed-startup HUD timing with a bounded local witness and pass native captures.
 - [x] Complete both cast-witness cost orders and expanded paid defeat regressions.
 - [x] Pass focused protocol 61 same-step defeat cleanup and freeze a matching candidate identity.
@@ -30,16 +36,20 @@ The [current iteration](../docs/iteration-20261013/README.md) and
 - [x] Repair the trail probe's stale cursor target and preserve the failed no-flight trace; functional and both native orders pass.
 - [x] Challenge the trail candidate with sustained crowded paid casting: both native orders pass 23,163 checks, but all three reviewers reject the measured positive-path tradeoff. Canonical emitter stays unchanged.
 - [x] Run the bounded optional-coach reproduction: 14,831 integrity checks pass, but all three nominal offsets stop at the same early avoidance before the finisher. No terminal-save/freeze evidence and no production fix.
-- [ ] Select the next casting/Garden intervention from complete measurements.
-- [ ] Qualify the frozen p61-500be306a26a source with garden_middle / paid_fire_bolt_sustained / paid_all_six_mantle_sustained at 12 seconds. The five-minute attempt expired without Start, arming or game instantiation; its raw failure is archived. Manual Start and foreground admission remain required for any future attempt.
+- [ ] Deferred: select the next casting/Garden intervention from complete measurements. Movement is the largest measured simulation child; Mantle ground drawing remains a separate priority.
+- [ ] Deferred: qualify a future frozen source with sustained paid casting and foreground admission. Both p61-500be306a26a follow-ups expired before manual Start and measured no gameplay. No further foreground window is planned for this closing batch.
 - [x] Pass Full on unchanged p61-500be306a26a: 265 suites / 7,572,978 assertions / zero failures and stderr; independent raw review archived.
 - [x] Pass fresh portable export, all 18 archive checks and exact 133-image / 2,064-check exported-terrain gate; preserve the earlier build.
 - [x] Finish the five-case normal-close/reopen gate and promote p61-500be306a26a as the local play link. The user-authorized untouched repeat passes all five cases, exact twelve Fire and twelve Mantle admissions, empty stderr, unchanged package and shared preferences. Independent delivery review passes 3,784 checks. The first extra-outcome failure remains preserved.
-- [ ] Integrate the confirmed stale F5/F6 guide/menu hint repair after frozen-source probes. The exact ignored patch passes independent source review and 1,192 native fit checks / 36 images; actual-input affected suites remain required after application.
-- [ ] Run the ignored seven-interval simulation attribution after exact transformation/paid-fixture/observer reviews. The combined run timed out without a receipt; reviewed single-case runs retain all checks and five of thirteen cases pass. Complete all cases before a separately reviewed cost extension and any optimization choice.
-- [ ] Reproduce the independently source-confirmed terminal confirmation audio lifetime concern with an actual paid victory before selecting a repair.
-- [ ] Implement cross-reviewed improvements from all-domain audits in bounded slices.
-- [ ] Qualify coherent freezes, reconcile docs and stop at the usage cutoff.
+- [x] Integrate the confirmed stale F5/F6 guide/menu hint repair. Independent native fit passes 1,192 checks / 36 images; the real-input spell-tools suite passes 58,488 assertions and navigation passes 3,817 on p61-7804a23eb300.
+- [x] Independently review and archive all thirteen passed single-case runs of the ignored seven-interval simulation attribution: 84,172 checks, 2,548 attempts, 2,547 completed steps and 26 released diagnostic worlds. The combined first attempt timed out without a receipt; partitioning retained every functional check.
+- [x] Finish and independently archive all six contiguous timing runs: 73,880 engine checks and 30,033 review checks across 790 paired groups. The additional 480-step authored-roster qualification passes 14,490 checks. Boundary packet checks supplement the original every-step functional proof. Process/order variation prevents a stable overhead or speedup claim.
+- [x] Reproduce the terminal confirmation audio cutoff with a real paid victory: 2,728 integrity checks pass; the saved unlock is unchanged, but the 220 ms confirmation is stopped after about 1.2 ms by the next frozen-result callback. Exact successful evidence and both failed fixture admissions are archived.
+- [x] Integrate the independently reviewed audio repair: already-admitted finite tails finish through an otherwise eligible finished-result freeze; external input blocks, READY, mute and reset still stop them. Native repair passes 2,762 checks; the final registered eligibility suite passes 26,898 assertions. Failed focused fixtures and both narrow test-only corrections remain preserved.
+- [x] Integrate the tactical Sprint/Slide instruction's missing Jump press. Native fit passes 90 checks in four contexts; the real paid press/release and no-Jump negative regression passes within the 6,311-assertion signature suite.
+- [ ] Deferred at the stop checkpoint: narrow same-draw occupied-cell reuse hypothesis. Exact-script/court/non-base/unchanged-filter proposal and compatibility controls are source-reviewed, but parsing, native reachability and timing remain unrun. No production change is accepted.
+- [ ] Deferred: further audits and implementation require a user resume. The occupied-membership proposal, one-get mesh idea and profiler failure-path investigation are not applied.
+- [x] Qualify p61-7804a23eb300 with Full and fresh delivery checks and reconcile checkpoint documentation. Further implementation is paused at the user's request.
 
 ## Preserved October 12 checkpoint
 
@@ -61,7 +71,10 @@ paired cases. Warm Garden / Fire / Mantle p95 intervals remain 29.420 / 49.174 /
 51.784 ms; sustained 60 FPS is not achieved. The first lifecycle attempt had extra
 casts after its scheduled workload and remains failed; an unchanged repeat passed.
 
-## Resumed leads from the prior checkpoint
+## Historical leads from the prior checkpoint
+
+This original list is retained for context. Completed T7 and HUD work must not
+restart from it; only the current cycle above owns deferred work after a resume.
 
 1. Validate and apply the [reviewed T7 attribution draft](../docs/iteration-20261012/deferred-t7/README.md), then run its Godot, authority-equivalence, native and observer-cost checks.
 2. Use all-completed-step measurements to select one remaining casting bottleneck; preserve paid authority and measure the proposed intervention.

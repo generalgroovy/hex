@@ -1,0 +1,21 @@
+# Same-call occupied membership experiment
+
+Status: ignored prototype under exact source review. Canonical renderer remains byte-identical to `hex_court_presenter.before.gd` (`3190aa2683205bfdd1ebcc297e1002b3f3e624e4b59a61ecf64b76889733b92c`). No measured benefit or production adoption is claimed.
+
+`candidate_court.gd` copies exactly two methods from that renderer. Its actual non-base draw may reuse the occupied membership just selected/cropped/sorted by `_prepare_court`, only when the presenter script and court script are the exact supported scripts and the CanvasItem texture filter already equals NEAREST. The already-equal test is taken before the setter: changing that native property can emit a synchronous callback and must keep the fresh query. A scalar actual-court ID is saved/set around the existing two-argument virtual helper, consumed immediately at helper entry, and restored on return. No court reference, cross-tick history or new geometry cache is retained.
+
+The original aggregate-coverage scan remains. Base/Range, direct helper calls, generic and derived courts, derived presenters and changed-filter callbacks retain the original occupied/filter/sort path and legacy fallback. In particular, existing profiling presenter subclasses do not gain this fast path; an isolated exact-class result cannot claim a whole-observer improvement. The ignored self-script comparison is a fixed resource-path comparison inside the measured draw. A hypothetical canonical change would perform the same comparison with the canonical file path, not omit its cost.
+
+`transformations.json` declares the four exact insertions/replacements; `candidate-header.txt` declares only the path constant and scalar. Their exact hashes are embedded in `compare-occupied-membership.gd`. Its source guard reconstructs both methods from the exact predecessor and verifies the complete candidate text. All ten paid setup/step/coverage/phase/owner methods equal the previously executed prefix-comparison driver; no withdrawn prefix-key optimization is loaded. `draft-manifest.json` records the checkpoint.
+
+Gameplay owns a separate bounded `verify-membership-contract.gd` functional prerequisite. It must cover direct/base/generic/derived/missing-aggregate behavior, direct live replacement, presenter override mutation/reentry, a real property-list callback that mutates current coverage and calls another court, and the same-value filter positive. Prepared compatibility data is explicitly separate from the actual paid worlds used for cost. The pristine timing driver does not time these controls or add nested observer counters.
+
+Root-only native comparison CLI, after the functional gate and both source reviews:
+
+`-- --no-lan-discovery --output=res://.godot/iteration-20261013/occupied-render-membership/runs/probe-forward-a`
+
+The independent opposite-order process adds `--reverse-order` and uses a fresh `probe-reverse-a` directory. Driver is `res://.godot/iteration-20261013/occupied-render-membership/compare-occupied-membership.gd`. Root owns the checked parser/wrapper/external timeout; agents run no engine.
+
+Both processes retain the original 22 paid cases: 12 timed cases × 32 pairs plus four warmups, and ten pixel-only phase/expiry/reentry controls. The same two 640×480 native SubViewports, actual alternating callbacks, normal/reduced effects, owner/camera/zoom controls, complete snapshot/state/event purity, exact first/final RGBA and all retained geometry counters remain. There are 44 PNGs/process and a 240-second helper watchdog. World preparation, packet/hash/coverage checks, pixels and receipt work are outside the sole whole-ground timer; candidate guard work is inside it. First-use and warm status must come from actual counters, not the word “first.” Preserve process/order strata and all tails.
+
+The approximately 1.74 ms containing bundle in the foreground diagnostic is not attributed duplicate-membership cost. This experiment adds branches/scalar work and can lose. Retain only a repeatable useful whole-draw improvement that survives functional/pixel/authority and opposite-order controls; otherwise withdraw. No GPU, presentation latency, full-frame, physical-input, human-readability or 60 FPS claim belongs here.

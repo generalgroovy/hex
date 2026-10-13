@@ -150,7 +150,7 @@ func view() -> Dictionary:
 
 func tactical_view() -> Dictionary:
 	var titles := ["Link two paid movement actions","Land a mixed spell","Avoid a rival's shot","Win and keep the learned spell"]
-	var instructions := ["Sprint, Slide, then release %s to jump. Watch the Stamina cost." % String(_bindings.jump),"Open %s. Equip a mixed spell, then actually damage a target." % String(_bindings.range),"Choose a Bolt rival in Signature Challenges. Dodge through or jump over a shot.","Defeat the rival cleanly. If saving fails, choose Menu > Retry progress save."]
+	var instructions := ["Sprint, Slide, then press and release %s to jump. Watch the Stamina cost." % String(_bindings.jump),"Open %s. Equip a mixed spell, then actually damage a target." % String(_bindings.range),"Choose a Bolt rival in Signature Challenges. Dodge through or jump over a shot.","Defeat the rival cleanly. If saving fails, choose Menu > Retry progress save."]
 	var explanations := ["Accepted chains carry momentum and add a bounded cost. A denied input does not count.","Damage, status and ground effects are separate. Read the mixture's counter in the Range.","Height clears low shots. During a dodge, the translucent slash window avoids damage; the following opaque recovery is vulnerable.","Developer tools cannot earn progress. A save receipt completes this lesson; replay after restarting to check your learned weave."]
 	return {"active":active,"complete":complete,"step":step,"total":4,"title":titles[mini(step,3)] if not complete else "Tactical lessons complete","instruction":instructions[mini(step,3)],"explanation":explanations[mini(step,3)],"skip":String(_bindings.skip)}
 

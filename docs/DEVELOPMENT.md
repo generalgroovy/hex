@@ -4,10 +4,10 @@ Status: current source-development guide, October 13, 2026. Git contains source 
 
 Use the repository root containing `project.godot` and `hex.cmd`. Do not run
 development commands from a wrapper folder or an extracted portable. Current
-working source continues after `1068759` on `codex/hex-screen-smoothness-20261011`:
+working source is `p61-7804a23eb300` on `codex/hex-screen-smoothness-20261011`:
 protocol 61, SessionSnapshot 24, 120 Hz, six ingredients, 63 compositions, eight
 deliveries and 504 spells. The [active iteration](iteration-20261013/README.md)
-owns new checks and measurements; the qualified p60 portable and earlier builds stay preserved.
+owns checkpoint checks and measurements; previous qualified portables stay preserved.
 The [resume](../.agent/HEX-RESUME.md) owns exact identities and qualification;
 the [specification](../SPECIFICATION.md) owns behavior.
 
@@ -139,13 +139,14 @@ Its five-minute setup allowance gives the player time to start; measured focus
 requirements are unchanged. Warm Garden/Fire/Mantle p95 engine intervals remain
 29.420/49.174/51.784 ms, so this is not sustained 60 FPS acceptance. The
 [October 12 ledger](iteration-20261012/README.md) owns that portable's Full/package status.
-The [current 500be source review](iteration-20261013/foreground-500be-allsteps/review.json)
+The [last admitted 500be source review](iteration-20261013/foreground-500be-allsteps/review.json)
 reconciles every completed step with `-AllFixedSteps`: Garden/default-spawn
 Fire/Mantle p95 intervals are 24.743/28.217/39.999 ms at ten seconds per warm case.
 The older Fire route, duration and observer differ, so these are not matched
 speedup measurements. The twelve-second sustained follow-up expired without
 Start and never instantiated gameplay. Preserve its failure independently.
-The [active iteration](iteration-20261013/README.md) owns current Full/package gates.
+Newer source does not inherit these measurements. The
+[iteration](iteration-20261013/README.md) owns current Full/package gates.
 `-AllFixedSteps` records all successful catch-up work and zero-step groups;
 it cannot be combined with `-LightObserver`. Compare its explicit observer cost,
 failed-step counts and world/epoch continuity instead of treating a last-step

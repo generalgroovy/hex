@@ -60,6 +60,8 @@ with the current place. Esc or controller Back opens it during free play; Esc cl
 during a challenge, Esc returns to Wellspring instead. The challenge card keeps
 the next-rival and Developer shortcuts, while the Menu button stays hidden.
 Custom gameplay bindings take priority over Esc/M and F5/F6 convenience keys.
+If F5 or F6 is assigned to gameplay, its unavailable convenience hints disappear;
+the guide names the existing Menu route instead.
 F7 retains the movement-reference preset shortcut; sight is no longer a setting.
 Menus consume their own inputs so a
 selection does not cast a spell in the world.

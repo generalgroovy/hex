@@ -1,19 +1,20 @@
 # H.E.X. game design overview
 
-Status: **active October 13 development; qualified local portable p61-500be306a26a.**
-The [active iteration](iteration-20261013/README.md) owns current checks.
-Full passes 265 suites / 7,572,978 assertions with zero failures/stderr;
-the matching package, archive, terrain and five-case lifecycle checks pass.
-The [independent delivery review](iteration-20261013/delivery-review-500be/review.json)
-links exact source and package evidence. Steady 60 FPS remains unestablished.
-Use the [current launcher](../exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd).
-The [previous p60 portable](../exports/hex-iteration-20261012/windows/PLAY-HEX.cmd)
-and its [qualification](iteration-20261012/README.md) remain preserved.
-The [be680 fallback](../exports/hex-smoothness-20261012/windows/PLAY-HEX.cmd)
-and its [smoothness record](smoothness-20261012/README.md) remain preserved.
-The [resume](../.agent/HEX-RESUME.md) owns exact identities; SPECIFICATION.md owns
-the gameplay contract. Reviewed [T7 diagnostics](iteration-20261012/deferred-t7)
-are applied to the qualified p61 portable and remain outside the preserved p60 build.
+Status: **paused at the qualified October 13 checkpoint, p61-7804a23eb300.**
+The [iteration](iteration-20261013/README.md) records implemented changes,
+independent reviews and deferred work. The closing usability batch repairs
+victory audio tails, remapped shortcut hints and Jump press/release teaching.
+[Full](iteration-20261013/full-7804/README.md) passes 265 suites / 7,573,807
+assertions, with zero failures/error output and 120 Hz boot. The matching
+package, archive, exact terrain and five-case lifecycle checks pass;
+[delivery review](iteration-20261013/delivery-review-7804/review.json) links them.
+
+Use the [current launcher](../exports/hex-checkpoint-20261013-7804/windows/PLAY-HEX.cmd).
+The [500be fallback](../exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd)
+and older working builds remain preserved. Steady 60 FPS remains unestablished;
+the last admitted foreground measurement belongs to 500be. The
+[resume](../.agent/HEX-RESUME.md) owns exact identities and measurement limits;
+SPECIFICATION.md owns gameplay rules.
 
 H.E.X. combines movement execution, aimed spell combat and finite elemental
 terrain. Players learn a small set of actions, then express skill through timing,
@@ -35,7 +36,7 @@ from intended viability and uniqueness.
 | Earned single-player progression | All 30 rivals remain selectable. An optional Rapid→Fuse→Rebound lesson route uses real Conservatory, Tideglass and Basalt courts. A joined paid fixture observes introduction, movement chain, mixed hit, protected crossing, three victories, saved rewards and learned releases | These are three lessons, not a complete campaign. Difficulty progression, varied longer runs and human learning transfer remain open |
 | A larger, varied world with compact UI | Seven districts, thirteen map travel arrivals and 63 harmless Garden exhibits; optional district practice and authored map cues. Small-window/200% reading views retain selection and expose detail pages; mouse, keyboard and pad share compact actions | Human wayfinding and active-device transitions; native fit/navigation checks and source tests do not alone establish comprehension |
 | More dimensional, readable characters and magic | Wall attachment/release use directional poses. Ground characters retain aerial tuck during casting; flyers keep flight bodies with independent hands. Actual protection cues, receiving-surface shadows and a bounded four-voice priority audio batch support feedback | Bespoke authored movement cycles, listening comfort and moving-combat readability remain open |
-| Smooth play on modest hardware | Bounded terrain residency and worker validation, interpolation, Low/Standard settings, exact Garden selection reuse and staged funded/visual preparation during fast travel. Immediate campus drawing remains the default after moving-view measurements rejected the retained alternative | Current 500be source has Garden/default-Fire/Mantle p95 engine intervals of 24.743/28.217/39.999 ms with complete-step observation; steady 60 FPS remains unachieved. Older sustained Fire uses a different fixture, so these are not matched gains. Fresh Full/package qualification is separate; smaller preparation peaks do not imply lower total work |
+| Smooth play on modest hardware | Bounded terrain residency and worker validation, interpolation, Low/Standard settings, exact Garden selection reuse and staged funded/visual preparation during fast travel. Immediate campus drawing remains the default after moving-view measurements rejected the retained alternative | The last admitted 500be source run has Garden/default-Fire/Mantle p95 engine intervals of 24.743/28.217/39.999 ms with complete-step observation; steady 60 FPS remains unachieved. Newer source does not inherit these measurements. Older sustained Fire uses a different fixture, so these are not matched gains. Full/package qualification is separate; smaller preparation peaks do not imply lower total work |
 
 The [reference adaptations](../SPECIFICATION.md#reference-game-adaptations),
 [combat decisions](element-expansion-evidence-20261009/combat-design.md),
@@ -54,8 +55,8 @@ assertions with empty stderr. The protected-contact correction observes a real
 swept paid shot crossing during protection; it neither damages the actor nor
 changes the shot's trajectory or strength. The preserved be680 source subsequently
 passed 261 suites / 7,401,986 assertions and separate portable gates. The preserved
-1e084 build has its own clean Full and delivery receipts; current 500be qualification
-is recorded separately above. Subsequent edits require their own appropriate gates.
+1e084 and 500be builds have their own clean Full and delivery receipts linked
+from the iteration record. Subsequent edits require their own appropriate gates.
 
 The **55.65 Fire / 46.74 all-six Mantle reported-FPS means** belong to the
 historical `p60-d8e6ea1cd808` portable. Those finite October 11 workloads include

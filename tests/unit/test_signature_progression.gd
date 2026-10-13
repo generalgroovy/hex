@@ -38,6 +38,7 @@ func run() -> int:
 	_test_catalog_and_access()
 	_test_persistence()
 	_test_bound_reward()
+	_test_tactical_jump_instruction()
 	_test_learning_journey()
 	_test_full_delivery_encounters()
 	_test_ground_damage_evidence()
@@ -443,3 +444,74 @@ func _test_full_delivery_encounters() -> void:
 		check(bool(result.reward.get("ok",false)),"clean full delivery encounter admits its owned earned result")
 		seen[String(row.family)] = true
 	equal(seen.size(),8,"full paid encounter coverage reaches all eight delivery families")
+
+
+func _test_tactical_jump_instruction() -> void:
+	# Same finite ordinary route as the joined coach; no assigned guide step,
+	# movement clocks or resources. These are simulation commands, not OS input.
+	var negative := SimWorld.new()
+	var positive := SimWorld.new()
+	var worlds: Array[SimWorld] = [negative,positive]
+	var guides: Array[OptionalIntroduction] = []
+	for world: SimWorld in worlds:
+		var configured: bool = champions.apply_to_player(world.player(),"oh_tipi") and HexCourtPractice.configure(world,abilities)
+		check(configured,"tactical gesture uses ordinary fresh paid practice state")
+		if not configured: return
+		var guide := Tutorial.new()
+		check(guide.start_tactical(world),"tactical gesture begins through public optional guide action")
+		check(String(guide.view().instruction).contains("press and release Jump"),"tactical instruction names both required Jump edges")
+		guides.append(guide)
+		check(not world.player().jump_held_last_tick and not world.player().jumpsquat_active and world.player().jump_buffer_ticks==0,"fresh tactical entry has no primed Jump gesture")
+	var slide_tick := 40
+	var press_tick: int = slide_tick+negative.config.milliseconds_to_ticks(MovementTuning.SLIDE_JUMP_MINIMUM_COMMITMENT_MS)
+	var release_tick: int = press_tick+1
+	var initial_flux: int = negative.player().flux
+	var initial_health: int = negative.player().health
+	var initial_stamina: int = negative.player().stamina
+	for tick: int in range(release_tick+2):
+		for index: int in worlds.size():
+			var world: SimWorld = worlds[index]
+			var actor: PlayerState = world.player()
+			var held: int = SimCommand.HELD_SPRINT if tick<slide_tick else 0
+			var pressed: int = SimCommand.PRESSED_SLIDE if tick==slide_tick else 0
+			if index==1 and tick==press_tick:
+				pressed |= SimCommand.PRESSED_JUMP
+				held |= SimCommand.HELD_JUMP
+			var stamina_before: int = actor.stamina
+			var command := SimCommand.new(world.tick,1,1000,0,held,pressed,1000,0)
+			var stepped: bool = world.step([command,SimCommand.new(world.tick,2)])
+			check(stepped,"ordinary tactical press/release command completes at tick %d arm %d" % [tick,index])
+			if not stepped: return
+			var observed_hash: String = world.state_hash()
+			guides[index].observe(world,world.combat_events)
+			equal(world.state_hash(),observed_hash,"tactical observation never changes the paid trajectory")
+			check(not HexWorldSnapshot.capture(world).is_empty() and world.hex_court.conservation_valid(),"every gesture step retains strict finite Hex authority")
+			equal(actor.flux,initial_flux,"movement-only gesture does not spend Flux")
+			equal(actor.health,initial_health,"uncontested movement gesture preserves Health")
+			equal(int(world.hex_court.metrics.matter_paid),0,"gesture cannot fabricate spell matter")
+			if tick==slide_tick:
+				check(actor.slide_ticks>0 and actor.last_event=="slide" and actor.movement_chain_count==1,"actual paid Slide is the first movement link")
+				equal(stamina_before-actor.stamina,22000,"ordinary Oh Tipi slide pays its exact authored cost")
+				check(actor.stamina<initial_stamina-22000,"the preceding held sprint also spends ordinary Stamina")
+			if tick==press_tick:
+				if index==1:
+					check(actor.jumpsquat_active and actor.hop_mode==PlayerState.MovementMode.SLIDE_JUMP and not actor.is_airborne(),"fresh held Jump prepares the real slide-jump family before release")
+				else:
+					check(not actor.jumpsquat_active and not actor.jump_held_last_tick and not actor.is_airborne(),"unprimed release-only input cannot prepare or launch a jump")
+				equal(actor.stamina,stamina_before,"preparation or unprimed release does not buy a jump")
+				equal(guides[index].step,0,"slide alone or held preparation does not finish the two-action lesson")
+			if tick==release_tick:
+				if index==1:
+					check(actor.last_event=="slide_jump" and actor.air_height>0 and actor.air_vertical_velocity>0 and actor.movement_chain_count==2,"fresh press then release owns the actual rising paid second link")
+					equal(stamina_before-actor.stamina,22000,"slide jump pays authored 20000 plus the ordinary ten-percent chain premium")
+					equal(guides[index].step,1,"observer advances only after the actual paid movement chain")
+				else:
+					check(not actor.is_airborne() and actor.movement_chain_count==1,"release without any preceding Jump press stays a single grounded link")
+					equal(actor.stamina,stamina_before,"unprimed release buys no extra movement action")
+					equal(guides[index].step,0,"unprimed release cannot advance the tactical movement lesson")
+		if tick<press_tick:
+			equal(negative.state_hash(),positive.state_hash(),"both gestures share exact authority until the fresh Jump press")
+		if tick==release_tick:
+			equal(negative.player().stamina-positive.player().stamina,22000,"paired ordinary recovery control isolates exactly one paid slide jump")
+	equal(guides[0].step,0,"release-only negative remains on the movement instruction")
+	equal(guides[1].step,1,"press/release positive reaches the next existing lesson only")

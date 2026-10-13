@@ -30,8 +30,8 @@ func entries() -> Array[Dictionary]:
 	if game == null: return rows
 	if game._is_hex_practice():
 		rows.append_array([
-			{"id": "expansion-introduction", "label": "Skip introduction" if game.element_expansion.guide.active else "Introduction", "hint": "F5"},
-			{"id": "expansion-range", "label": "Change Range spell", "hint": "F6"},
+			{"id": "expansion-introduction", "label": "Skip introduction" if game.element_expansion.guide.active else "Introduction", "hint": "F5" if game.element_expansion.shortcut_available(KEY_F5) else ""},
+			{"id": "expansion-range", "label": "Change Range spell", "hint": "F6" if game.element_expansion.shortcut_available(KEY_F6) else ""},
 			{"id": "loom", "label": "Spell Loom", "hint": ""},
 			{"id": "characters", "label": "Characters", "hint": ""},
 			{"id": "reset_court", "label": "Reset practice court", "hint": ""},
@@ -39,9 +39,9 @@ func entries() -> Array[Dictionary]:
 		])
 	else:
 		rows.append_array([
-			{"id": "expansion-introduction", "label": "Skip introduction" if game.element_expansion.guide.active else "Introduction", "hint": "F5"},
-			{"id": "expansion-range", "label": "Spell Range", "hint": "F6"},
-			{"id": "expansion-challenges", "label": "Signature Challenges", "hint": "Shift+F6"},
+			{"id": "expansion-introduction", "label": "Skip introduction" if game.element_expansion.guide.active else "Introduction", "hint": "F5" if game.element_expansion.shortcut_available(KEY_F5) else ""},
+			{"id": "expansion-range", "label": "Spell Range", "hint": "F6" if game.element_expansion.shortcut_available(KEY_F6) else ""},
+			{"id": "expansion-challenges", "label": "Signature Challenges", "hint": "Shift+F6" if game.element_expansion.shortcut_available(KEY_F6) else ""},
 			{"id": "chemistry", "label": "Chemistry demos", "hint": ""},
 			{"id": "duel", "label": "Practice duel", "hint": ""},
 		])
@@ -50,7 +50,7 @@ func entries() -> Array[Dictionary]:
 		{"id": "compendium", "label": "Compendium", "hint": "F4"},
 		{"id": "controls", "label": "Controls & settings", "hint": ""},
 		{"id": "performance", "label": "Display & text size", "hint": ""},
-		{"id": "expansion-developer", "label": "Developer tools", "hint": "Shift+F5"},
+		{"id": "expansion-developer", "label": "Developer tools", "hint": "Shift+F5" if game.element_expansion.shortcut_available(KEY_F5) else ""},
 	])
 	var progress: Dictionary = game.element_expansion.progression.view()
 	if game.element_expansion.guide.active: rows.append({"id":"expansion-guide-details","label":"Guide action / explanation","hint":""})

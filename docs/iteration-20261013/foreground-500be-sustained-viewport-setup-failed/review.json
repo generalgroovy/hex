@@ -1,0 +1,144 @@
+{
+  "schema": "hex-failed-foreground-setup-review-v1",
+  "status": "setup_timeout_preserved_no_gameplay_measurement",
+  "run_id": "f7382e90-e17f-44a4-900a-ff38665001ff",
+  "runtime_identity_before": {
+    "schema_version": 1,
+    "status": "candidate_generated_not_promoted",
+    "scope_id": "production-runtime-source-v1",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "protocol_version": 61,
+    "snapshot_schema": 24,
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "record_count": 3444,
+    "runtime_source_sha256": "500be306a26ab82390d69f129d3be51e43b2513dd339dc03cfd0a470b5e9fd19",
+    "build_id": "p61-500be306a26a",
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate."
+  },
+  "runtime_identity_after": null,
+  "post_identity_scope": "The wrapper did not produce a runtime identity after-check and explicitly reports its root unavailable. This review does not replace it with an inferred successful check. The seven captured input hashes and current files match exactly.",
+  "requested": {
+    "profiles": [
+      "low"
+    ],
+    "cases": [
+      "garden_middle",
+      "paid_fire_bolt_sustained",
+      "paid_all_six_mantle_sustained"
+    ],
+    "seconds_per_case": 12.0,
+    "soak_seconds": 0.0,
+    "frame_limit": 60,
+    "width": 1280,
+    "height": 720,
+    "observer_mode": "full",
+    "viewport_render_timing": true,
+    "all_fixed_steps": true,
+    "campus_mode": "immediate_reference",
+    "screenshots": false,
+    "timeout_seconds": 900
+  },
+  "manual_confirmation_received": false,
+  "armed": false,
+  "game_instantiation_started": false,
+  "completed_result_rows": 0,
+  "setup_deadline_ms": 300000,
+  "setup_wait_elapsed_ms": 300014,
+  "setup_engine_polls": 17992,
+  "setup_engine_observations": 2742,
+  "post_arm_focus": {
+    "focus_exit_events": 0,
+    "samples": 0,
+    "unfocused_samples": 0
+  },
+  "wrapper_arming_sample_counts": {
+    "setup_sample_count": 604,
+    "measurement_sample_count": 0
+  },
+  "appdata_restored": true,
+  "all_input_hashes_before_after_current_equal": true,
+  "input_hashes": [
+    {
+      "path": "scripts/profile-gameplay.gd",
+      "sha256": "2e2df0510a06a305c2c3c8415bda8afd60d5e348714f70eff2203e837bdf96b1"
+    },
+    {
+      "path": "scripts/profile-gameplay.ps1",
+      "sha256": "b81a88c41f2d9a52079b77b65612dfe35f7cea57ec8ee0f3cceaf6b0be9b79c9"
+    },
+    {
+      "path": "scripts/runtime-build-identity.ps1",
+      "sha256": "ee1b11776ae2219f8374d80eaf7bbbe3d44364626e9ed8c60ce8b9290de014fa"
+    },
+    {
+      "path": "scripts/flux2-common.ps1",
+      "sha256": "06dcded01022fa9ae5c9a371e98f0b9577f01f258a8ad9f531450c35ddb3d040"
+    },
+    {
+      "path": "scripts/engine-guard.ps1",
+      "sha256": "9de3d4ae5d09dc59abc56e40bb78f626875db92ceee63136bfa99f62d4b38cd1"
+    },
+    {
+      "path": "scripts/measurement-observation.ps1",
+      "sha256": "e97c5a14e0b612b9475f647b502398ff1b2d437ca456785da980b36c694b0907"
+    },
+    {
+      "path": "content/runtime/runtime_build_identity_v1.json",
+      "sha256": "d4057c5823b1a0cee45077489332f19bc755133b8cc4ddb14570b0d29a7c3c67"
+    }
+  ],
+  "numeric_process_exit_code": null,
+  "expected_stderr_error": "Foreground setup did not arm within five minutes. Setup observations and the unqualified partial report are retained.",
+  "stderr_error_heading_count": 1,
+  "wrapper_validation_errors": [
+    "Godot emitted a script/import/runtime error.",
+    "Complete metrics.json is missing; any partial report remains unqualified evidence.",
+    "Expected exactly one matching complete-report marker in the native log.",
+    "Manual measurement requires exactly one matching run/UTC arming marker.",
+    "Native stderr is missing or nonempty; inspect the preserved log.",
+    "Runtime identity root is unavailable.",
+    "Requested foreground arming did not complete.",
+    "Manual arming requires a recorded Start button event during setup; engine focus alone cannot arm the run.",
+    "Foreground arming lacks a finite nonnegative integer: manual_confirmation_utc_msec.",
+    "Foreground arming lacks a finite nonnegative integer: manual_confirmation_monotonic_usec.",
+    "Foreground arming lacks a finite nonnegative integer: armed_utc_msec.",
+    "Foreground arming lacks a finite nonnegative integer: armed_monotonic_usec.",
+    "Foreground arming lacks a finite nonnegative integer: game_instantiation_started_utc_msec.",
+    "Foreground arming lacks a finite nonnegative integer: game_instantiation_started_monotonic_usec.",
+    "Post-arm engine focus was lost or insufficiently observed, including between measured cases.",
+    "At least three owned-window samples spanning one second are required; shorter runs remain diagnostic."
+  ],
+  "scope": "No manual Start, arming, game instantiation or gameplay rows. No gameplay focus, viewport GPU/CPU timing, FPS, portable release, or physical-input claim. Full/package/lifecycle and earlier admitted default-spawn foreground evidence remain separate; stressed sustained foreground qualification stays open.",
+  "raw": [
+    {
+      "path": "engine.log",
+      "source": ".godot/iteration-20261013/foreground-500be-sustained-viewport-a/engine.log",
+      "bytes": 288,
+      "sha256": "7a0b1313fe78917e39c0168dbfcf48eaca1aef5e6bf0c990df729522f813a33d"
+    },
+    {
+      "path": "engine.log.err",
+      "source": ".godot/iteration-20261013/foreground-500be-sustained-viewport-a/engine.log.err",
+      "bytes": 366,
+      "sha256": "de706e9e141a786c3afdb001faf196c653aada423b5a8ba49b02d66eb35f8fb7"
+    },
+    {
+      "path": "metrics.json.partial.json",
+      "source": ".godot/iteration-20261013/foreground-500be-sustained-viewport-a/metrics.json.partial.json",
+      "bytes": 280475,
+      "sha256": "7d12f7dce59c33d2f6b548459d26849afb1411379470cc98a636df714b7644e9"
+    },
+    {
+      "path": "runtime-identity.input.json",
+      "source": ".godot/iteration-20261013/foreground-500be-sustained-viewport-a/runtime-identity.input.json",
+      "bytes": 576,
+      "sha256": "d4057c5823b1a0cee45077489332f19bc755133b8cc4ddb14570b0d29a7c3c67"
+    },
+    {
+      "path": "summary.json",
+      "source": ".godot/iteration-20261013/foreground-500be-sustained-viewport-a/summary.json",
+      "bytes": 991224,
+      "sha256": "d1f4e7b44607629994e7fe7f403467327fab245a5cdd0f845b4dca3532de0fa4"
+    }
+  ]
+}

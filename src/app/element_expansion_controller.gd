@@ -51,8 +51,8 @@ func temporary_session() -> bool:
 	return training.active or developer.active or challenge_active
 
 
-func blocks_gameplay() -> bool:
-	return panel.is_open or (challenge_active and challenge.trial.blocks_gameplay())
+func blocks_gameplay(allow_finished_result: bool = false) -> bool:
+	return panel.is_open or (challenge_active and challenge.trial.blocks_gameplay() and not (allow_finished_result and challenge.trial.is_finished()))
 
 
 func can_equip(wire: int) -> bool:
@@ -126,7 +126,9 @@ func after_step() -> void:
 	if game == null or game.world == null: return
 	if training.active: range_target.observe()
 	game.district_practice.observe(game.world,game.campus_layout,offline() and not temporary_session())
-	if game.element_audio != null: game.element_audio.observe_movement(game._local_player_state(),game.world.tick,not game._gameplay_input_blocked() and not game._is_spectating())
+	# Observe eligibility before a legitimate victory adds its own input block.
+	var audio_allowed: bool = game.element_audio != null and not game._gameplay_input_blocked() and not game._is_spectating()
+	if game.element_audio != null: game.element_audio.observe_movement(game._local_player_state(),game.world.tick,audio_allowed)
 	if challenge_active:
 		challenge.observe(game.world, progression, offline(), developer.active)
 		if not challenge.reward.is_empty():
@@ -134,7 +136,7 @@ func after_step() -> void:
 			if text != _last_reward:
 				_last_reward = text
 				show_notice(text)
-				if bool(challenge.reward.get("ok",false)) and game.element_audio != null: game.element_audio.consequence("confirmed",game.world.tick)
+				if bool(challenge.reward.get("ok",false)) and game.element_audio != null: game.element_audio.consequence("confirmed",game.world.tick,audio_allowed)
 	if guide != null: guide.observe(game.world, game.world.combat_events, {"range": training.active, "panel_open": panel.is_open, "developer": developer.active,"challenge":challenge_active,"earned":bool(challenge.reward.get("ok",false)),"saved":bool(challenge.reward.get("saved",false))})
 
 
@@ -233,7 +235,12 @@ func start_introduction() -> void:
 		game._start_match(game.tick_rate)
 	refresh_guide_bindings()
 	guide.start(game.world)
-	show_notice("Introduction started. F5 or the Skip button ends it at any time.")
+	show_notice("Introduction started. F5 or the Skip button ends it at any time." if shortcut_available(KEY_F5) else "Introduction started. Menu > Skip introduction or the Skip button ends it.")
+
+
+func shortcut_available(key: int) -> bool:
+	# The existing input priority is also the source for displayed convenience hints.
+	return game != null and game.player_preferences != null and not game.player_preferences.keyboard_bindings.values().has(key)
 
 
 func refresh_guide_bindings() -> void:
@@ -245,7 +252,7 @@ func refresh_guide_bindings() -> void:
 		var label: String = bindings.action_label(StringName(direction), preferences)
 		moves.append(label if not label.is_empty() else "Unbound")
 	var jump: String = bindings.action_label(&"jump", preferences)
-	guide.configure_bindings({"move": "/".join(moves), "jump": jump if not jump.is_empty() else "Jump (unbound)", "cast": SpellLoomPresenter.slot_binding_label(0, preferences), "range": "Menu > Spell Range" if preferences.prompt_device == ControlBindingEditor.DEVICE_CONTROLLER else "F6 / Spell Range", "skip": "Menu > Skip introduction" if preferences.prompt_device == ControlBindingEditor.DEVICE_CONTROLLER else "F5 / Skip guide"})
+	guide.configure_bindings({"move": "/".join(moves), "jump": jump if not jump.is_empty() else "Jump (unbound)", "cast": SpellLoomPresenter.slot_binding_label(0, preferences), "range": "Menu > Spell Range" if preferences.prompt_device == ControlBindingEditor.DEVICE_CONTROLLER or not shortcut_available(KEY_F6) else "F6 / Spell Range", "skip": "Menu > Skip introduction" if preferences.prompt_device == ControlBindingEditor.DEVICE_CONTROLLER or not shortcut_available(KEY_F5) else "F5 / Skip guide"})
 
 
 func handle_input(event: InputEvent) -> bool:
@@ -272,7 +279,7 @@ func handle_input(event: InputEvent) -> bool:
 		var key: int = event.physical_keycode if event.physical_keycode != 0 else event.keycode
 		for entry: Array in ENTRIES:
 			# A pre-existing custom gameplay binding keeps priority over convenience keys.
-			if key == int(entry[3]) and event.shift_pressed == bool(entry[4]) and not game.player_preferences.keyboard_bindings.values().has(key):
+			if key == int(entry[3]) and event.shift_pressed == bool(entry[4]) and shortcut_available(key):
 				if String(entry[0]) == "expansion-introduction" and guide != null and bool(guide.view().get("active", false)): guide.stop()
 				else: activate(String(entry[0]))
 				return true
@@ -468,9 +475,9 @@ func draw(canvas: CanvasItem, font: Font, viewport: Vector2) -> void:
 	if developer.active and not challenge_active:
 		canvas.draw_rect(Rect2(viewport.x - 296, 422, 280, 44), Color("4b2344ee"))
 		canvas.draw_string(font, Vector2(viewport.x - 286, 440), "DEV SESSION | no earned progress", HORIZONTAL_ALIGNMENT_LEFT, 264, 13, Color("ffc5e4"))
-		canvas.draw_string(font, Vector2(viewport.x - 286, 457), "Shift+F5 opens overrides and Leave Developer", HORIZONTAL_ALIGNMENT_LEFT, 264, 11, Color("eadfc3"))
+		canvas.draw_string(font, Vector2(viewport.x - 286, 457), ("Shift+F5 opens overrides and Leave Developer" if shortcut_available(KEY_F5) else "Menu > Developer tools"), HORIZONTAL_ALIGNMENT_LEFT, 264, 11, Color("eadfc3"))
 	elif training.active:
-		canvas.draw_string(font, Vector2(viewport.x - 296, 444), "RANGE | F6 change spell · return restores weave", HORIZONTAL_ALIGNMENT_LEFT, 282, 11, Color("77dddc"))
+		canvas.draw_string(font, Vector2(viewport.x - 296, 444), ("RANGE | F6 change spell · return restores weave" if shortcut_available(KEY_F6) else "RANGE | Menu: spell · return restores weave"), HORIZONTAL_ALIGNMENT_LEFT, 282, 11, Color("77dddc"))
 	if challenge_active:
 		var status := challenge.status(game.world.tick)
 		var text := String(challenge.reward.get("notice", "")) if challenge.trial.is_finished() else String(status.get("cue", ""))
@@ -483,7 +490,7 @@ func draw(canvas: CanvasItem, font: Font, viewport: Vector2) -> void:
 			if y > box.end.y - 20: break
 			canvas.draw_string(font, Vector2(box.position.x + 14, y), line, HORIZONTAL_ALIGNMENT_LEFT, width, 12, Color("77dddc"))
 			y += 16
-		var footer := "Esc / Back: return · then Menu for rivals, tools and saves" if viewport.x < 900 or game.player_preferences.prompt_device == ControlBindingEditor.DEVICE_CONTROLLER else "DEV PRACTICE · Esc: return · Shift+F5: tools" if developer.active else "Esc / Back: return · Shift+F6: rivals · Shift+F5: tools"
+		var footer := "Esc / Back: return · then Menu for rivals, tools and saves" if viewport.x < 900 or game.player_preferences.prompt_device == ControlBindingEditor.DEVICE_CONTROLLER or not shortcut_available(KEY_F5) or (not developer.active and not shortcut_available(KEY_F6)) else "DEV PRACTICE · Esc: return · Shift+F5: tools" if developer.active else "Esc / Back: return · Shift+F6: rivals · Shift+F5: tools"
 		canvas.draw_string(font, box.position + Vector2(14, box.size.y-6), footer, HORIZONTAL_ALIGNMENT_LEFT, width, 11, Color("b8c1bf"))
 		if challenge.trial.is_finished():
 			var progress := progression.view()

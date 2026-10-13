@@ -1,0 +1,36 @@
+{
+  "schema": "hex.occupied-membership-ignored-draft.v1",
+  "status": "UNAPPLIED; source review pending; separate functional gate required before native timing",
+  "canonical_presenter_sha256": "3190aa2683205bfdd1ebcc297e1002b3f3e624e4b59a61ecf64b76889733b92c",
+  "candidate_sha256": "22376c664780c244249dc0ed5285d67cd0d677e7f69151e594845dfa2a67da6a",
+  "driver_sha256": "f211bdcd9e70ebf5ad581c7606c63e0eac6a83aaf9dc74c9c9594832e98ddab1",
+  "self_path_policy": "Exact get_script().resource_path comparison remains inside candidate timing; hypothetical production uses the same constant with canonical presenter path. No dynamic load. All subclasses fallback.",
+  "changes": [
+    {
+      "method": "draw_ground",
+      "old": "\tcanvas.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST",
+      "new": "\t# A changed native setter can emit a synchronous property-list signal.\n\tvar occupied_filter_unchanged := canvas.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST\n\tcanvas.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST"
+    },
+    {
+      "method": "draw_ground",
+      "old": "\tvar frame: Dictionary = _prepare_draw_bundle(court, tick)",
+      "new": "\tvar previous_occupied_court_id := _prepared_occupied_court_id\n\t_prepared_occupied_court_id = int(court.get_instance_id()) if occupied_filter_unchanged and not draw_district_base and get_script().resource_path == OCCUPIED_MEMBERSHIP_SCRIPT_PATH and (court.get_script() == HexChemistryWorldScript or court.get_script() == HexCourtScript) else 0\n\tvar frame: Dictionary = _prepare_draw_bundle(court, tick)\n\t_prepared_occupied_court_id = previous_occupied_court_id"
+    },
+    {
+      "method": "_prepare_draw_bundle",
+      "old": "func _prepare_draw_bundle(court: RefCounted, tick: float) -> Dictionary:\n\tvar previous := _compact_draw_bundle",
+      "new": "func _prepare_draw_bundle(court: RefCounted, tick: float) -> Dictionary:\n\t# Consume before downstream virtual work; direct/nested calls get no token.\n\tvar prepared_occupied_court_id := _prepared_occupied_court_id\n\t_prepared_occupied_court_id = 0\n\tvar previous := _compact_draw_bundle"
+    },
+    {
+      "method": "_prepare_draw_bundle",
+      "old": "\t\tif aggregate_coverage:",
+      "new": "\t\tif aggregate_coverage and prepared_occupied_court_id != int(court.get_instance_id()):"
+    }
+  ],
+  "limits": [
+    "No cross-call/tick cache or authority writes.",
+    "Texture-filter change disables reuse because the native setter can emit a synchronous callback.",
+    "Existing profiling subclasses deliberately retain predecessor work; isolated exact-class benefit would not prove full-observer improvement.",
+    "The containing bundle cost is not measured duplicated membership cost."
+  ]
+}

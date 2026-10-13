@@ -1,0 +1,29 @@
+--- a/tests/unit/test_element_audio.gd
++++ b/tests/unit/test_element_audio.gd
+@@ -3,6 +3,7 @@
+ const Elements = preload("res://src/content/element_rules.gd")
+ const Audio = preload("res://src/presentation/element_audio.gd")
+ const Harness = preload("res://tests/support/element_audio_harness.gd")
++const SoloDuelTrial = preload("res://src/app/solo_duel_trial.gd")
+ const CONTACTS := {"bolt": "projectile_hit", "spray": "spray_hit", "field": "field_triggered", "beam": "beam_fired"}
+ const LIVE_CONTACTS := {"bolt": "projectile_hit", "heavy": "projectile_hit", "rapid": "projectile_hit", "spray": "spray_hit"}
+ var catalog := AbilityCatalog.new()
+@@ -598,7 +599,7 @@
+ 		check(node._gameplay_input_blocked() and node._input_blocked(true) and node._audio_tails_blocked(true),"external blocker still stops result audio: "+String(row[1]))
+ 		row[0].set(row[1],old)
+ 		check(not node._audio_tails_blocked(true),"removing external block returns to finite-tail policy: "+String(row[1]))
+-	node.session_transport.mode = SessionTransport.Mode.HOST
++	node.session_transport.mode = SessionTransport.Mode.HOSTING
+ 	check(node._audio_tails_blocked(true),"non-offline terminal does not obtain frozen-result exception")
+ 	node.session_transport.mode = SessionTransport.Mode.CLIENT
+ 	node.session_transport.accepted = true
+--- a/tests/unit/test_spell_testing_tools.gd
++++ b/tests/unit/test_spell_testing_tools.gd
+@@ -812,5 +812,6 @@
+ 	for index: int in count:
+ 		var command: SimCommand = game._sample_gameplay_command(game.world.tick, Vector2.ZERO, Vector2.RIGHT, game._gameplay_input_blocked())
+ 		check(not command.has_pressed(SimCommand.PRESSED_SPELL_1), "handoff/release does not become a paid action")
+-		check(game.world.step([command]), "handoff guard expires through ordinary neutral steps")
++		var commands: Array[SimCommand] = [command]
++		check(game.world.step(commands), "handoff guard expires through ordinary neutral steps")
+ 		game.controls_input_guard_frames = maxi(0, game.controls_input_guard_frames - 1)

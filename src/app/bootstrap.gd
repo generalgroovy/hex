@@ -1005,7 +1005,7 @@ func _process(delta: float) -> void:
 		player_compendium.refresh_status(_local_player_state())
 	var controls_blocking := _gameplay_input_blocked()
 	character_movement_trail.begin_frame(delta, not controls_blocking and not _reduced_effects_enabled())
-	if element_audio != null and (controls_blocking or _is_spectating()):
+	if element_audio != null and _audio_tails_blocked(controls_blocking):
 		element_audio.silence()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if controls_blocking or not get_window().has_focus() else Input.MOUSE_MODE_HIDDEN
 	if controls_input_guard_frames > 0:
@@ -3182,7 +3182,20 @@ func _character_gallery_open() -> bool:
 
 
 func _gameplay_input_blocked() -> bool:
-	return _area_loading() or local_navigation.blocks_gameplay() or element_expansion.blocks_gameplay() or solo_trial_menu_open or (interception_practice_active and solo_trial.blocks_gameplay()) or service_directory.is_open or hex_playground_open or hex_playground_demo.is_active() or not application_input_active or join_address_editor_open or (controls_editor != null and controls_editor.is_open) or (spell_loom_editor != null and spell_loom_editor.is_open) or (player_compendium != null and player_compendium.is_open) or _character_gallery_open() or controls_input_guard_frames > 0
+	return _input_blocked()
+
+
+func _input_blocked(allow_finished_result: bool = false) -> bool:
+	return _area_loading() or local_navigation.blocks_gameplay() or element_expansion.blocks_gameplay(allow_finished_result) or solo_trial_menu_open or (interception_practice_active and solo_trial.blocks_gameplay() and not (allow_finished_result and solo_trial.is_finished())) or service_directory.is_open or hex_playground_open or hex_playground_demo.is_active() or not application_input_active or join_address_editor_open or (controls_editor != null and controls_editor.is_open) or (spell_loom_editor != null and spell_loom_editor.is_open) or (player_compendium != null and player_compendium.is_open) or _character_gallery_open() or controls_input_guard_frames > 0
+
+
+func _audio_tails_blocked(controls_blocking: bool) -> bool:
+	if _is_spectating(): return true
+	if not controls_blocking: return false
+	if not _solo_trial_frozen(): return true
+	# A finished result alone lets already-admitted finite tails finish.
+	# READY, loading, menus, focus and rearm guards still silence them.
+	return _input_blocked(true)
 
 
 func _sample_gameplay_command(tick: int, player_position: Vector2, pointer_position: Vector2, controls_blocking: bool) -> SimCommand:

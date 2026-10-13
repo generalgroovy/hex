@@ -1,0 +1,35 @@
+{
+  "schema": "hex.terminal-audio-unapplied-repair.v1",
+  "status": "UNAPPLIED; runtime/test source approved by Gameplay and Technical; native execution pending root",
+  "canonical_build": "p61-500be306a26a",
+  "files": [
+    {
+      "path": "src/app/bootstrap.gd",
+      "before_sha256": "76c24ae6dd2e7a43077f82579ed9dff3cc36bfa42d52e2953a635c5567da7921",
+      "proposed_sha256": "e1cb562cf19813f02be52f8b57902f0cff4742b9a811d2924e184491b85038a5"
+    },
+    {
+      "path": "src/app/element_expansion_controller.gd",
+      "before_sha256": "3e3006aa0a49ccf7623679bad870a7116670c556ed885d77cadb91c30568f513",
+      "proposed_sha256": "5cfc1609677f691d7af97d2c27dae437273327a10e3c6c6ed03832e8b11d96d3"
+    },
+    {
+      "path": "tests/unit/test_element_audio.gd",
+      "before_sha256": "ec467e8d186cee07d363f313da47f5694e7c8a7971ec094426f65f7431bbde17",
+      "proposed_sha256": "0e0f962efae7a8c14263d928ad03e73de8f38c08e103f88fc827784ecb5bda3f"
+    }
+  ],
+  "patch_sha256": "4421c1c6866ec9fa403810d0feeb240d6559c271b2c51673286c2c6f442a3580",
+  "scope": "Admission eligibility before terminal observation; only already-admitted finite tails survive an otherwise eligible actual offline finished-result freeze. No mixer/PCM/authority/protocol edits.",
+  "overlap": "Remap hint patch also touches Expansion in separate methods; root must preserve both and rerun applicable gates.",
+  "native": {
+    "driver": "verify-terminal-audio.gd",
+    "sha256": "30c08b791984366bbacdf5def9802e321d4950a51b7fb2c627d0fc0667481eff",
+    "source_pins_sha256": "522f4348239a73d840a4549323529e33a621ddd809db895cce21aca0b2f6db3d",
+    "wrapper": ".godot/iteration-20261013/run-terminal-audio-repair.ps1",
+    "wrapper_sha256": "cea35b5c1c683589017495b341fba58b137f6e6091d0be07a5872b4e51dca200",
+    "pacing": "10ms timer diagnostic observations; first3 immediate callbacks;2s/240limits; no FPS claim",
+    "gameplay_review": "approved exact30c08b pacing and wrapper; original runtime/test4421 unchanged",
+    "technical_review": "approved runtime/test4421 and native6f33; final one-line paced driver sent for confirmation"
+  }
+}
