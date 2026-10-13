@@ -2,7 +2,7 @@
 
 Status: **ACTIVE after explicit user resumption on October 13, 2026.**
 Continue audit, self-prompted delegation and cross-reviewed implementation until
-1% included usage remains. Latest allowance is 47% used / 53% remaining; paid
+1% included usage remains. Latest allowance is 51% used / 49% remaining; paid
 credits remain unchanged at 57564.601627. The [current iteration](../docs/iteration-20261013/README.md) and
 [self-prompt](../docs/iteration-20261013/SELF-PROMPT.md) own current work.
 T7 is applied with focused, paired native observer-cost and all three enclosing
@@ -53,11 +53,24 @@ gates pass. Their exact receipts are in
 `docs/iteration-20261013/delivery-500be`. The shared-profile lifecycle attempt
 closed normally but failed exact workload admission: twelve scheduled Fire casts
 were followed by 63 extra outcomes, whose input source is not identified. Its
-raw failure is archived; Mantle/reopen did not execute. An optional user
-availability question for an untouched three-minute repeat is pending.
-Canonical source stays frozen; agents may edit documentation and ignored
-prototypes. Root alone runs engines. The checkpoint below remains the playable
-fallback and does not qualify subsequent edits.
+raw failure is archived; Mantle/reopen did not execute in that attempt. The user
+authorized an untouched repeat, and all five cases now pass. Fire and all-six
+Mantle each admit exactly twelve casts with zero refusals or extra outcomes;
+package bytes, main preferences and backup remain unchanged through reopen.
+The corrected independent delivery reviewer passes 3,784 checks at
+`.godot/iteration-20261013/delivery-review/runs/final-a/review.json`, SHA
+`877be59a0a43b081df9d5bf7b37a0992ca5ecf69bd7f3b338cf38810443ab2ed`.
+Technical owns its exact archive and Gameplay independently recounts raw outcomes.
+Current local play link is `exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd`.
+Its ZIP is 161,186,435 bytes, SHA
+`9e27636f0542f0c85c60e1c45a540a8830d60bf0b9c5b4d71d56154e96c0e76b`;
+PCK SHA is `903630505c0fe1148fb8f4de4b3793c9b88d3286d00069862885d69cceac8fec`.
+Source checkpoint `5e84ee4f6c37b786677d1bdde7a254e3b2d339ab` is pushed to the
+existing branch; main remains `95ca630`. No branch CI was triggered and no open
+PR exists. The complete local Full gate remains the validation evidence.
+Canonical source stays frozen for the two queued ignored probes. Root alone
+runs engines. The older checkpoint below remains the playable fallback and does
+not qualify subsequent edits.
 
 The crowded trail preflight and smaller outline-prefix keys are withdrawn:
 their positive-work timing did not justify adoption. Canonical trail and Court
@@ -67,12 +80,19 @@ no fix was applied. All failed and contrary evidence is preserved.
 
 The next confirmed issue is stale F5/F6 guide/menu hints after supported gameplay
 remapping. Experience owns an ignored minimal availability/Menu-fallback patch;
-gameplay and technical independently review it. Root integrates only after the
-current coherent qualification. Technical and gameplay are preparing the
-seven-interval combined-stage diagnostic in ignored files; experience reviews
-the exact observer and root owns its wrapper. It remains unexecuted and is not
-an optimization. A source-confirmed victory audio-tail concern is awaiting a
-real paid terminal reproduction before any repair.
+gameplay and technical independently reviewed it. Coherent delivery qualification
+has passed; integration follows the frozen-source diagnostic and audio probes.
+The combined seven-interval functional diagnostic exceeded its 600-second
+watchdog without a receipt. Exact failed inputs/logs are preserved. A reviewed
+single-case wrapper retains every per-tick check and adds progress/deadline seams;
+five cases pass 8,074 checks / 108 attempts, with ten worlds correctly disabled.
+The full gate still requires all thirteen unique cases / 2,548 attempts; Fire-close
+is running next. No timing or optimization claim is made. Remap menu/guide fit
+passes 1,192 checks / twelve contexts / 36 native images; the actual-input suite
+awaits application. The audio reproduction had two pre-encounter fixture failures
+(consumed engine arguments and an overlong host name), both preserved. Exact
+reviewed helper `442fc863` is queued for a fresh run with actual driver and
+unchanged hostile-team checks. Neither failure establishes an audio defect.
 
 ## Preserved playable checkpoint
 

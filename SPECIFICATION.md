@@ -1,25 +1,23 @@
 # H.E.X. current design contract
 
-Status: **active October 13 development; current source p61-500be306a26a, qualification in progress.**
+Status: **active October 13 development; qualified local portable p61-500be306a26a.**
 The [active iteration](docs/iteration-20261013/README.md) owns current checks.
-The latest qualified local portable remains **p60-1e084a50a029**; the following
-delivery evidence belongs to that preserved build.
-The [iteration record](docs/iteration-20261012/README.md) binds the frozen source
-and matching Windows portable. Its clean [Full run](docs/iteration-20261012/full-final.json)
-passed 261 suites / 7,543,825 assertions with zero failures and stderr, including
-the 120 Hz boot check. Separate [package/archive](docs/iteration-20261012/delivery-files.json),
-[133-image terrain](docs/iteration-20261012/terrain-pack.json) and
-[five-case portable lifecycle](docs/iteration-20261012/portable-lifecycle.json) checks passed.
-Use the [launcher](exports/hex-iteration-20261012/windows/PLAY-HEX.cmd) or
-[Windows x64 ZIP](exports/hex-iteration-20261012/HEX-p60-1e084a50a029-Windows-x64.zip)
-(161,159,896 bytes; 153.7 MiB).
+The latest qualified local portable is **p61-500be306a26a**. Its clean
+[Full run](docs/iteration-20261013/full-500be/review.json) passed 265 suites /
+7,572,978 assertions with zero failures/stderr and the 120 Hz boot check.
+The [independent delivery review](docs/iteration-20261013/delivery-review-500be/review.json)
+links the matching package/archive, 133-image terrain and five-case normal-close
+lifecycle evidence. Use the [launcher](exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd)
+or [Windows x64 ZIP](exports/hex-iteration-20261013-500be/HEX-p61-500be306a26a-Windows-x64.zip)
+(161,186,435 bytes; 153.7 MiB). The prior p60-1e084a50a029 build remains preserved.
 
-The [foreground record](docs/iteration-20261012/foreground-current-record.json)
+The [foreground record](docs/iteration-20261013/foreground-500be-allsteps/review.json)
 passes manual Start, sampled focus, client-size and unchanged-source checks.
-Warm Garden/Fire/Mantle p95 engine intervals remain 29.420/49.174/51.784 ms;
-steady 60 FPS and human gameplay acceptance remain open. The reviewed
-[T7 diagnostics](docs/iteration-20261012/deferred-t7) are applied to the new working
-candidate, with focused and native observer-cost checks; they remain outside the
+Warm Garden/default Fire/Mantle p95 engine intervals are 24.743/28.217/39.999 ms.
+The workload differs from the earlier sustained Fire route, so this is not a
+matched speedup. Steady 60 FPS and human gameplay acceptance remain open. The
+reviewed [T7 diagnostics](docs/iteration-20261012/deferred-t7) are applied to p61,
+with focused and native observer-cost checks; they remain outside the
 preserved p60 portable.
 
 The [be680 fallback](exports/hex-smoothness-20261012/windows/PLAY-HEX.cmd) and its
@@ -56,7 +54,7 @@ The [player guide](docs/PLAYER-GUIDE.md), [roster](docs/CURRENT-CAST.md) and
 | Chemistry | 63 bounded reactions: six self-pairs and every distinct subset of two through six elements; stationary whole-hex impact fields |
 | Grid | 24 px face-to-face; 59,466 eligible Wellspring cells; topology cap 65,536 and selection cap 511; unchanged 64 paid casts / 32 products |
 | Wire | Protocol 61 / SessionSnapshot 24 / SessionRound 2 / HexWorldSnapshot 5 / HexChemistrySnapshot 5; protocol 61 clears defeated actors' unfired reservations in the same completed Hex step as paid-source retirement |
-| Delivery | Working p61 candidate has focused gates; whole-candidate qualification remains open. Preserved p60-1e084a50a029 passed Full, package, terrain and portable lifecycle checks. Its source foreground timing is admitted; steady 60 FPS, installer and publication remain unqualified. Exact evidence lives in the resume |
+| Delivery | Current p61-500be306a26a passes Full, package/archive, terrain and five-case portable lifecycle checks. Preserved p60-1e084a50a029 retains its own qualification. Current source foreground timing is admitted for the default workloads; sustained stress, steady 60 FPS, installer and publication remain unqualified. Exact evidence lives in the resume |
 
 The October 11 presentation revision expands the character-centered 360-degree
 view to cover every viewport corner, including camera lead, world edges and

@@ -1,18 +1,19 @@
 # H.E.X. game design overview
 
-Status: **active October 13 development; current source p61-500be306a26a, qualification in progress.**
-The [active iteration](iteration-20261013/README.md) owns current checks. The latest
-qualified portable remains **p60-1e084a50a029**.
-The [iteration record](iteration-20261012/README.md) contains the passed Full
-(261 suites / 7,543,825 assertions, zero failures and stderr), matching portable,
-terrain and five-case lifecycle gates. That preserved source also passed sampled
-foreground admission; steady 60 FPS remains unachieved. Use the
-[current launcher](../exports/hex-iteration-20261012/windows/PLAY-HEX.cmd).
+Status: **active October 13 development; qualified local portable p61-500be306a26a.**
+The [active iteration](iteration-20261013/README.md) owns current checks.
+Full passes 265 suites / 7,572,978 assertions with zero failures/stderr;
+the matching package, archive, terrain and five-case lifecycle checks pass.
+The [independent delivery review](iteration-20261013/delivery-review-500be/review.json)
+links exact source and package evidence. Steady 60 FPS remains unestablished.
+Use the [current launcher](../exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd).
+The [previous p60 portable](../exports/hex-iteration-20261012/windows/PLAY-HEX.cmd)
+and its [qualification](iteration-20261012/README.md) remain preserved.
 The [be680 fallback](../exports/hex-smoothness-20261012/windows/PLAY-HEX.cmd)
 and its [smoothness record](smoothness-20261012/README.md) remain preserved.
 The [resume](../.agent/HEX-RESUME.md) owns exact identities; SPECIFICATION.md owns
 the gameplay contract. Reviewed [T7 diagnostics](iteration-20261012/deferred-t7)
-are applied to the working candidate and remain outside the qualified p60 portable.
+are applied to the qualified p61 portable and remain outside the preserved p60 build.
 
 H.E.X. combines movement execution, aimed spell combat and finite elemental
 terrain. Players learn a small set of actions, then express skill through timing,
@@ -53,8 +54,8 @@ assertions with empty stderr. The protected-contact correction observes a real
 swept paid shot crossing during protection; it neither damages the actor nor
 changes the shot's trajectory or strength. The preserved be680 source subsequently
 passed 261 suites / 7,401,986 assertions and separate portable gates. The preserved
-1e084 build has its own clean Full and delivery receipts above; current 500be edits
-require fresh qualification.
+1e084 build has its own clean Full and delivery receipts; current 500be qualification
+is recorded separately above. Subsequent edits require their own appropriate gates.
 
 The **55.65 Fire / 46.74 all-six Mantle reported-FPS means** belong to the
 historical `p60-d8e6ea1cd808` portable. Those finite October 11 workloads include

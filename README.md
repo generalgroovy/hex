@@ -1,6 +1,6 @@
 # H.E.X. — Help, Everything eXploded!
 
-Status: **active development resumed October 13, 2026; candidate qualification in progress.**
+Status: **active development, October 13, 2026; qualified local portable available.**
 Current source **p61-500be306a26a** on `codex/hex-screen-smoothness-20261011` includes complete-step
 diagnostics, truthful cast timing, same-step defeated-cast cleanup, compact HUD
 identity and bounded worker terrain validation. The earlier terrain slicing
@@ -9,22 +9,24 @@ experiment was withdrawn after it lengthened arrival waits. The
 records its passed focused/native checks and current source measurements.
 [Full](docs/iteration-20261013/full-500be/review.json) passes 265 suites /
 7,572,978 assertions with zero failures/stderr. The fresh package, archive and
-133-image terrain checks pass, while the five-case normal-close/reopen gate
-remains open after extra unscheduled casts invalidated its Fire workload.
+133-image terrain checks and five-case normal-close/reopen repeat pass.
+The [independent delivery review](docs/iteration-20261013/delivery-review-500be/review.json)
+reconciles 3,784 checks across the exact source, raw test logs and package bytes.
+The earlier failed lifecycle record is retained.
 
-The latest qualified local Windows portable remains **p60-1e084a50a029**.
-Its [iteration record](docs/iteration-20261012/README.md)
-documents the prior multi-agent implementation, independent reviews and measurements.
-Its [Full run](docs/iteration-20261012/full-final.json) passed **261 suites /
-7,543,825 assertions**, zero failures and stderr, plus the 120 Hz boot check.
-The matching portable passed archive, terrain and five-case lifecycle checks.
+The latest qualified local Windows portable is **p61-500be306a26a**. Its source
+checkpoint is `5e84ee4` on the presentation branch; `main` is unchanged. The
+previous **p60-1e084a50a029** portable and its
+[qualification record](docs/iteration-20261012/README.md) remain preserved.
 
 This checkpoint includes faster bounded projectiles, actual-path movement trails,
 readability and perk/damage fixes, and staged Element Garden preparation.
-The [foreground recording](docs/iteration-20261012/foreground-current-record.json)
-passes admission, but warm Garden/Fire/Mantle p95 engine intervals remain
-**29.420/49.174/51.784 ms**: steady 60 FPS is not achieved. Preparation staging
-reduces measured peak work while increasing total CPU in the paired cases.
+The [current source foreground recording](docs/iteration-20261013/foreground-500be-allsteps/review.json)
+passes admission, with warm Garden/default Fire/Mantle p95 engine intervals of
+**24.743/28.217/39.999 ms**. Steady 60 FPS is not established. This diagnostic
+includes observer overhead and differs from the earlier sustained-casting route;
+it is not a matched improvement claim or a portable performance measurement.
+The sustained follow-up expired before Start and remains an open gate.
 Previous working portables and failed evidence remain preserved. The
 [single queue](.agent/OVERHAUL-IMPLEMENTATION.md) and [resume](.agent/HEX-RESUME.md)
 record remaining work. Each receipt qualifies only its recorded source or package.
@@ -66,20 +68,24 @@ For an independent portable, install matching Windows export templates and run
 `.\hex.cmd package -PixelCast`. Each run creates a fresh folder under `exports/`.
 See [development and verification](docs/DEVELOPMENT.md) for checks and packaging.
 
-The latest qualified local portable is **p60-1e084a50a029**:
+The latest qualified local portable is **p61-500be306a26a**:
 
-- [Launch H.E.X.](exports/hex-iteration-20261012/windows/PLAY-HEX.cmd)
-- [Windows x64 ZIP](exports/hex-iteration-20261012/HEX-p60-1e084a50a029-Windows-x64.zip) — **153.7 MiB** (161,159,896 bytes). Extract the ZIP before launching.
+- [Launch H.E.X.](exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd)
+- [Windows x64 ZIP](exports/hex-iteration-20261013-500be/HEX-p61-500be306a26a-Windows-x64.zip) — **153.7 MiB** (161,186,435 bytes). Extract the ZIP before launching.
 
-The [package receipt](docs/iteration-20261012/package.json) and
-[delivery checks](docs/iteration-20261012/delivery-files.json) verify the
-export/archive identities. The [terrain check](docs/iteration-20261012/terrain-pack.json)
-verified 133 exact images with 2,062 checks. The
-[portable lifecycle check](docs/iteration-20261012/portable-lifecycle.json)
+The [package receipt](docs/iteration-20261013/delivery-500be/package.json) and
+[delivery checks](docs/iteration-20261013/delivery-500be/delivery-files.json) verify the
+export/archive identities. The [terrain check](docs/iteration-20261013/delivery-500be/terrain/terrain-pack.json)
+verified 133 exact images with 2,064 checks. The
+[portable lifecycle check](docs/iteration-20261013/portable-lifecycle-500be-passed-b/receipt.json)
 passed five cases with normal window closes and empty stderr, retaining the same
 isolated preferences and unchanged package. Fire and all-six Mantle each completed
 12 accepted paid casts with no refusals. These checks do not establish smooth frame
 times, physical input, competitive balance or installer acceptance.
+
+The prior **p60-1e084a50a029** portable remains available through its
+[launcher](exports/hex-iteration-20261012/windows/PLAY-HEX.cmd) and
+[qualification record](docs/iteration-20261012/README.md).
 
 The preceding **p60-be680e20d70e** portable remains available through its
 [launcher](exports/hex-smoothness-20261012/windows/PLAY-HEX.cmd) and

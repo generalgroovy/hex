@@ -1,9 +1,11 @@
 # October 13 iterative improvement cycle
 
 Status: **active, explicitly resumed by the user**. Start is clean commit
-106875954a8b7f11710961c3a6d425e71798b77d. The prior qualified portable
-p60-1e084a50a029 remains available and unchanged. This record does not qualify
-new source edits as a replacement build.
+106875954a8b7f11710961c3a6d425e71798b77d. Source checkpoint
+5e84ee4f6c37b786677d1bdde7a254e3b2d339ab is pushed to the existing presentation
+branch. Current qualified local portable is p61-500be306a26a; the prior
+p60-1e084a50a029 remains available and unchanged. Each receipt qualifies only
+its recorded source and package bytes.
 
 The [self-prompt](SELF-PROMPT.md) defines scope, recursive decomposition, review
 ownership, preservation rules and the 1% included-usage cutoff. Root entered with
@@ -23,8 +25,8 @@ ownership, preservation rules and the 1% included-usage cutoff. Root entered wit
 | Skip impossible trail samples before counting ground | Gameplay ignored prototype | Technical, experience and root | Withdrawn: sustained crowded native orders pass 23,163 checks each, but actual-emission cost regresses in both. Overall no-op savings do not justify worsening the intended casting path. Canonical emitter unchanged; [initial](trail-noop/README.md) and [crowded](trail-crowded/README.md) archives retain contrary results |
 | Optional coach terminal edge | Gameplay ignored reproduction | Technical, experience and root | [Bounded diagnostic](coach-terminal/README.md) passes 14,831 integrity checks but does not reproduce the suspected issue. All nominal offsets stop at the same early avoidance, before a Spray finisher or terminal save/freeze. No source repair is justified |
 | Current gameplay and encounter audit | Gameplay | Experience and technical | Auditing normal paid paths, counterplay, learning and perk usefulness |
-| Casting/Garden bottleneck selection | Technical and root | Gameplay and experience | Current-source completed-step foreground record and independent raw attribution review pass. Mantle ground drawing and the combined resources/status/movement/cast stage remain leading measured costs; seven-interval diagnostic remains a proposal |
-| Remapped guide shortcuts | Experience ignored prototype | Gameplay, technical and root | Confirmed stale F5/F6 hints under supported gameplay remaps. Minimal availability/Menu-fallback patch is frozen and source-approved, including real input/paid regression draft; parsing and execution await application after qualification |
+| Casting/Garden bottleneck selection | Technical and root | Gameplay and experience | Current-source completed-step foreground record and independent raw attribution review pass. Mantle ground drawing and the combined resources/status/movement/cast stage remain leading measured costs; the independently reviewed seven-interval functional probe is running |
+| Remapped guide shortcuts | Experience ignored prototype | Gameplay, technical and root | Confirmed stale F5/F6 hints under supported gameplay remaps. The frozen patch passes native menu/guide fit: 1,192 checks, 12 contexts and 36 PNGs, independently verified. Integration and actual input regressions follow the frozen-source probes; [exact archive](remap-guide-hints/README.md) retains scope and limits |
 | Victory confirmation audio tail | Experience source audit | Gameplay and root | Source trace shows result input blocking can silence the confirmation on the next presentation frame. A real paid terminal reproduction is required; no runtime repair applied |
 
 The [prior checkpoint record](../iteration-20261012/README.md) owns its Full,
@@ -70,11 +72,17 @@ p61-500be306a26a: **265 suites / 7,572,978 assertions / zero failures and stderr
 including import, identity and 120 Hz boot. The [fresh package](delivery-500be/package.json),
 [18-check archive verification](delivery-500be/delivery-files.json) and
 [133-image / 2,064-check terrain gate](delivery-500be/terrain/terrain-pack.json)
-also pass. The source remains frozen while shared-profile lifecycle admission is
-open. Its [first attempt](portable-lifecycle-500be-failed-a/review.json) closed
+also pass. Its [first lifecycle attempt](portable-lifecycle-500be-failed-a/review.json) closed
 normally with empty stderr but recorded 63 extra cast outcomes after the twelve
 scheduled Fire admissions. The input source is unknown; Mantle/reopen were not
-executed. The failed record is preserved and an untouched-repeat availability
-question is pending. None of these delivery checks establishes frame pacing.
-Latest recorded allowance check: 47% used / 53% remaining;
+executed in that attempt. The failed record is preserved. The user-authorized
+[untouched repeat](portable-lifecycle-500be-passed-b/receipt.json) now passes all
+five cases, twelve Fire and twelve all-six Mantle admissions, zero extra outcomes,
+empty stderr, unchanged package bytes and shared preferences through reopen.
+The [independent delivery review](delivery-review-500be/review.json) passes 3,784
+checks linking Full, source, payload, ZIP, terrain and raw lifecycle evidence.
+The new portable is the current local play link. None of these delivery checks
+establishes frame pacing. The frozen-source attribution and audio probes precede
+the next bounded runtime edit.
+Latest recorded allowance check: 50% used / 50% remaining;
 credits balance unchanged.

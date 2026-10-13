@@ -2,8 +2,15 @@
 
 Current state: canonical source is frozen at **`p61-500be306a26a`**. Root reports
 clean Full validation: **265 suites / 7,572,978 assertions / zero failures and
-empty stderr**. Fresh package, exported-terrain and portable lifecycle gates are
-still in progress. T7 complete-step instrumentation, the bounded paid-startup
+empty stderr**. The [fresh package](delivery-500be/package.json),
+[archive verification](delivery-500be/delivery-files.json) and
+[exported-terrain gate](delivery-500be/terrain/terrain-pack.json) have passed.
+The [untouched portable lifecycle retry](portable-lifecycle-500be-passed-b/receipt.json)
+passes all five cases, with twelve Fire and twelve all-six Mantle admissions,
+zero refusals, empty stderr and preserved package/preferences. The linked
+[independent delivery review](delivery-review-500be/review.json) passes 3,784
+checks. This is the current qualified local portable; sustained foreground
+acceptance remains open. T7 complete-step instrumentation, the bounded paid-startup
 witness with an honest unknown fallback, and the protection-only lower HUD row
 are applied. Their focused/native evidence below remains scoped to the exact
 sources and workloads tested; Full and package qualification are separate.
@@ -18,10 +25,16 @@ the suspected terminal edge, so it establishes no coach defect and justifies no
 fix. The recent sustained foreground setup expired without Start and collected
 no gameplay; it does not replace the separate admitted `500be` diagnostic.
 
-Next action is the ignored-only remapped-shortcut hint draft described below,
-plus review of the proposed seven-interval simulation attribution in
+The remapped-shortcut hint draft remains unapplied. Its
+[native menu/guide fit gate](remap-guide-hints/README.md) passes 1,192 checks across
+12 contexts and 36 PNGs with empty stderr. Source, hash and sampled visual
+review approve root integration after the frozen-source probes; the actual
+supported-remap/paid-input regression still requires execution after application.
+Next are root's functional gates for the ignored terminal-audio reproduction and
+seven-interval simulation attribution in
 [Technical's ledger](technical.md#next-diagnostic-prompt-split-movement-and-cast-work).
-Root has authorized only an unapplied hint patch; canonical source stays frozen.
+Root has authorized these isolated diagnostics and the unapplied hint patch;
+canonical source stays frozen.
 No new cache, balance change or runtime edit is authorized by this document.
 Physical-input feel, listening, authored
 animation completeness and human counter recognition remain acceptance gaps,
@@ -1014,3 +1027,36 @@ prioritizes meaningful audio information and limits unnecessary noise. Reopened
 October 13, it supports preserving the existing useful cue without adding more
 sounds; it does not prescribe H.E.X.'s focus policy or prove this cue is pleasant
 or recognizable. The bounded audit stops here with no second audio issue.
+
+Root subsequently authorized the ignored reproduction, initially source-reviewed by
+Gameplay at driver SHA
+`dbe8ab83d24dcaaa56600b3f9e1ceae250c284819be4e4fa1783c892c30f36b6`
+under `.godot/iteration-20261013/terminal-audio/`. Its two paid-route methods are
+exact copies of the existing progression suite, with 28 canonical source pins.
+One actual district encounter must reach a genuine owned paid victory and saved
+reward. The primary witness requires the reserved confirmation voice still
+playing at the recorded `silence()` call, strictly before its actual clip could
+finish, then stopped after the inherited frozen-result callback. Alternate
+focus/menu/mute/handoff checks re-arm only the presentation notice marker on the
+same genuine result; they are explicitly synthetic eligibility controls, not
+new victories. The handoff check is an existing audio/input reset seam, not a
+complete world replacement. Actual authority, payment, reward and save bytes
+must remain fixed through those callbacks. The root-owned wrapper at
+`3698384dc786c8055bdb1c740ba9e6ecc3b106a4e2a10916188f9977051af55f`
+uses a fresh isolated APPDATA, strict parser/runner and bounded watchdog. The
+first run parsed but stopped before the encounter at its backend admission
+check; it establishes no audio behavior. Exact helper, wrapper, checkpoint,
+source pins, logs and the three-check rejected receipt are preserved under
+`terminal-audio/backend-admission-failed-1/` in the ignored work area. The helper
+had looked for engine flags in `OS.get_cmdline_args()`. The sole correction uses
+`AudioServer.get_driver_name()`—already used by the passing ElementAudio suite—
+and records the actual selected driver. Gameplay approved this exact delta at
+`814e048fba57713b6af60b9cb92de84970eba4812e7483314586a4714cb3fece`;
+the second run admitted Dummy but stopped at local-session binding before the
+encounter (75 checks, empty stderr). The fixture name was 20 characters against
+the existing 15-character limit. Exact failed bytes/logs/receipt are preserved
+under `terminal-audio/session-binding-failed-2/`; a short-name-only correction
+also records `last_error` and requires unchanged world state/hostile teams across
+binding. It remains an ignored fixture correction awaiting a fresh root gate,
+not audio-defect evidence. Dummy-backed playing/stop calls cannot establish
+listening comfort, physical focus or full-boot behavior. No repair is applied.

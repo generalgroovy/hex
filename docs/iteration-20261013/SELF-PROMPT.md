@@ -59,9 +59,10 @@ Withdraw optimizations whose intended benefit fails measurement. Do not revive
 the rejected broad Court cache or default retained campus without new evidence.
 
 The startup witness, same-step defeated-cast cleanup, bounded worker terrain
-validation and redundant idle HUD name removal are integrated. The preserved
-portable remains the prior qualified build until the coherent source freeze
-passes Full and fresh package gates. The single queue owns exact gate state.
+validation and redundant idle HUD name removal are integrated. Coherent source
+p61-500be306a26a now passes Full and all fresh package/lifecycle gates; 3,784
+independent review checks link the raw evidence. It is the current local play
+link, with the previous build preserved. The single queue owns exact gate state.
 
 The completed review ring withdrew both crowded trail preflight and smaller
 outline-prefix keys after their intended positive-work timing failed. The
@@ -71,10 +72,10 @@ archived. Preserve these decisions; do not repeat their original task prompts.
 
 The next ring is deliberately bounded:
 
-1. Root: finish Full and qualify a fresh package, archive, terrain and shared
-   profile normal-close/reopen sequence on frozen p61-500be306a26a. Technical
-   reviews raw receipt/source/package linkage; gameplay reviews paid counts and
-   persistence boundaries. Keep the old portable until all delivery gates pass.
+1. Root: preserve the passed Full/package/archive/terrain/shared-profile
+   qualification on p61-500be306a26a and pushed source checkpoint 5e84ee4.
+   Technical archives exact receipt/source/package linkage; Gameplay independently
+   reviews paid counts and persistence boundaries. Keep both portables.
 2. Experience: prepare an ignored minimal correction for stale F5/F6 guide and
    menu hints when those keys are validly remapped. Reuse the routing availability
    rule and existing Menu fallback. Gameplay reviews actual mapped input and

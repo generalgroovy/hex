@@ -1,7 +1,8 @@
 # H.E.X. single implementation queue
 
 Status: **ACTIVE after the user's October 13 resumption**, with a 1% remaining
-included-usage cutoff. The stable p60-1e084a50a029 portable is preserved.
+included-usage cutoff. Current qualified portable is p61-500be306a26a; the stable
+p60-1e084a50a029 fallback is preserved. Source checkpoint 5e84ee4 is pushed.
 The [current iteration](../docs/iteration-20261013/README.md) and
 [self-prompt](../docs/iteration-20261013/SELF-PROMPT.md) own new work.
 
@@ -33,14 +34,14 @@ The [current iteration](../docs/iteration-20261013/README.md) and
 - [ ] Qualify the frozen p61-500be306a26a source with garden_middle / paid_fire_bolt_sustained / paid_all_six_mantle_sustained at 12 seconds. The five-minute attempt expired without Start, arming or game instantiation; its raw failure is archived. Manual Start and foreground admission remain required for any future attempt.
 - [x] Pass Full on unchanged p61-500be306a26a: 265 suites / 7,572,978 assertions / zero failures and stderr; independent raw review archived.
 - [x] Pass fresh portable export, all 18 archive checks and exact 133-image / 2,064-check exported-terrain gate; preserve the earlier build.
-- [ ] Finish the five-case normal-close/reopen gate before promoting the new playable checkpoint. First attempt closed normally but failed after twelve scheduled Fire admissions were followed by 63 extra cast outcomes; Mantle/reopen unrun. An untouched-repeat availability question is pending; preserve the raw failure.
-- [ ] After qualification, fix confirmed stale F5/F6 guide/menu hints under supported gameplay remaps, with independent action/fallback review; ignored prototype only during the freeze.
-- [ ] Run the ignored seven-interval simulation attribution after exact transformation/paid-fixture/observer reviews; choose at most one demonstrated redundant-work change afterward.
+- [x] Finish the five-case normal-close/reopen gate and promote p61-500be306a26a as the local play link. The user-authorized untouched repeat passes all five cases, exact twelve Fire and twelve Mantle admissions, empty stderr, unchanged package and shared preferences. Independent delivery review passes 3,784 checks. The first extra-outcome failure remains preserved.
+- [ ] Integrate the confirmed stale F5/F6 guide/menu hint repair after frozen-source probes. The exact ignored patch passes independent source review and 1,192 native fit checks / 36 images; actual-input affected suites remain required after application.
+- [ ] Run the ignored seven-interval simulation attribution after exact transformation/paid-fixture/observer reviews. The combined run timed out without a receipt; reviewed single-case runs retain all checks and five of thirteen cases pass. Complete all cases before a separately reviewed cost extension and any optimization choice.
 - [ ] Reproduce the independently source-confirmed terminal confirmation audio lifetime concern with an actual paid victory before selecting a repair.
 - [ ] Implement cross-reviewed improvements from all-domain audits in bounded slices.
 - [ ] Qualify coherent freezes, reconcile docs and stop at the usage cutoff.
 
-## Stable iteration checkpoint
+## Preserved October 12 checkpoint
 
 - [x] Audit all systems through three specialists and independently review selected changes.
 - [x] Implement and check bounded gameplay, presentation and Garden improvements.

@@ -1,0 +1,35 @@
+{
+  "schema": "hex.remap-guide-hints.independent-review.v1",
+  "status": "approved for root integration after frozen probes",
+  "canonical_applied": false,
+  "receipt_sha256": "49a7ff75d4ab479c9c6684dcd59d02ceb5ef77fa3f836b6ed963775deb3dca50",
+  "checks": 1192,
+  "contexts": 12,
+  "pngs_verified": 36,
+  "source_pins_verified": 24,
+  "stderr_bytes": 0,
+  "patch_sha256": "93628c4843e11611f0420222d568c07ced1e635b9d9f483abdfac66869e9cc16",
+  "visual_samples": [
+    "960-200-default-menu_first.png",
+    "960-200-controller-menu_developer.png",
+    "1280-200-remapped-menu_developer.png",
+    "1280-100-default-guide_range.png",
+    "960-200-remapped-guide_range.png",
+    "1280-200-controller-guide_range.png"
+  ],
+  "visual_findings": [
+    "Default F5/F6/Shift+F6 remain visible and aligned",
+    "Remapped Developer/Range hint is omitted while menu action stays readable",
+    "Controller menu suppresses keyboard hints; guide points to Menu",
+    "Wrapped guide text remains clear of Skip and Details targets",
+    "No clipping or overlap observed in these six inspected PNGs"
+  ],
+  "limits": [
+    "36 PNG hashes and automated geometry checks are full coverage; visual inspection samples six",
+    "Offscreen native proposed menu/guide draw paths; no complete Bootstrap boot or input dispatch",
+    "Prepared guide step is not paid tutorial progression",
+    "Fixed wide Developer/Range status and challenge footer excluded",
+    "Real remap/Shift/paid input regression remains pending after application",
+    "No physical device, focus, performance or audio claim"
+  ]
+}

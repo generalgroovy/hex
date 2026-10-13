@@ -2,26 +2,23 @@
 
 Status: **active development, October 13, 2026**, on
 codex/hex-screen-smoothness-20261011. The [active iteration](iteration-20261013/README.md)
-owns current source **p61-500be306a26a**, its cross-reviews and open
-qualification gates. Full, fresh package/archive and exported terrain pass;
-the normal-close lifecycle repeat and sustained foreground stress gate remain open.
-The latest qualified portable remains **p60-1e084a50a029**. Its
-[iteration record](iteration-20261012/README.md) owns the following qualification.
-[Full](iteration-20261012/full-final.json) passes 261 suites / 7,543,825 assertions
-with zero failures/stderr and 120 Hz boot. The matching portable passes
-[archive](iteration-20261012/delivery-files.json),
-[terrain](iteration-20261012/terrain-pack.json) and
-[five-case lifecycle](iteration-20261012/portable-lifecycle.json) checks.
+owns current source and qualified portable **p61-500be306a26a**. Full, fresh
+package/archive, exported terrain and the normal-close lifecycle repeat pass.
+The [independent review](iteration-20261013/delivery-review-500be/review.json)
+reconciles 3,784 checks, including 265 Full suites / 7,572,978 assertions with
+zero failures/stderr and 120 Hz boot. The sustained foreground stress gate stays
+open; its last setup expired without Start. The earlier **p60-1e084a50a029**
+[portable and qualification](iteration-20261012/README.md) remain preserved.
 
-Use the [current launcher](../exports/hex-iteration-20261012/windows/PLAY-HEX.cmd)
-or [Windows x64 ZIP](../exports/hex-iteration-20261012/HEX-p60-1e084a50a029-Windows-x64.zip)
-(161,159,896 bytes; 153.7 MiB). These local binaries are excluded from Git.
-The [foreground record](iteration-20261012/foreground-current-record.json) passes
+Use the [current launcher](../exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd)
+or [Windows x64 ZIP](../exports/hex-iteration-20261013-500be/HEX-p61-500be306a26a-Windows-x64.zip)
+(161,186,435 bytes; 153.7 MiB). These local binaries are excluded from Git.
+The [foreground record](iteration-20261013/foreground-500be-allsteps/review.json) passes
 admission but does not establish sustained 60 FPS. The
 [resume](../.agent/HEX-RESUME.md) owns exact identities; the
 [single queue](../.agent/OVERHAUL-IMPLEMENTATION.md) owns deferred work.
 The [T7 patch archive](iteration-20261012/deferred-t7/README.md) preserves the reviewed
-proposal now applied to the working candidate; it is outside the p60 portable.
+proposal now applied to the qualified p61 portable; it is outside the p60 fallback.
 
 Previous [be680](smoothness-20261012/README.md),
 [845f](implementation-20261012/README.md) and

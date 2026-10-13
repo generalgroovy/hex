@@ -1,19 +1,16 @@
 # H.E.X. player guide
 
-Status: **development is active; this guide's qualified portable is p60-1e084a50a029.**
-The [October 13 iteration](iteration-20261013/README.md) tracks the new working candidate.
-Open the [current launcher](../exports/hex-iteration-20261012/windows/PLAY-HEX.cmd),
-or extract the [Windows x64 ZIP](../exports/hex-iteration-20261012/HEX-p60-1e084a50a029-Windows-x64.zip)
-(161,159,896 bytes; 153.7 MiB) into its own folder before launching.
+Status: **development is active; this guide's qualified portable is p61-500be306a26a.**
+The [October 13 iteration](iteration-20261013/README.md) tracks current work and checks.
+Open the [current launcher](../exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd),
+or extract the [Windows x64 ZIP](../exports/hex-iteration-20261013-500be/HEX-p61-500be306a26a-Windows-x64.zip)
+(161,186,435 bytes; 153.7 MiB) into its own folder before launching.
 These are local files. The [README](../README.md#install-or-play-on-windows)
 explains source setup and portable use.
 
-The [Full run](iteration-20261012/full-final.json) passed 261 suites /
-7,543,825 assertions with zero failures and stderr, including the 120 Hz boot check.
-The matching portable passed [package/archive](iteration-20261012/delivery-files.json),
-[133-image terrain](iteration-20261012/terrain-pack.json) and
-[five-case normal-close/reopen checks](iteration-20261012/portable-lifecycle.json).
-The [current performance record](iteration-20261012/foreground-current-record.json)
+The [independent delivery review](iteration-20261013/delivery-review-500be/review.json)
+links passed Full tests, package/archive, terrain and normal-close/reopen checks.
+The [current performance record](iteration-20261013/foreground-500be-allsteps/review.json)
 passes its focus and source checks, but steady 60 FPS is not yet achieved.
 Physical-controller behavior, human balance and movement feel remain acceptance work.
 
