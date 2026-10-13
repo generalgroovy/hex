@@ -9,7 +9,7 @@ const Policy = preload("res://src/sim/hex/hex_recipe_policy.gd")
 func run() -> int:
 	equal(Elements.IDS, ["water", "fire", "wind", "earth", "light", "dark"], "one six-element display order")
 	equal(Elements.WIRE_IDS, [3, 2, 4, 1, 7, 8], "sparse identities do not reinterpret historical wires")
-	equal(SimConfig.PROTOCOL_VERSION, 60, "mixed payload and status authority is a new protocol")
+	equal(SimConfig.PROTOCOL_VERSION, 61, "mixed payload and status authority includes same-step defeated pending cleanup")
 	equal(ChemistrySnapshot.SCHEMA_VERSION, 5, "mixed source funding requires schema5")
 	for wire: int in range(-2, 12):
 		equal(Elements.is_active_wire(wire), wire in [1, 2, 3, 4, 7, 8], "live element admission uses membership: %d" % wire)

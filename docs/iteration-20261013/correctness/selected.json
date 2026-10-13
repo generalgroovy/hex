@@ -1,0 +1,79 @@
+{
+  "schema": "hex-selected-correctness-v1",
+  "passed": true,
+  "suites": [
+    {
+      "assertions": 1287,
+      "suite": "cast-startup-witness"
+    },
+    {
+      "assertions": 21570,
+      "suite": "defeated-pending-capture"
+    },
+    {
+      "assertions": 439,
+      "suite": "terrain-validation-slices"
+    },
+    {
+      "assertions": 3016,
+      "suite": "six-element-protocol"
+    },
+    {
+      "assertions": 52,
+      "suite": "core"
+    }
+  ],
+  "assertions": 26364,
+  "failures": 0,
+  "stderr_bytes": 0,
+  "protocol": 61,
+  "snapshot_schema": 24,
+  "sources_after_run": [
+    {
+      "path": "src/sim/core/sim_world.gd",
+      "sha256": "2a8e32069c800d70644f222d4ce1e2378e3b2c79991e7e5d58b4de2df4548a1e"
+    },
+    {
+      "path": "src/sim/core/sim_config.gd",
+      "sha256": "0805015a85ba138ee0c024c01b614c908e3ea714202a1410be6b11ee60390d98"
+    },
+    {
+      "path": "src/presentation/cast_startup_witness.gd",
+      "sha256": "b38f0d45bb23901295d24cb63b5369562b434f1509356d120c42dcfc9892effc"
+    },
+    {
+      "path": "src/presentation/wellspring_terrain_stream.gd",
+      "sha256": "2ec06bcf99f2da0f208221a78089e199dba518fa4fbe82abd9e46c723d5dc28c"
+    },
+    {
+      "path": "tests/unit/test_cast_startup_witness.gd",
+      "sha256": "31912dd81e3f2fcf34857caca7be9e8f11a298c22abf5880cac88d2c8c56ea71"
+    },
+    {
+      "path": "tests/unit/test_defeated_pending_capture.gd",
+      "sha256": "8010fb0018b21aaed2adef7f7474573b48517285f70618f155e2a8828f3cb6c1"
+    },
+    {
+      "path": "tests/unit/test_terrain_validation_slices.gd",
+      "sha256": "fd298da601578710e05b2c3d057b0840d79770fbf4980a376b7b23763dd00157"
+    },
+    {
+      "path": "tests/run_all.gd",
+      "sha256": "c38717a7dbd90ac339250b6fd17f40b397fd16663539f6baf92a035df5f3294d"
+    }
+  ],
+  "logs": [
+    "death-slices-focused.log",
+    "death-slices-focused.log.err"
+  ],
+  "preserved_failures": {
+    "expanded_first": "Twelve fixture reachability/lifetime failures; all fixed using actual authored paid damage/lifetimes",
+    "e13_original": "Real empty snapshot on same-step paid admission and death",
+    "bootstrap_first": "Seven failures after correct refusal of deliberately stale p60 runtime identity; requires matching p61 freeze and rerun"
+  },
+  "limits": [
+    "Selected suites, not Full or package qualification",
+    "Terrain fixture proves resource lifecycle, not uninterrupted actual walking",
+    "Matching runtime identity generation and whole candidate gates follow"
+  ]
+}

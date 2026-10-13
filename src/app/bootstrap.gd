@@ -14,6 +14,7 @@ const DistrictCoach = preload("res://src/presentation/district_practice_coach.gd
 const ReadingPolicy = preload("res://src/presentation/ui_reading_policy.gd")
 const DamageEvent = preload("res://src/sim/combat/combat_damage_event.gd")
 const ElementAudioScript = preload("res://src/presentation/element_audio.gd")
+const CastStartupWitnessScript = preload("res://src/presentation/cast_startup_witness.gd")
 const ReadableLoom = preload("res://src/presentation/readable_spell_loom.gd")
 const ReadableControls = preload("res://src/presentation/readable_controls.gd")
 const ReadableChemistryDemo = preload("res://src/presentation/readable_chemistry_demo.gd")
@@ -86,6 +87,7 @@ var _visibility_frame_sight_range := -1.0
 var _visibility_bounds_builds := 0
 
 var world: SimWorld
+var cast_startup_witness := CastStartupWitnessScript.new()
 var element_expansion := ElementExpansion.new()
 var local_navigation := preload("res://src/app/local_navigation_controller.gd").new()
 var element_garden := preload("res://src/app/element_garden_exhibition.gd").new()
@@ -1186,10 +1188,14 @@ func _process(delta: float) -> void:
 				if range_command != null: commands.append(range_command)
 			if session_transport.is_host():
 				commands = authoritative_session.commands_for_tick(command)
+			var step_started_tick := world.tick
 			if not world.step(commands):
 				push_error(world.last_error)
 				set_process(false)
 				break
+			# Only this synchronous authority boundary can witness the paid total.
+			# Replica event ingestion may arrive after startup has already advanced.
+			cast_startup_witness.observe_local_step(world, world.combat_events, step_started_tick)
 			element_expansion.after_paid_step(commands)
 			element_expansion.after_step()
 			_update_element_garden()
@@ -1453,6 +1459,7 @@ func _draw() -> void:
 	_draw_remote_travellers(camera_origin, state.entity_id, visual_tick, team_markers, -1, rendered_position.y)
 	var local_label_position := Vector2(INF, INF)
 	var presentation_state: PlayerState = client_prediction.predicted_state if session_transport.is_connected_client() and client_prediction.is_ready() else state
+	var local_cast_timing := _cast_timing_for(state)
 	if _chemistry_actor_visible(state):
 		var presentation := JumpPresentation.sample(presentation_state, world.config, alpha, _reduced_effects_enabled(), previous_air_height)
 		var landing := LandingPresentation.sample(presentation_state, world.config, alpha, _reduced_effects_enabled())
@@ -1486,6 +1493,7 @@ func _draw() -> void:
 				shadow_center,
 				actor_motion_history.gait_phase(presentation_state.entity_id),
 				actor_motion_history.wall_travel(presentation_state.entity_id),
+				local_cast_timing,
 			)
 		if not sprite_drawn:
 			draw_circle(body_position, player_radius + 5.0, Color(ATTUNEMENT_COLOR, 0.18))
@@ -1493,7 +1501,7 @@ func _draw() -> void:
 			draw_arc(body_position, player_radius + 2.0, 0.0, TAU, 24, PARCHMENT_COLOR, 2.0)
 		if show_debug_overlay:
 			_draw_actor_hitbox_diagnostic(body_position, float(presentation_state.radius) / 1000.0, presentation_champion_id)
-		_draw_spell_startup(presentation_state, sprite_anchor, roundi(visual_tick))
+		_draw_spell_startup(presentation_state, sprite_anchor, roundi(visual_tick), local_cast_timing)
 		ElementStatusPresenter.draw(self, state, body_position, world.config, visual_language, _reduced_effects_enabled())
 		local_label_position = body_position
 		if state.spawn_protection_ticks > 0:
@@ -1561,6 +1569,7 @@ func _draw() -> void:
 			get_viewport().get_mouse_position() / ui_scale,
 			_session_feedback_label(),
 			player_preferences,
+			local_cast_timing if observed_state == state else _cast_timing_for(observed_state),
 		)
 		draw_set_transform(Vector2.ZERO)
 	stage_started = _record_draw_stage("combat_hud", stage_started)
@@ -2084,6 +2093,7 @@ func _draw_remote_travellers(camera_origin: Vector2, local_entity_id: int, visua
 		var sprite_drawn: bool = false
 		var champion_id := champion_catalog.champion_id_from_wire(remote_state.champion_wire_id)
 		var sprite_anchor := shadow_center + Vector2(0.0, -float(presentation.body_lift_pixels))
+		var remote_cast_timing := _cast_timing_for(remote_state)
 		if viewport_policy.can_skip_body(cartoon_champion_presenter, champion_id, remote_state, world.config, sprite_anchor, shadow_center, camera_origin, body_viewport, PlayerCameraRig.ZOOM_PERCENT):
 			sprite_drawn = true # Only the bounded presenter body is skipped.
 		elif cartoon_champion_presenter != null:
@@ -2099,6 +2109,7 @@ func _draw_remote_travellers(camera_origin: Vector2, local_entity_id: int, visua
 				shadow_center,
 				actor_motion_history.gait_phase(remote_state.entity_id),
 				actor_motion_history.wall_travel(remote_state.entity_id),
+				remote_cast_timing,
 			)
 		if not sprite_drawn:
 			var body_color := FLUX_COLOR if remote_state.champion_wire_id == 2 else ATTUNEMENT_COLOR
@@ -2107,7 +2118,7 @@ func _draw_remote_travellers(camera_origin: Vector2, local_entity_id: int, visua
 			draw_arc(body_position, radius + 2.0, 0.0, TAU, 24, PARCHMENT_COLOR, 2.0)
 		if show_debug_overlay:
 			_draw_actor_hitbox_diagnostic(body_position, radius, champion_id)
-		_draw_spell_startup(remote_state, sprite_anchor, roundi(visual_tick))
+		_draw_spell_startup(remote_state, sprite_anchor, roundi(visual_tick), remote_cast_timing)
 		ElementStatusPresenter.draw(self, remote_state, body_position, world.config, visual_language, _reduced_effects_enabled())
 		if remote_state.spawn_protection_ticks > 0:
 			var protection_ratio := clampf(float(remote_state.spawn_protection_ticks) / float(maxi(1, world.config.milliseconds_to_ticks(1200))), 0.0, 1.0)
@@ -2185,14 +2196,25 @@ func _draw_receiving_surface_shadow(center: Vector2, radii: Vector2, opacity: fl
 	_set_world_transform(camera_origin)
 
 
-func _draw_spell_startup(state: PlayerState, position: Vector2, visual_tick: int) -> void:
+func _cast_timing_for(state: PlayerState) -> Dictionary:
+	if world == null or state == null or state.pending_cast_wire_id <= 0 or state.pending_cast_ticks <= 0:
+		return {}
+	if session_transport != null and session_transport.is_connected_client():
+		return {}
+	return cast_startup_witness.describe(world, state)
+
+
+func _draw_spell_startup(state: PlayerState, position: Vector2, visual_tick: int, cast_timing: Dictionary = {}) -> void:
 	if foundation_spell_presenter == null or state == null or state.pending_cast_wire_id <= 0 or state.pending_cast_ticks <= 0:
 		return
 	var ability := ability_catalog.ability_from_wire(state.pending_cast_wire_id)
 	if ability.is_empty():
 		return
-	var full_ticks := maxi(1, world.config.milliseconds_to_ticks(int(ability.get("startup_ms", 0))))
-	var phase := clampf(1.0 - float(state.pending_cast_ticks) / float(full_ticks), 0.0, 1.0)
+	var timing := CastStartupWitnessScript.for_state(state, world.config, cast_timing)
+	if timing.is_empty(): return
+	# Unknown totals retain the authored release-proximity animation coordinate;
+	# only a witnessed admission supplies a completion fraction or elapsed age.
+	var phase := float(timing.get("animation_progress", 0.0))
 	var hand_origin := CartoonChampionPresenter.hand_cast_origin(position, Vector2(state.aim_x, state.aim_y))
 	foundation_spell_presenter.draw_startup(
 		self,
@@ -2202,6 +2224,7 @@ func _draw_spell_startup(state: PlayerState, position: Vector2, visual_tick: int
 		phase,
 		visual_tick,
 		_reduced_effects_enabled(),
+		timing,
 	)
 
 
@@ -2498,6 +2521,7 @@ func _sync_session_transport() -> void:
 		if _client_world_ready(): client_reconciliation_buffer.offer_many(reconciliations)
 		var reconciliation: Dictionary = {} if _is_spectating() or not _client_world_ready() else client_reconciliation_buffer.take_exact(last_client_world_epoch, world.tick)
 		if not reconciliation.is_empty():
+			cast_startup_witness.clear()
 			var local_authority := _local_player_state()
 			var authority_event := local_authority.last_event if local_authority != null else "network_snapshot"
 			if client_prediction.reconcile(reconciliation, authority_event, _reduced_effects_enabled()):
@@ -4105,7 +4129,7 @@ func _pov_observer_overlay_frame(visual_tick: float, alpha: float) -> Dictionary
 	var shadow_center := ground + Vector2(0.0, float(MovementTuning.PLAYER_RADIUS) / 1000.0 * 0.58)
 	var jump := JumpPresentation.sample(pose_state, world.config, pose_alpha, _reduced_effects_enabled(), previous_height)
 	var champion_id := _champion_visual_id(observer)
-	var frame := cartoon_champion_presenter.movement_frame(champion_id, pose_state, visual_tick, world.config, _reduced_effects_enabled(), actor_motion_history.gait_phase(pose_state.entity_id), actor_motion_history.wall_travel(pose_state.entity_id))
+	var frame := cartoon_champion_presenter.movement_frame(champion_id, pose_state, visual_tick, world.config, _reduced_effects_enabled(), actor_motion_history.gait_phase(pose_state.entity_id), actor_motion_history.wall_travel(pose_state.entity_id), _cast_timing_for(observer))
 	if frame.is_empty():
 		return {}
 	var texture: Texture2D = frame.get("texture", cartoon_champion_presenter.texture_for_champion(champion_id))
@@ -5627,6 +5651,7 @@ func _reconcile_spectator_focus() -> void:
 
 
 func _reset_motion_history() -> void:
+	cast_startup_witness.clear()
 	player_camera.clear()
 	camera_focus_entity = -1
 	actor_motion_history.clear()
@@ -5927,6 +5952,7 @@ func _apply_world_envelope(envelope: Dictionary) -> bool:
 	if not prepared_context.is_empty(): next_prediction.publish_hex_context(prepared_context)
 	hex_playground_demo.cancel(null)
 	hex_playground_demo.dismiss_result()
+	cast_startup_witness.clear()
 	world = candidate
 	client_prediction = next_prediction
 	last_client_world_epoch = epoch

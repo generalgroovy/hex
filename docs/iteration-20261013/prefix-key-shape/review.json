@@ -1,0 +1,3305 @@
+{
+  "schema": "hex.ground.prefix-key-shape-review.v1",
+  "decision": "WITHDRAW_UNAPPLIED_CANDIDATE",
+  "canonical_changed": false,
+  "native": [
+    {
+      "mode": "forward",
+      "receipt_sha256": "a2c5fa2417c02a024e01de8614b1fb5bbe6c91ecf5136dda867d13f1fc68f1d3",
+      "checks": 9077,
+      "direct_prefix_checks": 2334,
+      "cases": 22,
+      "stderr_bytes": 0
+    },
+    {
+      "mode": "reverse",
+      "receipt_sha256": "44db42f62b24f75872deabfd2ec08086a6c59f42817f17e9adafc7d2162d1966",
+      "checks": 9077,
+      "direct_prefix_checks": 2334,
+      "cases": 22,
+      "stderr_bytes": 0
+    }
+  ],
+  "source_pins_equal_and_rechecked": true,
+  "source_pin_count": 27,
+  "verified_pngs": 88,
+  "measured_pairs": 768,
+  "warmup_pairs": 96,
+  "pixel_control_pairs": 20,
+  "actual_order_checks": true,
+  "exact_authority_and_coverage_across_processes": true,
+  "retained_counters_equal": true,
+  "all_measured_mesh_and_topology_builds_zero": true,
+  "cases": {
+    "fire_ignition_normal": {
+      "plain_us": {
+        "count": 64,
+        "mean": 2422.34375,
+        "median": 2281.0,
+        "p95": 3228,
+        "minimum": 2094,
+        "maximum": 4445
+      },
+      "candidate_us": {
+        "count": 64,
+        "mean": 2446.796875,
+        "median": 2286.5,
+        "p95": 3309,
+        "minimum": 2107,
+        "maximum": 3765
+      },
+      "paired_delta_us": {
+        "count": 64,
+        "mean": 24.453125,
+        "median": -5.0,
+        "p95": 955,
+        "minimum": -1542,
+        "maximum": 1469
+      },
+      "candidate_slower_pairs": 32,
+      "mean_change_percent": 1.0094820357350098,
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2352.875,
+            "median": 2265.5,
+            "p95": 2670,
+            "minimum": 2099,
+            "maximum": 3917
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 2453.28125,
+            "median": 2281.0,
+            "p95": 3188,
+            "minimum": 2131,
+            "maximum": 3695
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 100.40625,
+            "median": -14.5,
+            "p95": 957,
+            "minimum": -1542,
+            "maximum": 1469
+          },
+          "candidate_slower_pairs": 15
+        },
+        "candidate_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2491.8125,
+            "median": 2316.5,
+            "p95": 3289,
+            "minimum": 2094,
+            "maximum": 4445
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 2440.3125,
+            "median": 2292.5,
+            "p95": 3664,
+            "minimum": 2107,
+            "maximum": 3765
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -51.5,
+            "median": 11.0,
+            "p95": 622,
+            "minimum": -983,
+            "maximum": 1086
+          },
+          "candidate_slower_pairs": 17
+        }
+      },
+      "by_process": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2405.6875,
+            "median": 2328.0,
+            "p95": 3158,
+            "minimum": 2094,
+            "maximum": 3228
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 2327.1875,
+            "median": 2246.5,
+            "p95": 2717,
+            "minimum": 2129,
+            "maximum": 3695
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -78.5,
+            "median": -110.5,
+            "p95": 564,
+            "minimum": -983,
+            "maximum": 1469
+          },
+          "candidate_slower_pairs": 9
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2439,
+            "median": 2269.0,
+            "p95": 3917,
+            "minimum": 2099,
+            "maximum": 4445
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 2566.40625,
+            "median": 2391.0,
+            "p95": 3664,
+            "minimum": 2107,
+            "maximum": 3765
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 127.40625,
+            "median": 95.5,
+            "p95": 957,
+            "minimum": -1542,
+            "maximum": 1086
+          },
+          "candidate_slower_pairs": 23
+        }
+      },
+      "warmups": {
+        "all": {
+          "plain_us": {
+            "count": 8,
+            "mean": 3245.375,
+            "median": 2297.5,
+            "p95": 6715,
+            "minimum": 2172,
+            "maximum": 6715
+          },
+          "candidate_us": {
+            "count": 8,
+            "mean": 4156.625,
+            "median": 2338.5,
+            "p95": 12998,
+            "minimum": 2250,
+            "maximum": 12998
+          },
+          "paired_delta_us": {
+            "count": 8,
+            "mean": 911.25,
+            "median": 85.5,
+            "p95": 6283,
+            "minimum": -204,
+            "maximum": 6283
+          },
+          "candidate_slower_pairs": 6
+        },
+        "by_process": {
+          "forward": {
+            "plain_us": {
+              "count": 4,
+              "mean": 3360.25,
+              "median": 2277.0,
+              "p95": 6715,
+              "minimum": 2172,
+              "maximum": 6715
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 4972.75,
+              "median": 2314.0,
+              "p95": 12998,
+              "minimum": 2265,
+              "maximum": 12998
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": 1612.5,
+              "median": 85.5,
+              "p95": 6283,
+              "minimum": -4,
+              "maximum": 6283
+            },
+            "candidate_slower_pairs": 3,
+            "new_meshes": 10,
+            "new_topologies": 1
+          },
+          "reverse": {
+            "plain_us": {
+              "count": 4,
+              "mean": 3130.5,
+              "median": 2381.0,
+              "p95": 5499,
+              "minimum": 2261,
+              "maximum": 5499
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 3340.5,
+              "median": 2419.5,
+              "p95": 6273,
+              "minimum": 2250,
+              "maximum": 6273
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": 210,
+              "median": 135.0,
+              "p95": 774,
+              "minimum": -204,
+              "maximum": 774
+            },
+            "candidate_slower_pairs": 3,
+            "new_meshes": 10,
+            "new_topologies": 1
+          }
+        }
+      },
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/ignition"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "world_tick": 24,
+      "matter_paid": 600,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "measured_fallbacks": 0,
+      "edge_mask_hits": 832,
+      "mesh_hits": 640
+    },
+    "fire_ignition_reduced": {
+      "plain_us": {
+        "count": 64,
+        "mean": 2651.890625,
+        "median": 2326.5,
+        "p95": 4095,
+        "minimum": 2060,
+        "maximum": 4461
+      },
+      "candidate_us": {
+        "count": 64,
+        "mean": 2663.984375,
+        "median": 2336.5,
+        "p95": 4396,
+        "minimum": 2110,
+        "maximum": 5106
+      },
+      "paired_delta_us": {
+        "count": 64,
+        "mean": 12.09375,
+        "median": -23.0,
+        "p95": 1644,
+        "minimum": -2130,
+        "maximum": 2222
+      },
+      "candidate_slower_pairs": 30,
+      "mean_change_percent": 0.4560425639726473,
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2553.8125,
+            "median": 2288.5,
+            "p95": 4095,
+            "minimum": 2060,
+            "maximum": 4123
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 2911.5,
+            "median": 2463.0,
+            "p95": 4999,
+            "minimum": 2110,
+            "maximum": 5106
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 357.6875,
+            "median": 137.5,
+            "p95": 1793,
+            "minimum": -1410,
+            "maximum": 2222
+          },
+          "candidate_slower_pairs": 21
+        },
+        "candidate_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2749.96875,
+            "median": 2472.5,
+            "p95": 4312,
+            "minimum": 2100,
+            "maximum": 4461
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 2416.46875,
+            "median": 2299.5,
+            "p95": 3563,
+            "minimum": 2114,
+            "maximum": 3957
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -333.5,
+            "median": -97.0,
+            "p95": 255,
+            "minimum": -2130,
+            "maximum": 510
+          },
+          "candidate_slower_pairs": 9
+        }
+      },
+      "by_process": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2838.96875,
+            "median": 2495.0,
+            "p95": 4312,
+            "minimum": 2100,
+            "maximum": 4461
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 2917.71875,
+            "median": 2446.5,
+            "p95": 4999,
+            "minimum": 2140,
+            "maximum": 5106
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 78.75,
+            "median": 75.0,
+            "p95": 1793,
+            "minimum": -2130,
+            "maximum": 2222
+          },
+          "candidate_slower_pairs": 18
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2464.8125,
+            "median": 2278.5,
+            "p95": 3402,
+            "minimum": 2060,
+            "maximum": 3934
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 2410.25,
+            "median": 2239.0,
+            "p95": 3368,
+            "minimum": 2110,
+            "maximum": 4201
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -54.5625,
+            "median": -60.0,
+            "p95": 658,
+            "minimum": -1706,
+            "maximum": 1696
+          },
+          "candidate_slower_pairs": 12
+        }
+      },
+      "warmups": {
+        "all": {
+          "plain_us": {
+            "count": 8,
+            "mean": 2330.625,
+            "median": 2254.5,
+            "p95": 2708,
+            "minimum": 2139,
+            "maximum": 2708
+          },
+          "candidate_us": {
+            "count": 8,
+            "mean": 2398.625,
+            "median": 2396.5,
+            "p95": 2561,
+            "minimum": 2155,
+            "maximum": 2561
+          },
+          "paired_delta_us": {
+            "count": 8,
+            "mean": 68,
+            "median": 116.5,
+            "p95": 324,
+            "minimum": -315,
+            "maximum": 324
+          },
+          "candidate_slower_pairs": 6
+        },
+        "by_process": {
+          "forward": {
+            "plain_us": {
+              "count": 4,
+              "mean": 2267.25,
+              "median": 2254.5,
+              "p95": 2356,
+              "minimum": 2204,
+              "maximum": 2356
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 2368,
+              "median": 2378.0,
+              "p95": 2561,
+              "minimum": 2155,
+              "maximum": 2561
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": 100.75,
+              "median": 135.5,
+              "p95": 205,
+              "minimum": -73,
+              "maximum": 205
+            },
+            "candidate_slower_pairs": 3,
+            "new_meshes": 0,
+            "new_topologies": 0
+          },
+          "reverse": {
+            "plain_us": {
+              "count": 4,
+              "mean": 2394,
+              "median": 2364.5,
+              "p95": 2708,
+              "minimum": 2139,
+              "maximum": 2708
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 2429.25,
+              "median": 2461.5,
+              "p95": 2541,
+              "minimum": 2253,
+              "maximum": 2541
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": 35.25,
+              "median": 66.0,
+              "p95": 324,
+              "minimum": -315,
+              "maximum": 324
+            },
+            "candidate_slower_pairs": 3,
+            "new_meshes": 0,
+            "new_topologies": 0
+          }
+        }
+      },
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/ignition"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "world_tick": 24,
+      "matter_paid": 600,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "measured_fallbacks": 0,
+      "edge_mask_hits": 832,
+      "mesh_hits": 640
+    },
+    "fire_active_normal": {
+      "plain_us": {
+        "count": 64,
+        "mean": 1710.46875,
+        "median": 1680.5,
+        "p95": 2111,
+        "minimum": 1529,
+        "maximum": 2286
+      },
+      "candidate_us": {
+        "count": 64,
+        "mean": 1716.078125,
+        "median": 1660.5,
+        "p95": 2245,
+        "minimum": 1543,
+        "maximum": 2522
+      },
+      "paired_delta_us": {
+        "count": 64,
+        "mean": 5.609375,
+        "median": -3.5,
+        "p95": 364,
+        "minimum": -617,
+        "maximum": 650
+      },
+      "candidate_slower_pairs": 31,
+      "mean_change_percent": 0.3279437288755016,
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 1693.78125,
+            "median": 1670.5,
+            "p95": 2126,
+            "minimum": 1555,
+            "maximum": 2179
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 1724.5,
+            "median": 1658.5,
+            "p95": 2256,
+            "minimum": 1543,
+            "maximum": 2522
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 30.71875,
+            "median": 18.0,
+            "p95": 551,
+            "minimum": -484,
+            "maximum": 650
+          },
+          "candidate_slower_pairs": 17
+        },
+        "candidate_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 1727.15625,
+            "median": 1688.0,
+            "p95": 2111,
+            "minimum": 1529,
+            "maximum": 2286
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 1707.65625,
+            "median": 1662.5,
+            "p95": 2100,
+            "minimum": 1575,
+            "maximum": 2319
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -19.5,
+            "median": -28.5,
+            "p95": 364,
+            "minimum": -617,
+            "maximum": 508
+          },
+          "candidate_slower_pairs": 14
+        }
+      },
+      "by_process": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 1715.28125,
+            "median": 1680.5,
+            "p95": 2111,
+            "minimum": 1555,
+            "maximum": 2126
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 1687.90625,
+            "median": 1648.0,
+            "p95": 1885,
+            "minimum": 1574,
+            "maximum": 2319
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -27.375,
+            "median": -19.5,
+            "p95": 251,
+            "minimum": -496,
+            "maximum": 508
+          },
+          "candidate_slower_pairs": 13
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 1705.65625,
+            "median": 1680.0,
+            "p95": 2179,
+            "minimum": 1529,
+            "maximum": 2286
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 1744.25,
+            "median": 1666.0,
+            "p95": 2256,
+            "minimum": 1543,
+            "maximum": 2522
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 38.59375,
+            "median": 19.0,
+            "p95": 551,
+            "minimum": -617,
+            "maximum": 650
+          },
+          "candidate_slower_pairs": 18
+        }
+      },
+      "warmups": {
+        "all": {
+          "plain_us": {
+            "count": 8,
+            "mean": 1813.5,
+            "median": 1763.5,
+            "p95": 2055,
+            "minimum": 1605,
+            "maximum": 2055
+          },
+          "candidate_us": {
+            "count": 8,
+            "mean": 1748.75,
+            "median": 1693.0,
+            "p95": 2031,
+            "minimum": 1591,
+            "maximum": 2031
+          },
+          "paired_delta_us": {
+            "count": 8,
+            "mean": -64.75,
+            "median": -14.0,
+            "p95": 122,
+            "minimum": -323,
+            "maximum": 122
+          },
+          "candidate_slower_pairs": 3
+        },
+        "by_process": {
+          "forward": {
+            "plain_us": {
+              "count": 4,
+              "mean": 1823,
+              "median": 1820.5,
+              "p95": 2046,
+              "minimum": 1605,
+              "maximum": 2046
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 1765.25,
+              "median": 1693.0,
+              "p95": 2031,
+              "minimum": 1644,
+              "maximum": 2031
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": -57.75,
+              "median": 12.5,
+              "p95": 67,
+              "minimum": -323,
+              "maximum": 67
+            },
+            "candidate_slower_pairs": 2,
+            "new_meshes": 0,
+            "new_topologies": 1
+          },
+          "reverse": {
+            "plain_us": {
+              "count": 4,
+              "mean": 1804,
+              "median": 1763.5,
+              "p95": 2055,
+              "minimum": 1634,
+              "maximum": 2055
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 1732.25,
+              "median": 1701.5,
+              "p95": 1935,
+              "minimum": 1591,
+              "maximum": 1935
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": -71.75,
+              "median": -68.0,
+              "p95": 122,
+              "minimum": -273,
+              "maximum": 122
+            },
+            "candidate_slower_pairs": 1,
+            "new_meshes": 0,
+            "new_topologies": 1
+          }
+        }
+      },
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "world_tick": 48,
+      "matter_paid": 600,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "measured_fallbacks": 0,
+      "edge_mask_hits": 832,
+      "mesh_hits": 640
+    },
+    "fire_active_reduced": {
+      "plain_us": {
+        "count": 64,
+        "mean": 1733.6875,
+        "median": 1675.5,
+        "p95": 2061,
+        "minimum": 1554,
+        "maximum": 2347
+      },
+      "candidate_us": {
+        "count": 64,
+        "mean": 1754.265625,
+        "median": 1676.5,
+        "p95": 2206,
+        "minimum": 1556,
+        "maximum": 2533
+      },
+      "paired_delta_us": {
+        "count": 64,
+        "mean": 20.578125,
+        "median": 3.0,
+        "p95": 477,
+        "minimum": -654,
+        "maximum": 593
+      },
+      "candidate_slower_pairs": 33,
+      "mean_change_percent": 1.1869569919607859,
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 1707.34375,
+            "median": 1675.5,
+            "p95": 2100,
+            "minimum": 1567,
+            "maximum": 2347
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 1759.71875,
+            "median": 1669.5,
+            "p95": 2301,
+            "minimum": 1575,
+            "maximum": 2533
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 52.375,
+            "median": 33.5,
+            "p95": 556,
+            "minimum": -654,
+            "maximum": 593
+          },
+          "candidate_slower_pairs": 17
+        },
+        "candidate_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 1760.03125,
+            "median": 1679.0,
+            "p95": 2061,
+            "minimum": 1554,
+            "maximum": 2236
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 1748.8125,
+            "median": 1682.0,
+            "p95": 2198,
+            "minimum": 1556,
+            "maximum": 2264
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -11.21875,
+            "median": -2.5,
+            "p95": 348,
+            "minimum": -461,
+            "maximum": 477
+          },
+          "candidate_slower_pairs": 16
+        }
+      },
+      "by_process": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 1740.15625,
+            "median": 1671.5,
+            "p95": 2100,
+            "minimum": 1554,
+            "maximum": 2347
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 1727.5,
+            "median": 1663.0,
+            "p95": 2206,
+            "minimum": 1556,
+            "maximum": 2533
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -12.65625,
+            "median": -15.0,
+            "p95": 433,
+            "minimum": -654,
+            "maximum": 556
+          },
+          "candidate_slower_pairs": 14
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 1727.21875,
+            "median": 1684.0,
+            "p95": 1951,
+            "minimum": 1568,
+            "maximum": 2236
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 1781.03125,
+            "median": 1696.5,
+            "p95": 2264,
+            "minimum": 1589,
+            "maximum": 2301
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 53.8125,
+            "median": 36.5,
+            "p95": 477,
+            "minimum": -461,
+            "maximum": 593
+          },
+          "candidate_slower_pairs": 19
+        }
+      },
+      "warmups": {
+        "all": {
+          "plain_us": {
+            "count": 8,
+            "mean": 1635.875,
+            "median": 1625.0,
+            "p95": 1756,
+            "minimum": 1506,
+            "maximum": 1756
+          },
+          "candidate_us": {
+            "count": 8,
+            "mean": 1819,
+            "median": 1709.5,
+            "p95": 2491,
+            "minimum": 1532,
+            "maximum": 2491
+          },
+          "paired_delta_us": {
+            "count": 8,
+            "mean": 183.125,
+            "median": 122.5,
+            "p95": 801,
+            "minimum": -90,
+            "maximum": 801
+          },
+          "candidate_slower_pairs": 6
+        },
+        "by_process": {
+          "forward": {
+            "plain_us": {
+              "count": 4,
+              "mean": 1573.25,
+              "median": 1582.5,
+              "p95": 1622,
+              "minimum": 1506,
+              "maximum": 1622
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 1659,
+              "median": 1667.5,
+              "p95": 1769,
+              "minimum": 1532,
+              "maximum": 1769
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": 85.75,
+              "median": 122.5,
+              "p95": 188,
+              "minimum": -90,
+              "maximum": 188
+            },
+            "candidate_slower_pairs": 3,
+            "new_meshes": 0,
+            "new_topologies": 0
+          },
+          "reverse": {
+            "plain_us": {
+              "count": 4,
+              "mean": 1698.5,
+              "median": 1705.0,
+              "p95": 1756,
+              "minimum": 1628,
+              "maximum": 1756
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 1979,
+              "median": 1896.5,
+              "p95": 2491,
+              "minimum": 1632,
+              "maximum": 2491
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": 280.5,
+              "median": 172.5,
+              "p95": 801,
+              "minimum": -24,
+              "maximum": 801
+            },
+            "candidate_slower_pairs": 3,
+            "new_meshes": 0,
+            "new_topologies": 0
+          }
+        }
+      },
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "world_tick": 48,
+      "matter_paid": 600,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "measured_fallbacks": 0,
+      "edge_mask_hits": 832,
+      "mesh_hits": 640
+    },
+    "fire_cooling_normal": {
+      "plain_us": {
+        "count": 64,
+        "mean": 2384.375,
+        "median": 2310.5,
+        "p95": 2853,
+        "minimum": 2137,
+        "maximum": 2949
+      },
+      "candidate_us": {
+        "count": 64,
+        "mean": 2365.140625,
+        "median": 2274.0,
+        "p95": 2990,
+        "minimum": 2097,
+        "maximum": 3365
+      },
+      "paired_delta_us": {
+        "count": 64,
+        "mean": -19.234375,
+        "median": -15.5,
+        "p95": 669,
+        "minimum": -635,
+        "maximum": 897
+      },
+      "candidate_slower_pairs": 30,
+      "mean_change_percent": -0.806684141546532,
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2369.625,
+            "median": 2289.0,
+            "p95": 2834,
+            "minimum": 2139,
+            "maximum": 2876
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 2365.5625,
+            "median": 2262.5,
+            "p95": 3013,
+            "minimum": 2097,
+            "maximum": 3214
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -4.0625,
+            "median": -1.5,
+            "p95": 716,
+            "minimum": -467,
+            "maximum": 897
+          },
+          "candidate_slower_pairs": 16
+        },
+        "candidate_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2399.125,
+            "median": 2315.5,
+            "p95": 2855,
+            "minimum": 2137,
+            "maximum": 2949
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 2364.71875,
+            "median": 2286.0,
+            "p95": 2928,
+            "minimum": 2135,
+            "maximum": 3365
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -34.40625,
+            "median": -36.5,
+            "p95": 648,
+            "minimum": -635,
+            "maximum": 669
+          },
+          "candidate_slower_pairs": 14
+        }
+      },
+      "by_process": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2385.65625,
+            "median": 2318.0,
+            "p95": 2853,
+            "minimum": 2137,
+            "maximum": 2949
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 2339.6875,
+            "median": 2262.5,
+            "p95": 3214,
+            "minimum": 2097,
+            "maximum": 3365
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -45.96875,
+            "median": -57.5,
+            "p95": 669,
+            "minimum": -635,
+            "maximum": 897
+          },
+          "candidate_slower_pairs": 14
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2383.09375,
+            "median": 2264.5,
+            "p95": 2855,
+            "minimum": 2171,
+            "maximum": 2876
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 2390.59375,
+            "median": 2290.5,
+            "p95": 2990,
+            "minimum": 2126,
+            "maximum": 3013
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 7.5,
+            "median": -1.5,
+            "p95": 704,
+            "minimum": -562,
+            "maximum": 716
+          },
+          "candidate_slower_pairs": 16
+        }
+      },
+      "warmups": {
+        "all": {
+          "plain_us": {
+            "count": 8,
+            "mean": 2778.5,
+            "median": 2449.0,
+            "p95": 4234,
+            "minimum": 2172,
+            "maximum": 4234
+          },
+          "candidate_us": {
+            "count": 8,
+            "mean": 2621.75,
+            "median": 2478.0,
+            "p95": 3622,
+            "minimum": 2243,
+            "maximum": 3622
+          },
+          "paired_delta_us": {
+            "count": 8,
+            "mean": -156.75,
+            "median": -24.0,
+            "p95": 1127,
+            "minimum": -1562,
+            "maximum": 1127
+          },
+          "candidate_slower_pairs": 4
+        },
+        "by_process": {
+          "forward": {
+            "plain_us": {
+              "count": 4,
+              "mean": 2797,
+              "median": 2391.0,
+              "p95": 4234,
+              "minimum": 2172,
+              "maximum": 4234
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 2560.25,
+              "median": 2523.0,
+              "p95": 2916,
+              "minimum": 2279,
+              "maximum": 2916
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": -236.75,
+              "median": -60.5,
+              "p95": 492,
+              "minimum": -1318,
+              "maximum": 492
+            },
+            "candidate_slower_pairs": 2,
+            "new_meshes": 0,
+            "new_topologies": 1
+          },
+          "reverse": {
+            "plain_us": {
+              "count": 4,
+              "mean": 2760,
+              "median": 2449.0,
+              "p95": 3805,
+              "minimum": 2337,
+              "maximum": 3805
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 2683.25,
+              "median": 2434.0,
+              "p95": 3622,
+              "minimum": 2243,
+              "maximum": 3622
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": -76.75,
+              "median": 64.0,
+              "p95": 1127,
+              "minimum": -1562,
+              "maximum": 1127
+            },
+            "candidate_slower_pairs": 2,
+            "new_meshes": 0,
+            "new_topologies": 1
+          }
+        }
+      },
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/cooling"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "world_tick": 444,
+      "matter_paid": 600,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "measured_fallbacks": 0,
+      "edge_mask_hits": 832,
+      "mesh_hits": 640
+    },
+    "fire_cooling_reduced": {
+      "plain_us": {
+        "count": 64,
+        "mean": 2378.765625,
+        "median": 2277.0,
+        "p95": 3244,
+        "minimum": 2091,
+        "maximum": 3714
+      },
+      "candidate_us": {
+        "count": 64,
+        "mean": 2371.171875,
+        "median": 2309.5,
+        "p95": 2848,
+        "minimum": 2098,
+        "maximum": 3085
+      },
+      "paired_delta_us": {
+        "count": 64,
+        "mean": -7.59375,
+        "median": 5.0,
+        "p95": 557,
+        "minimum": -1352,
+        "maximum": 994
+      },
+      "candidate_slower_pairs": 33,
+      "mean_change_percent": -0.3192306934400091,
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2257.53125,
+            "median": 2246.5,
+            "p95": 2403,
+            "minimum": 2091,
+            "maximum": 2449
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 2344.875,
+            "median": 2284.0,
+            "p95": 2879,
+            "minimum": 2098,
+            "maximum": 3085
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 87.34375,
+            "median": 6.5,
+            "p95": 557,
+            "minimum": -199,
+            "maximum": 994
+          },
+          "candidate_slower_pairs": 16
+        },
+        "candidate_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2500,
+            "median": 2351.5,
+            "p95": 3518,
+            "minimum": 2176,
+            "maximum": 3714
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 2397.46875,
+            "median": 2349.5,
+            "p95": 2848,
+            "minimum": 2193,
+            "maximum": 2923
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -102.53125,
+            "median": 5.0,
+            "p95": 649,
+            "minimum": -1352,
+            "maximum": 680
+          },
+          "candidate_slower_pairs": 17
+        }
+      },
+      "by_process": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2363.875,
+            "median": 2272.0,
+            "p95": 3261,
+            "minimum": 2149,
+            "maximum": 3518
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 2348.75,
+            "median": 2306.5,
+            "p95": 2879,
+            "minimum": 2098,
+            "maximum": 2923
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -15.125,
+            "median": -6.5,
+            "p95": 489,
+            "minimum": -970,
+            "maximum": 680
+          },
+          "candidate_slower_pairs": 15
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2393.65625,
+            "median": 2285.0,
+            "p95": 3244,
+            "minimum": 2091,
+            "maximum": 3714
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 2393.59375,
+            "median": 2338.0,
+            "p95": 2825,
+            "minimum": 2130,
+            "maximum": 3085
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -0.0625,
+            "median": 33.5,
+            "p95": 649,
+            "minimum": -1352,
+            "maximum": 994
+          },
+          "candidate_slower_pairs": 18
+        }
+      },
+      "warmups": {
+        "all": {
+          "plain_us": {
+            "count": 8,
+            "mean": 2439.875,
+            "median": 2382.0,
+            "p95": 2960,
+            "minimum": 2147,
+            "maximum": 2960
+          },
+          "candidate_us": {
+            "count": 8,
+            "mean": 2544.25,
+            "median": 2323.0,
+            "p95": 3669,
+            "minimum": 2113,
+            "maximum": 3669
+          },
+          "paired_delta_us": {
+            "count": 8,
+            "mean": 104.375,
+            "median": -67.0,
+            "p95": 931,
+            "minimum": -469,
+            "maximum": 931
+          },
+          "candidate_slower_pairs": 3
+        },
+        "by_process": {
+          "forward": {
+            "plain_us": {
+              "count": 4,
+              "mean": 2252.25,
+              "median": 2174.0,
+              "p95": 2514,
+              "minimum": 2147,
+              "maximum": 2514
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 2454.5,
+              "median": 2288.5,
+              "p95": 3078,
+              "minimum": 2163,
+              "maximum": 3078
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": 202.25,
+              "median": 4.5,
+              "p95": 931,
+              "minimum": -131,
+              "maximum": 931
+            },
+            "candidate_slower_pairs": 2,
+            "new_meshes": 0,
+            "new_topologies": 0
+          },
+          "reverse": {
+            "plain_us": {
+              "count": 4,
+              "mean": 2627.5,
+              "median": 2598.5,
+              "p95": 2960,
+              "minimum": 2353,
+              "maximum": 2960
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 2634,
+              "median": 2377.0,
+              "p95": 3669,
+              "minimum": 2113,
+              "maximum": 3669
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": 6.5,
+              "median": -194.0,
+              "p95": 883,
+              "minimum": -469,
+              "maximum": 883
+            },
+            "candidate_slower_pairs": 1,
+            "new_meshes": 0,
+            "new_topologies": 0
+          }
+        }
+      },
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/cooling"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "world_tick": 444,
+      "matter_paid": 600,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "measured_fallbacks": 0,
+      "edge_mask_hits": 832,
+      "mesh_hits": 640
+    },
+    "fire_dense_normal": {
+      "plain_us": {
+        "count": 64,
+        "mean": 10382.09375,
+        "median": 10132.5,
+        "p95": 11862,
+        "minimum": 9422,
+        "maximum": 15004
+      },
+      "candidate_us": {
+        "count": 64,
+        "mean": 10636.171875,
+        "median": 10551.0,
+        "p95": 12292,
+        "minimum": 9196,
+        "maximum": 17899
+      },
+      "paired_delta_us": {
+        "count": 64,
+        "mean": 254.078125,
+        "median": 203.5,
+        "p95": 1228,
+        "minimum": -4436,
+        "maximum": 7989
+      },
+      "candidate_slower_pairs": 44,
+      "mean_change_percent": 2.4472724974189397,
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 10383.59375,
+            "median": 10030.5,
+            "p95": 12823,
+            "minimum": 9422,
+            "maximum": 15004
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 10787.5,
+            "median": 10590.0,
+            "p95": 13133,
+            "minimum": 9196,
+            "maximum": 17899
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 403.90625,
+            "median": 319.0,
+            "p95": 2484,
+            "minimum": -4436,
+            "maximum": 7989
+          },
+          "candidate_slower_pairs": 24
+        },
+        "candidate_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 10380.59375,
+            "median": 10321.0,
+            "p95": 11862,
+            "minimum": 9543,
+            "maximum": 12027
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 10484.84375,
+            "median": 10329.5,
+            "p95": 12292,
+            "minimum": 9448,
+            "maximum": 12347
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 104.25,
+            "median": 181.0,
+            "p95": 1228,
+            "minimum": -1335,
+            "maximum": 1245
+          },
+          "candidate_slower_pairs": 20
+        }
+      },
+      "by_process": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 10608.09375,
+            "median": 10337.0,
+            "p95": 12823,
+            "minimum": 9422,
+            "maximum": 15004
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 10612.15625,
+            "median": 10590.0,
+            "p95": 12292,
+            "minimum": 9196,
+            "maximum": 13133
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 4.0625,
+            "median": 125.5,
+            "p95": 1245,
+            "minimum": -4436,
+            "maximum": 2484
+          },
+          "candidate_slower_pairs": 19
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 10156.09375,
+            "median": 10043.0,
+            "p95": 10983,
+            "minimum": 9543,
+            "maximum": 11119
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 10660.1875,
+            "median": 10435.5,
+            "p95": 12347,
+            "minimum": 9646,
+            "maximum": 17899
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 504.09375,
+            "median": 224.0,
+            "p95": 1228,
+            "minimum": -378,
+            "maximum": 7989
+          },
+          "candidate_slower_pairs": 25
+        }
+      },
+      "warmups": {
+        "all": {
+          "plain_us": {
+            "count": 8,
+            "mean": 11547.125,
+            "median": 10283.5,
+            "p95": 16360,
+            "minimum": 9733,
+            "maximum": 16360
+          },
+          "candidate_us": {
+            "count": 8,
+            "mean": 11884.375,
+            "median": 10360.0,
+            "p95": 18115,
+            "minimum": 9525,
+            "maximum": 18115
+          },
+          "paired_delta_us": {
+            "count": 8,
+            "mean": 337.25,
+            "median": 126.5,
+            "p95": 2493,
+            "minimum": -866,
+            "maximum": 2493
+          },
+          "candidate_slower_pairs": 4
+        },
+        "by_process": {
+          "forward": {
+            "plain_us": {
+              "count": 4,
+              "mean": 11403.75,
+              "median": 10130.0,
+              "p95": 15622,
+              "minimum": 9733,
+              "maximum": 15622
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 11979,
+              "median": 10138.0,
+              "p95": 18115,
+              "minimum": 9525,
+              "maximum": 18115
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": 575.25,
+              "median": 65.5,
+              "p95": 2493,
+              "minimum": -323,
+              "maximum": 2493
+            },
+            "candidate_slower_pairs": 2,
+            "new_meshes": 15,
+            "new_topologies": 1
+          },
+          "reverse": {
+            "plain_us": {
+              "count": 4,
+              "mean": 11690.5,
+              "median": 10283.5,
+              "p95": 16360,
+              "minimum": 9835,
+              "maximum": 16360
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 11789.75,
+              "median": 10947.0,
+              "p95": 15494,
+              "minimum": 9771,
+              "maximum": 15494
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": 99.25,
+              "median": 126.5,
+              "p95": 1010,
+              "minimum": -866,
+              "maximum": 1010
+            },
+            "candidate_slower_pairs": 2,
+            "new_meshes": 15,
+            "new_topologies": 1
+          }
+        }
+      },
+      "coverage": {
+        "materials": {
+          "conflagration": 150
+        },
+        "occupied_cells": 25,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "conflagration/active",
+          "conflagration/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 75,
+            "created": 51,
+            "decay_tick": 435,
+            "expiry_tick": 495,
+            "id": 1,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1000,
+              1001
+            ]
+          },
+          {
+            "active_tick": 139,
+            "created": 115,
+            "decay_tick": 499,
+            "expiry_tick": 559,
+            "id": 2,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1002,
+              1003
+            ]
+          },
+          {
+            "active_tick": 203,
+            "created": 179,
+            "decay_tick": 563,
+            "expiry_tick": 623,
+            "id": 3,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1004,
+              1005
+            ]
+          },
+          {
+            "active_tick": 267,
+            "created": 243,
+            "decay_tick": 627,
+            "expiry_tick": 687,
+            "id": 4,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1006,
+              1007
+            ]
+          },
+          {
+            "active_tick": 331,
+            "created": 307,
+            "decay_tick": 691,
+            "expiry_tick": 751,
+            "id": 5,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1008,
+              1009
+            ]
+          },
+          {
+            "active_tick": 395,
+            "created": 371,
+            "decay_tick": 755,
+            "expiry_tick": 815,
+            "id": 6,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1010,
+              1011
+            ]
+          }
+        ],
+        "regions": 150
+      },
+      "world_tick": 372,
+      "matter_paid": 7200,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "measured_fallbacks": 0,
+      "edge_mask_hits": 9600,
+      "mesh_hits": 5760
+    },
+    "fire_dense_reduced": {
+      "plain_us": {
+        "count": 64,
+        "mean": 10372.734375,
+        "median": 10101.0,
+        "p95": 12419,
+        "minimum": 8712,
+        "maximum": 12821
+      },
+      "candidate_us": {
+        "count": 64,
+        "mean": 10385.140625,
+        "median": 10114.5,
+        "p95": 11755,
+        "minimum": 9229,
+        "maximum": 12251
+      },
+      "paired_delta_us": {
+        "count": 64,
+        "mean": 12.40625,
+        "median": -19.0,
+        "p95": 1285,
+        "minimum": -1938,
+        "maximum": 2785
+      },
+      "candidate_slower_pairs": 31,
+      "mean_change_percent": 0.11960443169065638,
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 10464.4375,
+            "median": 10124.0,
+            "p95": 12455,
+            "minimum": 8712,
+            "maximum": 12821
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 10439.40625,
+            "median": 10165.0,
+            "p95": 11732,
+            "minimum": 9441,
+            "maximum": 12176
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -25.03125,
+            "median": 40.0,
+            "p95": 1285,
+            "minimum": -1938,
+            "maximum": 2642
+          },
+          "candidate_slower_pairs": 16
+        },
+        "candidate_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 10281.03125,
+            "median": 10094.0,
+            "p95": 12080,
+            "minimum": 9302,
+            "maximum": 12291
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 10330.875,
+            "median": 10044.0,
+            "p95": 12073,
+            "minimum": 9229,
+            "maximum": 12251
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 49.84375,
+            "median": -41.5,
+            "p95": 2100,
+            "minimum": -951,
+            "maximum": 2785
+          },
+          "candidate_slower_pairs": 15
+        }
+      },
+      "by_process": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 10229.8125,
+            "median": 9967.5,
+            "p95": 12419,
+            "minimum": 8712,
+            "maximum": 12436
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 10306.6875,
+            "median": 10059.5,
+            "p95": 11619,
+            "minimum": 9229,
+            "maximum": 12176
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 76.875,
+            "median": -12.5,
+            "p95": 2100,
+            "minimum": -1938,
+            "maximum": 2642
+          },
+          "candidate_slower_pairs": 16
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 10515.65625,
+            "median": 10315.5,
+            "p95": 12455,
+            "minimum": 9345,
+            "maximum": 12821
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 10463.59375,
+            "median": 10206.5,
+            "p95": 12073,
+            "minimum": 9466,
+            "maximum": 12251
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -52.0625,
+            "median": -32.5,
+            "p95": 1285,
+            "minimum": -1814,
+            "maximum": 2785
+          },
+          "candidate_slower_pairs": 15
+        }
+      },
+      "warmups": {
+        "all": {
+          "plain_us": {
+            "count": 8,
+            "mean": 10379.75,
+            "median": 10023.0,
+            "p95": 12917,
+            "minimum": 9301,
+            "maximum": 12917
+          },
+          "candidate_us": {
+            "count": 8,
+            "mean": 10779.625,
+            "median": 10326.0,
+            "p95": 14082,
+            "minimum": 9599,
+            "maximum": 14082
+          },
+          "paired_delta_us": {
+            "count": 8,
+            "mean": 399.875,
+            "median": 480.0,
+            "p95": 1165,
+            "minimum": -588,
+            "maximum": 1165
+          },
+          "candidate_slower_pairs": 7
+        },
+        "by_process": {
+          "forward": {
+            "plain_us": {
+              "count": 4,
+              "mean": 9841.5,
+              "median": 9744.0,
+              "p95": 10577,
+              "minimum": 9301,
+              "maximum": 10577
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 9920.25,
+              "median": 9942.0,
+              "p95": 10198,
+              "minimum": 9599,
+              "maximum": 10198
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": 78.75,
+              "median": 218.5,
+              "p95": 466,
+              "minimum": -588,
+              "maximum": 466
+            },
+            "candidate_slower_pairs": 3,
+            "new_meshes": 0,
+            "new_topologies": 0
+          },
+          "reverse": {
+            "plain_us": {
+              "count": 4,
+              "mean": 10918,
+              "median": 10509.0,
+              "p95": 12917,
+              "minimum": 9737,
+              "maximum": 12917
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 11639,
+              "median": 11010.0,
+              "p95": 14082,
+              "minimum": 10454,
+              "maximum": 14082
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": 721,
+              "median": 612.5,
+              "p95": 1165,
+              "minimum": 494,
+              "maximum": 1165
+            },
+            "candidate_slower_pairs": 4,
+            "new_meshes": 0,
+            "new_topologies": 0
+          }
+        }
+      },
+      "coverage": {
+        "materials": {
+          "conflagration": 150
+        },
+        "occupied_cells": 25,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "conflagration/active",
+          "conflagration/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 75,
+            "created": 51,
+            "decay_tick": 435,
+            "expiry_tick": 495,
+            "id": 1,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1000,
+              1001
+            ]
+          },
+          {
+            "active_tick": 139,
+            "created": 115,
+            "decay_tick": 499,
+            "expiry_tick": 559,
+            "id": 2,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1002,
+              1003
+            ]
+          },
+          {
+            "active_tick": 203,
+            "created": 179,
+            "decay_tick": 563,
+            "expiry_tick": 623,
+            "id": 3,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1004,
+              1005
+            ]
+          },
+          {
+            "active_tick": 267,
+            "created": 243,
+            "decay_tick": 627,
+            "expiry_tick": 687,
+            "id": 4,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1006,
+              1007
+            ]
+          },
+          {
+            "active_tick": 331,
+            "created": 307,
+            "decay_tick": 691,
+            "expiry_tick": 751,
+            "id": 5,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1008,
+              1009
+            ]
+          },
+          {
+            "active_tick": 395,
+            "created": 371,
+            "decay_tick": 755,
+            "expiry_tick": 815,
+            "id": 6,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1010,
+              1011
+            ]
+          }
+        ],
+        "regions": 150
+      },
+      "world_tick": 372,
+      "matter_paid": 7200,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "measured_fallbacks": 0,
+      "edge_mask_hits": 9600,
+      "mesh_hits": 5760
+    },
+    "mantle_active_normal": {
+      "plain_us": {
+        "count": 64,
+        "mean": 7763.359375,
+        "median": 7593.0,
+        "p95": 9037,
+        "minimum": 6746,
+        "maximum": 12081
+      },
+      "candidate_us": {
+        "count": 64,
+        "mean": 7619.859375,
+        "median": 7555.5,
+        "p95": 8488,
+        "minimum": 6682,
+        "maximum": 9232
+      },
+      "paired_delta_us": {
+        "count": 64,
+        "mean": -143.5,
+        "median": -109.0,
+        "p95": 923,
+        "minimum": -5223,
+        "maximum": 1369
+      },
+      "candidate_slower_pairs": 27,
+      "mean_change_percent": -1.8484266033349739,
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 7814.8125,
+            "median": 7720.5,
+            "p95": 9139,
+            "minimum": 6998,
+            "maximum": 10147
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 7699.25,
+            "median": 7618.5,
+            "p95": 9146,
+            "minimum": 6960,
+            "maximum": 9232
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -115.5625,
+            "median": -118.0,
+            "p95": 945,
+            "minimum": -1165,
+            "maximum": 1369
+          },
+          "candidate_slower_pairs": 11
+        },
+        "candidate_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 7711.90625,
+            "median": 7487.5,
+            "p95": 9037,
+            "minimum": 6746,
+            "maximum": 12081
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 7540.46875,
+            "median": 7492.5,
+            "p95": 8488,
+            "minimum": 6682,
+            "maximum": 8873
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -171.4375,
+            "median": 36.0,
+            "p95": 923,
+            "minimum": -5223,
+            "maximum": 1062
+          },
+          "candidate_slower_pairs": 16
+        }
+      },
+      "by_process": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 7972.90625,
+            "median": 7752.0,
+            "p95": 10147,
+            "minimum": 6863,
+            "maximum": 12081
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 7634.4375,
+            "median": 7520.5,
+            "p95": 9146,
+            "minimum": 6682,
+            "maximum": 9232
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -338.46875,
+            "median": -256.0,
+            "p95": 1062,
+            "minimum": -5223,
+            "maximum": 1369
+          },
+          "candidate_slower_pairs": 12
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 7553.8125,
+            "median": 7560.5,
+            "p95": 8423,
+            "minimum": 6746,
+            "maximum": 8496
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 7605.28125,
+            "median": 7576.0,
+            "p95": 8201,
+            "minimum": 6960,
+            "maximum": 8488
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 51.46875,
+            "median": -18.5,
+            "p95": 677,
+            "minimum": -1042,
+            "maximum": 923
+          },
+          "candidate_slower_pairs": 15
+        }
+      },
+      "warmups": {
+        "all": {
+          "plain_us": {
+            "count": 8,
+            "mean": 11031.625,
+            "median": 7518.5,
+            "p95": 20749,
+            "minimum": 7102,
+            "maximum": 20749
+          },
+          "candidate_us": {
+            "count": 8,
+            "mean": 11293.75,
+            "median": 8391.0,
+            "p95": 21860,
+            "minimum": 7052,
+            "maximum": 21860
+          },
+          "paired_delta_us": {
+            "count": 8,
+            "mean": 262.125,
+            "median": 730.0,
+            "p95": 1562,
+            "minimum": -2708,
+            "maximum": 1562
+          },
+          "candidate_slower_pairs": 6
+        },
+        "by_process": {
+          "forward": {
+            "plain_us": {
+              "count": 4,
+              "mean": 10209.25,
+              "median": 7204.0,
+              "p95": 19327,
+              "minimum": 7102,
+              "maximum": 19327
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 10689.5,
+              "median": 7408.5,
+              "p95": 20889,
+              "minimum": 7052,
+              "maximum": 20889
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": 480.25,
+              "median": 299.5,
+              "p95": 1562,
+              "minimum": -240,
+              "maximum": 1562
+            },
+            "candidate_slower_pairs": 3,
+            "new_meshes": 60,
+            "new_topologies": 2
+          },
+          "reverse": {
+            "plain_us": {
+              "count": 4,
+              "mean": 11854,
+              "median": 9701.5,
+              "p95": 20749,
+              "minimum": 7264,
+              "maximum": 20749
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 11898,
+              "median": 8797.0,
+              "p95": 21860,
+              "minimum": 8138,
+              "maximum": 21860
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": 44,
+              "median": 886.5,
+              "p95": 1111,
+              "minimum": -2708,
+              "maximum": 1111
+            },
+            "candidate_slower_pairs": 3,
+            "new_meshes": 60,
+            "new_topologies": 2
+          }
+        }
+      },
+      "coverage": {
+        "materials": {
+          "compound_63": 84,
+          "water": 7
+        },
+        "occupied_cells": 33,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "water/forming",
+          "compound_63/decaying",
+          "compound_63/active",
+          "compound_63/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 824,
+            "created": 758,
+            "decay_tick": 1124,
+            "expiry_tick": 1172,
+            "id": 4,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1003
+            ]
+          },
+          {
+            "active_tick": 1017,
+            "created": 951,
+            "decay_tick": 1317,
+            "expiry_tick": 1365,
+            "id": 5,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1004
+            ]
+          },
+          {
+            "active_tick": 1210,
+            "created": 1144,
+            "decay_tick": 1510,
+            "expiry_tick": 1558,
+            "id": 6,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1005
+            ]
+          }
+        ],
+        "regions": 91
+      },
+      "world_tick": 1171,
+      "matter_paid": 4200,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "measured_fallbacks": 0,
+      "edge_mask_hits": 5824,
+      "mesh_hits": 5568
+    },
+    "mantle_active_reduced": {
+      "plain_us": {
+        "count": 64,
+        "mean": 7842.578125,
+        "median": 7634.5,
+        "p95": 9342,
+        "minimum": 6861,
+        "maximum": 11547
+      },
+      "candidate_us": {
+        "count": 64,
+        "mean": 7828.71875,
+        "median": 7581.0,
+        "p95": 9314,
+        "minimum": 6803,
+        "maximum": 12275
+      },
+      "paired_delta_us": {
+        "count": 64,
+        "mean": -13.859375,
+        "median": 63.5,
+        "p95": 1387,
+        "minimum": -2859,
+        "maximum": 3258
+      },
+      "candidate_slower_pairs": 34,
+      "mean_change_percent": -0.1767196294267026,
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 7812.8125,
+            "median": 7762.5,
+            "p95": 9068,
+            "minimum": 6998,
+            "maximum": 11379
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 7909.25,
+            "median": 7592.5,
+            "p95": 10852,
+            "minimum": 6803,
+            "maximum": 12275
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 96.4375,
+            "median": -27.5,
+            "p95": 2488,
+            "minimum": -1117,
+            "maximum": 3258
+          },
+          "candidate_slower_pairs": 16
+        },
+        "candidate_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 7872.34375,
+            "median": 7567.0,
+            "p95": 9795,
+            "minimum": 6861,
+            "maximum": 11547
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 7748.1875,
+            "median": 7581.0,
+            "p95": 9030,
+            "minimum": 6940,
+            "maximum": 9035
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -124.15625,
+            "median": 63.5,
+            "p95": 1008,
+            "minimum": -2859,
+            "maximum": 1387
+          },
+          "candidate_slower_pairs": 18
+        }
+      },
+      "by_process": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 7690.15625,
+            "median": 7634.5,
+            "p95": 9342,
+            "minimum": 6861,
+            "maximum": 9795
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 7520.0625,
+            "median": 7432.0,
+            "p95": 9035,
+            "minimum": 6803,
+            "maximum": 9314
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -170.09375,
+            "median": -105.0,
+            "p95": 1169,
+            "minimum": -2487,
+            "maximum": 1387
+          },
+          "candidate_slower_pairs": 14
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 7995,
+            "median": 7772.0,
+            "p95": 11379,
+            "minimum": 6998,
+            "maximum": 11547
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 8137.375,
+            "median": 7778.0,
+            "p95": 10852,
+            "minimum": 6940,
+            "maximum": 12275
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 142.375,
+            "median": 120.0,
+            "p95": 2488,
+            "minimum": -2859,
+            "maximum": 3258
+          },
+          "candidate_slower_pairs": 20
+        }
+      },
+      "warmups": {
+        "all": {
+          "plain_us": {
+            "count": 8,
+            "mean": 8309.375,
+            "median": 7929.0,
+            "p95": 12480,
+            "minimum": 6848,
+            "maximum": 12480
+          },
+          "candidate_us": {
+            "count": 8,
+            "mean": 7536,
+            "median": 7540.5,
+            "p95": 8195,
+            "minimum": 6812,
+            "maximum": 8195
+          },
+          "paired_delta_us": {
+            "count": 8,
+            "mean": -773.375,
+            "median": -140.0,
+            "p95": 380,
+            "minimum": -5423,
+            "maximum": 380
+          },
+          "candidate_slower_pairs": 2
+        },
+        "by_process": {
+          "forward": {
+            "plain_us": {
+              "count": 4,
+              "mean": 7279,
+              "median": 7193.0,
+              "p95": 7882,
+              "minimum": 6848,
+              "maximum": 7882
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 7329.75,
+              "median": 7202.0,
+              "p95": 8103,
+              "minimum": 6812,
+              "maximum": 8103
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": 50.75,
+              "median": 65.5,
+              "p95": 380,
+              "minimum": -308,
+              "maximum": 380
+            },
+            "candidate_slower_pairs": 2,
+            "new_meshes": 0,
+            "new_topologies": 0
+          },
+          "reverse": {
+            "plain_us": {
+              "count": 4,
+              "mean": 9339.75,
+              "median": 8451.5,
+              "p95": 12480,
+              "minimum": 7976,
+              "maximum": 12480
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 7742.25,
+              "median": 7858.5,
+              "p95": 8195,
+              "minimum": 7057,
+              "maximum": 8195
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": -1597.5,
+              "median": -422.0,
+              "p95": -123,
+              "minimum": -5423,
+              "maximum": -123
+            },
+            "candidate_slower_pairs": 0,
+            "new_meshes": 0,
+            "new_topologies": 0
+          }
+        }
+      },
+      "coverage": {
+        "materials": {
+          "compound_63": 84,
+          "water": 7
+        },
+        "occupied_cells": 33,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "water/forming",
+          "compound_63/decaying",
+          "compound_63/active",
+          "compound_63/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 824,
+            "created": 758,
+            "decay_tick": 1124,
+            "expiry_tick": 1172,
+            "id": 4,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1003
+            ]
+          },
+          {
+            "active_tick": 1017,
+            "created": 951,
+            "decay_tick": 1317,
+            "expiry_tick": 1365,
+            "id": 5,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1004
+            ]
+          },
+          {
+            "active_tick": 1210,
+            "created": 1144,
+            "decay_tick": 1510,
+            "expiry_tick": 1558,
+            "id": 6,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1005
+            ]
+          }
+        ],
+        "regions": 91
+      },
+      "world_tick": 1171,
+      "matter_paid": 4200,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "measured_fallbacks": 0,
+      "edge_mask_hits": 5824,
+      "mesh_hits": 5568
+    },
+    "two_owners_normal": {
+      "plain_us": {
+        "count": 64,
+        "mean": 3087.359375,
+        "median": 2990.5,
+        "p95": 3728,
+        "minimum": 2599,
+        "maximum": 3932
+      },
+      "candidate_us": {
+        "count": 64,
+        "mean": 3124.03125,
+        "median": 3046.5,
+        "p95": 3599,
+        "minimum": 2766,
+        "maximum": 4123
+      },
+      "paired_delta_us": {
+        "count": 64,
+        "mean": 36.671875,
+        "median": 39.5,
+        "p95": 623,
+        "minimum": -1124,
+        "maximum": 1260
+      },
+      "candidate_slower_pairs": 35,
+      "mean_change_percent": 1.1878071369647358,
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 3027.75,
+            "median": 2973.5,
+            "p95": 3508,
+            "minimum": 2711,
+            "maximum": 3680
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 3201.375,
+            "median": 3148.5,
+            "p95": 3599,
+            "minimum": 2777,
+            "maximum": 4123
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 173.625,
+            "median": 149.0,
+            "p95": 800,
+            "minimum": -414,
+            "maximum": 1260
+          },
+          "candidate_slower_pairs": 22
+        },
+        "candidate_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 3146.96875,
+            "median": 3068.5,
+            "p95": 3917,
+            "minimum": 2599,
+            "maximum": 3932
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 3046.6875,
+            "median": 2950.0,
+            "p95": 3829,
+            "minimum": 2766,
+            "maximum": 4001
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -100.28125,
+            "median": -47.0,
+            "p95": 449,
+            "minimum": -1124,
+            "maximum": 1079
+          },
+          "candidate_slower_pairs": 13
+        }
+      },
+      "by_process": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 3109.875,
+            "median": 3018.0,
+            "p95": 3758,
+            "minimum": 2599,
+            "maximum": 3917
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 3109.59375,
+            "median": 2943.0,
+            "p95": 3829,
+            "minimum": 2766,
+            "maximum": 4001
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -0.28125,
+            "median": 18.0,
+            "p95": 800,
+            "minimum": -1002,
+            "maximum": 1079
+          },
+          "candidate_slower_pairs": 16
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 3064.84375,
+            "median": 2968.0,
+            "p95": 3728,
+            "minimum": 2816,
+            "maximum": 3932
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 3138.46875,
+            "median": 3096.0,
+            "p95": 3493,
+            "minimum": 2772,
+            "maximum": 4123
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 73.625,
+            "median": 40.0,
+            "p95": 541,
+            "minimum": -1124,
+            "maximum": 1260
+          },
+          "candidate_slower_pairs": 19
+        }
+      },
+      "warmups": {
+        "all": {
+          "plain_us": {
+            "count": 8,
+            "mean": 3899.625,
+            "median": 3060.0,
+            "p95": 6833,
+            "minimum": 2760,
+            "maximum": 6833
+          },
+          "candidate_us": {
+            "count": 8,
+            "mean": 3941.125,
+            "median": 3006.0,
+            "p95": 6919,
+            "minimum": 2851,
+            "maximum": 6919
+          },
+          "paired_delta_us": {
+            "count": 8,
+            "mean": 41.5,
+            "median": 0.0,
+            "p95": 693,
+            "minimum": -395,
+            "maximum": 693
+          },
+          "candidate_slower_pairs": 4
+        },
+        "by_process": {
+          "forward": {
+            "plain_us": {
+              "count": 4,
+              "mean": 3715.5,
+              "median": 2938.0,
+              "p95": 6226,
+              "minimum": 2760,
+              "maximum": 6226
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 3933.75,
+              "median": 2982.5,
+              "p95": 6919,
+              "minimum": 2851,
+              "maximum": 6919
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": 218.25,
+              "median": 143.0,
+              "p95": 693,
+              "minimum": -106,
+              "maximum": 693
+            },
+            "candidate_slower_pairs": 3,
+            "new_meshes": 10,
+            "new_topologies": 1
+          },
+          "reverse": {
+            "plain_us": {
+              "count": 4,
+              "mean": 4083.75,
+              "median": 3236.0,
+              "p95": 6833,
+              "minimum": 3030,
+              "maximum": 6833
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 3948.5,
+              "median": 3165.0,
+              "p95": 6523,
+              "minimum": 2941,
+              "maximum": 6523
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": -135.25,
+              "median": -229.5,
+              "p95": 313,
+              "minimum": -395,
+              "maximum": 313
+            },
+            "candidate_slower_pairs": 1,
+            "new_meshes": 10,
+            "new_topologies": 1
+          }
+        }
+      },
+      "coverage": {
+        "materials": {
+          "fire": 27
+        },
+        "occupied_cells": 27,
+        "owners": [
+          "1",
+          "2"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 27
+      },
+      "world_tick": 48,
+      "matter_paid": 1200,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "measured_fallbacks": 0,
+      "edge_mask_hits": 1728,
+      "mesh_hits": 1280
+    },
+    "two_owners_reduced": {
+      "plain_us": {
+        "count": 64,
+        "mean": 3061.890625,
+        "median": 2976.0,
+        "p95": 3662,
+        "minimum": 2710,
+        "maximum": 4875
+      },
+      "candidate_us": {
+        "count": 64,
+        "mean": 3044.515625,
+        "median": 2968.5,
+        "p95": 3557,
+        "minimum": 2685,
+        "maximum": 3656
+      },
+      "paired_delta_us": {
+        "count": 64,
+        "mean": -17.375,
+        "median": 20.5,
+        "p95": 555,
+        "minimum": -1969,
+        "maximum": 766
+      },
+      "candidate_slower_pairs": 35,
+      "mean_change_percent": -0.5674598517051876,
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 3042.6875,
+            "median": 2952.5,
+            "p95": 3767,
+            "minimum": 2737,
+            "maximum": 4184
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 3087.375,
+            "median": 3042.5,
+            "p95": 3448,
+            "minimum": 2698,
+            "maximum": 3656
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 44.6875,
+            "median": 33.5,
+            "p95": 555,
+            "minimum": -967,
+            "maximum": 766
+          },
+          "candidate_slower_pairs": 20
+        },
+        "candidate_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 3081.09375,
+            "median": 3016.5,
+            "p95": 3662,
+            "minimum": 2710,
+            "maximum": 4875
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 3001.65625,
+            "median": 2914.5,
+            "p95": 3590,
+            "minimum": 2685,
+            "maximum": 3635
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -79.4375,
+            "median": -19.0,
+            "p95": 616,
+            "minimum": -1969,
+            "maximum": 657
+          },
+          "candidate_slower_pairs": 15
+        }
+      },
+      "by_process": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 3053.15625,
+            "median": 2951.5,
+            "p95": 3767,
+            "minimum": 2710,
+            "maximum": 4184
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 3060.09375,
+            "median": 2968.5,
+            "p95": 3557,
+            "minimum": 2685,
+            "maximum": 3656
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": 6.9375,
+            "median": 25.5,
+            "p95": 555,
+            "minimum": -967,
+            "maximum": 766
+          },
+          "candidate_slower_pairs": 19
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 3070.625,
+            "median": 2989.5,
+            "p95": 3516,
+            "minimum": 2757,
+            "maximum": 4875
+          },
+          "candidate_us": {
+            "count": 32,
+            "mean": 3028.9375,
+            "median": 2971.5,
+            "p95": 3590,
+            "minimum": 2757,
+            "maximum": 3635
+          },
+          "paired_delta_us": {
+            "count": 32,
+            "mean": -41.6875,
+            "median": 0.5,
+            "p95": 616,
+            "minimum": -1969,
+            "maximum": 657
+          },
+          "candidate_slower_pairs": 16
+        }
+      },
+      "warmups": {
+        "all": {
+          "plain_us": {
+            "count": 8,
+            "mean": 3194.5,
+            "median": 3103.0,
+            "p95": 3819,
+            "minimum": 2743,
+            "maximum": 3819
+          },
+          "candidate_us": {
+            "count": 8,
+            "mean": 3036.625,
+            "median": 3013.5,
+            "p95": 3417,
+            "minimum": 2672,
+            "maximum": 3417
+          },
+          "paired_delta_us": {
+            "count": 8,
+            "mean": -157.875,
+            "median": -249.5,
+            "p95": 238,
+            "minimum": -673,
+            "maximum": 238
+          },
+          "candidate_slower_pairs": 3
+        },
+        "by_process": {
+          "forward": {
+            "plain_us": {
+              "count": 4,
+              "mean": 3314.5,
+              "median": 3309.0,
+              "p95": 3691,
+              "minimum": 2949,
+              "maximum": 3691
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 3029,
+              "median": 3013.5,
+              "p95": 3417,
+              "minimum": 2672,
+              "maximum": 3417
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": -285.5,
+              "median": -275.5,
+              "p95": -225,
+              "minimum": -366,
+              "maximum": -225
+            },
+            "candidate_slower_pairs": 0,
+            "new_meshes": 0,
+            "new_topologies": 0
+          },
+          "reverse": {
+            "plain_us": {
+              "count": 4,
+              "mean": 3074.5,
+              "median": 2868.0,
+              "p95": 3819,
+              "minimum": 2743,
+              "maximum": 3819
+            },
+            "candidate_us": {
+              "count": 4,
+              "mean": 3044.25,
+              "median": 3063.5,
+              "p95": 3173,
+              "minimum": 2877,
+              "maximum": 3173
+            },
+            "paired_delta_us": {
+              "count": 4,
+              "mean": -30.25,
+              "median": 157.0,
+              "p95": 238,
+              "minimum": -673,
+              "maximum": 238
+            },
+            "candidate_slower_pairs": 3,
+            "new_meshes": 0,
+            "new_topologies": 0
+          }
+        }
+      },
+      "coverage": {
+        "materials": {
+          "fire": 27
+        },
+        "occupied_cells": 27,
+        "owners": [
+          "1",
+          "2"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 27
+      },
+      "world_tick": 48,
+      "matter_paid": 1200,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "measured_fallbacks": 0,
+      "edge_mask_hits": 1728,
+      "mesh_hits": 1280
+    }
+  },
+  "reason": "Exact output and authority passed, but Mantle mean benefit reverses in the second process. Reduced Mantle paired median is positive; legacy dense normal also regresses in both pooled order strata. No repeatable benefit justifies promotion. Preserve current production key and both full raw runs, including outliers.",
+  "scope": [
+    "Whole draw_ground_in_view CPU submission only, same outer timers, no nested attribution instrumentation.",
+    "Real finite paid snapshots and separate declared direct prefix contracts; no injected paid phase or resource grant.",
+    "Warmups retained with actual build deltas. First/final caches persist across cases and are not uniformly cold.",
+    "No application boot, rendering GPU/present, foreground FPS, physical input or human readability qualification.",
+    "Source guards preserve exact one-block prototype; no production patch is proposed."
+  ]
+}

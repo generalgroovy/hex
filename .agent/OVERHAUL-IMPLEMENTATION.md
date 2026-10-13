@@ -1,8 +1,44 @@
 # H.E.X. single implementation queue
 
-Status: **PAUSED at the user's requested stable checkpoint, p60-1e084a50a029.**
-Do not continue the iteration or apply deferred changes until the user resumes.
-The final instruction authorizes updating this branch and its documentation.
+Status: **ACTIVE after the user's October 13 resumption**, with a 1% remaining
+included-usage cutoff. The stable p60-1e084a50a029 portable is preserved.
+The [current iteration](../docs/iteration-20261013/README.md) and
+[self-prompt](../docs/iteration-20261013/SELF-PROMPT.md) own new work.
+
+## Current cycle
+
+- [x] Verify clean pushed checkpoint and refreshed included allowance.
+- [x] Write the recursive self-prompt and assign technical/gameplay/experience review streams.
+- [x] Apply T7 and pass focused/PowerShell checks and paired native observer-cost controls.
+- [x] Finish T7 enclosing profiler lifecycle: normal, inherited failure and report-I/O failure pass.
+- [x] Run current-source completed-step attribution with qualified manual foreground admission: p61-500be306a26a passes all five cases, 95 available Windows foreground samples and unchanged-source checks.
+- [x] Repair committed-startup HUD timing with a bounded local witness and pass native captures.
+- [x] Complete both cast-witness cost orders and expanded paid defeat regressions.
+- [x] Pass focused protocol 61 same-step defeat cleanup and freeze a matching candidate identity.
+- [x] Test bounded 32 KiB terrain validation against exact predecessor, pixels and lifecycle.
+- [x] Withdraw the fixed 2 ms terrain policy after preserving the readiness regression and actual Bootstrap diagnostic.
+- [x] Import and pass the coherent restored-source gate: p61-83666f10e174, 25,461 focused assertions.
+- [x] Test isolated worker hashing: real-task lifecycle, both four-view comparisons and actual Bootstrap traversal pass; single-tile extra polling latency retained.
+- [x] Apply the reviewed async stream through one kit construction seam and reproduce/fix capture-reset accounting with real unfinished tasks.
+- [x] Qualify the actual production terrain dependency paths, native lifecycle and Bootstrap selection without injection: 718 focused native assertions and four actual routes pass; independent archive review is complete.
+- [x] Measure HUD panel stages in paired native draws with exact pixels and explicit observer overhead.
+- [x] Remove only the redundant lower idle identity: 285 native checks and 54,746 integrated HUD assertions pass; protection and inspection stay intact.
+- [x] Attribute HUD panels and paid ground drawing with exact native pixels and explicit observer cost.
+- [x] Test the reviewed outline-prefix key-shape candidate: both native orders pass 9,077 checks and exact pixels, but target timing reverses and dense legacy cost regresses. Withdraw without a canonical change.
+- [x] Test lazy trail accounting against unchanged paid authority; withdraw the candidate after crowded actual-emission timing regresses in both orders.
+- [x] Repair the trail probe's stale cursor target and preserve the failed no-flight trace; functional and both native orders pass.
+- [x] Challenge the trail candidate with sustained crowded paid casting: both native orders pass 23,163 checks, but all three reviewers reject the measured positive-path tradeoff. Canonical emitter stays unchanged.
+- [x] Run the bounded optional-coach reproduction: 14,831 integrity checks pass, but all three nominal offsets stop at the same early avoidance before the finisher. No terminal-save/freeze evidence and no production fix.
+- [ ] Select the next casting/Garden intervention from complete measurements.
+- [ ] Qualify the frozen p61-500be306a26a source with garden_middle / paid_fire_bolt_sustained / paid_all_six_mantle_sustained at 12 seconds. The five-minute attempt expired without Start, arming or game instantiation; its raw failure is archived. Manual Start and foreground admission remain required for any future attempt.
+- [x] Pass Full on unchanged p61-500be306a26a: 265 suites / 7,572,978 assertions / zero failures and stderr; independent raw review archived.
+- [x] Pass fresh portable export, all 18 archive checks and exact 133-image / 2,064-check exported-terrain gate; preserve the earlier build.
+- [ ] Finish the five-case normal-close/reopen gate before promoting the new playable checkpoint. First attempt closed normally but failed after twelve scheduled Fire admissions were followed by 63 extra cast outcomes; Mantle/reopen unrun. An untouched-repeat availability question is pending; preserve the raw failure.
+- [ ] After qualification, fix confirmed stale F5/F6 guide/menu hints under supported gameplay remaps, with independent action/fallback review; ignored prototype only during the freeze.
+- [ ] Run the ignored seven-interval simulation attribution after exact transformation/paid-fixture/observer reviews; choose at most one demonstrated redundant-work change afterward.
+- [ ] Reproduce the independently source-confirmed terminal confirmation audio lifetime concern with an actual paid victory before selecting a repair.
+- [ ] Implement cross-reviewed improvements from all-domain audits in bounded slices.
+- [ ] Qualify coherent freezes, reconcile docs and stop at the usage cutoff.
 
 ## Stable iteration checkpoint
 
@@ -24,7 +60,7 @@ paired cases. Warm Garden / Fire / Mantle p95 intervals remain 29.420 / 49.174 /
 51.784 ms; sustained 60 FPS is not achieved. The first lifecycle attempt had extra
 casts after its scheduled workload and remains failed; an unchanged repeat passed.
 
-## Deferred until explicitly resumed
+## Resumed leads from the prior checkpoint
 
 1. Validate and apply the [reviewed T7 attribution draft](../docs/iteration-20261012/deferred-t7/README.md), then run its Godot, authority-equivalence, native and observer-cost checks.
 2. Use all-completed-step measurements to select one remaining casting bottleneck; preserve paid authority and measure the proposed intervention.
@@ -32,7 +68,7 @@ casts after its scheduled workload and remains failed; an unchanged repeat passe
 4. Continue human movement/readability/balance, full animation and physical-device/network acceptance separately from automated correctness.
 
 The remainder is historical workstream evidence. Earlier unchecked acceptance
-items retain their scope; they are not active instructions during this pause.
+items retain their scope and do not override the current cycle's priorities.
 
 ## Preserved smoothness follow-up
 

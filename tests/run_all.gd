@@ -3,6 +3,9 @@ extends SceneTree
 
 
 const SUITES: Array[Script] = [
+	preload("res://tests/unit/test_completed_step_profile.gd"),
+	preload("res://tests/unit/test_cast_startup_witness.gd"),
+	preload("res://tests/unit/test_defeated_pending_capture.gd"),
 	preload("res://tests/unit/test_projectile_speed_policy.gd"),
 	preload("res://tests/unit/test_movement_route_decisions.gd"),
 	preload("res://tests/network/test_network_impairment.gd"),
@@ -24,6 +27,7 @@ const SUITES: Array[Script] = [
 	preload("res://tests/unit/test_performance_presentation.gd"),
 	preload("res://tests/unit/test_hex_stone_floor.gd"),
 	preload("res://tests/unit/test_wellspring_terrain_stream.gd"),
+	preload("res://tests/unit/test_wellspring_async_terrain_stream.gd"),
 	preload("res://tests/unit/test_retained_campus_canvas.gd"),
 	preload("res://tests/unit/test_range_target_scenario.gd"),
 	preload("res://tests/unit/test_hex_avoidance_feedback.gd"),

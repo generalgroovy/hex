@@ -1,0 +1,102 @@
+{
+  "schema": "hex.terrain-worker-promotion-stage.v1",
+  "status": "UNAPPLIED",
+  "scope": "Exact reviewed worker ownership algorithm promoted through path and metadata transforms; source tests and engine qualification have not run on these proposed bytes.",
+  "unchanged_base": {
+    "path": "src/presentation/wellspring_terrain_stream.gd",
+    "bytes": 19611,
+    "sha256": "83c1ee7a896ca60a92f2b691c9c7cfd54faff32fffdc33d84181e38ccdcdf0ca"
+  },
+  "prototype_sources": [
+    {
+      "path": ".godot/iteration-20261013/terrain-worker/worker_terrain_stream.gd",
+      "sha256": "0369b3cef8655c16a075396faa617e3fb06818543d92eaf520fd7edb0a4b7548"
+    },
+    {
+      "path": ".godot/iteration-20261013/terrain-worker/hash_job.gd",
+      "sha256": "6bcc7df8106bbfefca56bc674a257415dd9d0254c917e7f9db0e1b716eb8179e"
+    }
+  ],
+  "mapping": {
+    "base_path": "ignored pinned predecessor -> exact same canonical synchronous base",
+    "worker_path": "src/presentation/wellspring_async_terrain_stream.gd",
+    "task_path": "src/presentation/terrain_hash_job.gd",
+    "selection": "existing prebaked illustrated-kit TerrainStream.new() -> AsyncTerrainStream.new(); synchronous load_immediate and static validators inherited unchanged",
+    "status": "worker_prototype:true -> validation_backend:worker_sha256_v1",
+    "profile": "pixel_validation main interval -> byte_snapshot; backend:worker_sha256_v1 added; separate worker_elapsed_usec/worker_maximum_usec/worker_measured_completions unchanged",
+    "provenance": "base eight source paths remain unchanged; AsyncStream.VALIDATION_SOURCE_PATHS adds exactly worker and task files; independent pack-verifier inventory adds the same two explicitly",
+    "behavior_changes": "None in state transitions, ownership, hashing, polling, joining, reconstruction, upload, cancellation, bounds, error handling, counters or clock placement; only public diagnostic labels/description and dependency paths change."
+  },
+  "patch": {
+    "path": "terrain-worker-promotion.patch",
+    "bytes": 24144,
+    "sha256": "97e637979ecf1ccbbc0ff4be5fe570ca0ba19007c7a680da90c3ac5cd0c8bc77"
+  },
+  "files": [
+    {
+      "path": "src/presentation/wellspring_async_terrain_stream.gd",
+      "before_sha256": null,
+      "before_bytes": null,
+      "proposed_sha256": "18d9ef02d074fedc786fcc31151a9dde22a3a0d23be72b4b0b1185025ddb4399",
+      "proposed_bytes": 16910,
+      "canonical_unchanged_or_absent": true
+    },
+    {
+      "path": "src/presentation/terrain_hash_job.gd",
+      "before_sha256": null,
+      "before_bytes": null,
+      "proposed_sha256": "fd3c440709d9ba61575830b25daf0d9013d708005553f6da5d06ea2a7e76d5b2",
+      "proposed_bytes": 1328,
+      "canonical_unchanged_or_absent": true
+    },
+    {
+      "path": "src/presentation/wellspring_illustrated_kit.gd",
+      "before_sha256": "b06daddfca2c636cdb9f0ae6a170dfc3c806876fc4ce87a8d905de3cd7cd2e8d",
+      "before_bytes": 37815,
+      "proposed_sha256": "d70a5d54fc0e14f566f51e8104e261409c5b19ca903a04745f5c24669b4d85be",
+      "proposed_bytes": 37917,
+      "canonical_unchanged_or_absent": true
+    },
+    {
+      "path": "scripts/bake_wellspring_terrain.gd",
+      "before_sha256": "5f1d335255cda1212474304b76b99a5dd61e0b5855bb9e217d660d47269d11bf",
+      "before_bytes": 3765,
+      "proposed_sha256": "2d7fbcb445b1a4a691144cdc6f399a4d5fbe7cfe7a7e448e7f91ea145562a2d3",
+      "proposed_bytes": 3892,
+      "canonical_unchanged_or_absent": true
+    },
+    {
+      "path": "scripts/verify-terrain-pack.gd",
+      "before_sha256": "1a3d6477546c670b6b518715292c1c73b4cbf69d949ce9136badb67765b2627d",
+      "before_bytes": 15023,
+      "proposed_sha256": "1d508b423130fc4761dcbf5d5d3970f53ec0fa72b2e68569ddade63194dd8d8c",
+      "proposed_bytes": 15151,
+      "canonical_unchanged_or_absent": true
+    },
+    {
+      "path": "scripts/verify-terrain-pack.ps1",
+      "before_sha256": "10535e9d6e9ab54788e2095a43b27d8569c2063bb7be0d5fac841802d5fe6ef9",
+      "before_bytes": 11084,
+      "proposed_sha256": "ffa1ffce4b669e5a741ad5ec7d63d43fc83cb12fefc267815e31df80ccc90fb9",
+      "proposed_bytes": 11195,
+      "canonical_unchanged_or_absent": true
+    },
+    {
+      "path": "tests/unit/test_wellspring_terrain_stream.gd",
+      "before_sha256": "787b2f4a0ce6bb62a3417e2482fbd636cc910a45ee15de7993551693ed97c1d5",
+      "before_bytes": 26989,
+      "proposed_sha256": "383cdba939f911b4d2381ca2c82762d4a6cfa579a9b82f8512e9af8d8acc1d18",
+      "proposed_bytes": 27161,
+      "canonical_unchanged_or_absent": true
+    }
+  ],
+  "canonical_writes": false,
+  "not_included": [
+    "new registered asynchronous-stream regression owned by root",
+    "tests/run_all.gd registration",
+    "generated .gd.uid files",
+    "terrain manifest provenance metadata refresh",
+    "runtime identity regeneration",
+    "engine/native/Full/package gates"
+  ]
+}

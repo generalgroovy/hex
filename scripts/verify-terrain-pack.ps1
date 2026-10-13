@@ -57,6 +57,8 @@ try {
     $terrainSources = @(
         'scripts/bake_wellspring_terrain.gd',
         'src/presentation/wellspring_terrain_stream.gd',
+        'src/presentation/wellspring_async_terrain_stream.gd',
+        'src/presentation/terrain_hash_job.gd',
         'src/presentation/wellspring_illustrated_kit.gd',
         'src/presentation/hex_environment_layout.gd',
         'src/presentation/pixel_map_library.gd',

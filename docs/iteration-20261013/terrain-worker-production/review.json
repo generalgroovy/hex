@@ -1,0 +1,119 @@
+{
+  "schema": "hex-terrain-production-route-independent-review-v1",
+  "passed": true,
+  "errors": [],
+  "identity": {
+    "schema_version": 1,
+    "status": "candidate_generated_not_promoted",
+    "scope_id": "production-runtime-source-v1",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "protocol_version": 61,
+    "snapshot_schema": 24,
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "record_count": 3444,
+    "runtime_source_sha256": "500be306a26ab82390d69f129d3be51e43b2513dd339dc03cfd0a470b5e9fd19",
+    "build_id": "p61-500be306a26a",
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate."
+  },
+  "archive_manifest_sha256": "80ab1fb83443b89859699159390e5717245ae68f4875590509f2885f0da3668a",
+  "pairs": [
+    {
+      "route": "element-garden",
+      "compared_endpoint_fields": [
+        "actor",
+        "displacement_pixels",
+        "dropped_time_seconds",
+        "flux",
+        "health",
+        "image_sha256",
+        "matter_expired",
+        "matter_paid",
+        "minimum_stamina",
+        "packet_sha256",
+        "paid_movement_events",
+        "position",
+        "stamina",
+        "start_stamina",
+        "state_hash",
+        "tick"
+      ],
+      "all_compared_endpoint_fields_equal": true,
+      "only_endpoint_difference": "terrain backend/status/timing counters",
+      "commands_and_successful_step_rows_equal": true,
+      "commands": 480,
+      "before_checks": 388,
+      "after_checks": 5191,
+      "arrival_paused_callbacks": {
+        "before": 27,
+        "after": 27
+      },
+      "later_loading_callbacks": {
+        "before": 0,
+        "after": 0
+      },
+      "after_first_ready_pending_halo": true,
+      "tasks_started_joined": [
+        36,
+        36
+      ],
+      "minimum_stamina": 570692,
+      "displacement_pixels": [
+        -1374.89697265625,
+        0.0
+      ],
+      "state_hash": "fc7fe641e33d89a0e9ac79d4216e7b21201aa048e164ee6df798e7f8b9e544ba",
+      "packet_sha256": "2bdfd1258529c77dbcad833d27bfd65aedf7230bf284435b23d02e1170b95730",
+      "image_sha256": "6714c553d765e88f5124585f2ec515a35487ea87a16b2918f49cd80d73eb96d9"
+    },
+    {
+      "route": "verdant",
+      "compared_endpoint_fields": [
+        "actor",
+        "displacement_pixels",
+        "dropped_time_seconds",
+        "flux",
+        "health",
+        "image_sha256",
+        "matter_expired",
+        "matter_paid",
+        "minimum_stamina",
+        "packet_sha256",
+        "paid_movement_events",
+        "position",
+        "stamina",
+        "start_stamina",
+        "state_hash",
+        "tick"
+      ],
+      "all_compared_endpoint_fields_equal": true,
+      "only_endpoint_difference": "terrain backend/status/timing counters",
+      "commands_and_successful_step_rows_equal": true,
+      "commands": 480,
+      "before_checks": 388,
+      "after_checks": 5191,
+      "arrival_paused_callbacks": {
+        "before": 17,
+        "after": 17
+      },
+      "later_loading_callbacks": {
+        "before": 0,
+        "after": 0
+      },
+      "after_first_ready_pending_halo": true,
+      "tasks_started_joined": [
+        35,
+        35
+      ],
+      "minimum_stamina": 570692,
+      "displacement_pixels": [
+        1374.89697265625,
+        0.0
+      ],
+      "state_hash": "8c754b61d080610956dd349301556fae2cd313dda04dc9d0a2d23f8117946848",
+      "packet_sha256": "5ae352719e6f4b18381ac79313abc70df212ae046b6b49b2b2703c546ccd6022",
+      "image_sha256": "e7fee22ba4fdb7b9956e4e7bbbb802644ad05d60069774381ca9a7e93334638b"
+    }
+  ],
+  "qualification": "Promoted production kit selection, ownership, exact route state/commands/packets/images and normal teardown passed for two scripted480-command native routes. Synthetic application-focus and declared delta are explicit; this is not physical input, foreground frame performance, all-route proof or a Full/package qualification. Native-b timeout remains unexplained; subsequent fixture Gate retention is no causal diagnosis.",
+  "historical_failures": "Original v1 profile-epoch red195/1; corrected green209/0. Native-b drain timeout346/1 preserved without5-second budget relaxation. c209/0,d351+207+43/0,e351+324+43/0 preserved; poll assertions can vary."
+}

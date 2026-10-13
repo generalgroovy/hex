@@ -10,7 +10,7 @@ extends RefCounted
 # Frozen teams, retained score ledgers and explicit result reasons change the
 # replicated round contract. Old peers must not reinterpret these packets.
 # Identity perk prediction now carries identity, resource and cast clocks.
-const PROTOCOL_VERSION: int = 60
+const PROTOCOL_VERSION: int = 61
 const FIXED_SCALE: int = 1000
 const TICK_RATE: int = 120
 # Cast admission and replication share one finite authority envelope. Pending

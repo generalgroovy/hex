@@ -1,0 +1,20 @@
+--- before/tests/unit/test_wellspring_terrain_stream.gd
++++ prototype/tests/unit/test_wellspring_terrain_stream.gd
+@@ -195,12 +195,14 @@
+ 	stream.pump()
+ 	stream.allow_completion = true
+ 	stream.retrieval_usec = Stream.MAX_PUMP_USEC + 1
+-	equal(stream.pump(), 1, "one indivisible over-budget upload makes progress but prevents a second")
++	equal(stream.pump(), 0, "over-budget retrieval yields before validation and texture creation")
+ 	equal(stream.last_pump_usec, Stream.MAX_PUMP_USEC + 1, "actual time overrun remains visible rather than clamped")
+-	equal(stream.last_pump_bytes, 512 * 512 * 4, "upload bytes use validated native dimensions")
++	equal(stream.last_pump_bytes, 0, "unverified retrieval cannot spend an upload byte budget")
+ 	equal(stream.requests, 2, "time overrun also prevents another request admission")
+-	check(stream.budget_yields > 0 and stream.ready_for(view), "budget yield preserves exact current tile readiness")
++	check(stream.budget_yields > 0 and not stream.ready_for(view), "budget yield preserves the unfinished tile's actual readiness")
+ 	stream.retrieval_usec = 0
++	equal(stream.pump(1), 1, "next pump resumes the collected image and admits one verified tile")
++	check(stream.ready_for(view), "resumed validation publishes exact current pixels")
+ 	var reads: int = stream.retrieved.size()
+ 	equal(stream.pump(2, Stream.MAX_PUMP_USEC, 512 * 512 * 4 - 1), 0, "subtile byte budget cannot exceed limit even for first upload")
+ 	equal(stream.retrieved.size(), reads, "insufficient byte budget leaves loaded token owned for a later frame")

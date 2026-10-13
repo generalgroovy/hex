@@ -1,0 +1,16 @@
+{
+  "schema": "hex.terrain-worker.gate-owner-fixture-review.v1",
+  "status": "UNAPPLIED",
+  "canonical_path": "tests/unit/test_wellspring_async_terrain_stream.gd",
+  "before_sha256": "15bf198a525005f3ccfe15cde5164e287a071d011ccd34e2039f452b98dc1ca0",
+  "proposed_sha256": "2aa21ed428bf62c515d7d934f7a2c589c3b854dd8779acedcf0607bb0c483fbc",
+  "patch_sha256": "93aea5f0e5e446a906eba119c957bb479906fdfd6c697a343d8790c6c8cefe2b",
+  "scope": "Test-only strong Gate references persist after semaphore release until all submitted tasks are confirmed joined. Weak references prove live-before-join and freed-after-explicit-release behavior in normal and fallback teardown. Deadline remains exactly 5000ms. No production or workload edits; unexplained prior native timeout remains unexplained.",
+  "canonical_unchanged": true,
+  "engines_run": false,
+  "primary_references": [
+    "https://raw.githubusercontent.com/godotengine/godot/4.6/core/variant/callable.h",
+    "https://raw.githubusercontent.com/godotengine/godot/4.6/core/object/worker_thread_pool.cpp"
+  ],
+  "reference_limit": "Versioned Godot4.6 source supports explicit target ownership; it does not establish the cause of an earlier Godot4.7.1 timeout."
+}

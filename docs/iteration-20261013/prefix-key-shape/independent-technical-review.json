@@ -1,0 +1,1797 @@
+{
+  "schema": "hex-prefix-key-independent-timing-review-v1",
+  "errors": [],
+  "source_hashes_match": true,
+  "cases": [
+    {
+      "label": "fire_ignition_normal",
+      "world_tick": 24,
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/ignition"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "reference": {
+        "n": 64,
+        "mean": 2422.34375,
+        "median": 2281.0,
+        "p95": 3228,
+        "max": 4445,
+        "min": 2094
+      },
+      "candidate": {
+        "n": 64,
+        "mean": 2446.796875,
+        "median": 2286.5,
+        "p95": 3309,
+        "max": 3765,
+        "min": 2107
+      },
+      "delta": {
+        "n": 64,
+        "mean": 24.453125,
+        "median": -5.0,
+        "p95": 955,
+        "max": 1469,
+        "min": -1542
+      },
+      "wins": 32,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "strata": {
+        "run_forward": {
+          "reference_mean": 2405.6875,
+          "candidate_mean": 2327.1875,
+          "delta": {
+            "n": 32,
+            "mean": -78.5,
+            "median": -110.5,
+            "p95": 564,
+            "max": 1469,
+            "min": -983
+          }
+        },
+        "run_reverse": {
+          "reference_mean": 2439,
+          "candidate_mean": 2566.40625,
+          "delta": {
+            "n": 32,
+            "mean": 127.40625,
+            "median": 95.5,
+            "p95": 957,
+            "max": 1086,
+            "min": -1542
+          }
+        },
+        "first_candidate": {
+          "reference_mean": 2491.8125,
+          "candidate_mean": 2440.3125,
+          "delta": {
+            "n": 32,
+            "mean": -51.5,
+            "median": 11.0,
+            "p95": 622,
+            "max": 1086,
+            "min": -983
+          }
+        },
+        "first_plain": {
+          "reference_mean": 2352.875,
+          "candidate_mean": 2453.28125,
+          "delta": {
+            "n": 32,
+            "mean": 100.40625,
+            "median": -14.5,
+            "p95": 957,
+            "max": 1469,
+            "min": -1542
+          }
+        }
+      },
+      "largest_positive_deltas": [
+        {
+          "run": "forward",
+          "index": 5,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 2226,
+          "candidate": 3695
+        },
+        {
+          "run": "reverse",
+          "index": 9,
+          "order": [
+            "candidate",
+            "plain"
+          ],
+          "reference": 2679,
+          "candidate": 3765
+        },
+        {
+          "run": "reverse",
+          "index": 18,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 2099,
+          "candidate": 3056
+        }
+      ]
+    },
+    {
+      "label": "fire_ignition_reduced",
+      "world_tick": 24,
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/ignition"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "reference": {
+        "n": 64,
+        "mean": 2651.890625,
+        "median": 2326.5,
+        "p95": 4095,
+        "max": 4461,
+        "min": 2060
+      },
+      "candidate": {
+        "n": 64,
+        "mean": 2663.984375,
+        "median": 2336.5,
+        "p95": 4396,
+        "max": 5106,
+        "min": 2110
+      },
+      "delta": {
+        "n": 64,
+        "mean": 12.09375,
+        "median": -23.0,
+        "p95": 1644,
+        "max": 2222,
+        "min": -2130
+      },
+      "wins": 34,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "strata": {
+        "run_forward": {
+          "reference_mean": 2838.96875,
+          "candidate_mean": 2917.71875,
+          "delta": {
+            "n": 32,
+            "mean": 78.75,
+            "median": 75.0,
+            "p95": 1793,
+            "max": 2222,
+            "min": -2130
+          }
+        },
+        "run_reverse": {
+          "reference_mean": 2464.8125,
+          "candidate_mean": 2410.25,
+          "delta": {
+            "n": 32,
+            "mean": -54.5625,
+            "median": -60.0,
+            "p95": 658,
+            "max": 1696,
+            "min": -1706
+          }
+        },
+        "first_candidate": {
+          "reference_mean": 2749.96875,
+          "candidate_mean": 2416.46875,
+          "delta": {
+            "n": 32,
+            "mean": -333.5,
+            "median": -97.0,
+            "p95": 255,
+            "max": 510,
+            "min": -2130
+          }
+        },
+        "first_plain": {
+          "reference_mean": 2553.8125,
+          "candidate_mean": 2911.5,
+          "delta": {
+            "n": 32,
+            "mean": 357.6875,
+            "median": 137.5,
+            "p95": 1793,
+            "max": 2222,
+            "min": -1410
+          }
+        }
+      },
+      "largest_positive_deltas": [
+        {
+          "run": "forward",
+          "index": 11,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 2174,
+          "candidate": 4396
+        },
+        {
+          "run": "forward",
+          "index": 29,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 2768,
+          "candidate": 4561
+        },
+        {
+          "run": "reverse",
+          "index": 20,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 2505,
+          "candidate": 4201
+        }
+      ]
+    },
+    {
+      "label": "fire_active_normal",
+      "world_tick": 48,
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "reference": {
+        "n": 64,
+        "mean": 1710.46875,
+        "median": 1680.5,
+        "p95": 2111,
+        "max": 2286,
+        "min": 1529
+      },
+      "candidate": {
+        "n": 64,
+        "mean": 1716.078125,
+        "median": 1660.5,
+        "p95": 2245,
+        "max": 2522,
+        "min": 1543
+      },
+      "delta": {
+        "n": 64,
+        "mean": 5.609375,
+        "median": -3.5,
+        "p95": 364,
+        "max": 650,
+        "min": -617
+      },
+      "wins": 33,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "strata": {
+        "run_forward": {
+          "reference_mean": 1715.28125,
+          "candidate_mean": 1687.90625,
+          "delta": {
+            "n": 32,
+            "mean": -27.375,
+            "median": -19.5,
+            "p95": 251,
+            "max": 508,
+            "min": -496
+          }
+        },
+        "run_reverse": {
+          "reference_mean": 1705.65625,
+          "candidate_mean": 1744.25,
+          "delta": {
+            "n": 32,
+            "mean": 38.59375,
+            "median": 19.0,
+            "p95": 551,
+            "max": 650,
+            "min": -617
+          }
+        },
+        "first_candidate": {
+          "reference_mean": 1727.15625,
+          "candidate_mean": 1707.65625,
+          "delta": {
+            "n": 32,
+            "mean": -19.5,
+            "median": -28.5,
+            "p95": 364,
+            "max": 508,
+            "min": -617
+          }
+        },
+        "first_plain": {
+          "reference_mean": 1693.78125,
+          "candidate_mean": 1724.5,
+          "delta": {
+            "n": 32,
+            "mean": 30.71875,
+            "median": 18.0,
+            "p95": 551,
+            "max": 650,
+            "min": -484
+          }
+        }
+      },
+      "largest_positive_deltas": [
+        {
+          "run": "reverse",
+          "index": 14,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 1606,
+          "candidate": 2256
+        },
+        {
+          "run": "reverse",
+          "index": 20,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 1694,
+          "candidate": 2245
+        },
+        {
+          "run": "forward",
+          "index": 14,
+          "order": [
+            "candidate",
+            "plain"
+          ],
+          "reference": 1811,
+          "candidate": 2319
+        }
+      ]
+    },
+    {
+      "label": "fire_active_reduced",
+      "world_tick": 48,
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "reference": {
+        "n": 64,
+        "mean": 1733.6875,
+        "median": 1675.5,
+        "p95": 2061,
+        "max": 2347,
+        "min": 1554
+      },
+      "candidate": {
+        "n": 64,
+        "mean": 1754.265625,
+        "median": 1676.5,
+        "p95": 2206,
+        "max": 2533,
+        "min": 1556
+      },
+      "delta": {
+        "n": 64,
+        "mean": 20.578125,
+        "median": 3.0,
+        "p95": 477,
+        "max": 593,
+        "min": -654
+      },
+      "wins": 31,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "strata": {
+        "run_forward": {
+          "reference_mean": 1740.15625,
+          "candidate_mean": 1727.5,
+          "delta": {
+            "n": 32,
+            "mean": -12.65625,
+            "median": -15.0,
+            "p95": 433,
+            "max": 556,
+            "min": -654
+          }
+        },
+        "run_reverse": {
+          "reference_mean": 1727.21875,
+          "candidate_mean": 1781.03125,
+          "delta": {
+            "n": 32,
+            "mean": 53.8125,
+            "median": 36.5,
+            "p95": 477,
+            "max": 593,
+            "min": -461
+          }
+        },
+        "first_candidate": {
+          "reference_mean": 1760.03125,
+          "candidate_mean": 1748.8125,
+          "delta": {
+            "n": 32,
+            "mean": -11.21875,
+            "median": -2.5,
+            "p95": 348,
+            "max": 477,
+            "min": -461
+          }
+        },
+        "first_plain": {
+          "reference_mean": 1707.34375,
+          "candidate_mean": 1759.71875,
+          "delta": {
+            "n": 32,
+            "mean": 52.375,
+            "median": 33.5,
+            "p95": 556,
+            "max": 593,
+            "min": -654
+          }
+        }
+      },
+      "largest_positive_deltas": [
+        {
+          "run": "reverse",
+          "index": 26,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 1708,
+          "candidate": 2301
+        },
+        {
+          "run": "forward",
+          "index": 25,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 1650,
+          "candidate": 2206
+        },
+        {
+          "run": "reverse",
+          "index": 5,
+          "order": [
+            "candidate",
+            "plain"
+          ],
+          "reference": 1589,
+          "candidate": 2066
+        }
+      ]
+    },
+    {
+      "label": "fire_cooling_normal",
+      "world_tick": 444,
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/cooling"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "reference": {
+        "n": 64,
+        "mean": 2384.375,
+        "median": 2310.5,
+        "p95": 2853,
+        "max": 2949,
+        "min": 2137
+      },
+      "candidate": {
+        "n": 64,
+        "mean": 2365.140625,
+        "median": 2274.0,
+        "p95": 2990,
+        "max": 3365,
+        "min": 2097
+      },
+      "delta": {
+        "n": 64,
+        "mean": -19.234375,
+        "median": -15.5,
+        "p95": 669,
+        "max": 897,
+        "min": -635
+      },
+      "wins": 34,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "strata": {
+        "run_forward": {
+          "reference_mean": 2385.65625,
+          "candidate_mean": 2339.6875,
+          "delta": {
+            "n": 32,
+            "mean": -45.96875,
+            "median": -57.5,
+            "p95": 669,
+            "max": 897,
+            "min": -635
+          }
+        },
+        "run_reverse": {
+          "reference_mean": 2383.09375,
+          "candidate_mean": 2390.59375,
+          "delta": {
+            "n": 32,
+            "mean": 7.5,
+            "median": -1.5,
+            "p95": 704,
+            "max": 716,
+            "min": -562
+          }
+        },
+        "first_candidate": {
+          "reference_mean": 2399.125,
+          "candidate_mean": 2364.71875,
+          "delta": {
+            "n": 32,
+            "mean": -34.40625,
+            "median": -36.5,
+            "p95": 648,
+            "max": 669,
+            "min": -635
+          }
+        },
+        "first_plain": {
+          "reference_mean": 2369.625,
+          "candidate_mean": 2365.5625,
+          "delta": {
+            "n": 32,
+            "mean": -4.0625,
+            "median": -1.5,
+            "p95": 716,
+            "max": 897,
+            "min": -467
+          }
+        }
+      },
+      "largest_positive_deltas": [
+        {
+          "run": "forward",
+          "index": 29,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 2317,
+          "candidate": 3214
+        },
+        {
+          "run": "reverse",
+          "index": 12,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 2241,
+          "candidate": 2957
+        },
+        {
+          "run": "reverse",
+          "index": 10,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 2309,
+          "candidate": 3013
+        }
+      ]
+    },
+    {
+      "label": "fire_cooling_reduced",
+      "world_tick": 444,
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/cooling"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "reference": {
+        "n": 64,
+        "mean": 2378.765625,
+        "median": 2277.0,
+        "p95": 3244,
+        "max": 3714,
+        "min": 2091
+      },
+      "candidate": {
+        "n": 64,
+        "mean": 2371.171875,
+        "median": 2309.5,
+        "p95": 2848,
+        "max": 3085,
+        "min": 2098
+      },
+      "delta": {
+        "n": 64,
+        "mean": -7.59375,
+        "median": 5.0,
+        "p95": 557,
+        "max": 994,
+        "min": -1352
+      },
+      "wins": 30,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "strata": {
+        "run_forward": {
+          "reference_mean": 2363.875,
+          "candidate_mean": 2348.75,
+          "delta": {
+            "n": 32,
+            "mean": -15.125,
+            "median": -6.5,
+            "p95": 489,
+            "max": 680,
+            "min": -970
+          }
+        },
+        "run_reverse": {
+          "reference_mean": 2393.65625,
+          "candidate_mean": 2393.59375,
+          "delta": {
+            "n": 32,
+            "mean": -0.0625,
+            "median": 33.5,
+            "p95": 649,
+            "max": 994,
+            "min": -1352
+          }
+        },
+        "first_candidate": {
+          "reference_mean": 2500,
+          "candidate_mean": 2397.46875,
+          "delta": {
+            "n": 32,
+            "mean": -102.53125,
+            "median": 5.0,
+            "p95": 649,
+            "max": 680,
+            "min": -1352
+          }
+        },
+        "first_plain": {
+          "reference_mean": 2257.53125,
+          "candidate_mean": 2344.875,
+          "delta": {
+            "n": 32,
+            "mean": 87.34375,
+            "median": 6.5,
+            "p95": 557,
+            "max": 994,
+            "min": -199
+          }
+        }
+      },
+      "largest_positive_deltas": [
+        {
+          "run": "reverse",
+          "index": 8,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 2091,
+          "candidate": 3085
+        },
+        {
+          "run": "forward",
+          "index": 6,
+          "order": [
+            "candidate",
+            "plain"
+          ],
+          "reference": 2243,
+          "candidate": 2923
+        },
+        {
+          "run": "reverse",
+          "index": 27,
+          "order": [
+            "candidate",
+            "plain"
+          ],
+          "reference": 2176,
+          "candidate": 2825
+        }
+      ]
+    },
+    {
+      "label": "fire_dense_normal",
+      "world_tick": 372,
+      "coverage": {
+        "materials": {
+          "conflagration": 150
+        },
+        "occupied_cells": 25,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "conflagration/active",
+          "conflagration/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 75,
+            "created": 51,
+            "decay_tick": 435,
+            "expiry_tick": 495,
+            "id": 1,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1000,
+              1001
+            ]
+          },
+          {
+            "active_tick": 139,
+            "created": 115,
+            "decay_tick": 499,
+            "expiry_tick": 559,
+            "id": 2,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1002,
+              1003
+            ]
+          },
+          {
+            "active_tick": 203,
+            "created": 179,
+            "decay_tick": 563,
+            "expiry_tick": 623,
+            "id": 3,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1004,
+              1005
+            ]
+          },
+          {
+            "active_tick": 267,
+            "created": 243,
+            "decay_tick": 627,
+            "expiry_tick": 687,
+            "id": 4,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1006,
+              1007
+            ]
+          },
+          {
+            "active_tick": 331,
+            "created": 307,
+            "decay_tick": 691,
+            "expiry_tick": 751,
+            "id": 5,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1008,
+              1009
+            ]
+          },
+          {
+            "active_tick": 395,
+            "created": 371,
+            "decay_tick": 755,
+            "expiry_tick": 815,
+            "id": 6,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1010,
+              1011
+            ]
+          }
+        ],
+        "regions": 150
+      },
+      "reference": {
+        "n": 64,
+        "mean": 10382.09375,
+        "median": 10132.5,
+        "p95": 11862,
+        "max": 15004,
+        "min": 9422
+      },
+      "candidate": {
+        "n": 64,
+        "mean": 10636.171875,
+        "median": 10551.0,
+        "p95": 12292,
+        "max": 17899,
+        "min": 9196
+      },
+      "delta": {
+        "n": 64,
+        "mean": 254.078125,
+        "median": 203.5,
+        "p95": 1228,
+        "max": 7989,
+        "min": -4436
+      },
+      "wins": 20,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "strata": {
+        "run_forward": {
+          "reference_mean": 10608.09375,
+          "candidate_mean": 10612.15625,
+          "delta": {
+            "n": 32,
+            "mean": 4.0625,
+            "median": 125.5,
+            "p95": 1245,
+            "max": 2484,
+            "min": -4436
+          }
+        },
+        "run_reverse": {
+          "reference_mean": 10156.09375,
+          "candidate_mean": 10660.1875,
+          "delta": {
+            "n": 32,
+            "mean": 504.09375,
+            "median": 224.0,
+            "p95": 1228,
+            "max": 7989,
+            "min": -378
+          }
+        },
+        "first_candidate": {
+          "reference_mean": 10380.59375,
+          "candidate_mean": 10484.84375,
+          "delta": {
+            "n": 32,
+            "mean": 104.25,
+            "median": 181.0,
+            "p95": 1228,
+            "max": 1245,
+            "min": -1335
+          }
+        },
+        "first_plain": {
+          "reference_mean": 10383.59375,
+          "candidate_mean": 10787.5,
+          "delta": {
+            "n": 32,
+            "mean": 403.90625,
+            "median": 319.0,
+            "p95": 2484,
+            "max": 7989,
+            "min": -4436
+          }
+        }
+      },
+      "largest_positive_deltas": [
+        {
+          "run": "reverse",
+          "index": 34,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 9910,
+          "candidate": 17899
+        },
+        {
+          "run": "forward",
+          "index": 17,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 10649,
+          "candidate": 13133
+        },
+        {
+          "run": "forward",
+          "index": 30,
+          "order": [
+            "candidate",
+            "plain"
+          ],
+          "reference": 9914,
+          "candidate": 11159
+        }
+      ]
+    },
+    {
+      "label": "fire_dense_reduced",
+      "world_tick": 372,
+      "coverage": {
+        "materials": {
+          "conflagration": 150
+        },
+        "occupied_cells": 25,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "conflagration/active",
+          "conflagration/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 75,
+            "created": 51,
+            "decay_tick": 435,
+            "expiry_tick": 495,
+            "id": 1,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1000,
+              1001
+            ]
+          },
+          {
+            "active_tick": 139,
+            "created": 115,
+            "decay_tick": 499,
+            "expiry_tick": 559,
+            "id": 2,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1002,
+              1003
+            ]
+          },
+          {
+            "active_tick": 203,
+            "created": 179,
+            "decay_tick": 563,
+            "expiry_tick": 623,
+            "id": 3,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1004,
+              1005
+            ]
+          },
+          {
+            "active_tick": 267,
+            "created": 243,
+            "decay_tick": 627,
+            "expiry_tick": 687,
+            "id": 4,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1006,
+              1007
+            ]
+          },
+          {
+            "active_tick": 331,
+            "created": 307,
+            "decay_tick": 691,
+            "expiry_tick": 751,
+            "id": 5,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1008,
+              1009
+            ]
+          },
+          {
+            "active_tick": 395,
+            "created": 371,
+            "decay_tick": 755,
+            "expiry_tick": 815,
+            "id": 6,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1010,
+              1011
+            ]
+          }
+        ],
+        "regions": 150
+      },
+      "reference": {
+        "n": 64,
+        "mean": 10372.734375,
+        "median": 10101.0,
+        "p95": 12419,
+        "max": 12821,
+        "min": 8712
+      },
+      "candidate": {
+        "n": 64,
+        "mean": 10385.140625,
+        "median": 10114.5,
+        "p95": 11755,
+        "max": 12251,
+        "min": 9229
+      },
+      "delta": {
+        "n": 64,
+        "mean": 12.40625,
+        "median": -19.0,
+        "p95": 1285,
+        "max": 2785,
+        "min": -1938
+      },
+      "wins": 33,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "strata": {
+        "run_forward": {
+          "reference_mean": 10229.8125,
+          "candidate_mean": 10306.6875,
+          "delta": {
+            "n": 32,
+            "mean": 76.875,
+            "median": -12.5,
+            "p95": 2100,
+            "max": 2642,
+            "min": -1938
+          }
+        },
+        "run_reverse": {
+          "reference_mean": 10515.65625,
+          "candidate_mean": 10463.59375,
+          "delta": {
+            "n": 32,
+            "mean": -52.0625,
+            "median": -32.5,
+            "p95": 1285,
+            "max": 2785,
+            "min": -1814
+          }
+        },
+        "first_candidate": {
+          "reference_mean": 10281.03125,
+          "candidate_mean": 10330.875,
+          "delta": {
+            "n": 32,
+            "mean": 49.84375,
+            "median": -41.5,
+            "p95": 2100,
+            "max": 2785,
+            "min": -951
+          }
+        },
+        "first_plain": {
+          "reference_mean": 10464.4375,
+          "candidate_mean": 10439.40625,
+          "delta": {
+            "n": 32,
+            "mean": -25.03125,
+            "median": 40.0,
+            "p95": 1285,
+            "max": 2642,
+            "min": -1938
+          }
+        }
+      },
+      "largest_positive_deltas": [
+        {
+          "run": "reverse",
+          "index": 15,
+          "order": [
+            "candidate",
+            "plain"
+          ],
+          "reference": 9466,
+          "candidate": 12251
+        },
+        {
+          "run": "forward",
+          "index": 7,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 8712,
+          "candidate": 11354
+        },
+        {
+          "run": "forward",
+          "index": 26,
+          "order": [
+            "candidate",
+            "plain"
+          ],
+          "reference": 9373,
+          "candidate": 11473
+        }
+      ]
+    },
+    {
+      "label": "mantle_active_normal",
+      "world_tick": 1171,
+      "coverage": {
+        "materials": {
+          "compound_63": 84,
+          "water": 7
+        },
+        "occupied_cells": 33,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "water/forming",
+          "compound_63/decaying",
+          "compound_63/active",
+          "compound_63/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 824,
+            "created": 758,
+            "decay_tick": 1124,
+            "expiry_tick": 1172,
+            "id": 4,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1003
+            ]
+          },
+          {
+            "active_tick": 1017,
+            "created": 951,
+            "decay_tick": 1317,
+            "expiry_tick": 1365,
+            "id": 5,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1004
+            ]
+          },
+          {
+            "active_tick": 1210,
+            "created": 1144,
+            "decay_tick": 1510,
+            "expiry_tick": 1558,
+            "id": 6,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1005
+            ]
+          }
+        ],
+        "regions": 91
+      },
+      "reference": {
+        "n": 64,
+        "mean": 7763.359375,
+        "median": 7593.0,
+        "p95": 9037,
+        "max": 12081,
+        "min": 6746
+      },
+      "candidate": {
+        "n": 64,
+        "mean": 7619.859375,
+        "median": 7555.5,
+        "p95": 8488,
+        "max": 9232,
+        "min": 6682
+      },
+      "delta": {
+        "n": 64,
+        "mean": -143.5,
+        "median": -109.0,
+        "p95": 923,
+        "max": 1369,
+        "min": -5223
+      },
+      "wins": 37,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "strata": {
+        "run_forward": {
+          "reference_mean": 7972.90625,
+          "candidate_mean": 7634.4375,
+          "delta": {
+            "n": 32,
+            "mean": -338.46875,
+            "median": -256.0,
+            "p95": 1062,
+            "max": 1369,
+            "min": -5223
+          }
+        },
+        "run_reverse": {
+          "reference_mean": 7553.8125,
+          "candidate_mean": 7605.28125,
+          "delta": {
+            "n": 32,
+            "mean": 51.46875,
+            "median": -18.5,
+            "p95": 677,
+            "max": 923,
+            "min": -1042
+          }
+        },
+        "first_candidate": {
+          "reference_mean": 7711.90625,
+          "candidate_mean": 7540.46875,
+          "delta": {
+            "n": 32,
+            "mean": -171.4375,
+            "median": 36.0,
+            "p95": 923,
+            "max": 1062,
+            "min": -5223
+          }
+        },
+        "first_plain": {
+          "reference_mean": 7814.8125,
+          "candidate_mean": 7699.25,
+          "delta": {
+            "n": 32,
+            "mean": -115.5625,
+            "median": -118.0,
+            "p95": 945,
+            "max": 1369,
+            "min": -1165
+          }
+        }
+      },
+      "largest_positive_deltas": [
+        {
+          "run": "forward",
+          "index": 19,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 7863,
+          "candidate": 9232
+        },
+        {
+          "run": "forward",
+          "index": 26,
+          "order": [
+            "candidate",
+            "plain"
+          ],
+          "reference": 7811,
+          "candidate": 8873
+        },
+        {
+          "run": "forward",
+          "index": 13,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 7106,
+          "candidate": 8051
+        }
+      ]
+    },
+    {
+      "label": "mantle_active_reduced",
+      "world_tick": 1171,
+      "coverage": {
+        "materials": {
+          "compound_63": 84,
+          "water": 7
+        },
+        "occupied_cells": 33,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "water/forming",
+          "compound_63/decaying",
+          "compound_63/active",
+          "compound_63/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 824,
+            "created": 758,
+            "decay_tick": 1124,
+            "expiry_tick": 1172,
+            "id": 4,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1003
+            ]
+          },
+          {
+            "active_tick": 1017,
+            "created": 951,
+            "decay_tick": 1317,
+            "expiry_tick": 1365,
+            "id": 5,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1004
+            ]
+          },
+          {
+            "active_tick": 1210,
+            "created": 1144,
+            "decay_tick": 1510,
+            "expiry_tick": 1558,
+            "id": 6,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1005
+            ]
+          }
+        ],
+        "regions": 91
+      },
+      "reference": {
+        "n": 64,
+        "mean": 7842.578125,
+        "median": 7634.5,
+        "p95": 9342,
+        "max": 11547,
+        "min": 6861
+      },
+      "candidate": {
+        "n": 64,
+        "mean": 7828.71875,
+        "median": 7581.0,
+        "p95": 9314,
+        "max": 12275,
+        "min": 6803
+      },
+      "delta": {
+        "n": 64,
+        "mean": -13.859375,
+        "median": 63.5,
+        "p95": 1387,
+        "max": 3258,
+        "min": -2859
+      },
+      "wins": 30,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "strata": {
+        "run_forward": {
+          "reference_mean": 7690.15625,
+          "candidate_mean": 7520.0625,
+          "delta": {
+            "n": 32,
+            "mean": -170.09375,
+            "median": -105.0,
+            "p95": 1169,
+            "max": 1387,
+            "min": -2487
+          }
+        },
+        "run_reverse": {
+          "reference_mean": 7995,
+          "candidate_mean": 8137.375,
+          "delta": {
+            "n": 32,
+            "mean": 142.375,
+            "median": 120.0,
+            "p95": 2488,
+            "max": 3258,
+            "min": -2859
+          }
+        },
+        "first_candidate": {
+          "reference_mean": 7872.34375,
+          "candidate_mean": 7748.1875,
+          "delta": {
+            "n": 32,
+            "mean": -124.15625,
+            "median": 63.5,
+            "p95": 1008,
+            "max": 1387,
+            "min": -2859
+          }
+        },
+        "first_plain": {
+          "reference_mean": 7812.8125,
+          "candidate_mean": 7909.25,
+          "delta": {
+            "n": 32,
+            "mean": 96.4375,
+            "median": -27.5,
+            "p95": 2488,
+            "max": 3258,
+            "min": -1117
+          }
+        }
+      },
+      "largest_positive_deltas": [
+        {
+          "run": "reverse",
+          "index": 34,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 7594,
+          "candidate": 10852
+        },
+        {
+          "run": "reverse",
+          "index": 16,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 7327,
+          "candidate": 9815
+        },
+        {
+          "run": "reverse",
+          "index": 12,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 7211,
+          "candidate": 8719
+        }
+      ]
+    },
+    {
+      "label": "two_owners_normal",
+      "world_tick": 48,
+      "coverage": {
+        "materials": {
+          "fire": 27
+        },
+        "occupied_cells": 27,
+        "owners": [
+          "1",
+          "2"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 27
+      },
+      "reference": {
+        "n": 64,
+        "mean": 3087.359375,
+        "median": 2990.5,
+        "p95": 3728,
+        "max": 3932,
+        "min": 2599
+      },
+      "candidate": {
+        "n": 64,
+        "mean": 3124.03125,
+        "median": 3046.5,
+        "p95": 3599,
+        "max": 4123,
+        "min": 2766
+      },
+      "delta": {
+        "n": 64,
+        "mean": 36.671875,
+        "median": 39.5,
+        "p95": 623,
+        "max": 1260,
+        "min": -1124
+      },
+      "wins": 29,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "strata": {
+        "run_forward": {
+          "reference_mean": 3109.875,
+          "candidate_mean": 3109.59375,
+          "delta": {
+            "n": 32,
+            "mean": -0.28125,
+            "median": 18.0,
+            "p95": 800,
+            "max": 1079,
+            "min": -1002
+          }
+        },
+        "run_reverse": {
+          "reference_mean": 3064.84375,
+          "candidate_mean": 3138.46875,
+          "delta": {
+            "n": 32,
+            "mean": 73.625,
+            "median": 40.0,
+            "p95": 541,
+            "max": 1260,
+            "min": -1124
+          }
+        },
+        "first_candidate": {
+          "reference_mean": 3146.96875,
+          "candidate_mean": 3046.6875,
+          "delta": {
+            "n": 32,
+            "mean": -100.28125,
+            "median": -47.0,
+            "p95": 449,
+            "max": 1079,
+            "min": -1124
+          }
+        },
+        "first_plain": {
+          "reference_mean": 3027.75,
+          "candidate_mean": 3201.375,
+          "delta": {
+            "n": 32,
+            "mean": 173.625,
+            "median": 149.0,
+            "p95": 800,
+            "max": 1260,
+            "min": -414
+          }
+        }
+      },
+      "largest_positive_deltas": [
+        {
+          "run": "reverse",
+          "index": 30,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 2863,
+          "candidate": 4123
+        },
+        {
+          "run": "forward",
+          "index": 20,
+          "order": [
+            "candidate",
+            "plain"
+          ],
+          "reference": 2922,
+          "candidate": 4001
+        },
+        {
+          "run": "forward",
+          "index": 17,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 2734,
+          "candidate": 3534
+        }
+      ]
+    },
+    {
+      "label": "two_owners_reduced",
+      "world_tick": 48,
+      "coverage": {
+        "materials": {
+          "fire": 27
+        },
+        "occupied_cells": 27,
+        "owners": [
+          "1",
+          "2"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 27
+      },
+      "reference": {
+        "n": 64,
+        "mean": 3061.890625,
+        "median": 2976.0,
+        "p95": 3662,
+        "max": 4875,
+        "min": 2710
+      },
+      "candidate": {
+        "n": 64,
+        "mean": 3044.515625,
+        "median": 2968.5,
+        "p95": 3557,
+        "max": 3656,
+        "min": 2685
+      },
+      "delta": {
+        "n": 64,
+        "mean": -17.375,
+        "median": 20.5,
+        "p95": 555,
+        "max": 766,
+        "min": -1969
+      },
+      "wins": 29,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "strata": {
+        "run_forward": {
+          "reference_mean": 3053.15625,
+          "candidate_mean": 3060.09375,
+          "delta": {
+            "n": 32,
+            "mean": 6.9375,
+            "median": 25.5,
+            "p95": 555,
+            "max": 766,
+            "min": -967
+          }
+        },
+        "run_reverse": {
+          "reference_mean": 3070.625,
+          "candidate_mean": 3028.9375,
+          "delta": {
+            "n": 32,
+            "mean": -41.6875,
+            "median": 0.5,
+            "p95": 616,
+            "max": 657,
+            "min": -1969
+          }
+        },
+        "first_candidate": {
+          "reference_mean": 3081.09375,
+          "candidate_mean": 3001.65625,
+          "delta": {
+            "n": 32,
+            "mean": -79.4375,
+            "median": -19.0,
+            "p95": 616,
+            "max": 657,
+            "min": -1969
+          }
+        },
+        "first_plain": {
+          "reference_mean": 3042.6875,
+          "candidate_mean": 3087.375,
+          "delta": {
+            "n": 32,
+            "mean": 44.6875,
+            "median": 33.5,
+            "p95": 555,
+            "max": 766,
+            "min": -967
+          }
+        }
+      },
+      "largest_positive_deltas": [
+        {
+          "run": "forward",
+          "index": 25,
+          "order": [
+            "plain",
+            "candidate"
+          ],
+          "reference": 2890,
+          "candidate": 3656
+        },
+        {
+          "run": "reverse",
+          "index": 13,
+          "order": [
+            "candidate",
+            "plain"
+          ],
+          "reference": 2978,
+          "candidate": 3635
+        },
+        {
+          "run": "reverse",
+          "index": 21,
+          "order": [
+            "candidate",
+            "plain"
+          ],
+          "reference": 2974,
+          "candidate": 3590
+        }
+      ]
+    }
+  ],
+  "receipts": {
+    "forward": "a2c5fa2417c02a024e01de8614b1fb5bbe6c91ecf5136dda867d13f1fc68f1d3",
+    "reverse": "44db42f62b24f75872deabfd2ec08086a6c59f42817f17e9adafc7d2162d1966"
+  }
+}

@@ -1,16 +1,18 @@
 # H.E.X. game design overview
 
-Status: **stable local October 12, 2026 build p60-1e084a50a029; work paused at the user's request.**
+Status: **active October 13 development; current source p61-500be306a26a, qualification in progress.**
+The [active iteration](iteration-20261013/README.md) owns current checks. The latest
+qualified portable remains **p60-1e084a50a029**.
 The [iteration record](iteration-20261012/README.md) contains the passed Full
 (261 suites / 7,543,825 assertions, zero failures and stderr), matching portable,
-terrain and five-case lifecycle gates. The current source also passed sampled
+terrain and five-case lifecycle gates. That preserved source also passed sampled
 foreground admission; steady 60 FPS remains unachieved. Use the
 [current launcher](../exports/hex-iteration-20261012/windows/PLAY-HEX.cmd).
 The [be680 fallback](../exports/hex-smoothness-20261012/windows/PLAY-HEX.cmd)
 and its [smoothness record](smoothness-20261012/README.md) remain preserved.
 The [resume](../.agent/HEX-RESUME.md) owns exact identities; SPECIFICATION.md owns
 the gameplay contract. Reviewed [T7 diagnostics](iteration-20261012/deferred-t7)
-remain unapplied and outside this qualified build.
+are applied to the working candidate and remain outside the qualified p60 portable.
 
 H.E.X. combines movement execution, aimed spell combat and finite elemental
 terrain. Players learn a small set of actions, then express skill through timing,
@@ -32,16 +34,16 @@ from intended viability and uniqueness.
 | Earned single-player progression | All 30 rivals remain selectable. An optional Rapid→Fuse→Rebound lesson route uses real Conservatory, Tideglass and Basalt courts. A joined paid fixture observes introduction, movement chain, mixed hit, protected crossing, three victories, saved rewards and learned releases | These are three lessons, not a complete campaign. Difficulty progression, varied longer runs and human learning transfer remain open |
 | A larger, varied world with compact UI | Seven districts, thirteen map travel arrivals and 63 harmless Garden exhibits; optional district practice and authored map cues. Small-window/200% reading views retain selection and expose detail pages; mouse, keyboard and pad share compact actions | Human wayfinding and active-device transitions; native fit/navigation checks and source tests do not alone establish comprehension |
 | More dimensional, readable characters and magic | Wall attachment/release use directional poses. Ground characters retain aerial tuck during casting; flyers keep flight bodies with independent hands. Actual protection cues, receiving-surface shadows and a bounded four-voice priority audio batch support feedback | Bespoke authored movement cycles, listening comfort and moving-combat readability remain open |
-| Smooth play on modest hardware | Bounded terrain residency, interpolation, Low/Standard settings, exact Garden selection reuse and staged funded/visual preparation during fast travel. Immediate campus drawing remains the default after moving-view measurements rejected the retained alternative | The admitted 1e084 source has Garden/Fire/Mantle p95 engine intervals of 29.420/49.174/51.784 ms; steady 60 FPS remains unachieved. Full/package gates passed separately; smaller preparation peaks do not imply lower total work |
+| Smooth play on modest hardware | Bounded terrain residency and worker validation, interpolation, Low/Standard settings, exact Garden selection reuse and staged funded/visual preparation during fast travel. Immediate campus drawing remains the default after moving-view measurements rejected the retained alternative | Current 500be source has Garden/default-Fire/Mantle p95 engine intervals of 24.743/28.217/39.999 ms with complete-step observation; steady 60 FPS remains unachieved. Older sustained Fire uses a different fixture, so these are not matched gains. Fresh Full/package qualification is separate; smaller preparation peaks do not imply lower total work |
 
 The [reference adaptations](../SPECIFICATION.md#reference-game-adaptations),
 [combat decisions](element-expansion-evidence-20261009/combat-design.md),
 [learning and testing decisions](element-expansion-evidence-20261009/progression-testing-design.md)
 and [animation decisions](reference-refinement-evidence-20261009/animation-followup.md)
 record established precedents, their H.E.X. translations and limits. The
-[gameplay](implementation-20261012/gameplay.md),
-[experience](implementation-20261012/experience.md) and
-[technical](implementation-20261012/technical.md) ledgers record the current
+[gameplay](iteration-20261013/gameplay.md),
+[experience](iteration-20261013/experience.md) and
+[technical](iteration-20261013/technical.md) ledgers record the current
 adaptations, independent reviews and evidence. These references support design
 choices; tests and content counts alone do not establish fun, balance or smoothness.
 
@@ -50,8 +52,8 @@ for the joined route, 1,899 protected-contact assertions and 1,426 Range-scenari
 assertions with empty stderr. The protected-contact correction observes a real
 swept paid shot crossing during protection; it neither damages the actor nor
 changes the shot's trajectory or strength. The preserved be680 source subsequently
-passed 261 suites / 7,401,986 assertions and separate portable gates. The current
-1e084 build has its own clean Full and delivery receipts above; future edits
+passed 261 suites / 7,401,986 assertions and separate portable gates. The preserved
+1e084 build has its own clean Full and delivery receipts above; current 500be edits
 require fresh qualification.
 
 The **55.65 Fire / 46.74 all-six Mantle reported-FPS means** belong to the

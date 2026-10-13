@@ -1,0 +1,59 @@
+{
+  "schema": "hex.foreground-unarmed-attempt.v1",
+  "qualified": false,
+  "reason": "Five-minute Start window expired without a manual click; no measured gameplay cases.",
+  "runtime": "p61-83666f10e174",
+  "completed_gameplay_rows": 0,
+  "arming": {
+    "armed": false,
+    "manual_confirmation_received": false,
+    "deadline_ms": 300000,
+    "wait_elapsed_ms": 300004,
+    "game_instantiation_started_monotonic_usec": null,
+    "raw_observations": "metrics.json.partial.json"
+  },
+  "wrapper_errors": [
+    "Godot emitted a script/import/runtime error.",
+    "Complete metrics.json is missing; any partial report remains unqualified evidence.",
+    "Expected exactly one matching complete-report marker in the native log.",
+    "Manual measurement requires exactly one matching run/UTC arming marker.",
+    "Native stderr is missing or nonempty; inspect the preserved log.",
+    "Requested foreground arming did not complete.",
+    "Manual arming requires a recorded Start button event during setup; engine focus alone cannot arm the run.",
+    "Foreground arming lacks a finite nonnegative integer: manual_confirmation_utc_msec.",
+    "Foreground arming lacks a finite nonnegative integer: manual_confirmation_monotonic_usec.",
+    "Foreground arming lacks a finite nonnegative integer: armed_utc_msec.",
+    "Foreground arming lacks a finite nonnegative integer: armed_monotonic_usec.",
+    "Foreground arming lacks a finite nonnegative integer: game_instantiation_started_utc_msec.",
+    "Foreground arming lacks a finite nonnegative integer: game_instantiation_started_monotonic_usec.",
+    "Post-arm engine focus was lost or insufficiently observed, including between measured cases.",
+    "At least three owned-window samples spanning one second are required; shorter runs remain diagnostic."
+  ],
+  "files": [
+    {
+      "path": "summary.json",
+      "bytes": 986149,
+      "sha256": "fd13f1537cc0156a9b0257c2ac4e0282f0d0f345706bc1daa070044abeabe428"
+    },
+    {
+      "path": "metrics.json.partial.json",
+      "bytes": 281372,
+      "sha256": "f31738f4e835c3317de80f9354f36e083fec8160da62a941e050fb471bf67cc8"
+    },
+    {
+      "path": "engine.log",
+      "bytes": 288,
+      "sha256": "7a0b1313fe78917e39c0168dbfcf48eaca1aef5e6bf0c990df729522f813a33d"
+    },
+    {
+      "path": "engine.log.err",
+      "bytes": 366,
+      "sha256": "de706e9e141a786c3afdb001faf196c653aada423b5a8ba49b02d66eb35f8fb7"
+    },
+    {
+      "path": "runtime-identity.input.json",
+      "bytes": 576,
+      "sha256": "1cc51482c92e532eba4cb890c589822dc286095ebd091c914b0e3b018e229992"
+    }
+  ]
+}

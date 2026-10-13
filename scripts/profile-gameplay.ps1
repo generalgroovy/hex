@@ -11,6 +11,7 @@ param(
     [ValidateRange(540, 1440)][int]$Height = 720,
     [switch]$LightObserver,
     [switch]$ViewportRenderTiming,
+    [switch]$AllFixedSteps,
     [switch]$ReferenceCampus,
     [switch]$RequestForegroundOnce,
     [switch]$WaitForForeground,
@@ -78,6 +79,7 @@ function Get-GameplayProfileReportErrors($Report, $Expected) {
     foreach ($message in @(Get-MeasurementArmingErrors $arming $waitForForeground)) { $errors.Add($message) }
     foreach ($message in @(Get-GameplayProfileBudgetErrors (Get-GameplayProfileValue $Report 'observation_limits'))) { $errors.Add("Run: $message") }
     foreach ($message in @(Get-GameplayProfileViewportErrors $Report $Expected)) { $errors.Add($message) }
+    foreach ($message in @(Get-GameplayProfileAllFixedStepErrors $Report $Expected)) { $errors.Add($message) }
     foreach ($key in @('observed_source_before', 'observed_source_after')) {
         $snapshot = Get-GameplayProfileValue $Report $key
         if ((Get-GameplayProfileValue $snapshot 'ok' $false) -cne $true -or (Get-GameplayProfileValue $snapshot 'sha256' '') -cnotmatch '^[0-9a-f]{64}$') { $errors.Add("Missing valid independent source snapshot: $key") }
@@ -167,6 +169,118 @@ function Get-GameplayProfileReportErrors($Report, $Expected) {
             $shotPath = [string](Get-GameplayProfileValue $row 'screenshot' '')
             $wantedShot = Join-Path ([IO.Path]::GetDirectoryName($Expected.metrics_path)) ([IO.Path]::GetFileNameWithoutExtension($Expected.metrics_path) + '-' + $wanted.quality + '-' + $wanted.label + '.png')
             if ($shotPath.Replace('\', '/') -ine $wantedShot.Replace('\', '/') -or -not (Test-Path -LiteralPath $wantedShot -PathType Leaf) -or (Get-Item -LiteralPath $wantedShot).Length -le 8) { $errors.Add("Requested screenshot is absent or failed for warm result $index.") }
+        }
+    }
+    return $errors.ToArray()
+}
+
+function Test-GameplayProfileCounter($Value) {
+    if ($Value -isnot [ValueType] -or $Value -is [bool]) { return $false }
+    try {
+        $number = [double]$Value
+        return [double]::IsFinite($number) -and $number -ge 0 -and $number -le 9007199254740991 -and $number -eq [Math]::Floor($number)
+    } catch { return $false }
+}
+
+function Get-GameplayProfileAllFixedStepErrors($Report, $Expected) {
+    $errors = [Collections.Generic.List[string]]::new()
+    $requested = [bool](Get-GameplayProfileValue $Expected 'all_fixed_steps' $false)
+    $header = Get-GameplayProfileValue $Report 'all_fixed_steps'
+    $names = @('surfaces_expiry', 'command_order', 'movement_cast_admission', 'spray_contacts', 'projectile_contacts', 'terminal_deposits', 'actor_product_effects', 'chemistry_exposure', 'finalize')
+    $reportedRequest = Get-GameplayProfileValue $header 'requested' $false
+    if ($reportedRequest -isnot [bool] -or $reportedRequest -cne $requested) { $errors.Add('Completed-stage observer differs from the explicit request.') }
+    if ($requested -and ($Expected.observer -cne 'full' -or (Get-GameplayProfileValue $header 'schema' '') -cne 'hex-completed-stage-observer-v1' -or (@(Get-GameplayProfileValue $header 'stages' @()) -join ',') -cne ($names -join ','))) { $errors.Add('Completed-stage observer lacks full-mode fixed-nine provenance.') }
+    foreach ($row in @(Get-GameplayProfileValue $Report 'results' @())) {
+        $summary = Get-GameplayProfileValue $row 'all_fixed_step_totals'
+        $rawContainer = Get-GameplayProfileValue $row 'raw'
+        $rawValue = Get-GameplayProfileValue $rawContainer 'all_fixed_steps'
+        if (-not $requested) {
+            if ($null -ne $summary -or $null -ne $rawValue) { $errors.Add('Disabled completed-stage observer must not report counter work.') }
+            continue
+        }
+        $frames = @($rawValue)
+        $processMs = @(Get-GameplayProfileValue $rawContainer 'process_elapsed_ms' @())
+        $processCount = Get-GameplayProfileValue (Get-GameplayProfileValue $row 'process_elapsed_ms') 'count' -1
+        if ($frames.Count -lt 1 -or $frames.Count -gt 12000 -or $frames.Count -ne $processCount -or $processMs.Count -ne $frames.Count) { $errors.Add('Completed-stage groups do not cover every admitted process.'); continue }
+        if ((Get-GameplayProfileValue $summary 'valid') -isnot [bool] -or (Get-GameplayProfileValue $summary 'valid' $false) -cne $true -or (Get-GameplayProfileValue $summary 'error' 'missing') -cne '' -or (Get-GameplayProfileValue $summary 'process_frames' -1) -ne $frames.Count) { $errors.Add('Completed-stage summary is absent or incomplete.') }
+        foreach ($key in @('process_frames', 'completed_steps')) { if (-not (Test-GameplayProfileCounter (Get-GameplayProfileValue $summary $key))) { $errors.Add("Completed-stage summary has invalid $key.") } }
+        foreach ($lane in @('elapsed_us', 'executions')) {
+            $values = Get-GameplayProfileValue $summary $lane
+            $keys = if ($values -is [Collections.IDictionary]) { @($values.Keys) } elseif ($null -ne $values) { @($values.PSObject.Properties.Name) } else { @() }
+            if ((($keys | Sort-Object) -join ',') -cne (($names | Sort-Object) -join ',')) { $errors.Add("Completed-stage summary $lane has invalid buckets.") }
+            foreach ($name in $names) { if (-not (Test-GameplayProfileCounter (Get-GameplayProfileValue $values $name))) { $errors.Add("Completed-stage summary $lane/$name is invalid.") } }
+        }
+        $sumElapsed = @{}; $sumCount = @{}
+        foreach ($name in $names) { $sumElapsed[$name] = [decimal]0; $sumCount[$name] = [decimal]0 }
+        $totalSteps = 0L; $previous = $null; $previousFrame = -1L; $previousEnd = -1L
+        for ($index = 0; $index -lt $frames.Count; $index++) {
+            $frame = $frames[$index]
+            $startErrors = $errors.Count
+            foreach ($key in @('process_index', 'process_frame', 'process_started_us', 'process_elapsed_us')) {
+                if (-not (Test-GameplayProfileCounter (Get-GameplayProfileValue $frame $key))) { $errors.Add("Completed-stage frame has invalid $key.") }
+            }
+            $before = Get-GameplayProfileValue $frame 'before'; $after = Get-GameplayProfileValue $frame 'after'
+            foreach ($snapshot in @($before, $after)) {
+                if ((Get-GameplayProfileValue $snapshot 'schema' '') -cne 'hex.sim.completed-stages.v1') { $errors.Add('Completed-stage snapshot schema is invalid.') }
+                foreach ($key in @('enabled', 'profile_enabled', 'hex_mode')) {
+                    $value = Get-GameplayProfileValue $snapshot $key
+                    if ($value -isnot [bool] -or ($key -ne 'hex_mode' -and -not $value)) { $errors.Add("Completed-stage snapshot has invalid $key.") }
+                }
+                $worldIdentity = Get-GameplayProfileValue $snapshot 'world_id'
+                if ($worldIdentity -isnot [string] -or $worldIdentity -cnotmatch '^-?[1-9][0-9]{0,19}$') { $errors.Add('Completed-stage world identity must be an opaque canonical decimal string.') }
+                foreach ($key in @('epoch', 'tick', 'attempted_steps', 'completed_steps', 'failed_steps')) {
+                    if (-not (Test-GameplayProfileCounter (Get-GameplayProfileValue $snapshot $key))) { $errors.Add("Completed-stage snapshot has invalid $key.") }
+                }
+                foreach ($lane in @('elapsed_us', 'executions')) {
+                    $values = Get-GameplayProfileValue $snapshot $lane
+                    $keys = if ($values -is [Collections.IDictionary]) { @($values.Keys) } elseif ($null -ne $values) { @($values.PSObject.Properties.Name) } else { @() }
+                    if ((($keys | Sort-Object) -join ',') -cne (($names | Sort-Object) -join ',')) { $errors.Add("Completed-stage $lane must contain exactly nine buckets.") }
+                    foreach ($name in $names) {
+                        if (-not (Test-GameplayProfileCounter (Get-GameplayProfileValue $values $name))) { $errors.Add("Completed-stage $lane/$name is invalid.") }
+                    }
+                }
+            }
+            if ($errors.Count -ne $startErrors) { continue }
+            foreach ($snapshot in @($before, $after)) {
+                if ($snapshot.epoch -le 0 -or $snapshot.failed_steps -ne 0 -or $snapshot.attempted_steps -ne ($snapshot.completed_steps + $snapshot.failed_steps)) { $errors.Add('Completed-stage attempts, failures or identity are invalid.') }
+                foreach ($name in $names) {
+                    $wanted = if ($name -eq 'actor_product_effects' -and -not $snapshot.hex_mode) { 0L } else { [long]$snapshot.completed_steps }
+                    if ($snapshot.executions.$name -ne $wanted -or ($wanted -eq 0 -and $snapshot.elapsed_us.$name -ne 0)) { $errors.Add("Completed-stage execution coverage is invalid: $name") }
+                }
+            }
+            $steps = [long]$after.completed_steps - [long]$before.completed_steps
+            if ($before.world_id -cne $after.world_id -or $before.epoch -ne $after.epoch -or $before.hex_mode -cne $after.hex_mode -or $steps -lt 0 -or $steps -ne ([long]$after.tick - [long]$before.tick)) { $errors.Add('Completed-stage world/epoch/mode or tick boundary changed.') }
+            if ($index -eq 0 -and ($before.completed_steps -ne 0 -or $before.tick -ne (Get-GameplayProfileValue (Get-GameplayProfileValue $row 'workload') 'tick_begin' -1))) { $errors.Add('Completed-stage first snapshot misses the case start.') }
+            if ($null -ne $previous) {
+                foreach ($key in @('world_id', 'epoch', 'hex_mode', 'tick', 'attempted_steps', 'completed_steps', 'failed_steps')) { if ($before.$key -cne $previous.$key) { $errors.Add("Completed-stage frame gap: $key") } }
+                foreach ($lane in @('elapsed_us', 'executions')) { foreach ($name in $names) { if ($before.$lane.$name -ne $previous.$lane.$name) { $errors.Add("Completed-stage counter gap: $lane/$name") } } }
+            }
+            if ($frame.process_index -ne $index -or $frame.process_frame -le $previousFrame -or $frame.process_started_us -lt $previousEnd) { $errors.Add('Completed-stage process order or monotonic clock is invalid.') }
+            $ms = $processMs[$index]
+            if ($ms -isnot [ValueType] -or $ms -is [bool] -or -not [double]::IsFinite([double]$ms) -or [Math]::Abs([double]$ms * 1000.0 - [double]$frame.process_elapsed_us) -gt 0.01) { $errors.Add('Completed-stage containing interval differs from actual process timing.') }
+            $delta = Get-GameplayProfileValue $frame 'delta'
+            if ((Get-GameplayProfileValue $delta 'valid') -isnot [bool] -or (Get-GameplayProfileValue $delta 'valid' $false) -cne $true -or (Get-GameplayProfileValue $delta 'error' 'missing') -cne '' -or -not (Test-GameplayProfileCounter (Get-GameplayProfileValue $delta 'completed_steps')) -or (Get-GameplayProfileValue $delta 'completed_steps' -1) -ne $steps) { $errors.Add('Completed-stage raw delta is incomplete or inconsistent.') }
+            foreach ($lane in @('elapsed_us', 'executions')) {
+                $values = Get-GameplayProfileValue $delta $lane
+                $keys = if ($values -is [Collections.IDictionary]) { @($values.Keys) } elseif ($null -ne $values) { @($values.PSObject.Properties.Name) } else { @() }
+                if ((($keys | Sort-Object) -join ',') -cne (($names | Sort-Object) -join ',')) { $errors.Add("Completed-stage delta $lane has invalid buckets.") }
+                foreach ($name in $names) { if (-not (Test-GameplayProfileCounter (Get-GameplayProfileValue $values $name))) { $errors.Add("Completed-stage delta $lane/$name is invalid.") } }
+            }
+            $frameElapsed = 0L
+            foreach ($name in $names) {
+                $elapsed = [long]$after.elapsed_us.$name - [long]$before.elapsed_us.$name
+                $count = [long]$after.executions.$name - [long]$before.executions.$name
+                $wanted = if ($name -eq 'actor_product_effects' -and -not $before.hex_mode) { 0L } else { $steps }
+                if ($elapsed -lt 0 -or $count -ne $wanted -or ($count -eq 0 -and $elapsed -ne 0)) { $errors.Add("Completed-stage delta is invalid: $name") }
+                if ((Get-GameplayProfileValue (Get-GameplayProfileValue $delta 'elapsed_us') $name -1) -ne $elapsed -or (Get-GameplayProfileValue (Get-GameplayProfileValue $delta 'executions') $name -1) -ne $count) { $errors.Add("Completed-stage derived delta differs: $name") }
+                $sumElapsed[$name] += $elapsed; $sumCount[$name] += $count; $frameElapsed += $elapsed
+            }
+            if ($frameElapsed -gt $frame.process_elapsed_us) { $errors.Add('Completed-stage elapsed sum exceeds its actual containing process interval.') }
+            $totalSteps += $steps; $previous = $after; $previousFrame = $frame.process_frame; $previousEnd = $frame.process_started_us + $frame.process_elapsed_us
+        }
+        if ($totalSteps -ne (Get-GameplayProfileValue $row 'ticks_advanced' -1) -or $totalSteps -ne (Get-GameplayProfileValue $summary 'completed_steps' -1) -or $null -eq $previous -or $previous.tick -ne (Get-GameplayProfileValue (Get-GameplayProfileValue $row 'workload') 'tick_end' -1)) { $errors.Add('Completed-stage total misses authoritative case ticks.') }
+        foreach ($name in $names) {
+            if ((Get-GameplayProfileValue (Get-GameplayProfileValue $summary 'elapsed_us') $name -1) -ne $sumElapsed[$name] -or (Get-GameplayProfileValue (Get-GameplayProfileValue $summary 'executions') $name -1) -ne $sumCount[$name]) { $errors.Add("Completed-stage summary differs from raw: $name") }
         }
     }
     return $errors.ToArray()
@@ -340,6 +454,7 @@ function Get-GameplayProfileCompactReport($Report) {
 
 $profileRoot = Get-FluxRepoRoot
 if ($LightObserver -and $ViewportRenderTiming) { throw 'ViewportRenderTiming requires the full observer; omit LightObserver.' }
+if ($LightObserver -and $AllFixedSteps) { throw 'AllFixedSteps requires the full observer; omit LightObserver.' }
 # PowerShell ValidateSet is case-insensitive; the GDScript CLI is not.
 $Profiles = @($Profiles | ForEach-Object { $_.ToLowerInvariant() })
 $Cases = @($Cases | ForEach-Object { $_.ToLowerInvariant() })
@@ -389,6 +504,7 @@ try {
     if ($RequestForegroundOnce) { $profileArguments += '--profile-external-foreground-request' }
     if ($WaitForForeground) { $profileArguments += '--profile-wait-for-foreground' }
     if ($LightObserver) { $profileArguments += '--profile-light-observer' }
+    if ($AllFixedSteps) { $profileArguments += '--profile-all-fixed-steps' }
     if ($ViewportRenderTiming) { $profileArguments += '--profile-viewport-render-timing' }
     if ($ReferenceCampus) { $profileArguments += '--reference-campus' }
     else { $profileArguments += '--retained-campus' }
@@ -408,6 +524,7 @@ try {
         $expected['campus_mode'] = $(if ($ReferenceCampus) { 'immediate_reference' } else { 'retained' })
         $expected['wait_for_foreground'] = [bool]$WaitForForeground
         $expected['viewport_render_timing'] = [bool]$ViewportRenderTiming
+        $expected['all_fixed_steps'] = [bool]$AllFixedSteps
         foreach ($message in @(Get-GameplayProfileReportErrors $profileReport $expected)) { $profileErrors.Add($message) }
     }
     $completeLines = @(if (Test-Path -LiteralPath $profileLogPath) { Get-Content -LiteralPath $profileLogPath | Where-Object { $_ -ceq "HEX_GAMEPLAY_PROFILE_COMPLETE $profileMetricsPath" -or $_ -ceq ('HEX_GAMEPLAY_PROFILE_COMPLETE ' + $profileMetricsPath.Replace('\', '/')) } })
@@ -445,7 +562,7 @@ $profileSummary = [ordered]@{
     scope = 'Instrumented native source runtime, not portable-release FPS acceptance or physical presentation/input latency. Cold rows mean this game process cache, not full process launch latency or a flushed OS cache; optional foreground waiting and source hashing precede game instantiation and are retained separately from measured cases. Warm and travel rows stay separate. No source/package/promotion edits; engine preferences live only in the isolated profile. The shared checked-engine runner validates process results, but does not expose a numeric exit code when Windows leaves it unavailable.'
     numeric_process_exit_code = $null; exit_code_scope = 'Not exposed by the shared checked-engine runner; clean launcher return, exact completion marker, complete receipt and empty stderr are required.'
     appdata_restored = $profileAppDataRestored
-    requested = [ordered]@{ profiles = $Profiles; cases = $Cases; seconds_per_case = $SecondsPerCase; soak_seconds = $SoakSeconds; frame_limit = $FrameLimit; width = $Width; height = $Height; observer_mode = $(if ($LightObserver) { 'light' } else { 'full' }); viewport_render_timing = [bool]$ViewportRenderTiming; campus_mode = $(if ($ReferenceCampus) { 'immediate_reference' } else { 'retained' }); screenshots = [bool]$Screenshots; timeout_seconds = $TimeoutSeconds }
+    requested = [ordered]@{ profiles = $Profiles; cases = $Cases; seconds_per_case = $SecondsPerCase; soak_seconds = $SoakSeconds; frame_limit = $FrameLimit; width = $Width; height = $Height; observer_mode = $(if ($LightObserver) { 'light' } else { 'full' }); viewport_render_timing = [bool]$ViewportRenderTiming; all_fixed_steps = [bool]$AllFixedSteps; campus_mode = $(if ($ReferenceCampus) { 'immediate_reference' } else { 'retained' }); screenshots = [bool]$Screenshots; timeout_seconds = $TimeoutSeconds }
     output_directory = $OutputDirectory; engine = $profileEngine; arguments = $profileArguments; wall_seconds = $profileWatch.Elapsed.TotalSeconds
     available_memory_before = $profileMemoryBefore; available_memory_after = $profileMemoryAfter
     window_observations = $profileWindowObservations.ToArray(); window_assessment = $profileWindowAssessment; frame_present_tool_availability = $profilePresentTools

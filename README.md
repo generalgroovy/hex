@@ -1,9 +1,20 @@
 # H.E.X. — Help, Everything eXploded!
 
-Status: **paused at the user's requested stable checkpoint, October 12, 2026.**
-Current source and local Windows portable are **p60-1e084a50a029** on
-`codex/hex-screen-smoothness-20261011`. The [iteration record](docs/iteration-20261012/README.md)
-documents the multi-agent implementation, independent reviews and measurements.
+Status: **active development resumed October 13, 2026; candidate qualification in progress.**
+Current source **p61-500be306a26a** on `codex/hex-screen-smoothness-20261011` includes complete-step
+diagnostics, truthful cast timing, same-step defeated-cast cleanup, compact HUD
+identity and bounded worker terrain validation. The earlier terrain slicing
+experiment was withdrawn after it lengthened arrival waits. The
+[active iteration](docs/iteration-20261013/README.md)
+records its passed focused/native checks and current source measurements.
+[Full](docs/iteration-20261013/full-500be/review.json) passes 265 suites /
+7,572,978 assertions with zero failures/stderr. The fresh package, archive and
+133-image terrain checks pass, while the five-case normal-close/reopen gate
+remains open after extra unscheduled casts invalidated its Fire workload.
+
+The latest qualified local Windows portable remains **p60-1e084a50a029**.
+Its [iteration record](docs/iteration-20261012/README.md)
+documents the prior multi-agent implementation, independent reviews and measurements.
 Its [Full run](docs/iteration-20261012/full-final.json) passed **261 suites /
 7,543,825 assertions**, zero failures and stderr, plus the 120 Hz boot check.
 The matching portable passed archive, terrain and five-case lifecycle checks.
@@ -16,7 +27,7 @@ passes admission, but warm Garden/Fire/Mantle p95 engine intervals remain
 reduces measured peak work while increasing total CPU in the paired cases.
 Previous working portables and failed evidence remain preserved. The
 [single queue](.agent/OVERHAUL-IMPLEMENTATION.md) and [resume](.agent/HEX-RESUME.md)
-record remaining work; the next profiling change is reviewed and unapplied.
+record remaining work. Each receipt qualifies only its recorded source or package.
 
 A movement-led elemental combat sandbox in Godot. Move and aim independently,
 build a twelve-slot spell weave, combine finite elemental effects, and learn a

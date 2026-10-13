@@ -1,9 +1,12 @@
 # H.E.X. documentation map
 
-Status: **paused stable checkpoint, October 12, 2026**, on
-codex/hex-screen-smoothness-20261011. Current source and local Windows portable
-are **p60-1e084a50a029**. The [iteration record](iteration-20261012/README.md)
-owns the implementation, cross-reviews, measured tradeoffs and qualification.
+Status: **active development, October 13, 2026**, on
+codex/hex-screen-smoothness-20261011. The [active iteration](iteration-20261013/README.md)
+owns current source **p61-500be306a26a**, its cross-reviews and open
+qualification gates. Full, fresh package/archive and exported terrain pass;
+the normal-close lifecycle repeat and sustained foreground stress gate remain open.
+The latest qualified portable remains **p60-1e084a50a029**. Its
+[iteration record](iteration-20261012/README.md) owns the following qualification.
 [Full](iteration-20261012/full-final.json) passes 261 suites / 7,543,825 assertions
 with zero failures/stderr and 120 Hz boot. The matching portable passes
 [archive](iteration-20261012/delivery-files.json),
@@ -17,7 +20,8 @@ The [foreground record](iteration-20261012/foreground-current-record.json) passe
 admission but does not establish sustained 60 FPS. The
 [resume](../.agent/HEX-RESUME.md) owns exact identities; the
 [single queue](../.agent/OVERHAUL-IMPLEMENTATION.md) owns deferred work.
-The [T7 patch archive](iteration-20261012/deferred-t7/README.md) remains unapplied.
+The [T7 patch archive](iteration-20261012/deferred-t7/README.md) preserves the reviewed
+proposal now applied to the working candidate; it is outside the p60 portable.
 
 Previous [be680](smoothness-20261012/README.md),
 [845f](implementation-20261012/README.md) and
@@ -31,12 +35,12 @@ contract or qualify a newer build.
 
 | Need | Authoritative document |
 |---|---|
-| Current implementation, reviews and qualification | [Current iteration](iteration-20261012/README.md); [preceding comprehensive implementation](implementation-20261012/README.md) |
+| Current implementation, reviews and qualification | [October 13 iteration](iteration-20261013/README.md); [preserved qualified checkpoint](iteration-20261012/README.md); [preceding comprehensive implementation](implementation-20261012/README.md) |
 | Current design goals, implemented capabilities and acceptance gaps | [Game design overview](CORE-GAME-DESIGN.md) |
 | Earlier presentation implementation, cross-reviews and recorded checks | [October 11 presentation checkpoint](presentation-checkpoint-20261011/README.md) |
 | Run from source, build, and local portable paths | [Project README](../README.md); [development guide](DEVELOPMENT.md) |
 | Source publication and repository cleanup | [October 11 publication record](source-publication-20261011/README.md) |
-| Current performance qualification and earlier measurements | [Current foreground record](iteration-20261012/foreground-current-record.json); [iteration tradeoffs](iteration-20261012/README.md); [preceding measurements](smoothness-20261012/performance.md); [historical diagnosis](performance-assessment-20261010/assessment.md) |
+| Current performance qualification and earlier measurements | [Current source foreground review](iteration-20261013/foreground-500be-allsteps/review.json); [current attribution and limits](iteration-20261013/technical.md); [prior portable source record](iteration-20261012/foreground-current-record.json); [preceding measurements](smoothness-20261012/performance.md); [historical diagnosis](performance-assessment-20261010/assessment.md) |
 | Controls, first session, mixtures, learning and testing | [Player guide](PLAYER-GUIDE.md) |
 | Larger world, compact Menu and thirteen travel destinations | [Player guide](PLAYER-GUIDE.md#find-a-place-and-travel); [map decisions](large-wellspring-evidence-20261009/map-overview.md); [layout](large-wellspring-evidence-20261009/layout-design.md); [environment](large-wellspring-evidence-20261009/environment.md) |
 | Physical ground fields for every ingredient set | [Visit the Element Garden](PLAYER-GUIDE.md#walk-the-element-garden); [garden design and evidence](large-wellspring-evidence-20261009/element-garden.md) |
@@ -50,7 +54,7 @@ contract or qualify a newer build.
 | Every ancestry and character perk | [Identity field guide](IDENTITY-PERKS.md) |
 | What balance means and what remains unproven | [Balance contract](HEX-BALANCE-CONTRACT.md) |
 | Reproduce a playtest | [Playtest route](HEX-PLAYTEST.md) |
-| Executed checks, failures, corrections and limitations | [Current October 12 checks](iteration-20261012/README.md); [preserved d8 audit](audit-implementation-20261011/README.md#qualification); [earlier checkpoint](presentation-checkpoint-20261011/README.md#validation); [previous performance qualification](performance-implementation-20261010.md); [preserved expansion record](element-expansion-evidence-20261009/integration.md); [map evidence](large-wellspring-evidence-20261009/map-overview.md); [preserved animation qualification](reference-refinement-evidence-20261009/animation-followup.md) |
+| Executed checks, failures, corrections and limitations | [Current October 13 checks](iteration-20261013/README.md); [preserved October 12 checkpoint](iteration-20261012/README.md); [preserved d8 audit](audit-implementation-20261011/README.md#qualification); [earlier checkpoint](presentation-checkpoint-20261011/README.md#validation); [previous performance qualification](performance-implementation-20261010.md); [preserved expansion record](element-expansion-evidence-20261009/integration.md); [map evidence](large-wellspring-evidence-20261009/map-overview.md); [preserved animation qualification](reference-refinement-evidence-20261009/animation-followup.md) |
 
 ## Current vocabulary
 

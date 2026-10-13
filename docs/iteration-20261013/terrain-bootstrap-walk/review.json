@@ -1,0 +1,138 @@
+{
+  "schema": "hex.bootstrap-terrain-walk-independent-review.v1",
+  "reviewer": "gameplay",
+  "passed": true,
+  "root_summary_checksum_verified": true,
+  "raw_copies_verified": true,
+  "commands_independently_compared": true,
+  "endpoints_independently_compared": true,
+  "paused_authority_independently_checked": true,
+  "cases": [
+    {
+      "case": "before-element-garden-b",
+      "checks": 143,
+      "callbacks": 269,
+      "arrival_paused_callbacks": 27,
+      "walking_paused_callbacks": 0,
+      "commands": 480,
+      "successful_steps": 480,
+      "displacement_pixels": [
+        -1374.89697265625,
+        0.0
+      ],
+      "start_stamina": 660000,
+      "minimum_stamina": 570692,
+      "end_stamina": 660000,
+      "paid_movement_state_samples": {
+        "air_dodge": 22,
+        "slide": 5,
+        "slide_jump": 10
+      },
+      "first_combined_ready_tick": 2,
+      "first_ready_pending": 2,
+      "first_ready_queued": 4,
+      "exact_expected_close_writes": 1,
+      "normal_exit": true,
+      "stderr_bytes": 0,
+      "endpoint_state_hash": "fc7fe641e33d89a0e9ac79d4216e7b21201aa048e164ee6df798e7f8b9e544ba",
+      "endpoint_packet_sha256": "2bdfd1258529c77dbcad833d27bfd65aedf7230bf284435b23d02e1170b95730"
+    },
+    {
+      "case": "after-element-garden-b",
+      "checks": 4946,
+      "callbacks": 288,
+      "arrival_paused_callbacks": 46,
+      "walking_paused_callbacks": 0,
+      "commands": 480,
+      "successful_steps": 480,
+      "displacement_pixels": [
+        -1374.89697265625,
+        0.0
+      ],
+      "start_stamina": 660000,
+      "minimum_stamina": 570692,
+      "end_stamina": 660000,
+      "paid_movement_state_samples": {
+        "air_dodge": 22,
+        "slide": 5,
+        "slide_jump": 10
+      },
+      "first_combined_ready_tick": 2,
+      "first_ready_pending": 2,
+      "first_ready_queued": 7,
+      "exact_expected_close_writes": 1,
+      "normal_exit": true,
+      "stderr_bytes": 0,
+      "endpoint_state_hash": "fc7fe641e33d89a0e9ac79d4216e7b21201aa048e164ee6df798e7f8b9e544ba",
+      "endpoint_packet_sha256": "2bdfd1258529c77dbcad833d27bfd65aedf7230bf284435b23d02e1170b95730"
+    },
+    {
+      "case": "before-verdant-b",
+      "checks": 143,
+      "callbacks": 263,
+      "arrival_paused_callbacks": 21,
+      "walking_paused_callbacks": 0,
+      "commands": 480,
+      "successful_steps": 480,
+      "displacement_pixels": [
+        1374.89697265625,
+        0.0
+      ],
+      "start_stamina": 660000,
+      "minimum_stamina": 570692,
+      "end_stamina": 660000,
+      "paid_movement_state_samples": {
+        "air_dodge": 22,
+        "slide": 5,
+        "slide_jump": 10
+      },
+      "first_combined_ready_tick": 2,
+      "first_ready_pending": 0,
+      "first_ready_queued": 13,
+      "exact_expected_close_writes": 1,
+      "normal_exit": true,
+      "stderr_bytes": 0,
+      "endpoint_state_hash": "8c754b61d080610956dd349301556fae2cd313dda04dc9d0a2d23f8117946848",
+      "endpoint_packet_sha256": "5ae352719e6f4b18381ac79313abc70df212ae046b6b49b2b2703c546ccd6022"
+    },
+    {
+      "case": "after-verdant-b",
+      "checks": 4946,
+      "callbacks": 279,
+      "arrival_paused_callbacks": 37,
+      "walking_paused_callbacks": 0,
+      "commands": 480,
+      "successful_steps": 480,
+      "displacement_pixels": [
+        1374.89697265625,
+        0.0
+      ],
+      "start_stamina": 660000,
+      "minimum_stamina": 570692,
+      "end_stamina": 660000,
+      "paid_movement_state_samples": {
+        "air_dodge": 22,
+        "slide": 5,
+        "slide_jump": 10
+      },
+      "first_combined_ready_tick": 2,
+      "first_ready_pending": 0,
+      "first_ready_queued": 13,
+      "exact_expected_close_writes": 1,
+      "normal_exit": true,
+      "stderr_bytes": 0,
+      "endpoint_state_hash": "8c754b61d080610956dd349301556fae2cd313dda04dc9d0a2d23f8117946848",
+      "endpoint_packet_sha256": "5ae352719e6f4b18381ac79313abc70df212ae046b6b49b2b2703c546ccd6022"
+    }
+  ],
+  "interpretation": "Both actual camera-follow routes complete the same finite paid movement commands without walking pauses. Sliced validation increases arrival-paused callbacks in each one-shot pair. The stream-only proxy covers different rectangles and velocities, so its missing-frame results are distinct coverage, not a direct contradiction.",
+  "limits": [
+    "Explicit synthetic application focus; actual focus retained separately in raw rows.",
+    "Declared 1/60 callback delta and tick-scheduled intents; no physical-input-during-stall, FPS, latency, human feel or full-game performance acceptance.",
+    "Only two specified routes and one pair per route; no all-route or statistical timing claim.",
+    "Movement spends Stamina; these routes do not cast spells or spend Flux/matter.",
+    "paid_movement_state_samples counts observed action-state ticks, not distinct action admissions.",
+    "Source after is the subsequently withdrawn sliced-stream prototype, not the current restored runtime."
+  ],
+  "first_failure": "Original FE8735 receipt remains failed: its guard rejected the existing normal-close first backup. The repaired helper permits only ABSENT to exact unchanged boot-primary bytes at close, while preserving all through-route profile guards."
+}

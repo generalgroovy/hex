@@ -5,6 +5,7 @@ extends SceneTree
 # Lossless compressed Image resources need no texture importer and are included
 # by the existing all_resources export filter. Manifest is published last.
 const Stream = preload("res://src/presentation/wellspring_terrain_stream.gd")
+const AsyncStream = preload("res://src/presentation/wellspring_async_terrain_stream.gd")
 const Manifest = preload("res://src/presentation/wellspring_terrain_manifest.gd")
 
 
@@ -51,7 +52,7 @@ func _bake() -> void:
 	var manifest := Manifest.new()
 	manifest.descriptor = {"version": Stream.VERSION, "signature": kit.bake_signature, "canvas": [layout.canvas_size.x, layout.canvas_size.y], "chunk_size": Stream.CHUNK, "chunks": rows, "overview": {"size": [size.x, size.y], "path": overview_path, "rgba_sha256": Stream.pixel_hash(overview)}}
 	var provenance := {}
-	for source_path: String in Stream.BAKE_SOURCE_PATHS:
+	for source_path: String in Stream.BAKE_SOURCE_PATHS + AsyncStream.VALIDATION_SOURCE_PATHS:
 		if not FileAccess.file_exists(source_path):
 			_abort("Missing bake source: " + source_path)
 			return

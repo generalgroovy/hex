@@ -6,7 +6,7 @@ $profileTokens = $null
 $profileParseErrors = $null
 $profileAst = [Management.Automation.Language.Parser]::ParseFile($profileValidatorPath, [ref]$profileTokens, [ref]$profileParseErrors)
 if ($profileParseErrors.Count -gt 0) { throw ($profileParseErrors | Out-String) }
-foreach ($name in @('Get-GameplayProfileValue', 'Get-GameplayProfileExpectedRows', 'Get-GameplayProfileReportErrors', 'Get-GameplayProfileBudgetErrors', 'Get-GameplayProfileCampusErrors', 'Get-GameplayProfileViewportErrors')) {
+foreach ($name in @('Get-GameplayProfileValue', 'Get-GameplayProfileExpectedRows', 'Get-GameplayProfileReportErrors', 'Get-GameplayProfileBudgetErrors', 'Get-GameplayProfileCampusErrors', 'Get-GameplayProfileViewportErrors', 'Test-GameplayProfileCounter', 'Get-GameplayProfileAllFixedStepErrors')) {
     $definitions = @($profileAst.FindAll({ param($node) $node -is [Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq $name }, $true))
     if ($definitions.Count -ne 1) { throw "Expected one profile validator function $name" }
     Invoke-Expression $definitions[0].Extent.Text
@@ -254,6 +254,89 @@ foreach ($mutation in @('light', 'missing_header', 'node_policy_provenance', 'mi
         'observer_nonfinite' { $bad.results[1].viewport_render_timing.observer_pre_elapsed_us = [double]::NaN }
     }
     Check-Profile (@(Get-GameplayProfileReportErrors $bad $badExpected).Count -gt 0) "Viewport receipt rejects contradictory or unbounded evidence: $mutation"
+}
+# Independent raw receipt oracle: zero, one and eight successful steps, including
+# an early expensive step that final-step-only sampling would discard.
+$completedNames = @('surfaces_expiry', 'command_order', 'movement_cast_admission', 'spray_contacts', 'projectile_contacts', 'terminal_deposits', 'actor_product_effects', 'chemistry_exposure', 'finalize')
+function New-CompletedSnapshot([int]$Steps, [int]$Elapsed, [bool]$HexMode, [string]$WorldId) {
+    $times = @{}; $counts = @{}
+    foreach ($name in $completedNames) {
+        $present = $HexMode -or $name -cne 'actor_product_effects'
+        $times[$name] = $(if ($present) { $Elapsed } else { 0 })
+        $counts[$name] = $(if ($present) { $Steps } else { 0 })
+    }
+    return @{ schema = 'hex.sim.completed-stages.v1'; enabled = $true; profile_enabled = $true; world_id = $WorldId; hex_mode = $HexMode
+        epoch = 1; tick = 100 + $Steps; attempted_steps = $Steps; completed_steps = $Steps; failed_steps = 0; elapsed_us = $times; executions = $counts }
+}
+function New-CompletedReport([bool]$HexMode = $true, [string]$WorldId = '9007199254740993') {
+    $snapshots = @((New-CompletedSnapshot 0 0 $HexMode $WorldId), (New-CompletedSnapshot 0 0 $HexMode $WorldId), (New-CompletedSnapshot 1 100 $HexMode $WorldId), (New-CompletedSnapshot 9 180 $HexMode $WorldId))
+    $frames = @(for ($i = 0; $i -lt 3; $i++) {
+        $times = @{}; $counts = @{}
+        foreach ($name in $completedNames) { $times[$name] = $snapshots[$i + 1].elapsed_us[$name] - $snapshots[$i].elapsed_us[$name]; $counts[$name] = $snapshots[$i + 1].executions[$name] - $snapshots[$i].executions[$name] }
+        @{ process_index = $i; process_frame = 200 + $i; process_started_us = 100000 + $i * 100000; process_elapsed_us = $(if ($i -eq 0) { 50 } else { 1000 })
+           before = $snapshots[$i]; after = $snapshots[$i + 1]; delta = @{ valid = $true; error = ''; completed_steps = @(0, 1, 8)[$i]; elapsed_us = $times; executions = $counts } }
+    })
+    return Copy-Profile @{ all_fixed_steps = @{ schema = 'hex-completed-stage-observer-v1'; requested = $true; stages = $completedNames }; results = @(@{
+        process_elapsed_ms = @{ count = 3 }; ticks_advanced = 9; workload = @{ tick_begin = 100; tick_end = 109 }
+        raw = @{ process_elapsed_ms = @(0.05, 1.0, 1.0); all_fixed_steps = $frames }
+        all_fixed_step_totals = @{ valid = $true; error = ''; process_frames = 3; completed_steps = 9; elapsed_us = $snapshots[3].elapsed_us; executions = $snapshots[3].executions }
+    }) }
+}
+$completedExpected = @{ observer = 'full'; all_fixed_steps = $true }
+$completedReport = New-CompletedReport
+Check-Profile (@(Get-GameplayProfileAllFixedStepErrors $completedReport $completedExpected).Count -eq 0) 'Completed-step receipt accounts exact zero/one/eight steps and the early spike.'
+Check-Profile (@(Get-GameplayProfileAllFixedStepErrors (New-CompletedReport $false '-9223372036854775808') $completedExpected).Count -eq 0) 'Legacy actor-product absence and signed opaque world identity are valid.'
+Check-Profile ((Copy-Profile $completedReport).results[0].raw.all_fixed_steps[0].before.world_id -ceq '9007199254740993') 'Object identity above JSON safe integer remains exact text.'
+Check-Profile (@(Get-GameplayProfileAllFixedStepErrors @{ results = @(@{}) } @{ observer = 'light'; all_fixed_steps = $false }).Count -eq 0) 'Default and light receipts need no cumulative observer data.'
+Check-Profile (@(Get-GameplayProfileAllFixedStepErrors $completedReport @{ observer = 'full'; all_fixed_steps = $false }).Count -gt 0) 'Unrequested cumulative observer is rejected.'
+foreach ($mutation in @('light', 'header_boolean', 'missing_header', 'wrong_stages', 'missing_raw', 'missing_summary', 'missing_frame', 'extra_frame', 'bad_index', 'frame_regression', 'clock_overlap', 'negative_clock', 'numeric_string', 'fraction', 'infinity', 'negative_counter', 'numeric_world', 'zero_world', 'leading_zero_world', 'world_swap', 'epoch_swap', 'mode_swap', 'disabled', 'failed', 'attempts', 'tick', 'missing_bucket', 'extra_bucket', 'absolute_optional_prefix', 'optional_count', 'zero_elapsed', 'rollback', 'process_interval', 'stage_exceeds_interval', 'delta_false', 'delta_tamper', 'summary_tamper', 'tick_total', 'start_tick', 'end_tick', 'counter_gap')) {
+    $bad = Copy-Profile $completedReport
+    $badExpected = Copy-Profile $completedExpected
+    $r = $bad.results[0]; $f = $r.raw.all_fixed_steps
+    switch ($mutation) {
+        'light' { $badExpected.observer = 'light' }
+        'header_boolean' { $bad.all_fixed_steps.requested = 'true' }
+        'missing_header' { $bad.PSObject.Properties.Remove('all_fixed_steps') }
+        'wrong_stages' { $bad.all_fixed_steps.stages[0] = 'unknown' }
+        'missing_raw' { $r.raw.all_fixed_steps = $null }
+        'missing_summary' { $r.all_fixed_step_totals = $null }
+        'missing_frame' { $r.raw.all_fixed_steps = @($f[0], $f[2]) }
+        'extra_frame' { $r.raw.all_fixed_steps += (Copy-Profile $f[2]) }
+        'bad_index' { $f[1].process_index = 0 }
+        'frame_regression' { $f[1].process_frame = 200 }
+        'clock_overlap' { $f[1].process_started_us = 100001 }
+        'negative_clock' { $f[1].process_started_us = -1 }
+        'numeric_string' { $f[1].after.tick = '101' }
+        'fraction' { $f[1].after.elapsed_us.finalize = 0.5 }
+        'infinity' { $f[1].after.elapsed_us.finalize = [double]::PositiveInfinity }
+        'negative_counter' { $f[1].after.executions.finalize = -1 }
+        'numeric_world' { $f[1].after.world_id = 9007199254740992 }
+        'zero_world' { $f[1].after.world_id = '0' }
+        'leading_zero_world' { $f[1].after.world_id = '09007199254740993' }
+        'world_swap' { $f[1].after.world_id = '9007199254740992' }
+        'epoch_swap' { $f[1].after.epoch = 2 }
+        'mode_swap' { $f[1].after.hex_mode = $false }
+        'disabled' { $f[1].after.enabled = $false }
+        'failed' { $f[1].after.failed_steps = 1; $f[1].after.attempted_steps = 2 }
+        'attempts' { $f[1].after.attempted_steps = 2 }
+        'tick' { $f[1].after.tick = 102 }
+        'missing_bucket' { $f[1].after.elapsed_us.PSObject.Properties.Remove('finalize') }
+        'extra_bucket' { $f[1].after.elapsed_us | Add-Member -NotePropertyName invented -NotePropertyValue 0 }
+        'absolute_optional_prefix' { foreach ($frame in $f) { $frame.before.executions.actor_product_effects += 1; $frame.after.executions.actor_product_effects += 1 } }
+        'optional_count' { $f[1].after.executions.actor_product_effects = 0 }
+        'zero_elapsed' { $f[0].after.elapsed_us.finalize = 1 }
+        'rollback' { $f[2].after.elapsed_us.finalize = 99 }
+        'process_interval' { $r.raw.process_elapsed_ms[1] = 2.0 }
+        'stage_exceeds_interval' { $f[1].process_elapsed_us = 899; $r.raw.process_elapsed_ms[1] = 0.899 }
+        'delta_false' { $f[1].delta.valid = $false }
+        'delta_tamper' { $f[1].delta.elapsed_us.finalize = 1 }
+        'summary_tamper' { $r.all_fixed_step_totals.elapsed_us.finalize = 179 }
+        'tick_total' { $r.ticks_advanced = 8 }
+        'start_tick' { $r.workload.tick_begin = 99 }
+        'end_tick' { $r.workload.tick_end = 110 }
+        'counter_gap' { $f[2].before.elapsed_us.finalize = 101 }
+    }
+    Check-Profile (@(Get-GameplayProfileAllFixedStepErrors $bad $badExpected).Count -gt 0) "Completed-stage receipt rejects inconsistent evidence: $mutation"
 }
 & (Join-Path $PSScriptRoot 'test-measurement-observation.ps1')
 & (Join-Path $PSScriptRoot 'test-measurement-arming.ps1')

@@ -1,13 +1,13 @@
 # H.E.X. development on Windows
 
-Status: current source-development guide, October 12, 2026. Git contains source and relevant assets/evidence; local exports are separate.
+Status: current source-development guide, October 13, 2026. Git contains source and relevant assets/evidence; local exports are separate.
 
 Use the repository root containing `project.godot` and `hex.cmd`. Do not run
 development commands from a wrapper folder or an extracted portable. Current
-working source contains the audit changes after `791b00a` on `codex/hex-screen-smoothness-20261011`:
-protocol 60, SessionSnapshot 24, 120 Hz, six ingredients, 63 compositions, eight
-deliveries and 504 spells. The [implementation record](implementation-20261012/README.md)
-owns new checks and measurements; the previous d8 and be3 portables stay preserved.
+working source continues after `1068759` on `codex/hex-screen-smoothness-20261011`:
+protocol 61, SessionSnapshot 24, 120 Hz, six ingredients, 63 compositions, eight
+deliveries and 504 spells. The [active iteration](iteration-20261013/README.md)
+owns new checks and measurements; the qualified p60 portable and earlier builds stay preserved.
 The [resume](../.agent/HEX-RESUME.md) owns exact identities and qualification;
 the [specification](../SPECIFICATION.md) owns behavior.
 
@@ -31,7 +31,7 @@ git pull --ff-only
 
 This selects the committed checkpoint without merging it into `main`. Local
 audit edits are additional work; a pull cannot obtain uncommitted files. Use the
-[implementation record](implementation-20261012/README.md) for the current changes.
+[active iteration](iteration-20261013/README.md) for the current changes.
 The earlier Linux evidence remains in the
 [presentation checkpoint](presentation-checkpoint-20261011/README.md).
 
@@ -124,21 +124,32 @@ stay separate from warmed play. Match renderer, actual dimensions, quality,
 observer mode, frame limit, focus and fixture route when comparing runs.
 Report attempts, admissions and refusals separately: ordinary finite resources
 can legitimately refuse some Mantle attempts. The
-[current smoothness evidence](smoothness-20261012/performance.md) separates the
+[historical smoothness evidence](smoothness-20261012/performance.md) separates the
 qualified 845f baseline, intermediate 46fca full-observer comparison and
 light-observer control. Court/world batching and its style memo were later
 withdrawn after slower isolated native measurements; preserve those results
 and qualify the resulting source separately. The final `p60-be680e20d70e`
 foreground attempt expired before Start and recorded no gameplay cases;
 its setup timeout and wrapper duration are not performance measurements.
-The final source's [clean Full regression](smoothness-20261012/full-final.json)
+That source's [clean Full regression](smoothness-20261012/full-final.json)
 passed independently; it does not close the foreground-performance gate.
 The newer [1e084 foreground record](iteration-20261012/foreground-current-record.json)
 passes manual Start, exact client size, sampled focus and unchanged-source checks.
 Its five-minute setup allowance gives the player time to start; measured focus
 requirements are unchanged. Warm Garden/Fire/Mantle p95 engine intervals remain
 29.420/49.174/51.784 ms, so this is not sustained 60 FPS acceptance. The
-[iteration ledger](iteration-20261012/README.md) owns current Full/package status.
+[October 12 ledger](iteration-20261012/README.md) owns that portable's Full/package status.
+The [current 500be source review](iteration-20261013/foreground-500be-allsteps/review.json)
+reconciles every completed step with `-AllFixedSteps`: Garden/default-spawn
+Fire/Mantle p95 intervals are 24.743/28.217/39.999 ms at ten seconds per warm case.
+The older Fire route, duration and observer differ, so these are not matched
+speedup measurements. The twelve-second sustained follow-up expired without
+Start and never instantiated gameplay. Preserve its failure independently.
+The [active iteration](iteration-20261013/README.md) owns current Full/package gates.
+`-AllFixedSteps` records all successful catch-up work and zero-step groups;
+it cannot be combined with `-LightObserver`. Compare its explicit observer cost,
+failed-step counts and world/epoch continuity instead of treating a last-step
+sample as the entire process cost.
 `-ReferenceCampus` selects the immediate campus drawing path for an identical
 workload comparison. The source profiler explicitly opts into retained drawing
 otherwise. Ordinary game/portable launches keep immediate drawing; opt into the
@@ -245,7 +256,7 @@ rendered measurements or human acceptance.
 `exports/`, `.godot/` and local profiles are intentionally excluded from Git.
 Links to old local packages describe preserved local artifacts, not GitHub
 downloads. A source commit/push is not a GitHub binary release, installer or
-automatic update. The [implementation record](implementation-20261012/README.md)
+automatic update. The [active iteration](iteration-20261013/README.md)
 separates current source, export, payload and normal-close qualification; the earlier
 presentation checkpoint retains its original evidence and limits.
 
@@ -257,7 +268,8 @@ producer or duplicate only after proving its dependency boundary and preserving
 needed provenance. A filename containing `legacy`, `reference` or an old date
 does not establish that it is unused.
 
-The [implementation record](implementation-20261012/README.md) owns current checks.
+The [active iteration](iteration-20261013/README.md) owns current checks; the
+[October 12 checkpoint](iteration-20261012/README.md) owns its qualified portable.
 The earlier [presentation checkpoint](presentation-checkpoint-20261011/README.md)
 keeps its failed complete run and corrected focused run as historical evidence. The
 [previous performance report](performance-implementation-20261010.md) links the be3

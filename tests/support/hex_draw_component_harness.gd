@@ -94,17 +94,17 @@ class TimedGround extends HexCourtPresenter:
 
 class TimedActors extends CartoonChampionPresenter:
 	var counters: Counters
-	func draw(canvas: CanvasItem, state: PlayerState, champion_id: String, body_anchor: Vector2, presentation_tick: float, config: SimConfig, reduced_effects: bool = false, ground_anchor: Vector2 = Vector2.INF, locomotion_phase: float = -1.0, wall_travel: Vector2i = Vector2i.ZERO) -> bool:
+	func draw(canvas: CanvasItem, state: PlayerState, champion_id: String, body_anchor: Vector2, presentation_tick: float, config: SimConfig, reduced_effects: bool = false, ground_anchor: Vector2 = Vector2.INF, locomotion_phase: float = -1.0, wall_travel: Vector2i = Vector2i.ZERO, cast_timing: Dictionary = {}) -> bool:
 		var began: int = counters.start(canvas)
-		var result: bool = super.draw(canvas, state, champion_id, body_anchor, presentation_tick, config, reduced_effects, ground_anchor, locomotion_phase, wall_travel)
+		var result: bool = super.draw(canvas, state, champion_id, body_anchor, presentation_tick, config, reduced_effects, ground_anchor, locomotion_phase, wall_travel, cast_timing)
 		counters.finish("actor_bodies", began)
 		return result
 
 class TimedHud extends CompactCombatHud:
 	var counters: Counters
-	func draw(canvas: CanvasItem, viewport_size: Vector2, state: PlayerState, ability_catalog: AbilityCatalog, champion_id: String, champion_name: String, location_name: String, session_label: String, active_layer: int, tick_rate: int, spectating: bool, capacity: Vector2i = Vector2i(-1, -1), cast_gate: String = "", pointer: Vector2 = Vector2(-1000, -1000), feedback_label: String = "", preferences: PlayerPreferences = null) -> void:
+	func draw(canvas: CanvasItem, viewport_size: Vector2, state: PlayerState, ability_catalog: AbilityCatalog, champion_id: String, champion_name: String, location_name: String, session_label: String, active_layer: int, tick_rate: int, spectating: bool, capacity: Vector2i = Vector2i(-1, -1), cast_gate: String = "", pointer: Vector2 = Vector2(-1000, -1000), feedback_label: String = "", preferences: PlayerPreferences = null, cast_timing: Dictionary = {}) -> void:
 		var began: int = counters.start(canvas)
-		super.draw(canvas, viewport_size, state, ability_catalog, champion_id, champion_name, location_name, session_label, active_layer, tick_rate, spectating, capacity, cast_gate, pointer, feedback_label, preferences)
+		super.draw(canvas, viewport_size, state, ability_catalog, champion_id, champion_name, location_name, session_label, active_layer, tick_rate, spectating, capacity, cast_gate, pointer, feedback_label, preferences, cast_timing)
 		counters.finish("hud", began)
 
 var counters := Counters.new()

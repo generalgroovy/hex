@@ -1,11 +1,80 @@
 # H.E.X. resume handoff
 
-Status: **PAUSED at the user's request after reaching a qualified stable checkpoint.**
-Do not resume implementation, apply T7 or start a new measurement without a new
-user instruction. The final request authorizes the repository/documentation update.
-The prior continuous-iteration usage cutoff no longer requires further work.
+Status: **ACTIVE after explicit user resumption on October 13, 2026.**
+Continue audit, self-prompted delegation and cross-reviewed implementation until
+1% included usage remains. Latest allowance is 47% used / 53% remaining; paid
+credits remain unchanged at 57564.601627. The [current iteration](../docs/iteration-20261013/README.md) and
+[self-prompt](../docs/iteration-20261013/SELF-PROMPT.md) own current work.
+T7 is applied with focused, paired native observer-cost and all three enclosing
+cleanup checks passed. The cast timing witness passes paid regressions, native
+captures and both final cost orders. The dead-pending snapshot defect has a reviewed
+protocol 61 repair and passing expanded death/expiry/replay regressions. Historical intermediate identity
+**p61-83666f10e174** covers 3,440 records, protocol 61 / snapshot 24. This follows
+strict editor import and restoration of the original terrain stream. Earlier new
+correctness (26,364 assertions) and terrain/network (1,337 assertions) gates pass
+on their recorded temporary identity. The sliced terrain policy is withdrawn:
+lower pump peaks came with longer readiness and more interrupted camera-demand
+views. Four actual Bootstrap diagnostics passed with 480 commands each; Garden
+arrival waits rose from 27 to 46 callbacks and Verdant from 21 to 37. Both actual
+routes had zero later walking pauses. Exact source, successes and failures remain
+archived. Restored-source focused qualification passes 25,461 assertions across
+five suites with zero stderr. The first new manual Start attempt expired without
+a click, so it contains no gameplay measurement.
+A bounded worker-hash prototype passes 162 native checks across ten cases; both
+throughput orders and real Bootstrap traversal gates pass. The reviewed production
+seam is applied, with the single-tile extra-poll tradeoff retained. A real-task
+capture-reset regression reproduces the old diagnostic defect and passes 209
+assertions after correction. The later native production qualification is recorded below.
+Both HUD attribution orders
+pass 1,288 checks; outlines account for roughly 0.18–0.28 ms of full-HUD submission.
+The reviewed duplicate idle-name subtraction is now applied after 285 native
+checks and exact-pixel controls. Current source is **p61-500be306a26a**, 3,444
+records, and passes identity/current-state checks. Production native terrain,
+worker and Bootstrap suites pass 351 / 324 / 43 assertions. The earlier worker
+drain timeout remains unexplained and preserved; both later native repeats pass.
+Four actual production Bootstrap routes pass with 27/27 Garden and 17/17 Verdant
+arrival waits and no later walking pauses. Current-source foreground attribution
+also passes manual Start, all five completed-step records, 95 available owned
+foreground-window samples and unchanged-source checks. Warm Garden / Fire /
+all-six Mantle mean intervals are 18.873 / 22.416 / 30.752 ms; p95 is
+24.743 / 28.217 / 39.999 ms. These are observed source intervals, not a controlled
+gain or steady 60 FPS. Independent review reconciles all 1,349 process groups /
+3,646 completed steps and exact source pins. The later twelve-second sustained
+Fire/Mantle attempt expired after five minutes without Start, arming or game
+instantiation; it contributes no gameplay rows and its failure is archived.
+The stress-performance gate remains open.
 
-## Current checkpoint
+Full passed on frozen **p61-500be306a26a**, 3,444 records: 265 suites /
+7,572,978 assertions, zero failures/stderr and a matching 120 Hz boot. Receipt:
+`.godot/iteration-20261013/full-500be-a.json` and logs at
+`.godot/windows-tests/48a8be28e607499293e6d7061a0529a5`. Fresh package
+`exports/hex-iteration-20261013-500be`, archive and 133-image/2,064-check terrain
+gates pass. Their exact receipts are in
+`docs/iteration-20261013/delivery-500be`. The shared-profile lifecycle attempt
+closed normally but failed exact workload admission: twelve scheduled Fire casts
+were followed by 63 extra outcomes, whose input source is not identified. Its
+raw failure is archived; Mantle/reopen did not execute. An optional user
+availability question for an untouched three-minute repeat is pending.
+Canonical source stays frozen; agents may edit documentation and ignored
+prototypes. Root alone runs engines. The checkpoint below remains the playable
+fallback and does not qualify subsequent edits.
+
+The crowded trail preflight and smaller outline-prefix keys are withdrawn:
+their positive-work timing did not justify adoption. Canonical trail and Court
+remain unchanged. The optional-coach probe ended before the planned finisher in
+all three nominal offsets; terminal save/freeze behavior remains unexercised and
+no fix was applied. All failed and contrary evidence is preserved.
+
+The next confirmed issue is stale F5/F6 guide/menu hints after supported gameplay
+remapping. Experience owns an ignored minimal availability/Menu-fallback patch;
+gameplay and technical independently review it. Root integrates only after the
+current coherent qualification. Technical and gameplay are preparing the
+seven-interval combined-stage diagnostic in ignored files; experience reviews
+the exact observer and root owns its wrapper. It remains unexecuted and is not
+an optimization. A source-confirmed victory audio-tail concern is awaiting a
+real paid terminal reproduction before any repair.
+
+## Preserved playable checkpoint
 
 Repository: C:/Users/sende/Projects/hex; remote generalgroovy/hex.
 Documents/ChatGPT/H.E.X is a wrapper. The existing presentation branch is
@@ -58,19 +127,17 @@ increases in all six means. Actual Bootstrap arrival passes 288 checks and adds
 zero geometry/plaque builds on its first complete draw. This is a peak-work
 tradeoff, not faster overall travel or a millisecond ceiling.
 
-On explicit resumption, begin with the [T7 patch archive](../docs/iteration-20261012/deferred-t7/README.md).
-Three specialists cross-reviewed all-completed-fixed-step attribution. The patches
-remain UNAPPLIED; 239 isolated PowerShell assertions pass, while Godot parsing,
-actual simulation, native lifecycle and observer-cost checks remain unrun.
-Verify exact base/patch hashes before applying all three together. Original
-before/proposed trees remain under .godot/iteration-20261012/T7-draft.
+T7 was archived but unapplied at that prior checkpoint; the October 13 cycle has
+now applied and checked it. Its exact application, functional tests, cost comparison
+and cleanup proof belong to the [current iteration](../docs/iteration-20261013/README.md).
 Use its measurements to select the next actual bottleneck; do not restore the
 withdrawn general Court cache or default-on retained campus without new proof.
 
 Human movement feel, balance, listening, complete authored animation cycles,
 physical controllers and physical two-PC/Internet acceptance remain open.
-The HUD startup meter's base-duration denominator is a deferred correctness lead;
-no unreviewed runtime fix was added at this checkpoint.
+The October 13 cast witness repairs the startup denominator for observed local
+admissions and uses remaining time when a trustworthy total is unavailable.
+This candidate change is not included in the prior qualified portable.
 
 ## Preservation and operating rules
 
@@ -82,5 +149,7 @@ to .godot/iteration-20261012/withdrawn-fixtures, preserving exact local evidence
 Root serializes all engine imports/tests/probes/exports. Preserve original art,
 personal saves, dirty work and failed evidence. The historical FLUX pointer in
 docs/current-checkpoint.json remains unchanged. Exported binaries, profiles and
-caches stay excluded from Git. Included usage was 93% used / 7% remaining at the
-last checkpoint reading; no paid credits were spent or authorized.
+caches stay excluded from Git. The prior checkpoint stopped at 93% used; the new
+cycle began after reset and most recently read 47% used / 53% remaining. No paid
+credits were spent or authorized. Stop when any applicable included window reaches
+99% used, leaving 1% remaining.

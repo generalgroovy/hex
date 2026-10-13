@@ -1,0 +1,40 @@
+{
+  "schema": "hex.t7-cleanup-root-verification.v1",
+  "passed": true,
+  "cases": [
+    {
+      "case": "normal",
+      "passed": true,
+      "exit_code": 0,
+      "checks": 58,
+      "receipt": "C:\\Users\\sende\\Projects\\hex\\.godot\\iteration-20261013\\t7-cleanup-runs\\normal-d7965e73fd374dacb3f4fa6cff297daf\\receipt.json",
+      "receipt_sha256": "2504cd3f67227d174fa3e836e5383b41e6930d1a244707559254f6d5832d1589",
+      "log": "C:\\Users\\sende\\Projects\\hex\\.godot\\iteration-20261013\\t7-cleanup-normal-d7965e73fd374dacb3f4fa6cff297daf.log",
+      "stderr": "C:\\Users\\sende\\Projects\\hex\\.godot\\iteration-20261013\\t7-cleanup-normal-d7965e73fd374dacb3f4fa6cff297daf.log.err",
+      "expected_error": ""
+    },
+    {
+      "case": "failure",
+      "passed": true,
+      "exit_code": 1,
+      "checks": 67,
+      "receipt": "C:\\Users\\sende\\Projects\\hex\\.godot\\iteration-20261013\\t7-cleanup-runs\\failure-2f039ddcc50f4a51b37be7074c89b2f9\\receipt.json",
+      "receipt_sha256": "49119271ba107b12807b42c981cf7799a1fc4eafc77e6c7fc4cfcb6016739902",
+      "log": "C:\\Users\\sende\\Projects\\hex\\.godot\\iteration-20261013\\t7-cleanup-failure-2f039ddcc50f4a51b37be7074c89b2f9.log",
+      "stderr": "C:\\Users\\sende\\Projects\\hex\\.godot\\iteration-20261013\\t7-cleanup-failure-2f039ddcc50f4a51b37be7074c89b2f9.log.err",
+      "expected_error": "HEX_T7_CONTROLLED_PROFILER_FAILURE"
+    },
+    {
+      "case": "io",
+      "passed": true,
+      "exit_code": 1,
+      "checks": 69,
+      "receipt": "C:\\Users\\sende\\Projects\\hex\\.godot\\iteration-20261013\\t7-cleanup-runs\\io-bd002874d8294594a894f70b5f96ea51\\receipt.json",
+      "receipt_sha256": "ce170f2fbcd928bcdb016e1f156031b6c257c23c8a9f8238fc987eb76dc3d4ef",
+      "log": "C:\\Users\\sende\\Projects\\hex\\.godot\\iteration-20261013\\t7-cleanup-io-bd002874d8294594a894f70b5f96ea51.log",
+      "stderr": "C:\\Users\\sende\\Projects\\hex\\.godot\\iteration-20261013\\t7-cleanup-io-bd002874d8294594a894f70b5f96ea51.log.err",
+      "expected_error": "Could not open benchmark receipt: res://.godot/iteration-20261013/t7-cleanup-runs/io-bd002874d8294594a894f70b5f96ea51/directory-is-not-a-report"
+    }
+  ],
+  "scope": "Three native actual enclosing profiler cleanup paths. Expected failure exits/errors are exact, independently checked against receipt; no application foreground or close claim."
+}

@@ -1,0 +1,145 @@
+{
+  "schema": "hex.bootstrap-terrain-worker-walk-independent-review.v1",
+  "reviewer": "gameplay",
+  "passed": true,
+  "root_summary_checksums_verified": true,
+  "raw_copies_verified": true,
+  "all_watched_source_hashes_verified": true,
+  "complete_normalized_commands_independently_compared": true,
+  "endpoint_packets_states_independently_compared": true,
+  "paused_authority_independently_checked": true,
+  "worker_owner_bounds_and_terminal_counts_checked": true,
+  "profile_files_independently_checked": true,
+  "cases": [
+    {
+      "case": "before-element-garden-a",
+      "checks": 148,
+      "callbacks": 269,
+      "arrival_paused_callbacks": 27,
+      "walking_paused_callbacks": 0,
+      "commands": 480,
+      "successful_steps": 480,
+      "displacement_pixels": [
+        -1374.89697265625,
+        0.0
+      ],
+      "start_stamina": 660000,
+      "minimum_stamina": 570692,
+      "end_stamina": 660000,
+      "movement_state_samples": {
+        "air_dodge": 22,
+        "slide": 5,
+        "slide_jump": 10
+      },
+      "first_combined_ready_tick": 2,
+      "first_ready_pending": 2,
+      "first_ready_queued": 4,
+      "tasks_started": null,
+      "tasks_joined": null,
+      "exact_expected_close_writes": 1,
+      "normal_exit": true,
+      "stderr_bytes": 0,
+      "endpoint_state_hash": "fc7fe641e33d89a0e9ac79d4216e7b21201aa048e164ee6df798e7f8b9e544ba",
+      "endpoint_packet_sha256": "2bdfd1258529c77dbcad833d27bfd65aedf7230bf284435b23d02e1170b95730",
+      "endpoint_image_sha256": "92c4eb196b11cdd29ee8267ac45fa6bb715f43e49543f29dff67be3c4700295f"
+    },
+    {
+      "case": "after-element-garden-a",
+      "checks": 4951,
+      "callbacks": 269,
+      "arrival_paused_callbacks": 27,
+      "walking_paused_callbacks": 0,
+      "commands": 480,
+      "successful_steps": 480,
+      "displacement_pixels": [
+        -1374.89697265625,
+        0.0
+      ],
+      "start_stamina": 660000,
+      "minimum_stamina": 570692,
+      "end_stamina": 660000,
+      "movement_state_samples": {
+        "air_dodge": 22,
+        "slide": 5,
+        "slide_jump": 10
+      },
+      "first_combined_ready_tick": 2,
+      "first_ready_pending": 2,
+      "first_ready_queued": 2,
+      "tasks_started": 36,
+      "tasks_joined": 36,
+      "exact_expected_close_writes": 1,
+      "normal_exit": true,
+      "stderr_bytes": 0,
+      "endpoint_state_hash": "fc7fe641e33d89a0e9ac79d4216e7b21201aa048e164ee6df798e7f8b9e544ba",
+      "endpoint_packet_sha256": "2bdfd1258529c77dbcad833d27bfd65aedf7230bf284435b23d02e1170b95730",
+      "endpoint_image_sha256": "92c4eb196b11cdd29ee8267ac45fa6bb715f43e49543f29dff67be3c4700295f"
+    },
+    {
+      "case": "before-verdant-a",
+      "checks": 148,
+      "callbacks": 259,
+      "arrival_paused_callbacks": 17,
+      "walking_paused_callbacks": 0,
+      "commands": 480,
+      "successful_steps": 480,
+      "displacement_pixels": [
+        1374.89697265625,
+        0.0
+      ],
+      "start_stamina": 660000,
+      "minimum_stamina": 570692,
+      "end_stamina": 660000,
+      "movement_state_samples": {
+        "air_dodge": 22,
+        "slide": 5,
+        "slide_jump": 10
+      },
+      "first_combined_ready_tick": 2,
+      "first_ready_pending": 0,
+      "first_ready_queued": 13,
+      "tasks_started": null,
+      "tasks_joined": null,
+      "exact_expected_close_writes": 1,
+      "normal_exit": true,
+      "stderr_bytes": 0,
+      "endpoint_state_hash": "8c754b61d080610956dd349301556fae2cd313dda04dc9d0a2d23f8117946848",
+      "endpoint_packet_sha256": "5ae352719e6f4b18381ac79313abc70df212ae046b6b49b2b2703c546ccd6022",
+      "endpoint_image_sha256": "249124c2f462a4ef38c1bb7d9d82cc4f0066008190dc758b3ae9061e4c68fc09"
+    },
+    {
+      "case": "after-verdant-a",
+      "checks": 4951,
+      "callbacks": 260,
+      "arrival_paused_callbacks": 18,
+      "walking_paused_callbacks": 0,
+      "commands": 480,
+      "successful_steps": 480,
+      "displacement_pixels": [
+        1374.89697265625,
+        0.0
+      ],
+      "start_stamina": 660000,
+      "minimum_stamina": 570692,
+      "end_stamina": 660000,
+      "movement_state_samples": {
+        "air_dodge": 22,
+        "slide": 5,
+        "slide_jump": 10
+      },
+      "first_combined_ready_tick": 2,
+      "first_ready_pending": 0,
+      "first_ready_queued": 13,
+      "tasks_started": 35,
+      "tasks_joined": 35,
+      "exact_expected_close_writes": 1,
+      "normal_exit": true,
+      "stderr_bytes": 0,
+      "endpoint_state_hash": "8c754b61d080610956dd349301556fae2cd313dda04dc9d0a2d23f8117946848",
+      "endpoint_packet_sha256": "5ae352719e6f4b18381ac79313abc70df212ae046b6b49b2b2703c546ccd6022",
+      "endpoint_image_sha256": "249124c2f462a4ef38c1bb7d9d82cc4f0066008190dc758b3ae9061e4c68fc09"
+    }
+  ],
+  "scope": "Two routes, one before/after process each; actual Bootstrap with declared1/60 callback delta and explicit synthetic application-focus Boolean, real InputRouter/loading/modal/quarantine/physics/resources/rendering/normal close. World-tick scheduled inputs wait with paused authority. No physical-input, focus, FPS, human-feel, all-route, statistically qualified performance or production-promotion claim. Movement state sample counts are not admission counts. No spells were cast. Task totals and empty ownership are checked here; per-task exactly-once lifecycle is separate worker functional-test evidence.",
+  "result": "Both routes preserve all480 normalized commands and strict endpoint authority. Garden arrival-paused callbacks27\u219227; Verdant17\u219218. All four have zero walking pauses. These are one-shot lifecycle observations, not a throughput advantage. First-ready halo work remains recorded, without waiting for halo drainage."
+}

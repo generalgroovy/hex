@@ -1,0 +1,3457 @@
+{
+  "schema": "hex.ground.boundary-independent-review.v1",
+  "status": "ATTRIBUTION_PASSED_NO_OPTIMIZATION",
+  "native": [
+    {
+      "mode": "forward",
+      "receipt_sha256": "ab993b122c5e171bf2c6ab40ce88ca907215ba2577399f02f16fad53cf488769",
+      "checks": 7188,
+      "cases": 22,
+      "stderr_bytes": 0
+    },
+    {
+      "mode": "reverse",
+      "receipt_sha256": "434c968c50349a7327b8ae1c302d676d0c95ecead04c945e407ecfe8e8cff291",
+      "checks": 7188,
+      "cases": 22,
+      "stderr_bytes": 0
+    }
+  ],
+  "source_hashes_equal": true,
+  "current_source_hashes_rechecked": true,
+  "png_hashes_verified": 88,
+  "measured_pairs": 768,
+  "warmup_pairs": 96,
+  "pixel_control_pairs": 20,
+  "all_actual_order_checks": true,
+  "all_clock_containment_checks": true,
+  "all_cache_counter_checks": true,
+  "cases": {
+    "fire_ignition_normal": {
+      "plain_us": {
+        "count": 64,
+        "mean": 2521.03125,
+        "median": 2286.5,
+        "p95": 3802,
+        "minimum": 2094,
+        "maximum": 6969
+      },
+      "observed_us": {
+        "count": 64,
+        "mean": 2716.859375,
+        "median": 2444.5,
+        "p95": 4200,
+        "minimum": 2083,
+        "maximum": 5671
+      },
+      "observer_delta_us": {
+        "count": 64,
+        "mean": 195.828125,
+        "median": 128.5,
+        "p95": 1128,
+        "minimum": -2758,
+        "maximum": 2044
+      },
+      "children": {
+        "bundle_us": {
+          "count": 64,
+          "mean": 784.796875,
+          "median": 729.0,
+          "p95": 1151,
+          "minimum": 629,
+          "maximum": 1378
+        },
+        "topology_us": {
+          "count": 64,
+          "mean": 123.03125,
+          "median": 109.0,
+          "p95": 209,
+          "minimum": 92,
+          "maximum": 329
+        },
+        "prefix_us": {
+          "count": 64,
+          "mean": 110.9375,
+          "median": 96.0,
+          "p95": 194,
+          "minimum": 84,
+          "maximum": 298
+        },
+        "outline_us": {
+          "count": 64,
+          "mean": 195.515625,
+          "median": 170.5,
+          "p95": 303,
+          "minimum": 155,
+          "maximum": 462
+        },
+        "mask_us": {
+          "count": 64,
+          "mean": 100.984375,
+          "median": 86.5,
+          "p95": 158,
+          "minimum": 77,
+          "maximum": 257
+        },
+        "points_us": {
+          "count": 64,
+          "mean": 23,
+          "median": 21.0,
+          "p95": 33,
+          "minimum": 17,
+          "maximum": 59
+        },
+        "mesh_us": {
+          "count": 64,
+          "mean": 22.34375,
+          "median": 20.0,
+          "p95": 35,
+          "minimum": 15,
+          "maximum": 53
+        },
+        "command_us": {
+          "count": 64,
+          "mean": 6.25,
+          "median": 6.0,
+          "p95": 10,
+          "minimum": 2,
+          "maximum": 17
+        },
+        "submit_us": {
+          "count": 64,
+          "mean": 31.40625,
+          "median": 27.0,
+          "p95": 51,
+          "minimum": 22,
+          "maximum": 66
+        }
+      },
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/ignition"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "world_tick": 24,
+      "matter_paid": 600,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "fallback_delta": 0,
+      "mask_hit_delta": 832,
+      "mesh_hit_delta": 640,
+      "counts": {
+        "topology_calls": {
+          "count": 64,
+          "mean": 4,
+          "median": 4.0,
+          "p95": 4,
+          "minimum": 4,
+          "maximum": 4
+        },
+        "prefix_calls": {
+          "count": 64,
+          "mean": 26,
+          "median": 26.0,
+          "p95": 26,
+          "minimum": 26,
+          "maximum": 26
+        },
+        "outline_calls": {
+          "count": 64,
+          "mean": 13,
+          "median": 13.0,
+          "p95": 13,
+          "minimum": 13,
+          "maximum": 13
+        },
+        "mask_calls": {
+          "count": 64,
+          "mean": 13,
+          "median": 13.0,
+          "p95": 13,
+          "minimum": 13,
+          "maximum": 13
+        },
+        "points_calls": {
+          "count": 64,
+          "mean": 10,
+          "median": 10.0,
+          "p95": 10,
+          "minimum": 10,
+          "maximum": 10
+        },
+        "submit_calls": {
+          "count": 64,
+          "mean": 10,
+          "median": 10.0,
+          "p95": 10,
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2417.25,
+            "median": 2293.0,
+            "p95": 3266,
+            "minimum": 2094,
+            "maximum": 4061
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2669,
+            "median": 2421.0,
+            "p95": 3552,
+            "minimum": 2266,
+            "maximum": 4200
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 251.75,
+            "median": 153.5,
+            "p95": 1014,
+            "minimum": -597,
+            "maximum": 1412
+          }
+        },
+        "observed_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2624.8125,
+            "median": 2280.5,
+            "p95": 3835,
+            "minimum": 2101,
+            "maximum": 6969
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2764.71875,
+            "median": 2461.5,
+            "p95": 4214,
+            "minimum": 2083,
+            "maximum": 5671
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 139.90625,
+            "median": 116.5,
+            "p95": 1477,
+            "minimum": -2758,
+            "maximum": 2044
+          }
+        }
+      },
+      "by_run": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2772.53125,
+            "median": 2431.0,
+            "p95": 4061,
+            "minimum": 2166,
+            "maximum": 6969
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2986.375,
+            "median": 2668.0,
+            "p95": 4214,
+            "minimum": 2290,
+            "maximum": 5671
+          }
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2269.53125,
+            "median": 2234.0,
+            "p95": 2684,
+            "minimum": 2094,
+            "maximum": 2908
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2447.34375,
+            "median": 2333.5,
+            "p95": 3299,
+            "minimum": 2083,
+            "maximum": 3867
+          }
+        }
+      }
+    },
+    "fire_ignition_reduced": {
+      "plain_us": {
+        "count": 64,
+        "mean": 2412.96875,
+        "median": 2268.0,
+        "p95": 2717,
+        "minimum": 2125,
+        "maximum": 6819
+      },
+      "observed_us": {
+        "count": 64,
+        "mean": 2500.8125,
+        "median": 2362.5,
+        "p95": 3456,
+        "minimum": 2065,
+        "maximum": 3999
+      },
+      "observer_delta_us": {
+        "count": 64,
+        "mean": 87.84375,
+        "median": 82.5,
+        "p95": 979,
+        "minimum": -3984,
+        "maximum": 1643
+      },
+      "children": {
+        "bundle_us": {
+          "count": 64,
+          "mean": 752.453125,
+          "median": 708.5,
+          "p95": 1063,
+          "minimum": 613,
+          "maximum": 1193
+        },
+        "topology_us": {
+          "count": 64,
+          "mean": 113.9375,
+          "median": 106.0,
+          "p95": 177,
+          "minimum": 90,
+          "maximum": 239
+        },
+        "prefix_us": {
+          "count": 64,
+          "mean": 99.828125,
+          "median": 91.5,
+          "p95": 143,
+          "minimum": 77,
+          "maximum": 197
+        },
+        "outline_us": {
+          "count": 64,
+          "mean": 177.6875,
+          "median": 166.5,
+          "p95": 265,
+          "minimum": 147,
+          "maximum": 346
+        },
+        "mask_us": {
+          "count": 64,
+          "mean": 90.546875,
+          "median": 85.0,
+          "p95": 135,
+          "minimum": 73,
+          "maximum": 171
+        },
+        "points_us": {
+          "count": 64,
+          "mean": 21.203125,
+          "median": 21.0,
+          "p95": 29,
+          "minimum": 15,
+          "maximum": 32
+        },
+        "mesh_us": {
+          "count": 64,
+          "mean": 20,
+          "median": 19.5,
+          "p95": 28,
+          "minimum": 15,
+          "maximum": 34
+        },
+        "command_us": {
+          "count": 64,
+          "mean": 6.390625,
+          "median": 6.0,
+          "p95": 11,
+          "minimum": 2,
+          "maximum": 34
+        },
+        "submit_us": {
+          "count": 64,
+          "mean": 29.125,
+          "median": 27.0,
+          "p95": 42,
+          "minimum": 21,
+          "maximum": 72
+        }
+      },
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/ignition"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "world_tick": 24,
+      "matter_paid": 600,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "fallback_delta": 0,
+      "mask_hit_delta": 832,
+      "mesh_hit_delta": 640,
+      "counts": {
+        "topology_calls": {
+          "count": 64,
+          "mean": 4,
+          "median": 4.0,
+          "p95": 4,
+          "minimum": 4,
+          "maximum": 4
+        },
+        "prefix_calls": {
+          "count": 64,
+          "mean": 26,
+          "median": 26.0,
+          "p95": 26,
+          "minimum": 26,
+          "maximum": 26
+        },
+        "outline_calls": {
+          "count": 64,
+          "mean": 13,
+          "median": 13.0,
+          "p95": 13,
+          "minimum": 13,
+          "maximum": 13
+        },
+        "mask_calls": {
+          "count": 64,
+          "mean": 13,
+          "median": 13.0,
+          "p95": 13,
+          "minimum": 13,
+          "maximum": 13
+        },
+        "points_calls": {
+          "count": 64,
+          "mean": 10,
+          "median": 10.0,
+          "p95": 10,
+          "minimum": 10,
+          "maximum": 10
+        },
+        "submit_calls": {
+          "count": 64,
+          "mean": 10,
+          "median": 10.0,
+          "p95": 10,
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2521.46875,
+            "median": 2272.5,
+            "p95": 3224,
+            "minimum": 2140,
+            "maximum": 6819
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2446.625,
+            "median": 2361.5,
+            "p95": 2917,
+            "minimum": 2114,
+            "maximum": 3266
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": -74.84375,
+            "median": 82.5,
+            "p95": 745,
+            "minimum": -3984,
+            "maximum": 979
+          }
+        },
+        "observed_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2304.46875,
+            "median": 2267.0,
+            "p95": 2654,
+            "minimum": 2125,
+            "maximum": 2663
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2555,
+            "median": 2362.5,
+            "p95": 3675,
+            "minimum": 2065,
+            "maximum": 3999
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 250.53125,
+            "median": 85.5,
+            "p95": 1475,
+            "minimum": -221,
+            "maximum": 1643
+          }
+        }
+      },
+      "by_run": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2360.1875,
+            "median": 2277.0,
+            "p95": 3200,
+            "minimum": 2140,
+            "maximum": 3224
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2376.71875,
+            "median": 2321.0,
+            "p95": 2917,
+            "minimum": 2114,
+            "maximum": 3266
+          }
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2465.75,
+            "median": 2268.0,
+            "p95": 2717,
+            "minimum": 2125,
+            "maximum": 6819
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2624.90625,
+            "median": 2423.5,
+            "p95": 3675,
+            "minimum": 2065,
+            "maximum": 3999
+          }
+        }
+      }
+    },
+    "fire_active_normal": {
+      "plain_us": {
+        "count": 64,
+        "mean": 2134.140625,
+        "median": 1833.0,
+        "p95": 3188,
+        "minimum": 1524,
+        "maximum": 5260
+      },
+      "observed_us": {
+        "count": 64,
+        "mean": 2216.1875,
+        "median": 1962.5,
+        "p95": 3204,
+        "minimum": 1621,
+        "maximum": 3487
+      },
+      "observer_delta_us": {
+        "count": 64,
+        "mean": 82.046875,
+        "median": 94.5,
+        "p95": 847,
+        "minimum": -2877,
+        "maximum": 1029
+      },
+      "children": {
+        "bundle_us": {
+          "count": 64,
+          "mean": 877.8125,
+          "median": 766.0,
+          "p95": 1279,
+          "minimum": 658,
+          "maximum": 1416
+        },
+        "topology_us": {
+          "count": 64,
+          "mean": 140.390625,
+          "median": 117.5,
+          "p95": 227,
+          "minimum": 96,
+          "maximum": 246
+        },
+        "prefix_us": {
+          "count": 64,
+          "mean": 119.75,
+          "median": 101.0,
+          "p95": 189,
+          "minimum": 81,
+          "maximum": 267
+        },
+        "outline_us": {
+          "count": 64,
+          "mean": 193.59375,
+          "median": 167.5,
+          "p95": 288,
+          "minimum": 143,
+          "maximum": 327
+        },
+        "mask_us": {
+          "count": 64,
+          "mean": 98.515625,
+          "median": 84.0,
+          "p95": 154,
+          "minimum": 68,
+          "maximum": 216
+        },
+        "points_us": {
+          "count": 64,
+          "mean": 22.890625,
+          "median": 21.0,
+          "p95": 32,
+          "minimum": 15,
+          "maximum": 34
+        },
+        "mesh_us": {
+          "count": 64,
+          "mean": 22.15625,
+          "median": 20.0,
+          "p95": 32,
+          "minimum": 15,
+          "maximum": 34
+        },
+        "command_us": {
+          "count": 64,
+          "mean": 6.828125,
+          "median": 6.0,
+          "p95": 12,
+          "minimum": 2,
+          "maximum": 24
+        },
+        "submit_us": {
+          "count": 64,
+          "mean": 32.15625,
+          "median": 28.5,
+          "p95": 48,
+          "minimum": 22,
+          "maximum": 55
+        }
+      },
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "world_tick": 48,
+      "matter_paid": 600,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "fallback_delta": 0,
+      "mask_hit_delta": 832,
+      "mesh_hit_delta": 640,
+      "counts": {
+        "topology_calls": {
+          "count": 64,
+          "mean": 4,
+          "median": 4.0,
+          "p95": 4,
+          "minimum": 4,
+          "maximum": 4
+        },
+        "prefix_calls": {
+          "count": 64,
+          "mean": 26,
+          "median": 26.0,
+          "p95": 26,
+          "minimum": 26,
+          "maximum": 26
+        },
+        "outline_calls": {
+          "count": 64,
+          "mean": 13,
+          "median": 13.0,
+          "p95": 13,
+          "minimum": 13,
+          "maximum": 13
+        },
+        "mask_calls": {
+          "count": 64,
+          "mean": 13,
+          "median": 13.0,
+          "p95": 13,
+          "minimum": 13,
+          "maximum": 13
+        },
+        "points_calls": {
+          "count": 64,
+          "mean": 10,
+          "median": 10.0,
+          "p95": 10,
+          "minimum": 10,
+          "maximum": 10
+        },
+        "submit_calls": {
+          "count": 64,
+          "mean": 10,
+          "median": 10.0,
+          "p95": 10,
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2145.75,
+            "median": 1789.0,
+            "p95": 3143,
+            "minimum": 1565,
+            "maximum": 5260
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2177.1875,
+            "median": 1852.0,
+            "p95": 3160,
+            "minimum": 1651,
+            "maximum": 3186
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 31.4375,
+            "median": 89.5,
+            "p95": 665,
+            "minimum": -2877,
+            "maximum": 828
+          }
+        },
+        "observed_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2122.53125,
+            "median": 1858.0,
+            "p95": 3216,
+            "minimum": 1524,
+            "maximum": 3227
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2255.1875,
+            "median": 2003.5,
+            "p95": 3386,
+            "minimum": 1621,
+            "maximum": 3487
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 132.65625,
+            "median": 101.0,
+            "p95": 953,
+            "minimum": -1126,
+            "maximum": 1029
+          }
+        }
+      },
+      "by_run": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 1765.46875,
+            "median": 1688.5,
+            "p95": 2415,
+            "minimum": 1540,
+            "maximum": 2482
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 1844.09375,
+            "median": 1767.5,
+            "p95": 2340,
+            "minimum": 1621,
+            "maximum": 2445
+          }
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2502.8125,
+            "median": 2520.5,
+            "p95": 3227,
+            "minimum": 1524,
+            "maximum": 5260
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2588.28125,
+            "median": 2782.5,
+            "p95": 3386,
+            "minimum": 1651,
+            "maximum": 3487
+          }
+        }
+      }
+    },
+    "fire_active_reduced": {
+      "plain_us": {
+        "count": 64,
+        "mean": 1832.109375,
+        "median": 1686.5,
+        "p95": 2559,
+        "minimum": 1530,
+        "maximum": 2838
+      },
+      "observed_us": {
+        "count": 64,
+        "mean": 1879.328125,
+        "median": 1706.5,
+        "p95": 2879,
+        "minimum": 1570,
+        "maximum": 3218
+      },
+      "observer_delta_us": {
+        "count": 64,
+        "mean": 47.21875,
+        "median": 41.0,
+        "p95": 570,
+        "minimum": -689,
+        "maximum": 667
+      },
+      "children": {
+        "bundle_us": {
+          "count": 64,
+          "mean": 755.546875,
+          "median": 692.0,
+          "p95": 1118,
+          "minimum": 632,
+          "maximum": 1167
+        },
+        "topology_us": {
+          "count": 64,
+          "mean": 122.359375,
+          "median": 106.0,
+          "p95": 207,
+          "minimum": 97,
+          "maximum": 242
+        },
+        "prefix_us": {
+          "count": 64,
+          "mean": 99.46875,
+          "median": 86.5,
+          "p95": 166,
+          "minimum": 80,
+          "maximum": 212
+        },
+        "outline_us": {
+          "count": 64,
+          "mean": 171.828125,
+          "median": 152.0,
+          "p95": 256,
+          "minimum": 141,
+          "maximum": 451
+        },
+        "mask_us": {
+          "count": 64,
+          "mean": 83.546875,
+          "median": 74.0,
+          "p95": 134,
+          "minimum": 67,
+          "maximum": 197
+        },
+        "points_us": {
+          "count": 64,
+          "mean": 23.90625,
+          "median": 20.0,
+          "p95": 30,
+          "minimum": 15,
+          "maximum": 215
+        },
+        "mesh_us": {
+          "count": 64,
+          "mean": 20.15625,
+          "median": 19.0,
+          "p95": 30,
+          "minimum": 15,
+          "maximum": 35
+        },
+        "command_us": {
+          "count": 64,
+          "mean": 6.0625,
+          "median": 6.0,
+          "p95": 10,
+          "minimum": 2,
+          "maximum": 12
+        },
+        "submit_us": {
+          "count": 64,
+          "mean": 28.890625,
+          "median": 27.0,
+          "p95": 44,
+          "minimum": 22,
+          "maximum": 50
+        }
+      },
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "world_tick": 48,
+      "matter_paid": 600,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "fallback_delta": 0,
+      "mask_hit_delta": 832,
+      "mesh_hit_delta": 640,
+      "counts": {
+        "topology_calls": {
+          "count": 64,
+          "mean": 4,
+          "median": 4.0,
+          "p95": 4,
+          "minimum": 4,
+          "maximum": 4
+        },
+        "prefix_calls": {
+          "count": 64,
+          "mean": 26,
+          "median": 26.0,
+          "p95": 26,
+          "minimum": 26,
+          "maximum": 26
+        },
+        "outline_calls": {
+          "count": 64,
+          "mean": 13,
+          "median": 13.0,
+          "p95": 13,
+          "minimum": 13,
+          "maximum": 13
+        },
+        "mask_calls": {
+          "count": 64,
+          "mean": 13,
+          "median": 13.0,
+          "p95": 13,
+          "minimum": 13,
+          "maximum": 13
+        },
+        "points_calls": {
+          "count": 64,
+          "mean": 10,
+          "median": 10.0,
+          "p95": 10,
+          "minimum": 10,
+          "maximum": 10
+        },
+        "submit_calls": {
+          "count": 64,
+          "mean": 10,
+          "median": 10.0,
+          "p95": 10,
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 1825.5,
+            "median": 1684.0,
+            "p95": 2559,
+            "minimum": 1530,
+            "maximum": 2838
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 1862.84375,
+            "median": 1703.0,
+            "p95": 2890,
+            "minimum": 1570,
+            "maximum": 3073
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 37.34375,
+            "median": 41.0,
+            "p95": 449,
+            "minimum": -689,
+            "maximum": 662
+          }
+        },
+        "observed_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 1838.71875,
+            "median": 1714.5,
+            "p95": 2590,
+            "minimum": 1543,
+            "maximum": 2648
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 1895.8125,
+            "median": 1741.5,
+            "p95": 2879,
+            "minimum": 1613,
+            "maximum": 3218
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 57.09375,
+            "median": 44.5,
+            "p95": 590,
+            "minimum": -672,
+            "maximum": 667
+          }
+        }
+      },
+      "by_run": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 1896.25,
+            "median": 1726.5,
+            "p95": 2590,
+            "minimum": 1530,
+            "maximum": 2838
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 1970.46875,
+            "median": 1778.0,
+            "p95": 2890,
+            "minimum": 1613,
+            "maximum": 3073
+          }
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 1767.96875,
+            "median": 1681.5,
+            "p95": 2379,
+            "minimum": 1543,
+            "maximum": 2648
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 1788.1875,
+            "median": 1696.0,
+            "p95": 2343,
+            "minimum": 1570,
+            "maximum": 3218
+          }
+        }
+      }
+    },
+    "fire_cooling_normal": {
+      "plain_us": {
+        "count": 64,
+        "mean": 2692.046875,
+        "median": 2448.0,
+        "p95": 4317,
+        "minimum": 2138,
+        "maximum": 6408
+      },
+      "observed_us": {
+        "count": 64,
+        "mean": 2830.609375,
+        "median": 2577.0,
+        "p95": 4440,
+        "minimum": 2192,
+        "maximum": 5389
+      },
+      "observer_delta_us": {
+        "count": 64,
+        "mean": 138.5625,
+        "median": 95.0,
+        "p95": 1520,
+        "minimum": -2045,
+        "maximum": 1660
+      },
+      "children": {
+        "bundle_us": {
+          "count": 64,
+          "mean": 794.546875,
+          "median": 743.0,
+          "p95": 1082,
+          "minimum": 655,
+          "maximum": 1245
+        },
+        "topology_us": {
+          "count": 64,
+          "mean": 121.328125,
+          "median": 112.0,
+          "p95": 190,
+          "minimum": 96,
+          "maximum": 221
+        },
+        "prefix_us": {
+          "count": 64,
+          "mean": 112.890625,
+          "median": 100.0,
+          "p95": 182,
+          "minimum": 83,
+          "maximum": 248
+        },
+        "outline_us": {
+          "count": 64,
+          "mean": 206.578125,
+          "median": 181.5,
+          "p95": 342,
+          "minimum": 154,
+          "maximum": 462
+        },
+        "mask_us": {
+          "count": 64,
+          "mean": 105.453125,
+          "median": 93.0,
+          "p95": 178,
+          "minimum": 75,
+          "maximum": 231
+        },
+        "points_us": {
+          "count": 64,
+          "mean": 24.359375,
+          "median": 21.5,
+          "p95": 40,
+          "minimum": 17,
+          "maximum": 45
+        },
+        "mesh_us": {
+          "count": 64,
+          "mean": 23.328125,
+          "median": 20.0,
+          "p95": 35,
+          "minimum": 15,
+          "maximum": 72
+        },
+        "command_us": {
+          "count": 64,
+          "mean": 6.984375,
+          "median": 6.0,
+          "p95": 12,
+          "minimum": 2,
+          "maximum": 15
+        },
+        "submit_us": {
+          "count": 64,
+          "mean": 32.96875,
+          "median": 28.5,
+          "p95": 53,
+          "minimum": 22,
+          "maximum": 91
+        }
+      },
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/cooling"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "world_tick": 444,
+      "matter_paid": 600,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "fallback_delta": 0,
+      "mask_hit_delta": 832,
+      "mesh_hit_delta": 640,
+      "counts": {
+        "topology_calls": {
+          "count": 64,
+          "mean": 4,
+          "median": 4.0,
+          "p95": 4,
+          "minimum": 4,
+          "maximum": 4
+        },
+        "prefix_calls": {
+          "count": 64,
+          "mean": 26,
+          "median": 26.0,
+          "p95": 26,
+          "minimum": 26,
+          "maximum": 26
+        },
+        "outline_calls": {
+          "count": 64,
+          "mean": 13,
+          "median": 13.0,
+          "p95": 13,
+          "minimum": 13,
+          "maximum": 13
+        },
+        "mask_calls": {
+          "count": 64,
+          "mean": 13,
+          "median": 13.0,
+          "p95": 13,
+          "minimum": 13,
+          "maximum": 13
+        },
+        "points_calls": {
+          "count": 64,
+          "mean": 10,
+          "median": 10.0,
+          "p95": 10,
+          "minimum": 10,
+          "maximum": 10
+        },
+        "submit_calls": {
+          "count": 64,
+          "mean": 10,
+          "median": 10.0,
+          "p95": 10,
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2595.59375,
+            "median": 2330.0,
+            "p95": 4209,
+            "minimum": 2138,
+            "maximum": 4317
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2850.03125,
+            "median": 2595.5,
+            "p95": 4450,
+            "minimum": 2192,
+            "maximum": 4466
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 254.4375,
+            "median": 102.0,
+            "p95": 1644,
+            "minimum": -819,
+            "maximum": 1660
+          }
+        },
+        "observed_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2788.5,
+            "median": 2477.0,
+            "p95": 4839,
+            "minimum": 2197,
+            "maximum": 6408
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2811.1875,
+            "median": 2561.0,
+            "p95": 4083,
+            "minimum": 2253,
+            "maximum": 5389
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 22.6875,
+            "median": 60.0,
+            "p95": 1437,
+            "minimum": -2045,
+            "maximum": 1475
+          }
+        }
+      },
+      "by_run": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2801.90625,
+            "median": 2477.0,
+            "p95": 4317,
+            "minimum": 2176,
+            "maximum": 6408
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 3089,
+            "median": 2776.5,
+            "p95": 4466,
+            "minimum": 2273,
+            "maximum": 5389
+          }
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2582.1875,
+            "median": 2345.5,
+            "p95": 4589,
+            "minimum": 2138,
+            "maximum": 4839
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2572.21875,
+            "median": 2416.5,
+            "p95": 4016,
+            "minimum": 2192,
+            "maximum": 4083
+          }
+        }
+      }
+    },
+    "fire_cooling_reduced": {
+      "plain_us": {
+        "count": 64,
+        "mean": 2380.03125,
+        "median": 2274.5,
+        "p95": 2875,
+        "minimum": 2076,
+        "maximum": 4058
+      },
+      "observed_us": {
+        "count": 64,
+        "mean": 2466.90625,
+        "median": 2372.0,
+        "p95": 3184,
+        "minimum": 2154,
+        "maximum": 3927
+      },
+      "observer_delta_us": {
+        "count": 64,
+        "mean": 86.875,
+        "median": 52.0,
+        "p95": 753,
+        "minimum": -943,
+        "maximum": 1451
+      },
+      "children": {
+        "bundle_us": {
+          "count": 64,
+          "mean": 720.578125,
+          "median": 693.0,
+          "p95": 899,
+          "minimum": 633,
+          "maximum": 1153
+        },
+        "topology_us": {
+          "count": 64,
+          "mean": 113.296875,
+          "median": 106.5,
+          "p95": 155,
+          "minimum": 97,
+          "maximum": 222
+        },
+        "prefix_us": {
+          "count": 64,
+          "mean": 98.5625,
+          "median": 91.5,
+          "p95": 152,
+          "minimum": 80,
+          "maximum": 212
+        },
+        "outline_us": {
+          "count": 64,
+          "mean": 178.28125,
+          "median": 167.0,
+          "p95": 233,
+          "minimum": 154,
+          "maximum": 361
+        },
+        "mask_us": {
+          "count": 64,
+          "mean": 92.015625,
+          "median": 85.0,
+          "p95": 131,
+          "minimum": 77,
+          "maximum": 201
+        },
+        "points_us": {
+          "count": 64,
+          "mean": 21.375,
+          "median": 20.0,
+          "p95": 27,
+          "minimum": 17,
+          "maximum": 41
+        },
+        "mesh_us": {
+          "count": 64,
+          "mean": 20.015625,
+          "median": 19.0,
+          "p95": 24,
+          "minimum": 15,
+          "maximum": 40
+        },
+        "command_us": {
+          "count": 64,
+          "mean": 5.703125,
+          "median": 5.0,
+          "p95": 9,
+          "minimum": 2,
+          "maximum": 14
+        },
+        "submit_us": {
+          "count": 64,
+          "mean": 28.046875,
+          "median": 27.0,
+          "p95": 36,
+          "minimum": 23,
+          "maximum": 57
+        }
+      },
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/cooling"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "world_tick": 444,
+      "matter_paid": 600,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "fallback_delta": 0,
+      "mask_hit_delta": 832,
+      "mesh_hit_delta": 640,
+      "counts": {
+        "topology_calls": {
+          "count": 64,
+          "mean": 4,
+          "median": 4.0,
+          "p95": 4,
+          "minimum": 4,
+          "maximum": 4
+        },
+        "prefix_calls": {
+          "count": 64,
+          "mean": 26,
+          "median": 26.0,
+          "p95": 26,
+          "minimum": 26,
+          "maximum": 26
+        },
+        "outline_calls": {
+          "count": 64,
+          "mean": 13,
+          "median": 13.0,
+          "p95": 13,
+          "minimum": 13,
+          "maximum": 13
+        },
+        "mask_calls": {
+          "count": 64,
+          "mean": 13,
+          "median": 13.0,
+          "p95": 13,
+          "minimum": 13,
+          "maximum": 13
+        },
+        "points_calls": {
+          "count": 64,
+          "mean": 10,
+          "median": 10.0,
+          "p95": 10,
+          "minimum": 10,
+          "maximum": 10
+        },
+        "submit_calls": {
+          "count": 64,
+          "mean": 10,
+          "median": 10.0,
+          "p95": 10,
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2322.25,
+            "median": 2267.5,
+            "p95": 2814,
+            "minimum": 2076,
+            "maximum": 2875
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2483.375,
+            "median": 2401.0,
+            "p95": 3709,
+            "minimum": 2160,
+            "maximum": 3927
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 161.125,
+            "median": 106.5,
+            "p95": 1247,
+            "minimum": -379,
+            "maximum": 1451
+          }
+        },
+        "observed_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2437.8125,
+            "median": 2282.0,
+            "p95": 3396,
+            "minimum": 2131,
+            "maximum": 4058
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2450.4375,
+            "median": 2322.5,
+            "p95": 3184,
+            "minimum": 2154,
+            "maximum": 3192
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 12.625,
+            "median": 35.0,
+            "p95": 753,
+            "minimum": -943,
+            "maximum": 936
+          }
+        }
+      },
+      "by_run": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2434.96875,
+            "median": 2303.0,
+            "p95": 3008,
+            "minimum": 2076,
+            "maximum": 4058
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2471.0625,
+            "median": 2388.5,
+            "p95": 3115,
+            "minimum": 2154,
+            "maximum": 3709
+          }
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2325.09375,
+            "median": 2268.0,
+            "p95": 2680,
+            "minimum": 2114,
+            "maximum": 3396
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 2462.75,
+            "median": 2342.0,
+            "p95": 3192,
+            "minimum": 2191,
+            "maximum": 3927
+          }
+        }
+      }
+    },
+    "fire_dense_normal": {
+      "plain_us": {
+        "count": 64,
+        "mean": 10692.640625,
+        "median": 10185.0,
+        "p95": 14481,
+        "minimum": 9193,
+        "maximum": 16944
+      },
+      "observed_us": {
+        "count": 64,
+        "mean": 11208.09375,
+        "median": 10743.0,
+        "p95": 14176,
+        "minimum": 9730,
+        "maximum": 22001
+      },
+      "observer_delta_us": {
+        "count": 64,
+        "mean": 515.453125,
+        "median": 521.5,
+        "p95": 2585,
+        "minimum": -5761,
+        "maximum": 8922
+      },
+      "children": {
+        "bundle_us": {
+          "count": 64,
+          "mean": 3708.5625,
+          "median": 3569.0,
+          "p95": 4262,
+          "minimum": 3298,
+          "maximum": 7758
+        },
+        "topology_us": {
+          "count": 64,
+          "mean": 897.84375,
+          "median": 849.0,
+          "p95": 1459,
+          "minimum": 696,
+          "maximum": 1682
+        },
+        "prefix_us": {
+          "count": 64,
+          "mean": 976.53125,
+          "median": 934.0,
+          "p95": 1417,
+          "minimum": 806,
+          "maximum": 1712
+        },
+        "outline_us": {
+          "count": 64,
+          "mean": 1517.34375,
+          "median": 1462.0,
+          "p95": 1832,
+          "minimum": 1301,
+          "maximum": 2526
+        },
+        "mask_us": {
+          "count": 64,
+          "mean": 927,
+          "median": 898.0,
+          "p95": 1121,
+          "minimum": 785,
+          "maximum": 1609
+        },
+        "points_us": {
+          "count": 64,
+          "mean": 118.328125,
+          "median": 112.5,
+          "p95": 142,
+          "minimum": 103,
+          "maximum": 204
+        },
+        "mesh_us": {
+          "count": 64,
+          "mean": 116.15625,
+          "median": 111.5,
+          "p95": 144,
+          "minimum": 101,
+          "maximum": 180
+        },
+        "command_us": {
+          "count": 64,
+          "mean": 37.921875,
+          "median": 37.0,
+          "p95": 47,
+          "minimum": 19,
+          "maximum": 74
+        },
+        "submit_us": {
+          "count": 64,
+          "mean": 174.8125,
+          "median": 170.0,
+          "p95": 203,
+          "minimum": 148,
+          "maximum": 272
+        }
+      },
+      "coverage": {
+        "materials": {
+          "conflagration": 150
+        },
+        "occupied_cells": 25,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "conflagration/active",
+          "conflagration/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 75,
+            "created": 51,
+            "decay_tick": 435,
+            "expiry_tick": 495,
+            "id": 1,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1000,
+              1001
+            ]
+          },
+          {
+            "active_tick": 139,
+            "created": 115,
+            "decay_tick": 499,
+            "expiry_tick": 559,
+            "id": 2,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1002,
+              1003
+            ]
+          },
+          {
+            "active_tick": 203,
+            "created": 179,
+            "decay_tick": 563,
+            "expiry_tick": 623,
+            "id": 3,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1004,
+              1005
+            ]
+          },
+          {
+            "active_tick": 267,
+            "created": 243,
+            "decay_tick": 627,
+            "expiry_tick": 687,
+            "id": 4,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1006,
+              1007
+            ]
+          },
+          {
+            "active_tick": 331,
+            "created": 307,
+            "decay_tick": 691,
+            "expiry_tick": 751,
+            "id": 5,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1008,
+              1009
+            ]
+          },
+          {
+            "active_tick": 395,
+            "created": 371,
+            "decay_tick": 755,
+            "expiry_tick": 815,
+            "id": 6,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1010,
+              1011
+            ]
+          }
+        ],
+        "regions": 150
+      },
+      "world_tick": 372,
+      "matter_paid": 7200,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "fallback_delta": 0,
+      "mask_hit_delta": 9600,
+      "mesh_hit_delta": 5760,
+      "counts": {
+        "topology_calls": {
+          "count": 64,
+          "mean": 4,
+          "median": 4.0,
+          "p95": 4,
+          "minimum": 4,
+          "maximum": 4
+        },
+        "prefix_calls": {
+          "count": 64,
+          "mean": 300,
+          "median": 300.0,
+          "p95": 300,
+          "minimum": 300,
+          "maximum": 300
+        },
+        "outline_calls": {
+          "count": 64,
+          "mean": 150,
+          "median": 150.0,
+          "p95": 150,
+          "minimum": 150,
+          "maximum": 150
+        },
+        "mask_calls": {
+          "count": 64,
+          "mean": 150,
+          "median": 150.0,
+          "p95": 150,
+          "minimum": 150,
+          "maximum": 150
+        },
+        "points_calls": {
+          "count": 64,
+          "mean": 90,
+          "median": 90.0,
+          "p95": 90,
+          "minimum": 90,
+          "maximum": 90
+        },
+        "submit_calls": {
+          "count": 64,
+          "mean": 90,
+          "median": 90.0,
+          "p95": 90,
+          "minimum": 90,
+          "maximum": 90
+        }
+      },
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 10683.78125,
+            "median": 10154.0,
+            "p95": 16297,
+            "minimum": 9193,
+            "maximum": 16944
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 11143.375,
+            "median": 10707.5,
+            "p95": 12464,
+            "minimum": 9820,
+            "maximum": 22001
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 459.59375,
+            "median": 598.5,
+            "p95": 1565,
+            "minimum": -5761,
+            "maximum": 5704
+          }
+        },
+        "observed_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 10701.5,
+            "median": 10238.0,
+            "p95": 14481,
+            "minimum": 9346,
+            "maximum": 14642
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 11272.8125,
+            "median": 10751.0,
+            "p95": 15513,
+            "minimum": 9730,
+            "maximum": 18690
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 571.3125,
+            "median": 374.5,
+            "p95": 4696,
+            "minimum": -3340,
+            "maximum": 8922
+          }
+        }
+      },
+      "by_run": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 10683.9375,
+            "median": 10185.0,
+            "p95": 14481,
+            "minimum": 9193,
+            "maximum": 16297
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 11465.25,
+            "median": 10746.5,
+            "p95": 18690,
+            "minimum": 9730,
+            "maximum": 22001
+          }
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 10701.34375,
+            "median": 10201.5,
+            "p95": 14642,
+            "minimum": 9319,
+            "maximum": 16944
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 10950.9375,
+            "median": 10707.5,
+            "p95": 12464,
+            "minimum": 10041,
+            "maximum": 15513
+          }
+        }
+      }
+    },
+    "fire_dense_reduced": {
+      "plain_us": {
+        "count": 64,
+        "mean": 9933.75,
+        "median": 9759.0,
+        "p95": 10953,
+        "minimum": 8709,
+        "maximum": 12848
+      },
+      "observed_us": {
+        "count": 64,
+        "mean": 10468.203125,
+        "median": 10311.5,
+        "p95": 11712,
+        "minimum": 9305,
+        "maximum": 13136
+      },
+      "observer_delta_us": {
+        "count": 64,
+        "mean": 534.453125,
+        "median": 525.5,
+        "p95": 2067,
+        "minimum": -2548,
+        "maximum": 2642
+      },
+      "children": {
+        "bundle_us": {
+          "count": 64,
+          "mean": 3578.484375,
+          "median": 3528.5,
+          "p95": 4052,
+          "minimum": 3198,
+          "maximum": 4306
+        },
+        "topology_us": {
+          "count": 64,
+          "mean": 822.09375,
+          "median": 803.0,
+          "p95": 956,
+          "minimum": 666,
+          "maximum": 1335
+        },
+        "prefix_us": {
+          "count": 64,
+          "mean": 908.34375,
+          "median": 900.0,
+          "p95": 1078,
+          "minimum": 780,
+          "maximum": 1145
+        },
+        "outline_us": {
+          "count": 64,
+          "mean": 1425.5,
+          "median": 1415.0,
+          "p95": 1571,
+          "minimum": 1287,
+          "maximum": 1883
+        },
+        "mask_us": {
+          "count": 64,
+          "mean": 871.796875,
+          "median": 865.5,
+          "p95": 973,
+          "minimum": 756,
+          "maximum": 1171
+        },
+        "points_us": {
+          "count": 64,
+          "mean": 111.203125,
+          "median": 110.0,
+          "p95": 128,
+          "minimum": 102,
+          "maximum": 140
+        },
+        "mesh_us": {
+          "count": 64,
+          "mean": 110.640625,
+          "median": 109.0,
+          "p95": 122,
+          "minimum": 100,
+          "maximum": 132
+        },
+        "command_us": {
+          "count": 64,
+          "mean": 34.75,
+          "median": 35.0,
+          "p95": 42,
+          "minimum": 23,
+          "maximum": 50
+        },
+        "submit_us": {
+          "count": 64,
+          "mean": 165.640625,
+          "median": 164.0,
+          "p95": 181,
+          "minimum": 150,
+          "maximum": 203
+        }
+      },
+      "coverage": {
+        "materials": {
+          "conflagration": 150
+        },
+        "occupied_cells": 25,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "conflagration/active",
+          "conflagration/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 75,
+            "created": 51,
+            "decay_tick": 435,
+            "expiry_tick": 495,
+            "id": 1,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1000,
+              1001
+            ]
+          },
+          {
+            "active_tick": 139,
+            "created": 115,
+            "decay_tick": 499,
+            "expiry_tick": 559,
+            "id": 2,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1002,
+              1003
+            ]
+          },
+          {
+            "active_tick": 203,
+            "created": 179,
+            "decay_tick": 563,
+            "expiry_tick": 623,
+            "id": 3,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1004,
+              1005
+            ]
+          },
+          {
+            "active_tick": 267,
+            "created": 243,
+            "decay_tick": 627,
+            "expiry_tick": 687,
+            "id": 4,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1006,
+              1007
+            ]
+          },
+          {
+            "active_tick": 331,
+            "created": 307,
+            "decay_tick": 691,
+            "expiry_tick": 751,
+            "id": 5,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1008,
+              1009
+            ]
+          },
+          {
+            "active_tick": 395,
+            "created": 371,
+            "decay_tick": 755,
+            "expiry_tick": 815,
+            "id": 6,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1010,
+              1011
+            ]
+          }
+        ],
+        "regions": 150
+      },
+      "world_tick": 372,
+      "matter_paid": 7200,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "fallback_delta": 0,
+      "mask_hit_delta": 9600,
+      "mesh_hit_delta": 5760,
+      "counts": {
+        "topology_calls": {
+          "count": 64,
+          "mean": 4,
+          "median": 4.0,
+          "p95": 4,
+          "minimum": 4,
+          "maximum": 4
+        },
+        "prefix_calls": {
+          "count": 64,
+          "mean": 300,
+          "median": 300.0,
+          "p95": 300,
+          "minimum": 300,
+          "maximum": 300
+        },
+        "outline_calls": {
+          "count": 64,
+          "mean": 150,
+          "median": 150.0,
+          "p95": 150,
+          "minimum": 150,
+          "maximum": 150
+        },
+        "mask_calls": {
+          "count": 64,
+          "mean": 150,
+          "median": 150.0,
+          "p95": 150,
+          "minimum": 150,
+          "maximum": 150
+        },
+        "points_calls": {
+          "count": 64,
+          "mean": 90,
+          "median": 90.0,
+          "p95": 90,
+          "minimum": 90,
+          "maximum": 90
+        },
+        "submit_calls": {
+          "count": 64,
+          "mean": 90,
+          "median": 90.0,
+          "p95": 90,
+          "minimum": 90,
+          "maximum": 90
+        }
+      },
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 10110.9375,
+            "median": 9911.0,
+            "p95": 12461,
+            "minimum": 9156,
+            "maximum": 12848
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 10415.5,
+            "median": 10304.5,
+            "p95": 11413,
+            "minimum": 9305,
+            "maximum": 13136
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 304.5625,
+            "median": 384.0,
+            "p95": 1571,
+            "minimum": -2548,
+            "maximum": 2183
+          }
+        },
+        "observed_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 9756.5625,
+            "median": 9677.5,
+            "p95": 10533,
+            "minimum": 8709,
+            "maximum": 10716
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 10520.90625,
+            "median": 10314.5,
+            "p95": 12104,
+            "minimum": 9481,
+            "maximum": 12785
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 764.34375,
+            "median": 673.5,
+            "p95": 2069,
+            "minimum": -245,
+            "maximum": 2642
+          }
+        }
+      },
+      "by_run": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 9760,
+            "median": 9684.0,
+            "p95": 10872,
+            "minimum": 9156,
+            "maximum": 10953
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 10443.46875,
+            "median": 10310.0,
+            "p95": 11712,
+            "minimum": 9481,
+            "maximum": 13136
+          }
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 10107.5,
+            "median": 9971.5,
+            "p95": 12461,
+            "minimum": 8709,
+            "maximum": 12848
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 10492.9375,
+            "median": 10311.5,
+            "p95": 12104,
+            "minimum": 9305,
+            "maximum": 12785
+          }
+        }
+      }
+    },
+    "mantle_active_normal": {
+      "plain_us": {
+        "count": 64,
+        "mean": 7393.875,
+        "median": 7270.0,
+        "p95": 8463,
+        "minimum": 6444,
+        "maximum": 11775
+      },
+      "observed_us": {
+        "count": 64,
+        "mean": 7759.375,
+        "median": 7631.5,
+        "p95": 8955,
+        "minimum": 6883,
+        "maximum": 9216
+      },
+      "observer_delta_us": {
+        "count": 64,
+        "mean": 365.5,
+        "median": 490.0,
+        "p95": 1579,
+        "minimum": -4481,
+        "maximum": 2333
+      },
+      "children": {
+        "bundle_us": {
+          "count": 64,
+          "mean": 2656.0625,
+          "median": 2612.0,
+          "p95": 3174,
+          "minimum": 2375,
+          "maximum": 3332
+        },
+        "topology_us": {
+          "count": 64,
+          "mean": 532.53125,
+          "median": 517.0,
+          "p95": 685,
+          "minimum": 406,
+          "maximum": 887
+        },
+        "prefix_us": {
+          "count": 64,
+          "mean": 497.65625,
+          "median": 495.5,
+          "p95": 597,
+          "minimum": 393,
+          "maximum": 640
+        },
+        "outline_us": {
+          "count": 64,
+          "mean": 1040.78125,
+          "median": 1018.0,
+          "p95": 1197,
+          "minimum": 937,
+          "maximum": 1362
+        },
+        "mask_us": {
+          "count": 64,
+          "mean": 494.421875,
+          "median": 484.5,
+          "p95": 566,
+          "minimum": 423,
+          "maximum": 798
+        },
+        "points_us": {
+          "count": 64,
+          "mean": 139.265625,
+          "median": 137.0,
+          "p95": 156,
+          "minimum": 124,
+          "maximum": 176
+        },
+        "mesh_us": {
+          "count": 64,
+          "mean": 128.96875,
+          "median": 126.0,
+          "p95": 148,
+          "minimum": 109,
+          "maximum": 161
+        },
+        "command_us": {
+          "count": 64,
+          "mean": 42.78125,
+          "median": 42.5,
+          "p95": 52,
+          "minimum": 30,
+          "maximum": 57
+        },
+        "submit_us": {
+          "count": 64,
+          "mean": 193.71875,
+          "median": 187.5,
+          "p95": 223,
+          "minimum": 172,
+          "maximum": 254
+        }
+      },
+      "coverage": {
+        "materials": {
+          "compound_63": 84,
+          "water": 7
+        },
+        "occupied_cells": 33,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "water/forming",
+          "compound_63/decaying",
+          "compound_63/active",
+          "compound_63/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 824,
+            "created": 758,
+            "decay_tick": 1124,
+            "expiry_tick": 1172,
+            "id": 4,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1003
+            ]
+          },
+          {
+            "active_tick": 1017,
+            "created": 951,
+            "decay_tick": 1317,
+            "expiry_tick": 1365,
+            "id": 5,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1004
+            ]
+          },
+          {
+            "active_tick": 1210,
+            "created": 1144,
+            "decay_tick": 1510,
+            "expiry_tick": 1558,
+            "id": 6,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1005
+            ]
+          }
+        ],
+        "regions": 91
+      },
+      "world_tick": 1171,
+      "matter_paid": 4200,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "fallback_delta": 0,
+      "mask_hit_delta": 5824,
+      "mesh_hit_delta": 5568,
+      "counts": {
+        "topology_calls": {
+          "count": 64,
+          "mean": 5,
+          "median": 5.0,
+          "p95": 5,
+          "minimum": 5,
+          "maximum": 5
+        },
+        "prefix_calls": {
+          "count": 64,
+          "mean": 182,
+          "median": 182.0,
+          "p95": 182,
+          "minimum": 182,
+          "maximum": 182
+        },
+        "outline_calls": {
+          "count": 64,
+          "mean": 91,
+          "median": 91.0,
+          "p95": 91,
+          "minimum": 91,
+          "maximum": 91
+        },
+        "mask_calls": {
+          "count": 64,
+          "mean": 91,
+          "median": 91.0,
+          "p95": 91,
+          "minimum": 91,
+          "maximum": 91
+        },
+        "points_calls": {
+          "count": 64,
+          "mean": 87,
+          "median": 87.0,
+          "p95": 87,
+          "minimum": 87,
+          "maximum": 87
+        },
+        "submit_calls": {
+          "count": 64,
+          "mean": 87,
+          "median": 87.0,
+          "p95": 87,
+          "minimum": 87,
+          "maximum": 87
+        }
+      },
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 7376.34375,
+            "median": 7293.5,
+            "p95": 8463,
+            "minimum": 6670,
+            "maximum": 9251
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 7805.03125,
+            "median": 7532.5,
+            "p95": 9040,
+            "minimum": 7141,
+            "maximum": 9216
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 428.6875,
+            "median": 453.5,
+            "p95": 1853,
+            "minimum": -1813,
+            "maximum": 2333
+          }
+        },
+        "observed_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 7411.40625,
+            "median": 7208.5,
+            "p95": 8735,
+            "minimum": 6444,
+            "maximum": 11775
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 7713.71875,
+            "median": 7727.0,
+            "p95": 8550,
+            "minimum": 6883,
+            "maximum": 9173
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 302.3125,
+            "median": 545.0,
+            "p95": 1410,
+            "minimum": -4481,
+            "maximum": 1579
+          }
+        }
+      },
+      "by_run": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 7353.46875,
+            "median": 7271.0,
+            "p95": 8463,
+            "minimum": 6444,
+            "maximum": 9251
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 7823.59375,
+            "median": 7786.0,
+            "p95": 8783,
+            "minimum": 7227,
+            "maximum": 9173
+          }
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 7434.28125,
+            "median": 7261.0,
+            "p95": 8735,
+            "minimum": 6527,
+            "maximum": 11775
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 7695.15625,
+            "median": 7434.0,
+            "p95": 9040,
+            "minimum": 6883,
+            "maximum": 9216
+          }
+        }
+      }
+    },
+    "mantle_active_reduced": {
+      "plain_us": {
+        "count": 64,
+        "mean": 7345.21875,
+        "median": 7257.0,
+        "p95": 8119,
+        "minimum": 6502,
+        "maximum": 9013
+      },
+      "observed_us": {
+        "count": 64,
+        "mean": 7662.5625,
+        "median": 7584.5,
+        "p95": 8495,
+        "minimum": 6690,
+        "maximum": 9049
+      },
+      "observer_delta_us": {
+        "count": 64,
+        "mean": 317.34375,
+        "median": 355.0,
+        "p95": 1296,
+        "minimum": -1487,
+        "maximum": 2119
+      },
+      "children": {
+        "bundle_us": {
+          "count": 64,
+          "mean": 2675.078125,
+          "median": 2638.5,
+          "p95": 3106,
+          "minimum": 2348,
+          "maximum": 3260
+        },
+        "topology_us": {
+          "count": 64,
+          "mean": 521.203125,
+          "median": 507.5,
+          "p95": 688,
+          "minimum": 416,
+          "maximum": 757
+        },
+        "prefix_us": {
+          "count": 64,
+          "mean": 482.59375,
+          "median": 469.5,
+          "p95": 568,
+          "minimum": 400,
+          "maximum": 626
+        },
+        "outline_us": {
+          "count": 64,
+          "mean": 1029.90625,
+          "median": 1007.5,
+          "p95": 1146,
+          "minimum": 898,
+          "maximum": 1227
+        },
+        "mask_us": {
+          "count": 64,
+          "mean": 484.78125,
+          "median": 479.5,
+          "p95": 559,
+          "minimum": 414,
+          "maximum": 636
+        },
+        "points_us": {
+          "count": 64,
+          "mean": 140.765625,
+          "median": 138.0,
+          "p95": 163,
+          "minimum": 124,
+          "maximum": 170
+        },
+        "mesh_us": {
+          "count": 64,
+          "mean": 130.09375,
+          "median": 127.5,
+          "p95": 151,
+          "minimum": 114,
+          "maximum": 167
+        },
+        "command_us": {
+          "count": 64,
+          "mean": 44.375,
+          "median": 43.0,
+          "p95": 57,
+          "minimum": 32,
+          "maximum": 65
+        },
+        "submit_us": {
+          "count": 64,
+          "mean": 195.0625,
+          "median": 190.0,
+          "p95": 223,
+          "minimum": 173,
+          "maximum": 243
+        }
+      },
+      "coverage": {
+        "materials": {
+          "compound_63": 84,
+          "water": 7
+        },
+        "occupied_cells": 33,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "water/forming",
+          "compound_63/decaying",
+          "compound_63/active",
+          "compound_63/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 824,
+            "created": 758,
+            "decay_tick": 1124,
+            "expiry_tick": 1172,
+            "id": 4,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1003
+            ]
+          },
+          {
+            "active_tick": 1017,
+            "created": 951,
+            "decay_tick": 1317,
+            "expiry_tick": 1365,
+            "id": 5,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1004
+            ]
+          },
+          {
+            "active_tick": 1210,
+            "created": 1144,
+            "decay_tick": 1510,
+            "expiry_tick": 1558,
+            "id": 6,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1005
+            ]
+          }
+        ],
+        "regions": 91
+      },
+      "world_tick": 1171,
+      "matter_paid": 4200,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "fallback_delta": 0,
+      "mask_hit_delta": 5824,
+      "mesh_hit_delta": 5568,
+      "counts": {
+        "topology_calls": {
+          "count": 64,
+          "mean": 5,
+          "median": 5.0,
+          "p95": 5,
+          "minimum": 5,
+          "maximum": 5
+        },
+        "prefix_calls": {
+          "count": 64,
+          "mean": 182,
+          "median": 182.0,
+          "p95": 182,
+          "minimum": 182,
+          "maximum": 182
+        },
+        "outline_calls": {
+          "count": 64,
+          "mean": 91,
+          "median": 91.0,
+          "p95": 91,
+          "minimum": 91,
+          "maximum": 91
+        },
+        "mask_calls": {
+          "count": 64,
+          "mean": 91,
+          "median": 91.0,
+          "p95": 91,
+          "minimum": 91,
+          "maximum": 91
+        },
+        "points_calls": {
+          "count": 64,
+          "mean": 87,
+          "median": 87.0,
+          "p95": 87,
+          "minimum": 87,
+          "maximum": 87
+        },
+        "submit_calls": {
+          "count": 64,
+          "mean": 87,
+          "median": 87.0,
+          "p95": 87,
+          "minimum": 87,
+          "maximum": 87
+        }
+      },
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 7454.25,
+            "median": 7319.0,
+            "p95": 8571,
+            "minimum": 6546,
+            "maximum": 9013
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 7612.78125,
+            "median": 7581.5,
+            "p95": 8495,
+            "minimum": 6861,
+            "maximum": 8665
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 158.53125,
+            "median": 249.0,
+            "p95": 1164,
+            "minimum": -1487,
+            "maximum": 2119
+          }
+        },
+        "observed_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 7236.1875,
+            "median": 7160.5,
+            "p95": 8112,
+            "minimum": 6502,
+            "maximum": 8119
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 7712.34375,
+            "median": 7599.0,
+            "p95": 8742,
+            "minimum": 6690,
+            "maximum": 9049
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 476.15625,
+            "median": 443.0,
+            "p95": 1337,
+            "minimum": -406,
+            "maximum": 1382
+          }
+        }
+      },
+      "by_run": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 7392.75,
+            "median": 7373.5,
+            "p95": 8119,
+            "minimum": 6546,
+            "maximum": 8571
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 7774.03125,
+            "median": 7637.0,
+            "p95": 8742,
+            "minimum": 6968,
+            "maximum": 9049
+          }
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 7297.6875,
+            "median": 7189.0,
+            "p95": 8348,
+            "minimum": 6502,
+            "maximum": 9013
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 7551.09375,
+            "median": 7562.0,
+            "p95": 8346,
+            "minimum": 6690,
+            "maximum": 8383
+          }
+        }
+      }
+    },
+    "two_owners_normal": {
+      "plain_us": {
+        "count": 64,
+        "mean": 2985.390625,
+        "median": 2897.0,
+        "p95": 3596,
+        "minimum": 2634,
+        "maximum": 4462
+      },
+      "observed_us": {
+        "count": 64,
+        "mean": 3273.671875,
+        "median": 3039.0,
+        "p95": 4328,
+        "minimum": 2788,
+        "maximum": 6945
+      },
+      "observer_delta_us": {
+        "count": 64,
+        "mean": 288.28125,
+        "median": 141.0,
+        "p95": 769,
+        "minimum": -1414,
+        "maximum": 4024
+      },
+      "children": {
+        "bundle_us": {
+          "count": 64,
+          "mean": 1356.875,
+          "median": 1243.5,
+          "p95": 1784,
+          "minimum": 1135,
+          "maximum": 3903
+        },
+        "topology_us": {
+          "count": 64,
+          "mean": 199.140625,
+          "median": 182.0,
+          "p95": 298,
+          "minimum": 159,
+          "maximum": 515
+        },
+        "prefix_us": {
+          "count": 64,
+          "mean": 180.078125,
+          "median": 167.5,
+          "p95": 242,
+          "minimum": 148,
+          "maximum": 342
+        },
+        "outline_us": {
+          "count": 64,
+          "mean": 317.6875,
+          "median": 298.5,
+          "p95": 462,
+          "minimum": 277,
+          "maximum": 503
+        },
+        "mask_us": {
+          "count": 64,
+          "mean": 161.984375,
+          "median": 150.0,
+          "p95": 245,
+          "minimum": 139,
+          "maximum": 336
+        },
+        "points_us": {
+          "count": 64,
+          "mean": 40.390625,
+          "median": 39.0,
+          "p95": 55,
+          "minimum": 34,
+          "maximum": 66
+        },
+        "mesh_us": {
+          "count": 64,
+          "mean": 37.0625,
+          "median": 35.0,
+          "p95": 48,
+          "minimum": 29,
+          "maximum": 56
+        },
+        "command_us": {
+          "count": 64,
+          "mean": 10.65625,
+          "median": 10.0,
+          "p95": 16,
+          "minimum": 4,
+          "maximum": 36
+        },
+        "submit_us": {
+          "count": 64,
+          "mean": 52.734375,
+          "median": 50.0,
+          "p95": 67,
+          "minimum": 43,
+          "maximum": 93
+        }
+      },
+      "coverage": {
+        "materials": {
+          "fire": 27
+        },
+        "occupied_cells": 27,
+        "owners": [
+          "1",
+          "2"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 27
+      },
+      "world_tick": 48,
+      "matter_paid": 1200,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "fallback_delta": 0,
+      "mask_hit_delta": 1728,
+      "mesh_hit_delta": 1280,
+      "counts": {
+        "topology_calls": {
+          "count": 64,
+          "mean": 4,
+          "median": 4.0,
+          "p95": 4,
+          "minimum": 4,
+          "maximum": 4
+        },
+        "prefix_calls": {
+          "count": 64,
+          "mean": 54,
+          "median": 54.0,
+          "p95": 54,
+          "minimum": 54,
+          "maximum": 54
+        },
+        "outline_calls": {
+          "count": 64,
+          "mean": 27,
+          "median": 27.0,
+          "p95": 27,
+          "minimum": 27,
+          "maximum": 27
+        },
+        "mask_calls": {
+          "count": 64,
+          "mean": 27,
+          "median": 27.0,
+          "p95": 27,
+          "minimum": 27,
+          "maximum": 27
+        },
+        "points_calls": {
+          "count": 64,
+          "mean": 20,
+          "median": 20.0,
+          "p95": 20,
+          "minimum": 20,
+          "maximum": 20
+        },
+        "submit_calls": {
+          "count": 64,
+          "mean": 20,
+          "median": 20.0,
+          "p95": 20,
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2929.375,
+            "median": 2890.0,
+            "p95": 3461,
+            "minimum": 2634,
+            "maximum": 3479
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 3185.84375,
+            "median": 3057.0,
+            "p95": 3828,
+            "minimum": 2818,
+            "maximum": 4853
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 256.46875,
+            "median": 177.0,
+            "p95": 763,
+            "minimum": -558,
+            "maximum": 1788
+          }
+        },
+        "observed_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 3041.40625,
+            "median": 2921.5,
+            "p95": 3678,
+            "minimum": 2727,
+            "maximum": 4462
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 3361.5,
+            "median": 3039.0,
+            "p95": 6140,
+            "minimum": 2788,
+            "maximum": 6945
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 320.09375,
+            "median": 125.5,
+            "p95": 3131,
+            "minimum": -1414,
+            "maximum": 4024
+          }
+        }
+      },
+      "by_run": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 3016,
+            "median": 2895.5,
+            "p95": 3667,
+            "minimum": 2634,
+            "maximum": 4462
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 3170.09375,
+            "median": 3007.0,
+            "p95": 3828,
+            "minimum": 2788,
+            "maximum": 6140
+          }
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 2954.78125,
+            "median": 2904.0,
+            "p95": 3318,
+            "minimum": 2714,
+            "maximum": 3678
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 3377.25,
+            "median": 3103.5,
+            "p95": 4853,
+            "minimum": 2818,
+            "maximum": 6945
+          }
+        }
+      }
+    },
+    "two_owners_reduced": {
+      "plain_us": {
+        "count": 64,
+        "mean": 3156.5,
+        "median": 2950.5,
+        "p95": 4410,
+        "minimum": 2650,
+        "maximum": 4859
+      },
+      "observed_us": {
+        "count": 64,
+        "mean": 3266.515625,
+        "median": 3006.5,
+        "p95": 4894,
+        "minimum": 2728,
+        "maximum": 6507
+      },
+      "observer_delta_us": {
+        "count": 64,
+        "mean": 110.015625,
+        "median": 97.5,
+        "p95": 853,
+        "minimum": -1595,
+        "maximum": 2960
+      },
+      "children": {
+        "bundle_us": {
+          "count": 64,
+          "mean": 1337.75,
+          "median": 1234.0,
+          "p95": 1959,
+          "minimum": 1143,
+          "maximum": 2536
+        },
+        "topology_us": {
+          "count": 64,
+          "mean": 204.5625,
+          "median": 182.0,
+          "p95": 356,
+          "minimum": 157,
+          "maximum": 436
+        },
+        "prefix_us": {
+          "count": 64,
+          "mean": 184.046875,
+          "median": 167.0,
+          "p95": 291,
+          "minimum": 147,
+          "maximum": 385
+        },
+        "outline_us": {
+          "count": 64,
+          "mean": 325.984375,
+          "median": 295.5,
+          "p95": 501,
+          "minimum": 272,
+          "maximum": 721
+        },
+        "mask_us": {
+          "count": 64,
+          "mean": 162.609375,
+          "median": 148.0,
+          "p95": 250,
+          "minimum": 133,
+          "maximum": 389
+        },
+        "points_us": {
+          "count": 64,
+          "mean": 40.375,
+          "median": 38.0,
+          "p95": 58,
+          "minimum": 31,
+          "maximum": 73
+        },
+        "mesh_us": {
+          "count": 64,
+          "mean": 40.96875,
+          "median": 36.0,
+          "p95": 60,
+          "minimum": 29,
+          "maximum": 240
+        },
+        "command_us": {
+          "count": 64,
+          "mean": 10.703125,
+          "median": 10.0,
+          "p95": 18,
+          "minimum": 5,
+          "maximum": 22
+        },
+        "submit_us": {
+          "count": 64,
+          "mean": 56.671875,
+          "median": 49.5,
+          "p95": 84,
+          "minimum": 42,
+          "maximum": 261
+        }
+      },
+      "coverage": {
+        "materials": {
+          "fire": 27
+        },
+        "occupied_cells": 27,
+        "owners": [
+          "1",
+          "2"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 27
+      },
+      "world_tick": 48,
+      "matter_paid": 1200,
+      "measured_new_meshes": 0,
+      "measured_new_topologies": 0,
+      "fallback_delta": 0,
+      "mask_hit_delta": 1728,
+      "mesh_hit_delta": 1280,
+      "counts": {
+        "topology_calls": {
+          "count": 64,
+          "mean": 4,
+          "median": 4.0,
+          "p95": 4,
+          "minimum": 4,
+          "maximum": 4
+        },
+        "prefix_calls": {
+          "count": 64,
+          "mean": 54,
+          "median": 54.0,
+          "p95": 54,
+          "minimum": 54,
+          "maximum": 54
+        },
+        "outline_calls": {
+          "count": 64,
+          "mean": 27,
+          "median": 27.0,
+          "p95": 27,
+          "minimum": 27,
+          "maximum": 27
+        },
+        "mask_calls": {
+          "count": 64,
+          "mean": 27,
+          "median": 27.0,
+          "p95": 27,
+          "minimum": 27,
+          "maximum": 27
+        },
+        "points_calls": {
+          "count": 64,
+          "mean": 20,
+          "median": 20.0,
+          "p95": 20,
+          "minimum": 20,
+          "maximum": 20
+        },
+        "submit_calls": {
+          "count": 64,
+          "mean": 20,
+          "median": 20.0,
+          "p95": 20,
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "by_order": {
+        "plain_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 3194.40625,
+            "median": 2973.0,
+            "p95": 4636,
+            "minimum": 2650,
+            "maximum": 4760
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 3348.59375,
+            "median": 3000.5,
+            "p95": 4999,
+            "minimum": 2728,
+            "maximum": 6507
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 154.1875,
+            "median": 89.0,
+            "p95": 1048,
+            "minimum": -1595,
+            "maximum": 2960
+          }
+        },
+        "observed_first": {
+          "plain_us": {
+            "count": 32,
+            "mean": 3118.59375,
+            "median": 2894.0,
+            "p95": 4314,
+            "minimum": 2714,
+            "maximum": 4859
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 3184.4375,
+            "median": 3016.0,
+            "p95": 4787,
+            "minimum": 2787,
+            "maximum": 5334
+          },
+          "delta_us": {
+            "count": 32,
+            "mean": 65.84375,
+            "median": 115.0,
+            "p95": 475,
+            "minimum": -1287,
+            "maximum": 536
+          }
+        }
+      },
+      "by_run": {
+        "forward": {
+          "plain_us": {
+            "count": 32,
+            "mean": 3283.4375,
+            "median": 2999.5,
+            "p95": 4760,
+            "minimum": 2650,
+            "maximum": 4859
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 3467.4375,
+            "median": 3086.5,
+            "p95": 5334,
+            "minimum": 2815,
+            "maximum": 6507
+          }
+        },
+        "reverse": {
+          "plain_us": {
+            "count": 32,
+            "mean": 3029.5625,
+            "median": 2891.0,
+            "p95": 4314,
+            "minimum": 2687,
+            "maximum": 4636
+          },
+          "observed_us": {
+            "count": 32,
+            "mean": 3065.59375,
+            "median": 2969.0,
+            "p95": 3794,
+            "minimum": 2728,
+            "maximum": 4894
+          }
+        }
+      }
+    }
+  },
+  "limits": [
+    "Observed child clocks include wrapper/timer overhead; they are attribution estimates, not plain-cost decomposition.",
+    "Prefix is nested inside topology or mask; mask/points/submit are nested inside outline; mesh/command are nested inside submit. Do not sum parents and children.",
+    "Plain/observed share concrete frozen paid authority and persistent native resources; order effects remain recorded.",
+    "Prepared world construction, packet/coverage/hash checks and image readback are outside submission clocks. Production bundle work stays inside.",
+    "Offscreen native draw submission only; no Bootstrap, physical input, GPU/present, whole-frame, foreground or FPS qualification.",
+    "No runtime optimization is implemented or justified solely by these observer samples."
+  ]
+}

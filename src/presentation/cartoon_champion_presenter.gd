@@ -758,10 +758,11 @@ func draw(
 	ground_anchor: Vector2 = Vector2.INF,
 	locomotion_phase: float = -1.0,
 	wall_travel: Vector2i = Vector2i.ZERO,
+	cast_timing: Dictionary = {},
 ) -> bool:
 	if canvas == null or state == null or not champions.has(champion_id):
 		return false
-	var frame := movement_frame(champion_id, state, presentation_tick, config, reduced_effects, locomotion_phase, wall_travel)
+	var frame := movement_frame(champion_id, state, presentation_tick, config, reduced_effects, locomotion_phase, wall_travel, cast_timing)
 	if frame.is_empty():
 		return false
 	var anchor := body_anchor + (frame["offset"] as Vector2)
@@ -795,7 +796,7 @@ func draw(
 	return true
 
 
-func movement_frame(champion_id: String, state: PlayerState, presentation_tick: float, config: SimConfig, reduced_effects: bool = false, locomotion_phase: float = -1.0, wall_travel: Vector2i = Vector2i.ZERO) -> Dictionary:
+func movement_frame(champion_id: String, state: PlayerState, presentation_tick: float, config: SimConfig, reduced_effects: bool = false, locomotion_phase: float = -1.0, wall_travel: Vector2i = Vector2i.ZERO, cast_timing: Dictionary = {}) -> Dictionary:
 	if state == null or config == null or not champions.has(champion_id):
 		return {}
 	# Resolve the actual renderer once before preparing legacy body transforms.
@@ -804,7 +805,7 @@ func movement_frame(champion_id: String, state: PlayerState, presentation_tick: 
 	# Keep aura/contact/phase metadata exact and every fallback on its old path.
 	var fullbody_frame: Dictionary = {}
 	if fullbody_art != null:
-		fullbody_frame = fullbody_art.frame(champion_id, state, presentation_tick, config, locomotion_phase, reduced_effects, wall_travel)
+		fullbody_frame = fullbody_art.frame(champion_id, state, presentation_tick, config, locomotion_phase, reduced_effects, wall_travel, cast_timing)
 		if fullbody_art.bounded_residency and fullbody_frame.is_empty(): return {}
 	var prepare_legacy_offset := not fullbody_frame.has("offset")
 	var definition: Dictionary = champions[champion_id]

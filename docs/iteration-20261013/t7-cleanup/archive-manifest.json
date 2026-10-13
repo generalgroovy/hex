@@ -1,0 +1,118 @@
+{
+  "schema": "hex.t7-cleanup-archive.v1",
+  "passed": true,
+  "review_date": "2026-10-13",
+  "scope": "Independent source, receipt, exact stderr and byte-preserving archive review; root alone executed the native processes. Not full application teardown or performance acceptance.",
+  "cases": [
+    {
+      "case": "normal",
+      "assertions": 58,
+      "exit_code": 0,
+      "final_end_calls": 1,
+      "immediate_end_calls": 0,
+      "stderr_bytes": 0,
+      "source_hashes_verified": 11,
+      "receipt_sha256": "2504cd3f67227d174fa3e836e5383b41e6930d1a244707559254f6d5832d1589"
+    },
+    {
+      "case": "failure",
+      "assertions": 67,
+      "exit_code": 1,
+      "final_end_calls": 2,
+      "immediate_end_calls": 1,
+      "stderr_bytes": 309,
+      "source_hashes_verified": 11,
+      "receipt_sha256": "49119271ba107b12807b42c981cf7799a1fc4eafc77e6c7fc4cfcb6016739902"
+    },
+    {
+      "case": "io",
+      "assertions": 69,
+      "exit_code": 1,
+      "final_end_calls": 2,
+      "immediate_end_calls": 1,
+      "stderr_bytes": 498,
+      "source_hashes_verified": 11,
+      "receipt_sha256": "ce170f2fbcd928bcdb016e1f156031b6c257c23c8a9f8238fc987eb76dc3d4ef"
+    }
+  ],
+  "artifacts": [
+    {
+      "source": ".godot/iteration-20261013/verify-completed-stage-cleanup.gd",
+      "archive": "verify-completed-stage-cleanup.gd",
+      "bytes": 11749,
+      "sha256": "52e370e017cbcef45c995e0404a4aa4e946ecf558b038f82ad06c69f0404e404"
+    },
+    {
+      "source": ".godot/iteration-20261013/run-t7-cleanup.ps1",
+      "archive": "run-t7-cleanup.ps1",
+      "bytes": 4210,
+      "sha256": "5fb3bbb7f5d3672c11d33a854600c45dfced02655eb8a90265a1fe68b0224bc2"
+    },
+    {
+      "source": ".godot/iteration-20261013/t7-cleanup-summary.json",
+      "archive": "root-summary.json",
+      "bytes": 2413,
+      "sha256": "45edf958bf8be4c439e7df5756257dd8d1a16c592a77162c125b798b538d3bce"
+    },
+    {
+      "source": ".godot/iteration-20261013/t7-cleanup-runs/normal-d7965e73fd374dacb3f4fa6cff297daf/receipt.json",
+      "archive": "normal/receipt.json",
+      "bytes": 3835,
+      "sha256": "2504cd3f67227d174fa3e836e5383b41e6930d1a244707559254f6d5832d1589"
+    },
+    {
+      "source": ".godot/iteration-20261013/t7-cleanup-normal-d7965e73fd374dacb3f4fa6cff297daf.log",
+      "archive": "normal/stdout.log",
+      "bytes": 433,
+      "sha256": "240827b5bb17727ba10ec0ad7962f1af6ff5d7595dec9e16a999106a44bea888"
+    },
+    {
+      "source": ".godot/iteration-20261013/t7-cleanup-normal-d7965e73fd374dacb3f4fa6cff297daf.log.err",
+      "archive": "normal/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".godot/iteration-20261013/t7-cleanup-runs/failure-2f039ddcc50f4a51b37be7074c89b2f9/receipt.json",
+      "archive": "failure/receipt.json",
+      "bytes": 4933,
+      "sha256": "49119271ba107b12807b42c981cf7799a1fc4eafc77e6c7fc4cfcb6016739902"
+    },
+    {
+      "source": ".godot/iteration-20261013/t7-cleanup-failure-2f039ddcc50f4a51b37be7074c89b2f9.log",
+      "archive": "failure/stdout.log",
+      "bytes": 435,
+      "sha256": "7b9c957c710f01a1e2e6e2433aea357921399c12b254db57bbb2e6e98b5e12e6"
+    },
+    {
+      "source": ".godot/iteration-20261013/t7-cleanup-failure-2f039ddcc50f4a51b37be7074c89b2f9.log.err",
+      "archive": "failure/stderr.log",
+      "bytes": 309,
+      "sha256": "a0c5faf26d67e9ac2204d704fa2880f4f68ec52f975f96a8f519eb1a4b9e8135"
+    },
+    {
+      "source": ".godot/iteration-20261013/t7-cleanup-runs/failure-2f039ddcc50f4a51b37be7074c89b2f9/profile.json.partial.json",
+      "archive": "failure/profile.json.partial.json",
+      "bytes": 143,
+      "sha256": "b2c1b5fc2a19fa646bac91915fb4b85f593a5d14481bbfacd76c0fc7ad569bfa"
+    },
+    {
+      "source": ".godot/iteration-20261013/t7-cleanup-runs/io-bd002874d8294594a894f70b5f96ea51/receipt.json",
+      "archive": "io/receipt.json",
+      "bytes": 5050,
+      "sha256": "ce170f2fbcd928bcdb016e1f156031b6c257c23c8a9f8238fc987eb76dc3d4ef"
+    },
+    {
+      "source": ".godot/iteration-20261013/t7-cleanup-io-bd002874d8294594a894f70b5f96ea51.log",
+      "archive": "io/stdout.log",
+      "bytes": 425,
+      "sha256": "cc0044d4c2c4576a3dbcc0848c482cdfb20ec90fb8f805fedc14942d5a56deab"
+    },
+    {
+      "source": ".godot/iteration-20261013/t7-cleanup-io-bd002874d8294594a894f70b5f96ea51.log.err",
+      "archive": "io/stderr.log",
+      "bytes": 498,
+      "sha256": "d8ed8ebcccdb8ce8378dfba6fd647f3d415767c03a6f14e1db2e5ee00bcc00af"
+    }
+  ]
+}

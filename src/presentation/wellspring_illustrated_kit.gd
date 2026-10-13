@@ -15,6 +15,7 @@ const GROUND_CHUNK_SIZE := 512
 const GROUND_CACHE_LIMIT := 24 # Explicit synchronous tooling cache, not a viewport limit.
 const GROUND_MAX_RESIDENT := 132
 const TerrainStream = preload("res://src/presentation/wellspring_terrain_stream.gd")
+const AsyncTerrainStream = preload("res://src/presentation/wellspring_async_terrain_stream.gd")
 const GROUND_SAMPLER_VERSION := "authored-regions-2"
 const GROUND_CACHE_MAX_BYTES := 6144 * 5376 * 4
 const OVERVIEW_SCALE := 4
@@ -285,7 +286,7 @@ func configure(layout: SanctumCampusLayout, path: String = PATH, use_prebaked: b
 		if not ResourceLoader.exists(TerrainStream.MANIFEST): return _fail("Prepared campus terrain is missing; run scripts/bake_wellspring_terrain.gd")
 		var manifest := load(TerrainStream.MANIFEST) as Resource
 		if manifest == null: return _fail("Prepared campus terrain manifest could not load")
-		var stream := TerrainStream.new()
+		var stream := AsyncTerrainStream.new()
 		if not stream.configure(manifest.get("descriptor"), bake_signature, campus.canvas_size): return _fail(stream.last_error)
 		terrain_stream = stream
 		ground_chunks = stream.textures

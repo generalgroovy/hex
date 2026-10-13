@@ -186,6 +186,7 @@ func draw_startup(
 	phase: float,
 	tick: int,
 	reduced_effects: bool,
+	cast_timing: Dictionary = {},
 ) -> bool:
 	if canvas == null or not profiles_by_wire.has(wire_id):
 		return false
@@ -198,8 +199,8 @@ func draw_startup(
 	var progress := clampf(phase, 0.0, 1.0)
 	var element := String(profile.get("element", "water"))
 	var ability := ability_catalog.ability_from_wire(wire_id)
-	var preparation_age := floori(clampf(phase, 0.0, 1.0) * ceilf(float(ability.get("startup_ms", 0)) * 0.12))
-	if pixel_effects.hand(canvas, element, position, preparation_age, reduced_effects):
+	var preparation_sample := startup_sample_ticks(wire_id, progress, reduced_effects, cast_timing)
+	if pixel_effects.hand(canvas, element, position, preparation_sample, reduced_effects):
 		_draw_mixture_hand(canvas, int(ability.get("element_mask", 0)), position)
 		return true
 	var dark := language.element_color(element, "dark")
@@ -281,6 +282,22 @@ func draw_startup(
 		_:
 			return false
 	return true
+
+
+func startup_sample_ticks(wire_id: int, release_proximity: float, reduced_effects: bool, cast_timing: Dictionary = {}) -> int:
+	# Fresh local admission evidence supplies elapsed ticks. Unknown views select
+	# an artistic position in the admitted clip, never an invented admission age.
+	if cast_timing.get("known_total") == true and cast_timing.get("wire_id") == wire_id \
+		and typeof(cast_timing.get("elapsed_ticks")) == TYPE_INT and int(cast_timing.elapsed_ticks) >= 0 \
+		and typeof(cast_timing.get("remaining_ticks")) == TYPE_INT and int(cast_timing.remaining_ticks) > 0 \
+		and typeof(cast_timing.get("total_ticks")) == TYPE_INT \
+		and int(cast_timing.total_ticks) == int(cast_timing.elapsed_ticks) + int(cast_timing.remaining_ticks):
+		return int(cast_timing.elapsed_ticks)
+	if not pixel_effects.ready() or ability_catalog == null or not is_finite(release_proximity): return 0
+	var ability := ability_catalog.ability_from_wire(wire_id)
+	var element := String(ability.get("element", "water"))
+	var clip: Dictionary = pixel_effects.library.asset(pixel_effects.asset_id(element, "hand_prepare", reduced_effects))
+	return floori(clampf(release_proximity, 0.0, 1.0) * maxi(0, int(clip.get("total_ticks", 1)) - 1))
 
 
 static func startup_readability_geometry(aim: Vector2, progress: float) -> Dictionary:

@@ -1,0 +1,30 @@
+{
+  "schema": "hex-terrain-network-correctness-v1",
+  "passed": true,
+  "candidate_build": "p61-d0c8eb6551ff",
+  "assertions": 1337,
+  "suites": [
+    {
+      "assertions": 351,
+      "id": "wellspring-terrain-stream"
+    },
+    {
+      "assertions": 439,
+      "id": "terrain-validation-slices"
+    },
+    {
+      "assertions": 43,
+      "id": "bootstrap-catch-up"
+    },
+    {
+      "assertions": 504,
+      "id": "session-transport"
+    }
+  ],
+  "stderr_bytes": 0,
+  "logs": [
+    "terrain-network-focused.log",
+    "terrain-network-focused.log.err"
+  ],
+  "scope": "Includes exact sampled terrain recomposition, complete source provenance, lifecycle and real ENet host/catch-up on matching p61 identity. No source replay/schema weakening. Selected gates, not Full or network across two PCs."
+}

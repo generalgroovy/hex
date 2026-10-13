@@ -1,6 +1,7 @@
 extends FluxTestSuite
 
 const Stream = preload("res://src/presentation/wellspring_terrain_stream.gd")
+const AsyncStream = preload("res://src/presentation/wellspring_async_terrain_stream.gd")
 
 class LoaderProbe:
 	extends "res://src/presentation/wellspring_terrain_stream.gd"
@@ -389,8 +390,8 @@ func _test_real_bake_equivalence() -> void:
 	if kit.terrain_stream == null: return
 	var manifest: Dictionary = (load(Stream.MANIFEST) as Resource).get("descriptor")
 	var provenance: Dictionary = manifest.get("source_sha256", {})
-	equal(provenance.size(), Stream.BAKE_SOURCE_PATHS.size(), "bake records the exact complete source provenance inventory")
-	for source_path: String in Stream.BAKE_SOURCE_PATHS:
+	equal(provenance.size(), Stream.BAKE_SOURCE_PATHS.size() + AsyncStream.VALIDATION_SOURCE_PATHS.size(), "bake records the exact complete source provenance inventory")
+	for source_path: String in Stream.BAKE_SOURCE_PATHS + AsyncStream.VALIDATION_SOURCE_PATHS:
 		equal(String(provenance.get(source_path, "")), FileAccess.get_sha256(source_path), "bake cannot survive an unversioned source edit: " + source_path)
 	var old_source := CanonicalContent.sha256(layout.data)
 	# Compare independent native composition at core, Garden, all four annexes,

@@ -2,6 +2,7 @@ extends FluxTestSuite
 
 # Compile the native profiling wrappers in the regular gate as well: changing
 # a production draw signature must not silently strand performance diagnostics.
+const Timing = preload("res://src/presentation/cast_startup_witness.gd")
 const DrawProfile = preload("res://tests/support/hex_draw_component_harness.gd")
 
 
@@ -226,7 +227,7 @@ func _test_casting_card_hierarchy() -> void:
 	var before := state.canonical_values()
 	var visible := CompactCombatHud.spell_display_status(state, active)
 	check(visible.casting and not visible.waiting, "only the paid spell receives active card emphasis")
-	equal(visible.label, "CASTING", "paid cast keeps explicit text, not color-only feedback")
+	equal(visible.label, "CAST 0.1s", "paid cast keeps explicit text, not color-only feedback")
 	equal(visible.progress, CompactCombatHud.spell_readiness(state, active).progress, "active card keeps exact authority-owned fill")
 	var waiting := CompactCombatHud.spell_display_status(state, other)
 	check(waiting.waiting and not waiting.casting, "other spells are unavailable during shared commitment")
@@ -238,7 +239,7 @@ func _test_casting_card_hierarchy() -> void:
 	state.flux = 0
 	visible = CompactCombatHud.spell_display_status(state, active, 120, Vector2i.ZERO)
 	equal(visible.kind, "startup", "paid spell does not require payment or capacity again")
-	equal(visible.label, "CASTING", "zero remaining Flux cannot hide active casting")
+	equal(visible.label, "CAST 0.1s", "zero remaining Flux cannot hide active casting")
 	state.set_spell_cooldown(int(other.wire_id), 60)
 	waiting = CompactCombatHud.spell_display_status(state, other, 120, Vector2i.ZERO)
 	equal(waiting.kind, "cooldown", "other card retains its own cooldown ahead of resource restrictions")
@@ -328,8 +329,8 @@ func _test_hidden_cast_status() -> void:
 	for ticks: int in [-10,0,10000]:
 		state.pending_cast_ticks = ticks
 		var result := CompactCombatHud.hidden_cast_status(state,catalog,0,preferences)
-		check(float(result.progress) >= 0.0 and float(result.progress) <= 1.0, "outlying startup ticks cannot overrun cue")
-	equal(CompactCombatHud.hidden_cast_status(state,catalog,0,preferences,60).progress, 0.0, "unsupported rate cannot advertise invented timing")
+		equal(result.progress, -1.0, "unwitnessed or outlying startup never invents a fraction")
+	equal(CompactCombatHud.hidden_cast_status(state,catalog,0,preferences,60).progress, -1.0, "unsupported rate cannot advertise invented timing")
 	state.health = 0
 	equal(CompactCombatHud.hidden_cast_status(state,catalog,0,preferences), {}, "dead player has no paid cue")
 	state.health = 1
@@ -413,51 +414,59 @@ func _test_quiet_authoritative_readiness() -> void:
 
 
 func _test_paid_startup_progress() -> void:
+	# Prepared display inputs test the projection contract. Actual paid admission
+	# and threshold-crossing clocks are exercised in cast-startup-witness.
 	var catalog := AbilityCatalog.new()
-	check(catalog.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "startup progress uses the live catalog")
+	check(catalog.load_from_file("res://content/abilities/foundation_abilities_v1.json"), "startup display uses the live catalog")
 	var config := SimConfig.new()
 	var state := PlayerState.new()
-	state.flux = 0 # Payment already happened; do not require the cost again.
+	state.flux = 0
 	for element: String in AbilityCatalog.DISPLAY_ELEMENT_IDS:
 		for family: String in AbilityCatalog.SPELL_MATRIX_FAMILIES:
 			var ability := catalog.ability(catalog.spell_id_at(element, family))
-			var wire := int(ability.wire_id)
-			var total := config.milliseconds_to_ticks(int(ability.startup_ms))
-			state.pending_cast_wire_id = wire
-			for remaining: int in [total, floori(float(total) * 0.5), 1, 0, total + 1, -1]:
-				state.pending_cast_ticks = remaining
-				var before := state.canonical_values()
-				var readiness := CompactCombatHud.spell_readiness(state, ability)
-				var expected := clampf(1.0 - float(remaining) / float(maxi(1, total)), 0.0, 1.0)
-				equal(readiness.kind, "startup", "paid startup remains startup until authority releases it")
-				equal(readiness.label, "CASTING", "only the matching pending wire reports casting")
-				check(is_equal_approx(float(readiness.progress), expected), "startup fill follows authoritative remaining ticks for %s/%s" % [element, family])
-				equal(state.canonical_values(), before, "HUD startup sampling never changes paid player state")
-	var bolt := catalog.ability(catalog.spell_id_at("fire", "bolt"))
-	state.pending_cast_wire_id = int(bolt.wire_id)
-	state.pending_cast_ticks = 1
-	var other := catalog.ability(catalog.spell_id_at("water", "bolt"))
-	check(not other.is_empty() and int(other.wire_id) != state.pending_cast_wire_id, "other-slot fixture uses a distinct current spell")
-	equal(CompactCombatHud.spell_readiness(state, other), {"kind": "startup", "label": "FINISH CAST", "progress": 0.0}, "unrelated slots never borrow the active cast fill")
-	for invalid_rate: int in [-1, 0, 60, 240]:
-		equal(CompactCombatHud.spell_readiness(state, bolt, invalid_rate).progress, 0.0, "unsupported simulation rates cannot invent startup progress")
-	var tiny := bolt.duplicate(true)
-	tiny.startup_ms = 1
-	state.pending_cast_ticks = config.milliseconds_to_ticks(1)
-	equal(state.pending_cast_ticks, 1, "positive sub-tick startup quantizes to the authoritative minimum tick")
-	equal(CompactCombatHud.spell_readiness(state, tiny).progress, 0.0, "minimum-tick startup begins empty")
-	state.pending_cast_ticks = 0
-	equal(CompactCombatHud.spell_readiness(state, tiny).progress, 1.0, "minimum-tick startup reaches full at its release boundary")
-	tiny.startup_ms = 0
-	equal(CompactCombatHud.spell_readiness(state, tiny), {"kind": "startup", "label": "CASTING", "progress": 1.0}, "zero-ms startup stays finite and full without falsely claiming a released cast")
-	state.pending_cast_wire_id = 0
-	equal(CompactCombatHud.spell_readiness(state, bolt, 120, Vector2i(-1, -1), "startup_commitment"), {"kind": "startup", "label": "FINISH CAST", "progress": 0.0}, "gate-only commitment cannot fabricate a matching paid cast")
-	state.set_spell_cooldown(int(bolt.wire_id), config.milliseconds_to_ticks(int(bolt.cooldown_ms)))
-	var released := CompactCombatHud.spell_readiness(state, bolt)
-	equal(released.kind, "cooldown", "authoritative release switches the existing track back to cooldown")
-	equal(released.progress, 0.0, "fresh cooldown does not retain a full startup track")
-	state.set_spell_cooldown(int(bolt.wire_id), 0)
-	equal(CompactCombatHud.spell_readiness(state, bolt).kind, "flux", "after release the next unpaid cast still requires its own Flux")
+			state.pending_cast_wire_id = int(ability.wire_id)
+			var base := config.milliseconds_to_ticks(int(ability.startup_ms))
+			for total: int in [maxi(1, base - 3), base + 5]:
+				for remaining: int in [total, maxi(1, total / 2), 1]:
+					state.pending_cast_ticks = remaining
+					state.spell_wire_ids.fill(0)
+					state.spell_wire_ids[4]=state.pending_cast_wire_id
+					var before := state.canonical_values()
+					var expected := float(total - remaining) / float(total)
+					var timing := {"entity_id":state.entity_id,"wire_id":state.pending_cast_wire_id,"remaining_ticks":remaining,
+						"tick_rate":120,"known_total":true,"total_ticks":total,"elapsed_ticks":total-remaining,
+						"progress":expected,"animation_progress":expected}
+					var unknown := CompactCombatHud.spell_readiness(state, ability)
+					var readiness := CompactCombatHud.spell_readiness(state, ability,120,Vector2i(-1,-1),"",timing)
+					equal(unknown.progress,-1.0,"unobserved paid timer does not claim a base-duration fraction")
+					equal(readiness.kind,"startup","known startup remains active")
+					equal(readiness.label,"CAST " + Timing.remaining_label(remaining,120),"countdown reads the actual remaining clock")
+					check(is_equal_approx(float(readiness.progress),expected),"known fraction uses committed total, not authored base")
+					var hidden := CompactCombatHud.hidden_cast_status(state,catalog,0,null,120,timing)
+					equal(hidden.progress,readiness.progress,"hidden layer and visible card share the same witness")
+					check(String(hidden.label).begins_with(String(readiness.label)+" "),"hidden layer preserves the same remaining-time cue")
+					equal(state.canonical_values(),before,"visible and hidden display leave all canonical actor fields unchanged")
+	var bolt := catalog.ability(catalog.spell_id_at("fire","bolt"))
+	state.pending_cast_wire_id=int(bolt.wire_id)
+	state.pending_cast_ticks=1
+	var other := catalog.ability(catalog.spell_id_at("water","bolt"))
+	equal(CompactCombatHud.spell_readiness(state,other),{"kind":"startup","label":"FINISH CAST","progress":0.0},"unrelated slots never borrow the active cast fill")
+	equal(CompactCombatHud.spell_readiness(state,bolt).label,"CAST 0.1s","last positive tick never rounds down to 0.0 seconds")
+	for invalid_rate: int in [-1,0,60,240]:
+		equal(CompactCombatHud.spell_readiness(state,bolt,invalid_rate).progress,-1.0,"unsupported cadence cannot claim progress")
+		equal(CompactCombatHud.spell_readiness(state,bolt,invalid_rate).label,"CASTING","unsupported cadence does not invent a countdown")
+	for remaining: int in [0,-1]:
+		state.pending_cast_ticks=remaining
+		equal(CompactCombatHud.spell_readiness(state,bolt),{"kind":"startup","label":"CASTING","progress":-1.0},"invalid pending clocks never imply release or known progress")
+	state.pending_cast_wire_id=0
+	for remaining: int in [1,15,120,240]:
+		state.set_spell_cooldown(int(bolt.wire_id),remaining)
+		var released := CompactCombatHud.spell_readiness(state,bolt)
+		equal(released.kind,"cooldown","released cast uses actual cooldown")
+		equal(released.progress,-1.0,"cooldown has no unfounded base-duration fraction")
+		equal(released.label,Timing.remaining_label(remaining,120),"cooldown remains exact to displayed tenths")
+	state.set_spell_cooldown(int(bolt.wire_id),0)
+	equal(CompactCombatHud.spell_readiness(state,bolt).kind,"flux","next unpaid cast still requires its own Flux")
 
 
 func _test_compact_practice_card() -> void:
@@ -588,7 +597,7 @@ func _test_all_payload_card_layouts() -> void:
 				var summary_bounds := _text_bounds(font,model.summary,model.summary_at,10)
 				check(summary_bounds.size.x <= float(model.summary_width) and card_rect.encloses(summary_bounds), "actual family and cost fit their reserved row")
 				for title_bounds: Rect2 in heading_bounds: check(not title_bounds.intersects(summary_bounds), "full payload name remains separate from family/cost")
-				for label: String in ["CASTING", "0.5s", "MATERIAL LIMIT", "NEED %d F" % int(ability.flux_cost)]:
+				for label: String in ["CASTING", "CAST 9.9s", "0.5s", "MATERIAL LIMIT", "NEED %d F" % int(ability.flux_cost)]:
 					var bounds := _text_bounds(font,label,model.status_at,10)
 					check(bounds.size.x <= float(model.status_width) and card_rect.encloses(bounds), "startup/cooldown/refusal labels retain actual-font space")
 					check(not bounds.intersects(summary_bounds) and not bounds.intersects(model.track), "timing/refusal text does not collide with family or timing bar")
@@ -597,7 +606,7 @@ func _test_all_payload_card_layouts() -> void:
 			state.pending_cast_ticks = 1
 			var actor_before := state.canonical_values()
 			var paid := CompactCombatHud.spell_display_status(state,ability)
-			equal(paid.label,"CASTING","every payload/family can still display its actual paid preparation")
+			equal(paid.label,"CAST " + Timing.remaining_label(state.pending_cast_ticks,120) if state.pending_cast_ticks>0 else "CASTING","every payload/family displays its actual remaining preparation")
 			equal(state.canonical_values(),actor_before,"identity layout and status cannot advance paid authority")
 			seen[wire] = true
 			state.pending_cast_wire_id = 0

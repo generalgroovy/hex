@@ -5,16 +5,16 @@ extends RefCounted
 ## https://www.leagueoflegends.com/en-us/news/dev/clarity-in-league/
 ## These are reused registered pixels, not newly painted action animation.
 
-static func decorate(frame: Dictionary, state: PlayerState, texture: Texture2D, config: SimConfig, reduced: bool) -> void:
+const StartupTiming = preload("res://src/presentation/cast_startup_witness.gd")
+
+static func decorate(frame: Dictionary, state: PlayerState, texture: Texture2D, config: SimConfig, reduced: bool, cast_timing: Dictionary = {}) -> void:
 	if frame.is_empty() or state==null or config==null or texture==null or texture.get_size()!=Vector2(1024,512): return
 	if state.health<=0 or (state.pending_cast_wire_id<=0 and state.cast_recovery_ticks<=0): return
 	if state.control_state not in [PlayerState.ControlState.FREE,PlayerState.ControlState.SLOWED]: return
 	var aim := int(frame.get("aim_index",0))
 	var phase := "release"
 	if state.pending_cast_wire_id>0:
-		var definition := CombatTuning.cast_definition_view(state.pending_cast_wire_id)
-		var total := maxi(1,config.milliseconds_to_ticks(int(definition.get("startup_ms",0))))
-		phase="gather" if state.pending_cast_ticks>total/2 else "extend"
+		phase="gather" if StartupTiming.animation_progress(state, config, cast_timing) < 0.5 else "extend"
 	elif state.cast_recovery_ticks<=config.milliseconds_to_ticks(45): phase="settle"
 	var reach := 0 if reduced else (2 if phase=="extend" or phase=="release" else 1)
 	var direction := Vector2(state.aim_x,state.aim_y).normalized()

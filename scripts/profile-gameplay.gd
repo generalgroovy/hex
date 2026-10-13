@@ -9,6 +9,7 @@ extends SceneTree
 ##   --profile-width=1280 --profile-height=720 --profile-frame-limit=60
 ##   --profile-light-observer (interval control without detailed stage/memory sampling)
 ##   --profile-viewport-render-timing (opt-in last-engine CPU/GPU readings; full only)
+##   --profile-all-fixed-steps (opt-in completed-stage totals across catch-up; full only)
 ##   --profile-wait-for-foreground (bounded manual arm before game instantiation)
 ## Cold means uncached by this process, not a flushed operating-system disk cache.
 
@@ -236,6 +237,8 @@ class TimedGame extends "res://src/app/bootstrap.gd":
 	var max_texture_memory := 0
 	var max_video_memory := 0
 	var world_stage_samples: Array[Dictionary] = []
+	var all_fixed_steps := false
+	var all_fixed_step_samples: Array[Dictionary] = []
 	var draw_stage_samples: Array[Dictionary] = []
 	var draw_stage_contexts: Array[Dictionary] = []
 	var draw_serial := 0
@@ -255,11 +258,20 @@ class TimedGame extends "res://src/app/bootstrap.gd":
 		# Actual window focus is still recorded for every measured frame.
 		application_input_active = true
 		var tick_before := -1 if world == null else world.tick
+		var completed_before: Dictionary = {}
+		if observe_frame and all_fixed_steps and not light_observer and world != null:
+			completed_before = world.profile_cumulative_snapshot()
 		var game_started := Time.get_ticks_usec()
 		super._process(delta)
 		var game_elapsed := Time.get_ticks_usec() - game_started
 		if not observe_frame: return
 		process_ms.append(float(game_elapsed) / 1000.0)
+		if all_fixed_steps and not light_observer:
+			var completed_after: Dictionary = {} if world == null else world.profile_cumulative_snapshot()
+			all_fixed_step_samples.append({"process_index": process_ms.size() - 1,
+				"process_frame": Engine.get_process_frames(), "process_started_us": game_started,
+				"process_elapsed_us": game_elapsed, "before": completed_before, "after": completed_after,
+				"delta": completed_stage_delta(completed_before, completed_after, game_elapsed)})
 		if not get_window().has_focus(): unfocused_frames += 1
 		if terrain_loading: loading_frames += 1
 		if _area_loading(): area_loading_frames += 1
@@ -407,8 +419,69 @@ class TimedGame extends "res://src/app/bootstrap.gd":
 		max_texture_memory = 0
 		max_video_memory = 0
 		world_stage_samples.clear()
+		all_fixed_step_samples.clear()
 		draw_stage_samples.clear()
 		draw_stage_contexts.clear()
+
+	func begin_completed_stage_case() -> bool:
+		if not all_fixed_steps: return true
+		if light_observer or world == null or not world.profile_enabled: return false
+		return world.profile_cumulative_begin()
+
+	func end_completed_stage_case() -> void:
+		if all_fixed_steps and not light_observer and world != null:
+			world.profile_cumulative_end()
+
+	static func completed_stage_delta(before: Dictionary, after: Dictionary, process_elapsed_us: int) -> Dictionary:
+		var result := {"valid": false, "error": "Invalid completed-stage boundary.", "completed_steps": 0, "elapsed_us": {}, "executions": {}}
+		if process_elapsed_us < 0 or process_elapsed_us > 9007199254740991: return result
+		for snapshot: Dictionary in [before, after]:
+			if typeof(snapshot.get("enabled")) != TYPE_BOOL or typeof(snapshot.get("profile_enabled")) != TYPE_BOOL: return result
+			if snapshot.get("schema") != "hex.sim.completed-stages.v1" or snapshot.get("enabled") != true or snapshot.get("profile_enabled") != true:
+				return result
+			if typeof(snapshot.get("hex_mode")) != TYPE_BOOL: return result
+			if typeof(snapshot.get("world_id")) != TYPE_STRING: return result
+			var world_identity: String = snapshot.world_id
+			var digits: String = world_identity.substr(1) if world_identity.begins_with("-") else world_identity
+			if digits.is_empty() or digits.length() > 20 or digits.begins_with("0"): return result
+			for digit_index: int in digits.length():
+				if digits.unicode_at(digit_index) < 48 or digits.unicode_at(digit_index) > 57: return result
+			for key: String in ["epoch", "tick", "attempted_steps", "completed_steps", "failed_steps"]:
+				if typeof(snapshot.get(key)) != TYPE_INT or int(snapshot[key]) < 0 or int(snapshot[key]) > 9007199254740991: return result
+			if int(snapshot.epoch) <= 0 or int(snapshot.failed_steps) != 0 \
+				or int(snapshot.attempted_steps) != int(snapshot.completed_steps) + int(snapshot.failed_steps): return result
+			for lane: String in ["elapsed_us", "executions"]:
+				if not snapshot.get(lane) is Dictionary or snapshot[lane].size() != SimWorld.PROFILE_CUMULATIVE_STAGES.size(): return result
+				for stage: String in SimWorld.PROFILE_CUMULATIVE_STAGES:
+					if typeof(snapshot[lane].get(stage)) != TYPE_INT or int(snapshot[lane][stage]) < 0 or int(snapshot[lane][stage]) > 9007199254740991: return result
+			for stage: String in SimWorld.PROFILE_CUMULATIVE_STAGES:
+				var count := int(snapshot.executions[stage])
+				var wanted := 0 if stage == "actor_product_effects" and not bool(snapshot.hex_mode) else int(snapshot.completed_steps)
+				if count != wanted: return result
+				if count == 0 and int(snapshot.elapsed_us[stage]) != 0: return result
+		if before.world_id != after.world_id or before.epoch != after.epoch or before.hex_mode != after.hex_mode:
+			result.error = "World identity or profiling epoch changed within a process."
+			return result
+		var steps := int(after.completed_steps) - int(before.completed_steps)
+		if steps < 0 or int(after.tick) - int(before.tick) != steps:
+			result.error = "Completed steps and authoritative tick delta disagree."
+			return result
+		var elapsed_sum := 0
+		for stage: String in SimWorld.PROFILE_CUMULATIVE_STAGES:
+			var elapsed := int(after.elapsed_us[stage]) - int(before.elapsed_us[stage])
+			var count := int(after.executions[stage]) - int(before.executions[stage])
+			if elapsed < 0 or count < 0 or count > steps or (stage != "actor_product_effects" and count != steps) or (count == 0 and elapsed != 0): return result
+			if stage == "actor_product_effects" and count != (steps if bool(before.hex_mode) else 0): return result
+			result.elapsed_us[stage] = elapsed
+			result.executions[stage] = count
+			elapsed_sum += elapsed
+		if elapsed_sum > process_elapsed_us:
+			result.error = "Completed-stage elapsed total exceeds its containing process interval."
+			return result
+		result.valid = true
+		result.error = ""
+		result.completed_steps = steps
+		return result
 
 var game: TimedGame
 var garden: TimedGarden
@@ -420,6 +493,7 @@ var soak_seconds := 0.0
 var screenshots := false
 var light_observer := false
 var viewport_render_timing := false
+var all_fixed_steps := false
 const VIEWPORT_TIMING_ROLES := ["root", "pov_main", "pov_spare"]
 var viewport_timing_owned: Dictionary = {}
 var viewport_timing_pending: Array[Dictionary] = []
@@ -447,6 +521,7 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 func _finalize() -> void:
+	if all_fixed_steps and not light_observer and is_instance_valid(game): game.end_completed_stage_case()
 	_disable_viewport_timing()
 
 func _option(name: String, fallback: String = "") -> String:
@@ -480,6 +555,8 @@ func _run() -> void:
 	light_observer = OS.get_cmdline_user_args().has("--profile-light-observer")
 	viewport_render_timing = OS.get_cmdline_user_args().has("--profile-viewport-render-timing")
 	if viewport_render_timing and light_observer: _fail("Viewport render timing requires the full observer; omit --profile-light-observer."); return
+	all_fixed_steps = OS.get_cmdline_user_args().has("--profile-all-fixed-steps")
+	if all_fixed_steps and light_observer: _fail("All fixed-step attribution requires the full observer; omit --profile-light-observer."); return
 	if DirAccess.make_dir_recursive_absolute(output_path.get_base_dir()) != OK: _fail("Could not create report directory."); return
 	foreground_arming.requested = OS.get_cmdline_user_args().has("--profile-wait-for-foreground")
 	# Early failures retain setup evidence even though no game has been created.
@@ -514,6 +591,7 @@ func _run() -> void:
 	game = instance
 	game.observation_budget = observation_budget
 	game.light_observer = light_observer
+	game.all_fixed_steps = all_fixed_steps
 	game.expected_window_size = requested_window_size
 	garden = TimedGarden.new()
 	garden.observation_budget = observation_budget
@@ -549,6 +627,8 @@ func _run() -> void:
 		"fixtures": "Fresh120Hz world per independent case, ordinary paid SimCommand casts, no measured-period refill. Direct placement/equip happens before warm measurement. Cold travel uses actual authored menu travel. Focus loss is observed, while deterministic commands continue.",
 		"statistics": "Nearest-rank quantiles of raw process-start intervals; short samples do not establish stable tails. Sequential profile order is recorded; repeat in reverse order for comparisons.",
 		"observer_mode": "light" if light_observer else "full",
+		"all_fixed_steps": {"schema": "hex-completed-stage-observer-v1", "requested": all_fixed_steps, "stages": SimWorld.PROFILE_CUMULATIVE_STAGES},
+		"all_fixed_steps_scope": "Explicit full-observer option only. Exactly one bounded before/after completed-stage group per admitted process, including zero-step frames; no per-tick history. Fixed nine cumulative elapsed/count lanes commit only successful steps. Failed steps, world/epoch changes, missing groups or inconsistent clocks invalidate attribution. Totals include every catch-up step and preserve the older final-step fields separately. Stage intervals are nested in Bootstrap process time and include observer overhead; residual work remains unassigned, not rendering or GPU time. Default and light perform no cumulative snapshots or accumulation. Snapshot copying is outside the process timer; enabled counter updates are inside it.",
 		"viewport_render_timing": {"schema": "hex-viewport-render-timing-v1", "requested": viewport_render_timing, "viewport_limit": 3,
 			"reading_scope": "last_engine_reading_source_frame_unknown", "update_mode_scope": "rendering_server_pre_draw", "cleanup": null},
 		"viewport_render_timing_scope": "Optional, full observer only. At most root and two existing POV viewports; one fixed three-row group per admitted render_setup callback. Pre-draw effective RenderingServer policy is expected update eligibility, not proof of rendering (especially WHEN_VISIBLE); the requested node policy is recorded separately because it retains consumed ONCE requests. Effective-policy getters may synchronize the render thread, adding observer cost. CPU/GPU values are Godot's last stored engine readings, not necessarily the observation frame: the API exposes no source-frame ID. First eligible reading per case, after target replacement or any inactive gap is flagged warmup_or_resumed; inactive/absent targets are not queried and remain null. Numeric zero is retained without claiming true zero work or supported GPU timestamps. Per-role summaries separate continuous and warmup readings, never sum viewports or CPU/GPU. Timing instrumentation and callback bookkeeping add uncalibrated cost; callback totals exclude engine timestamp overhead. No player VSync/frame-cap change or physical-present inference.",
@@ -835,6 +915,9 @@ func _begin(label: String, profile: String, temperature: String) -> void:
 	for owned: Dictionary in viewport_timing_owned.values(): owned["was_expected"] = false
 	campus.begin_terrain_profile(not light_observer)
 	game.reset_samples()
+	if all_fixed_steps and not game.begin_completed_stage_case():
+		_fail("Completed-stage observer could not begin on the current profiled world.")
+		return
 	garden.samples.clear()
 	garden.stages.clear()
 	court.samples.clear()
@@ -873,6 +956,8 @@ func _begin(label: String, profile: String, temperature: String) -> void:
 
 func _end(ready: bool, fixture: Dictionary) -> bool:
 	game.recording = false
+	var completed_summary: Variant = _completed_stage_summary() if all_fixed_steps else null
+	if all_fixed_steps: game.end_completed_stage_case()
 	game.set_retained_observer(false)
 	garden.recording = false
 	court.recording = false
@@ -927,6 +1012,8 @@ func _end(ready: bool, fixture: Dictionary) -> bool:
 	row.raw["observer_overhead_elapsed_ms"] = game.observer_overhead_ms.duplicate()
 	row.raw["main_campus_draw_elapsed_ms"] = campus.samples.duplicate()
 	row.raw["last_fixed_step_stages"] = game.world_stage_samples.duplicate(true)
+	row["all_fixed_step_totals"] = completed_summary
+	row.raw["all_fixed_steps"] = game.all_fixed_step_samples.duplicate(true) if all_fixed_steps else null
 	row.raw["engine_render_setup_cpu_ms"] = game.render_setup_ms.duplicate()
 	row.raw["main_draw_stages_us"] = game.draw_stage_samples.duplicate(true)
 	row.raw["main_draw_contexts"] = game.draw_stage_contexts.duplicate(true)
@@ -951,6 +1038,9 @@ func _end(ready: bool, fixture: Dictionary) -> bool:
 	if not _write_report(output_path + ".partial.json"): return false
 	if not arrival_error.is_empty():
 		_fail("Garden arrival preparation failed: " + arrival_error + "; partial evidence retained.")
+		return false
+	if all_fixed_steps and not bool(completed_summary.valid):
+		_fail("Completed-stage attribution failed: " + String(completed_summary.error) + "; partial evidence retained.")
 		return false
 	if observation_budget.overflow:
 		_fail("Observation budget exhausted in stream " + observation_budget.overflow_stream + "; partial evidence retained, shorten or split this diagnostic.")
@@ -1120,6 +1210,38 @@ func _disable_viewport_timing() -> void:
 		report.viewport_render_timing.cleanup = {"enabled_count": viewport_timing_enabled_count, "disabled_count": viewport_timing_disabled_count,
 			"freed_before_cleanup_count": viewport_timing_freed_count, "live_owned_count": viewport_timing_owned.size(), "pre_draw_callback_connected": RenderingServer.frame_pre_draw.is_connected(_prepare_viewport_timing)}
 
+func _completed_stage_summary() -> Dictionary:
+	var summary := {"valid": false, "error": "Incomplete process coverage.", "process_frames": game.all_fixed_step_samples.size(), "completed_steps": 0, "elapsed_us": {}, "executions": {}}
+	for stage: String in SimWorld.PROFILE_CUMULATIVE_STAGES:
+		summary.elapsed_us[stage] = 0
+		summary.executions[stage] = 0
+	if game.all_fixed_step_samples.is_empty() or game.all_fixed_step_samples.size() != game.process_ms.size(): return summary
+	var previous: Dictionary = {}
+	var last_process_frame := -1
+	var last_end_us := -1
+	for index: int in game.all_fixed_step_samples.size():
+		var row: Dictionary = game.all_fixed_step_samples[index]
+		var current: Dictionary = row.delta
+		if not bool(current.valid):
+			summary.error = current.error
+			return summary
+		if int(row.process_index) != index or int(row.process_frame) <= last_process_frame or int(row.process_started_us) < last_end_us: return summary
+		if not previous.is_empty() and previous != row.before: return summary
+		if index == 0 and int(row.before.tick) != int(capture.tick_before): return summary
+		previous = row.after
+		last_process_frame = int(row.process_frame)
+		last_end_us = int(row.process_started_us) + int(row.process_elapsed_us)
+		summary.completed_steps += int(current.completed_steps)
+		for stage: String in SimWorld.PROFILE_CUMULATIVE_STAGES:
+			summary.elapsed_us[stage] += int(current.elapsed_us[stage])
+			summary.executions[stage] += int(current.executions[stage])
+	if game.world == null or previous.world_id != str(game.world.get_instance_id()) or int(previous.tick) != game.world.tick \
+		or int(summary.completed_steps) != game.world.tick - int(capture.tick_before): return summary
+	summary.valid = true
+	summary.error = ""
+	return summary
+
+
 static func _world_stage_stats(rows: Array[Dictionary]) -> Dictionary:
 	var stages: Array[Dictionary] = []
 	for row: Dictionary in rows: stages.append(row.last_step_stages_us)
@@ -1187,6 +1309,7 @@ func _write_report(path: String) -> bool:
 
 func _report_io_failure(message: String) -> bool:
 	failed = true
+	if all_fixed_steps and not light_observer and is_instance_valid(game): game.end_completed_stage_case()
 	_disable_viewport_timing()
 	if not report.is_empty():
 		report.complete = false
@@ -1198,6 +1321,7 @@ func _report_io_failure(message: String) -> bool:
 
 func _fail(message: String) -> void:
 	failed = true
+	if all_fixed_steps and not light_observer and is_instance_valid(game): game.end_completed_stage_case()
 	_disable_viewport_timing()
 	push_error(message)
 	if not report.is_empty():

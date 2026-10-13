@@ -10,6 +10,8 @@ const ISOLATED_PROJECT := "config_version=5\n\n[application]\nconfig/name=\"H.E.
 const SOURCES := [
 	"res://scripts/bake_wellspring_terrain.gd",
 	"res://src/presentation/wellspring_terrain_stream.gd",
+	"res://src/presentation/wellspring_async_terrain_stream.gd",
+	"res://src/presentation/terrain_hash_job.gd",
 	"res://src/presentation/wellspring_illustrated_kit.gd",
 	"res://src/presentation/hex_environment_layout.gd",
 	"res://src/presentation/pixel_map_library.gd",
@@ -135,7 +137,7 @@ func _verify() -> bool:
 	report["release_identity"] = actual_identity
 	var provenance := _json_file(_option("--expected-provenance"))
 	if not error.is_empty(): return false
-	if not _check(provenance.size() == SOURCES.size(), "expected provenance must contain exactly all eight producers"): return false
+	if not _check(provenance.size() == SOURCES.size(), "expected provenance must contain the exact independent terrain source inventory"): return false
 	for source_path: String in SOURCES:
 		if not _check(_valid_hash(String(provenance.get(source_path, ""))), "missing or invalid producer hash: " + source_path): return false
 	var expected_manifest := _manifest(_option("--expected-manifest"))

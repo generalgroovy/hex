@@ -1,0 +1,140 @@
+{
+	"after_finalize": {
+		"begin_calls": 1,
+		"end_calls": 2,
+		"label": "after_inherited_finalize",
+		"packet_sha256": "1eeb49795b2e63e3fbc6bdf467ec6cb27695f73a94d2339f38c66b1a6da9f1b1",
+		"snapshot": {
+			"attempted_steps": 1,
+			"completed_steps": 1,
+			"elapsed_us": {
+				"actor_product_effects": 10,
+				"chemistry_exposure": 27,
+				"command_order": 18,
+				"finalize": 7,
+				"movement_cast_admission": 429,
+				"projectile_contacts": 38,
+				"spray_contacts": 46,
+				"surfaces_expiry": 95,
+				"terminal_deposits": 6
+			},
+			"enabled": false,
+			"epoch": 1,
+			"executions": {
+				"actor_product_effects": 1,
+				"chemistry_exposure": 1,
+				"command_order": 1,
+				"finalize": 1,
+				"movement_cast_admission": 1,
+				"projectile_contacts": 1,
+				"spray_contacts": 1,
+				"surfaces_expiry": 1,
+				"terminal_deposits": 1
+			},
+			"failed_steps": 0,
+			"hex_mode": true,
+			"profile_enabled": true,
+			"schema": "hex.sim.completed-stages.v1",
+			"tick": 1,
+			"world_id": "-9223371879199275136"
+		},
+		"state_hash": "8709aa3e89008653c218a36dd981542afac8e4fcc3f5d75730c3bd221cc09ee6"
+	},
+	"before": {
+		"attempted_steps": 1,
+		"completed_steps": 1,
+		"elapsed_us": {
+			"actor_product_effects": 10,
+			"chemistry_exposure": 27,
+			"command_order": 18,
+			"finalize": 7,
+			"movement_cast_admission": 429,
+			"projectile_contacts": 38,
+			"spray_contacts": 46,
+			"surfaces_expiry": 95,
+			"terminal_deposits": 6
+		},
+		"enabled": true,
+		"epoch": 1,
+		"executions": {
+			"actor_product_effects": 1,
+			"chemistry_exposure": 1,
+			"command_order": 1,
+			"finalize": 1,
+			"movement_cast_admission": 1,
+			"projectile_contacts": 1,
+			"spray_contacts": 1,
+			"surfaces_expiry": 1,
+			"terminal_deposits": 1
+		},
+		"failed_steps": 0,
+		"hex_mode": true,
+		"profile_enabled": true,
+		"schema": "hex.sim.completed-stages.v1",
+		"tick": 1,
+		"world_id": "-9223371879199275136"
+	},
+	"case": "io",
+	"checks": 69,
+	"enclosing_finalizations": 1,
+	"errors": [],
+	"expected_error_text": "Could not open benchmark receipt: res://.godot/iteration-20261013/t7-cleanup-runs/io-bd002874d8294594a894f70b5f96ea51/directory-is-not-a-report",
+	"expected_exit_code": 1,
+	"immediate": {
+		"begin_calls": 1,
+		"end_calls": 1,
+		"label": "after_inherited_report_io_failure",
+		"packet_sha256": "1eeb49795b2e63e3fbc6bdf467ec6cb27695f73a94d2339f38c66b1a6da9f1b1",
+		"snapshot": {
+			"attempted_steps": 1,
+			"completed_steps": 1,
+			"elapsed_us": {
+				"actor_product_effects": 10,
+				"chemistry_exposure": 27,
+				"command_order": 18,
+				"finalize": 7,
+				"movement_cast_admission": 429,
+				"projectile_contacts": 38,
+				"spray_contacts": 46,
+				"surfaces_expiry": 95,
+				"terminal_deposits": 6
+			},
+			"enabled": false,
+			"epoch": 1,
+			"executions": {
+				"actor_product_effects": 1,
+				"chemistry_exposure": 1,
+				"command_order": 1,
+				"finalize": 1,
+				"movement_cast_admission": 1,
+				"projectile_contacts": 1,
+				"spray_contacts": 1,
+				"surfaces_expiry": 1,
+				"terminal_deposits": 1
+			},
+			"failed_steps": 0,
+			"hex_mode": true,
+			"profile_enabled": true,
+			"schema": "hex.sim.completed-stages.v1",
+			"tick": 1,
+			"world_id": "-9223371879199275136"
+		},
+		"state_hash": "8709aa3e89008653c218a36dd981542afac8e4fcc3f5d75730c3bd221cc09ee6"
+	},
+	"passed": true,
+	"schema": "hex.completed-stage-enclosing-cleanup.v1",
+	"scope": "Actual inherited profiler enclosing cleanup in three separate native processes. Real paid world and completed-step counters; TimedGame never enters the tree. Failure and I/O cases intentionally exit1 and emit their exact expected error. Side-channel receipt is independent of the inherited report path. No application bootstrap, art, LAN, saves, full player-close lifecycle, foreground or performance claim.",
+	"sources": {
+		"res://.godot/iteration-20261013/verify-completed-stage-cleanup.gd": "52e370e017cbcef45c995e0404a4aa4e946ecf558b038f82ad06c69f0404e404",
+		"res://content/abilities/foundation_abilities_v1.json": "2909419ec614172bce603c38f38a844a5b491fc676d5d81c9568d24b6dbc0bec",
+		"res://content/champions/foundation_champions_v1.json": "0125f9c55c976eb274ba51e1319f69f4ea62d5d6183bcab14a590aaa695a5b1a",
+		"res://content/runtime/runtime_build_identity_v1.json": "90addc5daeaf4d63aeecadad5a6d396aaac52991540c13411c61df54de6dcb75",
+		"res://scripts/profile-gameplay.gd": "2e2df0510a06a305c2c3c8415bda8afd60d5e348714f70eff2203e837bdf96b1",
+		"res://src/app/bootstrap.gd": "76c24ae6dd2e7a43077f82579ed9dff3cc36bfa42d52e2953a635c5567da7921",
+		"res://src/content/runtime_build_identity.gd": "68cbd2cb431da0c1f9e22ba3db90b1ddf32e465d53aa1b13da8fd4dc5b1e655f",
+		"res://src/net/hex_world_snapshot.gd": "403deec77f6e24d02416895917b5e8d2496900496f99c89a9c4ac95c99646bce",
+		"res://src/presentation/cast_startup_witness.gd": "b38f0d45bb23901295d24cb63b5369562b434f1509356d120c42dcfc9892effc",
+		"res://src/sim/core/sim_config.gd": "0805015a85ba138ee0c024c01b614c908e3ea714202a1410be6b11ee60390d98",
+		"res://src/sim/core/sim_world.gd": "2a8e32069c800d70644f222d4ce1e2378e3b2c79991e7e5d58b4de2df4548a1e"
+	}
+}

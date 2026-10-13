@@ -9,6 +9,7 @@ func run() -> int:
 	_test_repository_profiles()
 	_test_shared_direction_contract()
 	_test_startup_readability_geometry()
+	_test_startup_sample_contract()
 	_test_projectile_presentation_motion()
 	_test_fail_closed_catalog_alignment()
 	_test_pixel_material_contract()
@@ -348,3 +349,29 @@ func _test_fail_closed_catalog_alignment() -> void:
 	presenter.data = source.data.duplicate(true)
 	((presenter.data["profiles"] as Array)[0] as Dictionary)["skeleton_id"] = "beam"
 	check(not presenter.validate(catalog), "spell delivery cannot use a mismatched animation skeleton")
+
+
+func _test_startup_sample_contract() -> void:
+	var language := VisualLanguage.new()
+	var catalog := AbilityCatalog.new()
+	check(language.load_from_file() and catalog.load_from_file("res://content/abilities/foundation_abilities_v1.json"),"startup sample uses actual current visual and spell catalogs")
+	var presenter := FoundationSpellPresenter.new()
+	check(presenter.configure(language,catalog),"startup sample presenter configures")
+	for element: String in AbilityCatalog.DISPLAY_ELEMENT_IDS:
+		var wire := int(catalog.ability(catalog.spell_id_at(element,"heavy")).wire_id)
+		for reduced: bool in [false,true]:
+			var clip: Dictionary=presenter.pixel_effects.library.asset(presenter.pixel_effects.asset_id(element,"hand_prepare",reduced))
+			check(not clip.is_empty(),"normal and reduced preparation clips are admitted")
+			var final_sample := int(clip.total_ticks)-1
+			equal(presenter.startup_sample_ticks(wire,0.0,reduced),0,"unknown admission starts from release-proximity clip coordinate")
+			equal(presenter.startup_sample_ticks(wire,1.0,reduced),final_sample,"unknown terminal proximity stays inside admitted clip")
+			equal(presenter.startup_sample_ticks(wire,0.5,reduced),floori(float(final_sample)*0.5),"unknown sample is explicit clip coordinate, not claimed elapsed time")
+			for elapsed: int in [0,1,7,18]:
+				var timing := {"wire_id":wire,"known_total":true,"elapsed_ticks":elapsed,"remaining_ticks":21-elapsed,"total_ticks":21}
+				equal(presenter.startup_sample_ticks(wire,0.7,reduced,timing),elapsed,"witnessed admission uses actual elapsed ticks independently of fallback coordinate")
+				var before := timing.duplicate(true)
+				presenter.startup_sample_ticks(wire,0.7,reduced,timing)
+				equal(timing,before,"clip selection leaves timing context unchanged")
+			var stale := {"wire_id":wire+1,"known_total":true,"elapsed_ticks":7,"remaining_ticks":14,"total_ticks":21}
+			equal(presenter.startup_sample_ticks(wire,1.0,reduced,stale),final_sample,"other spell context cannot claim an admission age")
+			equal(presenter.startup_sample_ticks(wire,NAN,reduced),0,"invalid proximity fails finite")

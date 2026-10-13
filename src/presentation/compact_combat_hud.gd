@@ -7,6 +7,7 @@ const ElementGlyphRendererScript = preload("res://src/presentation/element_glyph
 const BindingLabels = preload("res://src/presentation/spell_binding_labels.gd")
 const LayoutCache = preload("res://src/presentation/compact_hud_layout_cache.gd")
 const Recovery = preload("res://src/sim/entities/resource_recovery.gd")
+const StartupTiming = preload("res://src/presentation/cast_startup_witness.gd")
 const EXPECTED_ID := "compact-combat-hud-v1"
 const EXPECTED_AUTHORITY := "presentation only; simulation, input legality and resource ownership remain authoritative elsewhere"
 const REQUIRED_LAYOUT_KEYS := [
@@ -109,6 +110,7 @@ func draw(
 	pointer: Vector2 = Vector2(-1000, -1000),
 	feedback_label: String = "",
 	preferences: PlayerPreferences = null,
+	cast_timing: Dictionary = {},
 ) -> void:
 	if canvas == null or state == null or ability_catalog == null or language == null:
 		return
@@ -152,7 +154,7 @@ func draw(
 	_draw_panel(canvas, layer_tab, 0.94)
 	canvas.draw_rect(Rect2(layer_tab.position + Vector2(5, 5), Vector2(5, 10)), language.ui_color("focus"), true)
 	canvas.draw_string(ThemeDB.fallback_font, layer_tab.position + Vector2(16, 14), layer_label, HORIZONTAL_ALIGNMENT_LEFT, layer_tab.size.x - 22.0, 9, language.ui_color("text_primary"))
-	var hidden_cast := hidden_cast_status(state, ability_catalog, active_layer, preferences, tick_rate)
+	var hidden_cast := hidden_cast_status(state, ability_catalog, active_layer, preferences, tick_rate, cast_timing)
 	var wait_label := cast_wait_label(state, cast_gate)
 	if not hidden_cast.is_empty():
 		# Releasing a modifier must not hide an already-paid cast's progress.
@@ -161,7 +163,8 @@ func draw(
 		var accent := language.element_color(String(hidden_cast.element), "bright")
 		_draw_panel(canvas, cue, 0.94)
 		canvas.draw_string(ThemeDB.fallback_font, cue.position + Vector2(7, 13), String(hidden_cast.label), HORIZONTAL_ALIGNMENT_LEFT, cue.size.x - 14.0, 9, accent)
-		canvas.draw_rect(Rect2(cue.position + Vector2(5, 17), Vector2((cue.size.x - 10.0) * float(hidden_cast.progress), 2)), accent)
+		if float(hidden_cast.progress) >= 0.0:
+			canvas.draw_rect(Rect2(cue.position + Vector2(5, 17), Vector2((cue.size.x - 10.0) * float(hidden_cast.progress), 2)), accent)
 	elif not wait_label.is_empty():
 		# The visible casting card already identifies the paid spell. Explain the
 		# shared restriction once, leaving other cards free for their own cooldown.
@@ -171,17 +174,18 @@ func draw(
 	for button_index: int in range(PlayerState.SPELL_BUTTON_COUNT):
 		var rectangle: Rect2 = frame.spell_rectangles[button_index]
 		var slot_index := active_layer * PlayerState.SPELL_BUTTON_COUNT + button_index
-		_draw_spell_cell(canvas, rectangle, state, ability_catalog, slot_index, button_index, tick_rate, copy, capacity, cast_gate, preferences)
+		_draw_spell_cell(canvas, rectangle, state, ability_catalog, slot_index, button_index, tick_rate, copy, capacity, cast_gate, preferences, cast_timing)
 
 
-func _draw_resources(canvas: CanvasItem, rectangle: Rect2, state: PlayerState, champion_id: String, champion_name: String, layout: Dictionary, tick_rate: int) -> void:
+func _draw_resources(canvas: CanvasItem, rectangle: Rect2, state: PlayerState, champion_id: String, _champion_name: String, layout: Dictionary, tick_rate: int) -> void:
 	_draw_panel(canvas, rectangle, 0.94)
 	var medallion := rectangle.position + Vector2(28, 34)
 	canvas.draw_circle(medallion + Vector2(2, 3), 19.0, Color(language.ramp_color("worldbone", 0), 0.7))
 	canvas.draw_circle(medallion, 18.0, language.ramp_color("aged_brass", 2))
 	_draw_portrait(canvas, medallion, champion_id)
 	var protection := protection_status(state, tick_rate)
-	canvas.draw_string(ThemeDB.fallback_font, rectangle.position + Vector2(54, 19), champion_name.to_upper() if protection.is_empty() else protection, HORIZONTAL_ALIGNMENT_LEFT, rectangle.size.x - 64.0, 11, language.ui_color("text_primary") if protection.is_empty() else language.ui_color("focus"))
+	if not protection.is_empty():
+		canvas.draw_string(ThemeDB.fallback_font, rectangle.position + Vector2(54, 19), protection, HORIZONTAL_ALIGNMENT_LEFT, rectangle.size.x - 64.0, 11, language.ui_color("focus"))
 	var bar_x := rectangle.position.x + 54.0
 	var bar_width := rectangle.size.x - 66.0
 	var bar_height := float(layout.get("resource_bar_height", 20))
@@ -355,13 +359,13 @@ static func resource_amount_label(value: int, maximum: int) -> String:
 	return "%d/%d" % [value / 1000, maximum / 1000]
 
 
-func _draw_spell_cell(canvas: CanvasItem, rectangle: Rect2, state: PlayerState, ability_catalog: AbilityCatalog, slot_index: int, button_index: int, tick_rate: int, copy: Dictionary, capacity: Vector2i = Vector2i(-1, -1), cast_gate: String = "", preferences: PlayerPreferences = null) -> void:
+func _draw_spell_cell(canvas: CanvasItem, rectangle: Rect2, state: PlayerState, ability_catalog: AbilityCatalog, slot_index: int, button_index: int, tick_rate: int, copy: Dictionary, capacity: Vector2i = Vector2i(-1, -1), cast_gate: String = "", preferences: PlayerPreferences = null, cast_timing: Dictionary = {}) -> void:
 	var wire_id: int = state.spell_wire_id(slot_index + 1)
 	var ability: Dictionary = ability_catalog.ability_from_wire(wire_id)
 	var empty := ability.is_empty()
 	var element := String(ability.get("element", "dark"))
 	var accent := language.element_color(element, "bright") if not empty and language.elements.has(element) else language.ui_color("text_muted")
-	var readiness := spell_display_status(state, ability, tick_rate, capacity, cast_gate)
+	var readiness := spell_display_status(state, ability, tick_rate, capacity, cast_gate, cast_timing)
 	_draw_panel(canvas, rectangle, 0.95)
 	canvas.draw_rect(rectangle, Color(accent, 1.0 if readiness.casting else (0.36 if readiness.waiting else 0.72)), false, 3.0 if readiness.casting else (1.0 if readiness.waiting else 2.0))
 	var card := _spell_card_layout(slot_index, ability, _button_binding_label(button_index, preferences), rectangle)
@@ -380,25 +384,22 @@ func _draw_spell_cell(canvas: CanvasItem, rectangle: Rect2, state: PlayerState, 
 	if not status.is_empty():
 		canvas.draw_string(ThemeDB.fallback_font, card.status_at, status, HORIZONTAL_ALIGNMENT_LEFT, card.status_width, 10, language.ui_color("pending") if readiness.kind in ["cooldown", "startup"] else language.ui_color("danger"))
 	var track: Rect2 = card.track
-	canvas.draw_rect(track, Color(accent, 0.15))
-	canvas.draw_rect(Rect2(track.position, Vector2(track.size.x * float(readiness.progress), track.size.y)), Color(accent, 0.42 if readiness.waiting else 0.9))
+	if float(readiness.progress) >= 0.0:
+		canvas.draw_rect(track, Color(accent, 0.15))
+		canvas.draw_rect(Rect2(track.position, Vector2(track.size.x * float(readiness.progress), track.size.y)), Color(accent, 0.42 if readiness.waiting else 0.9))
 
 
-static func spell_readiness(state: PlayerState, ability: Dictionary, tick_rate: int = 120, capacity: Vector2i = Vector2i(-1, -1), cast_gate: String = "") -> Dictionary:
+static func spell_readiness(state: PlayerState, ability: Dictionary, tick_rate: int = 120, capacity: Vector2i = Vector2i(-1, -1), cast_gate: String = "", cast_timing: Dictionary = {}) -> Dictionary:
 	if state == null or state.health <= 0 or ability.is_empty():
 		return {"kind": "unavailable", "label": "UNAVAILABLE", "progress": 0.0}
 	var wire := int(ability.get("wire_id", 0))
 	if state.pending_cast_wire_id != 0 or cast_gate == "startup_commitment":
 		var active_cast := wire > 0 and state.pending_cast_wire_id == wire
-		var progress := 0.0
-		if active_cast:
-			var config := SimConfig.new(tick_rate)
-			if config.is_valid():
-				# This cast is already paid. Read the same quantized startup as
-				# authority; other slots must not borrow its progress or timing.
-				var startup_ticks := config.milliseconds_to_ticks(int(ability.get("startup_ms", 0)))
-				progress = clampf(1.0 - float(state.pending_cast_ticks) / float(maxi(1, startup_ticks)), 0.0, 1.0)
-		return {"kind": "startup", "label": "CASTING" if active_cast else "FINISH CAST", "progress": progress}
+		if not active_cast:
+			return {"kind": "startup", "label": "FINISH CAST", "progress": 0.0}
+		var remaining := StartupTiming.remaining_label(state.pending_cast_ticks, tick_rate)
+		var progress := float(cast_timing.progress) if StartupTiming.known_for(state, tick_rate, cast_timing) else -1.0
+		return {"kind": "startup", "label": "CAST " + remaining if not remaining.is_empty() else "CASTING", "progress": progress}
 	if not cast_gate.is_empty():
 		return {"kind": "control", "label": "CONTROLLED", "progress": 0.0}
 	return _spell_availability(state, ability, tick_rate, capacity)
@@ -408,8 +409,8 @@ static func _spell_availability(state: PlayerState, ability: Dictionary, tick_ra
 	var wire := int(ability.get("wire_id", 0))
 	var cooldown := state.spell_cooldown_for_wire(wire)
 	if cooldown > 0:
-		var total := maxi(1, ceili(float(int(ability.get("cooldown_ms", 1)) * maxi(1, tick_rate)) / 1000.0))
-		return {"kind": "cooldown", "label": "%.1fs" % (float(cooldown) / float(maxi(1, tick_rate))), "progress": clampf(1.0 - float(cooldown) / float(total), 0.0, 1.0)}
+		var remaining := StartupTiming.remaining_label(cooldown, tick_rate)
+		return {"kind": "cooldown", "label": remaining if not remaining.is_empty() else "WAIT", "progress": -1.0}
 	var needed := CombatSystem.cast_capacity_requirement(wire)
 	if (capacity.x >= 0 and needed.x > capacity.x) or (capacity.y >= 0 and needed.y > capacity.y):
 		return {"kind": "capacity", "label": "MATERIAL LIMIT" if needed.x > 0 else "FIELD LIMIT", "progress": 0.0}
@@ -418,8 +419,8 @@ static func _spell_availability(state: PlayerState, ability: Dictionary, tick_ra
 	return {"kind": "ready", "label": "", "progress": 1.0}
 
 
-static func spell_display_status(state: PlayerState, ability: Dictionary, tick_rate: int = 120, capacity: Vector2i = Vector2i(-1, -1), cast_gate: String = "") -> Dictionary:
-	var result := spell_readiness(state, ability, tick_rate, capacity, cast_gate)
+static func spell_display_status(state: PlayerState, ability: Dictionary, tick_rate: int = 120, capacity: Vector2i = Vector2i(-1, -1), cast_gate: String = "", cast_timing: Dictionary = {}) -> Dictionary:
+	var result := spell_readiness(state, ability, tick_rate, capacity, cast_gate, cast_timing)
 	var casting: bool = result.kind == "startup" and int(ability.get("wire_id", 0)) > 0 and state.pending_cast_wire_id == int(ability.wire_id)
 	var waiting: bool = result.kind == "startup" and not casting
 	if waiting:
@@ -440,7 +441,7 @@ static func cast_wait_label(state: PlayerState, cast_gate: String = "") -> Strin
 	return "SPELLS WAIT" if cast_gate == "startup_commitment" else ""
 
 
-static func hidden_cast_status(state: PlayerState, catalog: AbilityCatalog, active_layer: int, preferences: PlayerPreferences = null, tick_rate: int = 120) -> Dictionary:
+static func hidden_cast_status(state: PlayerState, catalog: AbilityCatalog, active_layer: int, preferences: PlayerPreferences = null, tick_rate: int = 120, cast_timing: Dictionary = {}) -> Dictionary:
 	if state == null or catalog == null or state.health <= 0 or state.pending_cast_wire_id <= 0:
 		return {}
 	if active_layer < 0 or active_layer >= PlayerState.SPELL_SLOT_COUNT / PlayerState.SPELL_BUTTON_COUNT:
@@ -453,10 +454,11 @@ static func hidden_cast_status(state: PlayerState, catalog: AbilityCatalog, acti
 			return {}
 	var slot := state.spell_slot_index_for_wire(wire)
 	var binding := SpellLoomPresenter.slot_binding_label(slot, preferences) if slot >= 0 else ""
-	var label := "CASTING " + spell_header_label(ability) + " " + AbilityCatalog._spell_family(ability).to_upper()
+	var readiness := spell_readiness(state, ability, tick_rate, Vector2i(-1, -1), "", cast_timing)
+	var label := String(readiness.label) + " " + spell_header_label(ability) + " " + AbilityCatalog._spell_family(ability).to_upper()
 	if not binding.is_empty(): label += " / " + binding
 	return {"wire_id": wire, "slot": slot, "element": String(ability.get("element", "")), "label": label,
-		"progress": spell_readiness(state, ability, tick_rate).progress}
+		"progress": readiness.progress}
 
 
 static func spell_header_label(ability: Dictionary) -> String:

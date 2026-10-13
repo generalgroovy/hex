@@ -5,7 +5,7 @@ extends CartoonChampionPresenter
 
 class PrecedingFullbody:
 	extends "res://src/presentation/fullbody_cast_presenter.gd"
-	func frame(id: String, state: PlayerState, tick: float, config: SimConfig, locomotion_phase: float, reduced_motion: bool = false, wall_travel: Vector2i = Vector2i.ZERO) -> Dictionary:
+	func frame(id: String, state: PlayerState, tick: float, config: SimConfig, locomotion_phase: float, reduced_motion: bool = false, wall_travel: Vector2i = Vector2i.ZERO, _cast_timing: Dictionary = {}) -> Dictionary:
 		if not entries.has(id): return {}
 		var action := action_for_state(state)
 		var aim_vec := CartoonChampionPresenter.presentation_facing_vector(state)
@@ -151,7 +151,7 @@ func enable_fullbody_art(use_pixel_pilot: bool = false, use_full_cast: bool = fa
 	return true
 
 
-func movement_frame(champion_id: String, state: PlayerState, presentation_tick: float, config: SimConfig, reduced_effects: bool = false, locomotion_phase: float = -1.0, wall_travel: Vector2i = Vector2i.ZERO) -> Dictionary:
+func movement_frame(champion_id: String, state: PlayerState, presentation_tick: float, config: SimConfig, reduced_effects: bool = false, locomotion_phase: float = -1.0, wall_travel: Vector2i = Vector2i.ZERO, _cast_timing: Dictionary = {}) -> Dictionary:
 	if state == null or config == null or not champions.has(champion_id):
 		return {}
 	var definition: Dictionary = champions[champion_id]

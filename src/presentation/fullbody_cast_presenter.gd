@@ -4,6 +4,7 @@ extends RefCounted
 
 const PATH := "res://assets/sprites/fullbody_cast_v1/"
 const CastHands = preload("res://src/presentation/pixel_cast_hands.gd")
+const StartupTiming = preload("res://src/presentation/cast_startup_witness.gd")
 const AerialPose = preload("res://src/presentation/pixel_aerial_pose.gd")
 const WallPose = preload("res://src/presentation/pixel_wallrun_pose.gd")
 const PixelFlipbook = preload("res://src/presentation/pixel_flipbook_presenter.gd")
@@ -319,7 +320,7 @@ static func action_for_state(state: PlayerState) -> String:
 	return "idle"
 
 
-func frame(id: String, state: PlayerState, tick: float, config: SimConfig, locomotion_phase: float, reduced_motion: bool = false, wall_travel: Vector2i = Vector2i.ZERO) -> Dictionary:
+func frame(id: String, state: PlayerState, tick: float, config: SimConfig, locomotion_phase: float, reduced_motion: bool = false, wall_travel: Vector2i = Vector2i.ZERO, cast_timing: Dictionary = {}) -> Dictionary:
 	if not entries.has(id) or not textures.has(id): return {}
 	var action := action_for_state(state)
 	var aim_vec := CartoonChampionPresenter.presentation_facing_vector(state)
@@ -365,16 +366,13 @@ func frame(id: String, state: PlayerState, tick: float, config: SimConfig, locom
 	elif action == "cast":
 		phase = 0.35 # Control-owned charge without a pending spell holds its gather.
 		if state.pending_cast_wire_id > 0:
-			var charge := CombatTuning.cast_definition_view(state.pending_cast_wire_id)
-			phase = clampf(1.0-float(state.pending_cast_ticks)/maxi(1,config.milliseconds_to_ticks(int(charge.get("startup_ms",0)))),0,1)
+			phase = StartupTiming.animation_progress(state, config, cast_timing)
 	elif action == "defeated": phase = 1.0
 	var casting := (state.pending_cast_wire_id > 0 or state.cast_recovery_ticks > 0) and action not in ["hit","stunned","defeated"]
 	var cast_phase := 0.5
 	var cast_weight := 1.0
 	if state.pending_cast_wire_id > 0:
-		var cast_definition := CombatTuning.cast_definition_view(state.pending_cast_wire_id)
-		var startup := maxi(1,config.milliseconds_to_ticks(int(cast_definition.get("startup_ms",0))))
-		cast_phase = clampf(1.0-float(state.pending_cast_ticks)/startup,0,1)
+		cast_phase = StartupTiming.animation_progress(state, config, cast_timing)
 		cast_weight = smoothstep(0.0,0.35,cast_phase)
 	elif state.cast_recovery_ticks > 0:
 		cast_phase = 1.0
@@ -385,7 +383,7 @@ func frame(id: String, state: PlayerState, tick: float, config: SimConfig, locom
 				Vector2(state.wall_x, state.wall_y), velocity != Vector2i.ZERO, reduced_motion)
 			if not wall_frame.is_empty():
 				wall_frame["cast_overlay_requested"] = casting
-				if casting: CastHands.decorate(wall_frame,state,pixel_pilot.textures.get(id),config,reduced_motion)
+				if casting: CastHands.decorate(wall_frame,state,pixel_pilot.textures.get(id),config,reduced_motion,cast_timing)
 				return wall_frame
 		# Explicit authority gates; the DOUBLE_JUMP adapter alone never means flight.
 		# Non-fliers keep their compact tuck throughout voluntary jump descent.
@@ -394,7 +392,7 @@ func frame(id: String, state: PlayerState, tick: float, config: SimConfig, locom
 			var aerial: Dictionary = pixel_pilot.aerial_frame(id, action, aim, travel, pose_tick, state.air_vertical_velocity, reduced_motion, state.hop_mode == PlayerState.MovementMode.DOUBLE_JUMP)
 			if not aerial.is_empty():
 				aerial["cast_overlay_requested"] = casting
-				if casting: CastHands.decorate(aerial,state,pixel_pilot.textures.get(id),config,reduced_motion)
+				if casting: CastHands.decorate(aerial,state,pixel_pilot.textures.get(id),config,reduced_motion,cast_timing)
 				return aerial
 		var pixel_cast_weight := cast_weight
 		if casting and state.pending_cast_wire_id > 0 and state.cast_recovery_ticks > 0:
@@ -410,7 +408,7 @@ func frame(id: String, state: PlayerState, tick: float, config: SimConfig, locom
 			# this does not grant flight or compose a second registered upper body.
 			if casting and state.is_airborne() and state.flight_capable and action in AerialPose.BALL_ACTIONS \
 					and bool(fixed_frame.get("pixel_action_key",false)) and not bool(fixed_frame.get("independent_cast_pose",false)):
-				CastHands.decorate(fixed_frame,state,pixel_pilot.textures.get(id),config,reduced_motion)
+				CastHands.decorate(fixed_frame,state,pixel_pilot.textures.get(id),config,reduced_motion,cast_timing)
 			return fixed_frame
 		var rigid_fallback: Dictionary = pixel_pilot.rigid_fallback_frame(id,action,aim,travel,phase,casting)
 		if not rigid_fallback.is_empty():

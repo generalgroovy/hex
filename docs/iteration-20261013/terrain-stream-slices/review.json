@@ -1,0 +1,395 @@
+{
+  "schema": "hex.terrain-slice-independent-review.v1",
+  "status": "default_rejected",
+  "reason": "Lower isolated pump p95, but higher total CPU, required-readiness delay and worse identical-demand early-walking gaps. No default promotion.",
+  "production_withdrawal_status": "root-owned decision; archive preserves prototype before any withdrawal",
+  "actual_bootstrap_control": "pending deterministic synthetic-input comparison; do not infer physical input or FPS",
+  "receipts": [
+    {
+      "run": "forward",
+      "checks": 75798,
+      "cases": 48,
+      "early_walking": 6,
+      "cancellation": 2,
+      "passed": true,
+      "errors": [],
+      "sha256": "3d87136c38a3213634ffbfc72bb614499e4dfd80e6d62ba07c69ea141b8c3b99",
+      "stderr_bytes": 0
+    },
+    {
+      "run": "reverse",
+      "checks": 75706,
+      "cases": 48,
+      "early_walking": 6,
+      "cancellation": 2,
+      "passed": true,
+      "errors": [],
+      "sha256": "1851c6e8bf3cfd88ee1748d432347e1ed479bed59fa7247a1922cdf1bff5daf4",
+      "stderr_bytes": 0
+    }
+  ],
+  "statistics_policy": "Two warmups excluded;6measured cycles per process, both opposite arm orders pooled to12cases/view/arm. Nearest-rank p95 of arrival pump calls; per-case means for CPU/readiness. first_ready_frame is zero-based so pump count adds1.",
+  "summary": [
+    {
+      "view": "garden",
+      "role": "before",
+      "measured_cases": 12,
+      "arrival_pumps": 363,
+      "arrival_p95_whole_pump_us": 7300,
+      "arrival_max_whole_pump_us": 8407,
+      "mean_all_phase_pump_cpu_us": 196526.75,
+      "mean_required_ready_pumps": 9.083333333333334,
+      "mean_required_ready_wall_us": 276393.25,
+      "mean_halo_ready_pumps": 30.25,
+      "mean_halo_ready_wall_us": 896299.75,
+      "walking_unready_frames": 0,
+      "max_end_pump_validation_logical_bytes": 0,
+      "max_logical_overlap_bytes": 0,
+      "mean_stage_cpu_us": {
+        "image_reconstruction": 0,
+        "pixel_validation": 159806.41666666666,
+        "ready_retrieval": 953.1666666666666,
+        "request_submission": 12705.25,
+        "retention_trim": 686.25,
+        "texture_creation": 11560.5
+      }
+    },
+    {
+      "view": "garden",
+      "role": "after",
+      "measured_cases": 12,
+      "arrival_pumps": 844,
+      "arrival_p95_whole_pump_us": 2390,
+      "arrival_max_whole_pump_us": 3125,
+      "mean_all_phase_pump_cpu_us": 224979.08333333334,
+      "mean_required_ready_pumps": 21.666666666666668,
+      "mean_required_ready_wall_us": 736491.5,
+      "mean_halo_ready_pumps": 70.33333333333333,
+      "mean_halo_ready_wall_us": 2286216.8333333335,
+      "walking_unready_frames": 0,
+      "max_end_pump_validation_logical_bytes": 1048576,
+      "max_logical_overlap_bytes": 2097152,
+      "mean_stage_cpu_us": {
+        "image_reconstruction": 354.5833333333333,
+        "pixel_validation": 177784.75,
+        "ready_retrieval": 792.5,
+        "request_submission": 11353.666666666666,
+        "retention_trim": 649.25,
+        "texture_creation": 12055.083333333334
+      }
+    },
+    {
+      "view": "large28",
+      "role": "before",
+      "measured_cases": 12,
+      "arrival_pumps": 1020,
+      "arrival_p95_whole_pump_us": 7264,
+      "arrival_max_whole_pump_us": 8154,
+      "mean_all_phase_pump_cpu_us": 386477.75,
+      "mean_required_ready_pumps": 45.25,
+      "mean_required_ready_wall_us": 1455672.6666666667,
+      "mean_halo_ready_pumps": 85,
+      "mean_halo_ready_wall_us": 2643215.8333333335,
+      "walking_unready_frames": 0,
+      "max_end_pump_validation_logical_bytes": 0,
+      "max_logical_overlap_bytes": 0,
+      "mean_stage_cpu_us": {
+        "image_reconstruction": 0,
+        "pixel_validation": 313878.1666666667,
+        "ready_retrieval": 1971.9166666666667,
+        "request_submission": 25739.916666666668,
+        "retention_trim": 455.0833333333333,
+        "texture_creation": 22734.75
+      }
+    },
+    {
+      "view": "large28",
+      "role": "after",
+      "measured_cases": 12,
+      "arrival_pumps": 2158,
+      "arrival_p95_whole_pump_us": 2344,
+      "arrival_max_whole_pump_us": 5529,
+      "mean_all_phase_pump_cpu_us": 441945.5,
+      "mean_required_ready_pumps": 93,
+      "mean_required_ready_wall_us": 3005934.3333333335,
+      "mean_halo_ready_pumps": 179.83333333333334,
+      "mean_halo_ready_wall_us": 5856897.833333333,
+      "walking_unready_frames": 17,
+      "max_end_pump_validation_logical_bytes": 2097152,
+      "max_logical_overlap_bytes": 3145728,
+      "mean_stage_cpu_us": {
+        "image_reconstruction": 675.9166666666666,
+        "pixel_validation": 351305.0833333333,
+        "ready_retrieval": 1474.6666666666667,
+        "request_submission": 23130.666666666668,
+        "retention_trim": 827.25,
+        "texture_creation": 24309.833333333332
+      }
+    },
+    {
+      "view": "partial_edge",
+      "role": "before",
+      "measured_cases": 12,
+      "arrival_pumps": 72,
+      "arrival_p95_whole_pump_us": 7155,
+      "arrival_max_whole_pump_us": 7794,
+      "mean_all_phase_pump_cpu_us": 38113.333333333336,
+      "mean_required_ready_pumps": 2,
+      "mean_required_ready_wall_us": 48097.75,
+      "mean_halo_ready_pumps": 6,
+      "mean_halo_ready_wall_us": 146333.66666666666,
+      "walking_unready_frames": 0,
+      "max_end_pump_validation_logical_bytes": 0,
+      "max_logical_overlap_bytes": 0,
+      "mean_stage_cpu_us": {
+        "image_reconstruction": 0,
+        "pixel_validation": 29810.25,
+        "ready_retrieval": 221,
+        "request_submission": 3290.5,
+        "retention_trim": 56,
+        "texture_creation": 2542.3333333333335
+      }
+    },
+    {
+      "view": "partial_edge",
+      "role": "after",
+      "measured_cases": 12,
+      "arrival_pumps": 135,
+      "arrival_p95_whole_pump_us": 2241,
+      "arrival_max_whole_pump_us": 2614,
+      "mean_all_phase_pump_cpu_us": 42877.416666666664,
+      "mean_required_ready_pumps": 3,
+      "mean_required_ready_wall_us": 88252.5,
+      "mean_halo_ready_pumps": 11.25,
+      "mean_halo_ready_wall_us": 329802.3333333333,
+      "walking_unready_frames": 0,
+      "max_end_pump_validation_logical_bytes": 1048576,
+      "max_logical_overlap_bytes": 2097152,
+      "mean_stage_cpu_us": {
+        "image_reconstruction": 82.33333333333333,
+        "pixel_validation": 32784.416666666664,
+        "ready_retrieval": 173.58333333333334,
+        "request_submission": 3031.0833333333335,
+        "retention_trim": 43.583333333333336,
+        "texture_creation": 2514.5
+      }
+    }
+  ],
+  "early_walking": [
+    {
+      "run": "forward",
+      "role": "before",
+      "view": "garden",
+      "unfinished_halo_at_start": true,
+      "unready_frames": 5,
+      "longest_unready_run": 3,
+      "max_last_ready_proxy_gap_px": 144.0,
+      "final_requested_position": [
+        4096.0,
+        792.0
+      ],
+      "final_last_ready_position": [
+        4096.0,
+        792.0
+      ]
+    },
+    {
+      "run": "forward",
+      "role": "after",
+      "view": "garden",
+      "unfinished_halo_at_start": true,
+      "unready_frames": 13,
+      "longest_unready_run": 13,
+      "max_last_ready_proxy_gap_px": 576.0,
+      "final_requested_position": [
+        4096.0,
+        792.0
+      ],
+      "final_last_ready_position": [
+        4096.0,
+        792.0
+      ]
+    },
+    {
+      "run": "forward",
+      "role": "before",
+      "view": "large28",
+      "unfinished_halo_at_start": true,
+      "unready_frames": 8,
+      "longest_unready_run": 5,
+      "max_last_ready_proxy_gap_px": 240.0,
+      "final_requested_position": [
+        1024.0,
+        1024.0
+      ],
+      "final_last_ready_position": [
+        1024.0,
+        1024.0
+      ]
+    },
+    {
+      "run": "forward",
+      "role": "after",
+      "view": "large28",
+      "unfinished_halo_at_start": true,
+      "unready_frames": 23,
+      "longest_unready_run": 23,
+      "max_last_ready_proxy_gap_px": 576.0,
+      "final_requested_position": [
+        1024.0,
+        1024.0
+      ],
+      "final_last_ready_position": [
+        1024.0,
+        1024.0
+      ]
+    },
+    {
+      "run": "forward",
+      "role": "before",
+      "view": "partial_edge",
+      "unfinished_halo_at_start": true,
+      "unready_frames": 2,
+      "longest_unready_run": 2,
+      "max_last_ready_proxy_gap_px": 96.0,
+      "final_requested_position": [
+        5632.0,
+        5120.0
+      ],
+      "final_last_ready_position": [
+        5632.0,
+        5120.0
+      ]
+    },
+    {
+      "run": "forward",
+      "role": "after",
+      "view": "partial_edge",
+      "unfinished_halo_at_start": true,
+      "unready_frames": 4,
+      "longest_unready_run": 4,
+      "max_last_ready_proxy_gap_px": 192.0,
+      "final_requested_position": [
+        5632.0,
+        5120.0
+      ],
+      "final_last_ready_position": [
+        5632.0,
+        5120.0
+      ]
+    },
+    {
+      "run": "reverse",
+      "role": "after",
+      "view": "garden",
+      "unfinished_halo_at_start": true,
+      "unready_frames": 23,
+      "longest_unready_run": 23,
+      "max_last_ready_proxy_gap_px": 576.0,
+      "final_requested_position": [
+        4096.0,
+        792.0
+      ],
+      "final_last_ready_position": [
+        4096.0,
+        792.0
+      ]
+    },
+    {
+      "run": "reverse",
+      "role": "before",
+      "view": "garden",
+      "unfinished_halo_at_start": true,
+      "unready_frames": 5,
+      "longest_unready_run": 3,
+      "max_last_ready_proxy_gap_px": 96.0,
+      "final_requested_position": [
+        4096.0,
+        792.0
+      ],
+      "final_last_ready_position": [
+        4096.0,
+        792.0
+      ]
+    },
+    {
+      "run": "reverse",
+      "role": "after",
+      "view": "large28",
+      "unfinished_halo_at_start": true,
+      "unready_frames": 15,
+      "longest_unready_run": 15,
+      "max_last_ready_proxy_gap_px": 576.0,
+      "final_requested_position": [
+        1024.0,
+        1024.0
+      ],
+      "final_last_ready_position": [
+        1024.0,
+        1024.0
+      ]
+    },
+    {
+      "run": "reverse",
+      "role": "before",
+      "view": "large28",
+      "unfinished_halo_at_start": true,
+      "unready_frames": 8,
+      "longest_unready_run": 5,
+      "max_last_ready_proxy_gap_px": 240.0,
+      "final_requested_position": [
+        1024.0,
+        1024.0
+      ],
+      "final_last_ready_position": [
+        1024.0,
+        1024.0
+      ]
+    },
+    {
+      "run": "reverse",
+      "role": "after",
+      "view": "partial_edge",
+      "unfinished_halo_at_start": true,
+      "unready_frames": 5,
+      "longest_unready_run": 5,
+      "max_last_ready_proxy_gap_px": 240.0,
+      "final_requested_position": [
+        5632.0,
+        5120.0
+      ],
+      "final_last_ready_position": [
+        5632.0,
+        5120.0
+      ]
+    },
+    {
+      "run": "reverse",
+      "role": "before",
+      "view": "partial_edge",
+      "unfinished_halo_at_start": true,
+      "unready_frames": 2,
+      "longest_unready_run": 2,
+      "max_last_ready_proxy_gap_px": 96.0,
+      "final_requested_position": [
+        5632.0,
+        5120.0
+      ],
+      "final_last_ready_position": [
+        5632.0,
+        5120.0
+      ]
+    }
+  ],
+  "proof_limits": [
+    "Real ResourceLoader and ImageTexture endpoint pixels equal admitted manifest; no partial publication, bounded ownership and clean cancellation/re-entry.",
+    "Construction excluded; nested stage totals are not a full-frame breakdown. Readiness wall time includes diagnostic sampling/scheduling; no cold-OS-cache control.",
+    "Early walking is fixed synthetic camera demand and last-ready-view proxy, not real Bootstrap authority or physical input.",
+    "Logical buffer counters exclude allocator, local temporary references, GPU memory and process RSS.",
+    "No claim of60FPS, GPU execution, complete application latency, human feel or final release qualification."
+  ],
+  "reviewed_by": [
+    "audit_experience_next",
+    "checkpoint_audit"
+  ]
+}

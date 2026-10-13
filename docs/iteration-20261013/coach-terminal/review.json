@@ -1,0 +1,138 @@
+{
+  "schema": "hex.coach-terminal-independent-review.v1",
+  "diagnostic_integrity_passed": true,
+  "hypothesis_reproduced": false,
+  "decision": "Do not change production or widen the search from this result. The simultaneous terminal hypothesis is unconfirmed.",
+  "checks": 14831,
+  "receipt_sha256": "123c897202103e5c758d88ed0bf1c844b281c2942653a94b1c33964972303b5c",
+  "helper_sha256": "629e6a757a9ea5afe03858de98d68f23c6a26924a023dcb090436921fb263324",
+  "stderr_bytes": 0,
+  "parse_stderr_bytes": 0,
+  "exact_trace_equal_across_offsets": true,
+  "attempts": [
+    {
+      "offset": -1,
+      "final_tick": 1411,
+      "actual_admissions": {
+        "player_rapid": 55,
+        "player_spray": 0,
+        "rival": 3
+      },
+      "final_health": [
+        99085,
+        2400
+      ],
+      "final_guide": {
+        "active": true,
+        "complete": false,
+        "explanation": "Developer tools cannot earn progress. A save receipt completes this lesson; replay after restarting to check your learned weave.",
+        "instruction": "Defeat the rival cleanly. If saving fails, choose Menu > Retry progress save.",
+        "skip": "F5 / Skip guide",
+        "step": 3,
+        "title": "Win and keep the learned spell",
+        "total": 4
+      },
+      "planned": {},
+      "terminal": {},
+      "reason": "Avoidance lesson advanced before a simultaneous saved victory; this offset does not reproduce the edge.",
+      "paid_metrics": {
+        "admitted": 58,
+        "deposited": 26,
+        "exposure_queries": 1800,
+        "matter_consumed": 31800,
+        "matter_expired": 2400,
+        "matter_paid": 34800,
+        "modifiers": 0,
+        "reactions": 27,
+        "refused": 0,
+        "requested": 58
+      }
+    },
+    {
+      "offset": 0,
+      "final_tick": 1411,
+      "actual_admissions": {
+        "player_rapid": 55,
+        "player_spray": 0,
+        "rival": 3
+      },
+      "final_health": [
+        99085,
+        2400
+      ],
+      "final_guide": {
+        "active": true,
+        "complete": false,
+        "explanation": "Developer tools cannot earn progress. A save receipt completes this lesson; replay after restarting to check your learned weave.",
+        "instruction": "Defeat the rival cleanly. If saving fails, choose Menu > Retry progress save.",
+        "skip": "F5 / Skip guide",
+        "step": 3,
+        "title": "Win and keep the learned spell",
+        "total": 4
+      },
+      "planned": {},
+      "terminal": {},
+      "reason": "Avoidance lesson advanced before a simultaneous saved victory; this offset does not reproduce the edge.",
+      "paid_metrics": {
+        "admitted": 58,
+        "deposited": 26,
+        "exposure_queries": 1800,
+        "matter_consumed": 31800,
+        "matter_expired": 2400,
+        "matter_paid": 34800,
+        "modifiers": 0,
+        "reactions": 27,
+        "refused": 0,
+        "requested": 58
+      }
+    },
+    {
+      "offset": 1,
+      "final_tick": 1411,
+      "actual_admissions": {
+        "player_rapid": 55,
+        "player_spray": 0,
+        "rival": 3
+      },
+      "final_health": [
+        99085,
+        2400
+      ],
+      "final_guide": {
+        "active": true,
+        "complete": false,
+        "explanation": "Developer tools cannot earn progress. A save receipt completes this lesson; replay after restarting to check your learned weave.",
+        "instruction": "Defeat the rival cleanly. If saving fails, choose Menu > Retry progress save.",
+        "skip": "F5 / Skip guide",
+        "step": 3,
+        "title": "Win and keep the learned spell",
+        "total": 4
+      },
+      "planned": {},
+      "terminal": {},
+      "reason": "Avoidance lesson advanced before a simultaneous saved victory; this offset does not reproduce the edge.",
+      "paid_metrics": {
+        "admitted": 58,
+        "deposited": 26,
+        "exposure_queries": 1800,
+        "matter_consumed": 31800,
+        "matter_expired": 2400,
+        "matter_paid": 34800,
+        "modifiers": 0,
+        "reactions": 27,
+        "refused": 0,
+        "requested": 58
+      }
+    }
+  ],
+  "coverage": "Actual introduction, paid chain and mixed-hit prerequisites, normal paid rival encounter and an early real avoidance were observed. All three attempts stopped at the same tick1411 after avoidance advanced step2 to3, before any offset-specific Spray was requested.",
+  "not_covered": [
+    "No planned finisher",
+    "No Spray admission or lethal Spray",
+    "No terminal victory or defeat observation",
+    "No earned/saved progress artifact",
+    "No terminal freeze callbacks",
+    "No same-tick avoidance plus saved victory"
+  ],
+  "limits": "This is a source-reviewed bounded model/controller probe with directly prepared encounter binding, not full menu/native-boot/physical-input or human acceptance. Passing14831 integrity assertions does not cover branches that were never reached. All three offset attempts share the same trace; they are not independent terminal timing samples."
+}

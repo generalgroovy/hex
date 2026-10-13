@@ -61,7 +61,7 @@ func _transport(runtime_source_hash: String = TEST_RUNTIME_SOURCE_HASH) -> Sessi
 
 func _test_validation_fails_closed() -> void:
 	var transport := _transport()
-	equal(SimConfig.PROTOCOL_VERSION, 60, "expanded elemental status and delivery prediction requires protocol60")
+	equal(SimConfig.PROTOCOL_VERSION, 61, "defeated pending prediction requires protocol61")
 	equal(SessionTransport.MAX_PLAYERS, 8, "public session cap is eight players")
 	check(SessionCharter.catalog_hash().length() == 64, "session charter catalog contributes a bounded compatibility identity")
 	equal(_signature().length(), 64, "compatibility identity is a SHA-256 digest")
@@ -156,7 +156,7 @@ func _test_validation_fails_closed() -> void:
 
 
 func _test_runtime_identity_handshake_contract() -> void:
-	equal(SimConfig.PROTOCOL_VERSION, 60, "504 spells and appended elemental lanes own the explicit protocol60 boundary")
+	equal(SimConfig.PROTOCOL_VERSION, 61, "504 spells and corrected defeat cleanup own the explicit protocol61 boundary")
 	var local := _transport()
 	equal(local.runtime_source_sha256, TEST_RUNTIME_SOURCE_HASH, "configured transport exposes the full validated local source identity")
 	equal(local.build_id, "p%d-%s" % [SimConfig.PROTOCOL_VERSION, TEST_RUNTIME_SOURCE_HASH.left(12)], "configured transport exposes only the derived short display identity")

@@ -1,0 +1,1352 @@
+{
+  "schema": "hex-foreground-complete-step-independent-review-v1",
+  "passed": true,
+  "errors": [],
+  "run_id": "03220e54-7e9c-4dc5-972f-19726d2acf32",
+  "identity": {
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate.",
+    "build_id": "p61-500be306a26a",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "protocol_version": 61.0,
+    "record_count": 3444.0,
+    "runtime_source_sha256": "500be306a26ab82390d69f129d3be51e43b2513dd339dc03cfd0a470b5e9fd19",
+    "schema_version": 1.0,
+    "scope_id": "production-runtime-source-v1",
+    "snapshot_schema": 24.0,
+    "status": "candidate_generated_not_promoted"
+  },
+  "raw_metrics_sha256": "7798c82f2b82ce44453f8afe13a40f20cf96e39a05f554d77fd2df14d585de7c",
+  "summary_sha256": "ed302e4f5dadf5d03c012e02159cc40a99ecd15b4f898788fe7d2a48fdf2db53",
+  "requested": {
+    "profiles": [
+      "low"
+    ],
+    "cases": [
+      "garden_middle",
+      "paid_fire_bolt",
+      "paid_all_six_mantle"
+    ],
+    "seconds_per_case": 10.0,
+    "soak_seconds": 0.0,
+    "frame_limit": 60,
+    "width": 1280,
+    "height": 720,
+    "observer_mode": "full",
+    "viewport_render_timing": false,
+    "all_fixed_steps": true,
+    "campus_mode": "immediate_reference",
+    "screenshots": false,
+    "timeout_seconds": 600
+  },
+  "manual_arm": {
+    "wait_ms": 44713,
+    "stable_ms": 1004,
+    "raw_stable_records": 10,
+    "actual_button_event_before_entire_stable_interval": true,
+    "engine_post_arm_focus": {
+      "focus_exit_events": 0,
+      "samples": 1522,
+      "unfocused_samples": 0
+    }
+  },
+  "windows_raw": {
+    "setup": 113,
+    "post_arm": 97,
+    "available_owned_foreground_correct_physical_size": 95,
+    "trailing_unavailable": 2,
+    "max_available_gap_ms": 535
+  },
+  "all_fixed_steps": {
+    "schema": "hex-independent-completed-stage-review-v1",
+    "source": "p61-500be306a26a",
+    "raw_metrics_sha256": "7798c82f2b82ce44453f8afe13a40f20cf96e39a05f554d77fd2df14d585de7c",
+    "wrapper_summary_sha256": "ed302e4f5dadf5d03c012e02159cc40a99ecd15b4f898788fe7d2a48fdf2db53",
+    "errors": [],
+    "all_raw_groups_recomputed": 1349,
+    "all_completed_steps": 3646,
+    "results": [
+      {
+        "label": "startup_arrival",
+        "temperature": "cold_process_cache",
+        "process_frames": 16,
+        "completed_steps": 13,
+        "step_histogram": {
+          "0": 13,
+          "1": 1,
+          "4": 1,
+          "8": 1
+        },
+        "frame_interval_ms_recomputed": {
+          "count": 15,
+          "mean": 26.061866666666667,
+          "median": 21.248,
+          "p95_nearest_rank": 133.004,
+          "p95_floor_n_minus_one": 34.808,
+          "max": 133.004
+        },
+        "frame_interval_reported": {
+          "count": 15,
+          "max": 133.004,
+          "mean": 26.0618666666667,
+          "p50": 21.248,
+          "p95": 133.004,
+          "p99": 133.004,
+          "threshold_counts": {
+            "over_100ms": 1,
+            "over_20ms": 8,
+            "over_33_3ms": 2,
+            "over_50ms": 1
+          }
+        },
+        "process_ms_recomputed": {
+          "count": 16,
+          "mean": 3.1709375,
+          "median": 2.1630000000000003,
+          "p95_nearest_rank": 12.198,
+          "p95_floor_n_minus_one": 11.676,
+          "max": 12.198
+        },
+        "draw_ms_reported": {
+          "count": 17,
+          "max": 31.711,
+          "mean": 3.68735294117647,
+          "p50": 0.111,
+          "p95": 31.711,
+          "p99": 31.711,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 1,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "ground_ms_reported": {
+          "count": 4,
+          "max": 0.397,
+          "mean": 0.13875,
+          "p50": 0.051,
+          "p95": 0.397,
+          "p99": 0.397,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "cumulative_stage_per_process_ms": {
+          "surfaces_expiry": {
+            "count": 16,
+            "mean": 0.0393125,
+            "median": 0.0,
+            "p95_nearest_rank": 0.37,
+            "p95_floor_n_minus_one": 0.172,
+            "max": 0.37
+          },
+          "command_order": {
+            "count": 16,
+            "mean": 0.0173125,
+            "median": 0.0,
+            "p95_nearest_rank": 0.153,
+            "p95_floor_n_minus_one": 0.091,
+            "max": 0.153
+          },
+          "movement_cast_admission": {
+            "count": 16,
+            "mean": 0.5596875,
+            "median": 0.0,
+            "p95_nearest_rank": 5.693,
+            "p95_floor_n_minus_one": 2.422,
+            "max": 5.693
+          },
+          "spray_contacts": {
+            "count": 16,
+            "mean": 0.04225,
+            "median": 0.0,
+            "p95_nearest_rank": 0.436,
+            "p95_floor_n_minus_one": 0.164,
+            "max": 0.436
+          },
+          "projectile_contacts": {
+            "count": 16,
+            "mean": 0.0410625,
+            "median": 0.0,
+            "p95_nearest_rank": 0.414,
+            "p95_floor_n_minus_one": 0.174,
+            "max": 0.414
+          },
+          "terminal_deposits": {
+            "count": 16,
+            "mean": 0.0028125,
+            "median": 0.0,
+            "p95_nearest_rank": 0.027,
+            "p95_floor_n_minus_one": 0.013,
+            "max": 0.027
+          },
+          "actor_product_effects": {
+            "count": 16,
+            "mean": 0.012375,
+            "median": 0.0,
+            "p95_nearest_rank": 0.126,
+            "p95_floor_n_minus_one": 0.049,
+            "max": 0.126
+          },
+          "chemistry_exposure": {
+            "count": 16,
+            "mean": 0.01125,
+            "median": 0.0,
+            "p95_nearest_rank": 0.114,
+            "p95_floor_n_minus_one": 0.049,
+            "max": 0.114
+          },
+          "finalize": {
+            "count": 16,
+            "mean": 0.0101875,
+            "median": 0.0,
+            "p95_nearest_rank": 0.103,
+            "p95_floor_n_minus_one": 0.042,
+            "max": 0.103
+          }
+        },
+        "stage_totals_us": {
+          "surfaces_expiry": 629,
+          "command_order": 277,
+          "movement_cast_admission": 8955,
+          "spray_contacts": 676,
+          "projectile_contacts": 657,
+          "terminal_deposits": 45,
+          "actor_product_effects": 198,
+          "chemistry_exposure": 180,
+          "finalize": 163
+        },
+        "executions": {
+          "surfaces_expiry": 13,
+          "command_order": 13,
+          "movement_cast_admission": 13,
+          "spray_contacts": 13,
+          "projectile_contacts": 13,
+          "terminal_deposits": 13,
+          "actor_product_effects": 13,
+          "chemistry_exposure": 13,
+          "finalize": 13
+        },
+        "process_residual_ms": {
+          "count": 16,
+          "mean": 2.4346875,
+          "median": 2.1630000000000003,
+          "p95_nearest_rank": 8.5,
+          "p95_floor_n_minus_one": 4.762,
+          "max": 8.5
+        },
+        "attempts": 0,
+        "admitted": 0,
+        "refused": 0,
+        "matter_paid": 0,
+        "max_paid_cells": 0,
+        "max_resident_plots": 0,
+        "area_loading_frames": 13,
+        "terrain_loading_frames": 13,
+        "garden_arrival_loading_frames": 0,
+        "position_before": [
+          1536.0,
+          880.0
+        ],
+        "position_after": [
+          1536.0,
+          880.0
+        ]
+      },
+      {
+        "label": "garden_middle_arrival",
+        "temperature": "travel_process_cache_state_recorded",
+        "process_frames": 27,
+        "completed_steps": 18,
+        "step_histogram": {
+          "0": 24,
+          "2": 1,
+          "8": 2
+        },
+        "frame_interval_ms_recomputed": {
+          "count": 26,
+          "mean": 23.44969230769231,
+          "median": 17.0075,
+          "p95_nearest_rank": 96.006,
+          "p95_floor_n_minus_one": 21.514,
+          "max": 115.205
+        },
+        "frame_interval_reported": {
+          "count": 26,
+          "max": 115.205,
+          "mean": 23.4496923076923,
+          "p50": 16.872,
+          "p95": 96.006,
+          "p99": 115.205,
+          "threshold_counts": {
+            "over_100ms": 1,
+            "over_20ms": 4,
+            "over_33_3ms": 2,
+            "over_50ms": 2
+          }
+        },
+        "process_ms_recomputed": {
+          "count": 27,
+          "mean": 8.037888888888888,
+          "median": 7.676,
+          "p95_nearest_rank": 12.686,
+          "p95_floor_n_minus_one": 12.287,
+          "max": 13.255
+        },
+        "draw_ms_reported": {
+          "count": 28,
+          "max": 50.347,
+          "mean": 3.45467857142857,
+          "p50": 0.145,
+          "p95": 35.257,
+          "p99": 50.347,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 2,
+            "over_33_3ms": 2,
+            "over_50ms": 1
+          }
+        },
+        "ground_ms_reported": {
+          "count": 3,
+          "max": 0.069,
+          "mean": 0.0533333333333333,
+          "p50": 0.055,
+          "p95": 0.069,
+          "p99": 0.069,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "cumulative_stage_per_process_ms": {
+          "surfaces_expiry": {
+            "count": 27,
+            "mean": 0.02611111111111111,
+            "median": 0.0,
+            "p95_nearest_rank": 0.251,
+            "p95_floor_n_minus_one": 0.073,
+            "max": 0.381
+          },
+          "command_order": {
+            "count": 27,
+            "mean": 0.01048148148148148,
+            "median": 0.0,
+            "p95_nearest_rank": 0.11,
+            "p95_floor_n_minus_one": 0.032,
+            "max": 0.141
+          },
+          "movement_cast_admission": {
+            "count": 27,
+            "mean": 0.4242592592592593,
+            "median": 0.0,
+            "p95_nearest_rank": 4.277,
+            "p95_floor_n_minus_one": 1.165,
+            "max": 6.013
+          },
+          "spray_contacts": {
+            "count": 27,
+            "mean": 0.0267037037037037,
+            "median": 0.0,
+            "p95_nearest_rank": 0.251,
+            "p95_floor_n_minus_one": 0.057,
+            "max": 0.413
+          },
+          "projectile_contacts": {
+            "count": 27,
+            "mean": 0.029925925925925925,
+            "median": 0.0,
+            "p95_nearest_rank": 0.29,
+            "p95_floor_n_minus_one": 0.076,
+            "max": 0.442
+          },
+          "terminal_deposits": {
+            "count": 27,
+            "mean": 0.002074074074074074,
+            "median": 0.0,
+            "p95_nearest_rank": 0.018,
+            "p95_floor_n_minus_one": 0.004,
+            "max": 0.034
+          },
+          "actor_product_effects": {
+            "count": 27,
+            "mean": 0.008925925925925926,
+            "median": 0.0,
+            "p95_nearest_rank": 0.078,
+            "p95_floor_n_minus_one": 0.022,
+            "max": 0.141
+          },
+          "chemistry_exposure": {
+            "count": 27,
+            "mean": 0.00874074074074074,
+            "median": 0.0,
+            "p95_nearest_rank": 0.091,
+            "p95_floor_n_minus_one": 0.02,
+            "max": 0.125
+          },
+          "finalize": {
+            "count": 27,
+            "mean": 0.007703703703703703,
+            "median": 0.0,
+            "p95_nearest_rank": 0.073,
+            "p95_floor_n_minus_one": 0.019,
+            "max": 0.116
+          }
+        },
+        "stage_totals_us": {
+          "surfaces_expiry": 705,
+          "command_order": 283,
+          "movement_cast_admission": 11455,
+          "spray_contacts": 721,
+          "projectile_contacts": 808,
+          "terminal_deposits": 56,
+          "actor_product_effects": 241,
+          "chemistry_exposure": 236,
+          "finalize": 208
+        },
+        "executions": {
+          "surfaces_expiry": 18,
+          "command_order": 18,
+          "movement_cast_admission": 18,
+          "spray_contacts": 18,
+          "projectile_contacts": 18,
+          "terminal_deposits": 18,
+          "actor_product_effects": 18,
+          "chemistry_exposure": 18,
+          "finalize": 18
+        },
+        "process_residual_ms": {
+          "count": 27,
+          "mean": 7.492962962962963,
+          "median": 7.461,
+          "p95_nearest_rank": 9.871,
+          "p95_floor_n_minus_one": 8.68,
+          "max": 12.686
+        },
+        "attempts": 0,
+        "admitted": 0,
+        "refused": 0,
+        "matter_paid": 0,
+        "max_paid_cells": 0,
+        "max_resident_plots": 25,
+        "area_loading_frames": 24,
+        "terrain_loading_frames": 24,
+        "garden_arrival_loading_frames": 24,
+        "position_before": [
+          1536.0,
+          880.0
+        ],
+        "position_after": [
+          4736.0,
+          1152.0
+        ]
+      },
+      {
+        "label": "garden_middle",
+        "temperature": "warm",
+        "process_frames": 531,
+        "completed_steps": 1202,
+        "step_histogram": {
+          "2": 395,
+          "3": 132,
+          "4": 4
+        },
+        "frame_interval_ms_recomputed": {
+          "count": 530,
+          "mean": 18.87327547169811,
+          "median": 18.0955,
+          "p95_nearest_rank": 24.743,
+          "p95_floor_n_minus_one": 24.478,
+          "max": 27.574
+        },
+        "frame_interval_reported": {
+          "count": 530,
+          "max": 27.574,
+          "mean": 18.8732754716981,
+          "p50": 18.087,
+          "p95": 24.743,
+          "p99": 26.853,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 140,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "process_ms_recomputed": {
+          "count": 531,
+          "mean": 3.710949152542373,
+          "median": 3.388,
+          "p95_nearest_rank": 6.004,
+          "p95_floor_n_minus_one": 5.982,
+          "max": 8.316
+        },
+        "draw_ms_reported": {
+          "count": 531,
+          "max": 10.85,
+          "mean": 6.86345574387947,
+          "p50": 6.655,
+          "p95": 9.041,
+          "p99": 10.061,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "ground_ms_reported": {
+          "count": 531,
+          "max": 0.09,
+          "mean": 0.0451468926553673,
+          "p50": 0.043,
+          "p95": 0.065,
+          "p99": 0.079,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "cumulative_stage_per_process_ms": {
+          "surfaces_expiry": {
+            "count": 531,
+            "mean": 0.11829566854990584,
+            "median": 0.106,
+            "p95_nearest_rank": 0.198,
+            "p95_floor_n_minus_one": 0.197,
+            "max": 0.454
+          },
+          "command_order": {
+            "count": 531,
+            "mean": 0.04191713747645951,
+            "median": 0.038,
+            "p95_nearest_rank": 0.07,
+            "p95_floor_n_minus_one": 0.07,
+            "max": 0.135
+          },
+          "movement_cast_admission": {
+            "count": 531,
+            "mean": 1.5182561205273069,
+            "median": 1.34,
+            "p95_nearest_rank": 2.46,
+            "p95_floor_n_minus_one": 2.454,
+            "max": 3.904
+          },
+          "spray_contacts": {
+            "count": 531,
+            "mean": 0.09935404896421846,
+            "median": 0.084,
+            "p95_nearest_rank": 0.176,
+            "p95_floor_n_minus_one": 0.174,
+            "max": 0.457
+          },
+          "projectile_contacts": {
+            "count": 531,
+            "mean": 0.10640112994350283,
+            "median": 0.095,
+            "p95_nearest_rank": 0.182,
+            "p95_floor_n_minus_one": 0.181,
+            "max": 0.369
+          },
+          "terminal_deposits": {
+            "count": 531,
+            "mean": 0.007041431261770244,
+            "median": 0.006,
+            "p95_nearest_rank": 0.012,
+            "p95_floor_n_minus_one": 0.012,
+            "max": 0.05
+          },
+          "actor_product_effects": {
+            "count": 531,
+            "mean": 0.0321713747645951,
+            "median": 0.029,
+            "p95_nearest_rank": 0.056,
+            "p95_floor_n_minus_one": 0.055,
+            "max": 0.095
+          },
+          "chemistry_exposure": {
+            "count": 531,
+            "mean": 0.030216572504708102,
+            "median": 0.027,
+            "p95_nearest_rank": 0.05,
+            "p95_floor_n_minus_one": 0.05,
+            "max": 0.172
+          },
+          "finalize": {
+            "count": 531,
+            "mean": 0.02609416195856874,
+            "median": 0.023,
+            "p95_nearest_rank": 0.045,
+            "p95_floor_n_minus_one": 0.044,
+            "max": 0.098
+          }
+        },
+        "stage_totals_us": {
+          "surfaces_expiry": 62815,
+          "command_order": 22258,
+          "movement_cast_admission": 806194,
+          "spray_contacts": 52757,
+          "projectile_contacts": 56499,
+          "terminal_deposits": 3739,
+          "actor_product_effects": 17083,
+          "chemistry_exposure": 16045,
+          "finalize": 13856
+        },
+        "executions": {
+          "surfaces_expiry": 1202,
+          "command_order": 1202,
+          "movement_cast_admission": 1202,
+          "spray_contacts": 1202,
+          "projectile_contacts": 1202,
+          "terminal_deposits": 1202,
+          "actor_product_effects": 1202,
+          "chemistry_exposure": 1202,
+          "finalize": 1202
+        },
+        "process_residual_ms": {
+          "count": 531,
+          "mean": 1.731201506591337,
+          "median": 1.532,
+          "p95_nearest_rank": 3.074,
+          "p95_floor_n_minus_one": 3.064,
+          "max": 4.198
+        },
+        "attempts": 0,
+        "admitted": 0,
+        "refused": 0,
+        "matter_paid": 0,
+        "max_paid_cells": 0,
+        "max_resident_plots": 25,
+        "area_loading_frames": 0,
+        "terrain_loading_frames": 0,
+        "garden_arrival_loading_frames": 0,
+        "position_before": [
+          4736.0,
+          1152.0
+        ],
+        "position_after": [
+          4736.0,
+          1152.0
+        ]
+      },
+      {
+        "label": "paid_fire_bolt",
+        "temperature": "warm",
+        "process_frames": 448,
+        "completed_steps": 1206,
+        "step_histogram": {
+          "2": 164,
+          "3": 265,
+          "4": 16,
+          "5": 1,
+          "6": 1,
+          "8": 1
+        },
+        "frame_interval_ms_recomputed": {
+          "count": 447,
+          "mean": 22.416208053691275,
+          "median": 21.722,
+          "p95_nearest_rank": 28.217,
+          "p95_floor_n_minus_one": 28.186,
+          "max": 52.509
+        },
+        "frame_interval_reported": {
+          "count": 447,
+          "max": 52.509,
+          "mean": 22.4162080536913,
+          "p50": 21.722,
+          "p95": 28.217,
+          "p99": 34.179,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 356,
+            "over_33_3ms": 5,
+            "over_50ms": 1
+          }
+        },
+        "process_ms_recomputed": {
+          "count": 448,
+          "mean": 5.029707589285715,
+          "median": 4.7085,
+          "p95_nearest_rank": 7.415,
+          "p95_floor_n_minus_one": 7.386,
+          "max": 35.402
+        },
+        "draw_ms_reported": {
+          "count": 448,
+          "max": 12.37,
+          "mean": 7.16237946428571,
+          "p50": 6.847,
+          "p95": 9.289,
+          "p99": 10.944,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "ground_ms_reported": {
+          "count": 448,
+          "max": 0.241,
+          "mean": 0.0888973214285715,
+          "p50": 0.089,
+          "p95": 0.123,
+          "p99": 0.153,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "cumulative_stage_per_process_ms": {
+          "surfaces_expiry": {
+            "count": 448,
+            "mean": 0.152734375,
+            "median": 0.14,
+            "p95_nearest_rank": 0.245,
+            "p95_floor_n_minus_one": 0.245,
+            "max": 0.496
+          },
+          "command_order": {
+            "count": 448,
+            "mean": 0.044886160714285715,
+            "median": 0.043,
+            "p95_nearest_rank": 0.07,
+            "p95_floor_n_minus_one": 0.07,
+            "max": 0.137
+          },
+          "movement_cast_admission": {
+            "count": 448,
+            "mean": 1.7639017857142856,
+            "median": 1.7149999999999999,
+            "p95_nearest_rank": 2.742,
+            "p95_floor_n_minus_one": 2.674,
+            "max": 5.654
+          },
+          "spray_contacts": {
+            "count": 448,
+            "mean": 0.2363169642857143,
+            "median": 0.232,
+            "p95_nearest_rank": 0.398,
+            "p95_floor_n_minus_one": 0.395,
+            "max": 0.948
+          },
+          "projectile_contacts": {
+            "count": 448,
+            "mean": 0.7341517857142856,
+            "median": 0.7264999999999999,
+            "p95_nearest_rank": 1.372,
+            "p95_floor_n_minus_one": 1.368,
+            "max": 3.926
+          },
+          "terminal_deposits": {
+            "count": 448,
+            "mean": 0.00899330357142857,
+            "median": 0.008,
+            "p95_nearest_rank": 0.016,
+            "p95_floor_n_minus_one": 0.016,
+            "max": 0.05
+          },
+          "actor_product_effects": {
+            "count": 448,
+            "mean": 0.20037276785714284,
+            "median": 0.1985,
+            "p95_nearest_rank": 0.343,
+            "p95_floor_n_minus_one": 0.334,
+            "max": 0.721
+          },
+          "chemistry_exposure": {
+            "count": 448,
+            "mean": 0.32282589285714286,
+            "median": 0.335,
+            "p95_nearest_rank": 0.494,
+            "p95_floor_n_minus_one": 0.493,
+            "max": 1.009
+          },
+          "finalize": {
+            "count": 448,
+            "mean": 0.030636160714285713,
+            "median": 0.029,
+            "p95_nearest_rank": 0.046,
+            "p95_floor_n_minus_one": 0.045,
+            "max": 0.121
+          }
+        },
+        "stage_totals_us": {
+          "surfaces_expiry": 68425,
+          "command_order": 20109,
+          "movement_cast_admission": 790228,
+          "spray_contacts": 105870,
+          "projectile_contacts": 328900,
+          "terminal_deposits": 4029,
+          "actor_product_effects": 89767,
+          "chemistry_exposure": 144626,
+          "finalize": 13725
+        },
+        "executions": {
+          "surfaces_expiry": 1206,
+          "command_order": 1206,
+          "movement_cast_admission": 1206,
+          "spray_contacts": 1206,
+          "projectile_contacts": 1206,
+          "terminal_deposits": 1206,
+          "actor_product_effects": 1206,
+          "chemistry_exposure": 1206,
+          "finalize": 1206
+        },
+        "process_residual_ms": {
+          "count": 448,
+          "mean": 1.5348883928571428,
+          "median": 1.3860000000000001,
+          "p95_nearest_rank": 2.17,
+          "p95_floor_n_minus_one": 2.142,
+          "max": 33.613
+        },
+        "attempts": 11,
+        "admitted": 11,
+        "refused": 0,
+        "matter_paid": 6600,
+        "max_paid_cells": 29,
+        "max_resident_plots": 0,
+        "area_loading_frames": 0,
+        "terrain_loading_frames": 0,
+        "garden_arrival_loading_frames": 0,
+        "position_before": [
+          1536.0,
+          880.0
+        ],
+        "position_after": [
+          1536.0,
+          880.0
+        ]
+      },
+      {
+        "label": "paid_all_six_mantle",
+        "temperature": "warm",
+        "process_frames": 327,
+        "completed_steps": 1207,
+        "step_histogram": {
+          "2": 9,
+          "3": 123,
+          "4": 162,
+          "5": 27,
+          "6": 5,
+          "7": 1
+        },
+        "frame_interval_ms_recomputed": {
+          "count": 326,
+          "mean": 30.751855828220858,
+          "median": 30.1435,
+          "p95_nearest_rank": 39.999,
+          "p95_floor_n_minus_one": 39.979,
+          "max": 52.433
+        },
+        "frame_interval_reported": {
+          "count": 326,
+          "max": 52.433,
+          "mean": 30.7518558282209,
+          "p50": 30.122,
+          "p95": 39.999,
+          "p99": 47.604,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 324,
+            "over_33_3ms": 80,
+            "over_50ms": 2
+          }
+        },
+        "process_ms_recomputed": {
+          "count": 327,
+          "mean": 6.935764525993884,
+          "median": 6.861,
+          "p95_nearest_rank": 10.415,
+          "p95_floor_n_minus_one": 10.317,
+          "max": 18.214
+        },
+        "draw_ms_reported": {
+          "count": 327,
+          "max": 21.169,
+          "mean": 12.2609571865443,
+          "p50": 12.206,
+          "p95": 16.681,
+          "p99": 18.328,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 2,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "ground_ms_reported": {
+          "count": 327,
+          "max": 13.513,
+          "mean": 4.59661467889908,
+          "p50": 5.092,
+          "p95": 7.049,
+          "p99": 8.973,
+          "threshold_counts": {
+            "over_100ms": 0,
+            "over_20ms": 0,
+            "over_33_3ms": 0,
+            "over_50ms": 0
+          }
+        },
+        "cumulative_stage_per_process_ms": {
+          "surfaces_expiry": {
+            "count": 327,
+            "mean": 0.19096941896024466,
+            "median": 0.175,
+            "p95_nearest_rank": 0.315,
+            "p95_floor_n_minus_one": 0.312,
+            "max": 0.797
+          },
+          "command_order": {
+            "count": 327,
+            "mean": 0.05879510703363914,
+            "median": 0.054,
+            "p95_nearest_rank": 0.092,
+            "p95_floor_n_minus_one": 0.087,
+            "max": 0.578
+          },
+          "movement_cast_admission": {
+            "count": 327,
+            "mean": 2.664669724770642,
+            "median": 2.586,
+            "p95_nearest_rank": 3.955,
+            "p95_floor_n_minus_one": 3.944,
+            "max": 8.672
+          },
+          "spray_contacts": {
+            "count": 327,
+            "mean": 0.2959296636085627,
+            "median": 0.297,
+            "p95_nearest_rank": 0.538,
+            "p95_floor_n_minus_one": 0.534,
+            "max": 0.857
+          },
+          "projectile_contacts": {
+            "count": 327,
+            "mean": 0.5851406727828746,
+            "median": 0.605,
+            "p95_nearest_rank": 1.072,
+            "p95_floor_n_minus_one": 1.07,
+            "max": 3.057
+          },
+          "terminal_deposits": {
+            "count": 327,
+            "mean": 0.011504587155963303,
+            "median": 0.011,
+            "p95_nearest_rank": 0.019,
+            "p95_floor_n_minus_one": 0.018,
+            "max": 0.043
+          },
+          "actor_product_effects": {
+            "count": 327,
+            "mean": 0.8693730886850154,
+            "median": 0.931,
+            "p95_nearest_rank": 1.484,
+            "p95_floor_n_minus_one": 1.481,
+            "max": 2.692
+          },
+          "chemistry_exposure": {
+            "count": 327,
+            "mean": 0.43891437308868503,
+            "median": 0.477,
+            "p95_nearest_rank": 0.737,
+            "p95_floor_n_minus_one": 0.736,
+            "max": 1.435
+          },
+          "finalize": {
+            "count": 327,
+            "mean": 0.04285932721712538,
+            "median": 0.04,
+            "p95_nearest_rank": 0.07,
+            "p95_floor_n_minus_one": 0.07,
+            "max": 0.132
+          }
+        },
+        "stage_totals_us": {
+          "surfaces_expiry": 62447,
+          "command_order": 19226,
+          "movement_cast_admission": 871347,
+          "spray_contacts": 96769,
+          "projectile_contacts": 191341,
+          "terminal_deposits": 3762,
+          "actor_product_effects": 284285,
+          "chemistry_exposure": 143525,
+          "finalize": 14015
+        },
+        "executions": {
+          "surfaces_expiry": 1207,
+          "command_order": 1207,
+          "movement_cast_admission": 1207,
+          "spray_contacts": 1207,
+          "projectile_contacts": 1207,
+          "terminal_deposits": 1207,
+          "actor_product_effects": 1207,
+          "chemistry_exposure": 1207,
+          "finalize": 1207
+        },
+        "process_residual_ms": {
+          "count": 327,
+          "mean": 1.7776085626911315,
+          "median": 1.685,
+          "p95_nearest_rank": 2.532,
+          "p95_floor_n_minus_one": 2.531,
+          "max": 4.949
+        },
+        "attempts": 11,
+        "admitted": 6,
+        "refused": 5,
+        "matter_paid": 3600,
+        "max_paid_cells": 33,
+        "max_resident_plots": 0,
+        "area_loading_frames": 0,
+        "terrain_loading_frames": 0,
+        "garden_arrival_loading_frames": 0,
+        "position_before": [
+          1536.0,
+          880.0
+        ],
+        "position_after": [
+          1536.0,
+          880.0
+        ]
+      }
+    ],
+    "scope": "Independent arithmetic/identity/continuity validation of the retained raw source-diagnostic groups; all stage intervals include observer work and are nested inside process intervals. Residual is unassigned process work, not GPU or rendering attribution. No causal historical speedup claim."
+  },
+  "warm_results": [
+    {
+      "label": "garden_middle",
+      "frame_interval_ms": {
+        "count": 530,
+        "max": 27.574,
+        "mean": 18.8732754716981,
+        "p50": 18.087,
+        "p95": 24.743,
+        "p99": 26.853,
+        "threshold_counts": {
+          "over_100ms": 0,
+          "over_20ms": 140,
+          "over_33_3ms": 0,
+          "over_50ms": 0
+        }
+      },
+      "process_elapsed_ms": {
+        "count": 531,
+        "max": 8.316,
+        "mean": 3.71094915254237,
+        "p50": 3.388,
+        "p95": 6.004,
+        "p99": 7.27,
+        "threshold_counts": {
+          "over_100ms": 0,
+          "over_20ms": 0,
+          "over_33_3ms": 0,
+          "over_50ms": 0
+        }
+      },
+      "draw_submission_elapsed_ms": {
+        "count": 531,
+        "max": 10.85,
+        "mean": 6.86345574387947,
+        "p50": 6.655,
+        "p95": 9.041,
+        "p99": 10.061,
+        "threshold_counts": {
+          "over_100ms": 0,
+          "over_20ms": 0,
+          "over_33_3ms": 0,
+          "over_50ms": 0
+        }
+      },
+      "main_court_draw_elapsed_ms": {
+        "count": 531,
+        "max": 0.09,
+        "mean": 0.0451468926553673,
+        "p50": 0.043,
+        "p95": 0.065,
+        "p99": 0.079,
+        "threshold_counts": {
+          "over_100ms": 0,
+          "over_20ms": 0,
+          "over_33_3ms": 0,
+          "over_50ms": 0
+        }
+      },
+      "all_fixed_step_totals": {
+        "completed_steps": 1202,
+        "elapsed_us": {
+          "actor_product_effects": 17083,
+          "chemistry_exposure": 16045,
+          "command_order": 22258,
+          "finalize": 13856,
+          "movement_cast_admission": 806194,
+          "projectile_contacts": 56499,
+          "spray_contacts": 52757,
+          "surfaces_expiry": 62815,
+          "terminal_deposits": 3739
+        },
+        "error": "",
+        "executions": {
+          "actor_product_effects": 1202,
+          "chemistry_exposure": 1202,
+          "command_order": 1202,
+          "finalize": 1202,
+          "movement_cast_admission": 1202,
+          "projectile_contacts": 1202,
+          "spray_contacts": 1202,
+          "surfaces_expiry": 1202,
+          "terminal_deposits": 1202
+        },
+        "process_frames": 531,
+        "valid": true
+      },
+      "attempts": 0,
+      "admitted": 0,
+      "refused": 0,
+      "matter_paid": 0,
+      "position_before": [
+        4736.0,
+        1152.0
+      ],
+      "position_after": [
+        4736.0,
+        1152.0
+      ],
+      "fixture": {
+        "fixture_prepare_ms": 685.35,
+        "fresh_world": true,
+        "source_case": "garden_middle"
+      }
+    },
+    {
+      "label": "paid_fire_bolt",
+      "frame_interval_ms": {
+        "count": 447,
+        "max": 52.509,
+        "mean": 22.4162080536913,
+        "p50": 21.722,
+        "p95": 28.217,
+        "p99": 34.179,
+        "threshold_counts": {
+          "over_100ms": 0,
+          "over_20ms": 356,
+          "over_33_3ms": 5,
+          "over_50ms": 1
+        }
+      },
+      "process_elapsed_ms": {
+        "count": 448,
+        "max": 35.402,
+        "mean": 5.02970758928571,
+        "p50": 4.708,
+        "p95": 7.415,
+        "p99": 9.694,
+        "threshold_counts": {
+          "over_100ms": 0,
+          "over_20ms": 1,
+          "over_33_3ms": 1,
+          "over_50ms": 0
+        }
+      },
+      "draw_submission_elapsed_ms": {
+        "count": 448,
+        "max": 12.37,
+        "mean": 7.16237946428571,
+        "p50": 6.847,
+        "p95": 9.289,
+        "p99": 10.944,
+        "threshold_counts": {
+          "over_100ms": 0,
+          "over_20ms": 0,
+          "over_33_3ms": 0,
+          "over_50ms": 0
+        }
+      },
+      "main_court_draw_elapsed_ms": {
+        "count": 448,
+        "max": 0.241,
+        "mean": 0.0888973214285715,
+        "p50": 0.089,
+        "p95": 0.123,
+        "p99": 0.153,
+        "threshold_counts": {
+          "over_100ms": 0,
+          "over_20ms": 0,
+          "over_33_3ms": 0,
+          "over_50ms": 0
+        }
+      },
+      "all_fixed_step_totals": {
+        "completed_steps": 1206,
+        "elapsed_us": {
+          "actor_product_effects": 89767,
+          "chemistry_exposure": 144626,
+          "command_order": 20109,
+          "finalize": 13725,
+          "movement_cast_admission": 790228,
+          "projectile_contacts": 328900,
+          "spray_contacts": 105870,
+          "surfaces_expiry": 68425,
+          "terminal_deposits": 4029
+        },
+        "error": "",
+        "executions": {
+          "actor_product_effects": 1206,
+          "chemistry_exposure": 1206,
+          "command_order": 1206,
+          "finalize": 1206,
+          "movement_cast_admission": 1206,
+          "projectile_contacts": 1206,
+          "spray_contacts": 1206,
+          "surfaces_expiry": 1206,
+          "terminal_deposits": 1206
+        },
+        "process_frames": 448,
+        "valid": true
+      },
+      "attempts": 11,
+      "admitted": 11,
+      "refused": 0,
+      "matter_paid": 6600,
+      "position_before": [
+        1536.0,
+        880.0
+      ],
+      "position_after": [
+        1536.0,
+        880.0
+      ],
+      "fixture": {
+        "cast_interval_ticks": 120,
+        "fixture_prepare_ms": 0.272,
+        "fresh_world": true,
+        "source_case": "paid_fire_bolt",
+        "spell_wire": 145
+      }
+    },
+    {
+      "label": "paid_all_six_mantle",
+      "frame_interval_ms": {
+        "count": 326,
+        "max": 52.433,
+        "mean": 30.7518558282209,
+        "p50": 30.122,
+        "p95": 39.999,
+        "p99": 47.604,
+        "threshold_counts": {
+          "over_100ms": 0,
+          "over_20ms": 324,
+          "over_33_3ms": 80,
+          "over_50ms": 2
+        }
+      },
+      "process_elapsed_ms": {
+        "count": 327,
+        "max": 18.214,
+        "mean": 6.93576452599388,
+        "p50": 6.861,
+        "p95": 10.415,
+        "p99": 14.884,
+        "threshold_counts": {
+          "over_100ms": 0,
+          "over_20ms": 0,
+          "over_33_3ms": 0,
+          "over_50ms": 0
+        }
+      },
+      "draw_submission_elapsed_ms": {
+        "count": 327,
+        "max": 21.169,
+        "mean": 12.2609571865443,
+        "p50": 12.206,
+        "p95": 16.681,
+        "p99": 18.328,
+        "threshold_counts": {
+          "over_100ms": 0,
+          "over_20ms": 2,
+          "over_33_3ms": 0,
+          "over_50ms": 0
+        }
+      },
+      "main_court_draw_elapsed_ms": {
+        "count": 327,
+        "max": 13.513,
+        "mean": 4.59661467889908,
+        "p50": 5.092,
+        "p95": 7.049,
+        "p99": 8.973,
+        "threshold_counts": {
+          "over_100ms": 0,
+          "over_20ms": 0,
+          "over_33_3ms": 0,
+          "over_50ms": 0
+        }
+      },
+      "all_fixed_step_totals": {
+        "completed_steps": 1207,
+        "elapsed_us": {
+          "actor_product_effects": 284285,
+          "chemistry_exposure": 143525,
+          "command_order": 19226,
+          "finalize": 14015,
+          "movement_cast_admission": 871347,
+          "projectile_contacts": 191341,
+          "spray_contacts": 96769,
+          "surfaces_expiry": 62447,
+          "terminal_deposits": 3762
+        },
+        "error": "",
+        "executions": {
+          "actor_product_effects": 1207,
+          "chemistry_exposure": 1207,
+          "command_order": 1207,
+          "finalize": 1207,
+          "movement_cast_admission": 1207,
+          "projectile_contacts": 1207,
+          "spray_contacts": 1207,
+          "surfaces_expiry": 1207,
+          "terminal_deposits": 1207
+        },
+        "process_frames": 327,
+        "valid": true
+      },
+      "attempts": 11,
+      "admitted": 6,
+      "refused": 5,
+      "matter_paid": 3600,
+      "position_before": [
+        1536.0,
+        880.0
+      ],
+      "position_after": [
+        1536.0,
+        880.0
+      ],
+      "fixture": {
+        "cast_interval_ticks": 120,
+        "fixture_prepare_ms": 0.117,
+        "fresh_world": true,
+        "source_case": "paid_all_six_mantle",
+        "spell_wire": 1319
+      }
+    }
+  ],
+  "prior_record": "../iteration-20261012/foreground-current-record.json",
+  "historical_comparison_scope": "The previous1e084 receipt used12-second cases without all-fixed-step snapshots; this run uses10seconds with opt-in full cumulative observation, protocol61 and different source. Previous Fire sustained explicitly placed actor1536,880 with cursor1736,880 and readiness-gated120tick cadence; current paid_fire_bolt uses default spawn/pointer and unconditional120tick attempts. These are contextual records, not a matched causal speedup comparison.",
+  "numeric_exit_code": null,
+  "exit_code_scope": "Not exposed by the shared checked-engine runner; clean launcher return, exact completion marker, complete receipt and empty stderr are required.",
+  "limits": "Measured instrumented source process-start intervals and elapsed submission work, not physical display/GPU/input latency or portable-release performance. Main completed stages nest inside process time; residual is unassigned, not rendering. Default/light costs differ from this explicit observer.95 approximately500ms OS samples plus engine polls do not prove continuous physical presentation. No smooth60Hz acceptance or Full/package promotion."
+}

@@ -1,0 +1,77 @@
+--- a/tests/unit/test_wellspring_async_terrain_stream.gd
++++ b/tests/unit/test_wellspring_async_terrain_stream.gd
+@@ -32,6 +32,7 @@
+ 	var finishes: Dictionary[String, int] = {}
+ 	var images: Dictionary[String, Image] = {}
+ 	var gates: Array[Gate] = []
++	var gate_refs: Array[WeakRef] = []
+ 	var submitted: Array[int] = []
+ 	var actual_joins: Dictionary[int, int] = {}
+ 	var join_attempts := 0
+@@ -63,6 +64,7 @@
+ 		if hold_workers:
+ 			var gate := Gate.new(worker)
+ 			gates.append(gate)
++			gate_refs.append(weakref(gate))
+ 			task=WorkerThreadPool.add_task(gate.run,false,"Bounded terrain ownership gate")
+ 		else:
+ 			task=super._start_hash_task(worker)
+@@ -83,7 +85,8 @@
+ 	func release_gates() -> void:
+ 		hold_workers=false
+ 		for gate: Gate in gates: gate.release()
+-		gates.clear()
++		# The task Callable is not the fixture's ownership contract. Retain these
++		# targets until every submitted task has been confirmed joined.
+ 
+ var owned: Array[Probe] = []
+ var cases: Array[Dictionary] = []
+@@ -95,8 +98,10 @@
+ 	# Always release every semaphore before waiting, including failed cases.
+ 	for stream: Probe in owned:
+ 		stream.release_gates()
++		_gate_owners_live(stream)
+ 		stream.finish_shutdown()
+ 		_check(stream.pending.is_empty() and stream._jobs.is_empty(), "Suite teardown retains no task or loader token")
++		_release_joined_gate_owners(stream)
+ 	return finish("wellspring-async-terrain-stream")
+ 
+ func _run_cases() -> void:
+@@ -269,7 +274,9 @@
+ 
+ func _close(stream: Probe,label: String) -> bool:
+ 	stream.release_gates()
++	var gates_retained := _gate_owners_live(stream)
+ 	stream.finish_shutdown()
++	if not gates_retained: return false
+ 	if not _check(stream.pending.is_empty() and stream._jobs.is_empty()
+ 		and stream._tasks_started==stream._tasks_joined and stream.polls_after_join==0
+ 		and stream.actual_joins.size()==stream.submitted.size() and stream.premature_gets==0,
+@@ -279,9 +286,27 @@
+ 	for path: String in stream.starts:
+ 		if not _check(int(stream.gets.get(path,0))+int(stream.finishes.get(path,0))==int(stream.starts[path]),
+ 			"Each synthetic loader token is collected exactly once"): return false
++	if not _release_joined_gate_owners(stream): return false
+ 	cases.append({"label":label,"status":stream.status(),"join_attempts":stream.join_attempts,
+ 		"actual_join_calls":stream.actual_joins.size(),"loader_requests":stream.starts.duplicate(),
+ 		"loader_gets":stream.gets.duplicate(),"loader_finalizations":stream.finishes.duplicate()})
++	return true
++
++func _gate_owners_live(stream: Probe) -> bool:
++	if not _check(stream.gates.size() == stream.gate_refs.size(), "Every submitted gate has an explicit strong owner and weak lifetime witness"): return false
++	for reference: WeakRef in stream.gate_refs:
++		if not _check(reference.get_ref() != null, "Semaphore release retains each gate target through task completion and join"): return false
++	return true
++
++func _release_joined_gate_owners(stream: Probe) -> bool:
++	if not _check(stream.pending.is_empty() and stream._jobs.is_empty()
++		and stream._tasks_started == stream._tasks_joined,
++		"Gate targets are released only after all task and loader owners are confirmed collected"): return false
++	if not _gate_owners_live(stream): return false
++	stream.gates.clear()
++	for reference: WeakRef in stream.gate_refs:
++		if not _check(reference.get_ref() == null, "Joined gate targets are freed when the fixture releases its strong owners"): return false
++	stream.gate_refs.clear()
+ 	return true
+ 
+ func _test_default_profile() -> void:

@@ -1,6 +1,9 @@
 # H.E.X. current design contract
 
-Status: **stable local October 12, 2026 build p60-1e084a50a029; work paused at the user's request.**
+Status: **active October 13 development; current source p61-500be306a26a, qualification in progress.**
+The [active iteration](docs/iteration-20261013/README.md) owns current checks.
+The latest qualified local portable remains **p60-1e084a50a029**; the following
+delivery evidence belongs to that preserved build.
 The [iteration record](docs/iteration-20261012/README.md) binds the frozen source
 and matching Windows portable. Its clean [Full run](docs/iteration-20261012/full-final.json)
 passed 261 suites / 7,543,825 assertions with zero failures and stderr, including
@@ -15,7 +18,9 @@ The [foreground record](docs/iteration-20261012/foreground-current-record.json)
 passes manual Start, sampled focus, client-size and unchanged-source checks.
 Warm Garden/Fire/Mantle p95 engine intervals remain 29.420/49.174/51.784 ms;
 steady 60 FPS and human gameplay acceptance remain open. The reviewed
-[T7 diagnostics](docs/iteration-20261012/deferred-t7) are unapplied and outside this build.
+[T7 diagnostics](docs/iteration-20261012/deferred-t7) are applied to the new working
+candidate, with focused and native observer-cost checks; they remain outside the
+preserved p60 portable.
 
 The [be680 fallback](exports/hex-smoothness-20261012/windows/PLAY-HEX.cmd) and its
 [smoothness record](docs/smoothness-20261012/README.md) remain preserved, alongside
@@ -50,8 +55,8 @@ The [player guide](docs/PLAYER-GUIDE.md), [roster](docs/CURRENT-CAST.md) and
 | Magic | Water, Fire, Air, Earth, Light, Dark; 504 selectable spells from 63 nonempty mixtures × eight deliveries; 12 equipped positions; Ice and Charge are derived effects |
 | Chemistry | 63 bounded reactions: six self-pairs and every distinct subset of two through six elements; stationary whole-hex impact fields |
 | Grid | 24 px face-to-face; 59,466 eligible Wellspring cells; topology cap 65,536 and selection cap 511; unchanged 64 paid casts / 32 products |
-| Wire | Protocol 60 / SessionSnapshot 24 / SessionRound 2 / HexWorldSnapshot 5 / HexChemistrySnapshot 5; mixture/delivery state, finite reaction provenance and local prediction context |
-| Delivery | Stable local p60-1e084a50a029 passed Full, package, terrain and portable lifecycle checks. Source foreground timing is admitted; steady 60 FPS, installer and publication remain unqualified. Work is paused; exact evidence lives in the resume |
+| Wire | Protocol 61 / SessionSnapshot 24 / SessionRound 2 / HexWorldSnapshot 5 / HexChemistrySnapshot 5; protocol 61 clears defeated actors' unfired reservations in the same completed Hex step as paid-source retirement |
+| Delivery | Working p61 candidate has focused gates; whole-candidate qualification remains open. Preserved p60-1e084a50a029 passed Full, package, terrain and portable lifecycle checks. Its source foreground timing is admitted; steady 60 FPS, installer and publication remain unqualified. Exact evidence lives in the resume |
 
 The October 11 presentation revision expands the character-centered 360-degree
 view to cover every viewport corner, including camera lead, world edges and
@@ -139,7 +144,7 @@ An active condition alone does not promise an effective timing change.
 Defensive posture is sampled before a hit interrupts movement. Actual
 Health loss, including mitigation and lethal clamping, is the reported hit value.
 Movement prediction carries the identity and resource/cast context needed to
-evaluate the same windows; protocol 60 rejects incompatible prediction and reaction layouts.
+evaluate the same windows; protocol 61 rejects incompatible prediction, reaction and defeat-cleanup behavior.
 Distinct definitions and passing regressions establish implementation coverage,
 not equal viability or human acceptance of all fifty-one choices.
 

@@ -1,6 +1,7 @@
 # H.E.X. player guide
 
-Status: **stable local October 12 Windows build p60-1e084a50a029; development paused at the user's request.**
+Status: **development is active; this guide's qualified portable is p60-1e084a50a029.**
+The [October 13 iteration](iteration-20261013/README.md) tracks the new working candidate.
 Open the [current launcher](../exports/hex-iteration-20261012/windows/PLAY-HEX.cmd),
 or extract the [Windows x64 ZIP](../exports/hex-iteration-20261012/HEX-p60-1e084a50a029-Windows-x64.zip)
 (161,159,896 bytes; 153.7 MiB) into its own folder before launching.
@@ -22,7 +23,8 @@ The [845f fallback](../exports/hex-comprehensive-20261012/windows/PLAY-HEX.cmd)
 retains its [comprehensive record and 196 UI captures](implementation-20261012/README.md).
 The [d8 audit](audit-implementation-20261011/README.md) and
 [be3 performance evidence](performance-implementation-20261010.md) describe their own earlier builds.
-The [iteration record](iteration-20261012/README.md) owns current evidence and paused follow-up work.
+The [portable record](iteration-20261012/README.md) owns the evidence for this playable build;
+the [active iteration](iteration-20261013/README.md) owns ongoing work.
 
 ## Start small
 
