@@ -57,12 +57,14 @@ function Get-HexPrSuitePlan([string[]]$Registry) {
         'retained-campus-canvas', 'current-world-replay', 'diagnostic-replay',
         'spell-inspector', 'range-target-scenario', 'element-audio', 'hex-avoidance-feedback',
         'completed-step-profile', 'defeated-pending-capture', 'wellspring-async-terrain-stream', 'cast-startup-witness',
-        'player-camera-rig', 'performance-presentation', 'wellspring-illustrated-kit'
+        'player-camera-rig', 'performance-presentation', 'wellspring-illustrated-kit',
+        'signature-circuit', 'signature-circuit-integration', 'wellspring-map'
     )
     # Moving performance-presentation to arrival balances the Full7804 basis
     # at about 74/67/85 seconds. Recent local suites are slower; these are only
     # partitioning hints, not bounds. test.ps1 retains its 180-second limit.
     $shards = @(
+        [pscustomobject]@{ name = 'player-loop'; suites = @('signature-circuit', 'signature-circuit-integration', 'wellspring-map') }
         [pscustomobject]@{ name = 'arrival'; suites = @('element-garden-exhibition', 'local-navigation', 'current-world-replay', 'performance-presentation') }
         [pscustomobject]@{ name = 'authority'; suites = @(
             'completed-step-profile', 'defeated-pending-capture', 'cast-startup-witness', 'identity-perks',

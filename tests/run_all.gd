@@ -39,6 +39,8 @@ const SUITES: Array[Script] = [
 	preload("res://tests/unit/test_elemental_spell_expansion.gd"),
 	preload("res://tests/unit/test_element_delivery_presentation.gd"),
 	preload("res://tests/unit/test_signature_progression.gd"),
+	preload("res://tests/unit/test_signature_circuit.gd"),
+	preload("res://tests/unit/test_signature_circuit_integration.gd"),
 	preload("res://tests/unit/test_spell_testing_tools.gd"),
 	preload("res://tests/unit/test_wallrun_presentation.gd"),
 	preload("res://tests/unit/test_six_element_protocol.gd"),

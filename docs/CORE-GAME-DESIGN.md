@@ -10,6 +10,13 @@ working builds. Current-build foreground performance and portable FPS remain
 unmeasured; the [6459 diagnostic](performance-evidence-20261014/foreground-6459-b/review.json)
 is historical.
 
+The [October 15 product assessment](BREAKTHROUGH-ASSESSMENT-20261015.md) prioritizes
+a coherent rival → earned signature → next encounter loop. The current source
+candidate implements a three-rival Circuit using existing combat/reward authority,
+with optional temporary learned-spell use. It is under validation and is not yet
+the selected portable. The complete illustrated 2.5D overhaul remains a separate
+proposal; player comprehension and voluntary replay still require observation.
+
 The [October 15 overhaul design](OVERHAUL-DESIGN-20261015.md) covers the selected
 illustrated 2.5D animated-sprite direction, clear area effects, tall architecture,
 real interiors, learning and technical optimization. It is a cross-reviewed

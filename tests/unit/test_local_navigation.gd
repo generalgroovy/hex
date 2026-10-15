@@ -115,6 +115,7 @@ func run() -> int:
 	_rejected(nav, actor, target, "active Rampart at destination")
 	game.world.collision = original_collision
 	_test_input(game)
+	_test_compact_map_pointer(game, viewport)
 	var font := ThemeDB.fallback_font
 	for size: Vector2 in [Vector2(960, 540), Vector2(1280, 720)]:
 		var rows: Array[Dictionary] = nav.entries()
@@ -516,9 +517,21 @@ func _test_input(game: Node) -> void:
 	game.controls_input_guard_frames = 0
 	game._unhandled_input(key)
 	check(nav.menu_open, "Escape opens compact menu in freeplay")
+	var menu_rows: Array[Dictionary] = nav.entries()
+	equal(String(menu_rows[0].id), "expansion-circuit", "offline front door leads with the finite Rival Circuit")
+	var menu_ids: Array[String] = []
+	for row: Dictionary in menu_rows: menu_ids.append(String(row.id))
+	for id: String in ["map","expansion-introduction","expansion-range","expansion-tactics","expansion-challenges","duel","chemistry","compendium","controls","performance","expansion-developer"]:
+		check(menu_ids.has(id) and menu_ids.count(id) == 1, "task ordering keeps each existing tool reachable once: " + id)
+	game.session_transport.mode = SessionTransport.Mode.HOSTING
+	for row: Dictionary in nav.entries(): check(String(row.id) != "expansion-circuit", "offline Circuit cannot appear in an online menu")
+	game.session_transport.mode = SessionTransport.Mode.OFFLINE
 	var joy := InputEventJoypadButton.new()
-	joy.button_index = JOY_BUTTON_A
+	joy.button_index = JOY_BUTTON_DPAD_DOWN
 	joy.pressed = true
+	game._unhandled_input(joy)
+	equal(String(nav.entries()[nav.selected].id), "map", "controller moves from Circuit to the existing World map")
+	joy.button_index = JOY_BUTTON_A
 	game._unhandled_input(joy)
 	check(nav.map_panel.is_open, "controller confirms World map from menu")
 	joy.button_index = JOY_BUTTON_B
@@ -563,3 +576,34 @@ func _test_input(game: Node) -> void:
 	game.controls_editor.close_editor()
 	game.player_preferences.keyboard_bindings[&"emote"] = KEY_M
 	check(not nav.handle_input(key), "custom gameplay M binding retains priority")
+
+
+func _test_compact_map_pointer(game: Node, viewport: SubViewport) -> void:
+	var old_size := viewport.size
+	var old_text: int = game.player_preferences.ui_text_percent
+	var old_mouse := Input.mouse_mode
+	viewport.size = Vector2i(960,540)
+	game.player_preferences.ui_text_percent = 200
+	var nav: RefCounted = game.local_navigation
+	check(nav.open_map(), "actual navigation opens compact map at 200 percent text")
+	var logical: Vector2 = game.get_viewport_rect().size / game._ui_scale()
+	equal(logical, Vector2(480,270), "compact pointer witness uses the real UI transform")
+	var geo: Dictionary = MapPanel.geometry(logical)
+	var before: String = game.world.state_hash()
+	for direction: int in [-1,1]:
+		var button: Rect2 = geo.previous if direction < 0 else geo.next
+		nav.map_panel.model.select(2)
+		nav.map_panel.detail_page = 0
+		var click := InputEventMouseButton.new()
+		click.button_index = MOUSE_BUTTON_LEFT
+		click.pressed = true
+		click.position = Vector2(button.get_center().x,button.end.y-0.5) * game._ui_scale()
+		game._unhandled_input(click)
+		equal(nav.map_panel.model.selected_index, 2 + direction, "Bootstrap scales physical paging-edge click exactly once")
+		equal(nav.map_panel.detail_page, 0, "physical paging edge does not activate destination Details")
+		check(nav.map_panel.is_open, "paging remains inside the map input owner")
+	equal(game.world.state_hash(), before, "physical paging cannot move, spend or change authority")
+	nav.close()
+	viewport.size = old_size
+	game.player_preferences.ui_text_percent = old_text
+	Input.mouse_mode = old_mouse

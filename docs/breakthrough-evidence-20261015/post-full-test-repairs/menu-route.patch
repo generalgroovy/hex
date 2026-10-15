@@ -1,0 +1,57 @@
+--- a/tests/unit/test_spell_testing_tools.gd
++++ b/tests/unit/test_spell_testing_tools.gd
+@@ -737,10 +737,7 @@
+ 		_hint_neutral_steps(game, 4)
+ 		# Open the actual Menu and choose its Introduction row through key events.
+ 		game.local_navigation.open_menu()
+-		_hint_key(viewport, KEY_DOWN, true)
+-		_hint_key(viewport, KEY_DOWN, false)
+-		_hint_key(viewport, KEY_ENTER, true)
+-		_hint_key(viewport, KEY_ENTER, false)
++		_hint_choose_menu_entry(game, viewport, "expansion-introduction")
+ 		check(game.element_expansion.guide.active and not game.local_navigation.menu_open, "Menu remains a working route to Introduction after remapping")
+ 		_hint_neutral_steps(game, 4)
+ 		var before := game.world.state_hash()
+@@ -773,10 +770,7 @@
+ 		_hint_neutral_steps(game, 1)
+ 		# The existing fallback is actionable; no direct guide-stop call is used.
+ 		game.local_navigation.open_menu()
+-		_hint_key(viewport, KEY_DOWN, true)
+-		_hint_key(viewport, KEY_DOWN, false)
+-		_hint_key(viewport, KEY_ENTER, true)
+-		_hint_key(viewport, KEY_ENTER, false)
++		_hint_choose_menu_entry(game, viewport, "expansion-introduction")
+ 		check(not game.element_expansion.guide.active, "Menu Skip works while the gameplay remap is retained")
+ 		game.controls_editor.reset_bindings(game.player_preferences)
+ 		game._commit_control_bindings()
+@@ -806,6 +800,30 @@
+ 	Input.mouse_mode = previous_mouse_mode
+ 
+ 
++func _hint_choose_menu_entry(game: Node, viewport: SubViewport, target_id: String) -> void:
++	var rows: Array[Dictionary] = game.local_navigation.entries()
++	var target := -1
++	var target_count := 0
++	for index: int in rows.size():
++		if String(rows[index].id) == target_id:
++			target = index
++			target_count += 1
++	check(target_count == 1, "Menu exposes exactly one requested action: " + target_id)
++	if target_count != 1: return
++	var steps: int = posmod(target - int(game.local_navigation.selected), rows.size())
++	for index: int in steps:
++		_hint_key(viewport, KEY_DOWN, true)
++		_hint_key(viewport, KEY_DOWN, false)
++	var selected: int = int(game.local_navigation.selected)
++	var current_rows: Array[Dictionary] = game.local_navigation.entries()
++	var on_target: bool = game.local_navigation.menu_open and selected >= 0 and selected < current_rows.size() \
++		and String(current_rows[selected].id) == target_id
++	check(on_target, "actual keyboard navigation reaches the requested Menu action: " + target_id)
++	if not on_target: return
++	_hint_key(viewport, KEY_ENTER, true)
++	_hint_key(viewport, KEY_ENTER, false)
++
++
+ func _hint_key(viewport: SubViewport, keycode: int, pressed: bool, shifted: bool = false) -> void:
+ 	var event := InputEventKey.new()
+ 	event.physical_keycode = keycode

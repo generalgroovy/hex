@@ -3,6 +3,7 @@ param(
     [ValidateSet('Play', 'Source', 'Profile', 'Diagnostic')][string]$Mode = 'Play',
     [string]$OutputDirectory = '',
     [switch]$Inspect,
+    [switch]$LightObserver,
     [switch]$Lifecycle,
     [string]$CandidatePackageReceipt = '',
     [string]$CandidatePackageReceiptSha256 = '',
@@ -17,6 +18,27 @@ param(
 # Source, Profile and pinned Diagnostic runs are explicit developer choices.
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+function Get-HexProfileArguments([string]$OutputPath, [bool]$UseLightObserver) {
+    if (-not $OutputPath) { throw 'Profile requires a fresh OutputDirectory for its evidence.' }
+    $arguments = @{
+        OutputDirectory = $OutputPath
+        Profiles = @('low')
+        Cases = @('garden_middle', 'paid_fire_bolt_sustained', 'paid_all_six_mantle_sustained')
+        SecondsPerCase = 15
+        FrameLimit = 60
+        Width = 1280
+        Height = 720
+        ReferenceCampus = $true
+        WaitForForeground = $true
+        TimeoutSeconds = 600
+    }
+    # The producer explicitly forbids detailed completed-step observation in Light.
+    if ($UseLightObserver) { $arguments.LightObserver = $true }
+    else { $arguments.AllFixedSteps = $true }
+    return $arguments
+}
+
 $launchRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $delivery = Get-Content -LiteralPath (Join-Path $launchRoot 'docs/current-delivery.json') -Raw | ConvertFrom-Json
 if ($delivery.schema_version -ne 1 -or $delivery.qualified_build_id -cnotmatch '^p[0-9]+-[0-9a-f]{12}$' -or
@@ -24,6 +46,7 @@ if ($delivery.schema_version -ne 1 -or $delivery.qualified_build_id -cnotmatch '
     throw 'Invalid current delivery descriptor. Inspect docs/current-delivery.json.'
 }
 $portableLauncher = Join-Path $launchRoot $delivery.launcher
+if ($Mode -ne 'Profile' -and $PSBoundParameters.ContainsKey('LightObserver')) { throw 'LightObserver is only valid in Profile mode.' }
 if ($Lifecycle -and ($Mode -ne 'Play' -or $GameArguments.Count -gt 0)) { throw 'Lifecycle is a fixed supervised Play route and accepts no game arguments.' }
 if (-not $Lifecycle -and ($CandidatePackageReceipt -or $CandidatePackageReceiptSha256)) { throw 'Candidate package selection is only valid for supervised Lifecycle.' }
 if ($Mode -notin @('Profile','Diagnostic') -and -not $Lifecycle -and $OutputDirectory) { throw 'OutputDirectory is only valid for Profile, Diagnostic or Lifecycle.' }
@@ -53,6 +76,8 @@ if ($Inspect) {
         portable_available = Test-Path -LiteralPath $portableLauncher -PathType Leaf
         source_root = $launchRoot
         profile_scope = 'Explicit native source diagnostic; not packaged-release FPS or GPU/present/input-latency acceptance.'
+        profile_observer = $(if ($Mode -eq 'Profile') { if ($LightObserver) { 'light' } else { 'full' } } else { $null })
+        profile_all_fixed_steps = $(if ($Mode -eq 'Profile') { -not [bool]$LightObserver } else { $null })
         default_selection_unchanged = $true
     } | ConvertTo-Json
     return
@@ -69,11 +94,8 @@ switch ($Mode) {
         & (Join-Path $PSScriptRoot 'run.ps1') -GameArguments (@('--fullbody-art', '--pixel-cast') + $GameArguments)
     }
     'Profile' {
-        if (-not $OutputDirectory) { throw 'Profile requires a fresh OutputDirectory for its evidence.' }
+        $profileArguments = Get-HexProfileArguments $OutputDirectory $LightObserver
         Write-Output 'H.E.X. source diagnostic: Garden and sustained Fire/Mantle. Click Start and leave the game in front until it closes.'
-        & (Join-Path $PSScriptRoot 'profile-gameplay.ps1') -OutputDirectory $OutputDirectory `
-            -Profiles @('low') -Cases @('garden_middle', 'paid_fire_bolt_sustained', 'paid_all_six_mantle_sustained') `
-            -SecondsPerCase 15 -FrameLimit 60 -Width 1280 -Height 720 -AllFixedSteps `
-            -ReferenceCampus -WaitForForeground -TimeoutSeconds 600
+        & (Join-Path $PSScriptRoot 'profile-gameplay.ps1') @profileArguments
     }
 }

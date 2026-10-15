@@ -1,0 +1,96 @@
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory)][ValidateSet('outage-eight')][string]$Case,
+    [Parameter(Mandatory)][string]$OutputDirectory
+)
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+$diagRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../..'))
+$diagPrefix = '.godot/iteration-20261015/network-capture-diagnostic'
+$diagRuns = Join-Path $PSScriptRoot 'runs'
+$diagPinsPath = Join-Path $PSScriptRoot 'source-pins.json'
+$diagPinsSha = '9caa682e97ea926634e6f7184114f694ec6d85c75847f5f74f852855391118a3'
+. (Join-Path $diagRoot 'scripts/flux2-common.ps1')
+
+function Assert-Diagnostic([bool]$Condition, [string]$Message) { if (-not $Condition) { throw $Message } }
+function Assert-PhysicalDiagnosticPath([string]$Path) {
+    $part = [IO.Path]::GetFullPath($Path)
+    while ($part) {
+        if ((Test-Path -LiteralPath $part) -and ((Get-Item -LiteralPath $part -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)) { throw 'Diagnostic rejects reparse paths.' }
+        $part = [IO.Path]::GetDirectoryName($part)
+    }
+}
+function Resolve-DiagnosticSource([string]$Relative) {
+    Assert-Diagnostic ($Relative -cmatch '^[^:\\]+$' -and $Relative -notmatch '(^|/)\.\.?(/|$)') 'Invalid source path.'
+    $path = [IO.Path]::GetFullPath((Join-Path $diagRoot $Relative))
+    Assert-Diagnostic ($path.StartsWith($diagRoot+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)) 'Source escapes checkout.'
+    Assert-PhysicalDiagnosticPath $path
+    return $path
+}
+function Assert-DiagnosticSources {
+    Assert-Diagnostic ((Get-FluxFileSha256 $diagPinsPath) -ceq $diagPinsSha) 'Diagnostic pin inventory changed.'
+    foreach ($record in $diagPins.records) {
+        Assert-Diagnostic ((Get-FluxFileSha256 (Resolve-DiagnosticSource $record.path)) -ceq $record.sha256) "Source differs: $($record.path)"
+    }
+}
+function Write-DiagnosticRecord([string]$Path, $Record) {
+    Assert-PhysicalDiagnosticPath $Path
+    $encoded = ($Record | ConvertTo-Json -Depth 20)+"`n"
+    $stream = [IO.File]::Open($Path,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::None)
+    try { $bytes=[Text.UTF8Encoding]::new($false).GetBytes($encoded); $stream.Write($bytes,0,$bytes.Length); $stream.Flush() } finally { $stream.Dispose() }
+    Assert-Diagnostic ([IO.File]::ReadAllText($Path) -ceq $encoded) 'Diagnostic readback differs.'
+}
+
+Assert-PhysicalDiagnosticPath $PSScriptRoot
+Assert-Diagnostic ((Get-FluxFileSha256 $diagPinsPath) -ceq $diagPinsSha) 'Reviewed diagnostic pins differ.'
+$diagPins = Get-Content -LiteralPath $diagPinsPath -Raw | ConvertFrom-Json -AsHashtable
+Assert-Diagnostic ($diagPins.schema -ceq 'hex.network-capture-diagnostic-pins.v1' -and $diagPins.case -ceq $Case) 'Pin scope differs.'
+Assert-DiagnosticSources
+$diagOutput = [IO.Path]::GetFullPath($OutputDirectory)
+Assert-PhysicalDiagnosticPath $diagOutput
+$diagLeaf = [IO.Path]::GetFileName($diagOutput)
+Assert-Diagnostic ([IO.Path]::GetDirectoryName($diagOutput) -ceq $diagRuns -and $diagLeaf -cmatch '^outage-eight-[a-z0-9]+(?:-[a-z0-9]+)*$') 'Output must be one fresh case-qualified run child.'
+foreach ($fresh in @($diagOutput,"$diagOutput-roaming")) { Assert-Diagnostic (-not(Test-Path -LiteralPath $fresh)) "Preserve prior output: $fresh"; Assert-PhysicalDiagnosticPath $fresh }
+$diagRunnerSha = Get-FluxFileSha256 $PSCommandPath
+$diagPointerPath = Join-Path $diagRoot 'docs/current-delivery.json'
+$diagPointerSha = Get-FluxFileSha256 $diagPointerPath
+$diagGodot = Get-FluxGodot
+$diagGodotSha = Get-FluxFileSha256 $diagGodot
+$diagHadAppData = Test-Path Env:APPDATA
+$diagSavedAppData = $env:APPDATA
+$diagPassed=$false; $diagFailure=$null; $diagReceiptSha=$null; $diagStarted=[DateTime]::UtcNow.ToString('o')
+$diagArguments=@('--headless','--path',$diagRoot,'--audio-driver','Dummy','--script',"res://$diagPrefix/diagnose-outage.gd",'--','--no-lan-discovery',"--output=res://$diagPrefix/runs/$diagLeaf")
+$diagLease=Enter-FluxEngineRun 'desktop-network-capture-diagnostic'
+try {
+    New-Item -ItemType Directory -Path $diagOutput | Out-Null
+    $env:APPDATA="$diagOutput-roaming"; New-Item -ItemType Directory -Path $env:APPDATA | Out-Null
+    Assert-FluxGodotVersion $diagGodot | Out-Null
+    Write-DiagnosticRecord (Join-Path $diagOutput 'admission.json') ([ordered]@{schema='hex.network-diagnostic-admission.v1';case=$Case;runner_sha256=$diagRunnerSha;pins_sha256=$diagPinsSha;engine_sha256=$diagGodotSha;default_pointer_sha256=$diagPointerSha;arguments=$diagArguments;parse_timeout_seconds=180;scenario_timeout_seconds=2700;scope='Existing Full envelope, one complete eight-peer scenario; not a new test tier or relaxed test.ps1 deadline.'})
+    Invoke-FluxGodotChecked $diagGodot @('--headless','--path',$diagRoot,'--check-only','--script',"res://$diagPrefix/diagnose-outage.gd") (Join-Path $diagOutput 'parse.log') -RejectWarnings -TimeoutSeconds 180 | Out-Null
+    Invoke-FluxGodotChecked $diagGodot $diagArguments (Join-Path $diagOutput 'scenario.log') -RejectWarnings -TimeoutSeconds 2700 | Out-Null
+    $diagReceiptPath=Join-Path $diagOutput 'receipt.json'
+    Assert-Diagnostic ((Get-Item -LiteralPath $diagReceiptPath).Length -le 1MB) 'Diagnostic receipt exceeds bound.'
+    $receipt=Get-Content -LiteralPath $diagReceiptPath -Raw | ConvertFrom-Json -AsHashtable
+    Assert-Diagnostic ($receipt.schema -ceq 'hex.network-capture-diagnostic.v1' -and $receipt.passed -is [bool] -and $receipt.passed -ceq $true -and $receipt.errors.Count -eq 0) 'Diagnostic scenario failed.'
+    Assert-Diagnostic ($receipt.case -ceq $Case -and $receipt.players -eq 8 -and $receipt.profile -ceq 'outage_return' -and $receipt.assertions -gt 0 -and $receipt.failures -eq 0 -and $receipt.trace_rows -eq 241) 'Incomplete scenario or wrong case.'
+    Assert-Diagnostic ($receipt.publication_failure_witness -ceq $false -and $receipt.initial_envelope_retained -ceq $true -and $receipt.fixture_sha256 -ceq $diagPins.proposed_fixture_sha256) 'Publication/fixture proof differs.'
+    Assert-Diagnostic ($receipt.runtime_identity.runtime_source_sha256 -ceq $diagPins.runtime_source_sha256 -and $receipt.runtime_identity.record_count -eq 3450) 'Runtime identity differs.'
+    foreach($stderr in @('parse.log.err','scenario.log.err')) { Assert-Diagnostic ((Get-Item -LiteralPath (Join-Path $diagOutput $stderr)).Length -eq 0) 'Strict stderr must be empty.' }
+    Assert-Diagnostic (Select-String -LiteralPath (Join-Path $diagOutput 'scenario.log') -SimpleMatch "NETWORK_CAPTURE_DIAGNOSTIC_PASS assertions=$($receipt.assertions) failures=0 trace_rows=241" -Quiet) 'Terminal marker differs.'
+    $diagReceiptSha=Get-FluxFileSha256 $diagReceiptPath
+    $diagPassed=$true
+} catch { $diagFailure=$_.Exception.Message }
+finally {
+    if ($diagHadAppData) { $env:APPDATA=$diagSavedAppData } else { Remove-Item Env:APPDATA -ErrorAction SilentlyContinue }
+    Exit-FluxEngineRun $diagLease
+    try {
+        Assert-DiagnosticSources
+        Assert-Diagnostic ((Get-FluxFileSha256 $PSCommandPath) -ceq $diagRunnerSha -and (Get-FluxFileSha256 $diagPointerPath) -ceq $diagPointerSha -and (Get-FluxFileSha256 $diagGodot) -ceq $diagGodotSha) 'Runner, qualified pointer or engine changed.'
+    } catch { $diagPassed=$false; $diagFailure=([string]$diagFailure+'; '+$_.Exception.Message).Trim(';',' ') }
+}
+if (-not(Test-Path -LiteralPath $diagOutput)) { New-Item -ItemType Directory -Path $diagOutput | Out-Null }
+$diagLogs=[ordered]@{}
+foreach($leaf in @('parse.log','parse.log.err','scenario.log','scenario.log.err')) { $path=Join-Path $diagOutput $leaf; if(Test-Path -LiteralPath $path -PathType Leaf){$diagLogs[$leaf]=Get-FluxFileSha256 $path} }
+Write-DiagnosticRecord (Join-Path $diagOutput 'runner.json') ([ordered]@{schema='hex.network-capture-diagnostic-run.v1';passed=$diagPassed;case=$Case;failure=$diagFailure;started_utc=$diagStarted;ended_utc=[DateTime]::UtcNow.ToString('o');runner_sha256=$diagRunnerSha;source_pins_sha256=$diagPinsSha;helper_receipt_sha256=$diagReceiptSha;engine_path=$diagGodot;engine_sha256=$diagGodotSha;arguments=$diagArguments;parse_timeout_seconds=180;scenario_timeout_seconds=2700;logs=$diagLogs;default_pointer_sha256=$diagPointerSha;appdata_restored=$true;scope='Single actual loopback scenario. A pass does not explain the historical rejection or qualify Full. stdout contains first-failure diagnostic chunks if publication fails. Desktop wrapper proof is external.'})
+if (-not $diagPassed) { throw "Network diagnostic failed: $diagFailure" }
+Write-Output "PASS network diagnostic; helper receipt $diagReceiptSha"

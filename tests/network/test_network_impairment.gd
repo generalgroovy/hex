@@ -4,6 +4,17 @@ extends "res://tests/unit/test_session_transport.gd"
 const Snapshot = preload("res://src/net/hex_world_snapshot.gd")
 const Mixtures = preload("res://src/content/mixture_catalog.gd")
 
+# Test-only failure witness. It never retries publication or changes admission.
+# Bounded history changes polling cost; this is diagnosis, not a timing replay.
+const DiagnosticChemistry = preload("res://src/net/hex_chemistry_snapshot.gd")
+const DiagnosticEnvelope = preload("res://src/net/world_snapshot_envelope.gd")
+var diagnostic_first_failure := false
+var diagnostic_case: Dictionary = {}
+var diagnostic_phase := "initial"
+var diagnostic_loop_tick := -1
+var diagnostic_transcript: Array[Dictionary] = []
+var diagnostic_initial_envelope: Dictionary = {}
+
 class ImpairedTransport:
 	extends SessionTransport
 	var enabled := false
@@ -72,6 +83,11 @@ func _impaired(profile: Dictionary) -> ImpairedTransport:
 
 
 func _exercise(count: int, profile: Dictionary) -> void:
+	diagnostic_case = {"players": count, "profile": profile.duplicate(true)}
+	diagnostic_phase = "initial"
+	diagnostic_loop_tick = -1
+	diagnostic_transcript.clear()
+	diagnostic_initial_envelope.clear()
 	var host := _impaired(profile)
 	var clients: Array[SessionTransport] = []
 	check(host.start_host(0, _signature(), "Impairment Host"), "owned unprivileged loopback host starts")
@@ -126,17 +142,23 @@ func _exercise(count: int, profile: Dictionary) -> void:
 	var paid := {}
 	var captures := PackedInt64Array()
 	for tick: int in 240:
+		diagnostic_phase = "impaired"
+		diagnostic_loop_tick = tick
+		var sent_rows: Array = []
 		host.advance(tick)
 		for index: int in clients.size():
 			var client := clients[index] as ImpairedTransport
 			client.advance(tick)
 			var command := SimCommand.new(world.tick, client.local_entity_id, 1000 if tick % 80 < 40 else -1000, 0, SimCommand.SPELL_HELD_BITS[0], SimCommand.PRESSED_JUMP if tick % 70 == 0 else 0, 0, -1000)
+			sent_rows.append({"peer_id": client.local_peer_id, "sequence": tick, "command": command.canonical_bytes()})
 			check(client.send_input(tick, command), "real input sends under the selected impairment")
 			check(predictions[index].queue_input(tick, command), "prediction retains ordinary movement intent")
 			overflow_seen[index] = overflow_seen[index] or predictions[index].history_overflowed
 		host.poll()
-		session.ingest_inputs(host.take_inputs())
+		var received_inputs := host.take_inputs()
+		session.ingest_inputs(received_inputs)
 		var commands := session.commands_for_tick(SimCommand.new(world.tick, 1, 0, 0, SimCommand.SPELL_HELD_BITS[0], 0, 0, -1000))
+		_diagnostic_record(world.tick, received_inputs, commands, sent_rows)
 		check(world.step(commands), "authority steps paid pressure despite delayed peers")
 		for event: Dictionary in world.combat_events:
 			if String(event.get("type", "")) == "cast_started": paid[int(event.entity_id)] = true
@@ -157,8 +179,13 @@ func _exercise(count: int, profile: Dictionary) -> void:
 		host.poll()
 		for client: SessionTransport in clients: client.poll()
 		OS.delay_msec(1)
-	session.ingest_inputs(host.take_inputs())
-	check(world.step(session.commands_for_tick(SimCommand.new(world.tick, 1))), "final authority consumes drained input")
+	diagnostic_phase = "healthy_final"
+	diagnostic_loop_tick = 240
+	var drained_inputs := host.take_inputs()
+	session.ingest_inputs(drained_inputs)
+	var final_commands := session.commands_for_tick(SimCommand.new(world.tick, 1))
+	_diagnostic_record(world.tick, drained_inputs, final_commands, [])
+	check(world.step(final_commands), "final authority consumes drained input")
 	check(_publish(host, session), "healthy complete snapshot follows impairment")
 	for client: SessionTransport in clients: check(host.send_reconciliation(client.local_peer_id, session.capture_reconciliation(client.local_entity_id)), "healthy correction follows impairment")
 	for unused: int in 200:
@@ -196,7 +223,13 @@ func _publish(host: SessionTransport, session: AuthoritativeSession) -> bool:
 	# The test transport subclass only intercepts the final send. Capture uses
 	# the real callback-free production factory, not subclass dispatch fallback.
 	var publication := SessionTransport._capture_session_packets(session)
-	return not publication.is_empty() and host._broadcast_encoded_packets(publication.packets)
+	if diagnostic_phase == "initial" and not publication.is_empty():
+		diagnostic_initial_envelope = (publication.envelope as Dictionary).duplicate(true)
+	var published: bool = not publication.is_empty() and host._broadcast_encoded_packets(publication.packets)
+	if not published and not diagnostic_first_failure:
+		diagnostic_first_failure = true
+		_diagnostic_publication_failure(host as ImpairedTransport, session, publication)
+	return published
 
 
 func _consume(client: SessionTransport, prediction: ClientPrediction, buffer: ReconciliationOrderBuffer, replicas: Array[SimWorld], index: int, trusted: SimWorld) -> void:
@@ -212,3 +245,90 @@ func _consume(client: SessionTransport, prediction: ClientPrediction, buffer: Re
 	if not packet.is_empty():
 		check(prediction.bind_hex_world(replicas[index]), "correction binds exact matching Hex geometry")
 		check(prediction.reconcile(packet), "correction replays only against matching complete world")
+
+
+func _diagnostic_record(tick: int, inputs: Array[Dictionary], commands: Array[SimCommand], sent: Array) -> void:
+	# Exactly 240 impaired batches and one final drain. No transport tokens.
+	if diagnostic_transcript.size() >= 241: return
+	var rows: Array = []
+	for command: SimCommand in commands: rows.append(command.canonical_bytes())
+	diagnostic_transcript.append({"tick": tick, "loop_tick": diagnostic_loop_tick,
+		"phase": diagnostic_phase, "inputs": inputs.duplicate(true),
+		"commands": rows, "sent_inputs": sent.duplicate(true)})
+
+
+func _diagnostic_publication_failure(host: ImpairedTransport, session: AuthoritativeSession, publication: Dictionary) -> void:
+	var world: SimWorld = session.world
+	var court: HexChemistryWorld = world.hex_court as HexChemistryWorld
+	var context := {"schema": "hex.network-capture-failure.v1", "case": diagnostic_case,
+		"phase": diagnostic_phase, "loop_tick": diagnostic_loop_tick, "world_tick": world.tick,
+		"last_error": world.last_error, "publication_empty": publication.is_empty(),
+		"queue_count": host.queued.size(), "queue_peak": host.peak_queue,
+		"send_failures": host.send_failures, "trace_rows": diagnostic_transcript.size()}
+	# Persist the small context before touching any deeper codec/relation validator.
+	print("IMPAIRMENT_CAPTURE_FAILURE_CONTEXT " + JSON.stringify(context))
+	var actors: Array = []
+	for actor: PlayerState in world.players:
+		actors.append({"values": actor.canonical_values(), "last_event": actor.last_event})
+	var shots: Array = []
+	for shot: ProjectileState in world.projectiles:
+		shots.append({"values": shot.canonical_values(), "initial_strength": shot.initial_strength,
+			"remaining_strength": shot.remaining_strength})
+	var raw := {"context": context, "seed": world.seed, "map_id": world.map_id, "map_hash": world.map_hash,
+		"next_ids": [world.next_projectile_id, world.next_field_id, world.next_deposit_id, world.next_reaction_id],
+		"actors": actors, "projectiles": shots, "combat_events": world.combat_events.duplicate(true),
+		"peer_entity": host.entity_by_peer.duplicate(true), "trace": diagnostic_transcript.duplicate(true),
+		"initial_envelope": diagnostic_initial_envelope.duplicate(true),
+		"latest_inputs": session.latest_input_by_entity.duplicate(true),
+		"processed_sequences": session.last_processed_input_sequence_by_entity.duplicate(true)}
+	if court != null:
+		# Never read court.cells: that getter materializes sealed topology.
+		raw["court"] = {"origin": court.origin, "tick": court.current_tick,
+			"chemistry_enabled": court.chemistry_enabled, "casts": court.casts.duplicate(true),
+			"products": court.products.duplicate(true), "pending": court.pending.duplicate(true),
+			"sources": court.sources.duplicate(true), "exposure": court.exposure.duplicate(true),
+			"flow_carry": court.flow_carry.duplicate(true), "sparse_cells": court._sparse_cells.duplicate(true),
+			"legacy_cells": court._legacy_cells.duplicate(true), "metrics": court.metrics.duplicate(true),
+			"next_ids": [court.next_cast_id, court.next_product_id, court.next_ground_part_id]}
+	_diagnostic_emit_bytes(raw)
+	# Each marker survives if a malformed relation record makes the next call fail.
+	print("IMPAIRMENT_CAPTURE_DIAGNOSTIC trusted_world " + str(Snapshot._trusted_world_valid(world)))
+	print("IMPAIRMENT_CAPTURE_DIAGNOSTIC producer_reuse " + str(Snapshot._producer_reuse_eligible(world)))
+	for actor: PlayerState in world.players:
+		print("IMPAIRMENT_CAPTURE_DIAGNOSTIC actor %d valid=%s" % [actor.entity_id, str(Snapshot._valid_player_values(actor.canonical_values()))])
+	if court == null: return
+	for shot: ProjectileState in world.projectiles:
+		var ledger: Dictionary = court.ledger_for_source(shot.source_cast_id).duplicate(true)
+		var ledger_valid: bool = not ledger.is_empty() and StrengthBudget.validate(ledger)
+		var row := PackedInt32Array()
+		if ledger_valid: row = Snapshot._capture_projectile(shot, ledger)
+		print("IMPAIRMENT_CAPTURE_DIAGNOSTIC projectile %d ledger=%s row=%s" % [shot.entity_id, str(ledger_valid), str(not row.is_empty())])
+	print("IMPAIRMENT_CAPTURE_DIAGNOSTIC begin_world_relations")
+	print("IMPAIRMENT_CAPTURE_DIAGNOSTIC world_relations " + str(Snapshot._validate_relations(world)))
+	print("IMPAIRMENT_CAPTURE_DIAGNOSTIC begin_chemistry_relations")
+	print("IMPAIRMENT_CAPTURE_DIAGNOSTIC chemistry_relations " + str(DiagnosticChemistry._validate_relations(court)))
+	print("IMPAIRMENT_CAPTURE_DIAGNOSTIC conservation " + str(court.conservation_valid()))
+	var metadata: Dictionary = AuthoritativeSession._capture_hex_session_metadata(session)
+	print("IMPAIRMENT_CAPTURE_DIAGNOSTIC session_shape " + str(not metadata.is_empty() and DiagnosticEnvelope._hex_session_shape_valid(metadata)))
+	# Encoding only, not a second full-world capture or retry of the failed result.
+	print("IMPAIRMENT_CAPTURE_DIAGNOSTIC begin_chemistry_encoding")
+	var chemistry: Dictionary = DiagnosticChemistry._capture_for_outer_roundtrip(court)
+	print("IMPAIRMENT_CAPTURE_DIAGNOSTIC chemistry_bytes=%d shape=%s" % [DiagnosticChemistry.encoded_size(chemistry), str(DiagnosticChemistry._snapshot_shape_valid(chemistry))])
+
+
+func _diagnostic_emit_bytes(raw: Dictionary) -> void:
+	var bytes: PackedByteArray = var_to_bytes(raw)
+	const MAX_WITNESS_BYTES := 4 * 1024 * 1024
+	if bytes.size() > MAX_WITNESS_BYTES:
+		print("IMPAIRMENT_CAPTURE_WITNESS_OVERFLOW bytes=%d limit=%d" % [bytes.size(), MAX_WITNESS_BYTES])
+		return
+	var hasher := HashingContext.new()
+	hasher.start(HashingContext.HASH_SHA256)
+	hasher.update(bytes)
+	var digest: String = hasher.finish().hex_encode()
+	var hex: String = bytes.hex_encode()
+	var chunks: int = ceili(float(hex.length()) / 16384.0)
+	print("IMPAIRMENT_CAPTURE_WITNESS_BEGIN bytes=%d chunks=%d sha256=%s" % [bytes.size(), chunks, digest])
+	for index: int in chunks:
+		print("IMPAIRMENT_CAPTURE_WITNESS_CHUNK %d/%d %s" % [index, chunks, hex.substr(index * 16384, 16384)])
+	print("IMPAIRMENT_CAPTURE_WITNESS_END " + digest)

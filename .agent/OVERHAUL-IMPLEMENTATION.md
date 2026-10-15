@@ -1,9 +1,11 @@
 # H.E.X. single implementation queue
 
-Status: **WINDOWS CHECKPOINT FOR LINUX HANDOFF — October 15; stop at 20,000 credits remaining.**
-The [Git handoff](LINUX-HANDOFF.md) transfers the complete current source, tools,
-evidence and design state through the presentation branch. No Windows
-implementation continues while the receiving CLI restores it.
+Status: **ACTIVE PRODUCT IMPLEMENTATION — October 15; stop before 20,000 credits remain.**
+Active playable profiles: 30.
+The user resumed work after the Git handoff and authorized deep product analysis
+and implementation with creative freedom. Work is isolated on
+`codex/hex-breakthrough-20261015`, based on `aec900a`. The original presentation
+branch remains the published [Linux handoff](LINUX-HANDOFF.md) checkpoint.
 The user approved the cross-reviewed improvement proposals, requested multiple
 agents per point, stronger visual depth and environment variety (including
 higher wall/rampart forms), removal of unused/redundant material, and use of the
@@ -18,8 +20,38 @@ matrix, staged acceptance and the next implementation prompt. This is proposed
 work, not new runtime behavior. The design request produced documentation only;
 the subsequent user-authorized Git handoff publishes the whole existing checkpoint.
 Qualified delivery and existing source changes remain intact. Use its Stage A
-baseline and Stage B integrated pilot when implementation resumes; this file
+baseline and Stage B integrated pilot for the later illustrated overhaul; this file
 remains the only active task ledger.
+
+## October 15 product loop
+
+The [breakthrough assessment](../docs/BREAKTHROUGH-ASSESSMENT-20261015.md) identifies
+the central product hypothesis: read a rival, earn its signature, and use it in
+the next encounter. Broad content expansion is secondary to a coherent playable
+slice and current performance evidence. Commercial demand remains untested.
+
+| Work | Owner / independent reviewers | Gate |
+|---|---|---|
+| Optional three-rival Circuit and result surface | Gameplay / Experience + Technical | Real paid victories only; explicit next/retry/leave; compact mouse/controller/keyboard access |
+| Controller integration and temporary learned-spell reuse | Root / Gameplay + Technical | Actual admission, paid reuse, save/exit recovery and normal weave restoration |
+| First-menu route and compact-map overlap | Experience / Technical + Root | No hidden tool/input regression; 960×540 at 200% layout and hit targets |
+| Launcher Full/Light selector | Technical / Experience + Root | Honor downstream observer admission; label differing evidence coverage |
+| Product priorities, documentation and verification | Root / all three | Current/proposed and source/package/human evidence remain distinct |
+
+- [x] Source audits and primary-reference research; three specialists review each other.
+- [x] Implement the Circuit, navigation/map repair and observer selector.
+- [x] Record candidate **p61-6618873387e2**, 3,450 runtime records, and preserve qualified d6d1 selection.
+- [x] Record initial Circuit focused **548 / 0**, map **1,403 / 0** within an earlier failed overall run, and eight prepared native UI captures; [evidence and limits](../docs/breakthrough-evidence-20261015/README.md).
+- [ ] Resolve the failed [Full-a](../docs/breakthrough-evidence-20261015/full-a/tests.json): **112 / 267** suites completed, **5,280,932** assertions, **nine failures**, **2,700-second timeout**; 155 suites incomplete and boot not run. The source candidate is unqualified.
+- [x] Seven-suite `focused-review-a` passed **65,133 assertions / zero failures and stderr**, **264,217 ms**, after the reviewed test-only changes. Tools **58,514 / 0** and Circuit integration **314 / 0** cover the repaired menu route and global InputMap teardown. The seven suites exclude the failing eight-player network scenario; no production network fix is established. Runtime identity is unchanged.
+- [x] Record separate local `outage-eight-a`: **6,478 assertions / zero failures**, **241 trace rows**, no rejected capture reproduced. This does not establish the historical cause or complete overall qualification.
+- [ ] Run clean Windows CI Full on the candidate branch after root publication. This is planned, separate validation; it does not retroactively pass local Full-a or establish its historical capture cause.
+- [ ] Compare current-source Full/Light observers on matched 15-second paid workloads,
+  reversing observer order. Keep focus, Low/1280×720/60 cap, campus mode, memory,
+  actual ticks, paid admissions and effect coverage explicit. Compare common
+  metrics only: Light omits full completed-step attribution and detailed draw
+  diagnostics. Neither observer establishes portable FPS.
+- [ ] Obtain current packaged performance and unfamiliar-player evidence before claiming smoothness or product success.
 
 Qualified playable build: **p61-d6d1bfb9c529**. Full passed 265 suites /
 7,574,524 assertions; package/archive, 133-image terrain, all five desktop-wrapper
@@ -38,7 +70,7 @@ must not produce simultaneous engine runs or conflicting edits.
 
 | Point | Implementer | Independent reviewer | Current work / gate |
 |---|---|---|---|
-| Casting/Garden performance | Root + Technical | Experience | Previous-build Profile B admitted for 6459; current d6d1 Full/Light matched-observer measurement remains pending |
+| Casting/Garden performance | Root + Technical | Experience | Previous-build Profile B admitted for 6459; matched current-source Full/Light measurement and qualified-build presented-frame evidence remain pending |
 | Loading/memory | Technical | Root + Experience | Repeated travel/cancel/close and real memory residency; no speculative prefetch |
 | Movement/control/camera | Gameplay | Technical | Independent camera look-ahead preference, legacy migration and normal/reduced-motion combinations |
 | Defense/readability | Gameplay | Experience | Actual protection, height and cover outcomes; concise optional practice feedback |
@@ -54,7 +86,7 @@ must not produce simultaneous engine runs or conflicting edits.
 | Networking/save recovery | Technical | Gameplay | Actual two-peer and earned-save/recovery acceptance remain explicit |
 | Documentation/CI/cleanup/launcher | Root + Technical | Experience | Correct active status, add omitted regression suites, remove proven redundancy and fix desktop target |
 
-## Current batch
+## Qualified October 14 history
 
 - [x] Implement and cross-review camera preference/menu/migration; execution gates below.
 - [x] Implement and cross-review district wall depth within current collision bounds; native gate below.
@@ -73,7 +105,7 @@ must not produce simultaneous engine runs or conflicting edits.
 - [x] [Retain and integrate the stationary ground-velocity change](../docs/performance-evidence-20261014/stationary-ground/README.md): all eight paid-case benefit gates passed across four native processes; movement negatives and isolated tails remain explicit. Root applied six runtime lines and the reviewed 96-line behavior regression; both peers confirmed exact measured-code equivalence.
 - [x] [Qualify **p61-d6d1bfb9c529**](../docs/performance-evidence-20261014/stationary-qualification-d6d1/README.md): 1,693 frozen inputs; Full 265 suites / 7,574,524 assertions, zero failures/error output and 120 Hz boot. Package, all 18 portable checks, 133-image terrain, five lifecycle cases and 4,076 independent delivery checks passed. The normal launcher now selects d6d1; the immediate 6459 fallback is preserved. Current-build foreground performance remains unmeasured.
 - [x] [Withdraw Low-detail Conflagration decoration grouping](../docs/performance-evidence-20261014/conflagration-decoration-coalescing/README.md): both native correctness runs and captured readability passed, but three of four primary cost gates failed and one-field drawing repeatedly regressed. No canonical renderer change or additional variant.
-- [ ] Next measurement after qualification: compare existing Full/Light observers on the same 15-second sustained Fire route, in opposite orders. Keep focus, Low/1280x720/60 cap, campus mode and memory context matched; report actual ticks, paid admissions and effect coverage. Full's reported observer head/tail excludes instrumentation inside simulation/drawing, and its wall denominator includes endpoint summary work. Disabled ordinary-play guards passed two-agent source audit; neither observer mode establishes portable FPS.
+- [x] Record the next matched-observer measurement method, now carried forward into the active product-loop gates above. Full's reported observer head/tail excludes instrumentation inside simulation/drawing, and its wall denominator includes endpoint summary work. Disabled ordinary-play guards passed two-agent source audit; no current portable FPS claim follows.
 - [x] The 6459 Full, portable export, archive and isolated exported-terrain checks passed.
 - [x] The 6459 desktop-wrapper lifecycle and final independent delivery review passed; 7804 remains preserved.
 

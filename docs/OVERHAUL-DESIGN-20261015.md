@@ -1,6 +1,8 @@
 # H.E.X. complete overhaul design
 
-Date: October 15, 2026. Status: **proposed design; runtime implementation has not started.**
+Status: **proposed illustrated overhaul; runtime implementation has not started.**
+Date: October 15, 2026. The separate [product-loop candidate](BREAKTHROUGH-ASSESSMENT-20261015.md)
+does not implement this artwork, architecture or AoE overhaul.
 The user selected **illustrated 2.5D with smooth animated sprites**. The qualified
 playable build remains **p61-d6d1bfb9c529**. Its foreground frame pacing is still
 unmeasured. This document proposes changes to that build; it does not replace

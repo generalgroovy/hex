@@ -8,6 +8,11 @@ performance and portable FPS remain unmeasured. The
 [6459 source diagnostic](docs/performance-evidence-20261014/foreground-6459-b/review.json)
 is historical and does not qualify d6d1 performance.
 
+The October 15 source candidate adds an optional three-rival Circuit, temporary
+earned-spell reuse and compact-map repairs. See the
+[product assessment](docs/BREAKTHROUGH-ASSESSMENT-20261015.md) and single queue for
+validation. This does not change the selected qualified portable.
+
 The [October 15 overhaul design](docs/OVERHAUL-DESIGN-20261015.md) targets the
 user-selected illustrated 2.5D animated-sprite direction. It is a cross-reviewed
 proposal, not implemented rules. This contract remains in force until individual
@@ -439,6 +444,7 @@ and return from a distant view creates fresh exhibition authorities.
 | Trios | Exactly six; 3v3 |
 | Solo Duel Trial | Separate offline, 72-second paid-rival challenge; disclosed temporary kit |
 | Signature Challenges | Thirty offline rivals; unique paid mixture/delivery signatures, earned only from clean authoritative victory |
+| Rival Circuit (source candidate) | Optional offline Rapid → Fuse → Rebound route over existing challenges; clean wins permit next or temporary learned spell in slot 1, failures permit retry, completion permits practice/replay; normal weave is restored on exit |
 | Spell Range | All 504 spell definitions; temporary twelve-slot loaners, optional target Setup and observer statistics, explicit refill/reset/clear, no automatic casting or save |
 | Element Garden | Offline Wellspring ground exhibits, 63 plots and a named map arrival; nearby explanation without another control |
 | Optional Introduction | Skippable nonmodal basics; optional tactical continuation observes an accepted paid chain, mixed damaging contact, rival avoidance and a clean earned/saved result |

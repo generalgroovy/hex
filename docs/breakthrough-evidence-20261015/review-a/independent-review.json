@@ -1,0 +1,269 @@
+{
+  "schema": "hex.breakthrough-focused-independent-review.v1",
+  "reviewed_at_utc": "2026-10-15T22:20:42.275035+00:00",
+  "reviewer": "checkpoint_audit",
+  "audit_result": "verified_focused_pass",
+  "full_qualified": false,
+  "scope": "Independent read-only audit of the seven selected suites and exact producer artifacts. No engines or tests run by this reviewer. Archive copies preserve original bytes.",
+  "producer": {
+    "receipt_path": ".godot/iteration-20261015/breakthrough/runs/review-a/tests.json",
+    "receipt_sha256": "5f76362e5825e893205a683f29acca29e1fd6362a5d48f8158353d55eee5b254",
+    "completed_at_utc": "2026-10-15T22:17:56.6857643Z",
+    "tier": "focused",
+    "result": "passed",
+    "duration_ms": 264217,
+    "supervision": {
+      "default_engine_timeout_seconds": 180,
+      "import_timeout_seconds": 600,
+      "suite_timeout_seconds": 180
+    },
+    "source": {
+      "current_state_path": ".godot/windows-tests/ff76aad88a5a47899c1c79a55de4d5df/current-state.json",
+      "asset_inventory_path": null,
+      "head": "aec900adeea74bc9c16bb5807ef8758d73696edb",
+      "branch": "codex/hex-breakthrough-20261015",
+      "dirty": true,
+      "current_state_sha256": "cf98bfbfbba7269f9d7e153702b39884ba870bf11baf5656db8e02a7909f48b2",
+      "asset_inventory_sha256": null
+    },
+    "isolation": {
+      "appdata_path": ".godot/windows-tests/ff76aad88a5a47899c1c79a55de4d5df/isolated-roaming",
+      "scope": "Godot import, suite and boot user data; packaging retains its own isolation policy",
+      "caller_appdata_restored": true
+    }
+  },
+  "raw_results": {
+    "requested_suite_ids": [
+      "signature-circuit",
+      "signature-circuit-integration",
+      "local-navigation",
+      "wellspring-map",
+      "spell-testing-tools",
+      "signature-recovery",
+      "solo-trial-process"
+    ],
+    "executed_order": "Exact registry order filtered by requested IDs",
+    "suite_count": 7,
+    "assertion_count": 65133,
+    "failure_count": 0,
+    "stderr_bytes": 0,
+    "suites": [
+      {
+        "id": "signature-recovery",
+        "assertions": 68,
+        "failures": 0
+      },
+      {
+        "id": "local-navigation",
+        "assertions": 3847,
+        "failures": 0
+      },
+      {
+        "id": "wellspring-map",
+        "assertions": 1403,
+        "failures": 0
+      },
+      {
+        "id": "signature-circuit",
+        "assertions": 488,
+        "failures": 0
+      },
+      {
+        "id": "signature-circuit-integration",
+        "assertions": 314,
+        "failures": 0
+      },
+      {
+        "id": "spell-testing-tools",
+        "assertions": 58514,
+        "failures": 0
+      },
+      {
+        "id": "solo-trial-process",
+        "assertions": 499,
+        "failures": 0
+      }
+    ],
+    "timings": [
+      {
+        "id": "signature-recovery",
+        "duration_ms": 1240
+      },
+      {
+        "id": "local-navigation",
+        "duration_ms": 45507
+      },
+      {
+        "id": "wellspring-map",
+        "duration_ms": 185
+      },
+      {
+        "id": "signature-circuit",
+        "duration_ms": 152
+      },
+      {
+        "id": "signature-circuit-integration",
+        "duration_ms": 21277
+      },
+      {
+        "id": "spell-testing-tools",
+        "duration_ms": 5482
+      },
+      {
+        "id": "solo-trial-process",
+        "duration_ms": 5031
+      }
+    ],
+    "completed_timing_sum_ms": 78874,
+    "terminal_marker_exact": true,
+    "error_warning_parse_markers": []
+  },
+  "source": {
+    "runtime_identity": {
+      "schema_version": 1,
+      "status": "candidate_generated_not_promoted",
+      "scope_id": "production-runtime-source-v1",
+      "canonical_encoding": "utf8-lf-tagged-length-v1",
+      "protocol_version": 61,
+      "snapshot_schema": 24,
+      "engine_identity": "4.7.1.stable.official.a13da4feb",
+      "record_count": 3450,
+      "runtime_source_sha256": "6618873387e2b62744f54ab845a03031dea83c7baa1506a2cab8de4c2cce715d",
+      "build_id": "p61-6618873387e2",
+      "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate."
+    },
+    "runtime_descriptor_path": "content/runtime/runtime_build_identity_v1.json",
+    "runtime_descriptor_sha256": "92a84630d0580eca340cacb6c4682ca78e3ad3739da366f422e7d33319d4303f",
+    "registry_path": "tests/run_all.gd",
+    "registry_sha256": "f4b585de287c84f5286f68bed46079b49c16e5b81e1293be2ef6b3dffff9e9e1",
+    "selected_suite_source_hashes_at_audit": [
+      {
+        "suite_id": "signature-recovery",
+        "path": "tests/unit/test_signature_recovery.gd",
+        "sha256": "239a8c49c53b1e69127b0ac43608ed27db265671aaa7b03bc72021b1901d5c4e"
+      },
+      {
+        "suite_id": "local-navigation",
+        "path": "tests/unit/test_local_navigation.gd",
+        "sha256": "b6f499d84e74be005c35f0b8cdec3d77b333fb8b6a1130fc0e7c21fee9dc4cc0"
+      },
+      {
+        "suite_id": "wellspring-map",
+        "path": "tests/unit/test_wellspring_map.gd",
+        "sha256": "220d58e3f58652c8a60ec066437a8bfc11e55cfda1260142835e576e5c68bdb3"
+      },
+      {
+        "suite_id": "signature-circuit",
+        "path": "tests/unit/test_signature_circuit.gd",
+        "sha256": "7432899ad3b30c029c953eb698fd9548f85b020c46ffcfa5bce34b683e01a538"
+      },
+      {
+        "suite_id": "signature-circuit-integration",
+        "path": "tests/unit/test_signature_circuit_integration.gd",
+        "sha256": "1df060f96ee84a07da9161f077539f3f8128c85a09fe31698789655d3575f368"
+      },
+      {
+        "suite_id": "spell-testing-tools",
+        "path": "tests/unit/test_spell_testing_tools.gd",
+        "sha256": "1a940b46c6b1b1c3d8217ae701bda971c5f4ceb71936ee59269fd4da1ffb036d"
+      },
+      {
+        "suite_id": "solo-trial-process",
+        "path": "tests/unit/test_solo_trial_process.gd",
+        "sha256": "23c3fce2e7b2d0d0b497c37412f20543a471b67b2d33cb0d18f0c2ea0d9471a1"
+      }
+    ],
+    "test_repair_archive_path": "docs/breakthrough-evidence-20261015/post-full-test-repairs/archive.json",
+    "test_repair_archive_sha256": "f1444e4632542f60392f05cfecf508eb1bcd109f12f24b43ef42d872a25e6739",
+    "test_repair_payload_hashes_verified": 10,
+    "scope": "Runtime identity remains661887; reviewed test-only menu stable-ID, InputMap teardown and network diagnostic revisions followed failed Full-a. This subset does not execute network-impairment. Selected current source hashes are not a rerun of the historical4632 frozen-input audit."
+  },
+  "gates": {
+    "current_state": {
+      "passed": true,
+      "issue_count": 0,
+      "issues": []
+    },
+    "class_cache": {
+      "canonical_count": 178,
+      "cache_count": 178,
+      "cache_sha256": "0db970364fa0749965706843578b5f8eae55368429fd870d1c764990171d2987",
+      "violations": [],
+      "passed": true
+    },
+    "producer_executed": {
+      "current_state_check": true,
+      "asset_inventory": false,
+      "doctor": true,
+      "import": false,
+      "post_import_identity_check": false,
+      "deterministic_suite_runner": true,
+      "suite_count": 7,
+      "assertion_count": 65133,
+      "boot_120_hz": false,
+      "package_and_installer": false
+    },
+    "import_executed": false,
+    "asset_inventory_executed": false,
+    "post_import_identity_check_executed": false,
+    "boot_120_hz_executed": false,
+    "package_executed": false,
+    "note": "Match initialized at120Hz lines come from integration fixtures; they are not the separate boot qualification gate."
+  },
+  "artifacts": [
+    {
+      "source": ".godot/iteration-20261015/breakthrough/runs/review-a/tests.json",
+      "archive": "docs/breakthrough-evidence-20261015/review-a/tests.json",
+      "sha256": "5f76362e5825e893205a683f29acca29e1fd6362a5d48f8158353d55eee5b254",
+      "bytes": 2576
+    },
+    {
+      "source": ".godot/windows-tests/ff76aad88a5a47899c1c79a55de4d5df/receipt.json",
+      "archive": "docs/breakthrough-evidence-20261015/review-a/receipt.json",
+      "sha256": "5f76362e5825e893205a683f29acca29e1fd6362a5d48f8158353d55eee5b254",
+      "bytes": 2576
+    },
+    {
+      "source": ".godot/windows-tests/ff76aad88a5a47899c1c79a55de4d5df/suite.log",
+      "archive": "docs/breakthrough-evidence-20261015/review-a/suite.log",
+      "sha256": "0cd494dbd22f11f7f9ec3ef8b29cb7ce78ea3a87b71172bcd7578f18106b6c19",
+      "bytes": 1249
+    },
+    {
+      "source": ".godot/windows-tests/ff76aad88a5a47899c1c79a55de4d5df/suite.log.err",
+      "archive": "docs/breakthrough-evidence-20261015/review-a/suite.log.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".godot/windows-tests/ff76aad88a5a47899c1c79a55de4d5df/current-state.json",
+      "archive": "docs/breakthrough-evidence-20261015/review-a/current-state.json",
+      "sha256": "cf98bfbfbba7269f9d7e153702b39884ba870bf11baf5656db8e02a7909f48b2",
+      "bytes": 62845
+    },
+    {
+      "source": ".godot/windows-tests/ff76aad88a5a47899c1c79a55de4d5df/script-class-cache.json",
+      "archive": "docs/breakthrough-evidence-20261015/review-a/script-class-cache.json",
+      "sha256": "000032a227140e73284d45ad93643269d090c58d4fc4061cdec8cc933137a07c",
+      "bytes": 182
+    }
+  ],
+  "receipt_copies_equal": true,
+  "prior_full": {
+    "receipt_path": "docs/breakthrough-evidence-20261015/full-a/tests.json",
+    "independent_review_path": "docs/breakthrough-evidence-20261015/full-a/independent-review.json",
+    "result": "failed",
+    "completed_suites": 112,
+    "assertions": 5280932,
+    "failures": 9,
+    "suite_timeout_seconds": 2700,
+    "boot_executed": false,
+    "scope": "Preserved earlier revision and incomplete Full. This focused pass does not replace or upgrade it."
+  },
+  "limits": [
+    "Circuit integration314 includes InputMap cleanup assertions; it does not mean314 combat scenarios.",
+    "The underlying paid three-win/earned-release mechanism remains separate from durable save/reopen and human tactical usefulness.",
+    "Historical network capture cause remains unresolved; the dedicated diagnostic is separate and was not executed by this audit.",
+    "No Full, delivery, Linux/CI, human-play, frame-pacing or release acceptance follows from these seven suites."
+  ]
+}

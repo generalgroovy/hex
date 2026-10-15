@@ -23,6 +23,12 @@ The immediate [6459 fallback](depth-clarity-evidence-20261014/delivery-review/re
 older [7804 fallback](iteration-20261013/delivery-review-7804/review.json) and earlier
 working builds remain preserved through the [documentation index](README.md).
 
+The `codex/hex-breakthrough-20261015` source candidate adds an optional Rival
+Circuit and compact-map navigation repair. Their runtime and delivery gates are
+pending; they are **not in the qualified desktop Play build above**. Candidate
+instructions are marked below. The [single queue](../.agent/OVERHAUL-IMPLEMENTATION.md)
+records validation without changing the playable selection.
+
 ## Start small
 
 Move with **WASD**, aim with the mouse, and try one of **1–4**. **Ctrl+1–4**
@@ -350,6 +356,30 @@ a saved character weave or an earned unlock. Changing loaners preserves each
 spell's cooldown; leaving the practice world starts a fresh ordinary world with
 your original weave. The Range lets you explore trade-offs; all 504 choices
 still require balance playtesting.
+
+## Rival Circuit — source candidate
+
+In the candidate's offline **Menu**, **Rival Circuit · 3 rivals** is the first
+choice. Introduction, exploration, individual challenges and the Range remain
+available. Leave Developer practice first. Starting the Circuit enters the
+existing ready countdown for **Wa Bidi → Oh Tipi → S. Wayne**, in their real
+Conservatory, Tideglass and Basalt courts. Each encounter starts with fresh
+resources and has a 72-second limit including ready time.
+
+After a clean victory, **Next with learned spell** explicitly puts that signature
+in **temporary slot 1** for the next encounter; your saved weave is unchanged.
+Ordinary **Next** keeps your current Circuit spell choice. The result distinguishes
+**Learned** from **Already known**, and **saved** from **not saved**. A legitimately
+earned but unsaved spell remains usable in the current session; the available
+save-retry or backup-recovery action handles persistence separately.
+
+After a failed attempt, **Retry rival** starts a fresh attempt against the same
+rival without removing earned spells. Completing all three offers **Try learned
+spell**, which ends the Circuit and opens the final signature in the Spell Range,
+or **Replay circuit** for a fresh route. **Leave circuit / Esc / B** ends the
+route and returns to Wellspring; your normal weave and earned progress remain.
+Use arrows or D-pad to select, **Enter / A** to confirm, or click a button. During
+a live encounter, Esc keeps its existing return-to-Wellspring behavior.
 
 ## Learn a rival's signature
 

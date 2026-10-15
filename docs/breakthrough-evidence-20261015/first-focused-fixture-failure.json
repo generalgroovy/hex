@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "completed_at_utc": "2026-10-15T21:09:00.8014752Z",
+  "tier": "focused",
+  "result": "failed",
+  "failure": "Godot emitted a script/import/runtime error.",
+  "source": {
+    "current_state_path": ".godot/windows-tests/108e438186a6409ba523f5a64ebffc56/current-state.json",
+    "asset_inventory_path": null,
+    "head": "aec900adeea74bc9c16bb5807ef8758d73696edb",
+    "branch": "codex/hex-breakthrough-20261015",
+    "dirty": true,
+    "current_state_sha256": "cf18eba6a8ad21b83409c5358353fa72960f52c7a2e515e7b72615abf5d8b416",
+    "asset_inventory_sha256": null
+  },
+  "requested_suite_ids": [
+    "signature-circuit",
+    "wellspring-map"
+  ],
+  "supervision": {
+    "default_engine_timeout_seconds": 180,
+    "import_timeout_seconds": 600,
+    "suite_timeout_seconds": 180
+  },
+  "isolation": {
+    "appdata_path": ".godot/windows-tests/108e438186a6409ba523f5a64ebffc56/isolated-roaming",
+    "scope": "Godot import, suite and boot user data; packaging retains its own isolation policy",
+    "caller_appdata_restored": true
+  },
+  "executed": {
+    "current_state_check": true,
+    "asset_inventory": false,
+    "doctor": true,
+    "import": false,
+    "post_import_identity_check": false,
+    "deterministic_suite_runner": true,
+    "suite_count": 2,
+    "assertion_count": 1891,
+    "suites": [
+      {
+        "id": "wellspring-map",
+        "assertions": 1403,
+        "failures": 0
+      },
+      {
+        "id": "signature-circuit",
+        "assertions": 488,
+        "failures": 1
+      }
+    ],
+    "boot_120_hz": false,
+    "package_and_installer": false
+  },
+  "duration_ms": 246387,
+  "stderr_bytes": 0,
+  "logs": [
+    {
+      "path": ".godot/windows-tests/108e438186a6409ba523f5a64ebffc56/suite.log",
+      "sha256": "778712bea039f93eeace33cc35932fa0f8d46a3bf02ba14fced0904355b52799",
+      "stderr_bytes": 0
+    }
+  ]
+}

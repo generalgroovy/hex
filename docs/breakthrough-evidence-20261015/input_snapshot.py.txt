@@ -1,0 +1,21 @@
+import hashlib
+import json
+import pathlib
+import subprocess
+import sys
+from datetime import datetime, timezone
+
+root = pathlib.Path(__file__).resolve().parents[3]
+target = root / 'docs/breakthrough-evidence-20261015/validation-inputs.json'
+files = subprocess.check_output(['git', 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], cwd=root).decode().split('\0')
+prefixes = ('src/', 'content/', 'scenes/', 'addons/', 'assets/', 'scripts/', 'tests/', 'art_batches/pixel_v1/magic/export/', 'art_batches/pixel_v1/map/export/', 'art_batches/wellspring_style_v2/runtime/')
+single = {'project.godot', 'export_presets.cfg', 'art_batches/pixel_v1/magic/manifest.json', 'art_batches/pixel_v1/map/manifest.json', 'art_batches/wellspring_style_v2/ground_style.gd', '.github/workflows/ci.yml'}
+records = [{'path': p, 'sha256': hashlib.sha256((root / p).read_bytes()).hexdigest()} for p in sorted(set(files)) if p in single or p.startswith(prefixes)]
+if '--check' in sys.argv:
+    expected = json.loads(target.read_text(encoding='utf-8'))
+    assert records == expected['records'], 'Validation inputs changed'
+    print(f'PASS: {len(records)} source, asset, test and tool inputs unchanged')
+else:
+    assert not target.exists(), 'Preserve the original validation snapshot'
+    target.write_text(json.dumps({'created_at_utc': datetime.now(timezone.utc).isoformat(), 'scope': 'tracked or nonignored runtime, tests, scripts and CI; excludes documentation; captured during Full preflight', 'base_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root).decode().strip(), 'records': records}, indent=2) + '\n', encoding='utf-8')
+    print(f'SNAPSHOT: {len(records)} validation inputs')

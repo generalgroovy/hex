@@ -1,0 +1,38 @@
+param(
+    [ValidateSet('prepare','circuit','integration','regression','full','capture')][string]$Case,
+    [Parameter(Mandatory)][string]$OutputDirectory
+)
+$ErrorActionPreference = 'Stop'
+$breakthroughRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../..'))
+if (Test-Path -LiteralPath $OutputDirectory) { throw 'Preserve prior output; choose a fresh diagnostic directory.' }
+New-Item -ItemType Directory -Path $OutputDirectory | Out-Null
+Push-Location $breakthroughRoot
+try {
+    if ($Case -eq 'prepare') {
+        . ./scripts/flux2-common.ps1
+        $lease = Enter-FluxEngineRun 'breakthrough-import'
+        try {
+            $engine = Get-FluxGodot
+            Assert-FluxGodotVersion $engine | Out-Null
+            Invoke-FluxGodotChecked $engine @('--headless','--editor','--path',$breakthroughRoot,'--quit') (Join-Path $OutputDirectory 'import.log') -RejectWarnings -TimeoutSeconds 600
+        } finally { Exit-FluxEngineRun $lease }
+        & ./scripts/runtime-build-identity.ps1 -Mode Generate -Force
+    } elseif ($Case -eq 'capture') {
+        . ./scripts/flux2-common.ps1
+        $lease = Enter-FluxEngineRun 'breakthrough-capture'
+        try {
+            $engine = Get-FluxGodot
+            Assert-FluxGodotVersion $engine | Out-Null
+            Invoke-FluxGodotChecked $engine @('--path',$breakthroughRoot,'--rendering-method','gl_compatibility','--resolution','960x540','--script','res://.godot/iteration-20261015/breakthrough/capture.gd','--',('--output='+$OutputDirectory)) (Join-Path $OutputDirectory 'capture.log') -RejectWarnings -TimeoutSeconds 180
+        } finally { Exit-FluxEngineRun $lease }
+    } elseif ($Case -eq 'full') {
+        & ./scripts/test.ps1 -Tier Full -ReceiptPath (Join-Path $OutputDirectory 'tests.json')
+    } else {
+        $selection = switch ($Case) {
+            'circuit' { @('signature-circuit','wellspring-map') }
+            'integration' { @('signature-circuit','signature-circuit-integration') }
+            'regression' { @('local-navigation','spell-testing-tools','signature-recovery','solo-trial-process') }
+        }
+        & ./scripts/test.ps1 -Tier Focused -Suite $selection -ReceiptPath (Join-Path $OutputDirectory 'tests.json')
+    }
+} finally { Pop-Location }

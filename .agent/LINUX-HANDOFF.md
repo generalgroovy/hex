@@ -1,10 +1,28 @@
 # H.E.X. Linux CLI handoff — October 15, 2026
 
-Windows work is stopped at a stable documentation checkpoint for handoff. The
-Gameplay, Experience and Technical agents finished their audits and reciprocal
-reviews. No engine, import, test, capture or export is running for this handoff.
-The three agents are not live processes to migrate; recreate bounded workers in
-the receiving CLI and use their consolidated review record.
+Historical publication checkpoint: `aec900a` on the presentation branch. The user
+subsequently resumed Windows product work on `codex/hex-breakthrough-20261015`.
+This handoff still restores the published baseline; read the current branch's
+[resume](HEX-RESUME.md) and [single queue](OVERHAUL-IMPLEMENTATION.md) before
+coordinating new work across computers. Do not assume the two branches are identical.
+
+At the published `aec900a` handoff, Windows work had stopped at a stable
+documentation checkpoint after the three agents completed their audits and
+reciprocal reviews. That historical pause does not describe the later local
+candidate work: **p61-6618873387e2** is unqualified. Its
+[Full-a](../docs/breakthrough-evidence-20261015/full-a/tests.json) completed
+112 of 267 suites, 5,280,932 assertions and nine failures before the
+2,700-second timeout; 155 suites did not complete and boot did not run.
+Three reviewed test-only follow-ups are applied. Seven-suite `focused-review-a`
+passed **65,133 assertions, zero failures/stderr**, in **264,217 ms** on
+unchanged runtime identity; it excludes the failing eight-player network
+scenario. The historical network-capture cause remains unresolved. Clean
+Windows CI Full is planned for the candidate branch as separate validation;
+it has not run to a recorded result. This is not a qualified Linux or Windows
+replacement; selected desktop d6d1 and its fallbacks are preserved.
+Root owns any later candidate commit/push; these instructions do not imply
+the local candidate is already published. Agents are not live processes to
+migrate; recreate bounded workers in the receiving CLI.
 
 ## Restore from Git
 

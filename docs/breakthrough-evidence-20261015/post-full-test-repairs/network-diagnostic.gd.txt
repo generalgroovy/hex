@@ -1,0 +1,62 @@
+extends SceneTree
+## One real eight-peer outage_return scenario. No Full/matrix/performance claim.
+const Fixture = preload("res://tests/network/test_network_impairment.gd")
+const PREFIX := "res://.godot/iteration-20261015/network-capture-diagnostic/runs/"
+
+func _initialize() -> void:
+	call_deferred("_run")
+
+func _run() -> void:
+	var output := ""
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--output=") and output.is_empty(): output = argument.trim_prefix("--output=")
+		elif argument != "--no-lan-discovery":
+			push_error("Unsupported outage diagnostic argument")
+			quit(2)
+			return
+	var leaf: String = output.trim_prefix(PREFIX)
+	if not output.begins_with(PREFIX) or leaf.is_empty() or leaf.contains("/") or leaf.contains("\\") or leaf.contains(".."):
+		push_error("Expected one owned output leaf")
+		quit(2)
+		return
+	var receipt_path: String = output.path_join("receipt.json")
+	if not DirAccess.dir_exists_absolute(output) or FileAccess.file_exists(receipt_path):
+		push_error("Runner must own fresh output directory")
+		quit(2)
+		return
+	var fixture := Fixture.new()
+	var started: int = Time.get_ticks_msec()
+	print("NETWORK_CAPTURE_DIAGNOSTIC_BEGIN players=8 profile=outage_return ticks=240")
+	fixture._exercise(8, {"id": "outage_return", "delay": 6, "jitter": 3, "loss": 0, "outage": true})
+	var failures: int = fixture.finish("network-capture-outage-eight")
+	var trace_count: int = fixture.diagnostic_transcript.size()
+	var errors: Array[String] = []
+	if failures != 0: errors.append("Original scenario assertions failed")
+	if trace_count != 241: errors.append("Scenario did not finish 240 impaired steps and final drain")
+	if fixture.diagnostic_first_failure: errors.append("Publication failure witness emitted")
+	if fixture.diagnostic_initial_envelope.is_empty(): errors.append("Initial real publication was not retained")
+	var identity: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://content/runtime/runtime_build_identity_v1.json"))
+	var record := {"schema": "hex.network-capture-diagnostic.v1", "passed": errors.is_empty(),
+		"errors": errors, "case": "outage-eight", "players": 8, "profile": "outage_return",
+		"assertions": fixture.assertions, "failures": failures, "trace_rows": trace_count,
+		"publication_failure_witness": fixture.diagnostic_first_failure,
+		"initial_envelope_retained": not fixture.diagnostic_initial_envelope.is_empty(),
+		"elapsed_ms": Time.get_ticks_msec() - started, "runtime_identity": identity,
+		"fixture_sha256": FileAccess.get_sha256("res://tests/network/test_network_impairment.gd"),
+		"scope": "One actual ENet eight-player outage/reconnect scenario; fixture handshake uses its declared test identity. Not Full qualification, historical causal proof, or a performance benchmark."}
+	var encoded: String = JSON.stringify(record, "\t") + "\n"
+	var file := FileAccess.open(receipt_path, FileAccess.WRITE)
+	if file == null:
+		push_error("Cannot write diagnostic receipt")
+		quit(2)
+		return
+	file.store_string(encoded)
+	file.flush()
+	file.close()
+	if FileAccess.get_file_as_string(receipt_path) != encoded:
+		push_error("Diagnostic receipt readback differs")
+		quit(2)
+		return
+	print("NETWORK_CAPTURE_DIAGNOSTIC_%s assertions=%d failures=%d trace_rows=%d" % ["PASS" if errors.is_empty() else "FAIL", fixture.assertions, failures, trace_count])
+	fixture = null
+	quit(0 if errors.is_empty() else 1)

@@ -1,0 +1,978 @@
+{
+  "schema": "hex.breakthrough-terminal-full-independent-review.v1",
+  "reviewed_at_utc": "2026-10-15T22:15:54.559037+00:00",
+  "reviewer": "checkpoint_audit",
+  "audit_result": "consistent_terminal_failure",
+  "full_qualified": false,
+  "scope": "Read-only reconciliation of terminal producer receipt, actual completed raw suites, failures, timing rows, archived artifacts and recorded runtime identity. This new review is the only file written by this audit.",
+  "producer": {
+    "receipt_path": ".godot/iteration-20261015/breakthrough/runs/full-a/tests.json",
+    "receipt_sha256": "1b01eff4ca5f393554347c2e3b2eeba024708d362719450a10f65cfad5afda76",
+    "archive_receipt_path": "docs/breakthrough-evidence-20261015/full-a/tests.json",
+    "completed_at_utc": "2026-10-15T22:11:03.6388875Z",
+    "result": "failed",
+    "failure": "Godot check timed out after 2700 seconds; inspect C:\\Users\\sende\\Projects\\hex\\.godot\\windows-tests\\dad304047ead4f8faab5927e75173cbd\\suite.log and C:\\Users\\sende\\Projects\\hex\\.godot\\windows-tests\\dad304047ead4f8faab5927e75173cbd\\suite.log.err",
+    "duration_ms": 3434662,
+    "supervision": {
+      "default_engine_timeout_seconds": 180,
+      "import_timeout_seconds": 600,
+      "suite_timeout_seconds": 2700
+    },
+    "source": {
+      "current_state_path": ".godot/windows-tests/dad304047ead4f8faab5927e75173cbd/current-state.json",
+      "asset_inventory_path": ".godot/windows-tests/dad304047ead4f8faab5927e75173cbd/asset-inventory.json",
+      "head": "aec900adeea74bc9c16bb5807ef8758d73696edb",
+      "branch": "codex/hex-breakthrough-20261015",
+      "dirty": true,
+      "current_state_sha256": "53870aa64cfbb7ca4a2e2712b586c7f6c091f56f1b52e1b09c64a8d0d650726a",
+      "asset_inventory_sha256": "a3f9b5f9d80ec363cd70ebd0cd99f753265c32b6be914be6eb652186e68bb1e0"
+    },
+    "isolation": {
+      "appdata_path": ".godot/windows-tests/dad304047ead4f8faab5927e75173cbd/isolated-roaming",
+      "scope": "Godot import, suite and boot user data; packaging retains its own isolation policy",
+      "caller_appdata_restored": true
+    }
+  },
+  "raw_results": {
+    "registry_path": "tests/run_all.gd",
+    "registry_sha256": "f4b585de287c84f5286f68bed46079b49c16e5b81e1293be2ef6b3dffff9e9e1",
+    "registry_suite_count": 267,
+    "completed_suite_count": 112,
+    "completed_suites_are_exact_registry_prefix": true,
+    "passing_completed_suite_count": 110,
+    "assertions": 5280932,
+    "failures": 9,
+    "failed_suites": [
+      {
+        "id": "network-impairment",
+        "assertions": 33452,
+        "failures": 1
+      },
+      {
+        "id": "spell-testing-tools",
+        "assertions": 58498,
+        "failures": 8
+      }
+    ],
+    "failure_lines": [
+      "FAIL: every-other-tick publication satisfies the packet contract",
+      "FAIL: Menu remains a working route to Introduction after remapping",
+      "FAIL: remapped key and Shift variant cannot secretly Skip or open Range/rivals/tools",
+      "FAIL: Menu remains a working route to Introduction after remapping",
+      "FAIL: remapped key and Shift variant cannot secretly Skip or open Range/rivals/tools",
+      "FAIL: Menu remains a working route to Introduction after remapping",
+      "FAIL: remapped key and Shift variant cannot secretly Skip or open Range/rivals/tools",
+      "FAIL: Menu remains a working route to Introduction after remapping",
+      "FAIL: remapped key and Shift variant cannot secretly Skip or open Range/rivals/tools"
+    ],
+    "completed_suites": [
+      {
+        "id": "completed-step-profile",
+        "assertions": 2212,
+        "failures": 0
+      },
+      {
+        "id": "cast-startup-witness",
+        "assertions": 1287,
+        "failures": 0
+      },
+      {
+        "id": "defeated-pending-capture",
+        "assertions": 21570,
+        "failures": 0
+      },
+      {
+        "id": "projectile-speed-policy",
+        "assertions": 7526,
+        "failures": 0
+      },
+      {
+        "id": "movement-route-decisions",
+        "assertions": 840,
+        "failures": 0
+      },
+      {
+        "id": "network-impairment",
+        "assertions": 33452,
+        "failures": 1
+      },
+      {
+        "id": "diagnostic-replay",
+        "assertions": 104,
+        "failures": 0
+      },
+      {
+        "id": "perk-benefit-audit",
+        "assertions": 571,
+        "failures": 0
+      },
+      {
+        "id": "current-world-replay",
+        "assertions": 356,
+        "failures": 0
+      },
+      {
+        "id": "spell-inspector",
+        "assertions": 5623,
+        "failures": 0
+      },
+      {
+        "id": "session-admission-deadline",
+        "assertions": 34,
+        "failures": 0
+      },
+      {
+        "id": "signature-recovery",
+        "assertions": 68,
+        "failures": 0
+      },
+      {
+        "id": "signature-rival",
+        "assertions": 451,
+        "failures": 0
+      },
+      {
+        "id": "district-practice-coach",
+        "assertions": 1943,
+        "failures": 0
+      },
+      {
+        "id": "hex-render-polygon-cache",
+        "assertions": 11254,
+        "failures": 0
+      },
+      {
+        "id": "projectile-surface-depth",
+        "assertions": 92522,
+        "failures": 0
+      },
+      {
+        "id": "wellspring-environment-details",
+        "assertions": 132408,
+        "failures": 0
+      },
+      {
+        "id": "paid-field-rendering",
+        "assertions": 6490,
+        "failures": 0
+      },
+      {
+        "id": "movement-hot-path",
+        "assertions": 208508,
+        "failures": 0
+      },
+      {
+        "id": "sim-empty-work",
+        "assertions": 11256,
+        "failures": 0
+      },
+      {
+        "id": "character-page-residency",
+        "assertions": 7647,
+        "failures": 0
+      },
+      {
+        "id": "performance-presentation",
+        "assertions": 16580,
+        "failures": 0
+      },
+      {
+        "id": "hex-stone-floor",
+        "assertions": 3280,
+        "failures": 0
+      },
+      {
+        "id": "wellspring-terrain-stream",
+        "assertions": 351,
+        "failures": 0
+      },
+      {
+        "id": "wellspring-async-terrain-stream",
+        "assertions": 343,
+        "failures": 0
+      },
+      {
+        "id": "retained-campus-canvas",
+        "assertions": 19,
+        "failures": 0
+      },
+      {
+        "id": "range-target-scenario",
+        "assertions": 1447,
+        "failures": 0
+      },
+      {
+        "id": "hex-avoidance-feedback",
+        "assertions": 1899,
+        "failures": 0
+      },
+      {
+        "id": "element-garden-exhibition",
+        "assertions": 178957,
+        "failures": 0
+      },
+      {
+        "id": "large-world-rendering",
+        "assertions": 260326,
+        "failures": 0
+      },
+      {
+        "id": "local-navigation",
+        "assertions": 3847,
+        "failures": 0
+      },
+      {
+        "id": "wellspring-map",
+        "assertions": 1403,
+        "failures": 0
+      },
+      {
+        "id": "expanded-spell-network",
+        "assertions": 255,
+        "failures": 0
+      },
+      {
+        "id": "elemental-spell-expansion",
+        "assertions": 24065,
+        "failures": 0
+      },
+      {
+        "id": "element-delivery-presentation",
+        "assertions": 20531,
+        "failures": 0
+      },
+      {
+        "id": "signature-progression",
+        "assertions": 6358,
+        "failures": 0
+      },
+      {
+        "id": "signature-circuit",
+        "assertions": 488,
+        "failures": 0
+      },
+      {
+        "id": "signature-circuit-integration",
+        "assertions": 60,
+        "failures": 0
+      },
+      {
+        "id": "spell-testing-tools",
+        "assertions": 58498,
+        "failures": 8
+      },
+      {
+        "id": "wallrun-presentation",
+        "assertions": 77019,
+        "failures": 0
+      },
+      {
+        "id": "six-element-protocol",
+        "assertions": 3016,
+        "failures": 0
+      },
+      {
+        "id": "hex-six-element-reactions",
+        "assertions": 12839,
+        "failures": 0
+      },
+      {
+        "id": "six-element-cadence",
+        "assertions": 619,
+        "failures": 0
+      },
+      {
+        "id": "pixel-aerial-pose",
+        "assertions": 20348,
+        "failures": 0
+      },
+      {
+        "id": "identity-perks",
+        "assertions": 3778,
+        "failures": 0
+      },
+      {
+        "id": "character-movement-trail",
+        "assertions": 10683,
+        "failures": 0
+      },
+      {
+        "id": "balance-audit",
+        "assertions": 145533,
+        "failures": 0
+      },
+      {
+        "id": "demo-result-integration",
+        "assertions": 246,
+        "failures": 0
+      },
+      {
+        "id": "team-replication",
+        "assertions": 1695,
+        "failures": 0
+      },
+      {
+        "id": "team-round",
+        "assertions": 549,
+        "failures": 0
+      },
+      {
+        "id": "team-match-presentation",
+        "assertions": 995,
+        "failures": 0
+      },
+      {
+        "id": "hex-demo-result-card",
+        "assertions": 327,
+        "failures": 0
+      },
+      {
+        "id": "hex-round-result",
+        "assertions": 5517,
+        "failures": 0
+      },
+      {
+        "id": "session-round-label",
+        "assertions": 85,
+        "failures": 0
+      },
+      {
+        "id": "pov-terrain-context",
+        "assertions": 361,
+        "failures": 0
+      },
+      {
+        "id": "solo-duel-rival",
+        "assertions": 68,
+        "failures": 0
+      },
+      {
+        "id": "solo-duel-trial-panel",
+        "assertions": 8167,
+        "failures": 0
+      },
+      {
+        "id": "solo-duel-world-tell",
+        "assertions": 482,
+        "failures": 0
+      },
+      {
+        "id": "solo-duel-trial",
+        "assertions": 72,
+        "failures": 0
+      },
+      {
+        "id": "solo-trial-process",
+        "assertions": 499,
+        "failures": 0
+      },
+      {
+        "id": "hex-projectile-facets",
+        "assertions": 3874,
+        "failures": 0
+      },
+      {
+        "id": "hex-cast-release",
+        "assertions": 21143,
+        "failures": 0
+      },
+      {
+        "id": "hex-contact-punctuation",
+        "assertions": 21054,
+        "failures": 0
+      },
+      {
+        "id": "hex-material-surface",
+        "assertions": 23851,
+        "failures": 0
+      },
+      {
+        "id": "spell-loom-input-handoff",
+        "assertions": 11770,
+        "failures": 0
+      },
+      {
+        "id": "landing-airborne-contact",
+        "assertions": 7760,
+        "failures": 0
+      },
+      {
+        "id": "pixel-cast-continuity",
+        "assertions": 1121810,
+        "failures": 0
+      },
+      {
+        "id": "hex-canonical-cell-rows",
+        "assertions": 476,
+        "failures": 0
+      },
+      {
+        "id": "spell-binding-labels",
+        "assertions": 424,
+        "failures": 0
+      },
+      {
+        "id": "character-attunement-recovery",
+        "assertions": 143,
+        "failures": 0
+      },
+      {
+        "id": "hex-owned-capture",
+        "assertions": 472,
+        "failures": 0
+      },
+      {
+        "id": "owned-publication",
+        "assertions": 737,
+        "failures": 0
+      },
+      {
+        "id": "hex-capture-callback-safety",
+        "assertions": 74,
+        "failures": 0
+      },
+      {
+        "id": "hex-canonical-topology-bytes",
+        "assertions": 432,
+        "failures": 0
+      },
+      {
+        "id": "hex-chemistry-prepare",
+        "assertions": 592,
+        "failures": 0
+      },
+      {
+        "id": "session-receive-freshness",
+        "assertions": 755,
+        "failures": 0
+      },
+      {
+        "id": "world-envelope-metadata",
+        "assertions": 373,
+        "failures": 0
+      },
+      {
+        "id": "session-broadcast-bytes",
+        "assertions": 643,
+        "failures": 0
+      },
+      {
+        "id": "hex-collision-topology",
+        "assertions": 1432,
+        "failures": 0
+      },
+      {
+        "id": "hex-strict-wire-decode",
+        "assertions": 833,
+        "failures": 0
+      },
+      {
+        "id": "hex-cell-storage",
+        "assertions": 58,
+        "failures": 0
+      },
+      {
+        "id": "hex-sealed-snapshot",
+        "assertions": 300,
+        "failures": 0
+      },
+      {
+        "id": "hex-producer-topology-reuse",
+        "assertions": 325,
+        "failures": 0
+      },
+      {
+        "id": "world-publication-edges",
+        "assertions": 131,
+        "failures": 0
+      },
+      {
+        "id": "pixel-descriptor-reuse",
+        "assertions": 606786,
+        "failures": 0
+      },
+      {
+        "id": "world-publication",
+        "assertions": 59,
+        "failures": 0
+      },
+      {
+        "id": "hex-immutable-topology-candidate",
+        "assertions": 346,
+        "failures": 0
+      },
+      {
+        "id": "hex-new-ground-workset",
+        "assertions": 204,
+        "failures": 0
+      },
+      {
+        "id": "character-viewport-policy",
+        "assertions": 506,
+        "failures": 0
+      },
+      {
+        "id": "pixel-action-bank",
+        "assertions": 882332,
+        "failures": 0
+      },
+      {
+        "id": "hex-combat-labels",
+        "assertions": 674,
+        "failures": 0
+      },
+      {
+        "id": "pixel-cast",
+        "assertions": 87452,
+        "failures": 0
+      },
+      {
+        "id": "pixel-flipbook-presenter",
+        "assertions": 148430,
+        "failures": 0
+      },
+      {
+        "id": "hex-pressure-headroom",
+        "assertions": 5164,
+        "failures": 0
+      },
+      {
+        "id": "hex-contact-workset",
+        "assertions": 1049,
+        "failures": 0
+      },
+      {
+        "id": "hex-environment-layout",
+        "assertions": 473032,
+        "failures": 0
+      },
+      {
+        "id": "player-camera-rig",
+        "assertions": 402,
+        "failures": 0
+      },
+      {
+        "id": "wellspring-service-buildings",
+        "assertions": 415,
+        "failures": 0
+      },
+      {
+        "id": "wellspring-service-directory",
+        "assertions": 207,
+        "failures": 0
+      },
+      {
+        "id": "building-directory-integration",
+        "assertions": 76,
+        "failures": 0
+      },
+      {
+        "id": "hex-sparse-storage",
+        "assertions": 46,
+        "failures": 0
+      },
+      {
+        "id": "fullbody-cast",
+        "assertions": 332628,
+        "failures": 0
+      },
+      {
+        "id": "movement-checkpoint1",
+        "assertions": 99236,
+        "failures": 0
+      },
+      {
+        "id": "movement-checkpoint1-integration",
+        "assertions": 1942,
+        "failures": 0
+      },
+      {
+        "id": "movement-checkpoint1-visuals",
+        "assertions": 823,
+        "failures": 0
+      },
+      {
+        "id": "movement-checkpoint1-ground",
+        "assertions": 87,
+        "failures": 0
+      },
+      {
+        "id": "hex-render-frame",
+        "assertions": 284,
+        "failures": 0
+      },
+      {
+        "id": "hex-hash-specialization",
+        "assertions": 316,
+        "failures": 0
+      },
+      {
+        "id": "hex-water-pilot",
+        "assertions": 428,
+        "failures": 0
+      },
+      {
+        "id": "hex-clash-feedback",
+        "assertions": 35,
+        "failures": 0
+      },
+      {
+        "id": "hex-snapshot-optimization",
+        "assertions": 773,
+        "failures": 0
+      },
+      {
+        "id": "hex-branding",
+        "assertions": 11,
+        "failures": 0
+      }
+    ],
+    "without_completed_result_count": 155,
+    "without_completed_result_ids": [
+      "hex-steam-occupation",
+      "hex-handoff-presentation",
+      "session-transport-admin-close-delivery",
+      "hex-chemistry-knockouts",
+      "hex-canonical-sort",
+      "unified-reconciliation-order",
+      "unified-enet",
+      "hex-playground-panel",
+      "hex-playground-demo",
+      "unified-prediction",
+      "hex-optics",
+      "hex-trail-emitter",
+      "unified-authoritative-session",
+      "hex-actor-compat",
+      "world-snapshot-envelope",
+      "unified-hex-paid-matrix",
+      "partitioned-strength-budget",
+      "hex-cast-parts",
+      "hex-recipe-policy",
+      "hex-product-effects",
+      "hex-shared-presenter",
+      "hex-world-snapshot",
+      "hex-authored-shapes",
+      "hex-collision-world",
+      "hex-chemistry-snapshot",
+      "hex-world-definition",
+      "hex-shared-authority",
+      "hex-selection",
+      "hex-whole-coverage",
+      "character-weave-library",
+      "character-weave-policy",
+      "character-weave-integration",
+      "weave-acknowledgement",
+      "hex-field-interception",
+      "hex-strength",
+      "hex-projectile-combat",
+      "strength-budget",
+      "projectile-contact-order",
+      "continuous-contact",
+      "hex-footprint",
+      "hex-court-presenter",
+      "character-starter-kit",
+      "hex-grid",
+      "hex-court",
+      "hex-chemistry",
+      "spray-interception",
+      "spray-contact-geometry",
+      "interception-practice",
+      "interception-feedback",
+      "session-feedback-notice",
+      "runtime-build-identity",
+      "bootstrap-catch-up",
+      "controls-round-trip",
+      "authoritative-session",
+      "action-transition-policy",
+      "conservatory-route",
+      "ability-content",
+      "loadout-definition",
+      "combat-definition-table",
+      "champion-catalog",
+      "champion-roster-plan",
+      "character-overview-model",
+      "character-selection-model",
+      "character-selection-grid",
+      "champion-portrait-library",
+      "character-gallery-integration",
+      "movement-guide-model",
+      "movement-practice-coach",
+      "practice-coach-integration",
+      "player-compendium",
+      "runtime-content-summary",
+      "body-type-profile-catalog",
+      "control-binding-editor",
+      "spell-loom-editor",
+      "combat",
+      "four-delivery-admission",
+      "reaction-strength-provenance",
+      "collision-broadphase",
+      "training-target-system",
+      "elemental-bursts",
+      "spell-delivery-expansion",
+      "projectile-chemistry-integration",
+      "reaction-catalog",
+      "element-chemistry",
+      "rampart-movement",
+      "frostway-movement",
+      "capacitor-movement",
+      "capacitor-integration",
+      "element-trails",
+      "element-audio",
+      "chemistry-practice-coach",
+      "core",
+      "canonical-bytes",
+      "environment-kit-manifest",
+      "visual-language",
+      "element-glyph-renderer",
+      "visual-accessibility-filter",
+      "eight-direction-resolver",
+      "compact-combat-hud",
+      "wellspring-interaction-presenter",
+      "cartoon-champion-presenter",
+      "minimal-champion-motion",
+      "natural-map-kit",
+      "wellspring-wayfinding",
+      "wellspring-environment-kit",
+      "wellspring-architecture-kit",
+      "wellspring-illustrated-kit",
+      "foundation-spell-presenter",
+      "heavy-blast-presenter",
+      "spell-animation-skeleton-library",
+      "burst-projectile-presenter",
+      "element-chemistry-presenter",
+      "pixel-magic-library",
+      "pixel-effect-geometry",
+      "pixel-map-library",
+      "pixel-assets-export",
+      "hub-definition",
+      "input-router",
+      "jump-presentation",
+      "actor-motion-history",
+      "landing-presentation",
+      "material-content",
+      "material-grid",
+      "player-preferences",
+      "sanctum-campus-layout",
+      "sanctum-station-model",
+      "session-transport",
+      "lan-lobby",
+      "session-steward",
+      "spectator-focus",
+      "session-charter",
+      "session-hearth",
+      "session-round",
+      "session-snapshot",
+      "client-prediction",
+      "session-request-policy",
+      "sanctum-runtime-kit",
+      "sight-occlusion",
+      "pov-presentation",
+      "wireframe-body-presenter",
+      "movement-response",
+      "movement",
+      "movement-revision",
+      "movement-overhaul",
+      "movement-height",
+      "movement-float",
+      "movement-practice-trace",
+      "player-resources",
+      "skeleton-animation-library",
+      "visual-asset-registry",
+      "image-asset-inspector",
+      "wellspring-character-sprite",
+      "complete-visual-catalog",
+      "wellspring-visual-catalog",
+      "replay"
+    ],
+    "next_registered_suite": "hex-steam-occupation",
+    "missing_scope": "No completed result is available for these 155 suites; this does not assert that the first one never started.",
+    "timing_row_count": 112,
+    "completed_timing_sum_ms": 2640628,
+    "last_completed_suite": "hex-branding",
+    "last_completed_suite_timing_ms": 109,
+    "full_pass_marker_present": false,
+    "stderr_bytes": 0,
+    "other_error_warning_parse_markers": []
+  },
+  "gates": {
+    "producer_reported_pre_suite": {
+      "current_state_check": true,
+      "asset_inventory": true,
+      "doctor": true,
+      "import": true,
+      "post_import_identity_check": true
+    },
+    "independently_read_current_state_check": {
+      "passed": true,
+      "issue_count": 0,
+      "issues": []
+    },
+    "independently_read_asset_inventory_check": {
+      "passed": true,
+      "issues": []
+    },
+    "independently_read_class_cache": {
+      "canonical_count": 178,
+      "cache_count": 178,
+      "cache_sha256": "0db970364fa0749965706843578b5f8eae55368429fd870d1c764990171d2987",
+      "violations": [],
+      "passed": true
+    },
+    "boot_120_hz_executed": false,
+    "boot_log_present": false,
+    "boot_stderr_present": false,
+    "package_and_installer_executed": false,
+    "limits": "Doctor and post-import identity execution flags are producer-recorded; this audit did not rerun those commands. Empty stderr does not negate the nine assertion failures."
+  },
+  "runtime_identity": {
+    "value": {
+      "schema_version": 1,
+      "status": "candidate_generated_not_promoted",
+      "scope_id": "production-runtime-source-v1",
+      "canonical_encoding": "utf8-lf-tagged-length-v1",
+      "protocol_version": 61,
+      "snapshot_schema": 24,
+      "engine_identity": "4.7.1.stable.official.a13da4feb",
+      "record_count": 3450,
+      "runtime_source_sha256": "6618873387e2b62744f54ab845a03031dea83c7baa1506a2cab8de4c2cce715d",
+      "build_id": "p61-6618873387e2",
+      "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate."
+    },
+    "descriptor_path": "content/runtime/runtime_build_identity_v1.json",
+    "descriptor_sha256": "92a84630d0580eca340cacb6c4682ca78e3ad3739da366f422e7d33319d4303f",
+    "matches_archived_preflight": true,
+    "scope": "Recorded production identity remains unchanged by later test-only patches; not a new Full, package, CI or platform qualification."
+  },
+  "archive": {
+    "manifest_path": "docs/breakthrough-evidence-20261015/full-a/archive.json",
+    "manifest_sha256": "d3090a6eab52ee44b433dd0b789c4a0d82b735a76ad5c6c47a48c7dac21dd7bc",
+    "payload_count": 9,
+    "source_bytes": 3542641,
+    "stored_bytes": 159719,
+    "all_source_and_archive_bytes_verified": true,
+    "gzip_decoded_bytes_verified": true,
+    "records": [
+      {
+        "source": ".godot/iteration-20261015/breakthrough/runs/full-a/tests.json",
+        "archive": "docs/breakthrough-evidence-20261015/full-a/tests.json",
+        "source_sha256": "1b01eff4ca5f393554347c2e3b2eeba024708d362719450a10f65cfad5afda76",
+        "stored_sha256": "1b01eff4ca5f393554347c2e3b2eeba024708d362719450a10f65cfad5afda76",
+        "source_bytes": 14618,
+        "stored_bytes": 14618,
+        "compression": null,
+        "source_archive_bytes_match": true
+      },
+      {
+        "source": ".godot/windows-tests/dad304047ead4f8faab5927e75173cbd/asset-inventory.json",
+        "archive": "docs/breakthrough-evidence-20261015/full-a/asset-inventory.json.gz",
+        "source_sha256": "a3f9b5f9d80ec363cd70ebd0cd99f753265c32b6be914be6eb652186e68bb1e0",
+        "stored_sha256": "2098b0029eec07f0f6642ae7f14c54852f093a3ba5b3ac87dac3cac317d39aab",
+        "source_bytes": 3434907,
+        "stored_bytes": 51985,
+        "compression": "gzip",
+        "source_archive_bytes_match": true
+      },
+      {
+        "source": ".godot/windows-tests/dad304047ead4f8faab5927e75173cbd/current-state.json",
+        "archive": "docs/breakthrough-evidence-20261015/full-a/current-state.json",
+        "source_sha256": "53870aa64cfbb7ca4a2e2712b586c7f6c091f56f1b52e1b09c64a8d0d650726a",
+        "stored_sha256": "53870aa64cfbb7ca4a2e2712b586c7f6c091f56f1b52e1b09c64a8d0d650726a",
+        "source_bytes": 62845,
+        "stored_bytes": 62845,
+        "compression": null,
+        "source_archive_bytes_match": true
+      },
+      {
+        "source": ".godot/windows-tests/dad304047ead4f8faab5927e75173cbd/import.log",
+        "archive": "docs/breakthrough-evidence-20261015/full-a/import.log",
+        "source_sha256": "19e4d2e3dcb70c393135891070678ab0c0932d658bb65571e8d16de37238f096",
+        "stored_sha256": "19e4d2e3dcb70c393135891070678ab0c0932d658bb65571e8d16de37238f096",
+        "source_bytes": 1315,
+        "stored_bytes": 1315,
+        "compression": null,
+        "source_archive_bytes_match": true
+      },
+      {
+        "source": ".godot/windows-tests/dad304047ead4f8faab5927e75173cbd/import.log.err",
+        "archive": "docs/breakthrough-evidence-20261015/full-a/import.log.err",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stored_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_bytes": 0,
+        "stored_bytes": 0,
+        "compression": null,
+        "source_archive_bytes_match": true
+      },
+      {
+        "source": ".godot/windows-tests/dad304047ead4f8faab5927e75173cbd/receipt.json",
+        "archive": "docs/breakthrough-evidence-20261015/full-a/receipt.json",
+        "source_sha256": "1b01eff4ca5f393554347c2e3b2eeba024708d362719450a10f65cfad5afda76",
+        "stored_sha256": "1b01eff4ca5f393554347c2e3b2eeba024708d362719450a10f65cfad5afda76",
+        "source_bytes": 14618,
+        "stored_bytes": 14618,
+        "compression": null,
+        "source_archive_bytes_match": true
+      },
+      {
+        "source": ".godot/windows-tests/dad304047ead4f8faab5927e75173cbd/script-class-cache.json",
+        "archive": "docs/breakthrough-evidence-20261015/full-a/script-class-cache.json",
+        "source_sha256": "000032a227140e73284d45ad93643269d090c58d4fc4061cdec8cc933137a07c",
+        "stored_sha256": "000032a227140e73284d45ad93643269d090c58d4fc4061cdec8cc933137a07c",
+        "source_bytes": 182,
+        "stored_bytes": 182,
+        "compression": null,
+        "source_archive_bytes_match": true
+      },
+      {
+        "source": ".godot/windows-tests/dad304047ead4f8faab5927e75173cbd/suite.log",
+        "archive": "docs/breakthrough-evidence-20261015/full-a/suite.log",
+        "source_sha256": "07fc442db897a8f0d9d8d979d20eb05c73615dd0709d5c8f74adf9761bbe3d62",
+        "stored_sha256": "07fc442db897a8f0d9d8d979d20eb05c73615dd0709d5c8f74adf9761bbe3d62",
+        "source_bytes": 14156,
+        "stored_bytes": 14156,
+        "compression": null,
+        "source_archive_bytes_match": true
+      },
+      {
+        "source": ".godot/windows-tests/dad304047ead4f8faab5927e75173cbd/suite.log.err",
+        "archive": "docs/breakthrough-evidence-20261015/full-a/suite.log.err",
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stored_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_bytes": 0,
+        "stored_bytes": 0,
+        "compression": null,
+        "source_archive_bytes_match": true
+      }
+    ],
+    "review_manifest_membership": "This independently written review supplements the original immutable nine-payload copy manifest; it is not inserted into that manifest."
+  },
+  "historical_validation_input_check": {
+    "snapshot_path": "docs/breakthrough-evidence-20261015/validation-inputs.json",
+    "snapshot_sha256": "dcb0e9f6c74f986905629d03b1ba02b7f3e708dc0f2333bcd87f487f982f9a47",
+    "record_count": 4632,
+    "reported_by": "root",
+    "reported_result": "passed",
+    "reported_order": "After terminal Full and before applying the three reviewed test-only patches.",
+    "independent_scope": "This audit verified the snapshot file hash/count only. It did not independently rerun all 4632 input hashes after those patches and makes no such claim.",
+    "platform_scope": "Local Windows producer bytes; no Git LF/CRLF normalization, Linux checkout or CI claim."
+  },
+  "host_context": {
+    "reported_by": "root",
+    "independently_observed_by_this_reviewer": false,
+    "observed_at_utc": "2026-10-15T21:52:03Z",
+    "total_visible_mib": 7456,
+    "free_physical_mib": 460,
+    "total_virtual_mib": 25888,
+    "free_virtual_mib": 5075,
+    "godot_pid": 15604,
+    "godot_working_set_mib": 122,
+    "godot_cpu_seconds": 788.75,
+    "scope": "Read-only endpoint context reported by root while Full was active. Memory pressure is not a proved cause of the capture rejection or timeout, and does not justify relaxing 2700 seconds."
+  },
+  "limits": [
+    "The historical network publication rejection remains unexplained by this audit.",
+    "A passing focused rerun or dedicated diagnostic cannot replace this failed and incomplete Full result.",
+    "Later test-only fixture repairs and first-failure diagnostics are separate source revisions and evidence.",
+    "No boot, package, durable Circuit save/reopen, physical-player, performance/FPS or release acceptance follows from these partial results."
+  ]
+}

@@ -48,15 +48,21 @@ static func geometry(viewport: Vector2) -> Dictionary:
 	var size := Vector2(minf(1120, viewport.x - 48), minf(640, viewport.y - 48))
 	var panel := Rect2((viewport - size) * 0.5, size)
 	var split := minf(floorf(size.x * 0.62),size.x-256)
-	var page_size := clampi(floori((size.y-210)/ROW_HEIGHT),1,PAGE_SIZE)
-	var map := Rect2(panel.position + Vector2(18, 76), Vector2(split - 34, size.y - 180))
-	var list := Rect2(panel.position + Vector2(split, 76), Vector2(size.x - split - 18, page_size * ROW_HEIGHT))
+	var detail := Rect2(Vector2(panel.position.x + 18, panel.end.y - 80), Vector2(size.x - 200, 45))
+	var travel := Rect2(Vector2(panel.end.x - 166, panel.end.y - 78), Vector2(148, 42))
+	var controls_top := minf(detail.position.y, travel.position.y)
+	# Reserve the real 28px paging buttons and six-pixel gaps before admitting
+	# rows. At 200% text / 960x540 output, even the one-row page must clear Details.
+	var paging_space := 6.0 + 28.0 + 6.0
+	var list_top := minf(panel.position.y + 76, controls_top - ROW_HEIGHT - paging_space)
+	var page_size := clampi(floori((controls_top-list_top-paging_space)/ROW_HEIGHT),1,PAGE_SIZE)
+	var map := Rect2(Vector2(panel.position.x + 18, list_top), Vector2(split - 34, controls_top - list_top - 24))
+	var list := Rect2(Vector2(panel.position.x + split, list_top), Vector2(size.x - split - 18, page_size * ROW_HEIGHT))
 	return {"panel": panel, "map": map, "list": list,"page_size":page_size,
 		"close": Rect2(Vector2(panel.end.x - 92, panel.position.y + 14), Vector2(74, 32)),
 		"previous": Rect2(list.position + Vector2(0, list.size.y + 6), Vector2(72, 28)),
 		"next": Rect2(Vector2(list.end.x - 72, list.end.y + 6), Vector2(72, 28)),
-		"detail": Rect2(Vector2(panel.position.x + 18, panel.end.y - 80), Vector2(size.x - 200, 45)),
-		"travel": Rect2(Vector2(panel.end.x - 166, panel.end.y - 78), Vector2(148, 42))}
+		"detail": detail, "travel": travel}
 
 
 static func row_rect(index: int, geo: Dictionary) -> Rect2:

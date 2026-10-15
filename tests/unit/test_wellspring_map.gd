@@ -13,6 +13,7 @@ func run() -> int:
 	_test_projection(layout)
 	_test_input(layout)
 	_test_layout(layout)
+	_test_compact_controls(layout)
 	_test_compendium_request()
 	_test_selected_route(layout)
 	return finish("wellspring-map")
@@ -186,6 +187,40 @@ func _test_layout(layout: SanctumCampusLayout) -> void:
 				check(pin.distance_to(panel.project(panel.model.destination_position(previous), geo)) >= 22, "numbered pins do not obscure each other at the smallest viewport")
 		var travel: Rect2 = geo.travel
 		check(font.get_string_size("Travel  [Enter / A]", HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x <= travel.size.x - 12, "travel action retains full keyboard/controller label")
+
+
+func _test_compact_controls(layout: SanctumCampusLayout) -> void:
+	var panel := MapPanel.new()
+	check(panel.open(layout, layout.spawn * SimConfig.FIXED_SCALE), "compact controls use actual authored destinations")
+	for viewport: Vector2 in [Vector2(480,270), Vector2(640,360), Vector2(960,540), Vector2(1280,720)]:
+		var geo := MapPanel.geometry(viewport)
+		var targets: Array[String] = ["close", "previous", "next", "detail", "travel"]
+		for index: int in targets.size():
+			var target: Rect2 = geo[targets[index]]
+			check(target.has_area() and (geo.panel as Rect2).encloses(target), "compact map target remains visible: " + targets[index])
+			for other: int in range(index + 1, targets.size()):
+				check(not target.intersects(geo[targets[other]]), "map targets have one owner: " + targets[index] + "/" + targets[other])
+		var page_size := int(geo.page_size)
+		for direction: int in [-1, 1]:
+			var button: Rect2 = geo.previous if direction < 0 else geo.next
+			var points: Array[Vector2] = [button.position + Vector2(0.5,0.5), Vector2(button.end.x-0.5,button.position.y+0.5), button.get_center(), Vector2(button.position.x+0.5,button.end.y-0.5), button.end-Vector2(0.5,0.5)]
+			for point: Vector2 in points:
+				var start := page_size + 1 if direction < 0 else 1
+				panel.model.select(start)
+				panel.detail_page = 0
+				check(panel.handle_input(_click(point),viewport).is_empty(), "paging corners and center cannot issue travel")
+				equal(panel.model.selected_index, start + direction * page_size, "every painted paging edge changes the intended page")
+				equal(panel.detail_page, 0, "paging bottom edge cannot be consumed as Details")
+		panel.model.select(1)
+		panel.detail_page = 0
+		check(panel.handle_input(_click((geo.detail as Rect2).get_center()),viewport).is_empty(), "Details never issues travel")
+		equal(panel.detail_page, 1, "Details has its own click target")
+		equal(panel.model.selected_index, 1, "Details preserves destination selection")
+		var destination_id := String(panel.model.selected_destination().id)
+		equal(panel.handle_input(_click((geo.travel as Rect2).get_center()),viewport), {"action":"travel","destination_id":destination_id}, "Travel alone confirms the selected authored destination")
+		panel.set_availability({"enabled":false,"reason":"Prepared unavailable control."})
+		check(panel.handle_input(_click((geo.travel as Rect2).get_center()),viewport).is_empty(), "compact Travel preserves authority availability")
+		panel.set_availability({"enabled":true})
 
 
 func _test_compendium_request() -> void:

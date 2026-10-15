@@ -1,16 +1,32 @@
 # H.E.X. — Help, Everything eXploded!
 
-Status: **active improvement pass; October 15 design complete; Windows work paused for Linux handoff.**
+Status: **active improvement pass; unqualified local Rival Circuit candidate. Full-a failed; seven-suite focused review passed.**
 Stop before 20,000 credits remain.
+The [product assessment](docs/BREAKTHROUGH-ASSESSMENT-20261015.md) prioritizes a
+coherent rival → earned spell → next fight loop. Candidate work on
+`codex/hex-breakthrough-20261015` adds an optional three-rival Circuit, explicit
+temporary learned-spell reuse, a compact-map control fix and launcher observer
+selection. Candidate source does not replace the qualified portable automatically.
+Candidate **p61-6618873387e2** remains unqualified: [Full-a](docs/breakthrough-evidence-20261015/full-a/tests.json)
+completed 112 of 267 suites, with 5,280,932 assertions and nine failures, before
+the 2,700-second timeout; 155 suites did not complete and boot did not run.
+Three reviewed test-only follow-ups are applied. The seven-suite
+`focused-review-a` passed **65,133 assertions, zero failures/stderr**, in
+**264,217 ms** on unchanged runtime identity. Those suites do not cover the
+failing eight-player network scenario; its historical capture cause remains
+unresolved. Clean Windows CI Full is **planned** for the candidate branch,
+separate from the failed local Full. No Full pass or replacement delivery is
+claimed. See the [candidate evidence](docs/breakthrough-evidence-20261015/README.md).
 The [cross-reviewed overhaul proposal](docs/OVERHAUL-DESIGN-20261015.md) targets
 the selected illustrated 2.5D animated-sprite direction, clear spell areas,
 tall enterable architecture, compact learning and measured optimization.
 It is a design deliverable; its runtime changes are not implemented.
 
-**Continuing on Linux:** clone or pull `codex/hex-screen-smoothness-20261011`, then
+**Restoring the published Linux handoff:** clone or pull `codex/hex-screen-smoothness-20261011`, then
 read the [Linux CLI handoff](.agent/LINUX-HANDOFF.md). It contains the restore
 commands, current state, validation limits and receiving prompt. The complete
-checkpoint is carried by Git; the older ZIP overlay is no longer needed.
+checkpoint is carried by Git; the older ZIP overlay is no longer needed. Windows
+product work has since resumed on the separate candidate branch named above.
 
 The qualified local portable remains **p61-d6d1bfb9c529**. It includes the reviewed
 stationary movement optimization and the preceding depth/clarity improvements:
@@ -73,7 +89,9 @@ This Git repository contains the game source, required art, tests and qualificat
 evidence. Exported EXE/PCK/ZIP files and local profiles are excluded from Git;
 cloning the repository does not download a prebuilt portable.
 
-The current source is on `codex/hex-screen-smoothness-20261011`. `main` remains at `95ca630`
+The current source candidate is on `codex/hex-breakthrough-20261015`, based on
+the published `codex/hex-screen-smoothness-20261011` handoff at `aec900a`.
+`main` remains at `95ca630`
 with the earlier be3 runtime. Use the [development guide](docs/DEVELOPMENT.md)
 to select and update the intended branch before launching from source.
 

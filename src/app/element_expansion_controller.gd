@@ -11,6 +11,8 @@ const TestingPanelScript = preload("res://src/presentation/spell_testing_panel.g
 const Introduction = preload("res://src/app/optional_introduction.gd")
 const DiagnosticReplay = preload("res://src/app/diagnostic_replay_session.gd")
 const RangeTarget = preload("res://src/app/range_target_scenario.gd")
+const Circuit = preload("res://src/app/signature_circuit.gd")
+const CircuitPanel = preload("res://src/presentation/signature_circuit_panel.gd")
 const ENTRIES := [
 	["expansion-introduction", "INTRODUCTION", "Learn by doing; skip at any time", KEY_F5, false],
 	["expansion-range", "SPELL RANGE", "Try every element and delivery", KEY_F6, false],
@@ -31,6 +33,10 @@ var notice := ""
 var _last_reward := ""
 var diagnostic_replay := DiagnosticReplay.new()
 var range_target := RangeTarget.new()
+var circuit := Circuit.new()
+var circuit_panel := CircuitPanel.new()
+var _circuit_transition := false
+var _circuit_spell_wire := 0
 
 
 func configure(owner: Node) -> bool:
@@ -76,6 +82,9 @@ func refresh_loom() -> void:
 
 func before_transition() -> void:
 	diagnostic_replay.stop()
+	if not _circuit_transition:
+		circuit.reset()
+		_circuit_spell_wire = 0
 	# Called before any old actor can be copied into a normal saved/session weave.
 	if game != null and game.world != null:
 		var actor: PlayerState = game._local_player_state()
@@ -131,6 +140,7 @@ func after_step() -> void:
 	if game.element_audio != null: game.element_audio.observe_movement(game._local_player_state(),game.world.tick,audio_allowed)
 	if challenge_active:
 		challenge.observe(game.world, progression, offline(), developer.active)
+		if challenge.trial.is_finished(): circuit.observe_result(challenge.view())
 		if not challenge.reward.is_empty():
 			var text := String(challenge.reward.get("notice", ""))
 			if text != _last_reward:
@@ -181,6 +191,8 @@ func activate(id: String) -> bool:
 		return false
 	_close_other_panels()
 	match id:
+		"expansion-circuit":
+			return start_circuit()
 		"expansion-range":
 			var preset := garden_range_preset()
 			return open_range_preset(int(preset.get("mask",training.selected_mask)),String(preset.get("family",training.selected_family)))
@@ -218,6 +230,7 @@ func progress_action(id: String) -> Dictionary:
 	if bool(result.get("saved",false)) and bool(challenge.reward.get("ok",false)):
 		challenge.reward.saved = true
 		challenge.reward.notice = String(result.notice)
+		circuit.refresh_reward(challenge.reward)
 		# A finished challenge stops simulation ticks; a real retry receipt can
 		# finish the final observer gate without inventing a combat event.
 		if guide.active and guide.tactical and guide.step == 3:
@@ -271,6 +284,16 @@ func handle_input(event: InputEvent) -> bool:
 		return true
 	if game.controls_editor != null and game.controls_editor.is_open: return false
 	if game._directory_child_open() or game.service_directory.is_open or game.solo_trial_menu_open: return false
+	if challenge_active and challenge.trial.is_finished() and bool(circuit.view().get("active",false)):
+		var transformed := event
+		if event is InputEventMouse:
+			transformed = event.duplicate()
+			transformed.position = event.position / game._ui_scale()
+		var action: String = circuit_panel.handle_input(transformed, game.get_viewport_rect().size / game._ui_scale(), circuit_view())
+		if not action.is_empty():
+			apply_circuit_action(action)
+			_handoff()
+		return true
 	if challenge_active and challenge.trial.is_finished() and event is InputEventJoypadButton and event.pressed and event.button_index == JOY_BUTTON_X:
 		var progress := progression.view()
 		if bool(progress.get("can_recover_backup",false)): progress_action("expansion-recover-save"); return true
@@ -367,8 +390,9 @@ func _apply_panel_action(action: Dictionary) -> void:
 			show_notice("Practice tool applied: " + String(action.action).replace("_", " "))
 
 
-func start_challenge(id: String) -> bool:
+func start_challenge(id: String, circuit_wire: int = 0) -> bool:
 	if not offline(): return false
+	if circuit_wire != 0 and (not _circuit_transition or not progression.can_equip(circuit_wire)): return false
 	var definition := Challenges.definition(id, game.champion_catalog, game.ability_catalog)
 	if definition.is_empty(): return false
 	var candidate: SimWorld = game._new_wellspring_world(game.tick_rate)
@@ -380,6 +404,9 @@ func start_challenge(id: String) -> bool:
 	var opponent := candidate.player(2)
 	if not game.champion_catalog.apply_to_player(actor, game.selected_champion_id): return false
 	game.character_weaves.restore_actor(actor, true)
+	# Explicit circuit choice applies only to this fresh encounter. The existing
+	# temporary-session transition guard keeps it out of the saved normal weave.
+	if circuit_wire != 0 and not actor.place_proven_spell(0, circuit_wire): return false
 	if not game.champion_catalog.apply_to_player(opponent, id): return false
 	if not opponent.place_proven_spell(0, int(definition.signature_wire)): return false
 	# This is a fresh candidate before session admission, never a mid-fight warp.
@@ -406,6 +433,68 @@ func start_challenge(id: String) -> bool:
 	show_notice("%s · Defeat %s to learn %s. %s" % [String(anchors.district_label), String(definition.name), String(definition.spell_name), String(anchors.purpose)])
 	_handoff()
 	return true
+
+
+func start_circuit() -> bool:
+	if game == null or game.tick_rate != 120:
+		show_notice("Rival Circuit requires the standard 120 Hz session.")
+		return false
+	if not offline() or developer.active:
+		show_notice("Leave developer practice before starting a Rival Circuit.")
+		return false
+	var prepared := Circuit.new()
+	prepared.begin()
+	var id: String = prepared.current_id()
+	_circuit_transition = true
+	var started := start_challenge(id)
+	_circuit_transition = false
+	if not started: return false
+	circuit = prepared
+	circuit_panel.reset_selection()
+	_circuit_spell_wire = 0
+	return circuit.admit_current(id)
+
+
+func circuit_view() -> Dictionary:
+	var result: Dictionary = circuit.view()
+	result["progress"] = progression.view()
+	result["reward"] = challenge.reward.duplicate(true)
+	result["challenge"] = challenge.definition.duplicate(true)
+	return result
+
+
+func apply_circuit_action(action: String) -> bool:
+	if not offline() or not challenge_active or not challenge.trial.is_finished() or not bool(circuit.view().get("active",false)): return false
+	match action:
+		"circuit-leave":
+			return game._start_match(game.tick_rate)
+		"circuit-replay":
+			return start_circuit()
+		"circuit-save":
+			var progress := progression.view()
+			if bool(progress.get("can_recover_backup",false)): progress_action("expansion-recover-save")
+			elif bool(progress.get("can_retry_save",false)): progress_action("expansion-retry-save")
+			else: return false
+			return true
+		"circuit-try":
+			if not bool(circuit.view().get("complete",false)) or not bool(challenge.reward.get("ok",false)): return false
+			return open_range_preset(int(challenge.definition.mask), String(challenge.definition.family))
+		"circuit-next", "circuit-next-learned", "circuit-retry":
+			var retry := action == "circuit-retry"
+			var id: String = circuit.retry_id() if retry else circuit.next_id()
+			if id.is_empty(): return false
+			var wire := _circuit_spell_wire
+			if action == "circuit-next-learned":
+				if not bool(challenge.reward.get("ok",false)): return false
+				wire = int(challenge.definition.signature_wire)
+				if not progression.can_equip(wire): return false
+			_circuit_transition = true
+			var started := start_challenge(id, wire)
+			_circuit_transition = false
+			if not started: return false
+			_circuit_spell_wire = wire
+			return circuit.admit_retry(id) if retry else circuit.admit_next(id)
+	return false
 
 
 func show_notice(text: String) -> void:
@@ -467,6 +556,9 @@ func draw(canvas: CanvasItem, font: Font, viewport: Vector2) -> void:
 		panel.draw(canvas, font, viewport)
 		return
 	if game._directory_child_open() or game.service_directory.is_open or game.solo_trial_menu_open: return
+	if challenge_active and challenge.trial.is_finished() and bool(circuit.view().get("active",false)):
+		circuit_panel.draw(canvas, font, viewport, circuit_view())
+		return
 	if entry_buttons_visible():
 		for index: int in ENTRIES.size():
 			var rect := entry_rect(index, viewport)
@@ -484,7 +576,10 @@ func draw(canvas: CanvasItem, font: Font, viewport: Vector2) -> void:
 		var box := challenge_banner_rect(viewport)
 		var width := box.size.x - 28
 		canvas.draw_rect(box, Color("12242bea"))
-		canvas.draw_string(font, box.position + Vector2(14, 23), String(challenge.definition.spell_name), HORIZONTAL_ALIGNMENT_LEFT, width, 16, Color("eadfc3"))
+		var heading := String(challenge.definition.spell_name)
+		var route: Dictionary = circuit.view()
+		if bool(route.active): heading = "%d / %d · %s" % [int(route.stage)+1,int(route.total),heading]
+		canvas.draw_string(font, box.position + Vector2(14, 23), heading, HORIZONTAL_ALIGNMENT_LEFT, width, 16, Color("eadfc3"))
 		var y := box.position.y + 43
 		for line: String in TestingPanelScript._wrap(text, font, 12, width):
 			if y > box.end.y - 20: break

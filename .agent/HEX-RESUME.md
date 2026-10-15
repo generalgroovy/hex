@@ -1,11 +1,26 @@
 # H.E.X. resume handoff
 
-Status: **WINDOWS CHECKPOINT FOR LINUX HANDOFF — October 15; stop at 20,000 credits remaining.**
-Read [Linux handoff](LINUX-HANDOFF.md) for restoration, platform boundaries and
-the receiving prompt. The Windows agents have completed their work; no engine
-session is running for this handoff. The user authorized publishing the complete
-checkpoint on `codex/hex-screen-smoothness-20261011`; use Git clone/pull as described
-in the handoff, without applying the earlier ZIP overlay.
+Status: **ACTIVE PRODUCT IMPLEMENTATION — October 15; stop before 20,000 credits remain.**
+The user resumed development after the completed Git handoff, authorizing deep
+analysis and implementation toward a compelling indie game. Active local branch:
+`codex/hex-breakthrough-20261015`, based on published `aec900a`. The previous
+presentation branch remains the stable [Linux handoff](LINUX-HANDOFF.md).
+Read the [product assessment](../docs/BREAKTHROUGH-ASSESSMENT-20261015.md) for the
+new priorities. Circuit/navigation/measurement-tool changes are candidate work;
+their current validation belongs in the single queue. The qualified portable
+selection is unchanged. Local candidate **p61-6618873387e2** (3,450 runtime
+records) is **unqualified**. [Full-a](../docs/breakthrough-evidence-20261015/full-a/tests.json)
+failed after 112 of 267 suites, 5,280,932 assertions and nine failures, then
+reached its 2,700-second timeout. The remaining 155 suites did not complete;
+boot did not run. Three reviewed test-only follow-ups are applied. The
+seven-suite `focused-review-a` passed **65,133 assertions, zero failures/stderr**,
+in **264,217 ms**. It includes tools **58,514 / 0** and Circuit integration
+**314 / 0** with InputMap cleanup, but not the failing eight-player network
+scenario. Runtime 661887 is unchanged; the historical network-capture cause
+and coherent Full qualification remain open. Clean Windows CI Full on the
+candidate branch is planned as separate validation, with no result yet.
+[Candidate evidence](../docs/breakthrough-evidence-20261015/README.md) separates
+these failures from the earlier passing focused and prepared-layout checks.
 The [single queue](OVERHAUL-IMPLEMENTATION.md) owns all current work and assigns
 an implementer and independent reviewer to every point. The completed design request
 was analysis and complete overhaul design. The user selected illustrated 2.5D with
@@ -20,9 +35,9 @@ implementation work and its pending measurements remain in the single queue.
 ## Source and playable delivery
 
 Repository: `C:/Users/sende/Projects/hex`; branch:
-`codex/hex-screen-smoothness-20261011`. `Documents/ChatGPT/H.E.X` is a wrapper.
-Pre-handoff base commit: **38f1bc3**; `main` remains `95ca630`.
-Working source: **p61-d6d1bfb9c529**, SHA
+`codex/hex-breakthrough-20261015`. `Documents/ChatGPT/H.E.X` is a wrapper.
+Published handoff base commit: **aec900a**; `main` remains `95ca630`.
+Qualified baseline source: **p61-d6d1bfb9c529**, SHA
 `d6d1bfb9c5292d8dffbeade6e1cf460cd3a23ee54a655da7069d75e4cb572d44`.
 The stationary velocity change and regression are integrated and peer-reviewed.
 Full passed through the desktop Diagnostic runner with 1,693 frozen inputs:

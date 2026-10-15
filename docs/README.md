@@ -1,6 +1,6 @@
 # H.E.X. documentation map
 
-Status: October 15 overhaul proposal completed; qualified delivery is p61-d6d1bfb9c529.
+Status: unqualified local product-loop candidate p61-6618873387e2; local Full-a failed; seven-suite focused review passed (65,133 assertions, zero failures/stderr). Qualified desktop delivery remains p61-d6d1bfb9c529.
 
 The **single queue** tracks active work. The qualified playable build is **p61-d6d1bfb9c529**; 6459 is the immediate fallback, with 7804 and older builds preserved. Use the **H.E.X. desktop shortcut** on this PC, through `C:/Users/sende/Documents/ChatGPT/H.E.X/PLAY-HEX.cmd`.
 
@@ -10,6 +10,8 @@ The **single queue** tracks active work. The qualified playable build is **p61-d
 | Restore this checkpoint on a separate Linux computer | [Linux CLI handoff](../.agent/LINUX-HANDOFF.md) |
 | Controls, first session, map, spells and Garden | [Player guide](PLAYER-GUIDE.md) |
 | Current tasks and implementer/reviewer ownership | [Single implementation queue](../.agent/OVERHAUL-IMPLEMENTATION.md) |
+| Product gaps, audience hypothesis and implementation priorities | [Breakthrough assessment](BREAKTHROUGH-ASSESSMENT-20261015.md) |
+| Current candidate validation and failed Full archive | [Candidate evidence](breakthrough-evidence-20261015/README.md), [terminal Full-a receipt](breakthrough-evidence-20261015/full-a/tests.json) |
 | Proposed complete overhaul, evidence, agent coverage and acceptance stages | [October 15 overhaul design](OVERHAUL-DESIGN-20261015.md) |
 | Current batch decisions, review and checks | [Depth and clarity record](depth-clarity-20261013.md) |
 | Exact delivery identity and unresolved acceptance | [Resume handoff](../.agent/HEX-RESUME.md) |
@@ -23,6 +25,10 @@ The **single queue** tracks active work. The qualified playable build is **p61-d
 | Previous-build foreground measurement; current build unmeasured | [6459 source performance review](performance-evidence-20261014/foreground-6459-b/review.json), [raw recording and limits](performance-evidence-20261014/foreground-6459-b/README.md) |
 | Current casting/Garden investigations | [Qualified stationary optimization](performance-evidence-20261014/stationary-ground/README.md), [casting stage measurements](performance-evidence-20261014/casting-stage-attribution/README.md), [Fire decoration withdrawal](performance-evidence-20261014/conflagration-decoration-coalescing/README.md), [Garden marker-budget withdrawal](performance-evidence-20261014/garden-sample-budget/README.md), [Garden attribution and limits](performance-evidence-20261014/garden-attribution/README.md), [membership withdrawal](performance-evidence-20261014/occupied-membership/README.md), [ground-speed withdrawal](performance-evidence-20261014/movement-ground-speed/README.md) |
 | Previous checkpoints | [October 13 ledger](iteration-20261013/README.md), [October 12 iteration](iteration-20261012/README.md), [smoothness pass](smoothness-20261012/README.md), [October 12 implementation](implementation-20261012/README.md), [October 11 audit](audit-implementation-20261011/README.md) |
+
+Clean Windows CI Full is planned on the candidate branch as separate
+validation. It has not produced a result; the historical network-capture
+failure and overall candidate qualification remain open.
 
 ## Reading evidence correctly
 

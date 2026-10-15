@@ -25,7 +25,7 @@ function Copy-Ci([object]$Value) { return $Value | ConvertTo-Json -Depth 12 | Co
 $source = Get-Content -Raw -LiteralPath (Join-Path $ciTestRoot 'tests/run_all.gd')
 $registry = @(Get-HexRegisteredSuiteIds $source)
 $plan = Get-HexPrSuitePlan $registry
-Check-Ci ($plan.required_ids.Count -eq 38 -and $plan.shards.Count -eq 3 -and (@($plan.shards | ForEach-Object {$_.suites.Count}) -join ',') -ceq '4,10,24') 'Explicit 38-suite policy has three bounded 4/10/24 runs'
+Check-Ci ($plan.required_ids.Count -eq 41 -and $plan.shards.Count -eq 4 -and (@($plan.shards | ForEach-Object {$_.suites.Count}) -join ',') -ceq '3,4,10,24') 'Explicit 41-suite policy has four bounded 3/4/10/24 runs'
 foreach ($id in @('completed-step-profile', 'defeated-pending-capture', 'wellspring-async-terrain-stream', 'cast-startup-witness', 'player-camera-rig', 'performance-presentation', 'wellspring-illustrated-kit')) {
     Check-Ci ($plan.required_ids -ccontains $id) "New authority/loading regression is selected: $id"
 }

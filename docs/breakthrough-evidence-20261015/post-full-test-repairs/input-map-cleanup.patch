@@ -1,0 +1,54 @@
+--- a/tests/unit/test_signature_circuit_integration.gd
++++ b/tests/unit/test_signature_circuit_integration.gd
+@@ -5,6 +5,9 @@
+ 
+ 
+ func run() -> int:
++	# Real match startup configures the process-global InputMap. Preserve the
++	# exact caller action set, bindings and deadzones before fixture setup.
++	var previous_input_map := _capture_input_map()
+ 	var previous_mouse := Input.mouse_mode
+ 	var game := Fixture.new()
+ 	check(game.configure_trial_fixture(), "circuit fixture loads actual world and catalogs")
+@@ -93,5 +96,41 @@
+ 	check(game._start_match(120), "external return cancels route")
+ 	check(not bool(expansion.circuit_view().active) and expansion._circuit_spell_wire == 0, "external transition clears circuit-only state")
+ 	game.free()
++	_restore_input_map(previous_input_map)
++	var restored_input_map := _capture_input_map()
++	var before_actions: Array = previous_input_map.keys()
++	var after_actions: Array = restored_input_map.keys()
++	before_actions.sort()
++	after_actions.sort()
++	equal(after_actions, before_actions, "circuit teardown restores the original InputMap action set, including absent actions")
++	for action: StringName in before_actions:
++		if not restored_input_map.has(action): continue
++		equal(restored_input_map[action].deadzone, previous_input_map[action].deadzone, "circuit teardown restores the exact action deadzone: %s" % action)
++		equal(var_to_bytes_with_objects(restored_input_map[action].events), var_to_bytes_with_objects(previous_input_map[action].events), "circuit teardown restores ordered complete event bindings: %s" % action)
+ 	Input.mouse_mode = previous_mouse
++	equal(Input.mouse_mode, previous_mouse, "circuit teardown restores the caller mouse mode")
+ 	return finish("signature-circuit-integration")
++
++
++func _capture_input_map() -> Dictionary:
++	var result := {}
++	for action: StringName in InputMap.get_actions():
++		var events: Array[InputEvent] = []
++		for event: InputEvent in InputMap.action_get_events(action):
++			events.append(event.duplicate(true))
++		result[action] = {"deadzone": InputMap.action_get_deadzone(action), "events": events}
++	return result
++
++
++func _restore_input_map(snapshot: Dictionary) -> void:
++	for action: StringName in InputMap.get_actions():
++		if not snapshot.has(action):
++			Input.action_release(action)
++			InputMap.erase_action(action)
++	for action: StringName in snapshot:
++		if not InputMap.has_action(action):
++			InputMap.add_action(action, float(snapshot[action].deadzone))
++		InputMap.action_erase_events(action)
++		for event: InputEvent in snapshot[action].events:
++			InputMap.action_add_event(action, event.duplicate(true))
++		InputMap.action_set_deadzone(action, float(snapshot[action].deadzone))

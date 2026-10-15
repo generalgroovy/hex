@@ -1,0 +1,72 @@
+extends SceneTree
+
+const CircuitPanel = preload("res://src/presentation/signature_circuit_panel.gd")
+const Circuit = preload("res://src/app/signature_circuit.gd")
+const Challenges = preload("res://src/content/signature_challenge_catalog.gd")
+const MapPanel = preload("res://src/presentation/wellspring_map_panel.gd")
+
+class Surface extends Node2D:
+	var panel: RefCounted
+	var map_panel: RefCounted
+	var data: Dictionary = {}
+	var logical := Vector2(960, 540)
+	func _draw() -> void:
+		draw_rect(Rect2(Vector2.ZERO, logical), Color("33423f"))
+		if map_panel != null: map_panel.draw(self, ThemeDB.fallback_font, logical)
+		else: panel.draw(self, ThemeDB.fallback_font, logical, data)
+
+func _initialize() -> void:
+	call_deferred("_capture")
+
+func _capture() -> void:
+	root.content_scale_size = Vector2i(960, 540)
+	var output := ""
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--output="): output = argument.trim_prefix("--output=")
+	if output.is_empty():
+		push_error("capture output required")
+		quit(1)
+		return
+	var abilities := AbilityCatalog.new()
+	var champions := ChampionCatalog.new()
+	assert(abilities.load_from_file("res://content/abilities/foundation_abilities_v1.json"))
+	assert(champions.load_from_file("res://content/champions/foundation_champions_v1.json", abilities))
+	var circuit := Circuit.new()
+	circuit.begin()
+	assert(circuit.admit_current(circuit.current_id()))
+	var surface := Surface.new()
+	surface.panel = CircuitPanel.new()
+	root.add_child(surface)
+	for stage: int in 3:
+		var definition: Dictionary = Challenges.definition(Circuit.ROUTE[stage], champions, abilities)
+		# A prepared UI fixture; real paid combat is verified by the integration suite.
+		assert(circuit.observe_result({"finished": true, "phase": "victory", "challenge": definition,
+			"developer": false, "elapsed_ticks": 3901 + stage * 1440, "health": 74250,
+			"health_maximum": 100000, "paid_casts": 23, "interceptions": 2,
+			"reward": {"ok": true, "new": true, "saved": stage != 1,
+				"wire": int(definition.signature_wire), "notice": ""}}))
+		for zoom: int in [1, 2]:
+			surface.logical = Vector2(960, 540) / zoom
+			surface.scale = Vector2.ONE * zoom
+			surface.data = circuit.view()
+			surface.data.progress = {"can_retry_save": stage == 1}
+			surface.queue_redraw()
+			await process_frame
+			await RenderingServer.frame_post_draw
+			assert(root.get_texture().get_image().save_png(output.path_join("circuit-%d-scale-%d.png" % [stage + 1, zoom])) == OK)
+		if stage < 2: assert(circuit.admit_next(circuit.next_id()))
+	var layout := SanctumCampusLayout.new()
+	assert(layout.load_from_file("res://content/maps/sanctum_campus_g2_v1.json"))
+	surface.map_panel = MapPanel.new()
+	assert(surface.map_panel.open(layout, layout.spawn * SimConfig.FIXED_SCALE, {"enabled": true}))
+	for zoom: int in [1, 2]:
+		surface.logical = Vector2(960, 540) / zoom
+		surface.scale = Vector2.ONE * zoom
+		surface.queue_redraw()
+		await process_frame
+		await RenderingServer.frame_post_draw
+		assert(root.get_texture().get_image().save_png(output.path_join("map-scale-%d.png" % zoom)) == OK)
+	print("PASS: 8 native UI fixture captures; not gameplay, human input or performance evidence")
+	surface.queue_free()
+	await process_frame
+	quit(0)
