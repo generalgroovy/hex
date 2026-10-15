@@ -1,22 +1,27 @@
 # H.E.X. — Help, Everything eXploded!
 
-Status: **active improvement pass; unqualified local Rival Circuit candidate. Full-a failed; seven-suite focused review passed.**
+Status: **active improvement pass; clean Windows Full passed; Rival Circuit source candidate is not packaged or promoted.**
+Status updated **October 16, 2026**.
 Stop before 20,000 credits remain.
 The [product assessment](docs/BREAKTHROUGH-ASSESSMENT-20261015.md) prioritizes a
 coherent rival → earned spell → next fight loop. Candidate work on
 `codex/hex-breakthrough-20261015` adds an optional three-rival Circuit, explicit
 temporary learned-spell reuse, a compact-map control fix and launcher observer
 selection. Candidate source does not replace the qualified portable automatically.
-Candidate **p61-6618873387e2** remains unqualified: [Full-a](docs/breakthrough-evidence-20261015/full-a/tests.json)
-completed 112 of 267 suites, with 5,280,932 assertions and nine failures, before
-the 2,700-second timeout; 155 suites did not complete and boot did not run.
-Three reviewed test-only follow-ups are applied. The seven-suite
-`focused-review-a` passed **65,133 assertions, zero failures/stderr**, in
-**264,217 ms** on unchanged runtime identity. Those suites do not cover the
-failing eight-player network scenario; its historical capture cause remains
-unresolved. Clean Windows CI Full is **planned** for the candidate branch,
-separate from the failed local Full. No Full pass or replacement delivery is
-claimed. See the [candidate evidence](docs/breakthrough-evidence-20261015/README.md).
+Candidate **p61-6618873387e2** passed [clean Windows CI Full 38817305452](https://github.com/generalgroovy/hex/actions/runs/38817305452)
+at pushed commit **932f5974fe17a8d2432d8f82873eb86faf564543**: **267 suites /
+7,576,123 assertions / zero failures**, all three stderr files empty, and a
+correct **120 Hz boot**. The [independent CI review](docs/breakthrough-evidence-20261015/ci-full-38817305452/independent-review.json)
+reconciles the complete source validation. This candidate has **not been packaged
+or promoted**; desktop Play remains on qualified d6d1.
+The earlier local [Full-a](docs/breakthrough-evidence-20261015/full-a/tests.json)
+remains failed: 112 of 267 suites completed, 5,280,932 assertions and nine failures,
+then a 2,700-second timeout; 155 suites did not complete and boot did not run.
+Three test-only follow-ups were applied; seven-suite `focused-review-a` passed
+**65,133 assertions, zero failures/stderr**, in **264,217 ms**. Local outage
+diagnostics A/B passed **6,478 / 0** and **6,465 / 0**, each with 241 trace rows.
+Neither those reruns nor the later CI pass establish the historical capture
+failure's cause or retroactively pass local Full-a. See the [candidate evidence](docs/breakthrough-evidence-20261015/README.md).
 The [cross-reviewed overhaul proposal](docs/OVERHAUL-DESIGN-20261015.md) targets
 the selected illustrated 2.5D animated-sprite direction, clear spell areas,
 tall enterable architecture, compact learning and measured optimization.
@@ -61,9 +66,9 @@ in the current delivery. The [Garden marker-budget trial](docs/performance-evide
 and [Low-detail overlapping-Fire decoration trial](docs/performance-evidence-20261014/conflagration-decoration-coalescing/README.md)
 were withdrawn after failing their cost gates. Neither renderer change was applied.
 
-The [single queue](.agent/OVERHAUL-IMPLEMENTATION.md) tracks the approved depth,
-clarity and maintenance pass, with an implementer and independent reviewer for
-each point. The [resume handoff](.agent/HEX-RESUME.md) records the current delivery;
+The [single queue](.agent/OVERHAUL-IMPLEMENTATION.md) separates delivered depth,
+clarity and maintenance capabilities from the next ranked product and acceptance
+gates, with an implementer and independent reviewer for each point. The [resume handoff](.agent/HEX-RESUME.md) records the current delivery;
 the [closed iteration record](docs/iteration-20261013/README.md) retains earlier
 completed, withdrawn and deferred work. User saves, original art, older working
 builds and useful failed evidence remain preserved.
@@ -84,6 +89,19 @@ On this PC, use the **H.E.X. desktop shortcut** for all player sessions. Its
 stable launcher is `C:/Users/sende/Documents/ChatGPT/H.E.X/PLAY-HEX.cmd` and selects
 the qualified portable. Source testing uses the repository tools below; candidate
 source is not automatically substituted for the qualified play build.
+
+To inspect the **source candidate, not yet packaged, on this PC**, use the same wrapper
+with its explicit Source mode from PowerShell:
+
+```powershell
+& 'C:/Users/sende/Documents/ChatGPT/H.E.X/PLAY-HEX.cmd' -Mode Source
+```
+
+Open **Menu** with **Esc / controller Back / click Menu**; **Rival Circuit** is
+selected first. Press **Enter / A**, or click it. Custom bindings still take
+priority; the visible Menu button remains the fallback. Normal desktop **Play**
+continues to select qualified d6d1. This local Source route is separate from the
+fresh-PC portable instructions below.
 
 This Git repository contains the game source, required art, tests and qualification
 evidence. Exported EXE/PCK/ZIP files and local profiles are excluded from Git;
@@ -245,7 +263,7 @@ Temporary Range/Developer weaves do not overwrite the player's saved weave.
 ## Evidence, design and limits
 
 The [October 12 iteration record](docs/iteration-20261012/README.md)
-tracks the current code changes, independent reviews, completed checks and remaining
+retains that historical batch's code changes, independent reviews, completed checks and remaining
 acceptance work.
 The [preserved October 11 audit](docs/audit-implementation-20261011/README.md)
 retains the qualified d8 source and portable evidence. The

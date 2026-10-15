@@ -1,5 +1,7 @@
 # H.E.X. Linux CLI handoff — October 15, 2026
 
+Current status updated **October 16, 2026**.
+
 Historical publication checkpoint: `aec900a` on the presentation branch. The user
 subsequently resumed Windows product work on `codex/hex-breakthrough-20261015`.
 This handoff still restores the published baseline; read the current branch's
@@ -9,25 +11,29 @@ coordinating new work across computers. Do not assume the two branches are ident
 At the published `aec900a` handoff, Windows work had stopped at a stable
 documentation checkpoint after the three agents completed their audits and
 reciprocal reviews. That historical pause does not describe the later local
-candidate work: **p61-6618873387e2** is unqualified. Its
-[Full-a](../docs/breakthrough-evidence-20261015/full-a/tests.json) completed
+candidate work. **p61-6618873387e2** now passed clean Windows source Full,
+but is **not packaged or promoted**. The earlier local
+[Full-a](../docs/breakthrough-evidence-20261015/full-a/tests.json) remains failed:
 112 of 267 suites, 5,280,932 assertions and nine failures before the
-2,700-second timeout; 155 suites did not complete and boot did not run.
-Three reviewed test-only follow-ups are applied. Seven-suite `focused-review-a`
-passed **65,133 assertions, zero failures/stderr**, in **264,217 ms** on
-unchanged runtime identity; it excludes the failing eight-player network
-scenario. The historical network-capture cause remains unresolved. Clean
-Windows CI Full is planned for the candidate branch as separate validation;
-it has not run to a recorded result. This is not a qualified Linux or Windows
-replacement; selected desktop d6d1 and its fallbacks are preserved.
-Root owns any later candidate commit/push; these instructions do not imply
-the local candidate is already published. Agents are not live processes to
-migrate; recreate bounded workers in the receiving CLI.
+2,700-second timeout; 155 suites incomplete and boot not run. Three test-only
+follow-ups were applied; seven-suite `focused-review-a` passed **65,133 / 0**
+in **264,217 ms**, with empty stderr. Separate outage A/B passed **6,478 / 0**
+and **6,465 / 0**, each with 241 trace rows; its historical capture cause
+remains unresolved.
+Pushed commit **932f5974fe17a8d2432d8f82873eb86faf564543** on
+`codex/hex-breakthrough-20261015` passed [Windows CI Full 38817305452](https://github.com/generalgroovy/hex/actions/runs/38817305452):
+**267 suites / 7,576,123 assertions / zero failures**, three empty stderr files
+and correct **661887 / 120 Hz / protocol 61** boot; [independent CI review](../docs/breakthrough-evidence-20261015/ci-full-38817305452/independent-review.json).
+This validates the clean Windows source checkout, not a Linux checkout or a
+replacement package. Selected desktop d6d1 and its fallbacks are preserved.
+Agents are not live processes to migrate; recreate
+bounded workers in the receiving CLI.
 
 ## Restore from Git
 
 Repository: https://github.com/generalgroovy/hex.git
-Branch: `codex/hex-screen-smoothness-20261011`
+Historical baseline branch: `codex/hex-screen-smoothness-20261011`
+Current candidate branch: `codex/hex-breakthrough-20261015`, source checkpoint `932f597`
 Pre-handoff base: `38f1bc3a130eba66e4bd174128311289a94b738a`
 
 The user authorized publishing the complete checkpoint on this branch: current
@@ -35,6 +41,11 @@ source, art manifests, tests, launcher tools, qualification evidence, design and
 handoff instructions. The commit containing this document replaces the earlier
 ZIP-overlay transfer route. **Do not apply the older overlay over this Git
 checkpoint.** `main` and the qualified Windows playable selection are unchanged.
+
+The commands below deliberately restore the historical baseline. To continue
+the pushed candidate instead, use `codex/hex-breakthrough-20261015` in the same
+clone/fetch/switch procedure and verify checkpoint `932f597` or a later explicitly
+reported commit. Neither branch provides qualified native Linux evidence.
 
 For a new Linux checkout, choose an unused destination:
 

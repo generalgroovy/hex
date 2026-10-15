@@ -1,6 +1,7 @@
 # H.E.X.: product assessment and implementation direction
 
-Status: **unqualified local source candidate; local Full-a failed; seven-suite focused review passed. Product and release acceptance remain open.**
+Status: **clean Windows Full passed; source candidate is not packaged or promoted. Product and release acceptance remain open.**
+Status updated **October 16, 2026**.
 
 October 15, 2026. Baseline: Git `aec900a`, qualified Windows runtime
 `p61-d6d1bfb9c529`. This pass resumes development on
@@ -123,7 +124,7 @@ limits bound combat duration; no unmeasured 5–15 minute completion claim is ma
    validation. Keep the qualified portable selected until a replacement clears
    its own delivery gates.
 
-### Current evidence and immediate qualification gate
+### Current source validation and remaining delivery gates
 
 The candidate is `p61-6618873387e2`; normal desktop Play still selects qualified
 `p61-d6d1bfb9c529`. The [evidence index](breakthrough-evidence-20261015/README.md)
@@ -152,18 +153,38 @@ keeps the following scopes separate:
   routing and InputMap cleanup; the failing eight-player network scenario
   is outside these seven suites. This does not establish a production
   network fix, the historical capture cause, or a complete Full pass.
-- The separate local `outage-eight-a` diagnostic passed **6,478 assertions**
-  with **241 trace rows** and zero failures. It reproduced no rejected capture;
-  the historical failure cause and overall qualification remain unresolved.
-- Clean Windows CI Full is **planned** for the candidate branch as separate
-  validation, with no result yet. Delivery promotion remains blocked.
+- The separate local outage diagnostics [A](breakthrough-evidence-20261015/network-outage-a/independent-review.json)
+  and [B](breakthrough-evidence-20261015/network-outage-b/independent-review.json)
+  passed **6,478** and **6,465 assertions**, respectively, with zero failures
+  and **241 trace rows each**. Neither reproduced the rejected capture. Dynamic
+  receive checks explain why totals need not match; identical trajectories and
+  the historical failure cause are not established.
+- Pushed source checkpoint **932f5974fe17a8d2432d8f82873eb86faf564543** passed
+  [clean Windows CI Full 38817305452](https://github.com/generalgroovy/hex/actions/runs/38817305452):
+  **267 suites / 7,576,123 assertions / zero failures**, all three stderr files
+  empty, and correct **661887 / 120 Hz / protocol 61** boot. The
+  [independent review](breakthrough-evidence-20261015/ci-full-38817305452/independent-review.json)
+  reconciles all ordered suite rows and timings. Signature recovery/progression,
+  Circuit/unit integration and network impairment all pass. This completes the
+  clean Windows source Full gate; the earlier local failure and its unexplained
+  capture rejection remain historical evidence. The candidate has not been
+  packaged or promoted, and normal desktop Play remains qualified d6d1.
+- The [archived Light source attempt](breakthrough-evidence-20261015/profile-light-concurrent-a/independent-review.json) expired before manual Start: **armed=false, empty
+  results, no gameplay measurement**. Other Codex tasks were running, but this
+  is not evidence of why Start was missed. Matched Full/Light and packaged
+  frame-pacing acceptance remain open; no automatic restart is planned.
 
 These results do not establish a replacement package, durable Circuit save/reopen,
 physical-input behavior, current packaged frame pacing, or unfamiliar-player
 appeal. The illustrated sprites, tall-wall/self-visibility/interior work and wider
 campaign remain proposed; the Circuit does not implement that expansion.
 
-The [single queue](../.agent/OVERHAUL-IMPLEMENTATION.md) owns implementation status.
+The [single queue](../.agent/OVERHAUL-IMPLEMENTATION.md) owns implementation status
+and the ranked next five investments: useful earned-tool choice, first-fight
+comprehension, measured smoothness, one hero/rival action pilot, then one
+purposeful tall room/courtyard expansion. The first four improve existing play;
+the fifth adds new playable space. Qualification and a measurement baseline
+precede enlargement of the art/content workload.
 The [earlier complete overhaul design](OVERHAUL-DESIGN-20261015.md) retains detailed
 contracts for art, AoE, buildings and memory. This document sets product priorities;
 it does not create a second active queue or claim the whole overhaul is complete.
@@ -193,7 +214,7 @@ consequences. Starting this Circuit enters the existing ready countdown; the
 first-menu position alone does not prove that its first fight is understandable.
 Reuse a relevant existing lesson/counter only if observation identifies that gap.
 
-After coherent qualification and a measured baseline, the next art investment is
+After the remaining delivery checks and a measured baseline, the next art investment is
 **one hero/rival authored action pilot** at actual gameplay scale: readable
 locomotion and turns, windup/release/recovery, jump/landing and hit response.
 Establish its pivots, animation clocks, residency and setup budget before three

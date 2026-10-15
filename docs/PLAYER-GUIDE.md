@@ -1,6 +1,7 @@
 # H.E.X. player guide
 
 Status: **development is active; the qualified playable build is p61-d6d1bfb9c529.**
+Status updated **October 16, 2026**.
 Use the **H.E.X. desktop shortcut** on this PC. It opens the stable
 `C:/Users/sende/Documents/ChatGPT/H.E.X/PLAY-HEX.cmd` launcher and the qualified build.
 For another Windows PC, extract the [Windows x64 ZIP](../exports/hex-performance-20261014-d6d1/HEX-p61-d6d1bfb9c529-Windows-x64.zip)
@@ -23,11 +24,28 @@ The immediate [6459 fallback](depth-clarity-evidence-20261014/delivery-review/re
 older [7804 fallback](iteration-20261013/delivery-review-7804/review.json) and earlier
 working builds remain preserved through the [documentation index](README.md).
 
-The `codex/hex-breakthrough-20261015` source candidate adds an optional Rival
-Circuit and compact-map navigation repair. Their runtime and delivery gates are
-pending; they are **not in the qualified desktop Play build above**. Candidate
-instructions are marked below. The [single queue](../.agent/OVERHAUL-IMPLEMENTATION.md)
-records validation without changing the playable selection.
+The `codex/hex-breakthrough-20261015` source checkpoint [932f597](https://github.com/generalgroovy/hex/commit/932f597)
+adds the optional Rival Circuit and compact-map repair. Candidate
+**p61-6618873387e2** passed [clean Windows CI Full 38817305452](https://github.com/generalgroovy/hex/actions/runs/38817305452):
+**267 suites / 7,576,123 assertions / zero failures**, empty stderr and a correct
+120 Hz boot. It is **not packaged or included in desktop Play above**. The
+historical local Full failed; the later focused pass and two outage diagnostics
+did not establish its rejected capture's cause. [Evidence and limits](breakthrough-evidence-20261015/README.md)
+keep source validation separate from delivery, physical-input and player acceptance.
+
+To inspect the **source candidate, not yet packaged, on this PC**, use the same wrapper
+with its explicit Source mode from PowerShell:
+
+```powershell
+& 'C:/Users/sende/Documents/ChatGPT/H.E.X/PLAY-HEX.cmd' -Mode Source
+```
+
+Open **Menu** with **Esc / controller Back / click Menu**; **Rival Circuit** is
+selected first. Press **Enter / A**, or click it. Custom bindings still take
+priority; the visible Menu button remains the fallback. Normal desktop **Play**
+continues to select qualified d6d1. This local Source route is separate from the
+fresh-PC portable instructions above.
+
 
 ## Start small
 

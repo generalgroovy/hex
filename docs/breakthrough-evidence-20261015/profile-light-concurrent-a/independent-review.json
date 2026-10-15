@@ -1,0 +1,237 @@
+{
+  "schema": "hex.profile-setup-failure-independent-review.v1",
+  "reviewed_utc": "2026-10-15T22:45:35.147874+00:00",
+  "verdict": "setup_failure_confirmed_not_measured",
+  "run_id": "d3827bb6-3fab-437f-b255-a683199a2a90",
+  "source_directory": ".godot/iteration-20261016/breakthrough/profile-light-concurrent-a",
+  "scope": "Independent reconciliation of five terminal producer artifacts, exact source-input linkage and fresh byte-preserving archival. This is a failed setup attempt; no gameplay or performance acceptance.",
+  "producer_status": "incomplete_or_failed",
+  "wrapper_terminal": {
+    "root_reported_exit_code": 1,
+    "producer_numeric_process_exit_code": null,
+    "distinction": "Root reported terminal PowerShell wrapper exit 1. The producer does not expose a numeric native-process exit code; no native exit code is inferred."
+  },
+  "requested": {
+    "profiles": [
+      "low"
+    ],
+    "cases": [
+      "garden_middle",
+      "paid_fire_bolt_sustained",
+      "paid_all_six_mantle_sustained"
+    ],
+    "seconds_per_case": 15.0,
+    "soak_seconds": 0.0,
+    "frame_limit": 60,
+    "width": 1280,
+    "height": 720,
+    "observer_mode": "light",
+    "viewport_render_timing": false,
+    "all_fixed_steps": false,
+    "campus_mode": "immediate_reference",
+    "screenshots": false,
+    "timeout_seconds": 600
+  },
+  "observed": {
+    "complete_metrics_exists": false,
+    "partial_complete": false,
+    "gameplay_result_rows": 0,
+    "armed": false,
+    "manual_confirmation_received": false,
+    "arming_deadline_ms": 300000,
+    "wait_elapsed_ms": 300002,
+    "game_instantiation_started": false,
+    "null_arming_and_instantiation_fields": [
+      "armed_monotonic_usec",
+      "armed_utc_msec",
+      "manual_confirmation_monotonic_usec",
+      "manual_confirmation_utc_msec",
+      "game_instantiation_started_monotonic_usec",
+      "game_instantiation_started_utc_msec"
+    ],
+    "armed_log_markers": 0,
+    "completion_log_markers": 0,
+    "stderr_bytes": 366,
+    "stderr_error_count": 1,
+    "engine_setup_focus_polls": 17986,
+    "engine_setup_unfocused_polls": 0,
+    "engine_setup_observation_rows": 2739,
+    "windows_setup_observation_rows": 620,
+    "windows_measurement_observation_rows": 0,
+    "post_arm_focus": {
+      "focus_exit_events": 0,
+      "samples": 0,
+      "unfocused_samples": 0
+    },
+    "wrapper_wall_seconds": 616.8057193
+  },
+  "failure": {
+    "partial_error": "Foreground setup did not arm within five minutes. Setup observations and the unqualified partial report are retained.",
+    "raw_stderr": "engine.log.err",
+    "wrapper_validation_errors": [
+      "Godot emitted a script/import/runtime error.",
+      "Complete metrics.json is missing; any partial report remains unqualified evidence.",
+      "Expected exactly one matching complete-report marker in the native log.",
+      "Manual measurement requires exactly one matching run/UTC arming marker.",
+      "Native stderr is missing or nonempty; inspect the preserved log.",
+      "Requested foreground arming did not complete.",
+      "Manual arming requires a recorded Start button event during setup; engine focus alone cannot arm the run.",
+      "Foreground arming lacks a finite nonnegative integer: manual_confirmation_utc_msec.",
+      "Foreground arming lacks a finite nonnegative integer: manual_confirmation_monotonic_usec.",
+      "Foreground arming lacks a finite nonnegative integer: armed_utc_msec.",
+      "Foreground arming lacks a finite nonnegative integer: armed_monotonic_usec.",
+      "Foreground arming lacks a finite nonnegative integer: game_instantiation_started_utc_msec.",
+      "Foreground arming lacks a finite nonnegative integer: game_instantiation_started_monotonic_usec.",
+      "Post-arm engine focus was lost or insufficiently observed, including between measured cases.",
+      "At least three owned-window samples spanning one second are required; shorter runs remain diagnostic."
+    ],
+    "interpretation": "The actual recorded failure is expiry before a Start event was recorded. The remaining wrapper admission failures are preserved verbatim. In particular, a generic post-arm focus qualification error is not evidence of focus loss during gameplay: there were no post-arm samples or gameplay."
+  },
+  "identity": {
+    "schema_version": 1,
+    "status": "candidate_generated_not_promoted",
+    "scope_id": "production-runtime-source-v1",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "protocol_version": 61,
+    "snapshot_schema": 24,
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "record_count": 3450,
+    "runtime_source_sha256": "6618873387e2b62744f54ab845a03031dea83c7baa1506a2cab8de4c2cce715d",
+    "build_id": "p61-6618873387e2",
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate."
+  },
+  "source_checks": {
+    "producer_identity_before_after_and_input_equal": true,
+    "producer_input_hashes_before_after_equal": true,
+    "independently_rehashed_input_count": 7,
+    "inputs": [
+      {
+        "path": "scripts/profile-gameplay.gd",
+        "sha256": "2e2df0510a06a305c2c3c8415bda8afd60d5e348714f70eff2203e837bdf96b1",
+        "bytes": 84826
+      },
+      {
+        "path": "scripts/profile-gameplay.ps1",
+        "sha256": "b81a88c41f2d9a52079b77b65612dfe35f7cea57ec8ee0f3cceaf6b0be9b79c9",
+        "bytes": 57265
+      },
+      {
+        "path": "scripts/runtime-build-identity.ps1",
+        "sha256": "ee1b11776ae2219f8374d80eaf7bbbe3d44364626e9ed8c60ce8b9290de014fa",
+        "bytes": 15214
+      },
+      {
+        "path": "scripts/flux2-common.ps1",
+        "sha256": "06dcded01022fa9ae5c9a371e98f0b9577f01f258a8ad9f531450c35ddb3d040",
+        "bytes": 16447
+      },
+      {
+        "path": "scripts/engine-guard.ps1",
+        "sha256": "9de3d4ae5d09dc59abc56e40bb78f626875db92ceee63136bfa99f62d4b38cd1",
+        "bytes": 6967
+      },
+      {
+        "path": "scripts/measurement-observation.ps1",
+        "sha256": "e97c5a14e0b612b9475f647b502398ff1b2d437ca456785da980b36c694b0907",
+        "bytes": 22673
+      },
+      {
+        "path": "content/runtime/runtime_build_identity_v1.json",
+        "sha256": "92a84630d0580eca340cacb6c4682ca78e3ad3739da366f422e7d33319d4303f",
+        "bytes": 576
+      }
+    ],
+    "limit": "Only the seven recorded wrapper input files were independently rehashed here. Full runtime record generation/check is producer evidence; this audit did not rehash all 3450 runtime records or run identity tools."
+  },
+  "restoration": {
+    "producer_appdata_restored": true,
+    "limit": "Restoration is reported by the terminal producer; the auditor did not observe the parent environment before and after execution."
+  },
+  "host_context": {
+    "user_reported_other_codex_tasks_running": true,
+    "attribution": "Reported by the user via root before launch, not independently surveyed by this audit. No causal attribution of Start expiry, lag or any gameplay effect to concurrency.",
+    "producer_available_memory_before": {
+      "observed_utc": "2026-10-15T22:31:54.4167038Z",
+      "os": "Microsoft Windows 11 Home",
+      "os_version": "10.0.26300",
+      "available_mb": 490.14,
+      "total_visible_mb": 7455.62,
+      "error": null
+    },
+    "producer_available_memory_after": {
+      "observed_utc": "2026-10-15T22:42:11.4259259Z",
+      "os": "Microsoft Windows 11 Home",
+      "os_version": "10.0.26300",
+      "available_mb": 1193.29,
+      "total_visible_mb": 7455.62,
+      "error": null
+    },
+    "producer_setup_process_memory": {
+      "first_private_bytes": 15945728,
+      "last_private_bytes": 157806592,
+      "max_private_bytes": 382275584,
+      "max_working_set_bytes": 431366144
+    },
+    "limit": "Endpoint and setup observations only; no gameplay memory peak or isolated-machine baseline. Root separate launch snapshot must not be conflated with producer timestamps."
+  },
+  "limits": [
+    "No game was instantiated by the benchmark after arming, and no gameplay row exists.",
+    "No casting, Garden, FPS, responsiveness, physical input, human comfort or performance comparison conclusion.",
+    "Light omitted AllFixedSteps and viewport timing as required by the current producer; a later Full/Light comparison must use their common metrics.",
+    "Runtime source profiling does not qualify or change the selected portable delivery.",
+    "No restart, engine, import, test, source edit or Git operation was performed by this audit.",
+    "Private profile files and shader caches are excluded. Raw source files remain unchanged."
+  ],
+  "artifact_records": [
+    {
+      "source": ".godot/iteration-20261016/breakthrough/profile-light-concurrent-a/summary.json",
+      "archive": "docs/breakthrough-evidence-20261015/profile-light-concurrent-a/summary.json.gz",
+      "encoding": "gzip",
+      "source_sha256": "fb98f9a66ff24b025aa48ea1ba05d04fbf682db921f062598ef06ee3232b6753",
+      "source_bytes": 1006559,
+      "archive_sha256": "2a9c3952034f77c7c62420c740cc97d68154ffcf16f44ba623024a2cec1505db",
+      "archive_bytes": 32893,
+      "decoded_byte_equality_verified": true
+    },
+    {
+      "source": ".godot/iteration-20261016/breakthrough/profile-light-concurrent-a/metrics.json.partial.json",
+      "archive": "docs/breakthrough-evidence-20261015/profile-light-concurrent-a/metrics.json.partial.json.gz",
+      "encoding": "gzip",
+      "source_sha256": "7dc6c56c095c0528f1c5f1b0cd4d49ac31693affa11042e51610318cd669c09f",
+      "source_bytes": 280160,
+      "archive_sha256": "6a4e94d48ac4c6bbfa0adda66d37bfb334b4c71235120c2f44de32e50f384a2c",
+      "archive_bytes": 10457,
+      "decoded_byte_equality_verified": true
+    },
+    {
+      "source": ".godot/iteration-20261016/breakthrough/profile-light-concurrent-a/runtime-identity.input.json",
+      "archive": "docs/breakthrough-evidence-20261015/profile-light-concurrent-a/runtime-identity.input.json",
+      "encoding": "exact",
+      "source_sha256": "92a84630d0580eca340cacb6c4682ca78e3ad3739da366f422e7d33319d4303f",
+      "source_bytes": 576,
+      "archive_sha256": "92a84630d0580eca340cacb6c4682ca78e3ad3739da366f422e7d33319d4303f",
+      "archive_bytes": 576,
+      "decoded_byte_equality_verified": true
+    },
+    {
+      "source": ".godot/iteration-20261016/breakthrough/profile-light-concurrent-a/engine.log",
+      "archive": "docs/breakthrough-evidence-20261015/profile-light-concurrent-a/engine.log",
+      "encoding": "exact",
+      "source_sha256": "7a0b1313fe78917e39c0168dbfcf48eaca1aef5e6bf0c990df729522f813a33d",
+      "source_bytes": 288,
+      "archive_sha256": "7a0b1313fe78917e39c0168dbfcf48eaca1aef5e6bf0c990df729522f813a33d",
+      "archive_bytes": 288,
+      "decoded_byte_equality_verified": true
+    },
+    {
+      "source": ".godot/iteration-20261016/breakthrough/profile-light-concurrent-a/engine.log.err",
+      "archive": "docs/breakthrough-evidence-20261015/profile-light-concurrent-a/engine.log.err",
+      "encoding": "exact",
+      "source_sha256": "de706e9e141a786c3afdb001faf196c653aada423b5a8ba49b02d66eb35f8fb7",
+      "source_bytes": 366,
+      "archive_sha256": "de706e9e141a786c3afdb001faf196c653aada423b5a8ba49b02d66eb35f8fb7",
+      "archive_bytes": 366,
+      "decoded_byte_equality_verified": true
+    }
+  ]
+}

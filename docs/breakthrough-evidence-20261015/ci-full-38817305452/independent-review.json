@@ -1,0 +1,379 @@
+{
+  "schema": "hex.ci-full-independent-review.v1",
+  "reviewed_utc": "2026-10-15T22:50:56.136047+00:00",
+  "verdict": "passed_windows_source_full",
+  "audit_condition_count": 891,
+  "ci": {
+    "run_id": 38817305452,
+    "url": "https://github.com/generalgroovy/hex/actions/runs/38817305452",
+    "head_sha": "932f5974fe17a8d2432d8f82873eb86faf564543",
+    "job_name": "headless",
+    "job_url": "https://github.com/generalgroovy/hex/actions/runs/38817305452/job/116705099644",
+    "status": "completed",
+    "conclusion": "success",
+    "job_duration_seconds": 1020.0,
+    "metadata_source": "Root downloaded GitHub run view metadata; independently reconciled here with the raw producer receipt and current-state head."
+  },
+  "producer": {
+    "completed_at_utc": "2026-10-15T22:45:07.0699702Z",
+    "tier": "full",
+    "result": "passed",
+    "failure": null,
+    "source_head": "932f5974fe17a8d2432d8f82873eb86faf564543",
+    "branch": "codex/hex-breakthrough-20261015",
+    "source_dirty": false,
+    "dirty_entry_count": 0,
+    "duration_ms": 937643,
+    "supervision": {
+      "default_engine_timeout_seconds": 180,
+      "import_timeout_seconds": 600,
+      "suite_timeout_seconds": 2700
+    },
+    "isolation": {
+      "appdata_path": ".godot/windows-tests/66dd36bf75cf4aabb4c93d4ab472682b/isolated-roaming",
+      "scope": "Godot import, suite and boot user data; packaging retains its own isolation policy",
+      "caller_appdata_restored": true
+    },
+    "executed_gates": {
+      "current_state_check": true,
+      "asset_inventory": true,
+      "doctor": true,
+      "import": true,
+      "post_import_identity_check": true,
+      "deterministic_suite_runner": true,
+      "suite_count": 267,
+      "assertion_count": 7576123,
+      "boot_120_hz": true,
+      "package_and_installer": false
+    }
+  },
+  "raw_reconciliation": {
+    "suite_count": 267,
+    "distinct_suite_ids": 267,
+    "registry_order_exact": true,
+    "assertions": 7576123,
+    "failures": 0,
+    "timing_row_count": 267,
+    "timing_registry_order_exact": true,
+    "suite_timing_sum_ms": 717841,
+    "all_suites_positive_assertions": true,
+    "required_suites": [
+      {
+        "id": "signature-recovery",
+        "assertions": 68,
+        "failures": 0
+      },
+      {
+        "id": "signature-progression",
+        "assertions": 6358,
+        "failures": 0
+      },
+      {
+        "id": "signature-circuit",
+        "assertions": 488,
+        "failures": 0
+      },
+      {
+        "id": "signature-circuit-integration",
+        "assertions": 314,
+        "failures": 0
+      },
+      {
+        "id": "network-impairment",
+        "assertions": 34370,
+        "failures": 0
+      },
+      {
+        "id": "local-navigation",
+        "assertions": 3847,
+        "failures": 0
+      },
+      {
+        "id": "wellspring-map",
+        "assertions": 1403,
+        "failures": 0
+      },
+      {
+        "id": "spell-testing-tools",
+        "assertions": 58514,
+        "failures": 0
+      },
+      {
+        "id": "solo-trial-process",
+        "assertions": 499,
+        "failures": 0
+      }
+    ],
+    "log_hashes_match": true,
+    "stderr_files": 3,
+    "stderr_total_bytes": 0,
+    "raw_error_warning_failure_markers": 0,
+    "actual_full_terminal_markers": 1,
+    "actual_import_completion_markers": 1,
+    "actual_120hz_match_markers": 1,
+    "actual_runtime_build_markers": 1,
+    "logs": [
+      {
+        "path": ".godot/windows-tests/66dd36bf75cf4aabb4c93d4ab472682b/import.log",
+        "sha256": "b4925e843d20a15eff9ebffe397e4946a690caa3d41f61cb7ba650feeed9162b",
+        "stderr_bytes": 0
+      },
+      {
+        "path": ".godot/windows-tests/66dd36bf75cf4aabb4c93d4ab472682b/boot-120.log",
+        "sha256": "448603d3e8218d0b73a7e9abff274d4da936cd203d64a476000d227161b0238b",
+        "stderr_bytes": 0
+      },
+      {
+        "path": ".godot/windows-tests/66dd36bf75cf4aabb4c93d4ab472682b/suite.log",
+        "sha256": "97c2ef7209905ec2510cc4bad800bc9b79321d0886b148f83d7f2a8494174385",
+        "stderr_bytes": 0
+      }
+    ]
+  },
+  "identity": {
+    "schema_version": 1,
+    "status": "candidate_generated_not_promoted",
+    "scope_id": "production-runtime-source-v1",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "protocol_version": 61,
+    "snapshot_schema": 24,
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "record_count": 3450,
+    "runtime_source_sha256": "6618873387e2b62744f54ab845a03031dea83c7baa1506a2cab8de4c2cce715d",
+    "build_id": "p61-6618873387e2",
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate."
+  },
+  "registry": {
+    "path": "tests/run_all.gd",
+    "sha256": "f4b585de287c84f5286f68bed46079b49c16e5b81e1293be2ef6b3dffff9e9e1",
+    "count": 267,
+    "id_derivation": "Exact anchored SUITES preload lines in unit/network/replay/integration; test_ filename prefix removed and underscores replaced with hyphens. No comments, repeated IDs or omitted rows admitted.",
+    "ordered_ids_sha256": "75f7283155b1ef64743d862001c4edba353ee6fc501b759b822cbd26a35b7cb6",
+    "scope": "Current local registry bytes match the frozen registry hash used for prior preflight. Exact ordered raw CI inventory matches this registry."
+  },
+  "source_and_asset_reports": {
+    "current_state_sha256": "67413bc82ca4d8c07b47fc93ef41caa32c7d76d1ff06a04bbde3f6b05b9f3e0b",
+    "asset_inventory_sha256": "765c2f0a58303e060733dcefe0173cfe4722575d132b6e9dadf10daaae3ca690",
+    "state_check": {
+      "passed": true,
+      "issue_count": 0,
+      "issues": []
+    },
+    "asset_check": {
+      "passed": true,
+      "issues": []
+    },
+    "tracked_asset_count": 1097,
+    "recorded_asset_bytes": 270273874,
+    "missing_runtime_literal_reference_count": 0,
+    "missing_nonruntime_literal_reference_count": 93,
+    "case_collision_count": 0,
+    "class_cache": {
+      "canonical_count": 178,
+      "cache_count": 178,
+      "cache_sha256": "0db970364fa0749965706843578b5f8eae55368429fd870d1c764990171d2987",
+      "violations": [],
+      "passed": true
+    },
+    "scope": "Report contents and counts/hash linkage independently checked. The CI filesystem assets, generated class cache and all3450 runtime records were not independently rehashed on this local machine; their checks are producer evidence."
+  },
+  "network": {
+    "suite_assertions": 34370,
+    "suite_failures": 0,
+    "scenarios": [
+      {
+        "players": 2,
+        "profile": "delay",
+        "capture_send_p95_us": 40073,
+        "sent_bytes": 394932,
+        "dropped": 0,
+        "queue_peak": 12
+      },
+      {
+        "players": 2,
+        "profile": "jitter",
+        "capture_send_p95_us": 30278,
+        "sent_bytes": 387924,
+        "dropped": 0,
+        "queue_peak": 25
+      },
+      {
+        "players": 2,
+        "profile": "loss",
+        "capture_send_p95_us": 29543,
+        "sent_bytes": 338900,
+        "dropped": 65,
+        "queue_peak": 14
+      },
+      {
+        "players": 2,
+        "profile": "outage_return",
+        "capture_send_p95_us": 30110,
+        "sent_bytes": 236552,
+        "dropped": 155,
+        "queue_peak": 15
+      },
+      {
+        "players": 8,
+        "profile": "delay",
+        "capture_send_p95_us": 50664,
+        "sent_bytes": 4680820,
+        "dropped": 0,
+        "queue_peak": 126
+      },
+      {
+        "players": 8,
+        "profile": "jitter",
+        "capture_send_p95_us": 50840,
+        "sent_bytes": 4604776,
+        "dropped": 0,
+        "queue_peak": 264
+      },
+      {
+        "players": 8,
+        "profile": "loss",
+        "capture_send_p95_us": 54894,
+        "sent_bytes": 4007996,
+        "dropped": 633,
+        "queue_peak": 126
+      },
+      {
+        "players": 8,
+        "profile": "outage_return",
+        "capture_send_p95_us": 50823,
+        "sent_bytes": 2767260,
+        "dropped": 1477,
+        "queue_peak": 138
+      }
+    ],
+    "historical_failure_status": "Not reproduced in this clean CI run; cause of the earlier local Full publication rejection remains unresolved. Different packet/receive counts and host conditions cannot establish a production fix.",
+    "metric_scope": "Injected impairment diagnostic timing and traffic, not Internet RTT, gameplay FPS, physical presentation or a controlled before/after performance comparison."
+  },
+  "circuit_persistence_scope": "Full includes real paid progression victories, actual disk writes/new-object reloads/paid reuse and recovery cases, plus the new memory-only Circuit controller integration. It does not establish normal close and fresh-process reopen of the Circuit/default packaged profile; Circuit route state is intentionally ephemeral.",
+  "limits": [
+    "Windows source validation at the exact candidate commit, not package/export/installer/release qualification.",
+    "The existing qualified d6d1 portable is not promoted or replaced by this audit.",
+    "The local Full-a failure (112/267, nine failures, timeout) and both bounded diagnostic reruns remain separate immutable evidence.",
+    "No gameplay performance, human-feel, physical input or Linux acceptance claim.",
+    "No independent recheck of the historical4632 Windows raw-byte snapshot on CI; source normalization and platform boundaries remain distinct.",
+    "No source edit, engine launch, import, test execution or Git operation was performed by this independent audit."
+  ],
+  "prior_evidence": {
+    "local_failed_full": "docs/breakthrough-evidence-20261015/full-a/independent-review.json",
+    "focused_repair_pass": "docs/breakthrough-evidence-20261015/review-a/independent-review.json",
+    "network_outage_a": "docs/breakthrough-evidence-20261015/network-outage-a/independent-review.json",
+    "network_outage_b": "docs/breakthrough-evidence-20261015/network-outage-b/independent-review.json"
+  },
+  "artifact_records": [
+    {
+      "source": ".godot/iteration-20261016/breakthrough/ci-38817305452/raw/66dd36bf75cf4aabb4c93d4ab472682b/receipt.json",
+      "archive": "docs/breakthrough-evidence-20261015/ci-full-38817305452/receipt.json",
+      "encoding": "exact",
+      "source_sha256": "8f4f870de79bcbffb809c6216b883210dfac1552720ff4b6de084157469362d2",
+      "source_bytes": 31496,
+      "archive_sha256": "8f4f870de79bcbffb809c6216b883210dfac1552720ff4b6de084157469362d2",
+      "archive_bytes": 31496,
+      "decoded_byte_equality_verified": true
+    },
+    {
+      "source": ".godot/iteration-20261016/breakthrough/ci-38817305452/raw/66dd36bf75cf4aabb4c93d4ab472682b/current-state.json",
+      "archive": "docs/breakthrough-evidence-20261015/ci-full-38817305452/current-state.json",
+      "encoding": "exact",
+      "source_sha256": "67413bc82ca4d8c07b47fc93ef41caa32c7d76d1ff06a04bbde3f6b05b9f3e0b",
+      "source_bytes": 65063,
+      "archive_sha256": "67413bc82ca4d8c07b47fc93ef41caa32c7d76d1ff06a04bbde3f6b05b9f3e0b",
+      "archive_bytes": 65063,
+      "decoded_byte_equality_verified": true
+    },
+    {
+      "source": ".godot/iteration-20261016/breakthrough/ci-38817305452/raw/66dd36bf75cf4aabb4c93d4ab472682b/asset-inventory.json",
+      "archive": "docs/breakthrough-evidence-20261015/ci-full-38817305452/asset-inventory.json.gz",
+      "encoding": "gzip",
+      "source_sha256": "765c2f0a58303e060733dcefe0173cfe4722575d132b6e9dadf10daaae3ca690",
+      "source_bytes": 3518066,
+      "archive_sha256": "aac64d90cdd102403e3a166176e6add558b1a6cdedf7053b3e8751b944b0f305",
+      "archive_bytes": 53219,
+      "decoded_byte_equality_verified": true
+    },
+    {
+      "source": ".godot/iteration-20261016/breakthrough/ci-38817305452/raw/66dd36bf75cf4aabb4c93d4ab472682b/script-class-cache.json",
+      "archive": "docs/breakthrough-evidence-20261015/ci-full-38817305452/script-class-cache.json",
+      "encoding": "exact",
+      "source_sha256": "000032a227140e73284d45ad93643269d090c58d4fc4061cdec8cc933137a07c",
+      "source_bytes": 182,
+      "archive_sha256": "000032a227140e73284d45ad93643269d090c58d4fc4061cdec8cc933137a07c",
+      "archive_bytes": 182,
+      "decoded_byte_equality_verified": true
+    },
+    {
+      "source": ".godot/iteration-20261016/breakthrough/ci-38817305452/raw/66dd36bf75cf4aabb4c93d4ab472682b/import.log",
+      "archive": "docs/breakthrough-evidence-20261015/ci-full-38817305452/import.log.gz",
+      "encoding": "gzip",
+      "source_sha256": "b4925e843d20a15eff9ebffe397e4946a690caa3d41f61cb7ba650feeed9162b",
+      "source_bytes": 442747,
+      "archive_sha256": "325f39c3da223f898e8f4900a1c7eb1229b871233d4509ad07f1bc15793d2b69",
+      "archive_bytes": 18597,
+      "decoded_byte_equality_verified": true
+    },
+    {
+      "source": ".godot/iteration-20261016/breakthrough/ci-38817305452/raw/66dd36bf75cf4aabb4c93d4ab472682b/import.log.err",
+      "archive": "docs/breakthrough-evidence-20261015/ci-full-38817305452/import.log.err",
+      "encoding": "exact",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_bytes": 0,
+      "archive_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive_bytes": 0,
+      "decoded_byte_equality_verified": true
+    },
+    {
+      "source": ".godot/iteration-20261016/breakthrough/ci-38817305452/raw/66dd36bf75cf4aabb4c93d4ab472682b/boot-120.log",
+      "archive": "docs/breakthrough-evidence-20261015/ci-full-38817305452/boot-120.log",
+      "encoding": "exact",
+      "source_sha256": "448603d3e8218d0b73a7e9abff274d4da936cd203d64a476000d227161b0238b",
+      "source_bytes": 918,
+      "archive_sha256": "448603d3e8218d0b73a7e9abff274d4da936cd203d64a476000d227161b0238b",
+      "archive_bytes": 918,
+      "decoded_byte_equality_verified": true
+    },
+    {
+      "source": ".godot/iteration-20261016/breakthrough/ci-38817305452/raw/66dd36bf75cf4aabb4c93d4ab472682b/boot-120.log.err",
+      "archive": "docs/breakthrough-evidence-20261015/ci-full-38817305452/boot-120.log.err",
+      "encoding": "exact",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_bytes": 0,
+      "archive_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive_bytes": 0,
+      "decoded_byte_equality_verified": true
+    },
+    {
+      "source": ".godot/iteration-20261016/breakthrough/ci-38817305452/raw/66dd36bf75cf4aabb4c93d4ab472682b/suite.log",
+      "archive": "docs/breakthrough-evidence-20261015/ci-full-38817305452/suite.log",
+      "encoding": "exact",
+      "source_sha256": "97c2ef7209905ec2510cc4bad800bc9b79321d0886b148f83d7f2a8494174385",
+      "source_bytes": 48594,
+      "archive_sha256": "97c2ef7209905ec2510cc4bad800bc9b79321d0886b148f83d7f2a8494174385",
+      "archive_bytes": 48594,
+      "decoded_byte_equality_verified": true
+    },
+    {
+      "source": ".godot/iteration-20261016/breakthrough/ci-38817305452/raw/66dd36bf75cf4aabb4c93d4ab472682b/suite.log.err",
+      "archive": "docs/breakthrough-evidence-20261015/ci-full-38817305452/suite.log.err",
+      "encoding": "exact",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_bytes": 0,
+      "archive_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive_bytes": 0,
+      "decoded_byte_equality_verified": true
+    },
+    {
+      "source": ".godot/iteration-20261016/breakthrough/ci-38817305452/run.json",
+      "archive": "docs/breakthrough-evidence-20261015/ci-full-38817305452/run.json",
+      "encoding": "exact",
+      "source_sha256": "a115c30e3a4b6faee23135d0799af24be825eb858edd334320d36a7b9cd0aa91",
+      "source_bytes": 2124,
+      "archive_sha256": "a115c30e3a4b6faee23135d0799af24be825eb858edd334320d36a7b9cd0aa91",
+      "archive_bytes": 2124,
+      "decoded_byte_equality_verified": true
+    }
+  ]
+}

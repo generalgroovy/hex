@@ -1,6 +1,6 @@
 # H.E.X. single implementation queue
 
-Status: **ACTIVE PRODUCT IMPLEMENTATION — October 15; stop before 20,000 credits remain.**
+Status updated **October 16, 2026**: **ACTIVE PRODUCT IMPLEMENTATION; stop before 20,000 credits remain.**
 Active playable profiles: 30.
 The user resumed work after the Git handoff and authorized deep product analysis
 and implementation with creative freedom. Work is isolated on
@@ -42,15 +42,21 @@ slice and current performance evidence. Commercial demand remains untested.
 - [x] Implement the Circuit, navigation/map repair and observer selector.
 - [x] Record candidate **p61-6618873387e2**, 3,450 runtime records, and preserve qualified d6d1 selection.
 - [x] Record initial Circuit focused **548 / 0**, map **1,403 / 0** within an earlier failed overall run, and eight prepared native UI captures; [evidence and limits](../docs/breakthrough-evidence-20261015/README.md).
-- [ ] Resolve the failed [Full-a](../docs/breakthrough-evidence-20261015/full-a/tests.json): **112 / 267** suites completed, **5,280,932** assertions, **nine failures**, **2,700-second timeout**; 155 suites incomplete and boot not run. The source candidate is unqualified.
+- [x] Preserve the failed local [Full-a](../docs/breakthrough-evidence-20261015/full-a/tests.json): **112 / 267** suites completed, **5,280,932** assertions, **nine failures**, **2,700-second timeout**; 155 suites incomplete and boot not run. The later clean CI pass does not retroactively pass it or establish the historical capture cause.
 - [x] Seven-suite `focused-review-a` passed **65,133 assertions / zero failures and stderr**, **264,217 ms**, after the reviewed test-only changes. Tools **58,514 / 0** and Circuit integration **314 / 0** cover the repaired menu route and global InputMap teardown. The seven suites exclude the failing eight-player network scenario; no production network fix is established. Runtime identity is unchanged.
-- [x] Record separate local `outage-eight-a`: **6,478 assertions / zero failures**, **241 trace rows**, no rejected capture reproduced. This does not establish the historical cause or complete overall qualification.
-- [ ] Run clean Windows CI Full on the candidate branch after root publication. This is planned, separate validation; it does not retroactively pass local Full-a or establish its historical capture cause.
+- [x] Record local outage diagnostics [A](../docs/breakthrough-evidence-20261015/network-outage-a/independent-review.json) **6,478 / 0** and [B](../docs/breakthrough-evidence-20261015/network-outage-b/independent-review.json) **6,465 / 0**, each with **241 trace rows** and no rejected capture reproduced. Different receive-check totals do not prove identical trajectories; the historical cause remains unresolved.
+- [x] Push candidate source checkpoint [932f597](https://github.com/generalgroovy/hex/commit/932f597) on `codex/hex-breakthrough-20261015`.
+- [x] Complete clean Windows source Full at **932f5974fe17a8d2432d8f82873eb86faf564543**: [CI 38817305452](https://github.com/generalgroovy/hex/actions/runs/38817305452) passed **267 suites / 7,576,123 assertions / zero failures**, three empty stderr files and correct **661887 / 120 Hz / protocol 61** boot; [independent review](../docs/breakthrough-evidence-20261015/ci-full-38817305452/independent-review.json). All signature and network-impairment suites pass.
+- [ ] Qualify a replacement candidate package through its own package/archive, terrain, launcher lifecycle and independent delivery gates before promotion. Clean CI validates source correctness; desktop Play remains d6d1.
+- [ ] Complete the narrow Circuit process-reopen gate below before claiming durable normal-launcher Circuit recovery.
 - [ ] Compare current-source Full/Light observers on matched 15-second paid workloads,
   reversing observer order. Keep focus, Low/1280×720/60 cap, campus mode, memory,
   actual ticks, paid admissions and effect coverage explicit. Compare common
   metrics only: Light omits full completed-step attribution and detailed draw
-  diagnostics. Neither observer establishes portable FPS.
+  diagnostics. Neither observer establishes portable FPS. The Light attempt
+  expired before manual Start (armed=false, empty results), producing no
+  gameplay measurement. Other Codex tasks were running; they do not establish
+  the missed-Start cause. No automatic restart or new availability request.
 - [ ] Obtain current packaged performance and unfamiliar-player evidence before claiming smoothness or product success.
 
 Qualified playable build: **p61-d6d1bfb9c529**. Full passed 265 suites /
@@ -62,29 +68,59 @@ The [previous-build 6459 source performance review](../docs/performance-evidence
 retains Profile B; its measurements do not transfer to d6d1. Root alone runs engines,
 imports, tests, captures and exports.
 
-## Ownership and completion gates
+## Next five player-facing investments
 
-Every point has an implementation owner plus another agent reviewing the result.
-Root integrates and verifies. Dependencies determine order; parallel ownership
-must not produce simultaneous engine runs or conflicting edits.
+The clean Windows source Full gate has passed. Candidate delivery and player
+acceptance remain open. These are ordered next investments, not five simultaneous
+implementations or proof of commercial appeal.
 
-| Point | Implementer | Independent reviewer | Current work / gate |
+| Rank / kind | Concrete player benefit | Evidence and dependency | Acceptance / owner + reviewer |
 |---|---|---|---|
-| Casting/Garden performance | Root + Technical | Experience | Previous-build Profile B admitted for 6459; matched current-source Full/Light measurement and qualified-build presented-frame evidence remain pending |
-| Loading/memory | Technical | Root + Experience | Repeated travel/cancel/close and real memory residency; no speculative prefetch |
-| Movement/control/camera | Gameplay | Technical | Independent camera look-ahead preference, legacy migration and normal/reduced-motion combinations |
-| Defense/readability | Gameplay | Experience | Actual protection, height and cover outcomes; concise optional practice feedback |
-| Spell delivery/tempo | Gameplay | Technical | Equal-resource moving/cover/group scenarios; tuning requires demonstrated weak niches |
-| Chemistry/statuses | Gameplay | Experience | Compare shared-mechanic recipes with simpler subsets and actual finite follow-up effects |
-| Characters/ancestries | Gameplay | Experience | Natural activation and combined contribution; existing controls remain sufficient |
-| Rivals/AI | Gameplay | Technical | Check spacing, paid pressure and usable responses before behavior changes |
-| Progression/learning | Gameplay | Experience | Earn, equip, use, choose next; reuse existing Range and three lessons |
-| World/Garden/visual depth | Experience | Gameplay + Root | District wall facade/material/parapet variation inside truthful cover footprints; no added per-frame draw count |
-| Animation/audio | Experience | Gameplay | Readable moving poses, ground/height contact and bounded sound hierarchy |
-| Menus/accessibility/dev tools | Gameplay | Experience + Technical | Compact independent camera control; preserve navigation/remaps and readable layouts |
-| Architecture/assets | Technical | Experience | Narrow lifecycle seams and dependency checks; avoid broad rewrites |
-| Networking/save recovery | Technical | Gameplay | Actual two-peer and earned-save/recovery acceptance remain explicit |
-| Documentation/CI/cleanup/launcher | Root + Technical | Experience | Correct active status, add omitted regression suites, remove proven redundancy and fix desktop target |
+| 1 — Improvement | Make an earned spell a useful optional next-fight choice | Payment/release is proven; tactical usefulness is not. Reuse one existing rival situation, ordinary Next and the learned option. | Player explains and demonstrates a benefit/tradeoff without a forced loadout or unproved buff. Gameplay / Experience |
+| 2 — Improvement | Understand the first fight without coaching | First-menu placement and result-panel fit are implemented; entry still begins the current countdown. Observe one unaided launch→fight→result journey before changing teaching. | Player identifies the goal, one tell and a response; change only observed ambiguity using existing lesson information. Experience / Gameplay |
+| 3 — Improvement | Smooth paid casting, Garden and travel | Current packaged frame pacing is unmeasured. Establish common-metric Full/Light and presented-frame evidence before optimizing or adding art cost. | Repeatable whole-workload tails, authority parity and memory limits; no isolated microbenchmark presented as FPS. Root + Technical / Experience |
+| 4 — Improvement | One coherent hero/rival illustrated action pilot | Current art retains directional/action fallbacks. Prove one pair before three anatomy sets or the roster. | Readable locomotion, turns, windup/release/recovery, jump/landing and hit response at play scale; pivots/clocks/residency within budget. Experience / Gameplay + Technical |
+| 5 — Expansion | One purposeful tall courtyard/interior | New playable space, not a facade repaint. Depends on approved largest-body scale, collision/door, visibility and residency contracts. | Room changes a route or encounter; self stays visible without revealing hidden opponents. Experience + Gameplay / Technical |
+
+Small optional copy polish for a later separately validated source change: display
+`casts started` instead of `paid casts`, and `including countdown` instead of
+`including ready time`. Keep temporary slot 1, saved-weave, persistence and
+recovery distinctions. No runtime copy change is included in this checkpoint.
+
+### Narrow Circuit process-reopen gate
+
+Existing signature-progression coverage already includes three real paid lesson
+victories, disk save plus fresh Progress reload per win, and paid release of each
+loaded reward; recovery has separate coverage. The new Circuit integration is
+memory-only. The remaining gate is one normal-launcher journey on the same
+isolated profile: normal startup → saved first Circuit win → learned-next paid
+release → normal close while the temporary weave is active → fresh-process
+reopen. Verify earned progress persists, the ordinary weave is unchanged,
+Circuit is idle, no reward duplicates, and ordinary paid reuse succeeds. This
+specific path is untested; no source bug or new generic save framework is implied.
+
+## Ownership: delivered capability versus remaining acceptance
+
+This matrix preserves domain coverage, not a second parallel feature queue.
+Root integrates and serializes engines; each change has an independent reviewer.
+October 14 delivered capabilities remain in qualified d6d1. October 15 Circuit,
+map and observer-selector changes passed clean Windows Full but remain source
+candidate work without a replacement package or promotion.
+
+| Point | Owner / reviewer | Existing capability | Remaining concrete acceptance |
+|---|---|---|---|
+| Casting/Garden performance | Root + Technical / Experience | Stationary optimization qualified; rejected renderer trials preserved | Current-build whole-workload frame tails and common Full/Light metrics |
+| Loading/memory | Technical / Root + Experience | Bounded body/terrain residency and owned shutdown | Repeated travel/cancel/close plateau under measured actual memory |
+| Movement/control/camera | Gameplay / Technical | Camera look-ahead setting/migration and reduced-motion independence delivered | Unaided movement response and physical controller combinations; no reimplementation of the setting |
+| Defense/readability | Gameplay / Experience | Protection, height and cover outcomes exist | Read and use those outcomes in the selected rival situation |
+| Spell delivery/chemistry/statuses | Gameplay / Technical + Experience | Eight deliveries, mixtures and Range status observations exist | Useful paid alternatives and finite follow-up comparisons; no catalog growth as proof |
+| Characters/rivals | Gameplay / Experience + Technical | Existing identities, passives and three lesson rivals | One natural passive benefit and one authored hero/rival action pilot before roster expansion |
+| Progression/learning | Gameplay / Experience | Earned reuse guidance delivered; Circuit route is candidate | Useful choice, first-fight comprehension and the specific process-reopen gate above |
+| World/depth | Experience / Gameplay + Technical | Six wall treatments and two taller masonry facades delivered within existing footprints | One new useful tall room/courtyard with truthful collision and visibility, not all interiors claimed complete |
+| Animation/audio | Experience / Gameplay | Existing animation fallback and bounded audio lifecycle | Authored action pilot, readable threat/release/hit hierarchy and separate listening acceptance |
+| Menus/accessibility | Experience / Gameplay + Technical | Camera/text settings delivered; Circuit discovery and compact-map fix are candidate | Unaided route and real remapped/pad/pointer access at supported scales |
+| Networking/save recovery | Technical / Gameplay | Existing protocol, save/reload and recovery tests | Historical capture cause remains unexplained; replacement delivery, actual two-device acceptance and narrow Circuit reopen remain separate |
+| Documentation/CI/launcher | Root + Technical / Experience | Desktop route and prior CI inventory delivered; Full/Light selector is candidate | Exact terminal receipts, correct branch/qualification status and pending measurement; no pointer promotion from a subset |
 
 ## Qualified October 14 history
 

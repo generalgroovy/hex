@@ -1,0 +1,156 @@
+{
+  "schema": "hex.network-outage-independent-review.v1",
+  "reviewed_at_utc": "2026-10-15T22:28:45.306780+00:00",
+  "reviewer": "checkpoint_audit",
+  "audit_result": "verified_single_scenario_pass",
+  "full_qualified": false,
+  "historical_capture_cause_resolved": false,
+  "scope": "Independent receipt/raw-log/source-pin audit and byte-preserving archive of the second bounded diagnostic. No engine or test was executed by this reviewer.",
+  "case": {
+    "id": "outage-eight",
+    "run": "b",
+    "players": 8,
+    "profile": "outage_return",
+    "impaired_ticks": 240,
+    "final_drain_steps": 1,
+    "trace_rows": 241,
+    "actual_route": "Original real ENet loopback eight-player outage, recovery, acknowledgements, full replica/predicted actor parity and disconnect/reconnect assertions.",
+    "assertions": 6465,
+    "failures": 0,
+    "stderr_bytes": 0,
+    "elapsed_ms": 27370,
+    "initial_envelope_retained": true,
+    "publication_failure_witness": false,
+    "witness_markers_in_raw_log": false,
+    "transcript_persistence": "The bounded transcript and initial envelope remain in fixture memory on success and are emitted only on first failure. No transcript payload or initial-envelope dump is asserted for this passing run."
+  },
+  "raw_metrics": {
+    "capture_send_p95_us": 153430,
+    "sent_bytes": 2790192,
+    "dropped": 1477,
+    "queue_peak": 138,
+    "scope": "Instrumented state diagnosis with injected tick delays and real loopback polling. Not Internet RTT, FPS, a matched performance benchmark or proof of the historical failure cause."
+  },
+  "comparison_with_a": {
+    "receipt_path": "docs/breakthrough-evidence-20261015/network-outage-a/receipt.json",
+    "receipt_sha256": "20ba42b3cdb1a5b078c8ba85f3d0969d34ee85f0e17063fb5b6b9cbfa2c4909f",
+    "same_runner_source_pins_engine_and_default_pointer": true,
+    "same_declared_case_and241_step_trace_length": true,
+    "assertions_a": 6478,
+    "assertions_b": 6465,
+    "assertion_difference_b_minus_a": -13,
+    "scope": "The fixture checks each received envelope and admitted reconciliation, so its assertion count is not a fixed invariant across real polling schedules. Both raw counts match their own receipts. Different counts and transport totals do not prove identical input/receive trajectories; no successful command trace dump exists to assert that."
+  },
+  "provenance": {
+    "helper_receipt_sha256": "c178e0124b3fa7b925a80a27762785fadba335b73c80356d0b134e13f6433a4b",
+    "runner_receipt_sha256": "808dd6e9c5bb453796b71f74d6337f3fcc5dbf67decf6584c828f0adc74694b7",
+    "admission_sha256": "afcf469d48eae7e92676806adbbd558ee8465d4ca769e7ff2dfa73eec7f10a83",
+    "runner_path": ".godot/iteration-20261015/network-capture-diagnostic/run-network-capture.ps1",
+    "runner_sha256": "95e9c37be54ce6e347d6fa04441d40b34ca907f299f89d874ff75de91bef23ab",
+    "pins_path": ".godot/iteration-20261015/network-capture-diagnostic/source-pins.json",
+    "pins_sha256": "9caa682e97ea926634e6f7184114f694ec6d85c75847f5f74f852855391118a3",
+    "independently_rehashed_current_source_count": 667,
+    "current_source_bytes": 7577901,
+    "current_source_mismatches": [],
+    "fixture_sha256": "16105b077f8b687ca241539b461ef9d81d06e273cc93ac663e70fa465db7abb7",
+    "source_archive_manifest_path": "docs/breakthrough-evidence-20261015/post-full-test-repairs/archive.json",
+    "source_archive_manifest_sha256": "f1444e4632542f60392f05cfecf508eb1bcd109f12f24b43ef42d872a25e6739",
+    "source_archive_current_copies_match": true,
+    "scope": "These667 diagnostic inputs were independently rehashed after application. This is not a rerun of the earlier4632-input Full freeze."
+  },
+  "runtime_identity": {
+    "schema_version": 1,
+    "status": "candidate_generated_not_promoted",
+    "scope_id": "production-runtime-source-v1",
+    "canonical_encoding": "utf8-lf-tagged-length-v1",
+    "protocol_version": 61,
+    "snapshot_schema": 24,
+    "engine_identity": "4.7.1.stable.official.a13da4feb",
+    "record_count": 3450,
+    "runtime_source_sha256": "6618873387e2b62744f54ab845a03031dea83c7baa1506a2cab8de4c2cce715d",
+    "build_id": "p61-6618873387e2",
+    "authority": "Generated from canonical production runtime source records; delivery, publication and acceptance remain separate."
+  },
+  "runner_boundary": {
+    "started_utc": "2026-10-15T22:22:19.3458982Z",
+    "ended_utc": "2026-10-15T22:23:17.2243184Z",
+    "arguments": [
+      "--headless",
+      "--path",
+      "C:\\Users\\sende\\Projects\\hex",
+      "--audio-driver",
+      "Dummy",
+      "--script",
+      "res://.godot/iteration-20261015/network-capture-diagnostic/diagnose-outage.gd",
+      "--",
+      "--no-lan-discovery",
+      "--output=res://.godot/iteration-20261015/network-capture-diagnostic/runs/outage-eight-b"
+    ],
+    "parse_timeout_seconds": 180,
+    "scenario_timeout_seconds": 2700,
+    "engine_path": "C:\\Users\\sende\\AppData\\Local\\FLUX-dev\\godot-4.7.1\\Godot_v4.7.1-stable_win64.exe",
+    "engine_sha256_recorded_before_and_after": "323f9c4cc5db674e98815cdd8e69da007d5efc779abedc8c0e42883b7fdea12a",
+    "engine_binary_rehashed_by_this_audit": false,
+    "appdata_restored_reported": true,
+    "default_pointer_sha256": "faf2d3fc771c51a305662b75bce0ccc94ce9c12c43d644e47eb4ebf0ad20656f",
+    "default_pointer_matches_at_audit": true,
+    "desktop_route": "Root reports actual desktop-wrapper invocation. This audit verifies its reviewed dispatcher-compatible runner and arguments; no separate external shortcut receipt is invented."
+  },
+  "artifacts": [
+    {
+      "source": ".godot/iteration-20261015/network-capture-diagnostic/runs/outage-eight-b/receipt.json",
+      "archive": "docs/breakthrough-evidence-20261015/network-outage-b/receipt.json",
+      "sha256": "c178e0124b3fa7b925a80a27762785fadba335b73c80356d0b134e13f6433a4b",
+      "bytes": 1185
+    },
+    {
+      "source": ".godot/iteration-20261015/network-capture-diagnostic/runs/outage-eight-b/runner.json",
+      "archive": "docs/breakthrough-evidence-20261015/network-outage-b/runner.json",
+      "sha256": "808dd6e9c5bb453796b71f74d6337f3fcc5dbf67decf6584c828f0adc74694b7",
+      "bytes": 1857
+    },
+    {
+      "source": ".godot/iteration-20261015/network-capture-diagnostic/runs/outage-eight-b/admission.json",
+      "archive": "docs/breakthrough-evidence-20261015/network-outage-b/admission.json",
+      "sha256": "afcf469d48eae7e92676806adbbd558ee8465d4ca769e7ff2dfa73eec7f10a83",
+      "bytes": 1006
+    },
+    {
+      "source": ".godot/iteration-20261015/network-capture-diagnostic/runs/outage-eight-b/parse.log",
+      "archive": "docs/breakthrough-evidence-20261015/network-outage-b/parse.log",
+      "sha256": "9d581ec5492fe988c9c06ba731f53831e0de994203e89ae19ffcf5b503748acc",
+      "bytes": 75
+    },
+    {
+      "source": ".godot/iteration-20261015/network-capture-diagnostic/runs/outage-eight-b/parse.log.err",
+      "archive": "docs/breakthrough-evidence-20261015/network-outage-b/parse.log.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".godot/iteration-20261015/network-capture-diagnostic/runs/outage-eight-b/scenario.log",
+      "archive": "docs/breakthrough-evidence-20261015/network-outage-b/scenario.log",
+      "sha256": "96fffcce911f9cf573a32b65b29d87882c66ffe86f33fb369b5a4a430c09a74c",
+      "bytes": 443
+    },
+    {
+      "source": ".godot/iteration-20261015/network-capture-diagnostic/runs/outage-eight-b/scenario.log.err",
+      "archive": "docs/breakthrough-evidence-20261015/network-outage-b/scenario.log.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "prior_failure": {
+    "full_receipt_path": "docs/breakthrough-evidence-20261015/full-a/tests.json",
+    "full_review_path": "docs/breakthrough-evidence-20261015/full-a/independent-review.json",
+    "historical_network_failures": 1,
+    "scope": "The historical single publication rejection is not reproduced in either bounded diagnostic. The earlier failed/incomplete Full remains unchanged."
+  },
+  "limits": [
+    "No production capture fix, relaxed deadline, extra capture retry or changed packet acceptance is claimed.",
+    "Two passing eight-player outage runs do not qualify the eight-case impairment matrix or Full.",
+    "Fixture handshake uses its explicit test identity; generated production source identity is separately pinned.",
+    "Trace collection can affect actual poll batching; this is not an exact historical command replay.",
+    "No candidate portable promotion, durable save/player acceptance, platform CI result or performance claim follows."
+  ]
+}
