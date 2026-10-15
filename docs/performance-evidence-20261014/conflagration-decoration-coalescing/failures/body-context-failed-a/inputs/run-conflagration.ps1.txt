@@ -1,0 +1,218 @@
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory)][ValidateSet('forward','reverse')][string]$Case,
+    [Parameter(Mandatory)][string]$OutputDirectory
+)
+
+# Prepared experiment runner only. Invoke through the desktop Diagnostic route.
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+$hexRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../..'))
+$hexExperiment = [IO.Path]::GetFullPath($PSScriptRoot)
+$hexRuns = Join-Path $hexExperiment 'runs'
+$hexPrefix = '.godot/iteration-20261014/conflagration-next'
+$hexPinsPath = Join-Path $hexExperiment 'source-pins.json'
+$hexPinsSha256 = '80ad7d53c8db5b823cdf19eb18f4d3b75cef0818c52b01b0d2e4f193f44cf3ff'
+. (Join-Path $hexRoot 'scripts/flux2-common.ps1')
+
+function Assert-Condition([bool]$Condition, [string]$Message) {
+    if (-not $Condition) { throw $Message }
+}
+function Assert-PhysicalPath([string]$Path) {
+    $part = [IO.Path]::GetFullPath($Path)
+    while ($part) {
+        if ((Test-Path -LiteralPath $part) -and ((Get-Item -LiteralPath $part -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)) { throw 'Experiment path traverses a reparse point.' }
+        $part = [IO.Path]::GetDirectoryName($part)
+    }
+}
+function Resolve-Source([string]$ResourcePath) {
+    Assert-Condition ($ResourcePath -cmatch '^res://[^:\\]+$' -and $ResourcePath -notmatch '(^|/)\.\.?(/|$)') 'Invalid resource path in source inventory.'
+    $resolved = [IO.Path]::GetFullPath((Join-Path $hexRoot $ResourcePath.Substring(6)))
+    Assert-Condition ($resolved.StartsWith($hexRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) 'Source path escapes checkout.'
+    Assert-PhysicalPath $resolved
+    return $resolved
+}
+function Read-Json([string]$Path) {
+    Assert-PhysicalPath $Path
+    Assert-Condition ((Get-Item -LiteralPath $Path).Length -le 32MB) 'Receipt exceeds the bounded size.'
+    $value = Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json -AsHashtable
+    Assert-Condition ($value -is [System.Collections.IDictionary]) 'Expected a JSON object.'
+    return $value
+}
+function Assert-Sources([System.Collections.IDictionary]$Actual) {
+    Assert-Condition ($Actual.Count -eq $hexPins.source_hashes.Count) 'Source inventory count differs.'
+    foreach ($entry in $hexPins.source_hashes.GetEnumerator()) {
+        Assert-Condition ($Actual.Contains($entry.Key) -and $Actual[$entry.Key] -ceq $entry.Value) "Receipt pin differs: $($entry.Key)"
+        Assert-Condition ((Get-FluxFileSha256 (Resolve-Source $entry.Key)) -ceq $entry.Value) "Current input differs: $($entry.Key)"
+    }
+    Assert-Condition ((Get-FluxFileSha256 $hexPinsPath) -ceq $hexPinsSha256) 'Source-pins file changed.'
+}
+function Assert-Labels($Rows, [string[]]$Expected) {
+    $actual = @($Rows | ForEach-Object { $_.label })
+    Assert-Condition ($actual.Count -eq $Expected.Count -and (@($actual | Select-Object -Unique).Count -eq $Expected.Count)) 'Case inventory has missing/duplicate entries.'
+    for ($i = 0; $i -lt $Expected.Count; $i++) { Assert-Condition ($actual[$i] -ceq $Expected[$i]) "Unexpected case order at $i." }
+}
+function Assert-Image([System.Collections.IDictionary]$Image, [string]$Directory) {
+    $path = Resolve-Source $Image.path
+    Assert-Condition ([IO.Path]::GetDirectoryName($path) -ceq $Directory -and [IO.Path]::GetExtension($path) -ceq '.png') 'PNG is outside its owned run.'
+    Assert-Condition ($Image.sha256 -cmatch '^[a-f0-9]{64}$' -and (Get-FluxFileSha256 $path) -ceq $Image.sha256) 'PNG hash differs.'
+}
+function Assert-CommonReceipt([System.Collections.IDictionary]$Receipt, [string]$Directory) {
+    Assert-Condition ($Receipt.passed -is [bool] -and $Receipt.passed -ceq $true -and $Receipt.errors -is [array] -and $Receipt.errors.Count -eq 0 -and $Receipt.checks -gt 0) 'Helper did not pass.'
+    Assert-Condition ($Receipt.source_pins_sha256 -ceq $hexPinsSha256) 'Receipt names a different source inventory.'
+    Assert-Sources $Receipt.source_hashes
+    foreach ($log in @("$Directory.log.err", "$Directory-parse.log.err")) { Assert-Condition ((Get-Item -LiteralPath $log).Length -eq 0) 'Strict stderr is not empty.' }
+    foreach ($log in @("$Directory.log", "$Directory-parse.log")) {
+        Assert-Condition ((Get-Item -LiteralPath $log).Length -gt 0) 'Engine log is absent/empty.'
+        Assert-Condition (-not (Select-String -LiteralPath $log -Pattern '^(WARNING|ERROR|FAIL):|SCRIPT ERROR|Parse Error|Compile Error|leaked' -Quiet)) 'Engine diagnostic found in raw log.'
+    }
+}
+function Assert-Result([System.Collections.IDictionary]$Receipt, [string]$Directory) {
+    Assert-CommonReceipt $Receipt $Directory
+    Assert-Condition ($Receipt.schema -ceq 'hex.conflagration-decorations.v1' -and $Receipt.reverse_order -is [bool] -and $Receipt.reverse_order -ceq ($Case -eq 'reverse')) 'Helper schema/order differs.'
+    $expected = @('six_active_low_normal','six_active_low_reduced','six_active_standard_normal','fire_active_low_normal','mantle_active_low_normal','one_product_low_normal','six_active_standard_reduced','mixed_phase_low_normal','partial_expiry_low_normal','last_active_low_normal','active_with_flight_low_normal','conflagration_forming_low_normal','one_cooling_low_normal','two_conflagration_owners_low_normal','expired_low_normal')
+    Assert-Labels $Receipt.cases $expected
+    Assert-Condition ($Receipt.cleanup.viewports_created -eq 2 -and $Receipt.cleanup.viewports_freed -eq 2 -and $Receipt.cleanup.live_viewports -eq 0) 'Viewport owners did not close.'
+    Assert-Condition ($Receipt.measured_pairs_per_timed_case -eq 32 -and $Receipt.warmups_per_timed_case -eq 4 -and $Receipt.timed_cases -eq 6 -and $Receipt.pixel_only_cases -eq 9) 'Declared run bounds differ.'
+    $controls = $Receipt.prepared_controls
+    Assert-Condition ($controls.passed -is [bool] -and $controls.passed -ceq $true -and $controls.checks -gt 0 -and $controls.errors -is [array] -and $controls.errors.Count -eq 0 -and $controls.cases.Count -eq 27) 'Prepared classification/compatibility controls failed or changed.'
+    $controlLabels = @('quality_and_dependency_gates','empty','single','six_same_cell_last_seed_survives','other_cell_independent_single','same_rows_reentry')
+    foreach ($field in @('owner_key','direction','danger','intensity','polygon','phase','material')) { $controlLabels += 'separate_' + $field }
+    $controlLabels += @('same_triangle_different_vertex_order_retained','forming_and_decaying_marks_retained','last_active_retires_previous_live_seed_survives','expired_row_removed','all_decaying_no_active_coalescing','new_products_after_retirement','staggered_active_metadata_same_classification')
+    foreach ($field in @('owner_dictionary','owner_float','danger_int','intensity_float','direction_float','polygon_array')) { $controlLabels += 'unsupported_' + $field }
+    $controlLabels += 'readonly_input_metadata'
+    Assert-Labels $controls.cases $controlLabels
+    $timedCount = 0; $imagePaths = @(); $caseIndex = 0
+    foreach ($row in $Receipt.cases) {
+        $timed = $row.timed -ceq $true
+        Assert-Condition ($row.timed -is [bool] -and $timed -eq ($caseIndex -lt 6)) 'Timed/pixel-only placement differs.'
+        $caseIndex++
+        if ($timed) { $timedCount++ }
+        $standard = $row.label -clike '*_standard_*'
+        Assert-Condition ($row.profile -ceq $(if ($standard) { 'standard' } else { 'low' }) -and $row.reduced -ceq ($row.label -clike '*_reduced')) 'Actual quality/reduced state differs.'
+        Assert-Condition ($row.rows.Count -eq $(if ($timed) { 32 } else { 1 }) -and $row.warmups.Count -eq $(if ($timed) { 4 } else { 0 })) 'Draw row bounds differ.'
+        Assert-Condition ($row.physical_size.Count -eq 2 -and $row.physical_size[0] -eq 640 -and $row.physical_size[1] -eq 480 -and $row.zoom -eq 0.75 -and $row.world_tick -gt 0 -and $row.render_tick -eq $row.world_tick-1) 'Native size/scale/complete-step boundary differs.'
+        Assert-Condition ($row.context.current_fullbody_pixel_cast -ceq $true -and $row.context.actual_actor_count -gt 0 -and $row.authority_hash.Length -gt 0) 'Actual body/authority context missing.'
+        $cohort = $row.cohort; $pixel = $row.pixel_proof
+        Assert-Condition ($cohort.active_regions -eq $cohort.retained_active+$cohort.skipped_active -and $cohort.skipped_crown_lines -eq 2*$cohort.skipped_active -and $cohort.groups.Count -eq $cohort.cells) 'Active decorative accounting differs.'
+        $skippedTotal = 0; $retainedTotal = 0
+        foreach ($group in $cohort.groups) { $skippedTotal += $group.skipped_footprints.Count; $retainedTotal += $group.retained_footprints.Count }
+        Assert-Condition ($skippedTotal -eq $cohort.skipped_active -and $retainedTotal -eq $cohort.retained_active) 'Per-cell representative recount differs.'
+        Assert-Condition ($pixel.outside_eligible_polygons -eq 0 -and $pixel.expected_skipped_marks -eq $cohort.skipped_active -and $pixel.exact_rgba -is [bool]) 'Changed pixels escape actual eligible polygons.'
+        if ($cohort.skipped_active -eq 0) {
+            Assert-Condition ($pixel.exact_rgba -ceq $true -and $pixel.changed_pixels -eq 0) 'Unchanged context is not RGBA-exact.'
+        } else {
+            Assert-Condition ($pixel.exact_rgba -ceq $false -and $pixel.changed_pixels -gt 0) 'Positive simplification did not produce its declared art change.'
+        }
+        if ($row.label -in @('six_active_low_normal','six_active_low_reduced')) {
+            Assert-Condition ($cohort.active_products -eq 6 -and $cohort.active_regions -eq 150 -and $cohort.cells -eq 25 -and $cohort.skipped_active -eq 125 -and $cohort.retained_active -eq 25) 'Actual dense150-to25 witness differs.'
+        }
+        if ($standard -or $row.label -in @('fire_active_low_normal','mantle_active_low_normal','one_product_low_normal','conflagration_forming_low_normal','one_cooling_low_normal','two_conflagration_owners_low_normal','expired_low_normal')) {
+            Assert-Condition ($cohort.skipped_active -eq 0) 'An unaffected context lost decoration.'
+        }
+        if ($row.label -ceq 'one_product_low_normal') { Assert-Condition ($cohort.active_products -eq 1) 'Single-product visual control is not single.' }
+        if ($row.label -ceq 'active_with_flight_low_normal') { Assert-Condition ($row.context.actual_projectile_count -gt 0 -and $cohort.active_products -gt 0) 'Actual paid flight witness is absent.' }
+        if ($row.label -ceq 'two_conflagration_owners_low_normal') { Assert-Condition ($row.context.actual_actor_count -eq 2 -and $cohort.active_products -eq 2 -and $row.coverage.owners.Count -eq 2) 'Actual independent-owner control differs.' }
+        $drawIndex = 0
+        foreach ($draw in @($row.warmups) + @($row.rows)) {
+            Assert-Condition ($draw.index -eq $drawIndex) 'Draw indices are not contiguous.'
+            $candidateFirst = (($drawIndex % 2 -eq 0) -ne ($Case -eq 'reverse'))
+            $first = if ($candidateFirst) { 'candidate' } else { 'plain' }; $second = if ($candidateFirst) { 'plain' } else { 'candidate' }
+            Assert-Condition ($draw.actual_order.Count -eq 2 -and $draw.actual_order[0] -ceq $first -and $draw.actual_order[1] -ceq $second) 'Actual callback order differs.'
+            Assert-Condition ($draw.plain.okay -ceq $true -and $draw.candidate.okay -ceq $true -and $draw.plain.context_ok -ceq $true -and $draw.candidate.context_ok -ceq $true -and $draw.plain.authority_unchanged -ceq $true -and $draw.candidate.authority_unchanged -ceq $true) 'Ground/context/authority gate failed.'
+            Assert-Condition ($draw.plain.mark_draws-$draw.candidate.mark_draws -eq $cohort.skipped_active -and $draw.plain.prepared_cells -eq $draw.candidate.prepared_cells -and (-not $timed -or $draw.plain.prepared_cells -gt 0)) 'Actual flame submission or prepared-cell accounting differs.'
+            Assert-Condition ($draw.plain.ground_us -ge 0 -and $draw.candidate.ground_us -ge 0 -and $draw.new_meshes -ge 0 -and $draw.new_topologies -ge 0) 'Elapsed/build counters invalid.'
+            foreach ($phase in @('cache_before','cache_after')) {
+                $left = $draw[$phase].plain; $right = $draw[$phase].candidate
+                Assert-Condition ($left.Count -eq $right.Count) 'Boundary counter inventory differs.'
+                foreach ($key in $left.Keys) { Assert-Condition ($right.Contains($key) -and $left[$key] -eq $right[$key]) 'Fill/boundary cache counters differ.' }
+            }
+            $drawIndex++
+        }
+        Assert-Condition ($row.images.Count -eq 2 -and $row.images.Contains('plain') -and $row.images.Contains('candidate')) 'Paired image inventory differs.'
+        foreach ($role in @('plain','candidate')) {
+            $image = $row.images[$role]
+            Assert-Image $image $Directory
+            $path = Resolve-Source $image.path
+            Assert-Condition ([IO.Path]::GetFileName($path) -ceq "$($row.label)_$role.png") 'PNG name does not match actual case/role.'
+            $imagePaths += $path
+        }
+        Assert-Condition (($row.images.plain.sha256 -ceq $row.images.candidate.sha256) -eq $pixel.exact_rgba) 'PNG pair hashes disagree with exact/change proof.'
+    }
+    Assert-Condition ($timedCount -eq 6 -and $imagePaths.Count -eq 30 -and @($imagePaths | Select-Object -Unique).Count -eq 30 -and @(Get-ChildItem -LiteralPath $Directory -File -Filter '*.png').Count -eq 30) 'Measured case/image count differs.'
+    Assert-Labels $Receipt.paid_sequences @('single_fire_then_natural_reentry','twelve_fire','twelve_all_six_mantle_attempts','two_fire_one_conflagration','two_owners_two_fire_each')
+    foreach ($sequence in $Receipt.paid_sequences) {
+        Assert-Condition ($sequence.resource_refill -ceq $false -and $sequence.status_or_timer_injection -ceq $false -and $sequence.fully_expired -ceq $true -and $sequence.admitted -gt 0 -and $sequence.admitted+$sequence.refused -eq $sequence.attempts -and $sequence.matter_paid -gt 0) 'Finite ordinary paid sequence contract differs.'
+        $starts = @($sequence.outcomes | Where-Object { $_.event.type -ceq 'cast_started' }); $refusals = @($sequence.outcomes | Where-Object { $_.event.type -ceq 'cast_refused' })
+        Assert-Condition ($starts.Count -eq $sequence.admitted -and $refusals.Count -eq $sequence.refused -and $starts.Count+$refusals.Count -eq $sequence.outcomes.Count) 'Actual paid event recount differs.'
+        if ($sequence.label -ceq 'twelve_all_six_mantle_attempts') { Assert-Condition ($sequence.attempts -eq 12) 'Mantle attempts changed.' }
+        else {
+            $expectedAdmissions = if ($sequence.label -ceq 'twelve_fire') { 12 } elseif ($sequence.label -ceq 'two_owners_two_fire_each') { 4 } else { 2 }
+            Assert-Condition ($sequence.attempts -eq $expectedAdmissions -and $sequence.admitted -eq $expectedAdmissions -and $sequence.refused -eq 0 -and $sequence.matter_paid -eq 600*$expectedAdmissions) 'Fire ordinary payment/admission contract differs.'
+        }
+    }
+    Assert-Condition (Select-String -LiteralPath "$Directory.log" -SimpleMatch "CONFLAGRATION_PASS checks=$($Receipt.checks) cases=15" -Quiet) 'Native terminal marker differs.'
+}
+function Get-MemoryBoundary {
+    try {
+        $os = Get-CimInstance Win32_OperatingSystem -Property FreePhysicalMemory,TotalVisibleMemorySize -ErrorAction Stop
+        return [ordered]@{available=$true;observed_utc=[DateTime]::UtcNow.ToString('o');available_bytes=[long]$os.FreePhysicalMemory*1KB;total_visible_bytes=[long]$os.TotalVisibleMemorySize*1KB;scope='Host OS memory endpoint; not diagnostic-process memory or dedicated idle-machine proof.'}
+    } catch { return [ordered]@{available=$false;observed_utc=[DateTime]::UtcNow.ToString('o');error=$_.Exception.Message} }
+}
+function Write-NewJson([string]$Path, $Value) {
+    $text = ($Value | ConvertTo-Json -Depth 24) + "`n"
+    $stream = [IO.File]::Open($Path,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::None)
+    try { $bytes=[Text.UTF8Encoding]::new($false).GetBytes($text);$stream.Write($bytes,0,$bytes.Length);$stream.Flush() } finally { $stream.Dispose() }
+    Assert-Condition ([IO.File]::ReadAllText($Path) -ceq $text) 'Runner receipt readback differs.'
+}
+
+Assert-PhysicalPath $hexExperiment
+Assert-Condition ((Get-FluxFileSha256 $hexPinsPath) -ceq $hexPinsSha256) 'Reviewed source-pins hash differs.'
+$hexPins = Read-Json $hexPinsPath
+Assert-Condition ($hexPins.schema -ceq 'hex.conflagration-pins.v1' -and $hexPins.source_hashes.Count -eq 338 -and $hexPins.runtime_identity.build_id -ceq 'p61-64590c45c7a5' -and $hexPins.runtime_identity.runtime_source_sha256 -ceq '64590c45c7a5aa4b1b6fc492a3a11b32a4a3429d49fa792a729cabdec838c212') 'Reviewed manifest identity differs.'
+Assert-Sources $hexPins.source_hashes
+$hexOutput = [IO.Path]::GetFullPath($OutputDirectory)
+Assert-PhysicalPath $hexOutput
+$hexLeaf = [IO.Path]::GetFileName($hexOutput)
+$hexExpectedPrefix = "probe-$Case-"
+Assert-Condition ([IO.Path]::GetDirectoryName($hexOutput) -ceq $hexRuns -and $hexLeaf -cmatch ('^'+[regex]::Escape($hexExpectedPrefix)+'[a-z0-9]+(?:-[a-z0-9]+)*$')) 'Fresh output must be one owned case child.'
+foreach ($fresh in @($hexOutput,"$hexOutput.log","$hexOutput.log.err","$hexOutput-parse.log","$hexOutput-parse.log.err","$hexOutput-roaming")) { Assert-Condition (-not (Test-Path -LiteralPath $fresh)) "Preserve existing run: $fresh";Assert-PhysicalPath $fresh }
+$hexRunnerSha = Get-FluxFileSha256 $PSCommandPath
+$hexPointer = Join-Path $hexRoot 'docs/current-delivery.json'; $hexPointerSha = Get-FluxFileSha256 $hexPointer
+$hexSavedAppData = $env:APPDATA; $hexHadAppData = Test-Path Env:APPDATA
+$hexDriver = 'compare-conflagration.gd'
+$hexGodot = Get-FluxGodot; $hexGodotSha = Get-FluxFileSha256 $hexGodot
+$hexArguments = @('--path',$hexRoot,'--audio-driver','Dummy','--script',"res://$hexPrefix/$hexDriver",'--','--no-lan-discovery',"--output=res://$hexPrefix/runs/$hexLeaf")
+if ($Case -eq 'reverse') { $hexArguments += '--reverse-order' }
+$hexNativeLimit = 300
+$hexPassed = $false; $hexFailure = $null; $hexBefore = $null; $hexAfter = $null; $hexHelperPin = $null
+$hexStarted = [DateTime]::UtcNow.ToString('o')
+$hexLease = Enter-FluxEngineRun 'desktop-conflagration-diagnostic'
+try {
+    New-Item -ItemType Directory -Path $hexRuns -Force | Out-Null
+    $env:APPDATA = "$hexOutput-roaming"; New-Item -ItemType Directory -Path $env:APPDATA | Out-Null
+    Invoke-FluxGodotChecked $hexGodot @('--headless','--path',$hexRoot,'--check-only','--script',"res://$hexPrefix/$hexDriver") "$hexOutput-parse.log" -RejectWarnings -TimeoutSeconds 180 | Out-Null
+    $hexBefore = Get-MemoryBoundary
+    Invoke-FluxGodotChecked $hexGodot $hexArguments "$hexOutput.log" -RejectWarnings -TimeoutSeconds $hexNativeLimit | Out-Null
+    $hexAfter = Get-MemoryBoundary
+    $receipt = Read-Json (Join-Path $hexOutput 'receipt.json')
+    Assert-Result $receipt $hexOutput
+    $hexHelperPin = Get-FluxFileSha256 (Join-Path $hexOutput 'receipt.json')
+    $hexPassed = $true
+} catch { $hexFailure = $_.Exception.Message }
+finally {
+    if ($null -eq $hexAfter) { $hexAfter = Get-MemoryBoundary }
+    if ($hexHadAppData) { $env:APPDATA = $hexSavedAppData } else { Remove-Item Env:APPDATA -ErrorAction SilentlyContinue }
+    Exit-FluxEngineRun $hexLease
+    try {
+        Assert-Sources $hexPins.source_hashes
+        Assert-Condition ((Get-FluxFileSha256 $PSCommandPath) -ceq $hexRunnerSha -and (Get-FluxFileSha256 $hexPointer) -ceq $hexPointerSha -and (Get-FluxFileSha256 $hexGodot) -ceq $hexGodotSha) 'Runner, qualified pointer or engine changed.'
+    } catch { $hexPassed=$false;$hexFailure=([string]$hexFailure+'; '+$_.Exception.Message).Trim(';',' ') }
+}
+if (-not (Test-Path -LiteralPath $hexOutput)) { New-Item -ItemType Directory -Path $hexOutput | Out-Null }
+$hexLogPins = [ordered]@{}
+foreach ($log in @("$hexOutput.log","$hexOutput.log.err","$hexOutput-parse.log","$hexOutput-parse.log.err")) { if (Test-Path -LiteralPath $log -PathType Leaf) { $hexLogPins['../'+[IO.Path]::GetFileName($log)] = Get-FluxFileSha256 $log } }
+$hexRecord = [ordered]@{schema='hex.conflagration-launcher-run.v1';passed=$hexPassed;case=$Case;failure=$hexFailure;started_utc=$hexStarted;ended_utc=[DateTime]::UtcNow.ToString('o');runner_sha256=$hexRunnerSha;source_pins_sha256=$hexPinsSha256;helper_receipt_sha256=$hexHelperPin;engine_path=$hexGodot;engine_sha256=$hexGodotSha;engine_arguments=$hexArguments;parse_timeout_seconds=180;native_timeout_seconds=$hexNativeLimit;logs=$hexLogPins;host_memory_before=$hexBefore;host_memory_after=$hexAfter;default_pointer_sha256=$hexPointerSha;appdata_restored=$true;scope='Explicit pinned desktop Diagnostic runner. Native offscreen paid whole-ground draw and intentional Low art-change evidence. Passing this runner does not accept performance or threat-density readability; opposite-order analysis and root visual review remain mandatory. No whole-game FPS, GPU/present or idle-machine claim. Wrapper/shortcut invocation is external route evidence, not inferred from this receipt.'}
+Write-NewJson (Join-Path $hexOutput 'runner.json') $hexRecord
+if (-not $hexPassed) { throw "Conflagration $Case failed: $hexFailure" }
+Write-Output "PASS conflagration $Case; helper receipt $hexHelperPin"

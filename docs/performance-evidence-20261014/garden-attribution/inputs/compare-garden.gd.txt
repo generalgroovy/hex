@@ -1,0 +1,364 @@
+extends SceneTree
+## Ignored attribution. Exact production courts and delegated presentation.
+const Exhibition = preload("res://src/app/element_garden_exhibition.gd")
+const Presenter = preload("res://src/presentation/element_garden_presenter.gd")
+const Observers = preload("res://.godot/iteration-20261014/garden-next/observers.gd")
+const Quality = preload("res://src/presentation/render_quality.gd")
+const PREFIX := "res://.godot/iteration-20261014/garden-next/"
+const PINS := PREFIX+"source-pins.json"
+const SIZE := Vector2i(1280,720)
+const FOCUS := Vector2(4736,1152)
+const ZOOM := 0.75
+const MAX_STEPS := 1500
+const WARMUPS := 4
+const PAIRS := 16
+const LABELS := ["published","first_active_boundary","first_expiry","first_restart","departed","reentered"]
+
+class Board extends Node2D:
+	var model: RefCounted
+	var presenter: RefCounted
+	var observed := false
+	var reduced := false
+	var active := false
+	var role := ""
+	var serial := 0
+	var trace: Array[String] = []
+	var last: Dictionary = {}
+	func _draw() -> void:
+		serial+=1
+		draw_rect(Rect2(Vector2.ZERO,SIZE),Color("283e37"))
+		if not active: return
+		trace.append(role)
+		if observed:
+			(model as Observers.ObservedExhibition).reset_observer()
+			(presenter._surface as Observers.ObservedSurface).reset_observer()
+		PixelMagicLibrary.default_library().begin_frame(reduced)
+		draw_set_transform(Vector2(SIZE)*0.5-FOCUS*ZOOM,0,Vector2.ONE*ZOOM)
+		var started := Time.get_ticks_usec()
+		var entries: Array[Dictionary]=model.render_entries()
+		presenter.draw_ground(self,entries,reduced)
+		var elapsed := Time.get_ticks_usec()-started
+		draw_set_transform(Vector2.ZERO)
+		last={"whole_pipeline_us":elapsed,"entries":entries.size(),
+			"existing_stages_us":presenter.profile_stages_us.duplicate(),
+			"model":(model as Observers.ObservedExhibition).observation() if observed else {},
+			"surface":(presenter._surface as Observers.ObservedSurface).observation() if observed else {}}
+
+var output := ""
+var authorized := false
+var reverse_order := false
+var reduced := false
+var finished := false
+var checks := 0
+var errors: Array[String] = []
+var source_hashes: Dictionary = {}
+var pins_sha := ""
+var plain: Board
+var observed: Board
+var plain_view: SubViewport
+var observed_view: SubViewport
+var created := 0
+var freed := 0
+var trace: Array[String] = []
+var arrival_rows: Array[Dictionary] = []
+var groups: Array[Dictionary] = []
+var cases: Array[Dictionary] = []
+var memory_entry: Dictionary = {}
+var language := VisualLanguage.new()
+var layout := SanctumCampusLayout.new()
+var catalog := AbilityCatalog.new()
+var view := Rect2(FOCUS-Vector2(SIZE)/ZOOM*0.5,Vector2(SIZE)/ZOOM)
+
+func _initialize() -> void:
+	_run.call_deferred()
+
+func _run() -> void:
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--output="): output=argument.trim_prefix("--output=")
+	reverse_order=OS.get_cmdline_user_args().has("--reverse-order")
+	reduced=OS.get_cmdline_user_args().has("--reduced")
+	var suffix := output.trim_prefix(PREFIX+"runs/")
+	if not _check(DisplayServer.get_name()!="headless" and OS.get_cmdline_user_args().has("--no-lan-discovery")
+		and output.begins_with(PREFIX+"runs/") and not suffix.is_empty() and not "/" in suffix and not "\\" in suffix and not ".." in suffix
+		and not DirAccess.dir_exists_absolute(output) and not FileAccess.file_exists(output),"Fresh contained native output and no LAN"): _finish();return
+	if not _check(DirAccess.make_dir_recursive_absolute(output)==OK,"Create owned output"): _finish();return
+	authorized=true
+	pins_sha=FileAccess.get_sha256(PINS)
+	var pins: Variant=JSON.parse_string(FileAccess.get_file_as_string(PINS))
+	if not _check(pins is Dictionary and pins.get("schema")=="hex.garden-attribution-pins.v1" and pins.get("source_hashes") is Dictionary,"Pinned input inventory"): _finish();return
+	source_hashes=pins.source_hashes.duplicate()
+	if not _check(pins.runtime_identity.build_id=="p61-64590c45c7a5","Current qualified runtime identity"): _finish();return
+	for path: String in source_hashes:
+		if not _check(FileAccess.get_sha256(path)==source_hashes[path],"Pinned bytes: "+path): _finish();return
+	memory_entry=_memory()
+	if not _check(catalog.load_from_file("res://content/abilities/foundation_abilities_v1.json") and language.load_from_file()
+		and layout.load_from_file("res://content/maps/sanctum_campus_g2_v1.json"),"Actual content and map load"): _finish();return
+	Quality.set_profile("low")
+	plain=Board.new();observed=Board.new()
+	plain.model=Exhibition.new();observed.model=Observers.ObservedExhibition.new()
+	plain.role="plain";observed.role="observed";observed.observed=true
+	for board: Board in [plain,observed]:
+		board.presenter=Presenter.new();board.reduced=reduced;board.trace=trace
+		board.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
+		if not _check(board.model.configure(layout.element_garden_plots()) and board.presenter.configure(language),"Exact independently configured Garden"): _finish();return
+		if board.observed: board.presenter._surface=Observers.ObservedSurface.new()
+		board.presenter.profile_enabled=board.observed
+	plain_view=_viewport(plain);observed_view=_viewport(observed)
+	create_timer(240).timeout.connect(func() -> void:
+		if not finished: errors.append("240-second diagnostic bound expired");_finish())
+	if not await _arrival("initial"): _finish();return
+	await process_frame
+	if finished: return
+	if not await _draw_case("published"): _finish();return
+	var reached := {"active":false,"expiry":false,"restart":false}
+	var total_steps := 0
+	var group_index := 0
+	while not bool(reached.restart) and total_steps<MAX_STEPS:
+		var count: int=[0,1,8][group_index%3]
+		if total_steps+count>MAX_STEPS: break
+		var before := _markers(plain.model)
+		if not _group(count,group_index,view,FOCUS): _finish();return
+		var transitions := _transitions(before,_markers(plain.model))
+		groups[-1]["transitions"]=transitions
+		total_steps+=count;group_index+=1
+		if not bool(reached.active) and int(transitions.active_crossings)>0:
+			reached.active=true
+			if not await _draw_case("first_active_boundary"): _finish();return
+		if not bool(reached.expiry) and int(transitions.expiry_crossings)>0:
+			reached.expiry=true
+			if not await _draw_case("first_expiry"): _finish();return
+		if not bool(reached.restart) and int(transitions.restarts)>0:
+			reached.restart=true
+			if not await _draw_case("first_restart"): _finish();return
+		# This yield is outside all method clocks and bounds watchdog responsiveness.
+		if group_index%12==0:
+			await process_frame
+			if finished: return
+	if not _check(bool(reached.active) and bool(reached.expiry) and bool(reached.restart),"Actual active/expiry/restart boundaries reached inside finite bound"): _finish();return
+	var retired: Array[WeakRef]=_weak_owners()
+	if not _group(1,group_index,Rect2(-4000,-4000,100,100),Vector2(-3950,-3950)): _finish();return
+	if not await _draw_case("departed"): _finish();return
+	for item: WeakRef in retired:
+		if not _check(item.get_ref()==null,"Departed court/retained mesh owner released"): _finish();return
+	if not await _arrival("reentry"): _finish();return
+	if not await _draw_case("reentered"): _finish();return
+	_finish()
+
+func _arrival(label: String) -> bool:
+	for board: Board in [plain,observed]:
+		if not _check(board.model.request_arrival(view,FOCUS),"Real committed arrival request"): return false
+	var required: int=plain.model.arrival_status().required
+	if not _check(required==25 and observed.model.arrival_status().required==required,"Exact Profile B middle-view residency"): return false
+	for index: int in required:
+		var rows := {}
+		var order: Array=_order(index)
+		for role: String in order:
+			var board: Board=plain if role=="plain" else observed
+			if board.observed:
+				(board.model as Observers.ObservedExhibition).reset_observer()
+				(board.presenter._surface as Observers.ObservedSurface).reset_observer()
+			var started := Time.get_ticks_usec()
+			board.model.begin_frame();board.presenter.begin_frame()
+			var okay: bool=board.model.prepare_arrival()
+			var entries: Array[Dictionary]=board.model.arrival_render_entries()
+			okay=board.presenter.prepare_arrival(entries,required,reduced) and okay
+			var elapsed := Time.get_ticks_usec()-started
+			var observation: Dictionary=(board.model as Observers.ObservedExhibition).observation() if board.observed else {}
+			var surface_observation: Dictionary=(board.presenter._surface as Observers.ObservedSurface).observation() if board.observed else {}
+			rows[role]={"whole_preparation_us":elapsed,"prepared":index+1,"model":observation,"surface":surface_observation}
+			if not _check(okay and entries.size()==index+1 and board.model.render_entries().is_empty(),"One staged authority/visual row per frame, none published"): return false
+			if not _check(int(board.presenter.arrival_status().prepared)==index+1 and int(board.model.arrival_status().prepared)==index+1,"Authority and visual readiness agree"): return false
+			if board.observed and not _check(int(observation.emit_calls)==1 and int(observation.emit_us)<=elapsed and int(surface_observation.prepare_calls)==1,"Exactly one real finite emission and one visual preparation inside arrival budget"): return false
+		arrival_rows.append({"label":label,"index":index,"actual_order":order,"arms":rows})
+		await process_frame
+		if finished: return false
+	for board: Board in [plain,observed]:
+		if not _check(bool(board.model.arrival_status().ready) and bool(board.presenter.arrival_status().ready) and board.model.publish_arrival(),"Publish only complete funded and visual arrival"): return false
+	return _equivalent("Published arrival")
+
+func _group(count: int,index: int,requested_view: Rect2,observer: Vector2) -> bool:
+	var arms := {}
+	var order: Array=_order(index)
+	for role: String in order:
+		var board: Board=plain if role=="plain" else observed
+		if board.observed: (board.model as Observers.ObservedExhibition).reset_observer()
+		var okay := true
+		var completed := 0
+		var started := Time.get_ticks_usec()
+		board.model.begin_frame();board.presenter.begin_frame()
+		for unused: int in count:
+			if not board.model.step(requested_view,observer): okay=false;break
+			completed+=1
+		var elapsed := Time.get_ticks_usec()-started
+		arms[role]={"whole_exhibit_frame_us":elapsed,"okay":okay,"completed":completed,"observer":(board.model as Observers.ObservedExhibition).observation() if board.observed else {}}
+	groups.append({"index":index,"steps":count,"actual_order":order,"arms":arms,"memory":_memory() if index%32==0 else {}})
+	if not _check(bool(arms.plain.okay) and bool(arms.observed.okay) and int(arms.plain.completed)==count and int(arms.observed.completed)==count,"Actual exhibition group completed; partial arms retained on failure"): return false
+	var observation: Dictionary=arms.observed.observer
+	if not _check(int(observation.step_calls)==count and int(observation.emit_calls)<=1 and int(observation.emit_us)<=int(observation.step_us)
+		and int(observation.step_us)<=int(arms.observed.whole_exhibit_frame_us),"Exact step count/shared restart allowance/nested elapsed containment"): return false
+	return _equivalent("Completed exhibition group")
+
+func _markers(model: RefCounted) -> Dictionary:
+	var result := {}
+	for mask: int in model._resident:
+		var entry: Dictionary=model._resident[mask]
+		var court: HexChemistryWorld=entry.court
+		var pulses := {}
+		for id: int in court.products: pulses[str(id)]=int(court.products[id].get("pulse_index",-1))
+		result[mask]={"tick":int(entry.tick),"active":int(entry.active),"expiry":int(entry.expiry),"cycle":int(entry.cycle),
+			"products":court.products.size(),"revision":court.value_revision,"pulses":pulses}
+	return result
+
+func _transitions(before: Dictionary,after: Dictionary) -> Dictionary:
+	var result := {"active_crossings":0,"expiry_crossings":0,"restarts":0,"product_pulse_mutations":0,"value_revision_changes":0}
+	for mask: int in before:
+		if not after.has(mask): continue
+		var a: Dictionary=before[mask];var b: Dictionary=after[mask]
+		if int(a.tick)<int(a.active) and int(b.tick)>=int(a.active): result.active_crossings+=1
+		if int(a.tick)<int(a.expiry) and int(b.tick)>=int(a.expiry): result.expiry_crossings+=1
+		result.restarts+=int(b.cycle)-int(a.cycle)
+		if int(a.revision)!=int(b.revision): result.value_revision_changes+=1
+		for id: String in a.pulses:
+			if b.pulses.has(id) and int(a.pulses[id])!=int(b.pulses[id]): result.product_pulse_mutations+=1
+	return result
+
+func _state(model: RefCounted) -> Dictionary:
+	var rows: Array[Dictionary]=[]
+	for mask: int in model._resident:
+		var entry: Dictionary=model._resident[mask]
+		var court: HexChemistryWorld=entry.court
+		var row := {"mask":mask,"court_hash":court.state_hash(),"conservation":court.conservation_valid(),"court_script":court.get_script().resource_path}
+		for key: String in ["tick","cycle","started","active","decay","expiry","mode","material"]: row[key]=entry[key]
+		rows.append(row)
+	return {"rows":rows,"queue":model._restart_queue.duplicate(),"adoption":model._arrival_first_step.keys(),"budget":model._frame_restart_budget,"error":model.last_error}
+
+func _equivalent(label: String) -> bool:
+	var a := _state(plain.model);var b := _state(observed.model)
+	if not _check(a==b,label+": exact independent court hashes/scalars/budget/error"): return false
+	for row: Dictionary in a.rows:
+		if not _check(bool(row.conservation) and row.court_script=="res://src/app/element_garden_court.gd","Exact production ExhibitCourt and finite conservation"): return false
+	return true
+
+func _stats(board: Board) -> Dictionary:
+	return {"surface":board.presenter._surface.diagnostics(),"plaque_builds":board.presenter._plaque_builds,
+		"plaques":board.presenter._plaques.size(),"material":board.presenter._ground.material_surface.stats()}
+
+func _draw_case(label: String) -> bool:
+	var state := _state(plain.model)
+	var rows: Array[Dictionary]=[]
+	for board: Board in [plain,observed]: board.active=true
+	for index: int in WARMUPS+PAIRS:
+		trace.clear()
+		var before := {"plain":_stats(plain),"observed":_stats(observed)}
+		var a_serial := plain.serial;var b_serial := observed.serial
+		var order: Array=_order(index)
+		root.move_child(plain_view if order[0]=="plain" else observed_view,0)
+		(plain if order[0]=="plain" else observed).queue_redraw()
+		(observed if order[0]=="plain" else plain).queue_redraw()
+		await process_frame
+		if finished: return false
+		await process_frame
+		if finished: return false
+		RenderingServer.force_draw(false)
+		if not _check(trace==order and plain.serial==a_serial+1 and observed.serial==b_serial+1,"Exactly one actual callback per arm in requested order"): return false
+		var after := {"plain":_stats(plain),"observed":_stats(observed)}
+		if not _check(after.plain==after.observed,"Observers retain identical geometry/material/plaque counters"): return false
+		var child: Dictionary=observed.last.surface
+		var projection: Dictionary=observed.last.model
+		if not _check(int(child.build_us)<=int(child.geometry_us) and int(child.geometry_us)<=int(child.prepare_us)
+			and int(child.prepare_us)+int(child.retain_us)+int(projection.projection_us)<=int(observed.last.whole_pipeline_us)
+			and int(projection.projection_calls)==1 and int(child.prepare_calls)==int(observed.last.entries),"Nested child clocks/counts are contained, never summed twice"): return false
+		rows.append({"index":index,"warmup":index<WARMUPS,"actual_order":trace.duplicate(),"plain":plain.last.duplicate(true),"observed":observed.last.duplicate(true),"cache_before":before,"cache_after":after})
+		if index==0 and not _pixels_equal(label!="departed"): return false
+	if not _pixels_equal(label!="departed") or not _equivalent("Frozen native draw"): return false
+	if not _check(_state(plain.model)==state,"Drawing/projection never change authority"): return false
+	if label=="departed":
+		for board: Board in [plain,observed]:
+			var cleared: Dictionary=board.presenter._surface.diagnostics()
+			if not _check(int(cleared.resident)==0 and int(cleared.retained_geometry)==0,"Departure releases current and last-nonempty geometry in each presenter"): return false
+	var image: Image=plain_view.get_texture().get_image();image.convert(Image.FORMAT_RGBA8)
+	var path := output.path_join(label+".png")
+	if not _check(image.save_png(path)==OK,"Save representative exact paired image"): return false
+	var reread := Image.load_from_file(path)
+	if not _check(reread!=null,"PNG file readback"): return false
+	reread.convert(Image.FORMAT_RGBA8)
+	if not _check(reread.get_data()==image.get_data(),"PNG pixel readback"): return false
+	cases.append({"label":label,"state":state,"rows":rows,"exact_rgba_first_and_final":true,"image":{"path":path,"sha256":FileAccess.get_sha256(path)},"memory":_memory()})
+	for board: Board in [plain,observed]: board.active=false
+	return true
+
+func _pixels_equal(expect_ink: bool) -> bool:
+	var a := plain_view.get_texture().get_image();var b := observed_view.get_texture().get_image()
+	if not _check(a!=null and b!=null,"Native image readback"): return false
+	a.convert(Image.FORMAT_RGBA8);b.convert(Image.FORMAT_RGBA8)
+	if not _check(a.get_size()==SIZE and b.get_size()==SIZE and a.get_data()==b.get_data(),"Exact independent plain/observed RGBA"): return false
+	var ink := 0
+	for y: int in range(0,SIZE.y,8):
+		for x: int in range(0,SIZE.x,8):
+			if a.get_pixel(x,y).to_rgba32()!=Color("283e37").to_rgba32(): ink+=1
+	return _check(ink>0 if expect_ink else ink==0,"Expected actual Garden ink or complete departure")
+
+func _weak_owners() -> Array[WeakRef]:
+	var result: Array[WeakRef]=[]
+	for board: Board in [plain,observed]:
+		for entry: Dictionary in board.model._resident.values(): result.append(weakref(entry.court))
+		for row: Dictionary in board.presenter._surface._cache.values():
+			for key: String in ["mesh","native_mesh"]:
+				if row.get(key)!=null: result.append(weakref(row[key]))
+		for retained: Dictionary in board.presenter._surface._last_geometry.values():
+			var geometry: Dictionary=retained.geometry
+			for key: String in ["mesh","native_mesh"]:
+				if geometry.get(key)!=null: result.append(weakref(geometry[key]))
+	return result
+
+func _order(index: int) -> Array:
+	return ["observed","plain"] if (index%2==0)!=reverse_order else ["plain","observed"]
+
+func _viewport(board: Board) -> SubViewport:
+	var viewport := SubViewport.new();viewport.size=SIZE;viewport.render_target_update_mode=SubViewport.UPDATE_ALWAYS
+	root.add_child(viewport);viewport.add_child(board);created+=1
+	return viewport
+
+func _memory() -> Dictionary:
+	return {"static":int(Performance.get_monitor(Performance.MEMORY_STATIC)),"textures":int(Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED)),"video":int(Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED))}
+
+func _check(condition: bool,message: String) -> bool:
+	checks+=1
+	if not condition: errors.append(message)
+	return condition
+
+func _finish() -> void:
+	if finished: return
+	finished=true
+	var memory_before_cleanup := _memory()
+	for board: Board in [plain,observed]:
+		if not is_instance_valid(board): continue
+		board.active=false
+		if is_instance_valid(board.model): board.model.clear()
+		if is_instance_valid(board.presenter): board.presenter.cancel_arrival()
+	if is_instance_valid(plain_view): plain_view.free();freed+=1
+	elif is_instance_valid(plain): plain.free()
+	if is_instance_valid(observed_view): observed_view.free();freed+=1
+	elif is_instance_valid(observed): observed.free()
+	plain=null;observed=null;plain_view=null;observed_view=null
+	for path: String in source_hashes: _check(FileAccess.get_sha256(path)==source_hashes[path],"Final input unchanged: "+path)
+	if not pins_sha.is_empty(): _check(FileAccess.get_sha256(PINS)==pins_sha,"Input inventory unchanged")
+	var actual_labels: Array=[]
+	for row: Dictionary in cases: actual_labels.append(row.label)
+	var record := {"schema":"hex.garden-attribution.v1","passed":errors.is_empty() and actual_labels==LABELS and created==2 and freed==2,
+		"checks":checks,"errors":errors,"engine":Engine.get_version_info(),"source_hashes":source_hashes,"source_pins_sha256":pins_sha,
+		"reverse_order":reverse_order,"reduced":reduced,"physical_size":[SIZE.x,SIZE.y],"world_scale":ZOOM,"focus":[FOCUS.x,FOCUS.y],
+		"warmups":WARMUPS,"measured_pairs":PAIRS,"arrival_rows":arrival_rows,"groups":groups,"cases":cases,
+		"cleanup":{"created":created,"freed":freed,"live":created-freed},
+		"memory":{"entry":memory_entry,"before_cleanup":memory_before_cleanup,"after_cleanup":_memory()},
+		"scope":"Current native Garden method attribution only. Harmless explicitly funded exhibition stock, no player Flux/reward/save or SimWorld/Bootstrap scheduling. Exact ExhibitCourt/memo and production draw operations; no optimization. Low quality, one25-plot middle view, separate normal/reduced and opposite-order processes. Not foreground, physical input, GPU/present, complete game frame or FPS proof.",
+		"clocks":"Whole draw encloses render_entries plus presenter. Observed render projection is a sibling of presenter work; retain/prepare belong inside presenter, geometry_for inside prepare, build inside geometry_for. Existing stage clocks overlap these children. Residuals stay unlabeled. Whole update includes begin_frame for model/presenter plus0/1/8 actual steps; no interstep proof work. All hashes, counters, classifications, images and memory endpoints are outside clocks. Checks still change wall gaps/cache warmth. Whole plain/observed difference includes existing profile clocks and new observers.",
+		"limits":"Six frozen draw states,4warmups+16measured pairs each,6representative PNGs,2SubViewports,50staged arrival frames,<=1500evolutionsteps plus departure. First draws are not uniformly cold; real cache counters label builds/reuse. Active boundary crossings do not imply fracture mutation; pulse/value changes are recorded separately. Engine memory endpoints are neither process RSS/private/VRAM peaks nor leak/idle-machine evidence."}
+	if authorized:
+		var path := output.path_join("receipt.json");var file := FileAccess.open(path,FileAccess.WRITE)
+		if file!=null:
+			var encoded := JSON.stringify(record,"\t")+"\n";file.store_string(encoded);file.flush();var error := file.get_error();file.close()
+			if error!=OK or FileAccess.get_file_as_string(path)!=encoded: errors.append("Receipt write/readback failed")
+		else: errors.append("Receipt open failed")
+	if bool(record.passed) and errors.is_empty(): print("GARDEN_ATTRIBUTION_PASS checks=",checks," cases=",cases.size());quit(0)
+	else: printerr("GARDEN_ATTRIBUTION_FAILED: ",errors);quit(1)

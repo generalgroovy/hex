@@ -1,0 +1,17 @@
+{
+  "schema": "hex.stationary-source-transform.v1",
+  "movement_source_sha256": "3e195007a624088d211ce6d5c52f849f7213280eaf83e03ef9e5e30302a7e830",
+  "world_source_sha256": "2a8e32069c800d70644f222d4ce1e2378e3b2c79991e7e5d58b4de2df4548a1e",
+  "reference_class_removal": "class_name MovementSystem\n",
+  "candidate_insertion": "\t# STATIONARY_BEGIN\n\tif not moving and state.velocity_x == 0 and state.velocity_y == 0 and state.get_script() == PlayerState and config.get_script() == SimConfig:\n\t\tif allow_recovery and state.stamina_recovery_delay_ticks == 0:\n\t\t\t_apply_stamina_rate(state, ResourceRecoveryScript.rate_per_second(state.stamina_recovery_per_second, state.stamina_recovery_idle_ticks, config.tick_rate), config)\n\t\treturn\n\t# STATIONARY_END\n",
+  "candidate_insertion_sha256": "5c525d3487f75bd8d34d1a602ceb2709035fd329ecc1e1fda062cde385b0547e",
+  "world_redirect_count": 1,
+  "files": {
+    "reference_movement.gd": "ca871f65d7d8879d4a951663ea42eba7fa34781f4af5d8d769dd5658448dd016",
+    "candidate_movement.gd": "a3e4dcad95e6eea0b38203287efb2db79b172290e9d7483f4bc9b0b8d6cbbb67",
+    "candidate_counted.gd": "2876b2854dceafbf88a8c72cc1fa50cc1f573897e96cd46926b1f8ba60a9924e",
+    "reference_world.gd": "6b2e08890298fc79adbd018e399450c205f0cf25f4ba50bf3f782d5a4f0d9249",
+    "candidate_world.gd": "2949092302cbe026e51b9701a307d1c3815e08f7d2161c972806219117091a17"
+  },
+  "scope": "Exact movement copies; candidate only inserts the guarded stationary/recovery return. Counted copy is outside timings. World step only redirects MovementSystem references."
+}

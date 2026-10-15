@@ -1,0 +1,193 @@
+from pathlib import Path
+import hashlib
+
+HERE=Path(__file__).resolve().parent
+ROOT=HERE.parents[2]
+prior=ROOT/'.godot/iteration-20261014/performance-next/compare-occupied-membership.gd'
+s=prior.read_text(encoding='utf-8').replace('\r\n','\n')
+(HERE/'paid-route-reference.gd.txt').write_bytes(prior.read_bytes())
+def method(name):
+    start=s.index('func '+name+'('); end=s.find('\nfunc ',start+1)
+    return s[start:end if end>=0 else len(s)]
+def replace_method(name,new):
+    global s
+    old=method(name)
+    lines=[]
+    for line in new.splitlines():
+        indent=''
+        while line.startswith(chr(92)+'t'):
+            indent+='\t'
+            line=line[2:]
+        lines.append(indent+line)
+    new='\n'.join(lines)
+    s=s.replace(old,new.strip()+'\n',1)
+s=s.replace('Ignored same-call occupied membership experiment. Pristine whole-draw timers.','Ignored Low-only Conflagration decoration experiment. Pristine whole-ground clocks.')
+s=s.replace('iteration-20261014/performance-next/','iteration-20261014/conflagration-next/')
+s=s.replace('const Chemistry = preload','const Controls = preload("res://.godot/iteration-20261014/conflagration-next/controls.gd")\nconst Body = preload("res://src/presentation/cartoon_champion_presenter.gd")\nconst Foundation = preload("res://src/presentation/foundation_spell_presenter.gd")\nconst Chemistry = preload',1)
+s='\n'.join(line for line in s.split('\n') if not line.startswith(('const TRANSFORM_SHA','const HEADER_SHA')))
+s=s.replace('\tvar aggregate_coverage := false','\tvar body = Body.new()\n\tvar foundation = Foundation.new()',1)
+start=s.index('\t\tvar path_eligible:'); end=s.index('\t\tdraw_set_transform(center-focus*zoom',start)
+s=s[:start]+'''\t\tvar marks_before: Dictionary = presenter.retro_marks.geometry_stats()
+'''+s[end:]
+s=s.replace('''\t\tdraw_set_transform(Vector2.ZERO)
+\t\tlast={"ground_us":elapsed,"okay":okay,"authority_unchanged":before==world.state_hash(),
+\t\t\t"path_eligible":path_eligible,"presenter_script":presenter_path,"court_script":court_path,"prepared_cells":presenter._cells.size()}''','''\t\tvar marks_after: Dictionary = presenter.retro_marks.geometry_stats()
+\t\tvar body_ok := true
+\t\tfor actor: PlayerState in world.players:
+\t\t\tvar anchor := Vector2(actor.position_x, actor.position_y) / 1000.0
+\t\t\tbody_ok = body.draw(self,actor,"oh_tipi",anchor,float(world.tick-1),world.config,reduced,anchor) and body_ok
+\t\tfoundation.begin_frame(world.config,world.collision)
+\t\tvar projectile_ok := true
+\t\tvar expanded_draws := 0;var court_draws := 0
+\t\tfor shot: ProjectileState in world.projectiles:
+\t\t\tvar drawn: bool=foundation.draw_expanded_projectile(self,shot,world.tick,reduced,1.0,world.player(shot.owner_id))
+\t\t\tif drawn:expanded_draws+=1
+\t\t\telse:
+\t\t\t\tcourt_draws+=1
+\t\t\t\tdrawn=presenter.draw_projectile(self,shot,float(world.tick-1),1.0,reduced)
+\t\t\tprojectile_ok=drawn and projectile_ok
+\t\tdraw_set_transform(Vector2.ZERO)
+\t\tlast={"ground_us":elapsed,"okay":okay,"context_ok":body_ok and projectile_ok,"body_ok":body_ok,"projectile_ok":projectile_ok,
+\t\t\t"expanded_projectile_draws":expanded_draws,"court_projectile_draws":court_draws,"authority_unchanged":before==world.state_hash(),
+\t\t\t"mark_draws":int(marks_after.draws)-int(marks_before.draws),"prepared_cells":presenter._cells.size()}''')
+s=s.replace('var qualification_sha256 := ""\nvar qualification_path := ""','var prepared_controls: Dictionary = {}\nvar skipped_polygons: Array[PackedVector2Array] = []\nvar skipped_count := 0\nvar current_pixel: Dictionary = {}\nvar failure_context: Dictionary = {}\nvar seen_six := false\nvar retired_ids: Array[int] = []\nvar previous_quality := "standard"')
+replace_method('_run',r'''func _run() -> void:
+\tvar output_count := 0
+\tfor argument: String in OS.get_cmdline_user_args():
+\t\tif argument.begins_with("--output="): output=argument.trim_prefix("--output=");output_count+=1
+\t\telif argument=="--reverse-order": reverse_order=true
+\t\telif argument=="--no-lan-discovery": pass
+\t\telse: _check(false,"Unknown argument: "+argument)
+\tvar prefix := ROOT+"runs/probe-"
+\tvar suffix := output.trim_prefix(prefix)
+\tif not _check(output_count==1 and errors.is_empty() and DisplayServer.get_name()!="headless" and OS.get_cmdline_user_args().has("--no-lan-discovery")
+\t\tand output.begins_with(prefix) and suffix.is_valid_filename() and not suffix.is_empty() and not "/" in suffix and not "\\" in suffix and not ".." in suffix
+\t\tand not DirAccess.dir_exists_absolute(output) and not FileAccess.file_exists(output),"Fresh owned native output/no LAN"): _finish();return
+\tif not _check(DirAccess.make_dir_recursive_absolute(output)==OK,"Create owned output"): _finish();return
+\toutput_authorized=true
+\tpins_sha256=FileAccess.get_sha256(PINS)
+\tvar pins: Variant=JSON.parse_string(FileAccess.get_file_as_string(PINS))
+\tif not _check(pins is Dictionary and pins.get("schema")=="hex.conflagration-pins.v1" and pins.get("source_hashes") is Dictionary,"Reviewed source inventory"): _finish();return
+\thashes=pins.source_hashes.duplicate()
+\tfor path: String in hashes:
+\t\tif not _check(String(hashes[path]).length()==64 and hashes[path]==FileAccess.get_sha256(path),"Reviewed source bytes: "+path): _finish();return
+\tif not _source_guard(): _finish();return
+\tmemory_entry=_memory_endpoint();previous_quality=Quality.profile
+\tif not _check(language.load_from_file() and abilities.load_from_file("res://content/abilities/foundation_abilities_v1.json")
+\t\tand champions.load_from_file("res://content/champions/foundation_champions_v1.json",abilities)
+\t\tand layout.load_from_file("res://content/maps/sanctum_campus_g2_v1.json"),"Actual content loads"): _finish();return
+\tprepared_controls=Controls.run(language)
+\tif not _check(bool(prepared_controls.get("passed",false)) and prepared_controls.get("errors",["missing"]).is_empty(),"Prepared compatibility controls pass before timing"): _finish();return
+\tQuality.set_profile("low")
+\tcreate_timer(300).timeout.connect(func() -> void:
+\t\tif not finished: errors.append("Bounded native watchdog expired");_finish())
+\tif not _fire_route(false) or not _fire_route(true) or not _mantle_route() or not _single_product_route() or not _conflagration_owners_route(): _finish();return
+\tvar specs: Array[Dictionary]=[
+\t\t{"label":"six_active","profile":"low","reduced":false,"timed":true},
+\t\t{"label":"six_active","profile":"low","reduced":true,"timed":true},
+\t\t{"label":"six_active","profile":"standard","reduced":false,"timed":true},
+\t\t{"label":"fire_active","profile":"low","reduced":false,"timed":true},
+\t\t{"label":"mantle_active","profile":"low","reduced":false,"timed":true},
+\t\t{"label":"one_product","profile":"low","reduced":false,"timed":true},
+\t\t{"label":"six_active","profile":"standard","reduced":true,"timed":false},
+\t\t{"label":"mixed_phase","profile":"low","reduced":false,"timed":false},
+\t\t{"label":"partial_expiry","profile":"low","reduced":false,"timed":false},
+\t\t{"label":"last_active","profile":"low","reduced":false,"timed":false},
+\t\t{"label":"active_with_flight","profile":"low","reduced":false,"timed":false},
+\t\t{"label":"conflagration_forming","profile":"low","reduced":false,"timed":false},
+\t\t{"label":"one_cooling","profile":"low","reduced":false,"timed":false},
+\t\t{"label":"two_conflagration_owners","profile":"low","reduced":false,"timed":false},
+\t\t{"label":"expired","profile":"low","reduced":false,"timed":false}]
+\tfor spec: Dictionary in specs:
+\t\tif not _check(snapshots.has(spec.label),"Actually reached declared paid state: "+String(spec.label)): _finish();return
+\tplain=Board.new();candidate=Board.new();plain.presenter=Court.new();candidate.presenter=Candidate.new()
+\tplain.role="plain";candidate.role="candidate"
+\tfor board: Board in [plain,candidate]:
+\t\tboard.trace=trace;board.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
+\t\tvar names: Array[String]=["oh_tipi"]
+\t\tif not _check(board.presenter.configure(language) and board.foundation.configure(language,abilities) and board.body.configure_fullbody_startup(language,false,true)
+\t\t\tand board.body.prepare_override_pages(names),"Current material and fullbody pixel-cast banks admitted"): _finish();return
+\tplain_view=_viewport(plain);candidate_view=_viewport(candidate)
+\tawait process_frame
+\tif finished:return
+\tawait process_frame
+\tif finished:return
+\tRenderingServer.force_draw(false)
+\tfor spec: Dictionary in specs:
+\t\tQuality.set_profile(spec.profile)
+\t\tif not await _case(spec.label,spec.reduced,0.75,Vector2(0.25,0.75),spec.timed): _finish();return
+\t_finish()
+'''.replace('\t','	'))
+replace_method('_qualification_guard','')
+replace_method('_source_guard',r'''func _source_guard() -> bool:
+\tif not _check(FileAccess.get_sha256(BEFORE)==BEFORE_SHA and FileAccess.get_sha256("res://src/presentation/hex_court_presenter.gd")==BEFORE_SHA,"Exact unchanged production predecessor"): return false
+\tvar proof: Variant=JSON.parse_string(FileAccess.get_file_as_string(ROOT+"source-transform.json"))
+\tif not _check(proof is Dictionary and proof.get("schema")=="hex.conflagration-transform.v1","Exact transform inventory"): return false
+\tvar original := FileAccess.get_file_as_string(BEFORE).replace("\r\n","\n")
+\tvar actual := FileAccess.get_file_as_string(ROOT+"candidate_court.gd").replace("\r\n","\n")
+\tvar header := FileAccess.get_file_as_string(ROOT+"candidate-header.txt").replace("\r\n","\n")
+\tvar body := _method(original,"_draw_mirror_product")
+\tvar newline := body.find("\n")+1
+\tbody=body.substr(0,newline)+String(proof.guard)+body.substr(newline)
+\tfor change: Dictionary in proof.replacements:
+\t\tif not _check(body.count(String(change.old))==1,"Unique declared source replacement"): return false
+\t\tbody=body.replace(String(change.old),String(change.new))
+\tif not _check(actual==header+body+"\n\n" and header.sha256_text()==proof.header_sha256,"Only guarded mirror-product method and pure local classifier differ"): return false
+\tvar prior := FileAccess.get_file_as_string(ROOT+"paid-route-reference.gd.txt").replace("\r\n","\n")
+\tvar current := FileAccess.get_file_as_string(ROOT+"compare-conflagration.gd").replace("\r\n","\n")
+\tfor name: String in ["_world","_ready","_step","_record","_empty","_coverage","_capture","_mantle_route","_owners_route"]:
+\t\tif not _check(_method(prior,name)==_method(current,name),"Exact reviewed paid preparation: "+name): return false
+\tvar hook := "\t\tif dense and not _dense_captures(world,coverage): return false\n"
+\treturn _check(_method(current,"_fire_route").count(hook)==1 and _method(current,"_fire_route").replace(hook,"")==_method(prior,"_fire_route"),"Fire commands/steps unchanged; only capture hook added")
+'''.replace('\t','	'))
+s=s.replace('\t\tvar coverage := _coverage(world)\n\t\tif dense:', '\t\tvar coverage := _coverage(world)\n\t\tif dense and not _dense_captures(world,coverage): return false\n\t\tif dense:',1)
+# The remaining methods are authored separately so small review edits do not need regeneration.
+extra=(HERE/'driver-extra.txt').read_text(encoding='utf-8')
+replace_method('_case',extra[:extra.index('\nfunc _pixel_proof(')])
+replace_method('_pixels_equal',extra[extra.index('func _pixel_proof('):extra.index('\nfunc _dense_captures(')])
+append=extra[extra.index('func _dense_captures('):]
+replace_method('_finish',r'''func _finish() -> void:
+\tif finished:return
+\tfinished=true
+\tvar memory_before_cleanup := _memory_endpoint()
+\tif is_instance_valid(plain_view):plain_view.free();viewports_freed+=1
+\telif is_instance_valid(plain):plain.free()
+\tif is_instance_valid(candidate_view):candidate_view.free();viewports_freed+=1
+\telif is_instance_valid(candidate):candidate.free()
+\tplain_view=null;candidate_view=null;plain=null;candidate=null
+\tQuality.set_profile(previous_quality)
+\tfor path: String in hashes:_check(FileAccess.get_sha256(path)==String(hashes[path]),"Final source unchanged: "+path)
+\tif not pins_sha256.is_empty():_check(FileAccess.get_sha256(PINS)==pins_sha256,"Source inventory unchanged")
+\tvar record := {"schema":"hex.conflagration-decorations.v1","passed":errors.is_empty() and results.size()==15 and viewports_created==2 and viewports_freed==2,
+\t\t"engine":Engine.get_version_info(),"checks":checks,"errors":errors,"source_hashes":hashes,"source_pins_sha256":pins_sha256,"reverse_order":reverse_order,
+\t\t"prepared_controls":prepared_controls,"paid_sequences":sequences,"cases":results,"failure_context":failure_context,
+\t\t"cleanup":{"viewports_created":viewports_created,"viewports_freed":viewports_freed,"live_viewports":viewports_created-viewports_freed},
+\t\t"memory":{"entry":memory_entry,"before_cleanup":memory_before_cleanup,"after_cleanup":_memory_endpoint(),"scope":"Godot monitor endpoints, not host/process/private peaks or physical GPU allocation."},
+\t\t"measured_pairs_per_timed_case":PAIRS,"warmups_per_timed_case":WARMUPS,"timed_cases":6,"pixel_only_cases":9,
+\t\t"scope":"Low-only intentional active decoration simplification on frozen complete ordinary paid snapshots. Every fill/boundary/phase warning retained. Standard and unmodified contexts exact; changed RGBA confined to current eligible polygon interiors. One-versus-six and staggered threat readability requires root visual acceptance. No application boot, physical input, continuous moving-play, thread CPU, GPU/present or FPS claim.",
+\t\t"clock_scope":"Pristine whole draw_ground_in_view includes candidate guard/grouping. Strict packets, controls, proof, source readback, actor/projectile context and pixel inspection are outside. One untimed bundle inspection follows the first paired draw of each case; whole-draw projection remains inside the draw clock. Shared caches persist; first/final images are not uniformly cold. Actual order and reverse process retained.",
+\t\t"gate":"Both normal and reduced dense Low cases in both processes: >=10percent AND500us whole-ground mean savings, positive paired median and both order-stratum savings. Reject repeated all-frame p95 regression>5percent or unchanged-control mean regression exceeding BOTH3percent and100us. Visual threat-density acceptance independently mandatory.",
+\t\t"bounds":"6*(32measured+4warmup)+9pixel paired callbacks;2fixed640x480 views;30PNGs;bounded finite paid routes;300second watchdog."}
+\tif output_authorized:
+\t\tvar encoded := JSON.stringify(record,"\t")+"\n"
+\t\tif encoded.to_utf8_buffer().size()>32*1024*1024:print("CONFLAGRATION_FAILED receipt bound");quit(1);return
+\t\tvar path := output.path_join("receipt.json")
+\t\tif FileAccess.file_exists(path):print("CONFLAGRATION_FAILED existing receipt");quit(1);return
+\t\tvar file := FileAccess.open(path,FileAccess.WRITE)
+\t\tif file==null:print("CONFLAGRATION_FAILED output");quit(1);return
+\t\tfile.store_string(encoded);file.flush();var error := file.get_error();file.close()
+\t\tif error!=OK or FileAccess.get_file_as_string(path)!=encoded:errors.append("Receipt write/readback failed")
+\tif bool(record.passed) and errors.is_empty():print("CONFLAGRATION_PASS checks=",checks," cases=",results.size());quit(0)
+\telse:printerr("CONFLAGRATION_FAILED: ",errors);quit(1)
+
+func _finalize() -> void:
+\tif is_instance_valid(plain_view):plain_view.free()
+\telif is_instance_valid(plain):plain.free()
+\tif is_instance_valid(candidate_view):candidate_view.free()
+\telif is_instance_valid(candidate):candidate.free()
+\tQuality.set_profile(previous_quality)
+'''.replace('\t','	'))
+s += '\n'+append
+(HERE/'compare-conflagration.gd').write_text(s,encoding='utf-8')
+saved=(HERE/'compare-conflagration.gd').read_bytes()
+print('compare-conflagration.gd',len(saved),hashlib.sha256(saved).hexdigest())

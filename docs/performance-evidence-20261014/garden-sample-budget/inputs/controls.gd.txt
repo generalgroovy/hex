@@ -1,0 +1,235 @@
+extends RefCounted
+## Untimed compatibility/lifetime controls. Ordinary rows are real funded
+## exhibitions; sparse cache and virtual-hook probes are explicitly prepared.
+const Garden = preload("res://src/app/element_garden_exhibition.gd")
+const OriginalSurface = preload("res://src/presentation/element_garden_surface.gd")
+const CandidateSurface = preload("res://.godot/iteration-20261014/garden-sample-next/candidate_surface.gd")
+const CandidatePresenter = preload("res://.godot/iteration-20261014/garden-sample-next/candidate_presenter.gd")
+
+class DerivedSurface extends CandidateSurface:
+	var calls := 0
+	func prepare(entry: Dictionary, ground: HexCourtPresenter, reduced: bool) -> Dictionary:
+		calls += 1
+		return super.prepare(entry, ground, reduced)
+
+class MutatingGround extends HexCourtPresenter:
+	var calls := 0
+	func _prepare_region(value: Variant, material: String, polygon: PackedVector2Array = PackedVector2Array()) -> Dictionary:
+		calls += 1
+		return super._prepare_region(value, material, polygon)
+	func _fire_region_style(region: Dictionary, reduced: bool) -> Dictionary:
+		var style := super._fire_region_style(region, reduced)
+		# Prepared virtual side effect: later sample preparation changes styling.
+		style.base = Color(float(calls) / 10.0, 0.25, 0.5)
+		return style
+
+class DerivedCourt extends HexChemistryWorld:
+	var source: HexChemistryWorld
+	var calls := 0
+	func occupied_cells() -> Dictionary:
+		return source.occupied_cells()
+	func render_regions(cell: Vector2i, material: String, tick: float) -> Array[Dictionary]:
+		calls += 1
+		return source.render_regions(cell, material, tick)
+
+static func run(language: VisualLanguage, layout: SanctumCampusLayout, reduced: bool) -> Dictionary:
+	var errors: Array[String] = []
+	var result := {"checks": 0, "errors": errors, "evidence": {"prepared_compatibility_controls": ["sparse_sample_cells", "derived_surface", "derived_ground_style", "derived_court_proxy"], "phase_rows": []}}
+	var ground := HexCourtPresenter.new()
+	if not _check(result, ground.configure(language), "Configure ordinary production ground"): return result
+	_check(result, OriginalSurface.new().prepare({"mask": 0}, null, reduced).is_empty()
+		and CandidateSurface.new().prepare_for_draw({"mask": 0}, null, reduced, 1).is_empty(), "Invalid-mask null-ground harmless return remains compatible")
+	var fire := _fixture(layout, 2, result)
+	var backdraft := _fixture(layout, 34, result)
+	if fire.is_empty() or backdraft.is_empty(): return result
+	var entry: Dictionary = fire.entry
+	var authority_before: String = (entry.court as HexChemistryWorld).state_hash()
+	var reference := OriginalSurface.new()
+	var candidate := CandidateSurface.new()
+	var expected := reference.prepare(entry, ground, reduced)
+	var actual := candidate.prepare(entry, ground, reduced)
+	if not _check(result, expected.samples.size() == 3, "Actual Fire footprint has three public samples"): return result
+	_equal_rows(result, actual, expected, 3, "Direct default remains three")
+	var original_mesh: WeakRef = weakref(actual.mesh)
+	for limit: int in [1, 3, 1, 0, 99]:
+		var cold := OriginalSurface.new()
+		expected = cold.prepare(entry, ground, reduced)
+		actual = candidate.prepare_for_draw(entry, ground, reduced, limit)
+		_equal_rows(result, actual, expected, clampi(limit, 1, 3), "Same-phase budget " + str(limit))
+		_check(result, actual.mesh == original_mesh.get_ref(), "Quality change retains the exact full-footprint mesh")
+	_check(result, int(candidate._cache[int(entry.mask)].sample_limit) == 3, "High limit clamps to three")
+	candidate.prepare_for_draw(entry, ground, reduced, 1)
+	_equal_rows(result, candidate.prepare(entry, ground, reduced), expected, 3, "Direct prepare after Low/Standard stays default three")
+	var derived := DerivedSurface.new()
+	actual = derived.prepare_for_draw(entry, ground, reduced, 1)
+	_check(result, derived.calls == 1 and actual.samples.size() == 3, "Derived Surface delegates existing three-argument virtual prepare")
+	_equal_rows(result, actual, expected, 3, "Derived Surface unchanged result")
+	_derived_ground(language, entry, reduced, result)
+	_derived_court(entry, ground, reduced, result)
+	_sparse(entry, ground, reduced, result)
+	_check(result, (entry.court as HexChemistryWorld).state_hash() == authority_before, "Direct/quality/virtual/sparse controls preserve actual court")
+	_staging(language, [fire.entry, backdraft.entry], reduced, result)
+	_phases(backdraft, ground, reduced, result)
+	result.evidence["exact_candidate_low_samples"] = candidate.prepare_for_draw(entry, ground, reduced, 1).samples.size()
+	result.evidence["derived_surface_calls"] = derived.calls
+	result.evidence["direct_default_samples"] = expected.samples.size()
+	return result
+
+static func _fixture(layout: SanctumCampusLayout, mask: int, result: Dictionary) -> Dictionary:
+	var model := Garden.new()
+	if not _check(result, model.configure(layout.element_garden_plots()), "Configure real exhibit " + str(mask)): return {}
+	var center: Vector2 = model.plot_info(mask).center
+	var view := Rect2(center - Vector2.ONE, Vector2.ONE * 2)
+	model.begin_frame()
+	if not _check(result, model.step(view, center), "Ordinary finite initial exhibit emission"): return {}
+	var entries: Array[Dictionary] = model.render_entries()
+	if not _check(result, entries.size() == 1 and int(entries[0].mask) == mask, "Single authored plot selected"): return {}
+	_check(result, (entries[0].court as HexChemistryWorld).conservation_valid(), "Initial exhibition matter conserves")
+	return {"model": model, "entry": entries[0], "view": view, "center": center}
+
+static func _derived_ground(language: VisualLanguage, entry: Dictionary, reduced: bool, result: Dictionary) -> void:
+	var left := MutatingGround.new()
+	var right := MutatingGround.new()
+	if not _check(result, left.configure(language) and right.configure(language), "Configure prepared virtual ground controls"): return
+	var reference := OriginalSurface.new()
+	var candidate := CandidateSurface.new()
+	var expected := reference.prepare(entry, left, reduced)
+	var actual := candidate.prepare_for_draw(entry, right, reduced, 1)
+	_check(result, left.calls == 3 and right.calls == 3, "Derived ground retains all three observable preparation calls")
+	_check(result, actual.style == expected.style and actual.style.base == Color(0.3, 0.25, 0.5), "Derived ground later-call style mutation is preserved")
+	_equal_rows(result, actual, expected, 3, "Derived ground compatibility")
+	result.evidence["derived_ground_preparation_calls"] = [left.calls, right.calls]
+
+static func _sparse(entry: Dictionary, ground: HexCourtPresenter, reduced: bool, result: Dictionary) -> void:
+	var reference := OriginalSurface.new()
+	var candidate := CandidateSurface.new()
+	var expected := reference.prepare(entry, ground, reduced)
+	var actual := candidate.prepare(entry, ground, reduced)
+	var cells: Array[Vector2i] = [Vector2i(10000, 10000), expected.sample_cells[0], expected.sample_cells[1]]
+	# Only presentation cache metadata is prepared. The real court is untouched.
+	expected.sample_cells = cells.duplicate()
+	actual.sample_cells = cells.duplicate()
+	expected.sample_phase = ""
+	actual.sample_phase = ""
+	expected = reference.prepare(entry, ground, reduced)
+	actual = candidate.prepare_for_draw(entry, ground, reduced, 1)
+	_check(result, expected.samples.size() == 2 and actual.samples.size() == 1, "Low stops after a successful sample, not an empty first cell")
+	_equal_rows(result, actual, expected, 1, "Prepared first-empty sample fallback")
+
+static func _derived_court(entry: Dictionary, ground: HexCourtPresenter, reduced: bool, result: Dictionary) -> void:
+	var left := DerivedCourt.new()
+	var right := DerivedCourt.new()
+	left.source = entry.court
+	right.source = entry.court
+	var a: Dictionary = entry.duplicate()
+	var b: Dictionary = entry.duplicate()
+	a.court = left
+	b.court = right
+	var reference := OriginalSurface.new()
+	var candidate := CandidateSurface.new()
+	var expected := reference.prepare(a, ground, reduced)
+	var actual := candidate.prepare_for_draw(b, ground, reduced, 1)
+	_check(result, left.calls > 3 and right.calls == left.calls, "Derived court retains all observable public-region calls")
+	_equal_rows(result, actual, expected, 3, "Prepared derived court proxy preserves default sample dispatch")
+	result.evidence["derived_court_region_calls"] = [left.calls, right.calls]
+
+static func _staging(language: VisualLanguage, entries: Array[Dictionary], reduced: bool, result: Dictionary) -> void:
+	var presenter := CandidatePresenter.new()
+	if not _check(result, presenter.configure(language), "Configure staged sample presenter"): return
+	var original_hashes: Array[String] = []
+	for entry: Dictionary in entries: original_hashes.append((entry.court as HexChemistryWorld).state_hash())
+	presenter.set_render_detail(1)
+	presenter.begin_frame()
+	_check(result, presenter.prepare_arrival(entries, 2, reduced), "Prepare first actual staged surface")
+	_check(result, int(presenter.arrival_status().prepared) == 1 and not bool(presenter.arrival_status().ready), "Partial arrival remains incomplete")
+	presenter.set_render_detail(3)
+	_check(result, presenter.prepare_arrival(entries, 2, reduced), "Quality change accepts same arrival request")
+	_check(result, int(presenter.arrival_status().prepared) == 0 and not bool(presenter.arrival_status().ready), "Partial Low readiness invalidates without renewing spent budget")
+	for unused: int in 2:
+		presenter.begin_frame()
+		_check(result, presenter.prepare_arrival(entries, 2, reduced), "Next frame prepares at most one Standard entry")
+	_check(result, bool(presenter.arrival_status().ready), "Two real frames complete Standard arrival")
+	for entry: Dictionary in entries:
+		_check(result, int(presenter._surface._cache[int(entry.mask)].sample_limit) == 3, "Ready Standard row actually prepared three-budget view")
+	presenter.set_render_detail(1)
+	_check(result, presenter.prepare_arrival(entries, 2, reduced), "Complete arrival quality change rekeys")
+	_check(result, int(presenter.arrival_status().prepared) == 0, "Complete Standard readiness cannot be reused as Low readiness")
+	for unused: int in 2:
+		presenter.begin_frame()
+		_check(result, presenter.prepare_arrival(entries, 2, reduced), "Low reprepare uses next frame budget")
+	_check(result, bool(presenter.arrival_status().ready), "Low arrival completes normally")
+	var retired := _mesh_refs(presenter._surface)
+	_check(result, retired.size() >= 4, "Both actual staged footprints own retained mesh resources")
+	presenter.cancel_arrival()
+	_check(result, int(presenter._surface.diagnostics().resident) == 0 and int(presenter._surface.diagnostics().retained_geometry) == 0, "Cancel prunes current and last geometry")
+	_released(result, retired, "Cancel releases staged mesh owners")
+	_check(result, presenter.prepare_arrival(entries, 2, reduced) and int(presenter.arrival_status().prepared) == 0, "Cancel never replenishes spent construction budget")
+	presenter.begin_frame()
+	_check(result, presenter.prepare_arrival(entries, 2, reduced), "One frame can restart canceled preparation")
+	retired = _mesh_refs(presenter._surface)
+	var old_surface: WeakRef = weakref(presenter._surface)
+	_check(result, presenter.configure(language), "Reconfigure actual presenter")
+	_check(result, old_surface.get_ref() == null, "Reconfigure releases old Surface")
+	_released(result, retired, "Reconfigure releases old mesh owners")
+	_check(result, int(presenter.arrival_status().prepared) == 0, "Reconfigure clears readiness")
+	for index: int in entries.size():
+		_check(result, (entries[index].court as HexChemistryWorld).state_hash() == original_hashes[index], "Staging quality/lifecycle does not mutate finite authority")
+	result.evidence["staged_courts"] = entries.size()
+	result.evidence["cancel_and_reconfigure_mesh_release"] = true
+
+static func _phases(fixture: Dictionary, ground: HexCourtPresenter, reduced: bool, result: Dictionary) -> void:
+	var model: RefCounted = fixture.model
+	var resident: Dictionary = model._resident[34]
+	var targets: Array[int] = [int(resident.active), maxi(int(resident.active), int(resident.decay) - 72), int(resident.decay), int(resident.expiry)]
+	var candidate := CandidateSurface.new()
+	var reference := OriginalSurface.new()
+	var saw_warning := false
+	for target: int in targets:
+		if not _check(result, target <= 1500, "Authored phase target is bounded"): return
+		while int(model._resident[34].tick) < target:
+			model.begin_frame()
+			if not _check(result, model.step(fixture.view, fixture.center), "Natural single-exhibit phase step"): return
+		var entry: Dictionary = model.render_entries()[0]
+		var before: String = (entry.court as HexChemistryWorld).state_hash()
+		var expected := reference.prepare(entry, ground, reduced)
+		var actual := candidate.prepare_for_draw(entry, ground, reduced, 1)
+		_equal_rows(result, actual, expected, 1, "Actual Backdraft phase " + String(entry.phase))
+		var warning: bool = not expected.samples.is_empty() and ground.backdraft_warning(expected.samples[0], float(entry.tick))
+		saw_warning = saw_warning or warning
+		_check(result, (entry.court as HexChemistryWorld).state_hash() == before and (entry.court as HexChemistryWorld).conservation_valid(), "Phase presentation preserves current finite authority")
+		result.evidence.phase_rows.append({"tick": int(entry.tick), "phase": String(entry.phase), "warning": warning, "samples": actual.samples.size(), "empty_mesh": actual.mesh == null})
+	_check(result, saw_warning, "Real active Backdraft deadline still produces its warning")
+	_check(result, candidate._cache[34].mesh == null, "Actual expiry remains empty")
+
+static func _equal_rows(result: Dictionary, actual: Dictionary, expected: Dictionary, limit: int, label: String) -> void:
+	if not _check(result, not actual.is_empty() and not expected.is_empty(), label + " valid rows"): return
+	var expected_count := mini(limit, expected.samples.size())
+	_check(result, actual.samples == expected.samples.slice(0, expected_count), label + " exact current sample prefix")
+	for key: String in ["boundary", "cells", "sample_cells", "style", "style_key", "sample_phase", "native_opacity", "native_vertices"]:
+		_check(result, actual[key] == expected[key], label + " exact " + key)
+	for key: String in ["mesh", "native_mesh"]:
+		var a: ArrayMesh = actual[key]
+		var b: ArrayMesh = expected[key]
+		if not _check(result, (a == null) == (b == null), label + " " + key + " presence"): continue
+		if a == null: continue
+		_check(result, a.get_surface_count() == b.get_surface_count(), label + " " + key + " surface count")
+		for index: int in mini(a.get_surface_count(), b.get_surface_count()):
+			_check(result, a.surface_get_arrays(index) == b.surface_get_arrays(index), label + " " + key + " exact full footprint/UV/index arrays")
+
+static func _mesh_refs(surface: RefCounted) -> Array[WeakRef]:
+	var result: Array[WeakRef] = []
+	for row: Dictionary in surface._cache.values():
+		for key: String in ["mesh", "native_mesh"]:
+			if row.get(key) != null: result.append(weakref(row[key]))
+	for last: Dictionary in surface._last_geometry.values():
+		for key: String in ["mesh", "native_mesh"]:
+			if last.geometry.get(key) != null: result.append(weakref(last.geometry[key]))
+	return result
+
+static func _released(result: Dictionary, refs: Array[WeakRef], label: String) -> void:
+	for item: WeakRef in refs: _check(result, item.get_ref() == null, label)
+
+static func _check(result: Dictionary, okay: bool, label: String) -> bool:
+	result.checks = int(result.checks) + 1
+	if not okay: (result.errors as Array[String]).append(label)
+	return okay

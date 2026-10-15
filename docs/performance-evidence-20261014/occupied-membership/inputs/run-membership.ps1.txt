@@ -1,0 +1,208 @@
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory)][ValidateSet('functional','forward','reverse')][string]$Case,
+    [Parameter(Mandatory)][string]$OutputDirectory,
+    [string]$QualificationSha256 = ''
+)
+
+# Prepared experiment runner only. Invoke through the desktop Diagnostic route.
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+$hexRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../..'))
+$hexExperiment = [IO.Path]::GetFullPath($PSScriptRoot)
+$hexRuns = Join-Path $hexExperiment 'runs'
+$hexPrefix = '.godot/iteration-20261014/performance-next'
+$hexPinsPath = Join-Path $hexExperiment 'source-pins.json'
+$hexPinsSha256 = '499adfebce1b194995442b36b9d75e32403d7c776d721b0c37d0909c024d77bb'
+. (Join-Path $hexRoot 'scripts/flux2-common.ps1')
+
+function Assert-Condition([bool]$Condition, [string]$Message) {
+    if (-not $Condition) { throw $Message }
+}
+function Assert-PhysicalPath([string]$Path) {
+    $part = [IO.Path]::GetFullPath($Path)
+    while ($part) {
+        if ((Test-Path -LiteralPath $part) -and ((Get-Item -LiteralPath $part -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)) { throw 'Experiment path traverses a reparse point.' }
+        $part = [IO.Path]::GetDirectoryName($part)
+    }
+}
+function Resolve-Source([string]$ResourcePath) {
+    Assert-Condition ($ResourcePath -cmatch '^res://[^:\\]+$' -and $ResourcePath -notmatch '(^|/)\.\.?(/|$)') 'Invalid resource path in source inventory.'
+    $resolved = [IO.Path]::GetFullPath((Join-Path $hexRoot $ResourcePath.Substring(6)))
+    Assert-Condition ($resolved.StartsWith($hexRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) 'Source path escapes checkout.'
+    Assert-PhysicalPath $resolved
+    return $resolved
+}
+function Read-Json([string]$Path) {
+    Assert-PhysicalPath $Path
+    Assert-Condition ((Get-Item -LiteralPath $Path).Length -le 16MB) 'Receipt exceeds the bounded size.'
+    $value = Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json -AsHashtable
+    Assert-Condition ($value -is [System.Collections.IDictionary]) 'Expected a JSON object.'
+    return $value
+}
+function Assert-Sources([System.Collections.IDictionary]$Actual) {
+    Assert-Condition ($Actual.Count -eq $hexPins.source_hashes.Count) 'Source inventory count differs.'
+    foreach ($entry in $hexPins.source_hashes.GetEnumerator()) {
+        Assert-Condition ($Actual.Contains($entry.Key) -and $Actual[$entry.Key] -ceq $entry.Value) "Receipt pin differs: $($entry.Key)"
+        Assert-Condition ((Get-FluxFileSha256 (Resolve-Source $entry.Key)) -ceq $entry.Value) "Current input differs: $($entry.Key)"
+    }
+    Assert-Condition ((Get-FluxFileSha256 $hexPinsPath) -ceq $hexPinsSha256) 'Source-pins file changed.'
+}
+function Assert-Labels($Rows, [string[]]$Expected) {
+    $actual = @($Rows | ForEach-Object { $_.label })
+    Assert-Condition ($actual.Count -eq $Expected.Count -and (@($actual | Select-Object -Unique).Count -eq $Expected.Count)) 'Case inventory has missing/duplicate entries.'
+    for ($i = 0; $i -lt $Expected.Count; $i++) { Assert-Condition ($actual[$i] -ceq $Expected[$i]) "Unexpected case order at $i." }
+}
+function Assert-Image([System.Collections.IDictionary]$Image, [string]$Directory) {
+    $path = Resolve-Source $Image.path
+    Assert-Condition ([IO.Path]::GetDirectoryName($path) -ceq $Directory -and [IO.Path]::GetExtension($path) -ceq '.png') 'PNG is outside its owned run.'
+    Assert-Condition ($Image.sha256 -cmatch '^[a-f0-9]{64}$' -and (Get-FluxFileSha256 $path) -ceq $Image.sha256) 'PNG hash differs.'
+}
+function Assert-CommonReceipt([System.Collections.IDictionary]$Receipt, [string]$Directory) {
+    Assert-Condition ($Receipt.passed -is [bool] -and $Receipt.passed -ceq $true -and $Receipt.errors -is [array] -and $Receipt.errors.Count -eq 0 -and $Receipt.checks -gt 0) 'Helper did not pass.'
+    Assert-Condition ($Receipt.source_pins_sha256 -ceq $hexPinsSha256) 'Receipt names a different source inventory.'
+    Assert-Sources $Receipt.source_hashes
+    foreach ($log in @("$Directory.log.err", "$Directory-parse.log.err")) { Assert-Condition ((Get-Item -LiteralPath $log).Length -eq 0) 'Strict stderr is not empty.' }
+    foreach ($log in @("$Directory.log", "$Directory-parse.log")) {
+        Assert-Condition ((Get-Item -LiteralPath $log).Length -gt 0) 'Engine log is absent/empty.'
+        Assert-Condition (-not (Select-String -LiteralPath $log -Pattern '^(WARNING|ERROR|FAIL):|SCRIPT ERROR|Parse Error|Compile Error|leaked' -Quiet)) 'Engine diagnostic found in raw log.'
+    }
+}
+function Assert-Functional([System.Collections.IDictionary]$Receipt, [string]$Directory) {
+    Assert-CommonReceipt $Receipt $Directory
+    Assert-Condition ($Receipt.schema -ceq 'hex.occupied-membership-contract.v1') 'Functional schema differs.'
+    Assert-Labels $Receipt.cases @('direct_helper_refresh','exact_nonbase','compatibility_court','standalone_base','missing_aggregate','generic','derived_court','derived_presenter_reentry','changed_filter_callback','same_count_mutations','path_exact_nonbase','path_standalone_base','path_derived_presenter')
+    Assert-Condition ($Receipt.cleanup.viewports_created -eq 24 -and $Receipt.cleanup.viewports_freed -eq 24 -and $Receipt.cleanup.live_viewports -eq 0 -and $Receipt.images.Count -eq 28) 'Functional image/owner counts differ.'
+    foreach ($row in $Receipt.cases | Where-Object { $_.label -clike 'path_*' }) {
+        $reuse = if ($row.label -ceq 'path_exact_nonbase') { 1 } else { 0 }
+        Assert-Condition ($row.path_counts.reused -eq $reuse -and $row.path_counts.recomputed -eq (1-$reuse) -and $row.path_counts.legacy -eq 0) 'Native optimized/fallback branch witness differs.'
+    }
+    foreach ($row in $Receipt.cases | Where-Object { $_.Contains('rows') }) { foreach ($draw in $row.rows) { Assert-Condition ($draw.exact_rgba -ceq $true) 'Functional RGBA comparison failed.' } }
+    foreach ($image in $Receipt.images) { Assert-Image $image $Directory }
+    Assert-Condition (Select-String -LiteralPath "$Directory.log" -SimpleMatch "MEMBERSHIP_CONTRACT_PASS checks=$($Receipt.checks) cases=13" -Quiet) 'Functional terminal marker differs.'
+}
+function Assert-Timing([System.Collections.IDictionary]$Receipt, [string]$Directory) {
+    Assert-CommonReceipt $Receipt $Directory
+    Assert-Condition ($Receipt.schema -ceq 'hex.ground.occupied-render-membership.v1' -and $Receipt.reverse_order -ceq ($Case -eq 'reverse')) 'Timing schema/order differs.'
+    $expected = @(); foreach ($label in @('fire_ignition','fire_active','fire_cooling','fire_dense','mantle_active','two_owners','conflagration_forming','conflagration_decaying','mantle_decaying','expired','paid_reentry')) { $expected += "${label}_normal"; $expected += "${label}_reduced" }
+    Assert-Labels $Receipt.cases $expected
+    Assert-Condition ($Receipt.cleanup.viewports_created -eq 2 -and $Receipt.cleanup.viewports_freed -eq 2 -and $Receipt.cleanup.live_viewports -eq 0) 'Timing owners did not close.'
+    Assert-Condition ($Receipt.qualification.path -ceq $hexQualificationResource -and $Receipt.qualification.sha256 -ceq $QualificationSha256) 'Timing functional linkage differs.'
+    Assert-Condition ($Receipt.measured_pairs_per_timed_case -eq 32 -and $Receipt.warmups_per_timed_case -eq 4 -and $Receipt.timed_cases -eq 12 -and $Receipt.pixel_only_cases -eq 10) 'Timing bounds differ.'
+    $timedCount = 0; $imageCount = 0; $caseIndex = 0
+    foreach ($row in $Receipt.cases) {
+        $timed = $row.timed -ceq $true
+        Assert-Condition ($row.timed -is [bool] -and $timed -eq ($caseIndex -lt 12)) 'Timed/pixel-only case placement differs.'
+        $caseIndex++
+        if ($timed) { $timedCount++ }
+        Assert-Condition ($row.rows.Count -eq $(if ($timed) { 32 } else { 1 }) -and $row.warmups.Count -eq $(if ($timed) { 4 } else { 0 }) -and $row.exact_rgba_first_and_final -ceq $true) 'Draw rows or RGBA gates differ.'
+        foreach ($draw in @($row.warmups) + @($row.rows)) {
+            $candidateFirst = (($draw.index % 2 -eq 0) -ne ($Case -eq 'reverse'))
+            $first = if ($candidateFirst) { 'candidate' } else { 'plain' }; $second = if ($candidateFirst) { 'plain' } else { 'candidate' }
+            Assert-Condition ($draw.actual_order.Count -eq 2 -and $draw.actual_order[0] -ceq $first -and $draw.actual_order[1] -ceq $second) 'Actual callback order differs.'
+            Assert-Condition ($draw.plain.okay -ceq $true -and $draw.candidate.okay -ceq $true -and $draw.plain.authority_unchanged -ceq $true -and $draw.candidate.authority_unchanged -ceq $true) 'Draw or authority gate failed.'
+            Assert-Condition ($draw.candidate.path_eligible -ceq $true -and $draw.plain.path_eligible -ceq $false -and $draw.candidate.presenter_script -ceq "res://$hexPrefix/candidate_court.gd" -and $draw.candidate.court_script -ceq 'res://src/sim/hex/hex_chemistry_world.gd') 'Pristine candidate path was not selected.'
+            Assert-Condition ((-not $timed -or $draw.candidate.prepared_cells -gt 0) -and $draw.plain.ground_us -ge 0 -and $draw.candidate.ground_us -ge 0) 'Timed material path or elapsed value is invalid.'
+        }
+        foreach ($image in $row.images.Values) { Assert-Image $image $Directory; $imageCount++ }
+    }
+    Assert-Condition ($timedCount -eq 12 -and $imageCount -eq 44) 'Measured case/image count differs.'
+    Assert-Labels $Receipt.paid_sequences @('single_fire_then_natural_reentry','twelve_fire','twelve_all_six_mantle_attempts','two_friendly_owners_fire')
+    foreach ($sequence in $Receipt.paid_sequences) {
+        Assert-Condition ($sequence.resource_refill -ceq $false -and $sequence.status_or_timer_injection -ceq $false -and $sequence.fully_expired -ceq $true -and $sequence.admitted -gt 0 -and $sequence.admitted+$sequence.refused -eq $sequence.attempts -and $sequence.matter_paid -gt 0) 'Finite ordinary paid sequence contract differs.'
+        $starts = @($sequence.outcomes | Where-Object { $_.event.type -ceq 'cast_started' }); $refusals = @($sequence.outcomes | Where-Object { $_.event.type -ceq 'cast_refused' })
+        Assert-Condition ($starts.Count -eq $sequence.admitted -and $refusals.Count -eq $sequence.refused -and $starts.Count+$refusals.Count -eq $sequence.outcomes.Count) 'Paid event recount differs.'
+    }
+    Assert-Condition (Select-String -LiteralPath "$Directory.log" -SimpleMatch "GROUND_OCCUPIED_MEMBERSHIP_PASS checks=$($Receipt.checks) cases=22" -Quiet) 'Timing terminal marker differs.'
+}
+function Get-MemoryBoundary {
+    try {
+        $os = Get-CimInstance Win32_OperatingSystem -Property FreePhysicalMemory,TotalVisibleMemorySize -ErrorAction Stop
+        return [ordered]@{available=$true;observed_utc=[DateTime]::UtcNow.ToString('o');available_bytes=[long]$os.FreePhysicalMemory*1KB;total_visible_bytes=[long]$os.TotalVisibleMemorySize*1KB;scope='Host OS memory endpoint; not diagnostic-process memory or dedicated idle-machine proof.'}
+    } catch { return [ordered]@{available=$false;observed_utc=[DateTime]::UtcNow.ToString('o');error=$_.Exception.Message} }
+}
+function Write-NewJson([string]$Path, $Value) {
+    $text = ($Value | ConvertTo-Json -Depth 24) + "`n"
+    $stream = [IO.File]::Open($Path,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::None)
+    try { $bytes=[Text.UTF8Encoding]::new($false).GetBytes($text);$stream.Write($bytes,0,$bytes.Length);$stream.Flush() } finally { $stream.Dispose() }
+    Assert-Condition ([IO.File]::ReadAllText($Path) -ceq $text) 'Runner receipt readback differs.'
+}
+
+Assert-PhysicalPath $hexExperiment
+Assert-Condition ((Get-FluxFileSha256 $hexPinsPath) -ceq $hexPinsSha256) 'Reviewed source-pins hash differs.'
+$hexPins = Read-Json $hexPinsPath
+Assert-Condition ($hexPins.schema -ceq 'hex.membership-source-pins.v2' -and $hexPins.runtime_identity.build_id -ceq 'p61-64590c45c7a5') 'Reviewed manifest identity differs.'
+Assert-Sources $hexPins.source_hashes
+$hexOutput = [IO.Path]::GetFullPath($OutputDirectory)
+Assert-PhysicalPath $hexOutput
+$hexLeaf = [IO.Path]::GetFileName($hexOutput)
+$hexExpectedPrefix = if ($Case -eq 'functional') { 'verify-functional-' } else { "probe-$Case-" }
+Assert-Condition ([IO.Path]::GetDirectoryName($hexOutput) -ceq $hexRuns -and $hexLeaf -cmatch ('^'+[regex]::Escape($hexExpectedPrefix)+'[a-z0-9]+(?:-[a-z0-9]+)*$')) 'Fresh output must be one owned case child.'
+foreach ($fresh in @($hexOutput,"$hexOutput.log","$hexOutput.log.err","$hexOutput-parse.log","$hexOutput-parse.log.err","$hexOutput-roaming")) { Assert-Condition (-not (Test-Path -LiteralPath $fresh)) "Preserve existing run: $fresh";Assert-PhysicalPath $fresh }
+$hexQualificationPath = ''; $hexQualificationResource = ''
+if ($Case -eq 'functional') { Assert-Condition (-not $QualificationSha256) 'Functional mode has no prior qualification.' }
+else {
+    Assert-Condition ($QualificationSha256 -cmatch '^[a-f0-9]{64}$') 'Timing requires an exact passing functional SHA-256.'
+    $children = @(Get-ChildItem -LiteralPath $hexRuns -Directory -Filter 'verify-functional-*')
+    Assert-Condition ($children.Count -le 64) 'Too many direct functional run children for bounded admission.'
+    $qualifiedReceipts = @()
+    foreach ($child in $children) {
+        Assert-PhysicalPath $child.FullName
+        if ($child.Name -cnotmatch '^verify-functional-[a-z0-9]+(?:-[a-z0-9]+)*$') { continue }
+        $receipt = Join-Path $child.FullName 'receipt.json'
+        if (Test-Path -LiteralPath $receipt -PathType Leaf) { Assert-PhysicalPath $receipt; if ((Get-FluxFileSha256 $receipt) -ceq $QualificationSha256) { $qualifiedReceipts += $receipt } }
+    }
+    Assert-Condition ($qualifiedReceipts.Count -eq 1) 'Qualification hash must identify one exact contained functional receipt.'
+    $hexQualificationPath = $qualifiedReceipts[0]
+    $proofDirectory = [IO.Path]::GetDirectoryName($hexQualificationPath)
+    Assert-Functional (Read-Json $hexQualificationPath) $proofDirectory
+    $proofRunner = Read-Json (Join-Path $proofDirectory 'runner.json')
+    Assert-Condition ($proofRunner.schema -ceq 'hex.membership-launcher-run.v1' -and $proofRunner.passed -ceq $true -and $proofRunner.case -ceq 'functional' -and $proofRunner.runner_sha256 -ceq (Get-FluxFileSha256 $PSCommandPath) -and $proofRunner.source_pins_sha256 -ceq $hexPinsSha256 -and $proofRunner.helper_receipt_sha256 -ceq $QualificationSha256) 'Prior checked runner did not qualify these exact inputs.'
+    $proofLeaf = [IO.Path]::GetFileName($proofDirectory)
+    $proofLogKeys = @("../$proofLeaf.log","../$proofLeaf.log.err","../$proofLeaf-parse.log","../$proofLeaf-parse.log.err")
+    Assert-Condition ($proofRunner.logs.Count -eq 4) 'Qualification log inventory is incomplete.'
+    foreach ($key in $proofLogKeys) { Assert-Condition ($proofRunner.logs.Contains($key) -and (Get-FluxFileSha256 (Join-Path $proofDirectory $key)) -ceq $proofRunner.logs[$key]) 'Qualification raw log hash differs.' }
+    $hexQualificationResource = 'res://' + $hexQualificationPath.Substring($hexRoot.Length+1).Replace('\','/')
+}
+
+$hexRunnerSha = Get-FluxFileSha256 $PSCommandPath
+$hexPointer = Join-Path $hexRoot 'docs/current-delivery.json'; $hexPointerSha = Get-FluxFileSha256 $hexPointer
+$hexSavedAppData = $env:APPDATA; $hexHadAppData = Test-Path Env:APPDATA
+$hexDriver = if ($Case -eq 'functional') { 'verify-membership-contract.gd' } else { 'compare-occupied-membership.gd' }
+$hexGodot = Get-FluxGodot; $hexGodotSha = Get-FluxFileSha256 $hexGodot
+$hexArguments = @('--path',$hexRoot,'--audio-driver','Dummy','--script',"res://$hexPrefix/$hexDriver",'--','--no-lan-discovery',"--output=res://$hexPrefix/runs/$hexLeaf")
+if ($Case -ne 'functional') { $hexArguments += @("--qualification=$hexQualificationResource","--qualification-sha256=$QualificationSha256") }
+if ($Case -eq 'reverse') { $hexArguments += '--reverse-order' }
+$hexNativeLimit = if ($Case -eq 'functional') { 180 } else { 300 }
+$hexPassed = $false; $hexFailure = $null; $hexBefore = $null; $hexAfter = $null; $hexHelperPin = $null
+$hexStarted = [DateTime]::UtcNow.ToString('o')
+$hexLease = Enter-FluxEngineRun 'desktop-membership-diagnostic'
+try {
+    New-Item -ItemType Directory -Path $hexRuns -Force | Out-Null
+    $env:APPDATA = "$hexOutput-roaming"; New-Item -ItemType Directory -Path $env:APPDATA | Out-Null
+    Invoke-FluxGodotChecked $hexGodot @('--headless','--path',$hexRoot,'--check-only','--script',"res://$hexPrefix/$hexDriver") "$hexOutput-parse.log" -RejectWarnings -TimeoutSeconds 180 | Out-Null
+    $hexBefore = Get-MemoryBoundary
+    Invoke-FluxGodotChecked $hexGodot $hexArguments "$hexOutput.log" -RejectWarnings -TimeoutSeconds $hexNativeLimit | Out-Null
+    $hexAfter = Get-MemoryBoundary
+    $receipt = Read-Json (Join-Path $hexOutput 'receipt.json')
+    if ($Case -eq 'functional') { Assert-Functional $receipt $hexOutput } else { Assert-Timing $receipt $hexOutput }
+    $hexHelperPin = Get-FluxFileSha256 (Join-Path $hexOutput 'receipt.json')
+    $hexPassed = $true
+} catch { $hexFailure = $_.Exception.Message }
+finally {
+    if ($null -eq $hexAfter) { $hexAfter = Get-MemoryBoundary }
+    if ($hexHadAppData) { $env:APPDATA = $hexSavedAppData } else { Remove-Item Env:APPDATA -ErrorAction SilentlyContinue }
+    Exit-FluxEngineRun $hexLease
+    try {
+        Assert-Sources $hexPins.source_hashes
+        Assert-Condition ((Get-FluxFileSha256 $PSCommandPath) -ceq $hexRunnerSha -and (Get-FluxFileSha256 $hexPointer) -ceq $hexPointerSha -and (Get-FluxFileSha256 $hexGodot) -ceq $hexGodotSha) 'Runner, qualified pointer or engine changed.'
+        if ($hexQualificationPath) { Assert-Condition ((Get-FluxFileSha256 $hexQualificationPath) -ceq $QualificationSha256) 'Qualification changed during timing.' }
+    } catch { $hexPassed=$false;$hexFailure=([string]$hexFailure+'; '+$_.Exception.Message).Trim(';',' ') }
+}
+if (-not (Test-Path -LiteralPath $hexOutput)) { New-Item -ItemType Directory -Path $hexOutput | Out-Null }
+$hexLogPins = [ordered]@{}
+foreach ($log in @("$hexOutput.log","$hexOutput.log.err","$hexOutput-parse.log","$hexOutput-parse.log.err")) { if (Test-Path -LiteralPath $log -PathType Leaf) { $hexLogPins['../'+[IO.Path]::GetFileName($log)] = Get-FluxFileSha256 $log } }
+$hexRecord = [ordered]@{schema='hex.membership-launcher-run.v1';passed=$hexPassed;case=$Case;failure=$hexFailure;started_utc=$hexStarted;ended_utc=[DateTime]::UtcNow.ToString('o');runner_sha256=$hexRunnerSha;source_pins_sha256=$hexPinsSha256;helper_receipt_sha256=$hexHelperPin;qualification_path=$hexQualificationResource;qualification_sha256=$QualificationSha256;engine_path=$hexGodot;engine_sha256=$hexGodotSha;engine_arguments=$hexArguments;parse_timeout_seconds=180;native_timeout_seconds=$hexNativeLimit;logs=$hexLogPins;host_memory_before=$hexBefore;host_memory_after=$hexAfter;default_pointer_sha256=$hexPointerSha;appdata_restored=$true;scope='Explicit pinned desktop Diagnostic runner. Native offscreen paid draw/compatibility evidence; no whole-game FPS, GPU/present or idle-machine claim. Wrapper/shortcut invocation is external route evidence, not inferred from this receipt.'}
+Write-NewJson (Join-Path $hexOutput 'runner.json') $hexRecord
+if (-not $hexPassed) { throw "Membership $Case failed: $hexFailure" }
+Write-Output "PASS membership $Case; helper receipt $hexHelperPin"

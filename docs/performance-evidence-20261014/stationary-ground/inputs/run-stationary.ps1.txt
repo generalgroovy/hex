@@ -1,0 +1,157 @@
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory)][ValidateSet('forward','reverse')][string]$Case,
+    [Parameter(Mandatory)][string]$OutputDirectory
+)
+# Ignored candidate comparison through desktop Diagnostic; no runtime promotion.
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+$hexRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../..'))
+$hexRuns = Join-Path $PSScriptRoot 'runs'
+$hexPrefix = '.godot/iteration-20261014/stationary-ground-next'
+$hexPinsPath = Join-Path $PSScriptRoot 'source-pins.json'
+$hexPinsSha = '3484442cfc13a331f8f019d535a58ccd7061f5f52aa00c88c7e7b53334e268fa'
+. (Join-Path $hexRoot 'scripts/flux2-common.ps1')
+
+function Assert-Stationary([bool]$Condition, [string]$Message) { if (-not $Condition) { throw $Message } }
+function Assert-PhysicalStationaryPath([string]$Path) {
+    $part = [IO.Path]::GetFullPath($Path)
+    while ($part) {
+        if ((Test-Path -LiteralPath $part) -and ((Get-Item -LiteralPath $part -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)) { throw 'Stationary diagnostic rejects reparse paths.' }
+        $part = [IO.Path]::GetDirectoryName($part)
+    }
+}
+function Resolve-StationarySource([string]$Resource) {
+    Assert-Stationary ($Resource -cmatch '^res://[^:\\]+$' -and $Resource -notmatch '(^|/)\.\.?(/|$)') 'Invalid pinned source path.'
+    $path = [IO.Path]::GetFullPath((Join-Path $hexRoot $Resource.Substring(6)))
+    Assert-Stationary ($path.StartsWith($hexRoot+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)) 'Source escapes checkout.'
+    Assert-PhysicalStationaryPath $path
+    return $path
+}
+function Assert-StationarySources([System.Collections.IDictionary]$Actual) {
+    Assert-Stationary ($Actual.Count -eq $hexPins.source_hashes.Count) 'Receipt input count differs.'
+    foreach ($entry in $hexPins.source_hashes.GetEnumerator()) {
+        Assert-Stationary ($Actual.Contains($entry.Key) -and $Actual[$entry.Key] -ceq $entry.Value) 'Receipt source pin differs.'
+        Assert-Stationary ((Get-FluxFileSha256 (Resolve-StationarySource $entry.Key)) -ceq $entry.Value) "Current source differs: $($entry.Key)"
+    }
+    Assert-Stationary ((Get-FluxFileSha256 $hexPinsPath) -ceq $hexPinsSha) 'Stationary source inventory changed.'
+}
+function Get-StationaryMemory {
+    try {
+        $os = Get-CimInstance Win32_OperatingSystem -Property FreePhysicalMemory,TotalVisibleMemorySize -ErrorAction Stop
+        return [ordered]@{available=$true;observed_utc=[DateTime]::UtcNow.ToString('o');available_bytes=[long]$os.FreePhysicalMemory*1KB;total_visible_bytes=[long]$os.TotalVisibleMemorySize*1KB;scope='Host OS endpoint only, not process memory or idle-machine proof.'}
+    } catch { return [ordered]@{available=$false;error=$_.Exception.Message} }
+}
+function Assert-StationaryOrder($Order, [int]$Index) {
+    $candidateFirst = (($Index % 2 -eq 0) -ne $hexReverse)
+    $first = if ($candidateFirst) { 'candidate' } else { 'reference' }; $second = if ($candidateFirst) { 'reference' } else { 'candidate' }
+    Assert-Stationary ($Order.Count -eq 2 -and $Order[0] -ceq $first -and $Order[1] -ceq $second) 'Actual paired invocation order differs.'
+}
+function Assert-StationaryReceipt([System.Collections.IDictionary]$Receipt) {
+    Assert-Stationary ($Receipt.schema -ceq 'hex.stationary-ground.v1' -and $Receipt.passed -is [bool] -and $Receipt.passed -ceq $true -and $Receipt.errors.Count -eq 0 -and $Receipt.checks -gt 0) 'Stationary helper failed.'
+    Assert-Stationary ($Receipt.reverse_order -ceq $hexReverse -and $Receipt.source_pins_sha256 -ceq $hexPinsSha -and $Receipt.display -cne 'headless') 'Order/pins/native linkage differs.'
+    Assert-StationarySources $Receipt.source_hashes
+    Assert-Stationary ($Receipt.cleanup.Count -eq 5 -and $Receipt.cleanup.created -eq 9 -and $Receipt.cleanup.released -eq 9 -and $Receipt.cleanup.live_worlds -eq 0 -and $Receipt.cleanup.live_courts -eq 0 -and $Receipt.cleanup.factory_live -ceq $false) 'World/court/factory owners did not close.'
+    $controls=@('fractional_recovery','no_recovery','delayed_recovery','blocked_recovery','zero_recovery','capped_recovery','preserve_idle','stale_sprint_held','idle_ratios_and_minimum','pending_cast','stationary_recovery_perk','crouched_recovery_perk','idle_ramp','carry_velocity','fresh_motion','counterstrafe_landing','fractional_sprint_refusal','derived_actor','derived_config','derived_both')
+    foreach($controlName in @('direct_controls','path_controls')) {
+        $proof=$Receipt[$controlName]
+        Assert-Stationary ($proof.passed -ceq $true -and $proof.errors.Count -eq 0 -and $proof.checks -gt 0 -and $proof.cases.Count -eq $controls.Count) 'Direct semantic controls incomplete.'
+        for($i=0;$i -lt $controls.Count;$i++) {
+            $row=$proof.cases[$i]
+            Assert-Stationary ($row.label -ceq $controls[$i] -and $row.direct_calls_per_arm -eq 4) 'Direct control inventory differs.'
+            if($row.label -in @('derived_actor','derived_both')) { Assert-Stationary ($row.actor_virtual_calls -gt 0) 'Derived actor virtual path missing.' }
+            if($row.label -in @('derived_config','derived_both')) { Assert-Stationary ($row.config_virtual_calls -eq 4) 'Derived config virtual path missing.' }
+        }
+    }
+    Assert-Stationary ($Receipt.path_controls.stationary_calls -gt 0 -and $Receipt.path_controls.fallback_calls -gt 0) 'Separate counted mirror did not execute both paths.'
+    Assert-Stationary (($Receipt.direct_controls.cases | ConvertTo-Json -Depth 20 -Compress) -ceq ($Receipt.path_controls.cases | ConvertTo-Json -Depth 20 -Compress)) 'Counter witness changes direct outcomes.'
+    $labels=@('fire','mantle','moving_fire')
+    Assert-Stationary ($Receipt.cases.Count -eq 3) 'Three paid cases required.'
+    for($caseIndex=0;$caseIndex -lt 3;$caseIndex++) {
+        $caseRow=$Receipt.cases[$caseIndex]; $label=$labels[$caseIndex]
+        $actors=if($label -ceq 'moving_fire'){1}else{5}
+        Assert-Stationary ($caseRow.label -ceq $label -and $caseRow.actor_count -eq $actors -and $caseRow.rows.Count -eq 48 -and $caseRow.serial -eq 96) 'Bounded declared roster/trajectory differs.'
+        Assert-Stationary ($caseRow.admissions -eq 1 -and $caseRow.releases -eq 1 -and $caseRow.refusals -eq 0 -and $caseRow.flight_seen -ceq $true -and $caseRow.ground_seen -ceq $true -and $caseRow.first_flight_tick -gt 0 -and $caseRow.first_flight_tick -le 48 -and $caseRow.first_ground_tick -gt 0 -and $caseRow.first_ground_tick -le 48) 'Exactly one paid admission/release, no refusal, actual flight/ground required.'
+        $starts=0;$releases=0;$refusals=0
+        for($i=0;$i -lt 48;$i++) {
+            $row=$caseRow.rows[$i]
+            Assert-Stationary ($row.index -eq $i -and $row.tick_before -eq $i -and $row.tick_after -eq $i+1 -and $row.first_four -ceq ($i -lt 4)) 'All48 actual rows including first4 required.'
+            Assert-StationaryOrder $row.order $i
+            $first=$row.order[0];$second=$row.order[1]
+            Assert-Stationary ($row.result[$first].serial -eq 2*$i+1 -and $row.result[$second].serial -eq 2*$i+2) 'Actual invocation serials differ.'
+            foreach($side in @('canonical','reference','candidate')) {
+                Assert-Stationary ($row.result[$side].success -ceq $true -and $row.result[$side].last_error -ceq '') 'A canonical/paired step failed.'
+                if($side -cne 'canonical') { Assert-Stationary ($row.result[$side].whole_step_us -ge 0) 'Invalid whole-step elapsed time.' }
+            }
+            Assert-Stationary ($row.actor_before_sha256 -cmatch '^[0-9a-f]{64}$' -and $row.actor_after_sha256 -cmatch '^[0-9a-f]{64}$' -and $row.actor_byte_count -gt 0 -and $row.command_hex -cmatch '^[0-9a-f]+$') 'Actor/command witness missing.'
+            if($i -gt 0) { Assert-Stationary ($row.actor_before_sha256 -ceq $caseRow.rows[$i-1].actor_after_sha256 -and $row.matter_paid_before -eq $caseRow.rows[$i-1].matter_paid) 'Per-step continuity differs.' }
+            foreach($event in $row.events) { if($event.type -ceq 'cast_started'){$starts++}elseif($event.type -ceq 'projectile_spawned'){$releases++}elseif($event.type -ceq 'cast_refused'){$refusals++} }
+            Assert-Stationary ($row.matter_paid -eq $starts*600) 'Actual finite stock differs from paid events.'
+            if($label -ceq 'moving_fire') {
+                Assert-Stationary ($row.moving_negative_passed -ceq $true -and ($row.player_position_before[0] -ne $row.player_position_after[0] -or $row.player_position_before[1] -ne $row.player_position_after[1])) 'One-actor moving negative stopped moving.'
+            } else { Assert-Stationary ($null -eq $row.moving_negative_passed) 'Stationary case fabricated a moving witness.' }
+        }
+        Assert-Stationary ($starts -eq 1 -and $releases -eq 1 -and $refusals -eq 0) 'Raw event recount differs.'
+        Assert-Stationary ($caseRow.boundaries.Count -eq 2) 'Only declared complete strict entry/exit boundaries required.'
+        for($i=0;$i -lt 2;$i++) {
+            $boundary=$caseRow.boundaries[$i]; $name=if($i -eq 0){'entry'}else{'exit'}; $tick=if($i -eq 0){0}else{48}
+            Assert-Stationary ($boundary.label -ceq $name -and $boundary.tick -eq $tick -and $boundary.state_hash -cmatch '^[0-9a-f]{64}$' -and $boundary.packet_sha256 -cmatch '^[0-9a-f]{64}$' -and $boundary.actor_sha256 -cmatch '^[0-9a-f]{64}$') 'Strict complete boundary differs.'
+        }
+        Assert-Stationary ($caseRow.boundaries[0].actor_sha256 -ceq $caseRow.rows[0].actor_before_sha256 -and $caseRow.boundaries[1].actor_sha256 -ceq $caseRow.rows[-1].actor_after_sha256 -and $caseRow.boundaries[0].matter_paid -eq 0 -and $caseRow.boundaries[1].matter_paid -eq 600) 'Strict endpoints do not link the paid actor trace.'
+    }
+    foreach($stderr in @("$hexOutput.log.err","$hexOutput-parse.log.err")) { Assert-Stationary ((Get-Item -LiteralPath $stderr).Length -eq 0) 'Strict stderr must be empty.' }
+    Assert-Stationary (Select-String -LiteralPath "$hexOutput.log" -SimpleMatch "STATIONARY_GROUND_PASS checks=$($Receipt.checks) cases=3" -Quiet) 'Terminal result marker differs.'
+}
+
+Assert-PhysicalStationaryPath $PSScriptRoot
+Assert-Stationary ((Get-FluxFileSha256 $hexPinsPath) -ceq $hexPinsSha) 'Reviewed Stationary pin manifest differs.'
+$hexPins = Get-Content -LiteralPath $hexPinsPath -Raw | ConvertFrom-Json -AsHashtable
+Assert-Stationary ($hexPins.schema -ceq 'hex.stationary-pins.v1' -and $hexPins.runtime_identity.build_id -ceq 'p61-64590c45c7a5' -and $hexPins.source_hashes.Count -eq 342) 'Stationary source scope differs.'
+Assert-StationarySources $hexPins.source_hashes
+$hexOutput = [IO.Path]::GetFullPath($OutputDirectory); Assert-PhysicalStationaryPath $hexOutput
+$hexLeaf = [IO.Path]::GetFileName($hexOutput)
+Assert-Stationary ([IO.Path]::GetDirectoryName($hexOutput) -ceq $hexRuns -and $hexLeaf -cmatch ('^'+[regex]::Escape($Case)+'-[a-z0-9]+(?:-[a-z0-9]+)*$')) 'Case-qualified fresh output must be one direct run child.'
+foreach ($fresh in @($hexOutput,"$hexOutput.log","$hexOutput.log.err","$hexOutput-parse.log","$hexOutput-parse.log.err","$hexOutput-roaming")) { Assert-Stationary (-not (Test-Path -LiteralPath $fresh)) "Preserve existing run: $fresh";Assert-PhysicalStationaryPath $fresh }
+$hexReverse = $Case -ceq 'reverse'
+$hexRunnerSha = Get-FluxFileSha256 $PSCommandPath
+$hexPointerPath = Join-Path $hexRoot 'docs/current-delivery.json'; $hexPointerSha = Get-FluxFileSha256 $hexPointerPath
+$hexGodot = Get-FluxGodot; $hexGodotSha = Get-FluxFileSha256 $hexGodot
+$hexArguments = @('--path',$hexRoot,'--audio-driver','Dummy','--script',"res://$hexPrefix/compare-stationary.gd",'--','--no-lan-discovery',"--output=res://$hexPrefix/runs/$hexLeaf")
+if ($hexReverse) { $hexArguments += '--reverse-order' }
+$hexHadAppData = Test-Path Env:APPDATA; $hexSavedAppData = $env:APPDATA
+$hexPassed=$false; $hexFailure=$null; $hexBefore=$null; $hexAfter=$null; $hexHelperSha=$null
+$hexStarted=[DateTime]::UtcNow.ToString('o')
+$hexLease=Enter-FluxEngineRun 'desktop-stationary-ground'
+try {
+    New-Item -ItemType Directory -Path $hexRuns -Force | Out-Null
+    $env:APPDATA="$hexOutput-roaming"; New-Item -ItemType Directory -Path $env:APPDATA | Out-Null
+    Invoke-FluxGodotChecked $hexGodot @('--headless','--path',$hexRoot,'--check-only','--script',"res://$hexPrefix/compare-stationary.gd") "$hexOutput-parse.log" -RejectWarnings -TimeoutSeconds 180 | Out-Null
+    $hexBefore=Get-StationaryMemory
+    Invoke-FluxGodotChecked $hexGodot $hexArguments "$hexOutput.log" -RejectWarnings -TimeoutSeconds 180 | Out-Null
+    $hexAfter=Get-StationaryMemory
+    $hexReceiptPath=Join-Path $hexOutput 'receipt.json'
+    Assert-Stationary ((Get-Item -LiteralPath $hexReceiptPath).Length -le 16MB) 'Stationary receipt exceeds bounded size.'
+    $receipt=Get-Content -LiteralPath $hexReceiptPath -Raw | ConvertFrom-Json -AsHashtable
+    Assert-StationaryReceipt $receipt
+    $hexHelperSha=Get-FluxFileSha256 $hexReceiptPath; $hexPassed=$true
+} catch { $hexFailure=$_.Exception.Message }
+finally {
+    if ($null -eq $hexAfter) { $hexAfter=Get-StationaryMemory }
+    if ($hexHadAppData) { $env:APPDATA=$hexSavedAppData } else { Remove-Item Env:APPDATA -ErrorAction SilentlyContinue }
+    Exit-FluxEngineRun $hexLease
+    try {
+        Assert-StationarySources $hexPins.source_hashes
+        Assert-Stationary ((Get-FluxFileSha256 $PSCommandPath) -ceq $hexRunnerSha -and (Get-FluxFileSha256 $hexPointerPath) -ceq $hexPointerSha -and (Get-FluxFileSha256 $hexGodot) -ceq $hexGodotSha) 'Runner, qualified pointer or engine changed.'
+    } catch { $hexPassed=$false; $hexFailure=([string]$hexFailure+'; '+$_.Exception.Message).Trim(';',' ') }
+}
+if (-not (Test-Path -LiteralPath $hexOutput)) { New-Item -ItemType Directory -Path $hexOutput | Out-Null }
+$hexLogs=[ordered]@{}
+foreach ($log in @("$hexOutput.log","$hexOutput.log.err","$hexOutput-parse.log","$hexOutput-parse.log.err")) { if (Test-Path -LiteralPath $log -PathType Leaf) { $hexLogs['../'+[IO.Path]::GetFileName($log)]=Get-FluxFileSha256 $log } }
+$record=[ordered]@{schema='hex.stationary-launcher-run.v1';passed=$hexPassed;case=$Case;failure=$hexFailure;started_utc=$hexStarted;ended_utc=[DateTime]::UtcNow.ToString('o');runner_sha256=$hexRunnerSha;source_pins_sha256=$hexPinsSha;helper_receipt_sha256=$hexHelperSha;engine_path=$hexGodot;engine_sha256=$hexGodotSha;engine_arguments=$hexArguments;parse_timeout_seconds=180;native_timeout_seconds=180;logs=$hexLogs;host_memory_before=$hexBefore;host_memory_after=$hexAfter;default_pointer_sha256=$hexPointerSha;appdata_restored=$true;scope='Pristine isolated whole-step candidate comparison. Host memory endpoints are not process/private peaks. Desktop shortcut/wrapper invocation is separate external route evidence. No adoption, frame/FPS/GPU or physical-input claim.'}
+$encoded=($record | ConvertTo-Json -Depth 20)+"`n"
+$recordPath=Join-Path $hexOutput 'runner.json'
+$stream=[IO.File]::Open($recordPath,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::None)
+try { $bytes=[Text.UTF8Encoding]::new($false).GetBytes($encoded);$stream.Write($bytes,0,$bytes.Length);$stream.Flush() } finally { $stream.Dispose() }
+Assert-Stationary ([IO.File]::ReadAllText($recordPath) -ceq $encoded) 'Runner receipt readback differs.'
+if (-not $hexPassed) { throw "Stationary $Case failed: $hexFailure" }
+Write-Output "PASS Stationary $Case; helper receipt $hexHelperSha"

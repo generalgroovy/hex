@@ -21,9 +21,22 @@ static func labels(view: Dictionary) -> Array[String]:
 static func paragraphs(view: Dictionary) -> Array[String]:
 	if not view.get("active",false): return ["Start an offline Range session to adjust its target."]
 	var stats: Dictionary=view.get("statistics",{})
+	var tick_rate := int(view.get("tick_rate", 0))
+	var status_ticks: Array = stats.get("status_ticks", [])
+	var status_times: Array[String] = []
+	if tick_rate > 0:
+		for channel: int in mini(SpellStatusPolicy.NAMES.size(), status_ticks.size()):
+			if int(status_ticks[channel]) > 0:
+				status_times.append("%s %.2fs" % [SpellStatusPolicy.NAMES[channel], float(status_ticks[channel]) / tick_rate])
+	var status_summary := "No target status observed in this window."
+	if tick_rate <= 0:
+		status_summary = "Target status time is unavailable."
+	elif not status_times.is_empty():
+		status_summary = "Target status time in this window: %s. Channels can overlap." % "; ".join(status_times)
 	return ["Target changes apply when you resume. Firing spends its finite ordinary Flux; changing settings never refills resources.",
 		"Observed %.1fs. Player: %d accepted casts / %.1f Flux; target: %d accepted casts / %.1f Flux." % [float(view.get("elapsed_seconds",0.0)),int(stats.get("player_casts",0)),float(stats.get("player_flux",0))/1000.0,int(stats.get("target_casts",0)),float(stats.get("target_flux",0))/1000.0],
 		"Damage to target %.1f HP; to player %.1f HP. Target components: direct %.1f, status %.1f, ground %.1f HP." % [float(stats.get("damage_to_target",0))/1000.0,float(stats.get("damage_to_player",0))/1000.0,float(stats.get("direct_damage",0))/1000.0,float(stats.get("status_damage",0))/1000.0,float(stats.get("ground_damage",0))/1000.0],
+		status_summary,
 		String(view.get("scope","These observations describe this Range session; they are not a balance ranking.")),
 		"Reset statistics starts a new observation window. It does not clear shots, heal, refill or reset cooldowns; the original Range tools remain available."]
 

@@ -1,0 +1,448 @@
+extends SceneTree
+@warning_ignore_start("integer_division")
+## Ignored same-call occupied membership experiment. Pristine whole-draw timers.
+const Court = preload("res://src/presentation/hex_court_presenter.gd")
+const Candidate = preload("res://.godot/iteration-20261014/performance-next/candidate_court.gd")
+const Chemistry = preload("res://src/sim/hex/hex_chemistry_world.gd")
+const Packet = preload("res://src/net/hex_world_snapshot.gd")
+const Quality = preload("res://src/presentation/render_quality.gd")
+const SIZE := Vector2i(640,480)
+const PAIRS := 32
+const WARMUPS := 4
+const FIRE := 145
+const ROOT := "res://.godot/iteration-20261014/performance-next/"
+const PINS := ROOT+"source-pins.json"
+const BEFORE := "res://.godot/iteration-20261014/performance-next/hex_court_presenter.before.gd"
+const BEFORE_SHA := "3190aa2683205bfdd1ebcc297e1002b3f3e624e4b59a61ecf64b76889733b92c"
+const TRANSFORM_SHA := "1e8036be65890760fadc8b92faca44fa17abbc2790414150b09979e2b32fe4c0"
+const HEADER_SHA := "0095a69cb09793bde40eb1edc4c6b686226decc0dd4b339226f70e5e83fb6ebf"
+class Board extends Node2D:
+	var presenter: HexCourtPresenter
+	var world: SimWorld
+	var trace: Array[String] = []
+	var role := ""
+	var active := false
+	var serial := 0
+	var reduced := false
+	var focus := Vector2(1736,880)
+	var zoom := 1.0
+	var jitter := Vector2(0.25,0.75)
+	var aggregate_coverage := false
+	var last: Dictionary = {}
+	func _draw() -> void:
+		serial+=1
+		draw_rect(Rect2(Vector2.ZERO,SIZE),Color("283e37"))
+		for x: int in range(0,SIZE.x,32):
+			for y: int in range(0,SIZE.y,32):
+				if (x/32+y/32)%2==0: draw_rect(Rect2(x,y,32,32),Color("44504b"))
+		if not active or world==null: return
+		trace.append(role)
+		var before := world.state_hash()
+		var center := Vector2(SIZE)*0.5+jitter
+		var view := Rect2(focus-center/zoom,Vector2(SIZE)/zoom)
+		var path_eligible: bool = presenter.get_script()==Candidate and world.hex_court.get_script()==Chemistry and texture_filter==CanvasItem.TEXTURE_FILTER_NEAREST and aggregate_coverage
+		var presenter_path: String=presenter.get_script().resource_path
+		var court_path: String=world.hex_court.get_script().resource_path
+		draw_set_transform(center-focus*zoom,0,Vector2.ONE*zoom)
+		var started := Time.get_ticks_usec()
+		var okay := presenter.draw_ground_in_view(self,world.hex_court,float(world.tick-1),reduced,false,view)
+		var elapsed := Time.get_ticks_usec()-started
+		draw_set_transform(Vector2.ZERO)
+		last={"ground_us":elapsed,"okay":okay,"authority_unchanged":before==world.state_hash(),
+			"path_eligible":path_eligible,"presenter_script":presenter_path,"court_script":court_path,"prepared_cells":presenter._cells.size()}
+
+var output := ""
+var output_authorized := false
+var reverse_order := false
+var qualification_sha256 := ""
+var qualification_path := ""
+var pins_sha256 := ""
+var viewports_created := 0
+var viewports_freed := 0
+var memory_entry: Dictionary = {}
+var finished := false
+var checks := 0
+var errors: Array[String] = []
+var hashes: Dictionary = {}
+var snapshots: Dictionary = {}
+var sequences: Array[Dictionary] = []
+var results: Array[Dictionary] = []
+var trace: Array[String] = []
+var language := VisualLanguage.new()
+var abilities := AbilityCatalog.new()
+var champions := ChampionCatalog.new()
+var layout := SanctumCampusLayout.new()
+var plain: Board
+var candidate: Board
+var plain_view: SubViewport
+var candidate_view: SubViewport
+
+func _initialize() -> void:
+	_run.call_deferred()
+
+func _run() -> void:
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--output="): output=argument.trim_prefix("--output=")
+		elif argument.begins_with("--qualification-sha256="): qualification_sha256=argument.trim_prefix("--qualification-sha256=")
+		elif argument.begins_with("--qualification="): qualification_path=argument.trim_prefix("--qualification=")
+	reverse_order=OS.get_cmdline_user_args().has("--reverse-order")
+	var prefix := ROOT+"runs/probe-"
+	var suffix := output.trim_prefix(prefix)
+	if not _check(DisplayServer.get_name()!="headless" and OS.get_cmdline_user_args().has("--no-lan-discovery")
+		and output.begins_with(prefix) and not suffix.is_empty() and not "/" in suffix and not "\\" in suffix and not ".." in suffix
+		and not DirAccess.dir_exists_absolute(output) and not FileAccess.file_exists(output),"Fresh owned native output/no LAN"): _finish();return
+	if not _check(DirAccess.make_dir_recursive_absolute(output)==OK,"Create owned output"): _finish();return
+	output_authorized=true
+	pins_sha256=FileAccess.get_sha256(PINS)
+	var pins: Variant=JSON.parse_string(FileAccess.get_file_as_string(PINS))
+	if not _check(pins is Dictionary and pins.get("schema")=="hex.membership-source-pins.v2" and pins.get("source_hashes") is Dictionary,"Reviewed source inventory"): _finish();return
+	hashes=pins.source_hashes.duplicate()
+	for path: String in hashes:
+		if not _check(String(hashes[path]).length()==64 and hashes[path]==FileAccess.get_sha256(path),"Reviewed source bytes: "+path): _finish();return
+	if not _qualification_guard(): _finish();return
+	if not _source_guard(): _finish();return
+	memory_entry=_memory_endpoint()
+	if not _check(language.load_from_file() and abilities.load_from_file("res://content/abilities/foundation_abilities_v1.json")
+		and champions.load_from_file("res://content/champions/foundation_champions_v1.json",abilities)
+		and layout.load_from_file("res://content/maps/sanctum_campus_g2_v1.json"),"Actual content loads"): _finish();return
+	Quality.set_profile("low")
+	create_timer(240).timeout.connect(func() -> void:
+		if not finished: errors.append("Bounded native watchdog expired");_finish())
+	# These complete ordinary worlds are prepared before any submission clock.
+	if not _fire_route(false) or not _fire_route(true) or not _mantle_route() or not _owners_route(): _finish();return
+	var timed: Array[String]=["fire_ignition","fire_active","fire_cooling","fire_dense","mantle_active","two_owners"]
+	var controls: Array[String]=["conflagration_forming","conflagration_decaying","mantle_decaying","expired","paid_reentry"]
+	for label: String in timed+controls:
+		if not _check(snapshots.has(label),"Actually reached declared paid state: "+label): _finish();return
+	plain=Board.new();candidate=Board.new();plain.presenter=Court.new();candidate.presenter=Candidate.new()
+	plain.role="plain";candidate.role="candidate"
+	for board: Board in [plain,candidate]:
+		board.trace=trace;board.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
+		if not _check(board.presenter.configure(language) and int(board.presenter.material_surface.stats().textures)>0,"Native material bank admitted"): _finish();return
+	plain_view=_viewport(plain);candidate_view=_viewport(candidate)
+	await process_frame
+	if finished: return
+	await process_frame
+	if finished: return
+	RenderingServer.force_draw(false)
+	for label: String in timed:
+		for reduced: bool in [false,true]:
+			if not await _case(label,reduced,1.0,Vector2(0.25,0.75),true): _finish();return
+	# Same presenter lifetimes cross real phase/expiry/owner/geometry changes.
+	# At most10 additional pairs/20 PNGs; no manufactured phase or timers.
+	for index: int in controls.size():
+		for reduced: bool in [false,true]:
+			if not await _case(controls[index],reduced,0.75 if index%2==0 else 0.5,Vector2(0.625,0.125),false): _finish();return
+	for path: String in hashes:
+		if not _check(hashes[path]==FileAccess.get_sha256(path),"Sources unchanged: "+path): _finish();return
+	_finish()
+
+func _qualification_guard() -> bool:
+	var prefix := ROOT+"runs/verify-functional-"
+	var suffix := qualification_path.trim_prefix(prefix).trim_suffix("/receipt.json")
+	if not _check(qualification_path.begins_with(prefix) and qualification_path.ends_with("/receipt.json") and not suffix.is_empty()
+		and not "/" in suffix and not "\\" in suffix and not ".." in suffix and qualification_sha256.length()==64
+		and FileAccess.get_sha256(qualification_path)==qualification_sha256,"Explicit contained passing functional receipt pin"): return false
+	var proof: Variant=JSON.parse_string(FileAccess.get_file_as_string(qualification_path))
+	if not _check(proof is Dictionary and proof.get("schema")=="hex.occupied-membership-contract.v1" and proof.get("passed")==true and proof.get("errors")==[]
+		and proof.get("source_hashes")==hashes and proof.get("source_pins_sha256")==pins_sha256,"Same-input completed functional contract"): return false
+	var cleanup: Variant=proof.get("cleanup")
+	if not _check(proof.get("cases") is Array and proof.cases.size()==13 and proof.get("images") is Array and proof.images.size()==28
+		and cleanup is Dictionary and cleanup.size()==3,"Exact functional case/image/cleanup inventory"): return false
+	for key: String in ["viewports_created","viewports_freed","live_viewports"]:
+		var value: Variant=cleanup.get(key)
+		var expected: float=0.0 if key=="live_viewports" else 24.0
+		if not _check((value is int or value is float) and float(value)==expected,"Exact JSON numeric cleanup count: "+key): return false
+	return true
+
+func _source_guard() -> bool:
+	if not _check(FileAccess.get_sha256(BEFORE)==BEFORE_SHA and FileAccess.get_sha256("res://src/presentation/hex_court_presenter.gd")==BEFORE_SHA,"Exact unchanged production predecessor"): return false
+	if not _check(FileAccess.get_sha256("res://.godot/iteration-20261014/performance-next/transformations.json")==TRANSFORM_SHA and FileAccess.get_sha256("res://.godot/iteration-20261014/performance-next/candidate-header.txt")==HEADER_SHA,"Exact reviewed transformation and gate declarations"): return false
+	var original := FileAccess.get_file_as_string(BEFORE).replace("\r\n","\n")
+	var actual := FileAccess.get_file_as_string("res://.godot/iteration-20261014/performance-next/candidate_court.gd").replace("\r\n","\n")
+	var changes: Variant=JSON.parse_string(FileAccess.get_file_as_string("res://.godot/iteration-20261014/performance-next/transformations.json"))
+	if not _check(changes is Array and changes.size()==4,"Exactly four declared surgical insertions/replacements"): return false
+	var methods := {"draw_ground":_method(original,"draw_ground"),"_prepare_draw_bundle":_method(original,"_prepare_draw_bundle")}
+	for change: Dictionary in changes:
+		var name := String(change.method)
+		if not _check(methods.has(name) and String(methods[name]).count(String(change.old))==1,"Each exact predecessor edit occurs once"): return false
+		methods[name]=String(methods[name]).replace(String(change.old),String(change.new))
+	var header := FileAccess.get_file_as_string("res://.godot/iteration-20261014/performance-next/candidate-header.txt")
+	if not _check(actual==header+String(methods.draw_ground)+"\n\n"+String(methods._prepare_draw_bundle)+"\n","Candidate consists only of two guarded methods and scalar scope/path declarations"): return false
+	var prior := FileAccess.get_file_as_string("res://.godot/iteration-20261014/performance-next/paid-route-reference.gd.txt").replace("\r\n","\n")
+	var current := FileAccess.get_file_as_string("res://.godot/iteration-20261014/performance-next/compare-occupied-membership.gd").replace("\r\n","\n")
+	for name: String in ["_world","_ready","_step","_record","_empty","_coverage","_capture","_fire_route","_mantle_route","_owners_route"]:
+		if not _check(_method(prior,name)==_method(current,name),"Exact previously reviewed ordinary paid preparation: "+name): return false
+	return true
+
+func _method(source: String,name: String) -> String:
+	var start := source.find("func "+name+"(")
+	if start<0: return ""
+	var end := source.find("\nfunc ",start+1)
+	return source.substr(start,end-start if end>=0 else -1).strip_edges()
+
+func _world(wire: int) -> SimWorld:
+	var world := SimWorld.new(120,8675309,layout.build_collision_world(),String(layout.data.id),layout.content_hash)
+	var definition := HexWorldDefinition.from_campus(layout)
+	if not _check(definition!=null and definition.bind_world(world) and champions.apply_to_player(world.player(),"oh_tipi"),"Concrete campus/champion admitted"): return null
+	var actor := world.player();actor.position_x=1536000;actor.position_y=880000
+	if not _check(world.collision.can_occupy(Vector2i(actor.position_x,actor.position_y),actor.radius) and actor.place_proven_spell(0,wire),"Prepared legal actor placement/equip"): return null
+	return world
+
+func _ready(actor: PlayerState,wire: int) -> bool:
+	return actor.pending_cast_wire_id==0 and actor.cast_recovery_ticks==0 and actor.spell_cooldown_for_wire(wire)==0
+
+func _step(world: SimWorld,commands: Array[SimCommand],record: Dictionary) -> bool:
+	if not _check(world.step(commands) and world.hex_court.conservation_valid(),"Ordinary finite paid step"): return false
+	for event: Dictionary in world.combat_events:
+		var kind := String(event.get("type",""))
+		if kind=="cast_started": record.admitted+=1;record.outcomes.append({"tick":world.tick,"event":event.duplicate(true)})
+		elif kind=="cast_refused": record.refused+=1;record.outcomes.append({"tick":world.tick,"event":event.duplicate(true)})
+	record.ticks=world.tick;record.matter_paid=int(world.hex_court.metrics.get("matter_paid",0))
+	return true
+
+func _record(label: String) -> Dictionary:
+	var result: Dictionary={"label":label,"attempts":0,"admitted":0,"refused":0,"ticks":0,"matter_paid":0,
+		"outcomes":[],"attempt_ticks":[],"resource_refill":false,"status_or_timer_injection":false,"fully_expired":false}
+	sequences.append(result)
+	return result
+
+func _empty(world: SimWorld) -> bool:
+	return world.projectiles.is_empty() and world.hex_court.casts.is_empty() and world.hex_court.products.is_empty() and world.player().pending_cast_wire_id==0
+
+func _coverage(world: SimWorld) -> Dictionary:
+	var phases: Dictionary={};var owners: Dictionary={};var materials: Dictionary={};var regions:=0
+	for cell: Vector2i in world.hex_court.occupied_cells():
+		var value: Dictionary=world.hex_court.cell_record_value(cell)
+		for key: Variant in value:
+			if typeof(key) not in [TYPE_STRING,TYPE_STRING_NAME] or not value[key] is Dictionary or not String(key) in Court.MATERIALS: continue
+			var material := String(key)
+			var rows: Array[Dictionary]=world.hex_court.render_regions(cell,material,float(world.tick-1))
+			for row: Dictionary in rows:
+				regions+=1;phases[material+"/"+String(row.phase)]=true;owners[str(int(row.owner))]=true
+				materials[material]=int(materials.get(material,0))+1
+	var products: Array[Dictionary]=[]
+	for product: Dictionary in world.hex_court.products.values():
+		products.append({"id":int(product.id),"recipe_wire_id":int(product.recipe_wire_id),"material":String(product.material),"owner":int(product.owner),
+			"source_ids":product.source_ids.duplicate(),"created":int(product.created),"active_tick":int(product.active_tick),"decay_tick":int(product.decay_tick),"expiry_tick":int(product.expiry_tick)})
+	return {"regions":regions,"occupied_cells":world.hex_court.occupied_cells().size(),"phases":phases.keys(),"owners":owners.keys(),"materials":materials,"products":products}
+
+func _capture(label: String,world: SimWorld,coverage: Dictionary,focus: Vector2=Vector2(1736,880)) -> bool:
+	var packet := Packet.capture(world)
+	if not _check(not packet.is_empty(),"Complete paid packet at "+label): return false
+	snapshots[label]={"packet":packet,"coverage":coverage.duplicate(true),"focus":focus,"tick":world.tick,
+		"state_hash":str(world.state_hash()),"events":world.combat_events.duplicate(true),"matter_paid":world.hex_court.metrics.matter_paid}
+	return true
+
+func _fire_route(dense: bool) -> bool:
+	var world := _world(FIRE)
+	if world==null: return false
+	var record := _record("twelve_fire" if dense else "single_fire_then_natural_reentry")
+	var first_expired := false
+	var max_active := -1
+	for _step_index: int in 1500:
+		var limit := 12 if dense else 2 if first_expired else 1
+		var pressed := 0
+		if int(record.attempts)<limit and _ready(world.player(),FIRE):
+			pressed=SimCommand.PRESSED_SPELL_1;record.attempts+=1;record.attempt_ticks.append(world.tick)
+		var commands: Array[SimCommand]=[SimCommand.new(world.tick,1,0,0,0,pressed,1000,0,1736000,880000)]
+		if not _step(world,commands,record): return false
+		var coverage := _coverage(world)
+		if dense:
+			for phase: String in ["forming","decaying"]:
+				var label := "conflagration_"+phase
+				if not snapshots.has(label) and ("conflagration/"+phase) in coverage.phases:
+					if not _capture(label,world,coverage): return false
+			if "conflagration/active" in coverage.phases and int(coverage.regions)>max_active:
+				max_active=int(coverage.regions)
+				if not _capture("fire_dense",world,coverage): return false
+		else:
+			for phase: String in ["ignition","active","cooling"]:
+				var label := "fire_"+phase
+				if not snapshots.has(label) and ("fire/"+phase) in coverage.phases:
+					if not _capture(label,world,coverage): return false
+			if first_expired and not snapshots.has("paid_reentry") and int(coverage.regions)>0:
+				if not _capture("paid_reentry",world,coverage): return false
+		if int(record.attempts)==limit and _empty(world):
+			if not dense and not first_expired:
+				first_expired=true
+				if not _capture("expired",world,coverage): return false
+			else: record.fully_expired=true;break
+	var expected := 12 if dense else 2
+	return _check(int(record.attempts)==expected and int(record.admitted)==expected and int(record.refused)==0
+		and int(record.matter_paid)==expected*600 and bool(record.fully_expired),"Fire paid admissions/conservation/natural expiry")
+
+func _mantle_route() -> bool:
+	var wire := MixtureCatalog.wire_for(63,"mantle")
+	var world := _world(wire)
+	if world==null: return false
+	var cast: Dictionary=CombatTuning.cast_definition_view(wire)
+	var recipe: Dictionary=HexRecipePolicy.runtime_definition(HexRecipePolicy.wire_for_mask(63))
+	var spacing := world.config.milliseconds_to_ticks(int(cast.startup_ms))+maxi(world.config.milliseconds_to_ticks(int(cast.cooldown_ms)),world.config.milliseconds_to_ticks(int(cast.recovery_ms)))+2
+	var tail := maxi(int(recipe.formation_ticks)+int(recipe.active_ticks)+int(recipe.decay_ticks),HexChemistryWorld.trail_lifetime(int(cast.element_wire_id)))
+	var horizon := 12*spacing+world.config.milliseconds_to_ticks(int(cast.lifetime_ms))+tail+2
+	if not _check(horizon>0 and horizon<=4000,"Derived bounded Mantle route"): return false
+	var record := _record("twelve_all_six_mantle_attempts")
+	record.horizon=horizon;record.spacing_bound=spacing;record.tail_bound=tail
+	var max_active := -1
+	for _step_index: int in horizon:
+		var pressed := 0
+		if int(record.attempts)<12 and _ready(world.player(),wire):
+			pressed=SimCommand.PRESSED_SPELL_1;record.attempts+=1;record.attempt_ticks.append(world.tick)
+		var commands: Array[SimCommand]=[SimCommand.new(world.tick,1,0,0,0,pressed,1000,0,1736000,880000)]
+		if not _step(world,commands,record): return false
+		var coverage := _coverage(world)
+		var active := false;var decaying := false
+		var render_tick := world.tick-1
+		for product: Dictionary in coverage.products:
+			if int(product.recipe_wire_id)!=HexRecipePolicy.wire_for_mask(63): continue
+			active=active or (render_tick>=int(product.active_tick) and render_tick<int(product.decay_tick) and (String(product.material)+"/active") in coverage.phases)
+			decaying=decaying or (render_tick>=int(product.decay_tick) and render_tick<int(product.expiry_tick) and (String(product.material)+"/decaying") in coverage.phases)
+		if active and int(coverage.regions)>max_active:
+			max_active=int(coverage.regions)
+			if not _capture("mantle_active",world,coverage,Vector2(1536,880)): return false
+		if decaying and not snapshots.has("mantle_decaying"):
+			if not _capture("mantle_decaying",world,coverage,Vector2(1536,880)): return false
+		if int(record.attempts)==12 and _empty(world): record.fully_expired=true;break
+	return _check(int(record.attempts)==12 and int(record.admitted)>0 and int(record.admitted)+int(record.refused)==12
+		and int(record.matter_paid)>0 and bool(record.fully_expired),"Mantle attempts retain genuine payment/refusals and finite expiry")
+
+func _owners_route() -> bool:
+	var world := _world(FIRE)
+	if world==null: return false
+	var second := PlayerState.new(2)
+	if not _check(champions.apply_to_player(second,"oh_tipi"),"Second actual champion admitted"): return false
+	second.position_x=1536000;second.position_y=1048000;second.team_id=world.player().team_id
+	if not _check(world.collision.can_occupy(Vector2i(second.position_x,second.position_y),second.radius) and second.place_proven_spell(0,FIRE),"Separate ordinary owner legal placement/equip"): return false
+	world.players.append(second)
+	var record := _record("two_friendly_owners_fire")
+	record.actor_positions=[[1536000,880000],[1536000,1048000]]
+	record.targets=[[1736000,880000],[1736000,1048000]]
+	for step: int in 800:
+		var pressed := SimCommand.PRESSED_SPELL_1 if step==0 else 0
+		if step==0: record.attempts=2;record.attempt_ticks=[world.tick,world.tick]
+		var commands: Array[SimCommand]=[SimCommand.new(world.tick,1,0,0,0,pressed,1000,0,1736000,880000),SimCommand.new(world.tick,2,0,0,0,pressed,1000,0,1736000,1048000)]
+		if not _step(world,commands,record): return false
+		var coverage := _coverage(world)
+		if not snapshots.has("two_owners") and "fire/active" in coverage.phases and "1" in coverage.owners and "2" in coverage.owners:
+			if not _capture("two_owners",world,coverage,Vector2(1736,964)): return false
+		if _empty(world) and second.pending_cast_wire_id==0: record.fully_expired=true;break
+	return _check(int(record.admitted)==2 and int(record.refused)==0 and int(record.matter_paid)==1200 and bool(record.fully_expired),"Two ordinary owners pay once each and naturally expire")
+
+func _viewport(board: Board) -> SubViewport:
+	var viewport := SubViewport.new();viewport.size=SIZE;viewport.render_target_update_mode=SubViewport.UPDATE_ALWAYS
+	root.add_child(viewport);viewport.add_child(board)
+	viewports_created+=1
+	return viewport
+
+func _case(label: String,reduced: bool,zoom: float,jitter: Vector2,timed: bool) -> bool:
+	var snapshot: Dictionary=snapshots[label]
+	var world := _world(FIRE)
+	if world==null or not _check(Packet.restore(snapshot.packet,world) and str(world.state_hash())==String(snapshot.state_hash),"Exact complete paid snapshot restore"): return false
+	var packet := var_to_bytes(Packet.capture(world));var events := var_to_bytes(world.combat_events);var state := world.state_hash()
+	var aggregate_coverage := true
+	for cast_id: int in world.hex_court.casts:
+		if not world.hex_court.casts[cast_id].get("coverage") is Dictionary: aggregate_coverage=false;break
+	for board: Board in [plain,candidate]:
+		board.active=false;board.world=world;board.reduced=reduced;board.zoom=zoom;board.focus=snapshot.focus;board.jitter=jitter
+		board.aggregate_coverage=aggregate_coverage
+	await process_frame
+	if finished: return false
+	await process_frame
+	if finished: return false
+	RenderingServer.force_draw(false)
+	var rows: Array[Dictionary]=[];var warmups: Array[Dictionary]=[]
+	for board: Board in [plain,candidate]: board.active=true
+	var total := PAIRS+WARMUPS if timed else 1
+	for index: int in total:
+		trace.clear()
+		var serial_plain := plain.serial;var serial_candidate := candidate.serial
+		var before_stats := {"plain":plain.presenter.outline_cache_stats(),"candidate":candidate.presenter.outline_cache_stats()}
+		var candidate_first := (index%2==0)!=reverse_order
+		var first: Board=candidate if candidate_first else plain;var second: Board=plain if candidate_first else candidate
+		root.move_child(candidate_view if candidate_first else plain_view,0)
+		first.queue_redraw();second.queue_redraw()
+		await process_frame
+		if finished: return false
+		await process_frame
+		if finished: return false
+		RenderingServer.force_draw(false)
+		var expected: Array=[first.role,second.role]
+		if not _check(trace==expected and plain.serial==serial_plain+1 and candidate.serial==serial_candidate+1,"Actual one paired callback each in requested order"): return false
+		if not _check(bool(plain.last.okay) and bool(candidate.last.okay) and bool(plain.last.authority_unchanged) and bool(candidate.last.authority_unchanged) and world.state_hash()==state,"Actual successful draw/state purity"): return false
+		if not _check(int(candidate.presenter.get("_prepared_occupied_court_id"))==0,"One-call membership scope is consumed/restored after every draw"): return false
+		if not _check(bool(candidate.last.path_eligible) and not bool(plain.last.path_eligible)
+			and (not timed or int(candidate.last.prepared_cells)>0),"Pristine exact candidate/court/filter path; timed material reaches nonempty bundle"): return false
+		var after_stats := {"plain":plain.presenter.outline_cache_stats(),"candidate":candidate.presenter.outline_cache_stats()}
+		if not _check(after_stats.plain==after_stats.candidate,"Candidate preserves every retained boundary cache counter"): return false
+		var row := {"index":index,"actual_order":trace.duplicate(),"plain":plain.last.duplicate(true),"candidate":candidate.last.duplicate(true),
+			"cache_before":before_stats,"cache_after":after_stats,"new_topologies":int(after_stats.plain.topology_builds)-int(before_stats.plain.topology_builds),"new_meshes":int(after_stats.plain.uploads)-int(before_stats.plain.uploads)}
+		if timed and index<WARMUPS: warmups.append(row)
+		else: rows.append(row)
+		if index==0 and not _pixels_equal(label!="expired"): return false
+	if not _check(var_to_bytes(Packet.capture(world))==packet and var_to_bytes(world.combat_events)==events,"No drawing writes to packet/events"): return false
+	if not _pixels_equal(label!="expired"): return false
+	var images := {};var id := label+"_"+("reduced" if reduced else "normal")
+	for role: String in ["plain","candidate"]:
+		var image: Image=(plain_view if role=="plain" else candidate_view).get_texture().get_image();image.convert(Image.FORMAT_RGBA8)
+		var path := output.path_join(id+"_"+role+".png")
+		if not _check(image.save_png(path)==OK,"Save bounded representative PNG"): return false
+		images[role]={"path":path,"sha256":FileAccess.get_sha256(path)}
+	results.append({"label":id,"timed":timed,"reduced":reduced,"zoom":zoom,"jitter":[jitter.x,jitter.y],"focus":[plain.focus.x,plain.focus.y],
+		"physical_size":[SIZE.x,SIZE.y],"world_tick":world.tick,"render_tick":world.tick-1,"coverage":snapshot.coverage,"matter_paid":snapshot.matter_paid,
+		"authority_hash":str(state),"exact_rgba_first_and_final":true,"warmups":warmups,"rows":rows,"images":images})
+	return true
+
+func _pixels_equal(expect_ink: bool) -> bool:
+	var a := plain_view.get_texture().get_image();var b := candidate_view.get_texture().get_image()
+	if not _check(a!=null and b!=null,"Actual native images"): return false
+	a.convert(Image.FORMAT_RGBA8);b.convert(Image.FORMAT_RGBA8)
+	if not _check(a.get_size()==SIZE and b.get_size()==SIZE and a.get_data()==b.get_data(),"Exact plain/candidate RGBA"): return false
+	if not expect_ink: return true
+	var ink := 0
+	for y: int in range(0,SIZE.y,4):
+		for x: int in range(0,SIZE.x,4):
+			var color := a.get_pixel(x,y).to_rgba32()
+			if color!=Color("283e37").to_rgba32() and color!=Color("44504b").to_rgba32(): ink+=1
+	return _check(ink>4,"Nonblank actual paid ground survives native crop")
+
+func _check(condition: bool,message: String) -> bool:
+	checks+=1
+	if not condition: errors.append(message)
+	return condition
+
+func _memory_endpoint() -> Dictionary:
+	return {"static":int(Performance.get_monitor(Performance.MEMORY_STATIC)),
+		"textures":int(Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED)),
+		"video":int(Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED))}
+
+func _finish() -> void:
+	if finished: return
+	finished=true
+	var memory_before_cleanup := _memory_endpoint()
+	if is_instance_valid(plain_view): plain_view.free();viewports_freed+=1
+	elif is_instance_valid(plain): plain.free()
+	if is_instance_valid(candidate_view): candidate_view.free();viewports_freed+=1
+	elif is_instance_valid(candidate): candidate.free()
+	plain_view=null;candidate_view=null;plain=null;candidate=null
+	for path: String in hashes: _check(FileAccess.get_sha256(path)==String(hashes[path]),"Final source unchanged: "+path)
+	if not pins_sha256.is_empty(): _check(FileAccess.get_sha256(PINS)==pins_sha256,"Source-pins file unchanged")
+	if not qualification_sha256.is_empty(): _check(FileAccess.get_sha256(qualification_path)==qualification_sha256,"Functional qualification unchanged")
+	var record := {"schema":"hex.ground.occupied-render-membership.v1","passed":errors.is_empty() and results.size()==22 and viewports_created==2 and viewports_freed==2,"engine":Engine.get_version_info(),
+		"checks":checks,"errors":errors,"source_hashes":hashes,"reverse_order":reverse_order,"paid_sequences":sequences,"cases":results,
+		"source_pins_sha256":pins_sha256,"qualification":{"path":qualification_path,"sha256":qualification_sha256},
+		"cleanup":{"viewports_created":viewports_created,"viewports_freed":viewports_freed,"live_viewports":viewports_created-viewports_freed},
+		"memory":{"entry":memory_entry,"before_cleanup":memory_before_cleanup,"after_cleanup":_memory_endpoint(),"scope":"Engine allocator/render monitor endpoints outside draw clocks; not OS private bytes, resident memory, peak memory or GPU physical allocation."},
+		"measured_pairs_per_timed_case":PAIRS,"warmups_per_timed_case":WARMUPS,"timed_cases":12,"pixel_only_cases":10,
+		"scope":"Offscreen native current Court draw submission on frozen complete snapshots from ordinary finite paid worlds. Low quality, normal/reduced, actual phases/owners and fractional zoom/camera controls. Only synchronous occupied-membership reuse differs, limited to exact presenter/court/non-base/already-NEAREST draws; derived profiling presenters retain predecessor work. No cross-call authority cache. No application boot, save, LAN, physical input, human readability, GPU/present, wall-frame, foreground or FPS qualification.",
+		"clock_scope":"Only draw_ground_in_view is inside whole-ground clocks. World/case construction, restore, content admission, coverage, hashes, packet captures, retained counter reads and pixels are outside. Production _prepare_draw_bundle remains inside the draw clock. First/final comparisons share lifetime caches across cases; actual before/after builds identify first-use versus warm. Never label all first samples cold.",
+		"measurement":"Pristine whole draw elapsed timers only; these are not thread CPU counters. No nested attribution clocks/counters. Actual callback order and reverse process expose order effects. Shared caches persist across cases. Separate functional native counter-only mirror proves the selected/fallback branches; every timed row records actual exact presenter/court/filter/aggregate eligibility outside clocks, with nonempty prepared material. No TimedCourt subclass is timed. Gate comparisons, scalar scope writes and consumption are inside each candidate draw clock. The runner samples host OS memory endpoints; the helper samples engine allocator/render monitor endpoints. No per-process memory measurement is made.",
+		"bounds":"12*(32 measured+4 warmup)+10 pixel-only paired callbacks;2 fixed640x480 SubViewports;44 PNGs;4 finite paid routes with <=7800 successful steps;at most11 snapshots;240second watchdog. Source hashes checked at both boundaries; no unbounded per-region history."}
+	if output_authorized:
+		var path := output.path_join("receipt.json");var file := FileAccess.open(path,FileAccess.WRITE)
+		if file!=null:
+			var encoded := JSON.stringify(record,"\t")+"\n";file.store_string(encoded);file.flush();var error := file.get_error();file.close()
+			if error!=OK or FileAccess.get_file_as_string(path)!=encoded: errors.append("Receipt write/readback failed")
+		else: errors.append("Receipt open failed")
+	if bool(record.passed) and errors.is_empty(): print("GROUND_OCCUPIED_MEMBERSHIP_PASS checks=",checks," cases=",results.size());quit(0)
+	else: printerr("GROUND_OCCUPIED_MEMBERSHIP_FAILED: ",errors);quit(1)

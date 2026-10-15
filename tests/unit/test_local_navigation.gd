@@ -208,6 +208,7 @@ func _arrival_fixture(size: Vector2i = Vector2i(1280,720)) -> Dictionary:
 	# Use the supported stable-framing preference so the stationary comparison
 	# measures arrival semantics without an unrelated pointer-led camera pan.
 	game.player_preferences.reduced_motion = true
+	game.player_preferences.camera_look_ahead = false
 	viewport.notify_mouse_entered()
 	return {"game":game,"viewport":viewport}
 

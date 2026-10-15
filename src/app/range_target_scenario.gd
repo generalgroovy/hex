@@ -126,7 +126,7 @@ func observe() -> void:
 func view() -> Dictionary:
 	if not _admitted(): return {}
 	return {"active":active,"moving":moving,"firing":firing,"size":String(SIZE_LABELS[size_index]),
-		"radius":_world.player(2).radius,"elapsed_ticks":_world.tick-_started_tick,"elapsed_seconds":float(_world.tick-_started_tick)/_world.config.tick_rate,"statistics":_stats.duplicate(true),
+		"radius":_world.player(2).radius,"tick_rate":_world.config.tick_rate,"elapsed_ticks":_world.tick-_started_tick,"elapsed_seconds":float(_world.tick-_started_tick)/_world.config.tick_rate,"statistics":_stats.duplicate(true),
 		"scope":"Size changes only the hurt radius. Target movement and shots use ordinary commands and finite Flux. Reset statistics changes counters only; results are this attempt, not a balance ranking."}
 
 

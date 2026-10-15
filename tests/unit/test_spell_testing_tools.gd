@@ -375,8 +375,17 @@ func _test_panel() -> void:
 func _test_range_scenario_controls() -> void:
 	var panel := TestingPanelScript.new()
 	check(panel.open_range(abilities),"scenario controls live inside existing Range")
-	var scenario := {"active":true,"moving":false,"firing":false,"size":"Medium","elapsed_ticks":120,"statistics":{"player_casts":2,"player_flux":4000,"target_casts":0,"target_flux":0,"damage_to_target":3000,"damage_to_player":0,"direct_damage":3000,"ground_damage":0,"status_damage":0},"scope":"Current paid session only."}
+	var scenario := {"active":true,"moving":false,"firing":false,"size":"Medium","elapsed_ticks":120,"tick_rate":120,"statistics":{"status_ticks":[1,12,24,36,48,60],"player_casts":2,"player_flux":4000,"target_casts":0,"target_flux":0,"damage_to_target":3000,"damage_to_player":0,"direct_damage":3000,"ground_damage":0,"status_damage":0},"scope":"Current paid session only."}
 	panel.set_range_scenario(scenario)
+	var status_summary: String = TestingPanelScript.ScenarioPanel.paragraphs(panel._range_scenario)[3]
+	for expected: String in ["Fractured Focus 0.01s", "Burning 0.10s", "Chilled 0.20s", "Gusted 0.30s", "Revealed 0.40s", "Withered 0.50s"]:
+		check(status_summary.contains(expected), "prepared display control formats each existing named channel at the supplied cadence")
+	var slower := scenario.duplicate(true)
+	slower.tick_rate = 60
+	check(TestingPanelScript.ScenarioPanel.paragraphs(slower)[3].contains("Withered 1.00s"), "display conversion uses the supplied cadence rather than a hardcoded120Hz")
+	var partial := scenario.duplicate(true)
+	partial.statistics.status_ticks = [0, 0, 24, 0, 0, 0]
+	equal(TestingPanelScript.ScenarioPanel.paragraphs(partial)[3], "Target status time in this window: Chilled 0.20s. Channels can overlap.", "zero-exposure channels add no empty statistics clutter")
 	scenario.moving=true
 	check(not panel._range_scenario.moving,"scenario view cannot be changed through caller alias")
 	var viewport := Vector2(480,270)

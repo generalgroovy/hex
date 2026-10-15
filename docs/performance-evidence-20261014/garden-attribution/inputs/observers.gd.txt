@@ -1,0 +1,67 @@
+extends RefCounted
+## Diagnostic wrappers only. Each inherited operation is called exactly once.
+const GardenModel = preload("res://src/app/element_garden_exhibition.gd")
+const GardenSurface = preload("res://src/presentation/element_garden_surface.gd")
+
+class ObservedExhibition extends GardenModel:
+	var step_us := 0
+	var step_calls := 0
+	var emit_us := 0
+	var emit_calls := 0
+	var projection_us := 0
+	var projection_calls := 0
+	func reset_observer() -> void:
+		step_us=0;step_calls=0;emit_us=0;emit_calls=0;projection_us=0;projection_calls=0
+	func step(view_rect: Rect2, observer: Vector2) -> bool:
+		var started := Time.get_ticks_usec()
+		var result := super.step(view_rect,observer)
+		step_us+=Time.get_ticks_usec()-started;step_calls+=1
+		return result
+	func _emit_cycle(mask: int, entry: Dictionary) -> bool:
+		var started := Time.get_ticks_usec()
+		var result := super._emit_cycle(mask,entry)
+		emit_us+=Time.get_ticks_usec()-started;emit_calls+=1
+		return result
+	func render_entries() -> Array[Dictionary]:
+		var started := Time.get_ticks_usec()
+		var result := super.render_entries()
+		projection_us+=Time.get_ticks_usec()-started;projection_calls+=1
+		return result
+	func observation() -> Dictionary:
+		return {"step_us":step_us,"step_calls":step_calls,"emit_us":emit_us,"emit_calls":emit_calls,
+			"projection_us":projection_us,"projection_calls":projection_calls}
+
+class ObservedSurface extends GardenSurface:
+	var retain_us := 0
+	var retain_calls := 0
+	var prepare_us := 0
+	var prepare_calls := 0
+	var geometry_us := 0
+	var geometry_calls := 0
+	var build_us := 0
+	var build_calls := 0
+	func reset_observer() -> void:
+		retain_us=0;retain_calls=0;prepare_us=0;prepare_calls=0
+		geometry_us=0;geometry_calls=0;build_us=0;build_calls=0
+	func retain(entries: Array[Dictionary]) -> void:
+		var started := Time.get_ticks_usec()
+		super.retain(entries)
+		retain_us+=Time.get_ticks_usec()-started;retain_calls+=1
+	func prepare(entry: Dictionary, ground: HexCourtPresenter, reduced: bool) -> Dictionary:
+		var started := Time.get_ticks_usec()
+		var result := super.prepare(entry,ground,reduced)
+		prepare_us+=Time.get_ticks_usec()-started;prepare_calls+=1
+		return result
+	func _geometry_for(entry: Dictionary, ground: HexCourtPresenter) -> Dictionary:
+		var started := Time.get_ticks_usec()
+		var result := super._geometry_for(entry,ground)
+		geometry_us+=Time.get_ticks_usec()-started;geometry_calls+=1
+		return result
+	func _build_geometry(source: Dictionary, ground: HexCourtPresenter) -> Dictionary:
+		var started := Time.get_ticks_usec()
+		var result := super._build_geometry(source,ground)
+		build_us+=Time.get_ticks_usec()-started;build_calls+=1
+		return result
+	func observation() -> Dictionary:
+		return {"retain_us":retain_us,"retain_calls":retain_calls,"prepare_us":prepare_us,"prepare_calls":prepare_calls,
+			"geometry_us":geometry_us,"geometry_calls":geometry_calls,"build_us":build_us,"build_calls":build_calls}

@@ -1,0 +1,14 @@
+[
+  {
+    "old": "res://.godot/iteration-20261014/performance-next/candidate_court.gd",
+    "new": "res://.godot/iteration-20261014/performance-next/path_counter_court.gd"
+  },
+  {
+    "old": "var _prepared_occupied_court_id: int = 0",
+    "new": "var _prepared_occupied_court_id: int = 0\nvar path_reused: int = 0\nvar path_recomputed: int = 0\nvar path_legacy: int = 0"
+  },
+  {
+    "old": "\t\tif aggregate_coverage and prepared_occupied_court_id != int(court.get_instance_id()):",
+    "new": "\t\t# PATH_WITNESS: counters only; this copy is never timed.\n\t\tif aggregate_coverage and prepared_occupied_court_id == int(court.get_instance_id()):\n\t\t\tpath_reused += 1\n\t\telif aggregate_coverage:\n\t\t\tpath_recomputed += 1\n\t\telse:\n\t\t\tpath_legacy += 1\n\t\tif aggregate_coverage and prepared_occupied_court_id != int(court.get_instance_id()):"
+  }
+]

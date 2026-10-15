@@ -1,0 +1,125 @@
+"""Read-only cost and evidence review of the complete pair; no engine."""
+from pathlib import Path
+import hashlib
+import json
+import math
+import statistics
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+EXPECTED = {
+    'forward-c': '4e4709033740f45b9b5638918d7b6afa0c2c9fa69117c8f62a25d154688c5989',
+    'reverse-c': '94a11838fceef302053a9361cdc177d850dae4c16151c24274721bb85a88138f',
+}
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def p95(values):
+    return sorted(values)[math.ceil(len(values) * .95) - 1]
+
+
+def costs(rows):
+    old = [r['plain']['ground_us'] for r in rows]
+    new = [r['candidate']['ground_us'] for r in rows]
+    saving = [a-b for a, b in zip(old, new)]
+    a, b = statistics.mean(old), statistics.mean(new)
+    return {'pairs': len(rows), 'plain_mean_us': a, 'candidate_mean_us': b,
+            'mean_saving_us': a-b, 'mean_saving_percent': 100*(a-b)/a,
+            'paired_median_saving_us': statistics.median(saving),
+            'plain_p95_us': p95(old), 'candidate_p95_us': p95(new),
+            'p95_regression_percent': 100*(p95(new)-p95(old))/p95(old),
+            'paired_saving_min_us': min(saving), 'paired_saving_max_us': max(saving),
+            'plain_max_us': max(old), 'candidate_max_us': max(new)}
+
+
+pins = json.loads((HERE/'source-pins.json').read_text())
+receipts = {}
+review = {'schema': 'hex.conflagration-withdrawal-review.v1', 'decision': 'WITHDRAW',
+          'canonical_change': False, 'runtime_baseline': pins['runtime_identity'],
+          'scope': 'Complete native paid frozen-scene whole-ground submission. No FPS, GPU, continuous-play or physical-input claim.',
+          'percentile_method': 'Nearest rank: sorted[ceil(0.95*N)-1]. Savings are plain minus candidate.',
+          'source_pins_sha256': digest(HERE/'source-pins.json'), 'processes': {},
+          'primary_gate': 'Each dense Low normal/reduced case in BOTH processes: >=10% AND >=500us mean saving, positive paired median and both callback-order mean savings.',
+          'negative_gate': 'Reject repeated unchanged-control mean regression exceeding BOTH 3% and 100us; repeated all-frame p95 regression >5% is also retained.',
+          'visual_result': 'Captured native readability accepted independently by root and Gameplay; not exact stack-count or live-player acceptance.',
+          'limits': ['Four completed forward-b cases belong to a failed fixture and are excluded from cost acceptance.',
+                     'Shared caches persist; untimed bundle inspection follows each first paired draw. First-use/warmup rows remain separately visible.',
+                     'Actor/projectile context and strict proof are outside the complete ground draw timer.',
+                     'No second variant or reduced subset rescue is authorized after this withdrawal.',
+                     'Final source readback was captured before separately retained movement integration.'],
+          'errors': []}
+images = 0
+primary = []
+negatives = {}
+for mode, expected in EXPECTED.items():
+    folder = HERE/'runs'/('probe-'+mode)
+    receipt_path = folder/'receipt.json'
+    assert digest(receipt_path) == expected
+    d = json.loads(receipt_path.read_text()); receipts[mode] = d
+    assert d['passed'] and not d['errors'] and d['checks'] == 7459 and len(d['cases']) == 15
+    assert d['source_hashes'] == pins['source_hashes'] and d['source_pins_sha256'] == review['source_pins_sha256']
+    assert d['cleanup'] == {'viewports_created': 2, 'viewports_freed': 2, 'live_viewports': 0}
+    assert d['prepared_controls']['passed'] and not d['prepared_controls']['errors'] and len(d['prepared_controls']['cases']) == 27
+    runner = json.loads((folder/'runner.json').read_text())
+    assert runner['passed'] and runner['helper_receipt_sha256'] == expected and runner['source_pins_sha256'] == review['source_pins_sha256']
+    for suffix in ('.log.err', '-parse.log.err'):
+        assert (HERE/'runs'/('probe-'+mode+suffix)).read_bytes() == b''
+    process = {'receipt_sha256': expected, 'checks': d['checks'], 'prepared_checks': d['prepared_controls']['checks'], 'cases': {}}
+    review['processes'][mode] = process
+    for case in d['cases']:
+        for image in case['images'].values():
+            assert digest(ROOT/image['path'][6:]) == image['sha256']; images += 1
+        assert case['pixel_proof']['outside_eligible_polygons'] == 0
+        rows = case['warmups'] + case['rows']
+        for index, row in enumerate(rows):
+            first = 'candidate' if ((index % 2 == 0) != d['reverse_order']) else 'plain'
+            assert row['index'] == index and row['actual_order'] == [first, 'plain' if first == 'candidate' else 'candidate']
+            assert row['plain']['mark_draws'] - row['candidate']['mark_draws'] == case['cohort']['skipped_active']
+            assert row['cache_before']['plain'] == row['cache_before']['candidate']
+            assert row['cache_after']['plain'] == row['cache_after']['candidate']
+            for role in ('plain', 'candidate'):
+                item = row[role]
+                assert item['okay'] and item['body_ok'] and item['projectile_ok'] and item['authority_unchanged']
+                assert item['expanded_projectile_draws'] + item['court_projectile_draws'] == case['context']['actual_projectile_count']
+        if not case['timed']: continue
+        assert len(case['rows']) == 32 and len(case['warmups']) == 4
+        result = {'measured': costs(case['rows']), 'warmups': costs(case['warmups']), 'all_frames': costs(rows), 'orders': {}}
+        for first in ('plain', 'candidate'):
+            result['orders'][first+'_first'] = costs([r for r in case['rows'] if r['actual_order'][0] == first])
+        process['cases'][case['label']] = result
+        m = result['measured']
+        if case['label'] in ('six_active_low_normal', 'six_active_low_reduced'):
+            gate = m['mean_saving_percent'] >= 10 and m['mean_saving_us'] >= 500 and m['paired_median_saving_us'] > 0 and all(x['mean_saving_us'] > 0 for x in result['orders'].values())
+            result['primary_gate_passed'] = gate
+            primary.append(gate)
+        else:
+            result['negative_mean_failure'] = m['mean_saving_percent'] < -3 and m['mean_saving_us'] < -100
+            negatives.setdefault(case['label'], []).append(result['negative_mean_failure'])
+for a, b in zip(receipts['forward-c']['cases'], receipts['reverse-c']['cases']):
+    assert a['label'] == b['label'] and a['authority_hash'] == b['authority_hash'] and a['coverage'] == b['coverage'] and a['cohort'] == b['cohort']
+    for role in ('plain', 'candidate'): assert a['images'][role]['sha256'] == b['images'][role]['sha256']
+assert receipts['forward-c']['paid_sequences'] == receipts['reverse-c']['paid_sequences']
+review['correctness'] = {'complete_processes': 2, 'native_checks_each': 7459, 'contexts_each': 15, 'pngs_verified': images, 'source_inputs_each': len(pins['source_hashes']), 'paired_callbacks_each': 225, 'measured_pairs_each': 192, 'warmup_pairs_each': 24, 'pixel_only_pairs_each': 9, 'cross_process_authority_and_images_equal': True}
+review['primary_gates_passed'] = sum(primary)
+review['primary_gates_total'] = len(primary)
+review['repeated_negative_mean_failures'] = [k for k, v in negatives.items() if all(v)]
+assert sum(primary) == 1 and len(primary) == 4
+assert 'one_product_low_normal' in review['repeated_negative_mean_failures']
+review['reason'] = 'Only one of four preset primary cases passes. Single-product regression repeatedly exceeds both negative thresholds. Captured visual acceptance cannot override the failed cost gate.'
+review['independent_review_sha256'] = {
+    'gameplay': digest(HERE/'independent-gameplay-review-c.json'),
+    'technical': digest(HERE/'runs/review-complete-pair-a.json'),
+    'pre_integration_source_readback': digest(HERE/'final-source-readback.json'),
+}
+review['failed_fixture_manifests'] = {
+    name: digest(HERE/name/'manifest.json')
+    for name in ('parse-generation-failed-a','body-context-failed-a','projectile-context-failed-b')
+}
+target = HERE/'withdrawal-review.json'
+target.write_text(json.dumps(review, indent=2)+'\n', encoding='utf-8')
+assert json.loads(target.read_text()) == review
+print('WITHDRAW', review['primary_gates_passed'], '/', review['primary_gates_total'], review['repeated_negative_mean_failures'])
+print(target.name, digest(target))

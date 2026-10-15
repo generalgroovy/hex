@@ -1,0 +1,73 @@
+"""Freeze validation inputs after runtime integration; no engine or promotion."""
+import hashlib
+import json
+import re
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+
+
+def sha(path):
+    with path.open("rb") as stream:
+        return hashlib.file_digest(stream, "sha256").hexdigest()
+
+
+def main():
+    output = HERE / "source-pins.json"
+    if output.exists():
+        raise RuntimeError("Preserve existing qualification pins")
+    identity = json.loads((ROOT / "content/runtime/runtime_build_identity_v1.json").read_bytes())
+    if identity["build_id"] == "p61-64590c45c7a5":
+        raise RuntimeError("Integrate and generate the new runtime identity before freezing")
+    registry = (ROOT / "tests/run_all.gd").read_text(encoding="utf-8")
+    blocks = re.findall(r"^const SUITES: Array\[Script\] = \[\n(.*?)^\]", registry, re.M | re.S)
+    if len(blocks) != 1:
+        raise RuntimeError("Unsupported registry")
+    if 'return filename.trim_prefix("test_").replace("_", "-")' not in registry:
+        raise RuntimeError("Unsupported stable suite ID rule")
+    suites = []
+    ids = []
+    for line in blocks[0].splitlines():
+        if not line.strip():
+            continue
+        match = re.fullmatch(r'\s*preload\("res://(tests/(?:[a-z0-9_]+/)*test_([a-z0-9_]+)\.gd)"\),\s*', line)
+        if match is None:
+            raise RuntimeError("Unsupported registry entry: " + line)
+        suites.append(match[1])
+        ids.append(match[2].replace("_", "-"))
+    if len(suites) < 265 or len(suites) != len(set(suites)) or len(ids) != len(set(ids)):
+        raise RuntimeError("Incomplete or duplicated suite registry")
+    sources = set()
+    for tree in ("scripts", "tests", "src"):
+        for path in (ROOT / tree).rglob("*"):
+            if path.is_file():
+                if path.is_symlink():
+                    raise RuntimeError("No symbolic source paths")
+                sources.add(path.relative_to(ROOT).as_posix())
+    sources.update(("project.godot", "export_presets.cfg", "docs/current-delivery.json",
+                    "content/runtime/runtime_build_identity_v1.json"))
+    sources.add(Path(__file__).resolve().relative_to(ROOT).as_posix())
+    for path in sources:
+        if not re.fullmatch(r"[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*", path):
+            raise RuntimeError("Unsupported source path: " + path)
+    record = {"schema": "hex.performance-qualification-pins.v1",
+              "build_id": identity["build_id"],
+              "runtime_source_sha256": identity["runtime_source_sha256"],
+              "registered_suites": len(suites),
+              "suite_paths": suites,
+              "suite_ids": ids,
+              "package_run_id": "hex-performance-20261014-" + identity["runtime_source_sha256"][:4],
+              "sources": {path: sha(ROOT / path) for path in sorted(sources)},
+              "scope": "Raw validation/runtime-script input bytes plus runtime identity. The runner independently recomputes all production records before and after each fixed producer workflow. No result or promotion is implied."}
+    encoded = (json.dumps(record, indent=2) + "\n").encode()
+    with output.open("xb") as stream:
+        stream.write(encoded)
+    if output.read_bytes() != encoded:
+        raise RuntimeError("Pin readback differs")
+    print(json.dumps({"pins": str(output), "sha256": sha(output), "sources": len(sources),
+                      "suites": len(suites), "build_id": identity["build_id"]}))
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,43 @@
+"""Freeze reviewed ignored inputs against admitted Profile B; no engine."""
+from pathlib import Path
+import hashlib
+import json
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+baseline = ROOT / ".godot/iteration-20261014/foreground-6459-desktop-b/metrics.json"
+metrics = json.loads(baseline.read_text(encoding="utf-8"))
+pins = {}
+for row in metrics["observed_source_before"]["files"]:
+    path = ROOT / row["path"].removeprefix("res://")
+    assert digest(path) == row["sha256"], row["path"]
+    pins[row["path"]] = row["sha256"]
+names = (
+    "candidate_court.gd", "candidate-header.txt", "compare-conflagration.gd",
+    "controls.gd", "source-transform.json", "hex_court_presenter.before.gd",
+    "paid-route-reference.gd.txt", "driver-extra.txt", "prepare-candidate.py",
+    "prepare-driver.py", "PLAN.md", "freeze-inputs.py",
+)
+for name in names:
+    path = HERE / name
+    pins["res://" + path.relative_to(ROOT).as_posix()] = digest(path)
+record = {
+    "schema": "hex.conflagration-pins.v1",
+    "status": "Ignored source checkpoint; native cost and visual acceptance remain unrun.",
+    "runtime_identity": metrics["manifest"],
+    "source_hashes": dict(sorted(pins.items())),
+    "baseline_metrics_sha256": digest(baseline),
+    "scope": "326 admitted Profile B source inputs plus 12 ignored candidate/control/driver inputs. Native asset identity remains the qualified runtime's recorded identity; no expanded native asset manifest is claimed. Runner and this inventory are excluded to avoid hash cycles.",
+}
+target = HERE / "source-pins.json"
+target.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+for name in (*names, "source-pins.json"):
+    path = HERE / name
+    print(name, len(path.read_bytes()), digest(path))
+print("source_count", len(pins))

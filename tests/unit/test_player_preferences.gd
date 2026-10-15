@@ -13,6 +13,7 @@ class FailedReplacementPreferences:
 
 func run() -> int:
 	_test_direction_indicator()
+	_test_independent_camera_look_ahead()
 	_test_defaults_and_presets()
 	_test_validation()
 	_test_unified_relative_vision()
@@ -31,6 +32,63 @@ func run() -> int:
 	_test_controller_spell_default_candidate()
 	_test_controller_default_revision()
 	return finish("player-preferences")
+
+
+func _test_independent_camera_look_ahead() -> void:
+	var defaults := PlayerPreferences.new()
+	check(defaults.camera_look_ahead, "new profiles retain the established gentle camera lead")
+	defaults.camera_look_ahead = false
+	defaults.reset_to_defaults()
+	check(defaults.camera_look_ahead, "reset restores the established camera default")
+	for schema: int in range(1, 12):
+		for reduced: bool in [false, true]:
+			var old := _base_preferences(schema, {&"jump": KEY_J, &"primary": KEY_P})
+			old["reduced_motion"] = reduced
+			var migrated := PlayerPreferences.new()
+			migrated.camera_look_ahead = reduced
+			check(migrated.apply_dictionary(old), "schema%d loads without an independent camera field" % schema)
+			var effective_reduced: bool = reduced and schema >= 2
+			equal(migrated.camera_look_ahead, not effective_reduced, "missing camera field preserves schema%d historical framing" % schema)
+			equal(migrated.keyboard_bindings[&"jump"], KEY_J, "camera migration preserves customized Jump")
+			equal(migrated.keyboard_bindings[&"primary"], KEY_P, "camera migration preserves customized Primary")
+			check(migrated.to_dictionary().has("camera_look_ahead"), "next save makes the migrated camera choice explicit")
+	var folder := "user://camera-preferences-%d-%d" % [OS.get_process_id(), Time.get_ticks_usec()]
+	check(DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(folder)) == OK, "camera persistence uses a fresh owned directory")
+	for reduced: bool in [false, true]:
+		for lead: bool in [false, true]:
+			var requested := defaults.to_dictionary().duplicate(true)
+			requested["reduced_motion"] = reduced
+			requested["camera_look_ahead"] = lead
+			var prefs := PlayerPreferences.new()
+			check(prefs.apply_dictionary(requested), "all four effects/camera combinations are supported")
+			equal([prefs.reduced_motion, prefs.camera_look_ahead], [reduced, lead], "explicit independent choices survive application")
+			requested["reduced_motion"] = not reduced
+			check(prefs.apply_dictionary(requested), "effects can be changed after selecting a camera mode")
+			equal(prefs.camera_look_ahead, lead, "changing effects cannot overwrite explicit camera choice")
+			var path := folder + "/%s-%s.json" % [str(reduced), str(lead)]
+			check(prefs.save_to_file(path), "independent choices save through the real preference writer")
+			var loaded := PlayerPreferences.new()
+			check(loaded.load_from_file(path), "independent choices reload through the real preference reader")
+			equal(loaded.to_dictionary(), prefs.to_dictionary(), "all settings and independent camera mode survive disk round trip")
+			check(DirAccess.remove_absolute(ProjectSettings.globalize_path(path)) == OK, "owned camera profile removed")
+	check(DirAccess.remove_absolute(ProjectSettings.globalize_path(folder)) == OK, "owned camera fixture directory removed")
+	var custom := PlayerPreferences.new()
+	custom.keyboard_bindings[&"jump"] = KEY_J
+	custom.camera_look_ahead = false
+	custom.reduced_motion = true
+	var before := custom.to_dictionary().duplicate(true)
+	for invalid: Variant in [null, 0, 1, 0.0, "false", [], {}]:
+		var candidate := before.duplicate(true)
+		candidate["movement_reference"] = PlayerPreferences.MOVEMENT_AIM_RELATIVE
+		candidate["camera_look_ahead"] = invalid
+		check(not custom.apply_dictionary(candidate), "camera preference accepts only a Boolean")
+		equal(custom.to_dictionary(), before, "invalid camera data cannot partially replace a user's controls")
+		check(custom.last_error.contains("camera_look_ahead"), "invalid camera field gets an actionable error")
+	var late_failure := before.duplicate(true)
+	late_failure["camera_look_ahead"] = true
+	late_failure["controller_bindings"][&"jump"] = {"kind": "axis", "index": 99, "direction": 1}
+	check(not custom.apply_dictionary(late_failure), "later invalid binding refuses the entire update")
+	equal(custom.to_dictionary(), before, "camera choice is not committed before all profile validation finishes")
 
 
 func _test_direction_indicator() -> void:

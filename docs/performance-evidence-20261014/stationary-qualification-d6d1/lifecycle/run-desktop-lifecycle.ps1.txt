@@ -1,0 +1,232 @@
+[CmdletBinding()]
+param()
+
+# Fixed external-route proof. The verified desktop shortcut target invokes the
+# existing repository lifecycle verifier, which owns isolation and engine leases.
+# This script does not start an engine directly or change the qualified default.
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+$hexRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../..'))
+$hexBuildId = 'p61-d6d1bfb9c529'
+$hexSourceSha = 'd6d1bfb9c5292d8dffbeade6e1cf460cd3a23ee54a655da7069d75e4cb572d44'
+$hexPinsPath = Join-Path $PSScriptRoot 'source-pins.json'
+$hexPinsSha = 'd005817977a72b2bb38355906dd6d4db4bd05ba66aab58aca006fe08c9f9867d'
+$hexPackageRelative = 'exports/hex-performance-20261014-d6d1/receipt.json'
+$hexPackagePath = Join-Path $hexRoot $hexPackageRelative
+$hexBuildDirectory = [IO.Path]::GetDirectoryName($hexPackagePath)
+$hexLifecycleRelative = '.godot/iteration-20261014/qualification-next/runs/lifecycle-a'
+$hexLifecycleDirectory = Join-Path $hexRoot $hexLifecycleRelative
+$hexLifecycleReceipt = Join-Path $hexLifecycleDirectory 'receipt.json'
+$hexRouteDirectory = Join-Path $PSScriptRoot 'runs/desktop-route-a'
+$hexShortcutPath = 'C:/Users/sende/Desktop/H.E.X..lnk'
+$hexWrapperPath = 'C:/Users/sende/Documents/ChatGPT/H.E.X/PLAY-HEX.cmd'
+$hexShortcutSha = '71a77776b58b99d4bbb2d7736a67d93c756acdee741b78bd3447420dbaeacb71'
+$hexWrapperSha = 'a478b3dcc60b54abaadec306b6ea402128d9f70741afad3c9543ec3a7252212e'
+$hexHadAppData = Test-Path Env:APPDATA
+$hexSavedAppData = $env:APPDATA
+
+function Assert-Route([bool]$Value, [string]$Message) { if (-not $Value) { throw $Message } }
+function Assert-Physical([string]$Path) {
+    $hexCursor = [IO.Path]::GetFullPath($Path)
+    while ($hexCursor) {
+        if ((Test-Path -LiteralPath $hexCursor) -and
+            ((Get-Item -LiteralPath $hexCursor -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+            throw "Desktop lifecycle rejects reparse paths: $hexCursor"
+        }
+        $hexCursor = [IO.Path]::GetDirectoryName($hexCursor)
+    }
+}
+function Get-RouteSha([string]$Path) {
+    Assert-Physical $Path
+    Assert-Route (Test-Path -LiteralPath $Path -PathType Leaf) "Required lifecycle input is absent: $Path"
+    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+function Read-RouteJson([string]$Path) {
+    Assert-Physical $Path
+    return Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json -AsHashtable
+}
+function Get-DesktopRoute {
+    $hexHashes = [ordered]@{shortcut=Get-RouteSha $hexShortcutPath; wrapper=Get-RouteSha $hexWrapperPath}
+    Assert-Route ($hexHashes.shortcut -ceq $hexShortcutSha -and $hexHashes.wrapper -ceq $hexWrapperSha) 'Approved desktop shortcut or wrapper bytes changed.'
+    $hexShell = $null; $hexShortcut = $null
+    try {
+        $hexShell = New-Object -ComObject WScript.Shell
+        # The existing file was checked above; CreateShortcut is used only to read.
+        $hexShortcut = $hexShell.CreateShortcut($hexShortcutPath)
+        Assert-Route ([IO.Path]::GetFullPath($hexShortcut.TargetPath) -ieq [IO.Path]::GetFullPath($hexWrapperPath)) 'Desktop shortcut targets another wrapper.'
+        Assert-Route ($hexShortcut.Arguments -ceq '' -and
+            [IO.Path]::GetFullPath($hexShortcut.WorkingDirectory) -ieq [IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($hexWrapperPath))) 'Desktop shortcut arguments or working directory differ.'
+        return [ordered]@{hashes=$hexHashes; target=$hexShortcut.TargetPath; working_directory=$hexShortcut.WorkingDirectory; shortcut_arguments=$hexShortcut.Arguments}
+    } finally {
+        if ($null -ne $hexShortcut) { [void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($hexShortcut) }
+        if ($null -ne $hexShell) { [void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($hexShell) }
+    }
+}
+function Get-PackageHashes {
+    $hexPayload = Join-Path $hexBuildDirectory 'windows'
+    $hexManifest = Join-Path $hexPayload 'SHA256SUMS.txt'
+    $hexHashes = [ordered]@{}
+    $hexHashes[$hexPackageRelative] = Get-RouteSha $hexPackagePath
+    $hexHashes['exports/hex-performance-20261014-d6d1/windows/SHA256SUMS.txt'] = Get-RouteSha $hexManifest
+    $hexNames = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    foreach ($hexLine in [IO.File]::ReadLines($hexManifest)) {
+        $hexMatch = [regex]::Match($hexLine, '^([a-f0-9]{64})  ([A-Za-z0-9][A-Za-z0-9_.-]*)$')
+        Assert-Route $hexMatch.Success 'Malformed package inventory.'
+        $hexName = $hexMatch.Groups[2].Value
+        Assert-Route ($hexNames.Add($hexName) -and $hexNames.Count -le 32) 'Duplicate or oversized package inventory.'
+        $hexPath = Join-Path $hexPayload $hexName
+        $hexSha = Get-RouteSha $hexPath
+        Assert-Route ($hexSha -ceq $hexMatch.Groups[1].Value) "Package payload changed: $hexName"
+        $hexHashes['exports/hex-performance-20261014-d6d1/windows/'+$hexName] = $hexSha
+    }
+    foreach ($hexName in @('hex.exe','hex.pck','SOURCE-IDENTITY.json','BUILD-STATE.json','PLAY-HEX.cmd','README-FIRST.txt')) {
+        Assert-Route ($hexNames.Contains($hexName)) "Package inventory omitted $hexName"
+    }
+    Assert-Route (@(Get-ChildItem -LiteralPath $hexPayload -File -Force).Count -eq $hexNames.Count+1 -and
+        @(Get-ChildItem -LiteralPath $hexPayload -Directory -Force).Count -eq 0) 'Package inventory has unlisted entries.'
+    $hexZipRelative = 'exports/hex-performance-20261014-d6d1/HEX-'+$hexBuildId+'-Windows-x64.zip'
+    $hexZipPath = Join-Path $hexRoot $hexZipRelative
+    $hexHashes[$hexZipRelative] = Get-RouteSha $hexZipPath
+    Assert-Route ([IO.Path]::GetFullPath($hexPackage.zip) -ieq $hexZipPath -and
+        $hexHashes[$hexZipRelative] -ceq $hexPackage.zip_sha256 -and
+        $hexHashes['exports/hex-performance-20261014-d6d1/windows/hex.pck'] -ceq $hexPackage.pack_sha256) 'Package receipt disagrees with archive or PCK.'
+    return $hexHashes
+}
+function Assert-HashMaps([Collections.IDictionary]$Before, [Collections.IDictionary]$After, [string]$Label) {
+    Assert-Route ($Before.Count -eq $After.Count) "$Label inventory changed."
+    foreach ($hexKey in $Before.Keys) {
+        Assert-Route ($After.Contains($hexKey) -and $After[$hexKey] -ceq $Before[$hexKey]) "$Label changed: $hexKey"
+    }
+}
+function Write-NewRouteJson([string]$Path, [object]$Value) {
+    Assert-Physical $Path
+    $hexEncoded = ($Value | ConvertTo-Json -Depth 14)+"`n"
+    $hexBytes = [Text.UTF8Encoding]::new($false).GetBytes($hexEncoded)
+    $hexStream = [IO.File]::Open($Path,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::None)
+    try { $hexStream.Write($hexBytes,0,$hexBytes.Length) } finally { $hexStream.Dispose() }
+    Assert-Route ([IO.File]::ReadAllText($Path) -ceq $hexEncoded) 'Desktop route receipt readback differs.'
+}
+
+Assert-Physical $PSScriptRoot
+Assert-Route ($hexRoot -ieq [IO.Path]::GetFullPath('C:/Users/sende/Projects/hex')) 'This fixed desktop route belongs to the reviewed H.E.X. checkout.'
+foreach ($hexPath in @($hexRouteDirectory,$hexLifecycleDirectory)) {
+    Assert-Physical $hexPath
+    Assert-Route (-not (Test-Path -LiteralPath $hexPath)) 'Preserve prior route/lifecycle output; both fixed outputs must be fresh.'
+}
+Assert-Route ((Get-RouteSha $hexPinsPath) -ceq $hexPinsSha) 'Reviewed d6d1 qualification inventory is required.'
+$hexPins = Read-RouteJson $hexPinsPath
+Assert-Route ($hexPins.schema -ceq 'hex.performance-qualification-pins.v1' -and
+    $hexPins.build_id -ceq $hexBuildId -and $hexPins.runtime_source_sha256 -ceq $hexSourceSha -and
+    $hexPins.package_run_id -ceq 'hex-performance-20261014-d6d1') 'Qualification identity differs.'
+$hexSourceBefore = [ordered]@{}
+foreach ($hexRelative in @('content/runtime/runtime_build_identity_v1.json','docs/current-delivery.json',
+    'scripts/launch-hex.ps1','scripts/verify-launcher-lifecycle.ps1','scripts/flux2-common.ps1','scripts/engine-guard.ps1')) {
+    $hexSourceBefore[$hexRelative] = Get-RouteSha (Join-Path $hexRoot $hexRelative)
+    Assert-Route ($hexPins.sources.Contains($hexRelative) -and $hexPins.sources[$hexRelative] -ceq $hexSourceBefore[$hexRelative]) "Frozen launcher input differs: $hexRelative"
+}
+$hexIdentity = Read-RouteJson (Join-Path $hexRoot 'content/runtime/runtime_build_identity_v1.json')
+Assert-Route ($hexIdentity.build_id -ceq $hexBuildId -and $hexIdentity.runtime_source_sha256 -ceq $hexSourceSha) 'Working source identity differs.'
+$hexDefault = Read-RouteJson (Join-Path $hexRoot 'docs/current-delivery.json')
+Assert-Route ($hexDefault.qualified_build_id -ceq 'p61-64590c45c7a5' -and
+    $hexDefault.launcher -ceq 'exports/hex-depth-clarity-20261014-6459/windows/PLAY-HEX.cmd') 'Keep the qualified 6459 default until final independent review.'
+$hexPackageSha = Get-RouteSha $hexPackagePath
+$hexPackage = Read-RouteJson $hexPackagePath
+Assert-Route ($hexPackage.status -ceq 'passed' -and $hexPackage.build_id -ceq $hexBuildId -and
+    $hexPackage.runtime_source_sha256 -ceq $hexSourceSha) 'A terminal passed d6d1 candidate export is required.'
+$hexPackageBefore = Get-PackageHashes
+$hexRouteBefore = Get-DesktopRoute
+$hexRunnerSha = Get-RouteSha $PSCommandPath
+$hexInvocation = @('-Lifecycle','-CandidatePackageReceipt',$hexPackageRelative,
+    '-CandidatePackageReceiptSha256',$hexPackageSha,'-OutputDirectory',$hexLifecycleRelative)
+
+# Validate the full canonical package/stamp contract through this exact front door.
+# Inspect cannot start an engine and leaves both fresh output directories absent.
+$hexInspectInvocation = @($hexInvocation)+@('-Inspect')
+$hexInspectLines = @(& $hexWrapperPath @hexInspectInvocation)
+$hexInspectExit = $LASTEXITCODE
+Assert-Route ($hexInspectExit -eq 0) 'Desktop candidate Inspect failed.'
+$hexInspect = ($hexInspectLines -join "`n") | ConvertFrom-Json -AsHashtable
+Assert-Route ($hexInspect.mode -ceq 'Play' -and $hexInspect.lifecycle -ceq $true -and
+    $hexInspect.selection -ceq 'explicit_candidate_package' -and $hexInspect.build_id -ceq $hexBuildId -and
+    $hexInspect.runtime_source_sha256 -ceq $hexSourceSha -and $hexInspect.package_receipt -ceq $hexPackageRelative -and
+    $hexInspect.package_receipt_sha256 -ceq $hexPackageSha -and $hexInspect.qualified_default -ceq 'p61-64590c45c7a5' -and
+    $hexInspect.default_selection_unchanged -ceq $true) 'Desktop Inspect did not resolve the fixed candidate/default pair.'
+foreach ($hexPath in @($hexRouteDirectory,$hexLifecycleDirectory)) { Assert-Route (-not (Test-Path -LiteralPath $hexPath)) 'Inspect unexpectedly created output.' }
+
+$hexRecord = [ordered]@{
+    schema='hex.desktop-candidate-lifecycle-route.v1'; schema_version=1; status='running'; error=$null; exit_code=$null
+    build_id=$hexBuildId; runtime_source_sha256=$hexSourceSha; source_pins_sha256=$hexPinsSha; runner_sha256=$hexRunnerSha
+    route='invoked verified desktop shortcut target; not a physical desktop click'
+    shortcut=$hexShortcutPath; target=$hexRouteBefore.target; working_directory=$hexRouteBefore.working_directory
+    shortcut_arguments=$hexRouteBefore.shortcut_arguments; wrapper=$hexWrapperPath; arguments=$hexInvocation
+    before=$hexRouteBefore.hashes; after=$null; package_before=$hexPackageBefore; package_after=$null
+    source_before=$hexSourceBefore; source_after=$null; inspection=$hexInspect
+    lifecycle_receipt=$hexLifecycleRelative+'/receipt.json'; lifecycle_receipt_sha256=$null; cases=@()
+    caller_appdata_unchanged=$false; started_utc=[DateTime]::UtcNow.ToString('o'); finished_utc=$null
+    scope='Actual verified desktop shortcut target and explicit candidate selector, unchanged external route/package/default bytes, and five existing supervised normal-close cases. The canonical verifier owns engine leases, isolated profile and raw paid-workload checks. No physical desktop click, foreground/FPS, player-feel, earned-save recovery or soak claim.'
+}
+New-Item -ItemType Directory -Path $hexRouteDirectory -ErrorAction Stop | Out-Null
+Write-NewRouteJson (Join-Path $hexRouteDirectory 'admission.json') $hexRecord
+try {
+    & $hexWrapperPath @hexInvocation
+    $hexRecord.exit_code = $LASTEXITCODE
+    Assert-Route ($hexRecord.exit_code -eq 0) 'Desktop lifecycle command failed.'
+    $hexProof = Read-RouteJson $hexLifecycleReceipt
+    Assert-Route ($hexProof.schema -ceq 'hex-launcher-lifecycle-v1' -and $hexProof.status -ceq 'passed' -and
+        $null -eq $hexProof.failure -and $null -eq $hexProof.failed_case -and $hexProof.build_id -ceq $hexBuildId -and
+        $hexProof.runtime_source_sha256 -ceq $hexSourceSha -and $hexProof.selection -ceq 'explicit_candidate_package' -and
+        $hexProof.package_receipt -ceq $hexPackageRelative -and $hexProof.package_receipt_sha256 -ceq $hexPackageSha -and
+        $hexProof.qualified_default -ceq 'p61-64590c45c7a5') 'Lifecycle receipt does not bind the selected candidate/default.'
+    foreach ($hexFlag in @('default_selection_unchanged','input_pins_unchanged','shared_isolated_profile_verified','caller_appdata_restored')) {
+        Assert-Route ($hexProof[$hexFlag] -ceq $true) "Lifecycle did not establish $hexFlag"
+    }
+    $hexCases = @('hearth','garden','paid-fire','paid-all-six-mantle','reopen')
+    $hexWires = @(0,0,145,1319,0)
+    Assert-Route ($hexProof.cases.Count -eq 5) 'Lifecycle must complete exactly five cases.'
+    for ($hexIndex=0; $hexIndex -lt $hexCases.Count; $hexIndex++) {
+        $hexRow = $hexProof.cases[$hexIndex]; $hexExpected = if ($hexWires[$hexIndex] -eq 0) {0} else {12}
+        Assert-Route ($hexRow.case -ceq $hexCases[$hexIndex] -and $hexRow.status -ceq 'passed' -and
+            $hexRow.paid_wire -eq $hexWires[$hexIndex] -and $hexRow.accepted_casts -eq $hexExpected -and
+            $hexRow.released_casts -eq $hexExpected -and $hexRow.refused_casts -eq 0 -and
+            $hexRow.safe_close_marker -ceq $true -and $hexRow.stderr_bytes -eq 0 -and
+            $hexRow.exit_mode -ceq 'front-door-supervised-owned-process-normal-window-close') 'Lifecycle workload, order or normal close differs.'
+        $hexLog = Join-Path $hexLifecycleDirectory ($hexCases[$hexIndex]+'.log')
+        Assert-Route ([IO.Path]::GetFullPath($hexRow.log) -ieq $hexLog -and
+            (Get-RouteSha $hexLog) -ceq $hexRow.log_sha256 -and
+            (Get-RouteSha ($hexLog+'.err')) -ceq $hexRow.stderr_sha256 -and
+            (Get-Item -LiteralPath ($hexLog+'.err')).Length -eq 0) 'Lifecycle raw log linkage differs.'
+        Assert-Route ($hexRow.cast_rows.starts.Count -eq $hexExpected -and $hexRow.cast_rows.releases.Count -eq $hexExpected -and
+            $hexRow.cast_rows.refusals.Count -eq 0 -and ($hexExpected -gt 0 -or $hexRow.cast_rows.capture_rows -eq 0)) 'Lifecycle recorded cast counts differ.'
+        $hexRecord.cases += [ordered]@{case=$hexRow.case; accepted_casts=$hexRow.accepted_casts; released_casts=$hexRow.released_casts; refused_casts=$hexRow.refused_casts; log_sha256=$hexRow.log_sha256; stderr_sha256=$hexRow.stderr_sha256}
+    }
+    foreach ($hexRelative in $hexPackageBefore.Keys) {
+        $hexAbsolute = Join-Path $hexRoot $hexRelative
+        Assert-Route ($hexProof.input_hashes.Contains($hexAbsolute) -and $hexProof.input_hashes[$hexAbsolute] -ceq $hexPackageBefore[$hexRelative]) 'Lifecycle did not pin the same package bytes.'
+    }
+    $hexRecord.lifecycle_receipt_sha256 = Get-RouteSha $hexLifecycleReceipt
+    $hexRecord.status = 'passed'
+} catch {
+    $hexRecord.status = 'failed'; $hexRecord.error = $_.Exception.Message
+} finally {
+    try {
+        $hexRouteAfter = Get-DesktopRoute
+        $hexRecord.after = $hexRouteAfter.hashes
+        Assert-HashMaps $hexRecord.before $hexRecord.after 'Desktop route'
+        $hexRecord.package_after = Get-PackageHashes
+        Assert-HashMaps $hexPackageBefore $hexRecord.package_after 'Package'
+        $hexSourceAfter = [ordered]@{}
+        foreach ($hexRelative in $hexSourceBefore.Keys) { $hexSourceAfter[$hexRelative] = Get-RouteSha (Join-Path $hexRoot $hexRelative) }
+        $hexRecord.source_after = $hexSourceAfter
+        Assert-HashMaps $hexSourceBefore $hexSourceAfter 'Frozen launcher source/default'
+        Assert-Route ((Get-RouteSha $hexPinsPath) -ceq $hexPinsSha -and (Get-RouteSha $PSCommandPath) -ceq $hexRunnerSha) 'Route runner or qualification pins changed.'
+        $hexRecord.caller_appdata_unchanged = ((Test-Path Env:APPDATA) -eq $hexHadAppData -and $env:APPDATA -ceq $hexSavedAppData)
+        Assert-Route $hexRecord.caller_appdata_unchanged 'External caller APPDATA changed.'
+    } catch {
+        $hexRecord.status = 'failed'
+        $hexRecord.error = ([string]$hexRecord.error+'; '+$_.Exception.Message).Trim(';',' ')
+    }
+    $hexRecord.finished_utc = [DateTime]::UtcNow.ToString('o')
+    Write-NewRouteJson (Join-Path $hexRouteDirectory 'receipt.json') $hexRecord
+}
+if ($hexRecord.status -cne 'passed') { throw "Desktop lifecycle proof failed: $($hexRecord.error)" }
+Write-Output "PASS desktop candidate lifecycle route for $hexBuildId"

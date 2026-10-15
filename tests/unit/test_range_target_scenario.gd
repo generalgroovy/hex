@@ -2,6 +2,7 @@ extends FluxTestSuite
 
 const Scenario = preload("res://src/app/range_target_scenario.gd")
 const RangeSession = preload("res://src/app/spell_training_range.gd")
+const RangeScenarioPanel = preload("res://src/presentation/range_scenario_panel.gd")
 const Garden = preload("res://src/app/element_garden_exhibition.gd")
 
 
@@ -43,9 +44,14 @@ func run() -> int:
 	var saw_movement := false
 	var saw_target_shot := false
 	var saw_player_shot := false
+	var observed_status_ticks: Array[int] = [0, 0, 0, 0, 0, 0]
+	var saw_overlapping_statuses := false
+	var saw_status := false
 	for tick: int in range(600):
 		if tick==180:
+			var toggle_hash: String = world.state_hash()
 			check(scenario.set_moving(true) and scenario.set_firing(true),"target starts readable motion and paid return fire only on explicit toggles")
+			equal(world.state_hash(), toggle_hash, "target behavior toggles do not directly mutate paid authority")
 		var actor := world.player()
 		var aim := Vector2i(target.position_x-actor.position_x,target.position_y-actor.position_y)
 		var pressed := SimCommand.PRESSED_SPELL_1 if tick in [0,240,480] else 0
@@ -53,7 +59,20 @@ func run() -> int:
 		check(rival!=null,"Range planner supplies bounded ordinary target intent")
 		if rival==null: break
 		check(world.step([SimCommand.new(world.tick,1,0,0,0,pressed,aim.x,aim.y),rival]),"Range options run through whole paid simulation ticks")
+		var status_count := 0
+		for channel: int in 6:
+			if target.spell_status_values[channel * SpellStatusPolicy.STRIDE] > 0:
+				observed_status_ticks[channel] += 1
+				status_count += 1
+		# Keep all600 paid observations and independent status counts; sample the
+		# expensive whole-world purity hash at actual status and command boundaries.
+		var purity_boundary := tick in [0, 179, 180, 240, 480, 599] or (status_count > 0 and not saw_status) or (status_count > 1 and not saw_overlapping_statuses)
+		var observation_hash: String = world.state_hash() if purity_boundary else ""
 		scenario.observe()
+		if purity_boundary:
+			equal(world.state_hash(), observation_hash, "status observation preserves paid authority at boundary tick%d" % tick)
+		saw_status = saw_status or status_count > 0
+		saw_overlapping_statuses = saw_overlapping_statuses or status_count > 1
 		for event: Dictionary in world.combat_events:
 			if String(event.get("type",""))=="projectile_spawned":
 				saw_target_shot = saw_target_shot or int(event.get("owner_id",0))==2
@@ -65,6 +84,16 @@ func run() -> int:
 	check(int(measured.statistics.damage_to_target)>0,"selected mixture produces actual target damage")
 	equal(int(measured.statistics.damage_to_target),int(measured.statistics.direct_damage)+int(measured.statistics.ground_damage)+int(measured.statistics.status_damage),"damage categories reconcile every observed owned loss")
 	for exposure: int in measured.statistics.status_ticks: check(exposure>0,"actual all-six paid hit exposes every separate status")
+	equal(measured.tick_rate, world.config.tick_rate, "public status duration uses the actual simulation cadence")
+	equal(measured.statistics.status_ticks, observed_status_ticks, "each status counts actual completed active target ticks independently")
+	check(saw_overlapping_statuses, "paid mixture genuinely exposes overlapping channels")
+	var display_hash := world.state_hash()
+	var status_text: String = RangeScenarioPanel.paragraphs(measured)[3]
+	for channel: int in 6:
+		var expected := "%s %.2fs" % [SpellStatusPolicy.NAMES[channel], float(observed_status_ticks[channel]) / world.config.tick_rate]
+		check(status_text.contains(expected), "Range modal exposes the real paid duration for " + SpellStatusPolicy.NAMES[channel])
+	check(status_text.contains("in this window") and status_text.contains("Channels can overlap"), "duration wording does not add simultaneous status times or claim balance strength")
+	equal(world.state_hash(), display_hash, "formatting the detached Range evidence cannot change authority")
 	scenario.observe()
 	equal(scenario.view(),measured,"repeated observation cannot double count one authoritative tick")
 	before = world.state_hash()
@@ -77,6 +106,8 @@ func run() -> int:
 	equal([intent.move_x,intent.move_y,intent.held_actions],behavior_before,"statistics reset cannot restart the target's movement or firing rhythm")
 	equal(world.state_hash(),before,"reset statistics never resets target health, resources, projectiles, timers or effects")
 	equal(int(scenario.view().statistics.player_casts),0,"measurement reset clears observation counters only")
+	equal(scenario.view().statistics.status_ticks, [0, 0, 0, 0, 0, 0], "reset clears the status window without clearing live effects")
+	equal(RangeScenarioPanel.paragraphs(scenario.view())[3], "No target status observed in this window.", "cleared observation has an explicit empty result")
 	measured.statistics.clear()
 	check(not scenario.view().statistics.is_empty(),"public measurement view is detached")
 	scenario.close()

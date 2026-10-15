@@ -28,6 +28,7 @@ func run() -> int:
 	check(reference.stamp_bytes + reference.authored_tile_bytes <= kit.HexTerrain.MAX_STAMP_BYTES, "native authoring artwork and organic stamps share the existing16MiB transient budget")
 	equal(kit.roof_skins.size() + kit.practice_skins.size(), layout.buildings_by_id.size(), "each existing structure receives a cached skin without collision changes")
 	_test_practice_masonry(kit, layout)
+	_test_masonry_relief(kit)
 	_test_slate_roofs(kit, layout)
 	_test_ground_style(kit)
 	_test_floor_inlays(kit, layout)
@@ -36,7 +37,7 @@ func run() -> int:
 	equal(kit.decorations.size(), 0, "non-worldbone decoration is withheld from the live campus")
 	equal(String(kit.data["camera"]["ground_axes"]), "screen_cardinal", "painted elevation never skews input or aim")
 	equal(int(kit.data["camera"]["art_elevation_degrees"]), 55, "characters and environment share the elevated art camera")
-	check(int(kit.data["camera"]["maximum_facade_pixels"]) <= 64, "facades cannot steal large sections of play space")
+	check(int(kit.data["camera"]["maximum_facade_pixels"]) <= 64, "ordinary facade default remains bounded; selected taller art stays inside its existing footprint")
 	var building := Rect2(100, 100, 200, 120)
 	equal(kit.cover_opacity(building, Vector2(200, 90)), kit.cover_opacity(building, Vector2(90, 160)), "roof clearance is equal on cardinal approaches")
 	check(is_equal_approx(kit.cover_opacity(building, Vector2(200, 100)), 0.30), "near roof reveals the player without a schematic replacement panel")
@@ -215,6 +216,55 @@ func _test_practice_masonry(kit: WellspringIllustratedKit, layout: SanctumCampus
 	equal(CanonicalContent.sha256(layout.data), original, "wall raster and room materials cannot mutate collision/gameplay")
 
 
+func _test_masonry_relief(kit: WellspringIllustratedKit) -> void:
+	# Read actual image planes independently of the composer's chosen dimensions.
+	# A deeper facade may not move the silhouette, erase the cap, or add ground.
+	var deep_heights := {}
+	for family: String in kit.WallSkin.PALETTES:
+		var palette: Array = kit.WallSkin.PALETTES[family]
+		for size: Vector2i in [Vector2i(96, 128), Vector2i(320, 28), Vector2i(28, 192)]:
+			var bounds := Rect2i(Vector2i(304, 512), size)
+			var image: Image = kit.WallSkin.compose(bounds, family)
+			check(image != null, "bounded depth fixture composes for " + family)
+			if image == null: continue
+			equal(image.get_size(), size, "relief keeps the complete original collision footprint")
+			equal(image.get_data().size(), size.x * size.y * 4, "relief adds no texture area or layer")
+			var face_y := -1
+			for y: int in range(4, size.y - 2):
+				if image.get_pixel(4, y) == Color(palette[0]):
+					face_y = y
+					break
+			check(face_y >= 8 and face_y < size.y - 5, "actual cap and south face are both visible")
+			var face_height := size.y - 2 - face_y
+			check(face_height <= (size.y - 4) / 2, "visual height never consumes more than half the real footprint")
+			if size == Vector2i(96, 128):
+				deep_heights[family] = face_height
+				check(face_height > 14 and face_height <= 42, "deep blocks gain bounded relief beyond the old14px facade")
+			elif size.y == 28:
+				check(face_height <= 12, "thin cover retains a low facade and readable opaque cap")
+			var solid_rim := true
+			for x: int in size.x:
+				solid_rim = solid_rim and image.get_pixel(x, 0) == Color(palette[0]) and image.get_pixel(x, size.y - 1) == Color(palette[0])
+			for y: int in size.y:
+				solid_rim = solid_rim and image.get_pixel(0, y) == Color(palette[0]) and image.get_pixel(size.x - 1, y) == Color(palette[0])
+			check(solid_rim, "parapet and material relief cannot imply a notch, doorway or traversable gap")
+			var shaded_side := true
+			for y: int in range(2, size.y - 2):
+				shaded_side = shaded_side and image.get_pixel(size.x - 4, y) == Color(palette[1])
+			check(shaded_side, "continuous dark east plane conveys volume without exterior shadow or overhang")
+			equal(image.get_pixel(4, size.y - 3), Color(palette[5]), "continuous south foundation anchors the wall inside its collision edge")
+	check(int(deep_heights.get("garden", 0)) < int(deep_heights.get("slate", 0)), "garden barriers and slate ramparts retain distinct vertical profiles")
+	check(int(deep_heights.get("slate", 0)) < int(deep_heights.get("foundry", 0)), "industrial buttresses have deeper faces than slate ramparts")
+	check(int(deep_heights.get("foundry", 0)) < int(deep_heights.get("observatory", 0)), "observatory plinths retain their own bounded profile")
+	# Existing native terrain is an independent artifact. This relief belongs to
+	# setup-only building textures, not the tile bake or its producer inventory.
+	var terrain_manifest := load(kit.TerrainStream.MANIFEST) as Resource
+	check(terrain_manifest != null, "depth comparison retains the existing terrain manifest")
+	if terrain_manifest != null:
+		equal(String(terrain_manifest.get("descriptor").get("signature", "")), kit.bake_signature, "wall relief leaves the baked-ground signature unchanged")
+	check("res://src/presentation/practice_wall_skin.gd" not in kit.TerrainStream.BAKE_SOURCE_PATHS, "wall raster is not a ground-tile producer")
+
+
 func _test_slate_roofs(kit: WellspringIllustratedKit, layout: SanctumCampusLayout) -> void:
 	var original := CanonicalContent.sha256(layout.data)
 	var slate := kit.tiles[10]
@@ -228,6 +278,10 @@ func _test_slate_roofs(kit: WellspringIllustratedKit, layout: SanctumCampusLayou
 			continue
 		count += 1
 		var bounds := Rect2(SanctumCampusLayout._parse_bounds(building["bounds"]))
+		if id in [105, 108]:
+			_test_tall_architecture(kit, building)
+			bytes += kit.roof_skins[id].get_image().get_data().size()
+			continue
 		var facade_height := minf(float(kit.data["camera"]["maximum_facade_pixels"]), bounds.size.y * 0.42)
 		var size := Vector2i(Vector2(bounds.size.x, bounds.size.y - facade_height).ceil())
 		var skin: Texture2D = kit.roof_skins[id]
@@ -244,10 +298,11 @@ func _test_slate_roofs(kit: WellspringIllustratedKit, layout: SanctumCampusLayou
 		for _access: int in 3:
 			check(skin == kit.roof_skins[id], "repeated presentation lookup reuses the admitted texture")
 		bytes += actual.get_data().size()
-	equal(count, 8, "only the eight existing service buildings receive slate roofs")
+	equal(count, 8, "only the eight existing service buildings share the roof/architecture cache")
 	equal(kit.cached_roof_builds, count, "each roof is composed exactly once during configuration")
 	equal(kit.roof_skin_bytes, bytes, "roof cache reports exact decoded allocation")
-	check(bytes < 1024 * 1024, "all current slate roofs remain below one MiB decoded")
+	equal(bytes, 861440, "two full-footprint facades replace old roofs without retaining duplicate textures")
+	check(bytes < 1024 * 1024, "all current roofs and taller facades remain below one MiB decoded")
 	equal(slate.get_data(), source_bytes, "roof tiling never edits the validated source atlas")
 	for invalid: Vector2i in [Vector2i.ZERO, Vector2i(-1, 64), Vector2i(1025, 1), Vector2i(512, 512)]:
 		check(kit.compose_roof_skin(invalid, slate) == null, "invalid or over-budget roof sizes refuse allocation")
@@ -260,6 +315,47 @@ func _test_slate_roofs(kit: WellspringIllustratedKit, layout: SanctumCampusLayou
 		check(not draw_source.contains(forbidden), "building redraw cannot regenerate roof art or restore hex outlines: " + forbidden)
 	equal(kit.cached_roof_builds, count, "inspection and repeated lookups do not build extra roof textures")
 	equal(CanonicalContent.sha256(layout.data), original, "roof preparation cannot change footprints, LOS, stations or route authority")
+
+
+func _test_tall_architecture(kit: WellspringIllustratedKit, building: Dictionary) -> void:
+	var id := int(building.id)
+	var size := Vector2i(192, 160) if id == 105 else Vector2i(144, 144)
+	var face_y := 60 if id == 105 else 52
+	var family := "observatory" if id == 105 else "limestone"
+	var before := CanonicalContent.sha256(building)
+	var slate_before := kit.tiles[10].get_data()
+	var facade_before := kit.tiles[11].get_data()
+	var actual: Image = kit.roof_skins[id].get_image()
+	equal(actual.get_size(), size, "taller facade fills only its existing exact footprint")
+	equal(actual.get_format(), Image.FORMAT_RGBA8, "taller facade uses the existing decoded pixel format")
+	var opaque := true
+	var pixels := actual.get_data()
+	for offset: int in range(3, pixels.size(), 4):
+		opaque = opaque and pixels[offset] == 255
+	check(opaque, "taller planes and decorative cap contain no false opening")
+	for point: Vector2i in [Vector2i(0, 0), Vector2i(2, face_y), Vector2i(size.x - 1, size.y - 1)]:
+		equal(actual.get_pixelv(point), Color("4b3025"), "solid original outer rim remains inside its footprint")
+	equal(actual.get_pixel(5, 8), kit.tiles[10].get_pixel(2, 5), "narrow roof still samples approved slate at one-to-one scale")
+	var face_color := Color(kit.WallSkin.PALETTES[family][2])
+	var tile_color := kit.tiles[11].get_pixel(2, 12)
+	var expected := tile_color.lerp(face_color, 0.12)
+	expected.a = 1.0
+	var quantized := Image.create(1, 1, false, Image.FORMAT_RGBA8)
+	quantized.set_pixel(0, 0, expected)
+	equal(actual.get_pixel(5, face_y + 12), quantized.get_pixel(0, 0), "large front plane retains the approved facade tile's exact grain and phase")
+	check(actual.get_pixel(size.x - 8, face_y + 12).get_luminance() < actual.get_pixel(size.x - 136, face_y + 12).get_luminance(), "east plane stays visibly darker than the broad front")
+	check(kit.ArchitectureSkin.compose_building(building, null, kit.tiles[11]) == null, "selected architecture refuses missing approved slate")
+	check(kit.ArchitectureSkin.compose_building(building, kit.tiles[10], null) == null, "selected architecture refuses missing approved masonry")
+	var changed := building.duplicate(true)
+	changed.bounds[2] += 1
+	check(not kit.ArchitectureSkin.supports(changed), "different footprint uses ordinary architecture instead of stretching the admitted skin")
+	changed = building.duplicate(true)
+	changed.vaultable = true
+	check(not kit.ArchitectureSkin.supports(changed), "a traversable structure cannot borrow the solid tower treatment")
+	equal(kit.tiles[10].get_data(), slate_before, "architecture leaves the admitted slate source unchanged")
+	equal(kit.tiles[11].get_data(), facade_before, "architecture leaves the admitted masonry source unchanged")
+	equal(CanonicalContent.sha256(building), before, "architecture cannot change collision, LOS, doorway or movement flags")
+	check("res://src/presentation/wellspring_architecture_skin.gd" not in kit.TerrainStream.BAKE_SOURCE_PATHS, "object facade raster is not a baked-ground producer")
 
 
 func _test_visible_world_culling(layout: SanctumCampusLayout) -> void:
@@ -358,11 +454,14 @@ func _test_renderer_binding(layout: SanctumCampusLayout) -> void:
 		check(not renderer_source.contains(retired_dependency), "current campus has no dependency on retired startup seam " + retired_dependency)
 	var content_before := CanonicalContent.sha256(layout.data)
 	var previous_roof: WeakRef = weakref(renderer.illustrated_kit.roof_skins[104])
+	var previous_tall: WeakRef = weakref(renderer.illustrated_kit.roof_skins[105])
+	var previous_tower: WeakRef = weakref(renderer.illustrated_kit.roof_skins[108])
 	check(not renderer.configure_campus(null), "missing map refuses even after a previous successful setup")
 	check(renderer.illustrated_kit.ground == null and renderer.illustrated_kit.content_hash.is_empty(), "failed reconfiguration exposes no stale successful map")
 	check(renderer.illustrated_kit.practice_skins.is_empty() and renderer.illustrated_kit.practice_skin_bytes == 0, "failed reconfiguration releases stale wall art")
 	check(renderer.illustrated_kit.roof_skins.is_empty() and renderer.illustrated_kit.roof_skin_bytes == 0 and renderer.illustrated_kit.cached_roof_builds == 0, "failed reconfiguration releases stale roof textures and counters")
 	check(previous_roof.get_ref() == null, "reload drops its ownership of the old roof texture instead of retaining a stale cache")
+	check(previous_tall.get_ref() == null and previous_tower.get_ref() == null, "failed reconfiguration releases both full-footprint architecture textures")
 	renderer.draw(null, layout, 120)
 	# A genuinely failed active library load must not select historical map art.
 	var saved_library := PixelMapLibrary.default_library()
@@ -377,6 +476,12 @@ func _test_renderer_binding(layout: SanctumCampusLayout) -> void:
 	check(renderer.configure_campus(layout), "restored validated pack permits explicit reconfiguration")
 	equal(renderer.illustrated_kit.roof_skins.size(), 8, "recovery repopulates only the current eight roof textures")
 	equal(renderer.illustrated_kit.cached_roof_builds, 8, "recovery counts only its current setup, not released roof builds")
+	var recovered_tall: WeakRef = weakref(renderer.illustrated_kit.roof_skins[105])
+	var recovered_tower: WeakRef = weakref(renderer.illustrated_kit.roof_skins[108])
+	check(renderer.configure_campus(layout), "successful reconfiguration replaces the same current architecture cache")
+	check(recovered_tall.get_ref() == null and recovered_tower.get_ref() == null, "successful reconfiguration does not retain replaced facade textures")
+	equal(renderer.illustrated_kit.roof_skins.size(), 8, "reconfiguration retains only eight current roof/architecture textures")
+	equal(renderer.illustrated_kit.roof_skin_bytes, 861440, "reconfiguration restores the exact bounded allocation")
 	check(renderer.last_error.is_empty(), "successful recovery clears the previous diagnostic")
 	equal(CanonicalContent.sha256(layout.data), content_before, "startup failures and recovery cannot alter gameplay content")
 	check(not renderer.configure(null), "invalid language refuses a previously configured renderer")

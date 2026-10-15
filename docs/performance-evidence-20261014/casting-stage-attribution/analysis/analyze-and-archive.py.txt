@@ -1,0 +1,124 @@
+"""Root readback of four completed native attribution runs; no engine calls."""
+import hashlib
+import json
+import math
+import statistics as stats
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+DEST = ROOT / 'docs/performance-evidence-20261014/casting-stage-attribution'
+RUNS = ['fire-forward-a', 'fire-reverse-a', 'mantle-forward-a', 'mantle-reverse-a']
+checks = 0
+
+def verify(condition, message):
+    global checks
+    checks += 1
+    if not condition:
+        raise AssertionError(message)
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def summary(values):
+    values = sorted(values)
+    return {'n': len(values), 'mean': stats.mean(values), 'median': stats.median(values),
+            'p95_nearest_rank': values[math.ceil(len(values)*.95)-1], 'min': min(values), 'max': max(values)} if values else {}
+
+def summarize(rows, names):
+    return {'plain_whole_us': summary([r['result']['plain']['whole_step_us'] for r in rows]),
+            'observed_whole_us': summary([r['result']['observed']['whole_step_us'] for r in rows]),
+            'observed_parent_us': summary([r['result']['observed']['stages_us']['movement_cast_admission'] for r in rows]),
+            'observed_children_mean_us': {name: stats.mean(r['observation']['elapsed_us'][i] for r in rows) for i, name in enumerate(names)},
+            'observed_minus_plain_us': summary([r['result']['observed']['whole_step_us']-r['result']['plain']['whole_step_us'] for r in rows])} if rows else {}
+
+pins_path = HERE/'source-pins.json'
+pins = json.loads(pins_path.read_text())
+verify(len(pins['source_hashes']) == 337, 'source inventory')
+for resource, digest in pins['source_hashes'].items():
+    verify(sha(ROOT/resource.removeprefix('res://')) == digest, resource)
+report = {'schema': 'hex.casting-stage-independent-readback.v1', 'status': 'attribution_only', 'runs': {}}
+for name in RUNS:
+    folder = HERE/'runs'/name
+    record = json.loads((folder/'receipt.json').read_text())
+    runner = json.loads((folder/'runner.json').read_text())
+    verify(record['passed'] and not record['errors'] and runner['passed'], name+' pass')
+    verify(runner['helper_receipt_sha256'] == sha(folder/'receipt.json'), name+' link')
+    verify(record['source_hashes'] == pins['source_hashes'] and record['source_pins_sha256'] == sha(pins_path), name+' pins')
+    verify(runner['runner_sha256'] == sha(HERE/'run-stage.ps1'), name+' runner')
+    verify(record['admissions'] == record['releases'] == 1 and record['refusals'] == 0, name+' paid')
+    verify(record['flight_seen'] and record['ground_seen'], name+' actual flight/ground')
+    verify(record['cleanup'] == {'created':2,'ended':2,'live_worlds':0,'live_courts':0,'factory_live':False}, name+' cleanup')
+    for relative, digest in runner['logs'].items():
+        path = folder/relative
+        verify(sha(path) == digest, name+' log')
+        if path.name.endswith('.err'): verify(path.stat().st_size == 0, name+' stderr')
+    for i, row in enumerate(record['rows']):
+        verify(row['tick_before'] == i and row['tick_after'] == i+1 and row['index'] == i, name+' continuity')
+        expected = ['observed','plain'] if ((i%2 == 0) != record['reverse_order']) else ['plain','observed']
+        verify(row['order'] == expected, name+' order')
+        verify(row['result'][expected[0]]['serial'] == 2*i+1 and row['result'][expected[1]]['serial'] == 2*i+2, name+' serial')
+        children = sum(row['observation']['elapsed_us'])
+        parent = row['result']['observed']['stages_us']['movement_cast_admission']
+        verify(children == row['child_sum_us'] and children <= parent, name+' nested clocks')
+        verify(not row['observation']['unfinished_interval'], name+' closed intervals')
+        for arm in ['plain','observed']:
+            verify(row['result'][arm]['success'] and not row['result'][arm]['last_error'], name+' step')
+            if row['timed']: verify(row['result'][arm]['stages_us']['movement_cast_admission'] <= row['result'][arm]['whole_step_us'], name+' whole clock')
+        if i: verify(row['actor_before_sha256'] == record['rows'][i-1]['actor_after_sha256'], name+' actor trace')
+        verify(row['matter_paid'] == 600 and row['cumulative_completed'] == i+1, name+' finite accounting')
+    rows = [r for r in record['rows'] if r['timed']]
+    names = record['child_names']
+    result = {'receipt_sha256':sha(folder/'receipt.json'), 'helper_checks':record['checks'],
+              'ticks':len(record['rows']), 'first_flight_tick':record['first_flight_tick'], 'first_ground_tick':record['first_ground_tick'],
+              'continuation_ticks':record['continuation_ticks'], 'all_timed':summarize(rows,names),
+              'after_first_four':summarize([r for r in rows if not r['first_four_initial']],names),
+              'ground_present_including_first_impact':summarize([r for r in rows if r['occupied']>0],names),
+              'actual_release_rows':summarize([r for r in rows if any(e.get('type')=='projectile_spawned' for e in r['events'])],names),
+              'order':{arm:summarize([r for r in rows if r['order'][0]==arm],names) for arm in ['plain','observed']}}
+    report['runs'][name] = result
+report['checks'] = checks
+report['limits'] = 'Five-actor single-cast evolving source simulation. Added observer costs and actual-order effects are included. No whole-game, GPU, FPS, input latency, human-feel or optimization benefit claim. Ground-present includes first-impact work. One release per process cannot define a tail distribution.'
+analysis_path = HERE/'analysis-all-a.json'
+with analysis_path.open('x', encoding='utf-8') as handle: json.dump(report, handle, indent=2); handle.write('\n')
+verify(json.loads(analysis_path.read_text()) == report, 'analysis readback')
+
+verify(not DEST.exists(), 'fresh archive')
+DEST.mkdir(parents=True)
+files = []
+def copy(source, relative):
+    target = DEST/relative
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with target.open('xb') as handle: handle.write(source.read_bytes())
+    verify(sha(target) == sha(source), relative)
+    files.append({'path':relative,'sha256':sha(target),'bytes':target.stat().st_size,'origin':source.relative_to(ROOT).as_posix()})
+for leaf in ['compare-stages.gd','observed_world.gd','sim_world.before.gd','source-transform.json','source-pins.json','README.md','run-stage.ps1','freeze-inputs.py']:
+    copy(HERE/leaf, 'inputs/'+leaf+('.txt' if leaf.endswith(('.gd','.py')) else ''))
+for leaf in ['analysis-all-a.json','experience-fire-review-a.json','analyze-and-archive.py']:
+    copy(HERE/leaf, 'analysis/'+leaf+('.txt' if leaf.endswith('.py') else ''))
+for run in RUNS:
+    for leaf in ['receipt.json','runner.json']: copy(HERE/'runs'/run/leaf, 'runs/'+run+'/'+leaf)
+    for suffix in ['.log','.log.err','-parse.log','-parse.log.err']: copy(HERE/'runs'/(run+suffix), 'runs/'+run+suffix)
+for leaf in ['root-parse-a.log','root-parse-a.log.err','root-parse-b.log','root-parse-b.log.err']:
+    copy(HERE/leaf, 'setup/'+leaf)
+for source in sorted((HERE/'parse-failed-1').iterdir()):
+    if source.is_file(): copy(source,'setup/parse-failed-1/'+source.name+'.txt')
+lines = ['# Casting stage attribution: no runtime change', '',
+         'Four native source runs through the desktop launcher passed exact paid-event, actor, state-boundary and cleanup checks. Each uses a real Fire or all-six Mantle cast with five authored actors. Both arms retain the existing profiler; one adds seven disjoint child intervals.', '',
+         '| Case | Steps / checks | First ground tick | Whole plain mean, after first four | Observed movement mean, after first four |',
+         '|---|---:|---:|---:|---:|']
+for name, r in report['runs'].items():
+    s=r['after_first_four']
+    lines.append(f"| {name} | {r['ticks']} / {r['helper_checks']} | {r['first_ground_tick']} | {s['plain_whole_us']['mean']:.1f} us | {s['observed_children_mean_us']['movement']:.1f} us |")
+lines += ['', 'Movement is the largest measured child in the repeated ordinary steps. This motivates testing a narrow stationary-velocity fast path while preserving all surrounding movement, recovery and status processing. The observation alone does not qualify that candidate.', '',
+          'Actual callback order changes apparent observer overhead; negative paired overhead is an order/cache effect, not an optimization. Release and first-impact rows are retained separately. The short probe does not recreate the accumulated field or full application load of the earlier foreground recording. No portable FPS, smooth-gameplay, GPU/present or physical-input claim follows.', '',
+          '[analysis/analysis-all-a.json](analysis/analysis-all-a.json) preserves numerical strata; the original receipts retain all rows. The first strict parse failed because a local variable needed an explicit type; both failed and corrected parser logs are preserved. The qualified runtime and launcher selection remain p61-64590c45c7a5.', '',
+          'The manifest records exact source origins and every payload hash. Source scripts are archived as text; engine data, executable builds and isolated user profiles are excluded.']
+readme=DEST/'README.md'
+readme.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+files.append({'path':'README.md','sha256':sha(readme),'bytes':readme.stat().st_size,'origin':'root archival interpretation'})
+manifest={'schema':'hex.evidence-archive.v1','runtime_build_id':'p61-64590c45c7a5','status':'attribution_only_no_runtime_change','files':files,'payload_count':len(files),'payload_bytes':sum(x['bytes'] for x in files)}
+with (DEST/'manifest.json').open('x',encoding='utf-8') as handle: json.dump(manifest,handle,indent=2);handle.write('\n')
+for row in files: verify(sha(DEST/row['path']) == row['sha256'], row['path'])
+verify(len(list(DEST.rglob('*'))) - sum(p.is_dir() for p in DEST.rglob('*')) == len(files)+1,'exact inventory')
+print(json.dumps({'checks':checks,'archive':str(DEST),'payload_count':len(files),'payload_bytes':manifest['payload_bytes'],'manifest_sha256':sha(DEST/'manifest.json')}))

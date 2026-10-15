@@ -1,0 +1,23 @@
+extends SanctumCampusRenderer
+## Fixture-only adapter. All unselected buildings/layers use the exact source renderer.
+const ArchitectureSkin = preload("res://.godot/iteration-20261013/architecture-prototype/architecture_skin.gd")
+var original: SanctumCampusRenderer
+var prototype := ArchitectureSkin.new()
+var enabled := false
+
+func bind(source: SanctumCampusRenderer, layout: SanctumCampusLayout) -> bool:
+	original = source
+	language = source.language
+	natural_kit = source.natural_kit
+	illustrated_kit = source.illustrated_kit
+	environment_details = source.environment_details
+	return prototype.prepare(illustrated_kit, layout)
+
+func draw_retained_layer(canvas: CanvasItem, layout: SanctumCampusLayout, layer: int, tick: int, focus: Vector2, reduced: bool, titles: bool, visible: Rect2, details: bool, context: String) -> void:
+	if not enabled or layer != 2:
+		original.draw_retained_layer(canvas, layout, layer, tick, focus, reduced, titles, visible, details, context)
+		return
+	if illustrated_kit == null or not illustrated_kit.ground_ready() or layout == null or illustrated_kit.campus != layout: return
+	for value: Variant in layout.data.get("buildings", []):
+		var building: Dictionary = value
+		if visible_in_world_rect(building_visual_bounds(building), visible): prototype.draw(canvas, illustrated_kit, building, focus)

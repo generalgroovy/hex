@@ -78,6 +78,8 @@ func _test_catalog_and_access() -> void:
 	progress.preserve_existing(PackedInt32Array([preserved]))
 	check(progress.can_equip(preserved), "existing valid saved spell survives new progression")
 	equal(progress.learned_ids().size(), 0, "preservation is not a fabricated victory")
+	check(progress.view().learning_path.earned_reuse.is_empty(), "preserved equip permission is not a genuinely earned lesson")
+	check(not _challenge_guidance(progress, String(rows[0].id)).contains(String(Progress.LearningPath.LESSONS[1].reuse)), "preserved-only spell card cannot claim an earned lesson")
 	check(String(progress.view().characters).contains("already available"), "no invented character grind")
 
 
@@ -95,6 +97,10 @@ func _test_persistence() -> void:
 	progress.fail_primary = true
 	reward = progress.record_victory("s_wayne")
 	check(bool(reward.ok) and not bool(reward.saved) and progress.dirty, "failed replacement retains session unlock and dirty status")
+	var unsaved_before := progress.to_dictionary().duplicate(true)
+	check(_challenge_guidance(progress, "s_wayne").contains(String(Progress.LearningPath.LESSONS[2].reuse)), "genuinely session-earned tool keeps its reuse advice before save succeeds")
+	check(progress.dirty and not bool(reward.saved), "reading learned advice never upgrades the unsaved reward receipt")
+	equal(progress.to_dictionary(), unsaved_before, "guidance never grants or removes progression")
 	equal(FileAccess.get_file_as_bytes(path), original, "failed replacement keeps exact original")
 	equal(FileAccess.get_file_as_bytes(path + Progress.BACKUP_SUFFIX), original, "first replacement keeps byte-exact backup")
 	progress.fail_primary = false
@@ -253,6 +259,9 @@ func _test_learning_journey() -> void:
 		check(bool(guidance.optional),"suggested order never invents an unlock gate")
 		var row := Challenges.definition(String(lesson.id),champions,abilities)
 		check(not progress.can_equip(int(row.signature_wire)),"journey does not pre-unlock its reward")
+		var before_text := _challenge_guidance(progress, String(lesson.id))
+		check(before_text.contains("Recommended next: " + String(row.name) + ". Learn " + String(row.spell_name) + "."), "next objective asks to learn the still-locked signature")
+		check(not before_text.contains(String(lesson.reuse)), "unearned recommendation does not tell the player to equip that reward")
 		var result := _complete_encounter(row,progress,true,coach)
 		visited[String(result.district_id)] = true
 		equal(result.phase,"victory","ordinary paid lesson encounter reaches a genuine victory: "+String(row.id))
@@ -261,16 +270,39 @@ func _test_learning_journey() -> void:
 		check(reloaded.configure(champions,abilities,path,true),"earned lesson is read from the actual saved profile")
 		equal(reloaded.learned_ids().size(),index+1,"reload preserves each real victory once")
 		check(reloaded.can_equip(int(row.signature_wire)),"earned spell passes ordinary equip availability after reload")
+		var saved_bytes := FileAccess.get_file_as_bytes(path)
+		check(_challenge_guidance(reloaded, String(lesson.id)).contains(String(lesson.reuse)), "selected actually earned/reloaded tool retains its own concrete reuse objective")
+		equal(FileAccess.get_file_as_bytes(path), saved_bytes, "reading advice cannot rewrite the genuine earned save")
 		_test_learned_paid_cast(row,reloaded)
 		progress = reloaded
 	var complete: Dictionary = progress.view().learning_path
 	check(bool(complete.complete) and complete.next.is_empty(),"three earned lessons complete the optional route")
+	equal(complete.earned_reuse.size(), 3, "guidance remains bounded to the three authored lessons")
+	for lesson: Dictionary in Progress.LearningPath.LESSONS:
+		var text := _challenge_guidance(progress, String(lesson.id))
+		check(text.contains(String(lesson.reuse)), "finishing the route preserves each selected learned tool's reuse")
+		check(not text.contains("Recommended next:"), "complete route does not invent a fourth required rival")
 	equal(Challenges.rows(champions,abilities).size(),30,"learning route retains all existing selectable rivals")
 	equal(visited.size(),3,"three lesson victories occur in three actual collision districts")
 	check(coach.complete and not coach.active,"joined optional lessons observe a real chain, mixed hit, protected rival crossing and earned saved result without advancing lesson state by hand; final="+JSON.stringify(coach.view()))
 	var detached: Dictionary = progress.view().learning_path
 	detached.title = "edited"
+	detached.earned_reuse.clear()
+	equal(progress.view().learning_path.earned_reuse.size(), 3, "caller edits cannot erase earned reuse guidance")
 	check(String(progress.view().learning_path.title)!="edited","view edits cannot rewrite authored lesson text")
+
+
+func _challenge_guidance(progress: SignatureProgression, id: String) -> String:
+	var panel := SpellTestingPanel.new()
+	check(panel.open_challenges(champions, abilities, progress), "guidance uses the production challenge model")
+	var selected := false
+	for index: int in panel._rows.size():
+		if String(panel._rows[index].id) == id:
+			panel.selected_index = index
+			selected = true
+			break
+	check(selected, "guidance selects the actual rival ID rather than display order")
+	return "\n".join(panel.challenge_paragraphs())
 
 
 func _prepare_joined_tutorial() -> OptionalIntroduction:

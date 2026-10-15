@@ -1,0 +1,149 @@
+extends RefCounted
+## Prepared direct-call compatibility controls, not paid route or timing evidence.
+const CharacterPerks = preload("res://src/content/character_perk_catalog.gd")
+
+class ActorProbe extends PlayerState:
+	var airborne_calls: int = 0
+	func is_airborne() -> bool:
+		airborne_calls += 1
+		return super.is_airborne()
+
+class ConfigProbe extends SimConfig:
+	var per_tick_calls: int = 0
+	func per_tick(value_per_second: int) -> int:
+		per_tick_calls += 1
+		return super.per_tick(value_per_second)
+
+
+static func run(reference_script: Script, candidate_script: Script) -> Dictionary:
+	var result: Dictionary = {"passed": false, "errors": [], "checks": 0, "cases": []}
+	_check(result, reference_script != null and candidate_script != null, "Both concrete movement scripts exist")
+	if not result.errors.is_empty(): return result
+	var specs: Array[Dictionary] = [
+		{"label": "fractional_recovery"},
+		{"label": "no_recovery", "allow_recovery": false},
+		{"label": "delayed_recovery", "delay": 3},
+		{"label": "blocked_recovery", "blocked": 4},
+		{"label": "zero_recovery", "rate": 0},
+		{"label": "capped_recovery", "at_cap": true},
+		{"label": "preserve_idle", "preserve_idle": true, "stale_sprint": true},
+		{"label": "stale_sprint_held", "stale_sprint": true, "held": SimCommand.HELD_SPRINT},
+		{"label": "idle_ratios_and_minimum", "minimum": 900000, "ground": 1, "acceleration": 1, "braking": 1, "slow": true},
+		{"label": "pending_cast", "champion": "urzh", "pending": true},
+		{"label": "stationary_recovery_perk", "champion": "nico_lai", "low_flux": true},
+		{"label": "crouched_recovery_perk", "champion": "h_le_ne", "crouch": true},
+		{"label": "idle_ramp", "idle_age": 120, "rate": 12001},
+		{"label": "carry_velocity", "velocity": 400000},
+		{"label": "fresh_motion", "move": 1000},
+		{"label": "counterstrafe_landing", "move": 1000, "velocity": -200000, "landing": true},
+		{"label": "fractional_sprint_refusal", "move": 1000, "held": SimCommand.HELD_SPRINT, "near_empty": true},
+		{"label": "derived_actor", "actor_probe": true, "champion": "oh_tipi"},
+		{"label": "derived_config", "config_probe": true},
+		{"label": "derived_both", "actor_probe": true, "config_probe": true, "champion": "oh_tipi"},
+	]
+	for spec: Dictionary in specs:
+		_case(reference_script, candidate_script, spec, result)
+	result.passed = result.errors.is_empty()
+	return result
+
+
+static func _case(reference_script: Script, candidate_script: Script, spec: Dictionary, result: Dictionary) -> void:
+	var label := String(spec.label)
+	var actors: Array[PlayerState] = [_actor(spec), _actor(spec), _actor(spec)]
+	var configs: Array[SimConfig] = [_config(spec), _config(spec), _config(spec)]
+	var before: PackedInt64Array = actors[0].canonical_values()
+	var before_stamina: int = actors[0].stamina
+	var before_remainder: int = actors[0].stamina_remainder
+	_check(result, before == actors[1].canonical_values() and before == actors[2].canonical_values(), label + ": identical fresh prepared actors")
+	var input_move := int(spec.get("move", 0))
+	var held := int(spec.get("held", 0))
+	var recovery := bool(spec.get("allow_recovery", true))
+	var minimum := int(spec.get("minimum", 0))
+	var preserve := bool(spec.get("preserve_idle", false))
+	var ground := int(spec.get("ground", 1000))
+	var acceleration := int(spec.get("acceleration", 1000))
+	var braking := int(spec.get("braking", 1000))
+	for index: int in 4:
+		var command := SimCommand.new(index, 1, input_move, 0, held)
+		var input_before: PackedByteArray = command.canonical_bytes()
+		MovementSystem._apply_ground_velocity(actors[0], command, Vector2i(1000, 0), configs[0], recovery, minimum, preserve, ground, acceleration, braking)
+		reference_script._apply_ground_velocity(actors[1], command, Vector2i(1000, 0), configs[1], recovery, minimum, preserve, ground, acceleration, braking)
+		candidate_script._apply_ground_velocity(actors[2], command, Vector2i(1000, 0), configs[2], recovery, minimum, preserve, ground, acceleration, braking)
+		_check(result, actors[0].canonical_values() == actors[1].canonical_values() and actors[0].canonical_values() == actors[2].canonical_values(), "%s/%d: all canonical actor lanes equal" % [label, index])
+		_check(result, actors[0].last_event == actors[1].last_event and actors[0].last_event == actors[2].last_event, "%s/%d: event equal" % [label, index])
+		_check(result, command.canonical_bytes() == input_before, "%s/%d: input unchanged" % [label, index])
+		if bool(spec.get("actor_probe", false)):
+			var ordinary_calls: int = (actors[0] as ActorProbe).airborne_calls
+			_check(result, ordinary_calls == (actors[1] as ActorProbe).airborne_calls and ordinary_calls == (actors[2] as ActorProbe).airborne_calls and ordinary_calls > 0, "%s/%d: derived actor virtual calls preserved" % [label, index])
+		if bool(spec.get("config_probe", false)):
+			_check(result, (configs[0] as ConfigProbe).per_tick_calls == index + 1 and (configs[1] as ConfigProbe).per_tick_calls == index + 1 and (configs[2] as ConfigProbe).per_tick_calls == index + 1, "%s/%d: derived config virtual call retained" % [label, index])
+	var actual: PlayerState = actors[2]
+	if input_move == 0 and int(spec.get("velocity", 0)) == 0:
+		_check(result, actual.velocity_x == 0 and actual.velocity_y == 0 and not actual.sprinting, label + ": stationary remains motionless and clears sprint")
+	if label == "fractional_recovery":
+		_check(result, actual.stamina == before_stamina + 5 and actual.stamina_remainder == 3, "Independent 4-call integer recovery/remainder oracle")
+	if label in ["no_recovery", "delayed_recovery", "blocked_recovery", "zero_recovery", "preserve_idle"]:
+		_check(result, actual.stamina == before_stamina and actual.stamina_remainder == before_remainder, label + ": no accidental recovery")
+	if label == "capped_recovery":
+		_check(result, actual.stamina == actual.stamina_maximum and actual.stamina_remainder == 3, "Capped resource still maintains fractional remainder")
+	if label == "stationary_recovery_perk":
+		_check(result, actual.stamina == before_stamina + 4 and actual.stamina_remainder == 71, "Actual stationary identity recovery ratio remains applied")
+	if label == "fresh_motion":
+		_check(result, actual.velocity_x > 0, "Nonzero input still accelerates")
+	if label == "carry_velocity":
+		_check(result, actual.velocity_x > 0 and actual.velocity_x < int(spec.velocity), "Nonzero carry velocity still brakes")
+	if label == "counterstrafe_landing":
+		_check(result, actual.landing_ticks == 0 and actual.last_event == "landing_cut", "Real opposing movement retains landing cut")
+	if label == "fractional_sprint_refusal":
+		_check(result, not actual.sprinting, "Near-empty fractional sprint remains refused on first call and bounded continuation")
+	result.cases.append({"label": label, "direct_calls_per_arm": 4, "champion_wire_id": actual.champion_wire_id,
+		"stamina_before": before_stamina, "stamina_after": actual.stamina, "remainder_after": actual.stamina_remainder,
+		"velocity": [actual.velocity_x, actual.velocity_y], "last_event": actual.last_event,
+		"actor_virtual_calls": int(actual.get("airborne_calls")) if bool(spec.get("actor_probe", false)) else 0,
+		"config_virtual_calls": int(configs[2].get("per_tick_calls")) if bool(spec.get("config_probe", false)) else 0})
+
+
+static func _actor(spec: Dictionary) -> PlayerState:
+	var actor: PlayerState
+	if bool(spec.get("actor_probe", false)): actor = ActorProbe.new(1)
+	else: actor = PlayerState.new(1)
+	actor.stamina = 100000
+	actor.stamina_remainder = 119
+	actor.stamina_recovery_per_second = int(spec.get("rate", 121))
+	actor.stamina_recovery_idle_ticks = int(spec.get("idle_age", 0))
+	actor.stamina_recovery_delay_ticks = int(spec.get("delay", 0))
+	actor.chemistry_regen_block_ticks = int(spec.get("blocked", 0))
+	actor.sprinting = bool(spec.get("stale_sprint", false))
+	actor.crouching = bool(spec.get("crouch", false))
+	actor.velocity_x = int(spec.get("velocity", 0))
+	if bool(spec.get("at_cap", false)): actor.stamina = actor.stamina_maximum
+	if bool(spec.get("near_empty", false)):
+		actor.stamina = 1
+		actor.stamina_remainder = -119
+		actor.stamina_recovery_delay_ticks = 1
+	if bool(spec.get("slow", false)):
+		actor.control_state = PlayerState.ControlState.SLOWED
+		actor.control_ticks = 8
+		actor.slow_ratio = 700
+	if bool(spec.get("landing", false)):
+		actor.landing_ticks = 3
+		actor.landing_intensity = 500
+	if bool(spec.get("pending", false)):
+		actor.pending_cast_wire_id = 145
+		actor.pending_cast_ticks = 12
+	var champion := String(spec.get("champion", ""))
+	for index: int in CharacterPerks.ROWS.size():
+		if String(CharacterPerks.ROWS[index].champion_id) == champion:
+			actor.champion_wire_id = index + 1
+	if bool(spec.get("low_flux", false)): actor.flux = 1
+	return actor
+
+
+static func _config(spec: Dictionary) -> SimConfig:
+	if bool(spec.get("config_probe", false)): return ConfigProbe.new(120)
+	return SimConfig.new(120)
+
+
+static func _check(result: Dictionary, condition: bool, label: String) -> void:
+	result.checks = int(result.checks) + 1
+	if not condition: result.errors.append(label)

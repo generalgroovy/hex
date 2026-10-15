@@ -1,0 +1,131 @@
+extends RefCounted
+## Prepared classification and compatibility controls only. The native driver
+## supplies paid product, draw, pixel, threat-readability and timing evidence.
+const CandidateCourt = preload("res://.godot/iteration-20261014/conflagration-next/candidate_court.gd")
+const Quality = preload("res://src/presentation/render_quality.gd")
+const BaseMarks = preload("res://src/presentation/retro_material_marks.gd")
+
+class DerivedCourt extends CandidateCourt:
+	pass
+
+class DerivedLanguage extends VisualLanguage:
+	pass
+
+class DerivedMarks extends "res://src/presentation/retro_material_marks.gd":
+	pass
+
+
+static func run(language: VisualLanguage) -> Dictionary:
+	var result: Dictionary = {"passed": false, "checks": 0, "errors": [], "cases": []}
+	var prior_quality: String = Quality.profile
+	var candidate := CandidateCourt.new()
+	# Prepared metadata tests do not configure/load native art or draw anything.
+	candidate._language = language
+	_check(result, language != null and language.get_script() == VisualLanguage, "Exact shared language supplied")
+	Quality.set_profile("standard")
+	_check(result, not candidate._coalescing_enabled("conflagration"), "Standard retains original draw path")
+	Quality.set_profile("low")
+	_check(result, candidate._coalescing_enabled("conflagration"), "Exact Low presenter/language/marks is eligible")
+	_check(result, not candidate._coalescing_enabled("fire") and not candidate._coalescing_enabled("steam") and not candidate._coalescing_enabled("flood"), "Other materials retain their original draw path")
+	var derived := DerivedCourt.new()
+	derived._language = language
+	_check(result, not derived._coalescing_enabled("conflagration"), "Derived presenter retains virtual predecessor dispatch")
+	candidate._language = DerivedLanguage.new()
+	_check(result, not candidate._coalescing_enabled("conflagration"), "Derived language retains all original calls")
+	candidate._language = language
+	var original_marks: BaseMarks = candidate.retro_marks
+	candidate.retro_marks = DerivedMarks.new()
+	_check(result, not candidate._coalescing_enabled("conflagration"), "Derived marks retains all original calls")
+	candidate.retro_marks = original_marks
+	_check(result, candidate._coalescing_enabled("conflagration"), "Original exact dependencies restore eligibility")
+	result.cases.append({"label": "quality_and_dependency_gates", "scope": "Admission predicate; Standard draw parity is native-gated; derived dispatch is predicate/source-reviewed"})
+
+	_case(candidate, [], [], "empty", result)
+	_case(candidate, [_row(11)], [], "single", result)
+	var six: Array = []
+	for index: int in 6: six.append(_row(101 + index))
+	_case(candidate, six, [0, 1, 2, 3, 4], "six_same_cell_last_seed_survives", result)
+	_check(result, int(six[5].footprint_id) == 106, "Representative retains the existing last seed, not a new aggregate seed")
+	# Matching is local to this cell's supplied row list, not retained globally.
+	_case(candidate, [_row(101)], [], "other_cell_independent_single", result)
+	_case(candidate, six, [0, 1, 2, 3, 4], "same_rows_reentry", result)
+
+	for field: String in ["owner_key", "direction", "danger", "intensity", "polygon", "phase", "material"]:
+		var distinct := _row(22)
+		match field:
+			"owner_key": distinct.owner_key = 2
+			"direction": distinct.direction = Vector2i(0, 1000)
+			"danger": distinct.danger = true
+			"intensity": distinct.intensity = 1001
+			"polygon": distinct.polygon = PackedVector2Array([Vector2(1, 0), Vector2(40, 0), Vector2(20, 40)])
+			"phase": distinct.phase = "forming"
+			"material": distinct.material = "fire"
+		_case(candidate, [_row(21), distinct, _row(23)], [0], "separate_" + field, result)
+	var reversed := _row(24)
+	reversed.polygon = PackedVector2Array([Vector2(20, 40), Vector2(40, 0), Vector2(0, 0)])
+	_case(candidate, [_row(21), reversed], [], "same_triangle_different_vertex_order_retained", result)
+
+	var phases: Array = [_row(31), _row(32), _row(33), _row(34)]
+	phases[1].phase = "forming"
+	phases[2].phase = "decaying"
+	_case(candidate, phases, [0], "forming_and_decaying_marks_retained", result)
+	# Explicit prepared lifecycle metadata changes. Actual natural expiry is a
+	# separate paid native-driver witness; this tests no stale classification.
+	six[5].phase = "decaying"
+	_case(candidate, six, [0, 1, 2, 3], "last_active_retires_previous_live_seed_survives", result)
+	six.pop_back()
+	_case(candidate, six, [0, 1, 2, 3], "expired_row_removed", result)
+	for region: Dictionary in six: region.phase = "decaying"
+	_case(candidate, six, [], "all_decaying_no_active_coalescing", result)
+	six = [_row(201), _row(202)]
+	_case(candidate, six, [0], "new_products_after_retirement", result)
+	# Current seed and timing are intentionally not deduplicated authority. The
+	# later row alone supplies its original decorative seed; every fill remains.
+	six[0].active_tick = 10; six[0].expiry_tick = 100
+	six[1].active_tick = 20; six[1].expiry_tick = 200
+	_case(candidate, six, [0], "staggered_active_metadata_same_classification", result)
+
+	for invalid: String in ["owner_dictionary", "owner_float", "danger_int", "intensity_float", "direction_float", "polygon_array"]:
+		var custom := _row(41)
+		match invalid:
+			"owner_dictionary": custom.owner_key = {"team": 1}
+			"owner_float": custom.owner_key = 1.0
+			"danger_int": custom.danger = 0
+			"intensity_float": custom.intensity = 1000.0
+			"direction_float": custom.direction = Vector2(1000, 0)
+			"polygon_array": custom.polygon = [Vector2(0, 0), Vector2(40, 0), Vector2(20, 40)]
+		_case(candidate, [custom, custom.duplicate(true)], [], "unsupported_" + invalid, result)
+	var readonly: Array = [_row(51), _row(52)]
+	for row: Dictionary in readonly: row.make_read_only()
+	readonly.make_read_only()
+	_case(candidate, readonly, [0], "readonly_input_metadata", result)
+	Quality.set_profile(prior_quality)
+	_check(result, Quality.profile == prior_quality, "Shared quality preference restored")
+	result.passed = result.errors.is_empty()
+	return result
+
+
+static func _row(footprint_seed: int) -> Dictionary:
+	return {"phase": "active", "material": "conflagration", "owner_key": 1,
+		"polygon": PackedVector2Array([Vector2(0, 0), Vector2(40, 0), Vector2(20, 40)]),
+		"direction": Vector2i(1000, 0), "danger": false, "intensity": 1000, "footprint_id": footprint_seed}
+
+
+static func _case(candidate: RefCounted, rows: Array, expected: Array, label: String, result: Dictionary) -> void:
+	var before := var_to_bytes(rows)
+	var skipped: Dictionary = candidate._coalesced_active_indices(rows)
+	var indices: Array = skipped.keys()
+	indices.sort()
+	_check(result, indices == expected, label + ": only declared earlier decorative indices omitted")
+	for index: int in indices:
+		_check(result, typeof(skipped[index]) == TYPE_BOOL and skipped[index] == true and index >= 0 and index < rows.size(), label + ": bounded Boolean omission entry")
+	_check(result, var_to_bytes(rows) == before, label + ": input metadata and original seed order unchanged")
+	var survivors: Array[int] = []
+	for index: int in rows.size():
+		if not skipped.has(index): survivors.append(int(rows[index].footprint_id))
+	result.cases.append({"label": label, "rows": rows.size(), "skipped_indices": indices, "retained_seeds": survivors})
+
+
+static func _check(result: Dictionary, condition: bool, label: String) -> void:
+	result.checks = int(result.checks) + 1
+	if not condition: result.errors.append(label)

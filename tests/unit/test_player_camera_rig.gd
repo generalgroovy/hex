@@ -1,5 +1,15 @@
 extends FluxTestSuite
 
+# Never enters the tree: use the real preference admission and camera policy
+# without loading art, changing global frame caps, or writing a player profile.
+class PreferenceHarness:
+	extends "res://src/app/bootstrap.gd"
+	func _apply_performance_preferences() -> void:
+		pass
+	func _save_player_preferences_if_persistent() -> bool:
+		return true
+
+
 const Rig = preload("res://src/presentation/player_camera_rig.gd")
 const VIEW := Vector2(1280, 720)
 const WORLD := Rect2(0, 0, 3072, 2304)
@@ -11,6 +21,7 @@ func run() -> int:
 	_test_time_partition_independence()
 	_test_gentle_framing()
 	_test_lifecycle()
+	_test_independent_camera_policy()
 	_test_input_transform()
 	_test_visible_world_rect()
 	_test_arrow()
@@ -68,7 +79,7 @@ func _test_lifecycle() -> void:
 	equal(rig.framing_offset, Vector2.ZERO, "teleport snaps rather than sweeping across intervening rooms")
 	rig.advance(FEET + Vector2(500, 0), Vector2(400, 0), Vector2.RIGHT, 1.0, VIEW, WORLD)
 	rig.advance(FEET + Vector2(500, 0), Vector2(400, 0), Vector2.RIGHT, 0.01, VIEW, WORLD, 112.0, true)
-	equal(rig.framing_offset, Vector2.ZERO, "reduced-motion mode is stable player following without lead")
+	equal(rig.framing_offset, Vector2.ZERO, "disabled look-ahead is stable player following without lead")
 	rig.advance(FEET, Vector2.ZERO, Vector2.RIGHT, 0.1, VIEW, WORLD, 112.0, false, false, true)
 	equal(rig.origin, Rig.clamped_origin(FEET, VIEW, WORLD), "explicit spectator/respawn focus change snaps immediately")
 	before = rig.origin
@@ -76,6 +87,44 @@ func _test_lifecycle() -> void:
 	equal(rig.origin, before, "non-finite input never poisons camera state")
 	rig.clear()
 	check(not rig.initialized, "scene reset releases camera history")
+
+
+func _test_independent_camera_policy() -> void:
+	var game := PreferenceHarness.new()
+	check(game._camera_look_ahead_enabled(), "unconfigured presentation retains default camera lead")
+	game.player_preferences = PlayerPreferences.new()
+	for reduced: bool in [false, true]:
+		game.player_preferences.reduced_motion = reduced
+		for lead: bool in [false, true]:
+			check(game._change_performance_preferences({"camera_look_ahead": lead}), "existing display-menu admission accepts the camera setting")
+			equal(game.player_preferences.reduced_motion, reduced, "camera menu admission leaves the effects choice intact")
+			equal(game._camera_look_ahead_enabled(), lead, "production camera policy follows its independent preference")
+			var rig := Rig.new()
+			rig.advance(FEET, Vector2.ZERO, Vector2.ZERO, 0.0, VIEW, WORLD)
+			rig.advance(FEET, Vector2(400, 0), Vector2.RIGHT, 0.5, VIEW, WORLD, 112.0, not game._camera_look_ahead_enabled())
+			check(rig.framing_offset.x > 0.0 if lead else rig.framing_offset == Vector2.ZERO, "camera framing matches the selected mode for either effects preference")
+			var point := FEET + Vector2(51, -33)
+			var screen := point * Rig.ZOOM + (-rig.origin * Rig.ZOOM).round()
+			check(Rig.screen_to_world(screen, rig.origin).is_equal_approx(point), "both camera modes keep the exact draw-to-aim inverse")
+	game.player_preferences.camera_look_ahead = true
+	game.requested_capture_reduced_effects = true
+	check(not game._camera_look_ahead_enabled(), "explicit reduced-effects diagnostic capture retains its historical neutral camera")
+	check(game.player_preferences.camera_look_ahead, "capture override never rewrites the saved player choice")
+	game.requested_capture_reduced_effects = false
+	check(game._camera_look_ahead_enabled(), "ending capture restores the independent player choice")
+	game.player_preferences = null
+	game.requested_capture_reduced_effects = true
+	check(not game._camera_look_ahead_enabled(), "capture override also works before preferences are assigned")
+	game.free()
+	var rig := Rig.new()
+	rig.advance(FEET, Vector2.ZERO, Vector2.ZERO, 0.0, VIEW, WORLD)
+	rig.advance(FEET, Vector2(400, 0), Vector2.RIGHT, 0.5, VIEW, WORLD)
+	check(rig.framing_offset.x > 0.0, "toggle fixture first owns a real accumulated lead")
+	rig.advance(FEET + Vector2(10, 0), Vector2(400, 0), Vector2.RIGHT, 0.0, VIEW, WORLD, 112.0, true)
+	equal(rig.framing_offset, Vector2.ZERO, "turning look-ahead off removes stale lead even on a zero-delta query")
+	equal(rig.origin, Rig.clamped_origin(FEET + Vector2(10, 0), VIEW, WORLD), "off mode follows the player's current feet without positional lag")
+	rig.advance(FEET + Vector2(10, 0), Vector2(400, 0), Vector2.RIGHT, 1.0 / 120.0, VIEW, WORLD)
+	check(rig.framing_offset.x > 0.0 and rig.framing_offset.length() * Rig.ZOOM < 1.9, "re-enabling lead grows from zero within the existing gentle bound")
 
 
 func _test_gentle_framing() -> void:

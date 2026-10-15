@@ -1,0 +1,72 @@
+{
+  "schema": "hex.membership-archive-review.v1",
+  "decision": "withdraw_unapplied",
+  "canonical_runtime": "p61-64590c45c7a5",
+  "canonical_changed": false,
+  "correctness_passed": true,
+  "performance_gate_passed": false,
+  "gate": "inputs/acceptance-before-timing.json",
+  "qualification": "runs/verify-functional-d/receipt.json",
+  "forward": "runs/probe-forward-c/receipt.json",
+  "reverse": "runs/probe-reverse-c/receipt.json",
+  "analysis": "analysis/paired-analysis-c.json",
+  "technical_review": "analysis/independent-review-c.json",
+  "failed_attempts": "failed-attempts.json",
+  "independent_gameplay_review": {
+    "checks": 6289,
+    "scope": "Independent raw recomputation without invoking analyzer:768 measured+96warmup pairs;88timing PNG readbacks;338 current input hashes; same functional linkage; per-row actual script/path/success/authority/cache/order; cross-process case coverage/render/hash/image equality and paid route outcomes; final logs and2/2viewport cleanup. Runtime complete packet/event equality is asserted by the native helper, not independently reconstructible from summarized receipt bytes.",
+    "primary_case_process_passes": 0,
+    "primary_case_process_total": 8,
+    "mean_savings_fraction_range": [
+      0.0031299639731163695,
+      0.017905832566380817
+    ],
+    "dense_reduced_order_savings_us": {
+      "forward": {
+        "plain_first": -155.5625,
+        "candidate_first": 254.5
+      },
+      "reverse": {
+        "plain_first": -55.375,
+        "candidate_first": 226.9375
+      }
+    },
+    "repeated_other_case_p95_regressions_over_5_percent": []
+  },
+  "paid_route_scope": {
+    "admissions": [
+      2,
+      12,
+      12,
+      2
+    ],
+    "refusals": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "matter_paid": [
+      1200,
+      7200,
+      7200,
+      1200
+    ],
+    "finite_ticks": [
+      1008,
+      816,
+      2717,
+      504
+    ],
+    "all_naturally_expired": true,
+    "mantle_snapshot_matter": 4200,
+    "note": "Readiness-spaced ordinary preparation differs from Profile B: all12 Mantle attempts admitted here; do not import Profile B refusal counts. Selected snapshot stock is distinct from full-route payment."
+  },
+  "limits": [
+    "Native main-thread elapsed draw submission, not thread CPU/GPU/present/FPS or a full-game speed result.",
+    "Shared-cache lifetime, invocation-order effects, phase-correlated small samples and low host available memory remain disclosed.",
+    "All warmups, maxima and tails retained; no pooled subset rescues missed predeclared thresholds.",
+    "Exact source files are archived as text, never promoted. Historical prepared-state README/manifest are immutable inputs, not current outcome statements.",
+    "No large production asset/source tree or user profile data copied."
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "schema": "hex.movement-ground-speed-archive-review.v1",
+  "decision": "withdrawn_unapplied",
+  "runtime": "p61-64590c45c7a5",
+  "canonical_changed": false,
+  "gate": {
+    "both_processes_required": true,
+    "minimum_paired_median_saving_per_step_us": 10,
+    "minimum_paired_median_fractional_saving": 0.01,
+    "repeatable_material_active_or_order_regression_disqualifies": true
+  },
+  "native_checks": {
+    "identity": 2542,
+    "fire_functional": 5145,
+    "fire_forward": 3958,
+    "fire_reverse": 3958
+  },
+  "independent_analysis_checks": 3739,
+  "technical_independent_review": {
+    "checks_reported": 2448,
+    "agreement": "stop_unapplied",
+    "scope": "Independent raw arithmetic, 342 current source pins, qualifier, commands/events, boundary state/payment/packet, order, 240 ticks and cleanup.",
+    "evidence_form": "Peer message; no separate report file claimed."
+  },
+  "result": {
+    "forward": {
+      "n": 48,
+      "completed_steps": 216,
+      "reference_mean_per_step_us": 1098.9401041666667,
+      "candidate_mean_per_step_us": 1087.6354166666667,
+      "paired_mean_saving_per_step_us": 11.3046875,
+      "paired_median_saving_per_step_us": 16.4375,
+      "paired_median_saving_fraction": 0.014649050010410669,
+      "median_saving_over_reference_median": 0.015405342080599812,
+      "reference_p95_per_step_us": 1499.0,
+      "candidate_p95_per_step_us": 1496.25,
+      "reference_max_per_step_us": 2241.25,
+      "candidate_max_per_step_us": 2231.25,
+      "reference_whole_group_p95_us": 11442,
+      "candidate_whole_group_p95_us": 10863,
+      "reference_total_us": 238159,
+      "candidate_total_us": 236506
+    },
+    "reverse": {
+      "n": 48,
+      "completed_steps": 216,
+      "reference_mean_per_step_us": 1080.4401041666667,
+      "candidate_mean_per_step_us": 1074.921875,
+      "paired_mean_saving_per_step_us": 5.518229166666667,
+      "paired_median_saving_per_step_us": 6.0625,
+      "paired_median_saving_fraction": 0.0068799449604403165,
+      "median_saving_over_reference_median": 0.005843373493975903,
+      "reference_p95_per_step_us": 1482.0,
+      "candidate_p95_per_step_us": 1424.75,
+      "reference_max_per_step_us": 1563.375,
+      "candidate_max_per_step_us": 1486.375,
+      "reference_whole_group_p95_us": 11139,
+      "candidate_whole_group_p95_us": 11398,
+      "reference_total_us": 230775,
+      "candidate_total_us": 230287
+    }
+  },
+  "reason": "Reverse paired median savings 6.0625 us and 0.6879945 percent fail both preset thresholds; invocation-order mean signs reverse in both processes.",
+  "paid_route": {
+    "ticks": 240,
+    "actors": 5,
+    "wire": 145,
+    "admissions": 2,
+    "releases": 2,
+    "refusals": 0,
+    "matter_paid": 1200,
+    "first_flight_tick": 9,
+    "first_ground_tick": 24
+  },
+  "proof_limits": [
+    "Thirty identities times ten prepared direct boundaries are separate from the paid five-actor trajectory.",
+    "Functional qualification compares full state, events and strict packets every tick; timing checks command/event trace each step and full state/packet at each contiguous group boundary.",
+    "One/eight-step positive groups each have one statistical weight after division by completed steps. Zero-step rows are excluded; warmups and verification tails remain separate.",
+    "Each process has only one measured admission group and one measured release group; endpoint flight/ground classification is not an interior-step activity classification.",
+    "No displayed frame, GPU, FPS, physical input, full Bootstrap process or player-feel claim.",
+    "No idle or Mantle qualification/timing was executed after the Fire early-stop decision.",
+    "The copied input README and manifest describe the frozen pre-execution checkpoint. This review records the completed outcome.",
+    "All four engine gates completed with empty stderr. Source-only runner admission hardening was reviewed before execution; no failed engine attempt is asserted."
+  ]
+}

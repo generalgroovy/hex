@@ -1,0 +1,181 @@
+func _case(label: String,reduced: bool,zoom: float,jitter: Vector2,timed: bool) -> bool:
+	var snapshot: Dictionary=snapshots[label]
+	var world := _world(FIRE)
+	if world==null or not _check(Packet.restore(snapshot.packet,world) and str(world.state_hash())==String(snapshot.state_hash),"Exact complete paid snapshot restore"): return false
+	var packet := var_to_bytes(Packet.capture(world));var events := var_to_bytes(world.combat_events);var state := world.state_hash()
+	for board: Board in [plain,candidate]:
+		board.active=false;board.world=world;board.reduced=reduced;board.zoom=zoom;board.focus=snapshot.focus;board.jitter=jitter
+		var frame: Dictionary=board.body.movement_frame("oh_tipi",world.player(),float(world.tick-1),world.config,reduced)
+		if not _check(bool(frame.get("fullbody",false)) and bool(frame.get("pixel_cast",false)),"Current fullbody pixel-cast actor context"):return false
+	await process_frame
+	if finished:return false
+	await process_frame
+	if finished:return false
+	RenderingServer.force_draw(false)
+	var rows: Array[Dictionary]=[];var warmups: Array[Dictionary]=[]
+	var cohort: Dictionary={}
+	for board: Board in [plain,candidate]:board.active=true
+	var total := PAIRS+WARMUPS if timed else 1
+	for index: int in total:
+		trace.clear()
+		var serial_plain := plain.serial;var serial_candidate := candidate.serial
+		var before_stats := {"plain":plain.presenter.outline_cache_stats(),"candidate":candidate.presenter.outline_cache_stats()}
+		var candidate_first := (index%2==0)!=reverse_order
+		var first: Board=candidate if candidate_first else plain;var second: Board=plain if candidate_first else candidate
+		root.move_child(candidate_view if candidate_first else plain_view,0)
+		first.queue_redraw();second.queue_redraw()
+		await process_frame
+		if finished:return false
+		await process_frame
+		if finished:return false
+		RenderingServer.force_draw(false)
+		var expected: Array=[first.role,second.role]
+		if not _check(trace==expected and plain.serial==serial_plain+1 and candidate.serial==serial_candidate+1,"Actual paired callback order"):return false
+		if not _check(bool(plain.last.okay) and bool(candidate.last.okay) and bool(plain.last.context_ok) and bool(candidate.last.context_ok)
+			and bool(plain.last.authority_unchanged) and bool(candidate.last.authority_unchanged) and world.state_hash()==state,"Ground/context drawing succeeds without authority writes"):return false
+		var after_stats := {"plain":plain.presenter.outline_cache_stats(),"candidate":candidate.presenter.outline_cache_stats()}
+		if not _check(after_stats.plain==after_stats.candidate,"Every boundary/cache/phase-mark counter remains equal"):return false
+		if index==0:
+			cohort=_cohort(world)
+			if not errors.is_empty():return false
+			if label=="six_active" and Quality.profile=="low":
+				if not _check(int(cohort.active_regions)==150 and int(cohort.cells)==25 and skipped_count==125 and int(cohort.retained_active)==25,"Actual dense150→25 decorations, matching current integer owner/danger/intensity/direction"):return false
+			if label=="one_product" and not _check(int(cohort.active_products)==1 and skipped_count==0,"Actual single-product negative"):return false
+			if label=="active_with_flight" and not _check(world.projectiles.size()>0 and int(cohort.active_products)>0,"Actual surviving paid projectile beside active field"):return false
+			if Quality.profile=="standard" and not _check(skipped_count==0,"Standard draws complete original decoration"):return false
+		if not _check(int(plain.last.mark_draws)-int(candidate.last.mark_draws)==skipped_count,"Actual retained flame submissions fall only by declared omissions"):return false
+		var row := {"index":index,"actual_order":trace.duplicate(),"plain":plain.last.duplicate(true),"candidate":candidate.last.duplicate(true),
+			"cache_before":before_stats,"cache_after":after_stats,"new_topologies":int(after_stats.plain.topology_builds)-int(before_stats.plain.topology_builds),"new_meshes":int(after_stats.plain.uploads)-int(before_stats.plain.uploads)}
+		if timed and index<WARMUPS:warmups.append(row)
+		else:rows.append(row)
+		if index==0 and not _pixel_proof(label!="expired"):return false
+	if not _check(var_to_bytes(Packet.capture(world))==packet and var_to_bytes(world.combat_events)==events,"No drawing writes to strict packet/events"):return false
+	if not _pixel_proof(label!="expired"):return false
+	var images := {};var id := label+"_"+Quality.profile+"_"+("reduced" if reduced else "normal")
+	for role: String in ["plain","candidate"]:
+		var image: Image=(plain_view if role=="plain" else candidate_view).get_texture().get_image();image.convert(Image.FORMAT_RGBA8)
+		var path := output.path_join(id+"_"+role+".png")
+		if not _check(not FileAccess.file_exists(path) and image.save_png(path)==OK,"Save fresh representative PNG"):return false
+		images[role]={"path":path,"sha256":FileAccess.get_sha256(path)}
+	results.append({"label":id,"timed":timed,"profile":Quality.profile,"reduced":reduced,"zoom":zoom,"jitter":[jitter.x,jitter.y],"focus":[plain.focus.x,plain.focus.y],
+		"physical_size":[SIZE.x,SIZE.y],"world_tick":world.tick,"render_tick":world.tick-1,"coverage":snapshot.coverage,"matter_paid":snapshot.matter_paid,
+		"authority_hash":str(state),"cohort":cohort,"pixel_proof":current_pixel.duplicate(true),"warmups":warmups,"rows":rows,"images":images,
+		"context":{"current_fullbody_pixel_cast":true,"actual_actor_count":world.players.size(),"actual_projectile_count":world.projectiles.size()}})
+	return true
+
+func _pixel_proof(expect_ink: bool) -> bool:
+	var a := plain_view.get_texture().get_image();var b := candidate_view.get_texture().get_image()
+	if not _check(a!=null and b!=null,"Actual native images"):return false
+	a.convert(Image.FORMAT_RGBA8);b.convert(Image.FORMAT_RGBA8)
+	if not _check(a.get_size()==SIZE and b.get_size()==SIZE,"Native image bounds"):return false
+	var av := a.get_data();var bv := b.get_data()
+	var changed := 0;var outside := 0;var ink := 0
+	for y: int in SIZE.y:
+		for x: int in SIZE.x:
+			var offset := (y*SIZE.x+x)*4
+			if x%4==0 and y%4==0:
+				var color := a.get_pixel(x,y).to_rgba32()
+				if color!=Color("283e37").to_rgba32() and color!=Color("44504b").to_rgba32():ink+=1
+			if av[offset]==bv[offset] and av[offset+1]==bv[offset+1] and av[offset+2]==bv[offset+2] and av[offset+3]==bv[offset+3]:continue
+			changed+=1
+			var point := Vector2(x+0.5,y+0.5)
+			var allowed := false
+			for polygon: PackedVector2Array in skipped_polygons:
+				if Geometry2D.is_point_in_polygon(point,polygon):allowed=true;break
+			if not allowed:outside+=1
+	current_pixel={"changed_pixels":changed,"outside_eligible_polygons":outside,"exact_rgba":changed==0,"expected_skipped_marks":skipped_count}
+	return _check(outside==0 and (changed==0 if skipped_count==0 else changed>0),"Intentional changes only within actual eligible active polygons; negatives exact") and _check(not expect_ink or ink>4,"Nonblank native context")
+
+func _dense_captures(world: SimWorld,coverage: Dictionary) -> bool:
+	var active := 0;var forming := 0;var cooling := 0
+	var ids: Array[int]=[]
+	for product: Dictionary in coverage.products:
+		if product.material!="conflagration":continue
+		ids.append(int(product.id))
+		if world.tick-1<int(product.active_tick):forming+=1
+		elif world.tick-1<int(product.decay_tick):active+=1
+		else:cooling+=1
+	if active==6 and not seen_six:
+		seen_six=true;retired_ids=ids.duplicate()
+		if not _capture("six_active",world,coverage):return false
+	if active>0 and forming>0 and not snapshots.has("mixed_phase"):
+		if not _capture("mixed_phase",world,coverage):return false
+	if active>0 and not world.projectiles.is_empty() and not snapshots.has("active_with_flight"):
+		if not _capture("active_with_flight",world,coverage):return false
+	if seen_six and active>0 and ids.size()<6 and not snapshots.has("partial_expiry"):
+		if not _check(ids!=retired_ids,"Actual paid product retirement changed membership") or not _capture("partial_expiry",world,coverage):return false
+	if seen_six and active==1 and cooling>0 and not snapshots.has("last_active"):
+		if not _capture("last_active",world,coverage):return false
+	return true
+
+func _single_product_route() -> bool:
+	var world := _world(FIRE)
+	if world==null:return false
+	var record := _record("two_fire_one_conflagration")
+	for unused: int in 1500:
+		var pressed := 0
+		if int(record.attempts)<2 and _ready(world.player(),FIRE):
+			pressed=SimCommand.PRESSED_SPELL_1;record.attempts+=1;record.attempt_ticks.append(world.tick)
+		var commands: Array[SimCommand]=[SimCommand.new(world.tick,1,0,0,0,pressed,1000,0,1736000,880000)]
+		if not _step(world,commands,record):return false
+		var coverage := _coverage(world)
+		if "conflagration/active" in coverage.phases and not snapshots.has("one_product"):
+			if not _capture("one_product",world,coverage):return false
+		if "conflagration/decaying" in coverage.phases and not snapshots.has("one_cooling"):
+			if not _capture("one_cooling",world,coverage):return false
+		if int(record.attempts)==2 and _empty(world):record.fully_expired=true;break
+	return _check(int(record.admitted)==2 and int(record.refused)==0 and int(record.matter_paid)==1200 and bool(record.fully_expired),"Single product uses exactly two ordinary funded casts and natural expiry")
+
+func _conflagration_owners_route() -> bool:
+	var world := _world(FIRE)
+	if world==null:return false
+	var second := PlayerState.new(2)
+	if not _check(champions.apply_to_player(second,"oh_tipi"),"Second actual champion"):return false
+	second.position_x=1536000;second.position_y=1048000;second.team_id=world.player().team_id
+	if not _check(world.collision.can_occupy(Vector2i(second.position_x,second.position_y),second.radius) and second.place_proven_spell(0,FIRE),"Second ordinary owner legal placement/equip"):return false
+	world.players.append(second)
+	var attempts: Array[int]=[0,0]
+	var record := _record("two_owners_two_fire_each")
+	for unused: int in 1500:
+		var commands: Array[SimCommand]=[]
+		for index: int in 2:
+			var actor: PlayerState=world.players[index]
+			var pressed := 0
+			if attempts[index]<2 and _ready(actor,FIRE):
+				pressed=SimCommand.PRESSED_SPELL_1;attempts[index]+=1;record.attempts+=1;record.attempt_ticks.append(world.tick)
+			commands.append(SimCommand.new(world.tick,actor.entity_id,0,0,0,pressed,1000,0,1736000,actor.position_y))
+		if not _step(world,commands,record):return false
+		var coverage := _coverage(world)
+		var active_owners: Dictionary={}
+		for product: Dictionary in coverage.products:
+			if product.material=="conflagration" and world.tick-1>=int(product.active_tick) and world.tick-1<int(product.decay_tick):active_owners[int(product.owner)]=true
+		if active_owners.size()==2 and not snapshots.has("two_conflagration_owners"):
+			if not _capture("two_conflagration_owners",world,coverage,Vector2(1736,964)):return false
+		if record.attempts==4 and _empty(world) and second.pending_cast_wire_id==0:record.fully_expired=true;break
+	return _check(record.admitted==4 and record.refused==0 and record.matter_paid==2400 and bool(record.fully_expired),"Two owners each pay two real casts; all naturally expires")
+
+func _cohort(world: SimWorld) -> Dictionary:
+	skipped_polygons.clear();skipped_count=0
+	var a: Dictionary=plain.presenter._prepare_draw_bundle(world.hex_court,float(world.tick-1))
+	var b: Dictionary=candidate.presenter._prepare_draw_bundle(world.hex_court,float(world.tick-1))
+	_check(var_to_bytes(a)==var_to_bytes(b),"Exact current prepared geometry/metadata before classification")
+	var cells: Dictionary=b.regions.get("conflagration",{})
+	var active := 0;var products: Dictionary={};var groups: Array[Dictionary]=[]
+	for cell: Vector2i in cells:
+		var regions: Array=cells[cell]
+		var skipped: Dictionary=candidate.presenter._coalesced_active_indices(regions) if Quality.profile=="low" else {}
+		var skipped_ids: Array[int]=[];var retained_ids: Array[int]=[]
+		for index: int in regions.size():
+			var region: Dictionary=regions[index]
+			if region.phase!="active":continue
+			active+=1;products[int(region.footprint_id)]=true
+			if skipped.has(index):
+				skipped_count+=1;skipped_ids.append(int(region.footprint_id))
+				var polygon := PackedVector2Array()
+				for point: Vector2 in region.polygon:polygon.append((point-candidate.focus)*candidate.zoom+Vector2(SIZE)*0.5+candidate.jitter)
+				if not polygon in skipped_polygons:skipped_polygons.append(polygon)
+			else:retained_ids.append(int(region.footprint_id))
+		groups.append({"cell":[cell.x,cell.y],"skipped_footprints":skipped_ids,"retained_footprints":retained_ids})
+	return {"active_regions":active,"active_products":products.size(),"cells":cells.size(),"skipped_active":skipped_count,
+		"retained_active":active-skipped_count,"skipped_crown_lines":2*skipped_count,"groups":groups,
+		"scope":"Fresh metadata classification after first actual callback; actual flame draw difference checked in every row. No authority/pool aggregation."}

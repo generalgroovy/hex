@@ -1,0 +1,76 @@
+from pathlib import Path
+import hashlib
+import json
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+source = ROOT / 'src/presentation/hex_court_presenter.gd'
+raw = source.read_bytes()
+text = raw.decode().replace('\r\n', '\n')
+start = text.index('func _draw_mirror_product(')
+end = text.index('\n\nfunc ', start)
+body = text[start:end]
+guard = '''\t# COALESCE_GUARD_BEGIN
+\tif not _coalescing_enabled(material):
+\t\tsuper._draw_mirror_product(canvas, regions_by_cell, material, tick, reduced)
+\t\treturn
+\t# COALESCE_GUARD_END
+'''
+old_loop = '\tfor cell: Vector2i in regions_by_cell:\n\t\tfor region: Dictionary in regions_by_cell[cell]:\n'
+new_loop = '''\tfor cell: Vector2i in regions_by_cell:
+\t\tvar skipped := _coalesced_active_indices(regions_by_cell[cell])
+\t\tvar region_index := -1
+\t\tfor region: Dictionary in regions_by_cell[cell]:
+\t\t\tregion_index += 1
+'''
+old_mark = '\t\t\telse:\n\t\t\t\tvar phase := "active" if active else "cooling" if decaying else "ignition"\n'
+new_mark = '\t\t\telse:\n\t\t\t\tif active and skipped.has(region_index): continue\n\t\t\t\tvar phase := "active" if active else "cooling" if decaying else "ignition"\n'
+assert body.count(old_loop) == body.count(old_mark) == 1
+first_newline = body.index('\n') + 1
+candidate_body = body[:first_newline] + guard + body[first_newline:]
+candidate_body = candidate_body.replace(old_loop, new_loop).replace(old_mark, new_mark)
+header = '''extends "res://src/presentation/hex_court_presenter.gd"
+## Low-only active decoration experiment. Every authoritative fill/border remains.
+const COALESCE_SCRIPT := "res://.godot/iteration-20261014/conflagration-next/candidate_court.gd"
+
+func _coalescing_enabled(material: String) -> bool:
+\treturn material == "conflagration" and Quality.profile == "low" \\
+\t\tand get_script().resource_path == COALESCE_SCRIPT \\
+\t\tand _language != null and _language.get_script() == VisualLanguage \\
+\t\tand retro_marks != null and retro_marks.get_script() == RetroMarks
+
+
+func _coalesced_active_indices(rows: Array) -> Dictionary:
+\t# Call-local only. No membership or phase can survive a draw/expiry.
+\tvar last: Dictionary = {}
+\tvar keys: Array[Array] = []
+\tfor index: int in rows.size():
+\t\tvar region: Dictionary = rows[index]
+\t\tvar key: Array = []
+\t\t# Canonical product owners are integers. Generic custom-owner rows retain
+\t\t# every mark instead of inventing a new serialization/equality contract.
+\t\tif region.get("phase") == "active" and region.get("material") == "conflagration" \\
+\t\t\tand region.get("owner_key") is int and region.get("polygon") is PackedVector2Array \\
+\t\t\tand region.get("direction") is Vector2i and region.get("danger") is bool \\
+\t\t\tand region.get("intensity") is int:
+\t\t\tkey = [region.polygon, region.owner_key, region.direction, region.danger, region.intensity]
+\t\t\tlast[key] = index
+\t\tkeys.append(key)
+\tvar skipped: Dictionary = {}
+\tfor index: int in keys.size():
+\t\tif not keys[index].is_empty() and int(last[keys[index]]) != index:
+\t\t\tskipped[index] = true
+\treturn skipped
+
+
+'''
+(HERE / 'hex_court_presenter.before.gd').write_bytes(raw)
+(HERE / 'candidate-header.txt').write_text(header, encoding='utf-8')
+(HERE / 'candidate_court.gd').write_text(header + candidate_body + '\n', encoding='utf-8')
+proof = {'schema':'hex.conflagration-transform.v1', 'before_sha256':hashlib.sha256(raw).hexdigest(),
+         'guard':guard, 'replacements':[{'old':old_loop,'new':new_loop},{'old':old_mark,'new':new_mark}],
+         'header_sha256':hashlib.sha256(header.encode()).hexdigest(),
+         'scope':'Only exact Low presenter/language/RetroMarks active decorations consolidate. All fills, boundaries and non-active warnings retain original order. Standard/derived/custom-owner paths retain all marks.'}
+(HERE / 'source-transform.json').write_text(json.dumps(proof,indent=2)+'\n',encoding='utf-8')
+for name in ('candidate_court.gd','source-transform.json'):
+    print(name,hashlib.sha256((HERE/name).read_bytes()).hexdigest())

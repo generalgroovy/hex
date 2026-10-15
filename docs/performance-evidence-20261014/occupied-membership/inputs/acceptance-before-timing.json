@@ -1,0 +1,26 @@
+{
+  "schema": "hex.membership-predeclared-retention-gate.v1",
+  "status": "Declared before native paid timing. Admission variable rename, explicit bool annotation and exact JSON numeric cleanup checks repaired harness only; all thresholds unchanged.",
+  "canonical_candidate": "p61-64590c45c7a5",
+  "runner_sha256": "f0ba56c773a74a9597d09c0216c3891610cee86386cbe4339d0973e7bb9eff7f",
+  "source_pins_sha256": "499adfebce1b194995442b36b9d75e32403d7c776d721b0c37d0909c024d77bb",
+  "correctness_prerequisite": "All 13 native functional cases, all 22 paid draw cases in both orders, exact RGBA/state/event/packet/cache/path/cleanup/source gates and strict logs must pass.",
+  "primary_cases": [
+    "fire_dense_normal",
+    "fire_dense_reduced",
+    "mantle_active_normal",
+    "mantle_active_reduced"
+  ],
+  "primary_per_process_gate": {
+    "applies_to": "Each primary case separately in both fresh forward and reverse processes",
+    "mean_candidate_less_than_plain": true,
+    "median_paired_saving_positive": true,
+    "minimum_mean_saving_fraction": 0.03,
+    "minimum_mean_saving_usec": 50,
+    "threshold_composition": "Both fractional and absolute mean-saving requirements must hold."
+  },
+  "order_gate": "Retain actual invocation-order strata; a mean direction reversal across order strata defers promotion even if pooled means pass.",
+  "negative_controls": "Other positive-work cases must not show a repeatable greater-than-5-percent p95 regression in both processes. Preserve individual outliers/maxima; one noisy maximum is not a causal conclusion.",
+  "decision": "Below threshold, mixed process/order signs, or reproducible tail regressions means defer/withdraw the candidate rather than carry its guard complexity for a microbenchmark-only win.",
+  "limits": "Elapsed native draw submission only; phase-correlated samples, host memory pressure and shared cache order remain limitations. This is a promotion screen, not a statistical power claim, full-game CPU share, GPU/present result or FPS improvement."
+}

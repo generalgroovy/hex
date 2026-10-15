@@ -1,0 +1,129 @@
+extends RefCounted
+## Ignored visual prototype. One prepared image per selected existing structure.
+## No transparent openings, changed footprint, traversable height or new ledges.
+const SPECS := {
+	105: {"style": "spire", "size": Vector2i(192, 160), "face": 100, "family": "observatory"},
+	108: {"style": "service_tower", "size": Vector2i(144, 144), "face": 92, "family": "limestone"},
+}
+const WallSkin = preload("res://src/presentation/practice_wall_skin.gd")
+var textures: Dictionary[int, Texture2D] = {}
+var decoded_bytes := 0
+var composition_usec := 0
+var error := ""
+
+func prepare(kit: WellspringIllustratedKit, layout: SanctumCampusLayout) -> bool:
+	textures.clear()
+	decoded_bytes = 0
+	composition_usec = 0
+	error = ""
+	if kit == null or layout == null or kit.tiles.size() <= 11: return _fail("Prepared actual kit/roof and facade tiles required")
+	for id: int in SPECS:
+		var building: Dictionary = layout.buildings_by_id.get(id, {})
+		var spec: Dictionary = SPECS[id]
+		var bounds := SanctumCampusLayout._parse_bounds(building.get("bounds", []))
+		if String(building.get("style", "")) != String(spec.style) or bounds.size != spec.size or String(building.get("occlusion_policy", "")) != "los_cutaway" or bool(building.get("vaultable", true)):
+			return _fail("Prototype admits only the two exact existing solid structures")
+		var start := Time.get_ticks_usec()
+		var image: Image = compose(bounds.size, int(spec.face), String(spec.family), kit.tiles[10], kit.tiles[11], id == 105)
+		composition_usec += Time.get_ticks_usec() - start
+		if image == null: return _fail("Architecture composition refused input")
+		var bytes := image.get_data()
+		for alpha_index: int in range(3, bytes.size(), 4):
+			if bytes[alpha_index] != 255: return _fail("Prototype must preserve a fully opaque footprint")
+		textures[id] = ImageTexture.create_from_image(image)
+		decoded_bytes += bytes.size()
+	return decoded_bytes == 205824
+
+static func compose(size: Vector2i, face_height: int, family: String, slate: Image, facade_tile: Image, spire: bool) -> Image:
+	if size.x < 100 or size.y < 100 or size.x > 256 or size.y > 256 or face_height < 60 or face_height >= size.y - 24 or not WallSkin.PALETTES.has(family) or slate == null or slate.get_size() != Vector2i(128, 128): return null
+	if facade_tile == null or facade_tile.get_size() != Vector2i(128, 128) or facade_tile.get_format() != Image.FORMAT_RGBA8: return null
+	var colors: Array[Color] = []
+	for code: String in WallSkin.PALETTES[family]: colors.append(Color(code))
+	var image := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
+	image.fill(Color("4b3025")) # Retain a solid boundary beneath the existing frame.
+	var face_y := size.y - face_height
+	var side := 14 if spire else 18
+	var cap := Rect2i(3, 3, size.x - side - 6, face_y - 3)
+	var stone_regions: Array[Rect2i] = [Rect2i(3, face_y, size.x - 6, face_height - 3), Rect2i(size.x - side - 3, 3, side, size.y - 6), Rect2i(3, 3, size.x - side - 6, 2)]
+	for y: int in range(cap.position.y, cap.end.y):
+		for x: int in range(cap.position.x, cap.end.x):
+			image.set_pixel(x, y, slate.get_pixel(posmod(x - 3, 128), posmod(y - 3, 128)))
+	# Broad continuous face, narrow dark east plane; no horizontal stair shelves.
+	image.fill_rect(Rect2i(3, face_y, size.x - side - 6, face_height - 3), colors[2])
+	image.fill_rect(Rect2i(size.x - side - 3, 3, side, size.y - 6), colors[1])
+	image.fill_rect(Rect2i(size.x - side - 3, 3, 3, size.y - 6), colors[5])
+	image.fill_rect(Rect2i(3, face_y, size.x - 6, 3), colors[0])
+	image.fill_rect(Rect2i(3, face_y + 3, size.x - side - 6, 3), colors[4])
+	image.fill_rect(Rect2i(3, size.y - 8, size.x - 6, 5), colors[1])
+	image.fill_rect(Rect2i(3, size.y - 5, size.x - 6, 2), colors[5])
+	# Tall vertical supports have a single uninterrupted ground contact.
+	var columns: Array[int] = [12, size.x - side - 23]
+	if spire: columns.insert(1, size.x / 2 - 9)
+	for x: int in columns:
+		image.fill_rect(Rect2i(x, face_y + 6, 12, face_height - 14), colors[0])
+		image.fill_rect(Rect2i(x, face_y + 6, 8, face_height - 15), colors[3])
+		image.fill_rect(Rect2i(x, face_y + 6, 2, face_height - 15), colors[4])
+	# Sparse shallow panel seams differ from the close-set low-cover masonry.
+	for y: int in range(face_y + 30, size.y - 12, 32):
+		image.fill_rect(Rect2i(28, y, maxi(1, size.x - side - 60), 1), colors[5])
+	if spire:
+		# A nested, solid raised roof plate reads as a spire crown, not an opening.
+		var crown := Rect2i(size.x / 2 - 26, 10, 40, maxi(12, face_y - 24))
+		stone_regions.append(crown)
+		image.fill_rect(crown, colors[0])
+		image.fill_rect(Rect2i(crown.position, Vector2i(crown.size.x - 5, crown.size.y - 5)), colors[2])
+		image.fill_rect(Rect2i(crown.position, Vector2i(crown.size.x - 5, 3)), colors[4])
+		image.fill_rect(Rect2i(crown.position + Vector2i(17, 6), Vector2i(2, crown.size.y - 14)), colors[7])
+	else:
+		# Parapet merlons sit on a continuous solid band; no cuts expose ground.
+		image.fill_rect(Rect2i(6, 7, size.x - side - 12, 9), colors[1])
+		stone_regions.append(Rect2i(6, 7, size.x - side - 12, 9))
+		for x: int in range(10, size.x - side - 14, 28):
+			stone_regions.append(Rect2i(x, 5, 14, 8))
+			image.fill_rect(Rect2i(x, 5, 14, 8), colors[0])
+			image.fill_rect(Rect2i(x, 5, 11, 5), colors[3])
+			image.fill_rect(Rect2i(x, 5, 11, 2), colors[4])
+	image.fill_rect(Rect2i(3, 3, size.x - side - 6, 2), colors[4])
+	# Keep the admitted massing/lighting, but derive its masonry and grain from
+	# the same approved128px facade tile as adjacent buildings. Tile scale stays1:1.
+	var base_value := _value(colors[2])
+	for y: int in range(3, size.y - 3):
+		for x: int in range(3, size.x - 3):
+			var selected := false
+			for region: Rect2i in stone_regions:
+				if region.has_point(Vector2i(x, y)): selected = true; break
+			if not selected: continue
+			var plane := image.get_pixel(x, y)
+			var source := facade_tile.get_pixel(posmod(x - 3, 128), posmod(y - face_y, 128))
+			var light := clampf(_value(plane) / base_value, 0.45, 1.38)
+			var stone := Color(source.r * light, source.g * light, source.b * light, 1.0)
+			var shaded := stone.lerp(plane, 0.12)
+			shaded.a = 1.0
+			image.set_pixel(x, y, shaded)
+	return image
+
+static func _value(color: Color) -> float:
+	return color.r * 0.2126 + color.g * 0.7152 + color.b * 0.0722
+
+func draw(canvas: CanvasItem, kit: WellspringIllustratedKit, building: Dictionary, focus: Vector2) -> void:
+	var id := int(building.get("id", 0))
+	if not textures.has(id):
+		kit.draw_building(canvas, building, focus)
+		return
+	var bounds := Rect2(SanctumCampusLayout._parse_bounds(building.bounds))
+	var old_face_height := minf(float(kit.data.camera.maximum_facade_pixels), bounds.size.y * 0.42)
+	var old_roof := Rect2(bounds.position, Vector2(bounds.size.x, bounds.size.y - old_face_height))
+	# Keep the original external shadow and roof-outline fringe. The new opaque
+	# image overwrites only the interior, then the same exterior props paint once.
+	canvas.draw_rect(Rect2(bounds.position + Vector2(5, 9), bounds.size), Color(0.06, 0.09, 0.07, 0.5))
+	canvas.draw_rect(old_roof, Color(0.20, 0.15, 0.11, 1.0), false, 5)
+	canvas.draw_line(old_roof.position + Vector2(0, old_roof.size.y * 0.32), old_roof.position + Vector2(old_roof.size.x, old_roof.size.y * 0.32), Color("aa8650"), 4)
+	canvas.draw_line(Vector2(bounds.position.x, old_roof.end.y), Vector2(bounds.end.x, old_roof.end.y), Color("4b3025"), 6)
+	canvas.draw_texture(textures[id], bounds.position)
+	kit.draw_prop(canvas, "doorway", Vector2(bounds.get_center().x, bounds.end.y + 4), minf(110, bounds.size.y * 0.8))
+	for side: float in [-1.0, 1.0]: kit.draw_prop(canvas, "planter", Vector2(bounds.get_center().x + side * 82, bounds.end.y + 10), 45)
+	canvas.draw_rect(bounds, Color(0.82, 0.71, 0.48, 0.3), false, 1)
+
+func _fail(message: String) -> bool:
+	error = message
+	return false

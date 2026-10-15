@@ -1,94 +1,104 @@
 # H.E.X. resume handoff
 
-Status: **PAUSED at the user's October 13, 2026 checkpoint request.** The reviewed
-batch, Full regression and fresh portable qualification are complete. No audit,
-implementation, experiment or foreground test is active; continue only after a
-user resume. The former 1% allowance target is superseded. Latest allowance:
-67% used / 33% remaining; credits unchanged at 57564.601627.
+Status: **WINDOWS CHECKPOINT FOR LINUX HANDOFF — October 15; stop at 20,000 credits remaining.**
+Read [Linux handoff](LINUX-HANDOFF.md) for restoration, platform boundaries and
+the receiving prompt. The Windows agents have completed their work; no engine
+session is running for this handoff. The user authorized publishing the complete
+checkpoint on `codex/hex-screen-smoothness-20261011`; use Git clone/pull as described
+in the handoff, without applying the earlier ZIP overlay.
+The [single queue](OVERHAUL-IMPLEMENTATION.md) owns all current work and assigns
+an implementer and independent reviewer to every point. The completed design request
+was analysis and complete overhaul design. The user selected illustrated 2.5D with
+smooth animated sprites. Gameplay, Experience and Technical wrote separate drafts,
+reviewed each other and the [consolidated proposal](../docs/OVERHAUL-DESIGN-20261015.md).
+It covers all design/implementation areas with owner/reviewer assignments and
+staged gates. The October 15 planning pass changed documentation only; the later
+Git handoff publishes that plan together with the existing implementation and
+evidence. It does not change runtime behavior, launcher selection, packages or saves. Earlier approved
+implementation work and its pending measurements remain in the single queue.
 
-## Current source and delivery
+## Source and playable delivery
 
-Repository: `C:/Users/sende/Projects/hex`; Documents/ChatGPT/H.E.X is a wrapper.
-Branch: `codex/hex-screen-smoothness-20261011`; remote:
-`https://github.com/generalgroovy/hex.git`. The commit containing this handoff
-identifies the closing source/documentation checkpoint; its predecessor was `b574514`.
-`main` remains `95ca630`; no binary publication or installer promotion is requested.
+Repository: `C:/Users/sende/Projects/hex`; branch:
+`codex/hex-screen-smoothness-20261011`. `Documents/ChatGPT/H.E.X` is a wrapper.
+Pre-handoff base commit: **38f1bc3**; `main` remains `95ca630`.
+Working source: **p61-d6d1bfb9c529**, SHA
+`d6d1bfb9c5292d8dffbeade6e1cf460cd3a23ee54a655da7069d75e4cb572d44`.
+The stationary velocity change and regression are integrated and peer-reviewed.
+Full passed through the desktop Diagnostic runner with 1,693 frozen inputs:
+265 suites / 7,574,524 assertions, zero failures/error output and a 120 Hz boot.
+Qualified local portable: **p61-d6d1bfb9c529**, protocol 61,
+snapshot 24, 120 Hz simulation / 60 Hz transport and 3,446 production records.
+Package, all 18 portable checks, 2,064 checks over 133 exported terrain images,
+and five actual desktop-wrapper normal-close/reopen cases passed. Fire and Mantle
+each completed exactly 12 paid starts and releases, with zero refusals.
+The [independent delivery review](../docs/performance-evidence-20261014/stationary-qualification-d6d1/delivery-review/review.json)
+passed **4,076 checks**; [qualification archive](../docs/performance-evidence-20261014/stationary-qualification-d6d1/README.md).
+Current-build foreground performance and portable FPS remain unmeasured.
 
-Current source and qualified local portable are **p61-7804a23eb300**, 3,444 production records, SHA
-`7804a23eb300582ede154ca1083664f6c4200a51fa6539c6ddb2810068972120`.
-Protocol 61, snapshot 24, 120 Hz simulation and 60 Hz transport are unchanged.
-Seven reviewed files implement three confirmed usability repairs:
+The immediate qualified fallback is **p61-64590c45c7a5**. Its
+[Full](../docs/depth-clarity-evidence-20261014/full.json) passed 265 suites /
+7,574,438 assertions, and its [4,076-check delivery review](../docs/depth-clarity-evidence-20261014/delivery-review/review.json)
+retains the exact depth/clarity package qualification. Native parity was 260 checks /
+six captures, with five terrain-focused suites / 3,894 assertions.
+The older **p61-7804a23eb300** [Full](../docs/iteration-20261013/full-7804/README.md)
+passed 265 suites / 7,573,807 assertions; its [delivery review](../docs/iteration-20261013/delivery-review-7804/review.json)
+remains preserved. Keep 500be and other working builds, original assets and user data intact.
 
-- A legitimate victory's already-admitted audio tail may finish through its
-  result freeze; external blockers still stop it and denied notices do not replay.
-- F5/F6 guide and Menu hints follow existing gameplay-remap priority and fall
-  back to the existing Menu routes.
-- Tactical Sprint/Slide teaching explicitly includes the Jump press before release.
+Launch player sessions through **the desktop H.E.X. shortcut**, resolving to
+`C:/Users/sende/Documents/ChatGPT/H.E.X/PLAY-HEX.cmd`. That stable wrapper selects
+[the qualified portable](../exports/hex-performance-20261014-d6d1/windows/PLAY-HEX.cmd).
+The shortcut's stale FLUX-checkout target was corrected and read back in this batch.
+Use this same front door for future player/performance sessions; source unit
+validation remains serialized through the repository test tools. A candidate must
+be independently qualified before changing the normal playable selection.
 
-Source identity/current-state and independent exact application checks pass.
-[Full](../docs/iteration-20261013/full-7804/README.md) passes **265 suites /
-7,573,807 assertions**, zero failures/error output, import, identity, assets and
-120 Hz boot. Receipt SHA:
-`f14bb161efb6007f00ee6a1da4e1178aaac995d98dc798987473acb324978c85`.
-All four affected suites pass together within Full. The
-[usability archive](../docs/iteration-20261013/usability-checkpoint/README.md)
-retains both failed focused fixtures and their test-only corrections; no runtime
-policy or assertion was weakened.
+ZIP: `exports/hex-performance-20261014-d6d1/HEX-p61-d6d1bfb9c529-Windows-x64.zip`,
+161,194,910 bytes, SHA
+`0741a134bc163be16e0390b3364c7602445f20556a4ea552ac01462cd5511382`.
+PCK SHA: `5b6e84fe2af3dd1730972f755fd3012b1bc2fd6ee150ea36ead35c8021a1a819`.
+The 6459 fallback, 7804, 500be and older working builds remain preserved. Local binary
+exports are excluded from Git; this is not a published installer release.
 
-[Play current H.E.X.](../exports/hex-checkpoint-20261013-7804/windows/PLAY-HEX.cmd).
-The [Windows ZIP](../exports/hex-checkpoint-20261013-7804/HEX-p61-7804a23eb300-Windows-x64.zip)
-is 161,188,342 bytes, SHA
-`d742198b0b8b178c191363e7c1b1be1f0bfbc5dec79d80be6c8717a088073ebd`.
-PCK SHA: `16549da435191ffa0662896b588558a430de8dbe5294ccdb20ebedb09abf2b84`.
-[Fresh delivery](../docs/iteration-20261013/delivery-7804/README.md) passes all
-18 archive checks, 133 exact terrain images / 2,064 checks, and five normal-close
-lifecycle cases: Hearth, Garden, Fire, all-six Mantle and reopen. Fire and Mantle
-each accepted and released twelve casts, with no refusals or extra outcomes.
-Package bytes and shared isolated preferences remain unchanged; the environment
-was restored. The [independent review](../docs/iteration-20261013/delivery-review-7804/review.json)
-passes 3,789 checks, SHA
-`6044f6f84fd212a45dea53b9feeeeed270a8e2a96a169c2f66ae8adcd0a6a01c`.
-Package metadata retains its historical pre-promotion flag; completed qualification
-and these current links establish the local playable selection.
+## Acceptance boundaries
 
-The unchanged immediate fallback is [p61-500be306a26a](../exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd),
-ZIP SHA `9e27636f0542f0c85c60e1c45a540a8830d60bf0b9c5b4d71d56154e96c0e76b`.
-All older working builds, user saves, original art and failed evidence remain.
-Exported EXE/PCK/ZIP files are local and excluded from Git.
+Current d6d1 foreground performance and portable FPS are unmeasured.
+Previous-build source recording: **6459 Profile B**, full observer, 1280×720,
+low detail and synthetic paid commands. Garden/sustained Fire/Mantle engine
+interval mean / p95: **62.105 / 73.910, 92.595 / 117.084, 87.840 / 110.507 ms**.
+All 638 recorded process samples were focused; source hashes stayed unchanged.
+This is not portable FPS or physical-input proof. Low observed host memory,
+uncalibrated observer cost and unmatched historical conditions prevent a causal
+comparison to 500be. [Attempt A](../docs/performance-evidence-20261014/foreground-setup-a/review.json)
+expired before Start, instantiated no game and remains unmeasured.
+GPU/present/input latency, human feel, listening, balance and real two-PC
+acceptance retain their own gates. The [occupied-membership experiment](../docs/performance-evidence-20261014/occupied-membership/README.md)
+passed correctness but missed all eight primary performance gates and was
+withdrawn without application. The [ground-speed experiment](../docs/performance-evidence-20261014/movement-ground-speed/README.md)
+also passed correctness but failed its opposite-order benefit gate and remains
+unapplied. [Garden attribution](../docs/performance-evidence-20261014/garden-attribution/README.md)
+confirmed warm geometry reuse; its sparse lifecycle captures do not isolate
+live phase-refresh costs. The [Low marker-budget experiment](../docs/performance-evidence-20261014/garden-sample-budget/README.md)
+passed continuous-cycle image/state controls but failed both normal-effect cost
+gates and increased ordinary draw cost; it is withdrawn without reduced-mode
+expansion. [Casting-stage attribution](../docs/performance-evidence-20261014/casting-stage-attribution/README.md)
+passed four native processes and identified movement as the largest measured
+child in ordinary five-actor Fire/Mantle steps. The [stationary fast-path candidate](../docs/performance-evidence-20261014/stationary-ground/README.md)
+passed all eight paid-case performance gates across four native processes, with
+exact state/event parity. It is integrated and qualified in d6d1: it skips only
+stationary target/acceleration arithmetic and preserves recovery and surrounding
+movement processing. One-off tail regressions remain recorded; this is not an
+FPS result. The separate Low-detail Conflagration decoration trial is withdrawn:
+three of four primary cost gates failed, and single-field cost regressed by
+5.94% / 7.04% in the opposite-order runs. Captured threat readability passed;
+that does not rescue the cost failures. The stationary change alone was retained and qualified;
+no renderer optimization from the withdrawn trials was applied.
 
-## Completed diagnostics and deferred work
-
-The thirteen functional cases pass 84,172 checks with every-step authority
-proof. The additional authored-roster qualification passes 14,490 checks over
-480 ticks. All six contiguous native timing runs pass 73,880 engine and 30,033
-independent review checks. Movement is the largest measured child, but process
-and order variation and outliers prevent a stable overhead or speedup claim.
-Their scope is isolated SimWorld groups, not complete frames.
-
-The occupied-membership proposal is source-only, unexecuted and unapplied.
-Further movement attribution, the one-get mesh idea and profiler failure-path
-investigation are deferred. Crowded trail preflight and smaller prefix keys
-remain withdrawn; the coach-terminal hypothesis was not reproduced. Do not
-revive those proposals without new evidence.
-
-The last admitted foreground recording belongs to **500be**, with warm
-Garden/default Fire/Mantle p95 engine intervals 24.743/28.217/39.999 ms. It does
-not prove steady 60 FPS or a matched gain. Both sustained follow-ups expired
-before manual Start and measured no gameplay. GPU/present/input latency,
-physical input, movement feel, visual readability and competitive balance keep
-their own acceptance boundaries. Later builds do not inherit old measurements.
-
-## On a later resume
-
-Root alone serializes engines, tests, captures and exports. Preserve dirty work,
-failures, saves and working builds. Require measurements before accepting another
-performance change, and qualify a replacement before promoting its play link.
-The current iteration is closed; historical task lists do not restart work.
-
-The [single queue](OVERHAUL-IMPLEMENTATION.md),
-[current iteration](../docs/iteration-20261013/README.md),
-[specification](../SPECIFICATION.md) and
-[design overview](../docs/CORE-GAME-DESIGN.md) own current work and rules.
-Earlier narrative is in the linked iteration archives; receipts qualify only
-their exact source/package bytes. The legacy `docs/current-checkpoint.json` is
-the old FLUX pointer, not the active H.E.X. delivery contract.
+Root alone serializes engines/imports/captures/exports. Preserve user data,
+original assets, qualified builds and useful failed evidence. Delete only
+classified unused/redundant files; keep references valid. Historical receipts are
+immutable and qualify their recorded bytes. Previous detail is in the
+[closed checkpoint ledger](../docs/iteration-20261013/README.md) and Git 38f1bc3.
+`docs/current-delivery.json` owns the H.E.X. playable route. The separate
+`docs/current-checkpoint.json` remains a legacy FLUX tooling contract, not the
+active H.E.X. delivery pointer. The user authorized continued work with a cutoff of **20,000 credits remaining** (57,349 recorded at resume). This supersedes the former 1% usage cutoff and no-paid-credit restriction. Check the balance at phase boundaries and reserve enough to leave a coherent checkpoint before reaching the cutoff.

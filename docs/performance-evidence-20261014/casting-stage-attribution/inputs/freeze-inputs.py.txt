@@ -1,0 +1,63 @@
+"""Freeze this ignored attribution; read-only inputs, fresh manifest only."""
+import hashlib
+import json
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+BASELINE = ROOT / ".godot/iteration-20261014/movement-next/manifest.json"
+BASELINE_SHA = "70aa9b1a6224875bcb41ccc9c3b7ded18d2895203aad56d59bebdb9f03686ef5"
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def method(source, name):
+    start = source.index("func " + name + "(")
+    end = source.find("\nfunc ", start + 1)
+    return source[start:end if end >= 0 else None].strip()
+
+
+assert sha(BASELINE) == BASELINE_SHA, "Prior qualified inventory changed"
+baseline = json.loads(BASELINE.read_text())
+pins = {
+    path: digest for path, digest in baseline["source_sha256"].items()
+    if not path.startswith("res://.godot/")
+}
+assert len(pins) == 331
+for path, digest in pins.items():
+    assert path.startswith("res://") and ".." not in path and "\\" not in path
+    actual = ROOT / path[6:]
+    assert actual.is_file() and sha(actual) == digest, path
+
+proof = json.loads((HERE / "source-transform.json").read_text())
+live = ROOT / "src/sim/core/sim_world.gd"
+observed = HERE / "observed_world.gd"
+assert sha(live) == proof["source_sha256"] == sha(HERE / "sim_world.before.gd")
+assert sha(observed) == proof["observed_sha256"]
+lines = method(observed.read_text(), "step").splitlines()
+assert sum("# MC_OBSERVER" in line for line in lines) == 22
+assert "\n".join(line for line in lines if "# MC_OBSERVER" not in line).strip() == method(live.read_text(), "step")
+
+identity = json.loads((ROOT / "content/runtime/runtime_build_identity_v1.json").read_text())
+assert identity["build_id"] == "p61-64590c45c7a5"
+assert identity["record_count"] == 3446
+assert identity["runtime_source_sha256"] == "64590c45c7a5aa4b1b6fc492a3a11b32a4a3429d49fa792a729cabdec838c212"
+for leaf in ["README.md", "freeze-inputs.py", "compare-stages.gd", "observed_world.gd", "sim_world.before.gd", "source-transform.json"]:
+    path = HERE / leaf
+    pins["res://" + path.relative_to(ROOT).as_posix()] = sha(path)
+payload = {
+    "schema": "hex.stage-attribution-pins.v1",
+    "status": "source checkpoint; no parser/native result inferred",
+    "runtime_identity": {key: identity[key] for key in ["build_id", "runtime_source_sha256", "record_count"]},
+    "source_hashes": dict(sorted(pins.items())),
+    "provenance": {"inventory": "res://.godot/iteration-20261014/movement-next/manifest.json", "sha256": BASELINE_SHA,
+        "canonical_input_count": 331, "scope": "Exact current canonical inventory from the paid Fire proof, plus six local diagnostic inputs. No old experiment source is silently selected. Runner is admitted separately by desktop exact SHA to avoid a manifest hash cycle."},
+}
+target = HERE / "source-pins.json"
+encoded = (json.dumps(payload, indent=2) + "\n").encode()
+with target.open("xb") as file:
+    file.write(encoded)
+assert target.read_bytes() == encoded
+print(len(pins), sha(target))

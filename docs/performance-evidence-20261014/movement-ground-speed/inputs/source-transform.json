@@ -1,0 +1,9 @@
+{
+  "schema": "hex-call-local-ground-speed-transform-v1",
+  "movement_sha256": "3e195007a624088d211ce6d5c52f849f7213280eaf83e03ef9e5e30302a7e830",
+  "world_sha256": "2a8e32069c800d70644f222d4ce1e2378e3b2c79991e7e5d58b4de2df4548a1e",
+  "old": "var speed: int = Perks.scale(state, \"ground_speed_ratio\", MovementTuning.BASE_SPEED * state.movement_speed_ratio / 1000)",
+  "new": "var base_ground_speed: int = Perks.scale(state, \"ground_speed_ratio\", MovementTuning.BASE_SPEED * state.movement_speed_ratio / 1000)\n\tvar speed: int = base_ground_speed",
+  "old2": "var ordinary_speed := Perks.scale(state, \"ground_speed_ratio\", MovementTuning.BASE_SPEED * state.movement_speed_ratio / 1000)",
+  "new2": "var ordinary_speed := base_ground_speed"
+}

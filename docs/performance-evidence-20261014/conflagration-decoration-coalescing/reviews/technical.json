@@ -1,0 +1,5489 @@
+{
+  "schema": "hex.conflagration-independent-readback.v1",
+  "integrity_passed": true,
+  "checks": 13304,
+  "analyzer_sha256": "f78dad84c4f6a1696773463b28f42f0d111e5681fb87603a63de2e4b2102afbb",
+  "source_pins_sha256": "c655886839952c8876037d1e97fbec2b8728be180ee04b4ae1eabb8370329084",
+  "runner_sha256": "dc2ecb23b80cc0638923d32e496178639b97bd999b40475de85b7940eeecd112",
+  "pre_integration_source_readback_sha256": "ce1fbdc87feddd2b92aec10f501ad1d73ecb33eba62632485a91478202a103da",
+  "explicit_archived_source_substitutions": [
+    {
+      "resource": "res://src/sim/movement/movement_system.gd",
+      "archived_predecessor": "C:\\Users\\sende\\Projects\\hex\\docs\\performance-evidence-20261014\\stationary-ground\\inputs\\movement_system.before.gd.txt",
+      "sha256": "3e195007a624088d211ce6d5c52f849f7213280eaf83e03ef9e5e30302a7e830",
+      "current_sha256_not_used": "60393d901c0d4f5c8ceebb5a1b3bfdf92b59c871c5872a2a99f7ab5974859f82"
+    }
+  ],
+  "complete_receipts": {
+    "probe-forward-c": "4e4709033740f45b9b5638918d7b6afa0c2c9fa69117c8f62a25d154688c5989",
+    "probe-reverse-c": "94a11838fceef302053a9361cdc177d850dae4c16151c24274721bb85a88138f"
+  },
+  "helper_checks_total": 14918,
+  "measured_pairs": 384,
+  "warmup_pairs": 48,
+  "pixel_only_pairs": 18,
+  "png_count": 60,
+  "statistics": "Microsecond native elapsed draw submission; arithmetic means, paired plain-minus-candidate median; nearest-rank p95. Each process/quality/reduced case kept separate. All-frame tails include four warmups plus32 measured. Order strata use actual callback order.",
+  "reports": {
+    "probe-forward-c": {
+      "cases": {
+        "six_active_low_normal": {
+          "measured": {
+            "count": 32,
+            "plain_mean_us": 15928.03125,
+            "candidate_mean_us": 14040.15625,
+            "mean_saving_us": 1887.875,
+            "mean_saving_percent": 11.852531994498692,
+            "paired_median_saving_us": 1795.5,
+            "plain_median_us": 14895.5,
+            "candidate_median_us": 12949.0,
+            "plain_p95_us": 21209,
+            "candidate_p95_us": 18486,
+            "p95_regression_percent": -12.83888915083219,
+            "plain_max_us": 21252,
+            "candidate_max_us": 20976,
+            "largest_regressions": [
+              {
+                "index": 21,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 17056,
+                "candidate_us": 20976,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 4,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 14756,
+                "candidate_us": 14668,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 24,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 16899,
+                "candidate_us": 16780,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 16,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 14372,
+                "candidate_us": 14088,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 28,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 14124,
+                "candidate_us": 13593,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "actual_order_strata": {
+            "plain": {
+              "count": 16,
+              "plain_mean_us": 15470.75,
+              "candidate_mean_us": 13759.5,
+              "mean_saving_us": 1711.25,
+              "mean_saving_percent": 11.061196128177366,
+              "paired_median_saving_us": 1795.5,
+              "plain_median_us": 14519.0,
+              "candidate_median_us": 12788.0,
+              "plain_p95_us": 18954,
+              "candidate_p95_us": 20976,
+              "p95_regression_percent": 10.667932890155107,
+              "plain_max_us": 18954,
+              "candidate_max_us": 20976,
+              "largest_regressions": [
+                {
+                  "index": 21,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 17056,
+                  "candidate_us": 20976,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 33,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13783,
+                  "candidate_us": 12958,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 11,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 14348,
+                  "candidate_us": 13112,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 27,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13874,
+                  "candidate_us": 12305,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 23,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 18617,
+                  "candidate_us": 17006,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            },
+            "candidate": {
+              "count": 16,
+              "plain_mean_us": 16385.3125,
+              "candidate_mean_us": 14320.8125,
+              "mean_saving_us": 2064.5,
+              "mean_saving_percent": 12.59969866305571,
+              "paired_median_saving_us": 1546.0,
+              "plain_median_us": 14994.5,
+              "candidate_median_us": 13462.5,
+              "plain_p95_us": 21252,
+              "candidate_p95_us": 18486,
+              "p95_regression_percent": -13.015245623941274,
+              "plain_max_us": 21252,
+              "candidate_max_us": 18486,
+              "largest_regressions": [
+                {
+                  "index": 4,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 14756,
+                  "candidate_us": 14668,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 24,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 16899,
+                  "candidate_us": 16780,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 16,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 14372,
+                  "candidate_us": 14088,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 28,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 14124,
+                  "candidate_us": 13593,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 30,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 14839,
+                  "candidate_us": 14225,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            }
+          },
+          "warmup_first_use": {
+            "count": 4,
+            "plain_mean_us": 16475,
+            "candidate_mean_us": 15902,
+            "mean_saving_us": 573,
+            "mean_saving_percent": 3.4779969650986344,
+            "paired_median_saving_us": 2028.0,
+            "plain_median_us": 14653.5,
+            "candidate_median_us": 12428.0,
+            "plain_p95_us": 22644,
+            "candidate_p95_us": 26943,
+            "p95_regression_percent": 18.98516163222046,
+            "plain_max_us": 22644,
+            "candidate_max_us": 26943,
+            "largest_regressions": [
+              {
+                "index": 0,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 22644,
+                "candidate_us": 26943,
+                "new_meshes": 15,
+                "new_topologies": 1
+              },
+              {
+                "index": 2,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13949,
+                "candidate_us": 12077,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 1,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 14963,
+                "candidate_us": 12779,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 3,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 14344,
+                "candidate_us": 11809,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "all_frames": {
+            "count": 36,
+            "plain_mean_us": 15988.805555555555,
+            "candidate_mean_us": 14247.027777777777,
+            "mean_saving_us": 1741.7777777777778,
+            "mean_saving_percent": 10.893732941624089,
+            "paired_median_saving_us": 1819.0,
+            "plain_median_us": 14895.5,
+            "candidate_median_us": 12887.0,
+            "plain_p95_us": 21252,
+            "candidate_p95_us": 20976,
+            "p95_regression_percent": -1.2987012987012991,
+            "plain_max_us": 22644,
+            "candidate_max_us": 26943,
+            "largest_regressions": [
+              {
+                "index": 0,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 22644,
+                "candidate_us": 26943,
+                "new_meshes": 15,
+                "new_topologies": 1
+              },
+              {
+                "index": 21,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 17056,
+                "candidate_us": 20976,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 4,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 14756,
+                "candidate_us": 14668,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 24,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 16899,
+                "candidate_us": 16780,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 16,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 14372,
+                "candidate_us": 14088,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "first_pair": {
+            "actual_order": [
+              "candidate",
+              "plain"
+            ],
+            "cache_after": {
+              "candidate": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 150,
+                "fallbacks": 0,
+                "hits": 75,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 0,
+                "uploads": 15
+              },
+              "plain": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 150,
+                "fallbacks": 0,
+                "hits": 75,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 0,
+                "uploads": 15
+              }
+            },
+            "cache_before": {
+              "candidate": {
+                "batches": 0,
+                "edge_mask_builds": 0,
+                "edge_mask_hits": 0,
+                "fallbacks": 0,
+                "hits": 0,
+                "meshes": 0,
+                "phase_marks": 0,
+                "topologies": 0,
+                "topology_builds": 0,
+                "topology_hits": 0,
+                "uploads": 0
+              },
+              "plain": {
+                "batches": 0,
+                "edge_mask_builds": 0,
+                "edge_mask_hits": 0,
+                "fallbacks": 0,
+                "hits": 0,
+                "meshes": 0,
+                "phase_marks": 0,
+                "topologies": 0,
+                "topology_builds": 0,
+                "topology_hits": 0,
+                "uploads": 0
+              }
+            },
+            "candidate": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 26943,
+              "mark_draws": 25,
+              "okay": true,
+              "prepared_cells": 25,
+              "projectile_ok": true
+            },
+            "index": 0,
+            "new_meshes": 15,
+            "new_topologies": 1,
+            "plain": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 22644,
+              "mark_draws": 150,
+              "okay": true,
+              "prepared_cells": 25,
+              "projectile_ok": true
+            }
+          },
+          "measured_new_meshes": 0,
+          "measured_new_topologies": 0
+        },
+        "six_active_low_reduced": {
+          "measured": {
+            "count": 32,
+            "plain_mean_us": 14447.65625,
+            "candidate_mean_us": 13206.03125,
+            "mean_saving_us": 1241.625,
+            "mean_saving_percent": 8.59395446925864,
+            "paired_median_saving_us": 1417.0,
+            "plain_median_us": 14112.5,
+            "candidate_median_us": 12677.5,
+            "plain_p95_us": 16473,
+            "candidate_p95_us": 17562,
+            "p95_regression_percent": 6.610817701693672,
+            "plain_max_us": 17274,
+            "candidate_max_us": 17884,
+            "largest_regressions": [
+              {
+                "index": 25,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 15263,
+                "candidate_us": 17884,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 26,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13495,
+                "candidate_us": 15621,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 10,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 16069,
+                "candidate_us": 17562,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 12,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13753,
+                "candidate_us": 14897,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 21,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13375,
+                "candidate_us": 13055,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "actual_order_strata": {
+            "plain": {
+              "count": 16,
+              "plain_mean_us": 14425.625,
+              "candidate_mean_us": 13036.6875,
+              "mean_saving_us": 1388.9375,
+              "mean_saving_percent": 9.628265673064424,
+              "paired_median_saving_us": 1409.0,
+              "plain_median_us": 14270.5,
+              "candidate_median_us": 12618.5,
+              "plain_p95_us": 16473,
+              "candidate_p95_us": 17884,
+              "p95_regression_percent": 8.56553147574819,
+              "plain_max_us": 16473,
+              "candidate_max_us": 17884,
+              "largest_regressions": [
+                {
+                  "index": 25,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 15263,
+                  "candidate_us": 17884,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 21,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13375,
+                  "candidate_us": 13055,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 9,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13978,
+                  "candidate_us": 13443,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 17,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13887,
+                  "candidate_us": 13046,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 5,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13304,
+                  "candidate_us": 12388,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            },
+            "candidate": {
+              "count": 16,
+              "plain_mean_us": 14469.6875,
+              "candidate_mean_us": 13375.375,
+              "mean_saving_us": 1094.3125,
+              "mean_saving_percent": 7.5627929075869815,
+              "paired_median_saving_us": 1418.5,
+              "plain_median_us": 14093.0,
+              "candidate_median_us": 12730.0,
+              "plain_p95_us": 17274,
+              "candidate_p95_us": 17562,
+              "p95_regression_percent": 1.6672455713789613,
+              "plain_max_us": 17274,
+              "candidate_max_us": 17562,
+              "largest_regressions": [
+                {
+                  "index": 26,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13495,
+                  "candidate_us": 15621,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 10,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 16069,
+                  "candidate_us": 17562,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 12,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13753,
+                  "candidate_us": 14897,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 18,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13737,
+                  "candidate_us": 12929,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 8,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13849,
+                  "candidate_us": 12803,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            }
+          },
+          "warmup_first_use": {
+            "count": 4,
+            "plain_mean_us": 14772.75,
+            "candidate_mean_us": 13731.75,
+            "mean_saving_us": 1041,
+            "mean_saving_percent": 7.046758389602478,
+            "paired_median_saving_us": 1691.0,
+            "plain_median_us": 13839.5,
+            "candidate_median_us": 13005.0,
+            "plain_p95_us": 17600,
+            "candidate_p95_us": 16936,
+            "p95_regression_percent": -3.772727272727272,
+            "plain_max_us": 17600,
+            "candidate_max_us": 16936,
+            "largest_regressions": [
+              {
+                "index": 1,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13812,
+                "candidate_us": 16936,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 2,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13824,
+                "candidate_us": 12316,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 3,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13855,
+                "candidate_us": 11981,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 0,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 17600,
+                "candidate_us": 13694,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "all_frames": {
+            "count": 36,
+            "plain_mean_us": 14483.777777777777,
+            "candidate_mean_us": 13264.444444444445,
+            "mean_saving_us": 1219.3333333333333,
+            "mean_saving_percent": 8.418613928226215,
+            "paired_median_saving_us": 1476.5,
+            "plain_median_us": 14093.0,
+            "candidate_median_us": 12677.5,
+            "plain_p95_us": 17274,
+            "candidate_p95_us": 17562,
+            "p95_regression_percent": 1.6672455713789613,
+            "plain_max_us": 17600,
+            "candidate_max_us": 17884,
+            "largest_regressions": [
+              {
+                "index": 1,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13812,
+                "candidate_us": 16936,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 25,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 15263,
+                "candidate_us": 17884,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 26,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13495,
+                "candidate_us": 15621,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 10,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 16069,
+                "candidate_us": 17562,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 12,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13753,
+                "candidate_us": 14897,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "first_pair": {
+            "actual_order": [
+              "candidate",
+              "plain"
+            ],
+            "cache_after": {
+              "candidate": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 5550,
+                "fallbacks": 0,
+                "hits": 3315,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 36,
+                "uploads": 15
+              },
+              "plain": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 5550,
+                "fallbacks": 0,
+                "hits": 3315,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 36,
+                "uploads": 15
+              }
+            },
+            "cache_before": {
+              "candidate": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 5400,
+                "fallbacks": 0,
+                "hits": 3225,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 35,
+                "uploads": 15
+              },
+              "plain": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 5400,
+                "fallbacks": 0,
+                "hits": 3225,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 35,
+                "uploads": 15
+              }
+            },
+            "candidate": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 13694,
+              "mark_draws": 25,
+              "okay": true,
+              "prepared_cells": 25,
+              "projectile_ok": true
+            },
+            "index": 0,
+            "new_meshes": 0,
+            "new_topologies": 0,
+            "plain": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 17600,
+              "mark_draws": 150,
+              "okay": true,
+              "prepared_cells": 25,
+              "projectile_ok": true
+            }
+          },
+          "measured_new_meshes": 0,
+          "measured_new_topologies": 0
+        },
+        "six_active_standard_normal": {
+          "measured": {
+            "count": 32,
+            "plain_mean_us": 15249.78125,
+            "candidate_mean_us": 14551.71875,
+            "mean_saving_us": 698.0625,
+            "mean_saving_percent": 4.57752467760808,
+            "paired_median_saving_us": 280.5,
+            "plain_median_us": 14180.5,
+            "candidate_median_us": 13955.0,
+            "plain_p95_us": 20607,
+            "candidate_p95_us": 19860,
+            "p95_regression_percent": -3.6249818023001867,
+            "plain_max_us": 21732,
+            "candidate_max_us": 22053,
+            "largest_regressions": [
+              {
+                "index": 27,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 17894,
+                "candidate_us": 22053,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 31,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 14068,
+                "candidate_us": 15234,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 24,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 14146,
+                "candidate_us": 15042,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 5,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13443,
+                "candidate_us": 13932,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 21,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13923,
+                "candidate_us": 14229,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "actual_order_strata": {
+            "plain": {
+              "count": 16,
+              "plain_mean_us": 15182.5,
+              "candidate_mean_us": 14420.8125,
+              "mean_saving_us": 761.6875,
+              "mean_saving_percent": 5.016877984521654,
+              "paired_median_saving_us": 351.0,
+              "plain_median_us": 14252.0,
+              "candidate_median_us": 13912.5,
+              "plain_p95_us": 19891,
+              "candidate_p95_us": 22053,
+              "p95_regression_percent": 10.869237343522187,
+              "plain_max_us": 19891,
+              "candidate_max_us": 22053,
+              "largest_regressions": [
+                {
+                  "index": 27,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 17894,
+                  "candidate_us": 22053,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 31,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 14068,
+                  "candidate_us": 15234,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 5,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13443,
+                  "candidate_us": 13932,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 21,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13923,
+                  "candidate_us": 14229,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 17,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13516,
+                  "candidate_us": 13729,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            },
+            "candidate": {
+              "count": 16,
+              "plain_mean_us": 15317.0625,
+              "candidate_mean_us": 14682.625,
+              "mean_saving_us": 634.4375,
+              "mean_saving_percent": 4.142031149902274,
+              "paired_median_saving_us": 251.5,
+              "plain_median_us": 14051.5,
+              "candidate_median_us": 13985.0,
+              "plain_p95_us": 21732,
+              "candidate_p95_us": 19860,
+              "p95_regression_percent": -8.614025400331304,
+              "plain_max_us": 21732,
+              "candidate_max_us": 19860,
+              "largest_regressions": [
+                {
+                  "index": 24,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 14146,
+                  "candidate_us": 15042,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 16,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13450,
+                  "candidate_us": 13648,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 34,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13957,
+                  "candidate_us": 14135,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 10,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13741,
+                  "candidate_us": 13859,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 14,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13882,
+                  "candidate_us": 13992,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            }
+          },
+          "warmup_first_use": {
+            "count": 4,
+            "plain_mean_us": 14878.75,
+            "candidate_mean_us": 14920.75,
+            "mean_saving_us": -42,
+            "mean_saving_percent": -0.28228177770310003,
+            "paired_median_saving_us": 43.0,
+            "plain_median_us": 14143.0,
+            "candidate_median_us": 14340.0,
+            "plain_p95_us": 17707,
+            "candidate_p95_us": 17377,
+            "p95_regression_percent": -1.863669735133,
+            "plain_max_us": 17707,
+            "candidate_max_us": 17377,
+            "largest_regressions": [
+              {
+                "index": 0,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 14138,
+                "candidate_us": 14914,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 2,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13522,
+                "candidate_us": 13766,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 1,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 17707,
+                "candidate_us": 17377,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 3,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 14148,
+                "candidate_us": 13626,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "all_frames": {
+            "count": 36,
+            "plain_mean_us": 15208.555555555555,
+            "candidate_mean_us": 14592.722222222223,
+            "mean_saving_us": 615.8333333333334,
+            "mean_saving_percent": 4.049255901283635,
+            "paired_median_saving_us": 280.5,
+            "plain_median_us": 14147.0,
+            "candidate_median_us": 13955.0,
+            "plain_p95_us": 20607,
+            "candidate_p95_us": 19860,
+            "p95_regression_percent": -3.6249818023001867,
+            "plain_max_us": 21732,
+            "candidate_max_us": 22053,
+            "largest_regressions": [
+              {
+                "index": 27,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 17894,
+                "candidate_us": 22053,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 31,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 14068,
+                "candidate_us": 15234,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 24,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 14146,
+                "candidate_us": 15042,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 0,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 14138,
+                "candidate_us": 14914,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 5,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13443,
+                "candidate_us": 13932,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "first_pair": {
+            "actual_order": [
+              "candidate",
+              "plain"
+            ],
+            "cache_after": {
+              "candidate": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 10950,
+                "fallbacks": 0,
+                "hits": 6555,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 72,
+                "uploads": 15
+              },
+              "plain": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 10950,
+                "fallbacks": 0,
+                "hits": 6555,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 72,
+                "uploads": 15
+              }
+            },
+            "cache_before": {
+              "candidate": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 10800,
+                "fallbacks": 0,
+                "hits": 6465,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 71,
+                "uploads": 15
+              },
+              "plain": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 10800,
+                "fallbacks": 0,
+                "hits": 6465,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 71,
+                "uploads": 15
+              }
+            },
+            "candidate": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 14914,
+              "mark_draws": 150,
+              "okay": true,
+              "prepared_cells": 25,
+              "projectile_ok": true
+            },
+            "index": 0,
+            "new_meshes": 0,
+            "new_topologies": 0,
+            "plain": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 14138,
+              "mark_draws": 150,
+              "okay": true,
+              "prepared_cells": 25,
+              "projectile_ok": true
+            }
+          },
+          "measured_new_meshes": 0,
+          "measured_new_topologies": 0
+        },
+        "fire_active_low_normal": {
+          "measured": {
+            "count": 32,
+            "plain_mean_us": 2480.40625,
+            "candidate_mean_us": 2766.25,
+            "mean_saving_us": -285.84375,
+            "mean_saving_percent": -11.524069897824198,
+            "paired_median_saving_us": -97.0,
+            "plain_median_us": 2402.5,
+            "candidate_median_us": 2482.5,
+            "plain_p95_us": 3124,
+            "candidate_p95_us": 4290,
+            "p95_regression_percent": 37.323943661971825,
+            "plain_max_us": 3157,
+            "candidate_max_us": 6198,
+            "largest_regressions": [
+              {
+                "index": 13,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 2716,
+                "candidate_us": 6198,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 9,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 2457,
+                "candidate_us": 4290,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 10,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 2407,
+                "candidate_us": 3839,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 31,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 2306,
+                "candidate_us": 3050,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 25,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 2396,
+                "candidate_us": 3056,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "actual_order_strata": {
+            "plain": {
+              "count": 16,
+              "plain_mean_us": 2499.0625,
+              "candidate_mean_us": 2955.5625,
+              "mean_saving_us": -456.5,
+              "mean_saving_percent": -18.266850068775792,
+              "paired_median_saving_us": -235.0,
+              "plain_median_us": 2371.5,
+              "candidate_median_us": 2557.5,
+              "plain_p95_us": 3157,
+              "candidate_p95_us": 6198,
+              "p95_regression_percent": 96.32562559391829,
+              "plain_max_us": 3157,
+              "candidate_max_us": 6198,
+              "largest_regressions": [
+                {
+                  "index": 13,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 2716,
+                  "candidate_us": 6198,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 9,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 2457,
+                  "candidate_us": 4290,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 31,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 2306,
+                  "candidate_us": 3050,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 25,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 2396,
+                  "candidate_us": 3056,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 5,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 2304,
+                  "candidate_us": 2747,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            },
+            "candidate": {
+              "count": 16,
+              "plain_mean_us": 2461.75,
+              "candidate_mean_us": 2576.9375,
+              "mean_saving_us": -115.1875,
+              "mean_saving_percent": -4.679090078196405,
+              "paired_median_saving_us": -37.0,
+              "plain_median_us": 2411.5,
+              "candidate_median_us": 2404.5,
+              "plain_p95_us": 2721,
+              "candidate_p95_us": 3839,
+              "p95_regression_percent": 41.087835354649016,
+              "plain_max_us": 2721,
+              "candidate_max_us": 3839,
+              "largest_regressions": [
+                {
+                  "index": 10,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 2407,
+                  "candidate_us": 3839,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 6,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 2278,
+                  "candidate_us": 2801,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 16,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 2296,
+                  "candidate_us": 2503,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 14,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 2537,
+                  "candidate_us": 2700,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 22,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 2343,
+                  "candidate_us": 2462,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            }
+          },
+          "warmup_first_use": {
+            "count": 4,
+            "plain_mean_us": 3908.5,
+            "candidate_mean_us": 10117,
+            "mean_saving_us": -6208.5,
+            "mean_saving_percent": -158.84610464372523,
+            "paired_median_saving_us": 221.5,
+            "plain_median_us": 3193.0,
+            "candidate_median_us": 2540.5,
+            "plain_p95_us": 6744,
+            "candidate_p95_us": 33092,
+            "p95_regression_percent": 390.6880189798339,
+            "plain_max_us": 6744,
+            "candidate_max_us": 33092,
+            "largest_regressions": [
+              {
+                "index": 0,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 6744,
+                "candidate_us": 33092,
+                "new_meshes": 10,
+                "new_topologies": 1
+              },
+              {
+                "index": 2,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 2504,
+                "candidate_us": 2602,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 1,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 3020,
+                "candidate_us": 2479,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 3,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 3366,
+                "candidate_us": 2295,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "all_frames": {
+            "count": 36,
+            "plain_mean_us": 2639.0833333333335,
+            "candidate_mean_us": 3583,
+            "mean_saving_us": -943.9166666666666,
+            "mean_saving_percent": -35.766838232972304,
+            "paired_median_saving_us": -97.0,
+            "plain_median_us": 2428.5,
+            "candidate_median_us": 2491.0,
+            "plain_p95_us": 3366,
+            "candidate_p95_us": 6198,
+            "p95_regression_percent": 84.13547237076648,
+            "plain_max_us": 6744,
+            "candidate_max_us": 33092,
+            "largest_regressions": [
+              {
+                "index": 0,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 6744,
+                "candidate_us": 33092,
+                "new_meshes": 10,
+                "new_topologies": 1
+              },
+              {
+                "index": 13,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 2716,
+                "candidate_us": 6198,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 9,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 2457,
+                "candidate_us": 4290,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 10,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 2407,
+                "candidate_us": 3839,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 31,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 2306,
+                "candidate_us": 3050,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "first_pair": {
+            "actual_order": [
+              "candidate",
+              "plain"
+            ],
+            "cache_after": {
+              "candidate": {
+                "batches": 25,
+                "edge_mask_builds": 163,
+                "edge_mask_hits": 16213,
+                "fallbacks": 0,
+                "hits": 9705,
+                "meshes": 25,
+                "phase_marks": 0,
+                "topologies": 2,
+                "topology_builds": 2,
+                "topology_hits": 107,
+                "uploads": 25
+              },
+              "plain": {
+                "batches": 25,
+                "edge_mask_builds": 163,
+                "edge_mask_hits": 16213,
+                "fallbacks": 0,
+                "hits": 9705,
+                "meshes": 25,
+                "phase_marks": 0,
+                "topologies": 2,
+                "topology_builds": 2,
+                "topology_hits": 107,
+                "uploads": 25
+              }
+            },
+            "cache_before": {
+              "candidate": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 16200,
+                "fallbacks": 0,
+                "hits": 9705,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 107,
+                "uploads": 15
+              },
+              "plain": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 16200,
+                "fallbacks": 0,
+                "hits": 9705,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 107,
+                "uploads": 15
+              }
+            },
+            "candidate": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 33092,
+              "mark_draws": 0,
+              "okay": true,
+              "prepared_cells": 13,
+              "projectile_ok": true
+            },
+            "index": 0,
+            "new_meshes": 10,
+            "new_topologies": 1,
+            "plain": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 6744,
+              "mark_draws": 0,
+              "okay": true,
+              "prepared_cells": 13,
+              "projectile_ok": true
+            }
+          },
+          "measured_new_meshes": 0,
+          "measured_new_topologies": 0
+        },
+        "mantle_active_low_normal": {
+          "measured": {
+            "count": 32,
+            "plain_mean_us": 10954.21875,
+            "candidate_mean_us": 11060.78125,
+            "mean_saving_us": -106.5625,
+            "mean_saving_percent": -0.9727987219535852,
+            "paired_median_saving_us": -100.0,
+            "plain_median_us": 10833.5,
+            "candidate_median_us": 11022.5,
+            "plain_p95_us": 12261,
+            "candidate_p95_us": 12163,
+            "p95_regression_percent": -0.7992822771388908,
+            "plain_max_us": 12885,
+            "candidate_max_us": 12416,
+            "largest_regressions": [
+              {
+                "index": 8,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 10503,
+                "candidate_us": 12416,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 27,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 10528,
+                "candidate_us": 12163,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 29,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 10585,
+                "candidate_us": 11163,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 11,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 10600,
+                "candidate_us": 11177,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 22,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 10577,
+                "candidate_us": 11085,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "actual_order_strata": {
+            "plain": {
+              "count": 16,
+              "plain_mean_us": 11111.125,
+              "candidate_mean_us": 11115.1875,
+              "mean_saving_us": -4.0625,
+              "mean_saving_percent": -0.036562454296932126,
+              "paired_median_saving_us": 1.0,
+              "plain_median_us": 10942.5,
+              "candidate_median_us": 11170.0,
+              "plain_p95_us": 12885,
+              "candidate_p95_us": 12163,
+              "p95_regression_percent": -5.6034148234381025,
+              "plain_max_us": 12885,
+              "candidate_max_us": 12163,
+              "largest_regressions": [
+                {
+                  "index": 27,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 10528,
+                  "candidate_us": 12163,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 29,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 10585,
+                  "candidate_us": 11163,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 11,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 10600,
+                  "candidate_us": 11177,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 25,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 10780,
+                  "candidate_us": 11286,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 19,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 10948,
+                  "candidate_us": 11238,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            },
+            "candidate": {
+              "count": 16,
+              "plain_mean_us": 10797.3125,
+              "candidate_mean_us": 11006.375,
+              "mean_saving_us": -209.0625,
+              "mean_saving_percent": -1.9362457092910852,
+              "paired_median_saving_us": -110.0,
+              "plain_median_us": 10813.0,
+              "candidate_median_us": 10920.5,
+              "plain_p95_us": 11518,
+              "candidate_p95_us": 12416,
+              "p95_regression_percent": 7.796492446605319,
+              "plain_max_us": 11518,
+              "candidate_max_us": 12416,
+              "largest_regressions": [
+                {
+                  "index": 8,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 10503,
+                  "candidate_us": 12416,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 22,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 10577,
+                  "candidate_us": 11085,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 34,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 10818,
+                  "candidate_us": 11311,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 10,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 10856,
+                  "candidate_us": 11137,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 6,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 10376,
+                  "candidate_us": 10554,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            }
+          },
+          "warmup_first_use": {
+            "count": 4,
+            "plain_mean_us": 15302.5,
+            "candidate_mean_us": 15407.25,
+            "mean_saving_us": -104.75,
+            "mean_saving_percent": -0.6845286717856559,
+            "paired_median_saving_us": -187.0,
+            "plain_median_us": 11002.0,
+            "candidate_median_us": 10958.5,
+            "plain_p95_us": 28823,
+            "candidate_p95_us": 29253,
+            "p95_regression_percent": 1.4918641362800633,
+            "plain_max_us": 28823,
+            "candidate_max_us": 29253,
+            "largest_regressions": [
+              {
+                "index": 3,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 10383,
+                "candidate_us": 11306,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 0,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 28823,
+                "candidate_us": 29253,
+                "new_meshes": 60,
+                "new_topologies": 2
+              },
+              {
+                "index": 2,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 10515,
+                "candidate_us": 10459,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 1,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 11489,
+                "candidate_us": 10611,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "all_frames": {
+            "count": 36,
+            "plain_mean_us": 11437.361111111111,
+            "candidate_mean_us": 11543.722222222223,
+            "mean_saving_us": -106.36111111111111,
+            "mean_saving_percent": -0.9299445044870005,
+            "paired_median_saving_us": -100.0,
+            "plain_median_us": 10833.5,
+            "candidate_median_us": 11022.5,
+            "plain_p95_us": 12885,
+            "candidate_p95_us": 12416,
+            "p95_regression_percent": -3.639891346526969,
+            "plain_max_us": 28823,
+            "candidate_max_us": 29253,
+            "largest_regressions": [
+              {
+                "index": 8,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 10503,
+                "candidate_us": 12416,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 27,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 10528,
+                "candidate_us": 12163,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 3,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 10383,
+                "candidate_us": 11306,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 29,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 10585,
+                "candidate_us": 11163,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 11,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 10600,
+                "candidate_us": 11177,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "first_pair": {
+            "actual_order": [
+              "candidate",
+              "plain"
+            ],
+            "cache_after": {
+              "candidate": {
+                "batches": 85,
+                "edge_mask_builds": 254,
+                "edge_mask_hits": 16759,
+                "fallbacks": 0,
+                "hits": 10082,
+                "meshes": 85,
+                "phase_marks": 0,
+                "topologies": 4,
+                "topology_builds": 4,
+                "topology_hits": 142,
+                "uploads": 85
+              },
+              "plain": {
+                "batches": 85,
+                "edge_mask_builds": 254,
+                "edge_mask_hits": 16759,
+                "fallbacks": 0,
+                "hits": 10082,
+                "meshes": 85,
+                "phase_marks": 0,
+                "topologies": 4,
+                "topology_builds": 4,
+                "topology_hits": 142,
+                "uploads": 85
+              }
+            },
+            "cache_before": {
+              "candidate": {
+                "batches": 25,
+                "edge_mask_builds": 163,
+                "edge_mask_hits": 16668,
+                "fallbacks": 0,
+                "hits": 10055,
+                "meshes": 25,
+                "phase_marks": 0,
+                "topologies": 2,
+                "topology_builds": 2,
+                "topology_hits": 142,
+                "uploads": 25
+              },
+              "plain": {
+                "batches": 25,
+                "edge_mask_builds": 163,
+                "edge_mask_hits": 16668,
+                "fallbacks": 0,
+                "hits": 10055,
+                "meshes": 25,
+                "phase_marks": 0,
+                "topologies": 2,
+                "topology_builds": 2,
+                "topology_hits": 142,
+                "uploads": 25
+              }
+            },
+            "candidate": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 1,
+              "ground_us": 29253,
+              "mark_draws": 56,
+              "okay": true,
+              "prepared_cells": 33,
+              "projectile_ok": true
+            },
+            "index": 0,
+            "new_meshes": 60,
+            "new_topologies": 2,
+            "plain": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 1,
+              "ground_us": 28823,
+              "mark_draws": 56,
+              "okay": true,
+              "prepared_cells": 33,
+              "projectile_ok": true
+            }
+          },
+          "measured_new_meshes": 0,
+          "measured_new_topologies": 0
+        },
+        "one_product_low_normal": {
+          "measured": {
+            "count": 32,
+            "plain_mean_us": 3882,
+            "candidate_mean_us": 4112.53125,
+            "mean_saving_us": -230.53125,
+            "mean_saving_percent": -5.93846599690881,
+            "paired_median_saving_us": -321.0,
+            "plain_median_us": 3601.5,
+            "candidate_median_us": 3909.0,
+            "plain_p95_us": 5137,
+            "candidate_p95_us": 5646,
+            "p95_regression_percent": 9.90850691064824,
+            "plain_max_us": 5572,
+            "candidate_max_us": 5753,
+            "largest_regressions": [
+              {
+                "index": 32,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 3833,
+                "candidate_us": 5753,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 27,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 4198,
+                "candidate_us": 5224,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 26,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 4603,
+                "candidate_us": 5617,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 33,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 4802,
+                "candidate_us": 5646,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 31,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 3370,
+                "candidate_us": 4110,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "actual_order_strata": {
+            "plain": {
+              "count": 16,
+              "plain_mean_us": 3746.9375,
+              "candidate_mean_us": 4069,
+              "mean_saving_us": -322.0625,
+              "mean_saving_percent": -8.595352871511734,
+              "paired_median_saving_us": -342.5,
+              "plain_median_us": 3475.5,
+              "candidate_median_us": 3952.5,
+              "plain_p95_us": 5108,
+              "candidate_p95_us": 5646,
+              "p95_regression_percent": 10.532498042286619,
+              "plain_max_us": 5108,
+              "candidate_max_us": 5646,
+              "largest_regressions": [
+                {
+                  "index": 27,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 4198,
+                  "candidate_us": 5224,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 33,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 4802,
+                  "candidate_us": 5646,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 31,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 3370,
+                  "candidate_us": 4110,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 5,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 3272,
+                  "candidate_us": 3994,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 35,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 3393,
+                  "candidate_us": 3961,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            },
+            "candidate": {
+              "count": 16,
+              "plain_mean_us": 4017.0625,
+              "candidate_mean_us": 4156.0625,
+              "mean_saving_us": -139,
+              "mean_saving_percent": -3.4602399141163476,
+              "paired_median_saving_us": -241.0,
+              "plain_median_us": 3835.5,
+              "candidate_median_us": 3823.5,
+              "plain_p95_us": 5572,
+              "candidate_p95_us": 5753,
+              "p95_regression_percent": 3.248384781048097,
+              "plain_max_us": 5572,
+              "candidate_max_us": 5753,
+              "largest_regressions": [
+                {
+                  "index": 32,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 3833,
+                  "candidate_us": 5753,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 26,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 4603,
+                  "candidate_us": 5617,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 6,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 3467,
+                  "candidate_us": 4106,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 18,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 3376,
+                  "candidate_us": 4015,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 12,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 3234,
+                  "candidate_us": 3735,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            }
+          },
+          "warmup_first_use": {
+            "count": 4,
+            "plain_mean_us": 3651.75,
+            "candidate_mean_us": 3978,
+            "mean_saving_us": -326.25,
+            "mean_saving_percent": -8.93407270486753,
+            "paired_median_saving_us": -324.5,
+            "plain_median_us": 3414.5,
+            "candidate_median_us": 3739.0,
+            "plain_p95_us": 4448,
+            "candidate_p95_us": 4880,
+            "p95_regression_percent": 9.712230215827343,
+            "plain_max_us": 4448,
+            "candidate_max_us": 4880,
+            "largest_regressions": [
+              {
+                "index": 0,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 4448,
+                "candidate_us": 4880,
+                "new_meshes": 0,
+                "new_topologies": 1
+              },
+              {
+                "index": 1,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 3330,
+                "candidate_us": 3738,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 3,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 3499,
+                "candidate_us": 3740,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 2,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 3330,
+                "candidate_us": 3554,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "all_frames": {
+            "count": 36,
+            "plain_mean_us": 3856.4166666666665,
+            "candidate_mean_us": 4097.583333333333,
+            "mean_saving_us": -241.16666666666666,
+            "mean_saving_percent": -6.2536465198694815,
+            "paired_median_saving_us": -321.0,
+            "plain_median_us": 3499.5,
+            "candidate_median_us": 3864.5,
+            "plain_p95_us": 5137,
+            "candidate_p95_us": 5646,
+            "p95_regression_percent": 9.90850691064824,
+            "plain_max_us": 5572,
+            "candidate_max_us": 5753,
+            "largest_regressions": [
+              {
+                "index": 32,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 3833,
+                "candidate_us": 5753,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 27,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 4198,
+                "candidate_us": 5224,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 26,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 4603,
+                "candidate_us": 5617,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 33,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 4802,
+                "candidate_us": 5646,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 31,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 3370,
+                "candidate_us": 4110,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "first_pair": {
+            "actual_order": [
+              "candidate",
+              "plain"
+            ],
+            "cache_after": {
+              "candidate": {
+                "batches": 85,
+                "edge_mask_builds": 279,
+                "edge_mask_hits": 19969,
+                "fallbacks": 0,
+                "hits": 13142,
+                "meshes": 85,
+                "phase_marks": 0,
+                "topologies": 5,
+                "topology_builds": 5,
+                "topology_hits": 212,
+                "uploads": 85
+              },
+              "plain": {
+                "batches": 85,
+                "edge_mask_builds": 279,
+                "edge_mask_hits": 19969,
+                "fallbacks": 0,
+                "hits": 13142,
+                "meshes": 85,
+                "phase_marks": 0,
+                "topologies": 5,
+                "topology_builds": 5,
+                "topology_hits": 212,
+                "uploads": 85
+              }
+            },
+            "cache_before": {
+              "candidate": {
+                "batches": 85,
+                "edge_mask_builds": 254,
+                "edge_mask_hits": 19944,
+                "fallbacks": 0,
+                "hits": 13127,
+                "meshes": 85,
+                "phase_marks": 0,
+                "topologies": 4,
+                "topology_builds": 4,
+                "topology_hits": 212,
+                "uploads": 85
+              },
+              "plain": {
+                "batches": 85,
+                "edge_mask_builds": 254,
+                "edge_mask_hits": 19944,
+                "fallbacks": 0,
+                "hits": 13127,
+                "meshes": 85,
+                "phase_marks": 0,
+                "topologies": 4,
+                "topology_builds": 4,
+                "topology_hits": 212,
+                "uploads": 85
+              }
+            },
+            "candidate": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 4880,
+              "mark_draws": 25,
+              "okay": true,
+              "prepared_cells": 25,
+              "projectile_ok": true
+            },
+            "index": 0,
+            "new_meshes": 0,
+            "new_topologies": 1,
+            "plain": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 4448,
+              "mark_draws": 25,
+              "okay": true,
+              "prepared_cells": 25,
+              "projectile_ok": true
+            }
+          },
+          "measured_new_meshes": 0,
+          "measured_new_topologies": 0
+        }
+      },
+      "helper_sha256": "4e4709033740f45b9b5638918d7b6afa0c2c9fa69117c8f62a25d154688c5989",
+      "runner_receipt_sha256": "fa336b195ce8199cc94a66b080f525c5d725d967e962fea9e5d91d448afe1159",
+      "host_memory_before": {
+        "available": true,
+        "observed_utc": "2026-10-14T11:14:45.0444777Z",
+        "available_bytes": 821633024,
+        "total_visible_bytes": 7817785344,
+        "scope": "Host OS memory endpoint; not diagnostic-process memory or dedicated idle-machine proof."
+      },
+      "host_memory_after": {
+        "available": true,
+        "observed_utc": "2026-10-14T11:17:36.5908593Z",
+        "available_bytes": 1171800064,
+        "total_visible_bytes": 7817785344,
+        "scope": "Host OS memory endpoint; not diagnostic-process memory or dedicated idle-machine proof."
+      },
+      "engine_memory": {
+        "after_cleanup": {
+          "static": 216273164,
+          "textures": 36335003,
+          "video": 51266403
+        },
+        "before_cleanup": {
+          "static": 285634152,
+          "textures": 51315847,
+          "video": 66338871
+        },
+        "entry": {
+          "static": 83269997,
+          "textures": 7401763,
+          "video": 13812395
+        },
+        "scope": "Godot monitor endpoints, not host/process/private peaks or physical GPU allocation."
+      }
+    },
+    "probe-reverse-c": {
+      "cases": {
+        "six_active_low_normal": {
+          "measured": {
+            "count": 32,
+            "plain_mean_us": 15306.5,
+            "candidate_mean_us": 14453.96875,
+            "mean_saving_us": 852.53125,
+            "mean_saving_percent": 5.569733446574984,
+            "paired_median_saving_us": 1675.5,
+            "plain_median_us": 14292.0,
+            "candidate_median_us": 12688.0,
+            "plain_p95_us": 20465,
+            "candidate_p95_us": 21537,
+            "p95_regression_percent": 5.23821158074762,
+            "plain_max_us": 23302,
+            "candidate_max_us": 33472,
+            "largest_regressions": [
+              {
+                "index": 13,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 14210,
+                "candidate_us": 33472,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 34,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 15392,
+                "candidate_us": 21537,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 10,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 14259,
+                "candidate_us": 18450,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 29,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 14324,
+                "candidate_us": 17488,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 31,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13787,
+                "candidate_us": 14915,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "actual_order_strata": {
+            "plain": {
+              "count": 16,
+              "plain_mean_us": 15782.1875,
+              "candidate_mean_us": 14549.125,
+              "mean_saving_us": 1233.0625,
+              "mean_saving_percent": 7.813001207849038,
+              "paired_median_saving_us": 1310.0,
+              "plain_median_us": 14905.0,
+              "candidate_median_us": 13285.5,
+              "plain_p95_us": 23302,
+              "candidate_p95_us": 21537,
+              "p95_regression_percent": -7.574457128143508,
+              "plain_max_us": 23302,
+              "candidate_max_us": 21537,
+              "largest_regressions": [
+                {
+                  "index": 34,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 15392,
+                  "candidate_us": 21537,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 10,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 14259,
+                  "candidate_us": 18450,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 26,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 17077,
+                  "candidate_us": 17717,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 30,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 15742,
+                  "candidate_us": 16371,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 32,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 20465,
+                  "candidate_us": 20041,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            },
+            "candidate": {
+              "count": 16,
+              "plain_mean_us": 14830.8125,
+              "candidate_mean_us": 14358.8125,
+              "mean_saving_us": 472,
+              "mean_saving_percent": 3.1825633288803292,
+              "paired_median_saving_us": 1898.5,
+              "plain_median_us": 14235.0,
+              "candidate_median_us": 12584.5,
+              "plain_p95_us": 18976,
+              "candidate_p95_us": 33472,
+              "p95_regression_percent": 76.39123102866779,
+              "plain_max_us": 18976,
+              "candidate_max_us": 33472,
+              "largest_regressions": [
+                {
+                  "index": 13,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 14210,
+                  "candidate_us": 33472,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 29,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 14324,
+                  "candidate_us": 17488,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 31,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13787,
+                  "candidate_us": 14915,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 33,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 14434,
+                  "candidate_us": 13723,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 35,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13296,
+                  "candidate_us": 12376,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            }
+          },
+          "warmup_first_use": {
+            "count": 4,
+            "plain_mean_us": 17226.75,
+            "candidate_mean_us": 14266,
+            "mean_saving_us": 2960.75,
+            "mean_saving_percent": 17.186933112746164,
+            "paired_median_saving_us": 2195.5,
+            "plain_median_us": 14204.5,
+            "candidate_median_us": 12282.5,
+            "plain_p95_us": 27033,
+            "candidate_p95_us": 20654,
+            "p95_regression_percent": -23.597085044205237,
+            "plain_max_us": 27033,
+            "candidate_max_us": 20654,
+            "largest_regressions": [
+              {
+                "index": 3,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13577,
+                "candidate_us": 12504,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 2,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13465,
+                "candidate_us": 11845,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 1,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 14832,
+                "candidate_us": 12061,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 0,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 27033,
+                "candidate_us": 20654,
+                "new_meshes": 15,
+                "new_topologies": 1
+              }
+            ]
+          },
+          "all_frames": {
+            "count": 36,
+            "plain_mean_us": 15519.861111111111,
+            "candidate_mean_us": 14433.083333333334,
+            "mean_saving_us": 1086.7777777777778,
+            "mean_saving_percent": 7.002496800694451,
+            "paired_median_saving_us": 1675.5,
+            "plain_median_us": 14292.0,
+            "candidate_median_us": 12602.5,
+            "plain_p95_us": 23302,
+            "candidate_p95_us": 21537,
+            "p95_regression_percent": -7.574457128143508,
+            "plain_max_us": 27033,
+            "candidate_max_us": 33472,
+            "largest_regressions": [
+              {
+                "index": 13,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 14210,
+                "candidate_us": 33472,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 34,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 15392,
+                "candidate_us": 21537,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 10,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 14259,
+                "candidate_us": 18450,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 29,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 14324,
+                "candidate_us": 17488,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 31,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13787,
+                "candidate_us": 14915,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "first_pair": {
+            "actual_order": [
+              "plain",
+              "candidate"
+            ],
+            "cache_after": {
+              "candidate": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 150,
+                "fallbacks": 0,
+                "hits": 75,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 0,
+                "uploads": 15
+              },
+              "plain": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 150,
+                "fallbacks": 0,
+                "hits": 75,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 0,
+                "uploads": 15
+              }
+            },
+            "cache_before": {
+              "candidate": {
+                "batches": 0,
+                "edge_mask_builds": 0,
+                "edge_mask_hits": 0,
+                "fallbacks": 0,
+                "hits": 0,
+                "meshes": 0,
+                "phase_marks": 0,
+                "topologies": 0,
+                "topology_builds": 0,
+                "topology_hits": 0,
+                "uploads": 0
+              },
+              "plain": {
+                "batches": 0,
+                "edge_mask_builds": 0,
+                "edge_mask_hits": 0,
+                "fallbacks": 0,
+                "hits": 0,
+                "meshes": 0,
+                "phase_marks": 0,
+                "topologies": 0,
+                "topology_builds": 0,
+                "topology_hits": 0,
+                "uploads": 0
+              }
+            },
+            "candidate": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 20654,
+              "mark_draws": 25,
+              "okay": true,
+              "prepared_cells": 25,
+              "projectile_ok": true
+            },
+            "index": 0,
+            "new_meshes": 15,
+            "new_topologies": 1,
+            "plain": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 27033,
+              "mark_draws": 150,
+              "okay": true,
+              "prepared_cells": 25,
+              "projectile_ok": true
+            }
+          },
+          "measured_new_meshes": 0,
+          "measured_new_topologies": 0
+        },
+        "six_active_low_reduced": {
+          "measured": {
+            "count": 32,
+            "plain_mean_us": 13548.71875,
+            "candidate_mean_us": 12245.125,
+            "mean_saving_us": 1303.59375,
+            "mean_saving_percent": 9.621527865872926,
+            "paired_median_saving_us": 1497.5,
+            "plain_median_us": 13238.0,
+            "candidate_median_us": 11830.5,
+            "plain_p95_us": 14616,
+            "candidate_p95_us": 17111,
+            "p95_regression_percent": 17.07033388067871,
+            "plain_max_us": 20950,
+            "candidate_max_us": 17192,
+            "largest_regressions": [
+              {
+                "index": 34,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13107,
+                "candidate_us": 17192,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 11,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13268,
+                "candidate_us": 13412,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 12,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13262,
+                "candidate_us": 13070,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 9,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 12970,
+                "candidate_us": 12764,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 31,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13007,
+                "candidate_us": 12574,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "actual_order_strata": {
+            "plain": {
+              "count": 16,
+              "plain_mean_us": 13339.0625,
+              "candidate_mean_us": 12155.25,
+              "mean_saving_us": 1183.8125,
+              "mean_saving_percent": 8.874780367810706,
+              "paired_median_saving_us": 1557.5,
+              "plain_median_us": 13234.5,
+              "candidate_median_us": 11577.0,
+              "plain_p95_us": 14616,
+              "candidate_p95_us": 17192,
+              "p95_regression_percent": 17.624521072796927,
+              "plain_max_us": 14616,
+              "candidate_max_us": 17192,
+              "largest_regressions": [
+                {
+                  "index": 34,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13107,
+                  "candidate_us": 17192,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 12,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13262,
+                  "candidate_us": 13070,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 10,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13818,
+                  "candidate_us": 13016,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 30,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13371,
+                  "candidate_us": 12242,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 6,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 12738,
+                  "candidate_us": 11392,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            },
+            "candidate": {
+              "count": 16,
+              "plain_mean_us": 13758.375,
+              "candidate_mean_us": 12335,
+              "mean_saving_us": 1423.375,
+              "mean_saving_percent": 10.345516821572316,
+              "paired_median_saving_us": 1291.0,
+              "plain_median_us": 13240.5,
+              "candidate_median_us": 11937.0,
+              "plain_p95_us": 20950,
+              "candidate_p95_us": 17111,
+              "p95_regression_percent": -18.32458233890215,
+              "plain_max_us": 20950,
+              "candidate_max_us": 17111,
+              "largest_regressions": [
+                {
+                  "index": 11,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13268,
+                  "candidate_us": 13412,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 9,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 12970,
+                  "candidate_us": 12764,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 31,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13007,
+                  "candidate_us": 12574,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 33,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13214,
+                  "candidate_us": 12255,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 23,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13088,
+                  "candidate_us": 12054,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            }
+          },
+          "warmup_first_use": {
+            "count": 4,
+            "plain_mean_us": 13278.25,
+            "candidate_mean_us": 11663.75,
+            "mean_saving_us": 1614.5,
+            "mean_saving_percent": 12.15898179353454,
+            "paired_median_saving_us": 1540.5,
+            "plain_median_us": 13239.0,
+            "candidate_median_us": 11629.0,
+            "plain_p95_us": 13956,
+            "candidate_p95_us": 11996,
+            "p95_regression_percent": -14.044138721696765,
+            "plain_max_us": 13956,
+            "candidate_max_us": 11996,
+            "largest_regressions": [
+              {
+                "index": 1,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 12679,
+                "candidate_us": 11494,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 3,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 12804,
+                "candidate_us": 11401,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 2,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13674,
+                "candidate_us": 11996,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 0,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13956,
+                "candidate_us": 11764,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "all_frames": {
+            "count": 36,
+            "plain_mean_us": 13518.666666666666,
+            "candidate_mean_us": 12180.527777777777,
+            "mean_saving_us": 1338.138888888889,
+            "mean_saving_percent": 9.898453167636521,
+            "paired_median_saving_us": 1497.5,
+            "plain_median_us": 13238.0,
+            "candidate_median_us": 11779.0,
+            "plain_p95_us": 14616,
+            "candidate_p95_us": 17111,
+            "p95_regression_percent": 17.07033388067871,
+            "plain_max_us": 20950,
+            "candidate_max_us": 17192,
+            "largest_regressions": [
+              {
+                "index": 34,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13107,
+                "candidate_us": 17192,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 11,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13268,
+                "candidate_us": 13412,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 12,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13262,
+                "candidate_us": 13070,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 9,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 12970,
+                "candidate_us": 12764,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 31,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13007,
+                "candidate_us": 12574,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "first_pair": {
+            "actual_order": [
+              "plain",
+              "candidate"
+            ],
+            "cache_after": {
+              "candidate": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 5550,
+                "fallbacks": 0,
+                "hits": 3315,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 36,
+                "uploads": 15
+              },
+              "plain": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 5550,
+                "fallbacks": 0,
+                "hits": 3315,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 36,
+                "uploads": 15
+              }
+            },
+            "cache_before": {
+              "candidate": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 5400,
+                "fallbacks": 0,
+                "hits": 3225,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 35,
+                "uploads": 15
+              },
+              "plain": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 5400,
+                "fallbacks": 0,
+                "hits": 3225,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 35,
+                "uploads": 15
+              }
+            },
+            "candidate": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 11764,
+              "mark_draws": 25,
+              "okay": true,
+              "prepared_cells": 25,
+              "projectile_ok": true
+            },
+            "index": 0,
+            "new_meshes": 0,
+            "new_topologies": 0,
+            "plain": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 13956,
+              "mark_draws": 150,
+              "okay": true,
+              "prepared_cells": 25,
+              "projectile_ok": true
+            }
+          },
+          "measured_new_meshes": 0,
+          "measured_new_topologies": 0
+        },
+        "six_active_standard_normal": {
+          "measured": {
+            "count": 32,
+            "plain_mean_us": 13482.5625,
+            "candidate_mean_us": 13552.53125,
+            "mean_saving_us": -69.96875,
+            "mean_saving_percent": -0.5189573569564391,
+            "paired_median_saving_us": 0.0,
+            "plain_median_us": 13435.0,
+            "candidate_median_us": 13391.5,
+            "plain_p95_us": 14291,
+            "candidate_p95_us": 14826,
+            "p95_regression_percent": 3.743614862500877,
+            "plain_max_us": 14893,
+            "candidate_max_us": 15948,
+            "largest_regressions": [
+              {
+                "index": 28,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13595,
+                "candidate_us": 15948,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 21,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13546,
+                "candidate_us": 14826,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 8,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 12995,
+                "candidate_us": 13608,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 14,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13206,
+                "candidate_us": 13693,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 7,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13009,
+                "candidate_us": 13418,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "actual_order_strata": {
+            "plain": {
+              "count": 16,
+              "plain_mean_us": 13348.6875,
+              "candidate_mean_us": 13529.1875,
+              "mean_saving_us": -180.5,
+              "mean_saving_percent": -1.3521928654034339,
+              "paired_median_saving_us": -31.0,
+              "plain_median_us": 13300.5,
+              "candidate_median_us": 13348.0,
+              "plain_p95_us": 13823,
+              "candidate_p95_us": 15948,
+              "p95_regression_percent": 15.372929176010985,
+              "plain_max_us": 13823,
+              "candidate_max_us": 15948,
+              "largest_regressions": [
+                {
+                  "index": 28,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13595,
+                  "candidate_us": 15948,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 8,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 12995,
+                  "candidate_us": 13608,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 14,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13206,
+                  "candidate_us": 13693,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 10,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13220,
+                  "candidate_us": 13514,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 22,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 13193,
+                  "candidate_us": 13469,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            },
+            "candidate": {
+              "count": 16,
+              "plain_mean_us": 13616.4375,
+              "candidate_mean_us": 13575.875,
+              "mean_saving_us": 40.5625,
+              "mean_saving_percent": 0.29789363040075645,
+              "paired_median_saving_us": 65.5,
+              "plain_median_us": 13523.0,
+              "candidate_median_us": 13433.5,
+              "plain_p95_us": 14893,
+              "candidate_p95_us": 14826,
+              "p95_regression_percent": -0.4498757805680542,
+              "plain_max_us": 14893,
+              "candidate_max_us": 14826,
+              "largest_regressions": [
+                {
+                  "index": 21,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13546,
+                  "candidate_us": 14826,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 7,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13009,
+                  "candidate_us": 13418,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 35,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 14002,
+                  "candidate_us": 14394,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 25,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13177,
+                  "candidate_us": 13298,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 17,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 13078,
+                  "candidate_us": 13178,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            }
+          },
+          "warmup_first_use": {
+            "count": 4,
+            "plain_mean_us": 13498.75,
+            "candidate_mean_us": 13460.5,
+            "mean_saving_us": 38.25,
+            "mean_saving_percent": 0.2833595703305862,
+            "paired_median_saving_us": -60.5,
+            "plain_median_us": 13541.0,
+            "candidate_median_us": 13392.0,
+            "plain_p95_us": 13909,
+            "candidate_p95_us": 13881,
+            "p95_regression_percent": -0.20130850528434774,
+            "plain_max_us": 13909,
+            "candidate_max_us": 13881,
+            "largest_regressions": [
+              {
+                "index": 0,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13619,
+                "candidate_us": 13881,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 2,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13004,
+                "candidate_us": 13177,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 3,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13463,
+                "candidate_us": 13411,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 1,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13909,
+                "candidate_us": 13373,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "all_frames": {
+            "count": 36,
+            "plain_mean_us": 13484.361111111111,
+            "candidate_mean_us": 13542.305555555555,
+            "mean_saving_us": -57.94444444444444,
+            "mean_saving_percent": -0.42971590546250077,
+            "paired_median_saving_us": 0.0,
+            "plain_median_us": 13457.5,
+            "candidate_median_us": 13392.0,
+            "plain_p95_us": 14291,
+            "candidate_p95_us": 14826,
+            "p95_regression_percent": 3.743614862500877,
+            "plain_max_us": 14893,
+            "candidate_max_us": 15948,
+            "largest_regressions": [
+              {
+                "index": 28,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13595,
+                "candidate_us": 15948,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 21,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13546,
+                "candidate_us": 14826,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 8,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 12995,
+                "candidate_us": 13608,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 14,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 13206,
+                "candidate_us": 13693,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 7,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 13009,
+                "candidate_us": 13418,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "first_pair": {
+            "actual_order": [
+              "plain",
+              "candidate"
+            ],
+            "cache_after": {
+              "candidate": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 10950,
+                "fallbacks": 0,
+                "hits": 6555,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 72,
+                "uploads": 15
+              },
+              "plain": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 10950,
+                "fallbacks": 0,
+                "hits": 6555,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 72,
+                "uploads": 15
+              }
+            },
+            "cache_before": {
+              "candidate": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 10800,
+                "fallbacks": 0,
+                "hits": 6465,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 71,
+                "uploads": 15
+              },
+              "plain": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 10800,
+                "fallbacks": 0,
+                "hits": 6465,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 71,
+                "uploads": 15
+              }
+            },
+            "candidate": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 13881,
+              "mark_draws": 150,
+              "okay": true,
+              "prepared_cells": 25,
+              "projectile_ok": true
+            },
+            "index": 0,
+            "new_meshes": 0,
+            "new_topologies": 0,
+            "plain": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 13619,
+              "mark_draws": 150,
+              "okay": true,
+              "prepared_cells": 25,
+              "projectile_ok": true
+            }
+          },
+          "measured_new_meshes": 0,
+          "measured_new_topologies": 0
+        },
+        "fire_active_low_normal": {
+          "measured": {
+            "count": 32,
+            "plain_mean_us": 2428.46875,
+            "candidate_mean_us": 2484.40625,
+            "mean_saving_us": -55.9375,
+            "mean_saving_percent": -2.3034062101890336,
+            "paired_median_saving_us": 2.5,
+            "plain_median_us": 2398.0,
+            "candidate_median_us": 2449.5,
+            "plain_p95_us": 2659,
+            "candidate_p95_us": 2733,
+            "p95_regression_percent": 2.7830011282437006,
+            "plain_max_us": 2753,
+            "candidate_max_us": 2837,
+            "largest_regressions": [
+              {
+                "index": 19,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 2336,
+                "candidate_us": 2837,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 5,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 2281,
+                "candidate_us": 2728,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 34,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 2366,
+                "candidate_us": 2595,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 24,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 2305,
+                "candidate_us": 2523,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 26,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 2302,
+                "candidate_us": 2516,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "actual_order_strata": {
+            "plain": {
+              "count": 16,
+              "plain_mean_us": 2414.625,
+              "candidate_mean_us": 2468.4375,
+              "mean_saving_us": -53.8125,
+              "mean_saving_percent": -2.2286069265413886,
+              "paired_median_saving_us": 2.5,
+              "plain_median_us": 2412.0,
+              "candidate_median_us": 2449.5,
+              "plain_p95_us": 2636,
+              "candidate_p95_us": 2733,
+              "p95_regression_percent": 3.679817905918048,
+              "plain_max_us": 2636,
+              "candidate_max_us": 2733,
+              "largest_regressions": [
+                {
+                  "index": 34,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 2366,
+                  "candidate_us": 2595,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 24,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 2305,
+                  "candidate_us": 2523,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 26,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 2302,
+                  "candidate_us": 2516,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 32,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 2530,
+                  "candidate_us": 2733,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 10,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 2274,
+                  "candidate_us": 2472,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            },
+            "candidate": {
+              "count": 16,
+              "plain_mean_us": 2442.3125,
+              "candidate_mean_us": 2500.375,
+              "mean_saving_us": -58.0625,
+              "mean_saving_percent": -2.377357524886762,
+              "paired_median_saving_us": -3.0,
+              "plain_median_us": 2392.0,
+              "candidate_median_us": 2429.0,
+              "plain_p95_us": 2753,
+              "candidate_p95_us": 2837,
+              "p95_regression_percent": 3.0512168543407103,
+              "plain_max_us": 2753,
+              "candidate_max_us": 2837,
+              "largest_regressions": [
+                {
+                  "index": 19,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 2336,
+                  "candidate_us": 2837,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 5,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 2281,
+                  "candidate_us": 2728,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 29,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 2362,
+                  "candidate_us": 2572,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 9,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 2347,
+                  "candidate_us": 2481,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 15,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 2397,
+                  "candidate_us": 2531,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            }
+          },
+          "warmup_first_use": {
+            "count": 4,
+            "plain_mean_us": 7162.25,
+            "candidate_mean_us": 3702,
+            "mean_saving_us": 3460.25,
+            "mean_saving_percent": 48.312332018569585,
+            "paired_median_saving_us": 33.5,
+            "plain_median_us": 2400.5,
+            "candidate_median_us": 2367.0,
+            "plain_p95_us": 21547,
+            "candidate_p95_us": 7762,
+            "p95_regression_percent": -63.976423632060154,
+            "plain_max_us": 21547,
+            "candidate_max_us": 7762,
+            "largest_regressions": [
+              {
+                "index": 1,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 2301,
+                "candidate_us": 2312,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 3,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 2335,
+                "candidate_us": 2332,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 2,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 2466,
+                "candidate_us": 2402,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 0,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 21547,
+                "candidate_us": 7762,
+                "new_meshes": 10,
+                "new_topologies": 1
+              }
+            ]
+          },
+          "all_frames": {
+            "count": 36,
+            "plain_mean_us": 2954.4444444444443,
+            "candidate_mean_us": 2619.6944444444443,
+            "mean_saving_us": 334.75,
+            "mean_saving_percent": 11.330387363670553,
+            "paired_median_saving_us": 3.5,
+            "plain_median_us": 2398.0,
+            "candidate_median_us": 2437.0,
+            "plain_p95_us": 2753,
+            "candidate_p95_us": 2837,
+            "p95_regression_percent": 3.0512168543407103,
+            "plain_max_us": 21547,
+            "candidate_max_us": 7762,
+            "largest_regressions": [
+              {
+                "index": 19,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 2336,
+                "candidate_us": 2837,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 5,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 2281,
+                "candidate_us": 2728,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 34,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 2366,
+                "candidate_us": 2595,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 24,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 2305,
+                "candidate_us": 2523,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 26,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 2302,
+                "candidate_us": 2516,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "first_pair": {
+            "actual_order": [
+              "plain",
+              "candidate"
+            ],
+            "cache_after": {
+              "candidate": {
+                "batches": 25,
+                "edge_mask_builds": 163,
+                "edge_mask_hits": 16213,
+                "fallbacks": 0,
+                "hits": 9705,
+                "meshes": 25,
+                "phase_marks": 0,
+                "topologies": 2,
+                "topology_builds": 2,
+                "topology_hits": 107,
+                "uploads": 25
+              },
+              "plain": {
+                "batches": 25,
+                "edge_mask_builds": 163,
+                "edge_mask_hits": 16213,
+                "fallbacks": 0,
+                "hits": 9705,
+                "meshes": 25,
+                "phase_marks": 0,
+                "topologies": 2,
+                "topology_builds": 2,
+                "topology_hits": 107,
+                "uploads": 25
+              }
+            },
+            "cache_before": {
+              "candidate": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 16200,
+                "fallbacks": 0,
+                "hits": 9705,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 107,
+                "uploads": 15
+              },
+              "plain": {
+                "batches": 15,
+                "edge_mask_builds": 150,
+                "edge_mask_hits": 16200,
+                "fallbacks": 0,
+                "hits": 9705,
+                "meshes": 15,
+                "phase_marks": 0,
+                "topologies": 1,
+                "topology_builds": 1,
+                "topology_hits": 107,
+                "uploads": 15
+              }
+            },
+            "candidate": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 7762,
+              "mark_draws": 0,
+              "okay": true,
+              "prepared_cells": 13,
+              "projectile_ok": true
+            },
+            "index": 0,
+            "new_meshes": 10,
+            "new_topologies": 1,
+            "plain": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 21547,
+              "mark_draws": 0,
+              "okay": true,
+              "prepared_cells": 13,
+              "projectile_ok": true
+            }
+          },
+          "measured_new_meshes": 0,
+          "measured_new_topologies": 0
+        },
+        "mantle_active_low_normal": {
+          "measured": {
+            "count": 32,
+            "plain_mean_us": 10657.375,
+            "candidate_mean_us": 10668.875,
+            "mean_saving_us": -11.5,
+            "mean_saving_percent": -0.10790649667483784,
+            "paired_median_saving_us": 5.5,
+            "plain_median_us": 10630.5,
+            "candidate_median_us": 10600.5,
+            "plain_p95_us": 11220,
+            "candidate_p95_us": 11239,
+            "p95_regression_percent": 0.16934046345811193,
+            "plain_max_us": 11236,
+            "candidate_max_us": 11261,
+            "largest_regressions": [
+              {
+                "index": 17,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 10453,
+                "candidate_us": 11112,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 25,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 10633,
+                "candidate_us": 11239,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 14,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 10649,
+                "candidate_us": 11066,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 19,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 10629,
+                "candidate_us": 10948,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 15,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 10380,
+                "candidate_us": 10638,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "actual_order_strata": {
+            "plain": {
+              "count": 16,
+              "plain_mean_us": 10674.625,
+              "candidate_mean_us": 10623.1875,
+              "mean_saving_us": 51.4375,
+              "mean_saving_percent": 0.4818670445097603,
+              "paired_median_saving_us": 20.5,
+              "plain_median_us": 10640.5,
+              "candidate_median_us": 10591.5,
+              "plain_p95_us": 11220,
+              "candidate_p95_us": 11066,
+              "p95_regression_percent": -1.3725490196078383,
+              "plain_max_us": 11220,
+              "candidate_max_us": 11066,
+              "largest_regressions": [
+                {
+                  "index": 14,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 10649,
+                  "candidate_us": 11066,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 28,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 10396,
+                  "candidate_us": 10641,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 4,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 10384,
+                  "candidate_us": 10485,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 26,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 10385,
+                  "candidate_us": 10434,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 8,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 10910,
+                  "candidate_us": 10919,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            },
+            "candidate": {
+              "count": 16,
+              "plain_mean_us": 10640.125,
+              "candidate_mean_us": 10714.5625,
+              "mean_saving_us": -74.4375,
+              "mean_saving_percent": -0.6995923450147438,
+              "paired_median_saving_us": -63.0,
+              "plain_median_us": 10587.5,
+              "candidate_median_us": 10600.5,
+              "plain_p95_us": 11236,
+              "candidate_p95_us": 11261,
+              "p95_regression_percent": 0.22249911000356004,
+              "plain_max_us": 11236,
+              "candidate_max_us": 11261,
+              "largest_regressions": [
+                {
+                  "index": 17,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 10453,
+                  "candidate_us": 11112,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 25,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 10633,
+                  "candidate_us": 11239,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 19,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 10629,
+                  "candidate_us": 10948,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 15,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 10380,
+                  "candidate_us": 10638,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 7,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 10847,
+                  "candidate_us": 11081,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            }
+          },
+          "warmup_first_use": {
+            "count": 4,
+            "plain_mean_us": 15707,
+            "candidate_mean_us": 15187,
+            "mean_saving_us": 520,
+            "mean_saving_percent": 3.3106258356146943,
+            "paired_median_saving_us": 335.5,
+            "plain_median_us": 10734.5,
+            "candidate_median_us": 10533.5,
+            "plain_p95_us": 30932,
+            "candidate_p95_us": 29319,
+            "p95_regression_percent": -5.21466442519074,
+            "plain_max_us": 30932,
+            "candidate_max_us": 29319,
+            "largest_regressions": [
+              {
+                "index": 2,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 10434,
+                "candidate_us": 10638,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 1,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 10427,
+                "candidate_us": 10362,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 3,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 11035,
+                "candidate_us": 10429,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 0,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 30932,
+                "candidate_us": 29319,
+                "new_meshes": 60,
+                "new_topologies": 2
+              }
+            ]
+          },
+          "all_frames": {
+            "count": 36,
+            "plain_mean_us": 11218.444444444445,
+            "candidate_mean_us": 11170.888888888889,
+            "mean_saving_us": 47.55555555555556,
+            "mean_saving_percent": 0.42390507695659924,
+            "paired_median_saving_us": 9.0,
+            "plain_median_us": 10630.5,
+            "candidate_median_us": 10600.5,
+            "plain_p95_us": 11236,
+            "candidate_p95_us": 11261,
+            "p95_regression_percent": 0.22249911000356004,
+            "plain_max_us": 30932,
+            "candidate_max_us": 29319,
+            "largest_regressions": [
+              {
+                "index": 17,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 10453,
+                "candidate_us": 11112,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 25,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 10633,
+                "candidate_us": 11239,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 14,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 10649,
+                "candidate_us": 11066,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 19,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 10629,
+                "candidate_us": 10948,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 15,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 10380,
+                "candidate_us": 10638,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "first_pair": {
+            "actual_order": [
+              "plain",
+              "candidate"
+            ],
+            "cache_after": {
+              "candidate": {
+                "batches": 85,
+                "edge_mask_builds": 254,
+                "edge_mask_hits": 16759,
+                "fallbacks": 0,
+                "hits": 10082,
+                "meshes": 85,
+                "phase_marks": 0,
+                "topologies": 4,
+                "topology_builds": 4,
+                "topology_hits": 142,
+                "uploads": 85
+              },
+              "plain": {
+                "batches": 85,
+                "edge_mask_builds": 254,
+                "edge_mask_hits": 16759,
+                "fallbacks": 0,
+                "hits": 10082,
+                "meshes": 85,
+                "phase_marks": 0,
+                "topologies": 4,
+                "topology_builds": 4,
+                "topology_hits": 142,
+                "uploads": 85
+              }
+            },
+            "cache_before": {
+              "candidate": {
+                "batches": 25,
+                "edge_mask_builds": 163,
+                "edge_mask_hits": 16668,
+                "fallbacks": 0,
+                "hits": 10055,
+                "meshes": 25,
+                "phase_marks": 0,
+                "topologies": 2,
+                "topology_builds": 2,
+                "topology_hits": 142,
+                "uploads": 25
+              },
+              "plain": {
+                "batches": 25,
+                "edge_mask_builds": 163,
+                "edge_mask_hits": 16668,
+                "fallbacks": 0,
+                "hits": 10055,
+                "meshes": 25,
+                "phase_marks": 0,
+                "topologies": 2,
+                "topology_builds": 2,
+                "topology_hits": 142,
+                "uploads": 25
+              }
+            },
+            "candidate": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 1,
+              "ground_us": 29319,
+              "mark_draws": 56,
+              "okay": true,
+              "prepared_cells": 33,
+              "projectile_ok": true
+            },
+            "index": 0,
+            "new_meshes": 60,
+            "new_topologies": 2,
+            "plain": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 1,
+              "ground_us": 30932,
+              "mark_draws": 56,
+              "okay": true,
+              "prepared_cells": 33,
+              "projectile_ok": true
+            }
+          },
+          "measured_new_meshes": 0,
+          "measured_new_topologies": 0
+        },
+        "one_product_low_normal": {
+          "measured": {
+            "count": 32,
+            "plain_mean_us": 3451.5625,
+            "candidate_mean_us": 3694.46875,
+            "mean_saving_us": -242.90625,
+            "mean_saving_percent": -7.037573562698054,
+            "paired_median_saving_us": -280.0,
+            "plain_median_us": 3390.0,
+            "candidate_median_us": 3657.5,
+            "plain_p95_us": 3938,
+            "candidate_p95_us": 4132,
+            "p95_regression_percent": 4.926358557643473,
+            "plain_max_us": 4357,
+            "candidate_max_us": 4255,
+            "largest_regressions": [
+              {
+                "index": 17,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 3579,
+                "candidate_us": 4132,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 18,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 3542,
+                "candidate_us": 4064,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 7,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 3272,
+                "candidate_us": 3766,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 23,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 3372,
+                "candidate_us": 3857,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 21,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 3797,
+                "candidate_us": 4255,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "actual_order_strata": {
+            "plain": {
+              "count": 16,
+              "plain_mean_us": 3459.75,
+              "candidate_mean_us": 3669.75,
+              "mean_saving_us": -210,
+              "mean_saving_percent": -6.0698027314112295,
+              "paired_median_saving_us": -221.0,
+              "plain_median_us": 3437.5,
+              "candidate_median_us": 3640.5,
+              "plain_p95_us": 3938,
+              "candidate_p95_us": 4064,
+              "p95_regression_percent": 3.1995937023870047,
+              "plain_max_us": 3938,
+              "candidate_max_us": 4064,
+              "largest_regressions": [
+                {
+                  "index": 18,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 3542,
+                  "candidate_us": 4064,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 32,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 3288,
+                  "candidate_us": 3678,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 6,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 3260,
+                  "candidate_us": 3584,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 34,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 3304,
+                  "candidate_us": 3598,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 4,
+                  "order": [
+                    "plain",
+                    "candidate"
+                  ],
+                  "plain_us": 3275,
+                  "candidate_us": 3561,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            },
+            "candidate": {
+              "count": 16,
+              "plain_mean_us": 3443.375,
+              "candidate_mean_us": 3719.1875,
+              "mean_saving_us": -275.8125,
+              "mean_saving_percent": -8.009946636657348,
+              "paired_median_saving_us": -319.5,
+              "plain_median_us": 3381.0,
+              "candidate_median_us": 3667.5,
+              "plain_p95_us": 4357,
+              "candidate_p95_us": 4255,
+              "p95_regression_percent": -2.341060362634839,
+              "plain_max_us": 4357,
+              "candidate_max_us": 4255,
+              "largest_regressions": [
+                {
+                  "index": 17,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 3579,
+                  "candidate_us": 4132,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 7,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 3272,
+                  "candidate_us": 3766,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 23,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 3372,
+                  "candidate_us": 3857,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 21,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 3797,
+                  "candidate_us": 4255,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                },
+                {
+                  "index": 27,
+                  "order": [
+                    "candidate",
+                    "plain"
+                  ],
+                  "plain_us": 3315,
+                  "candidate_us": 3702,
+                  "new_meshes": 0,
+                  "new_topologies": 0
+                }
+              ]
+            }
+          },
+          "warmup_first_use": {
+            "count": 4,
+            "plain_mean_us": 3544.75,
+            "candidate_mean_us": 3832.5,
+            "mean_saving_us": -287.75,
+            "mean_saving_percent": -8.11763876154877,
+            "paired_median_saving_us": -271.5,
+            "plain_median_us": 3383.5,
+            "candidate_median_us": 3731.5,
+            "plain_p95_us": 4102,
+            "candidate_p95_us": 4324,
+            "p95_regression_percent": 5.411994149195509,
+            "plain_max_us": 4102,
+            "candidate_max_us": 4324,
+            "largest_regressions": [
+              {
+                "index": 2,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 3342,
+                "candidate_us": 3728,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 3,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 3425,
+                "candidate_us": 3735,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 1,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 3310,
+                "candidate_us": 3543,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 0,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 4102,
+                "candidate_us": 4324,
+                "new_meshes": 0,
+                "new_topologies": 1
+              }
+            ]
+          },
+          "all_frames": {
+            "count": 36,
+            "plain_mean_us": 3461.9166666666665,
+            "candidate_mean_us": 3709.8055555555557,
+            "mean_saving_us": -247.88888888888889,
+            "mean_saving_percent": -7.160452222195476,
+            "paired_median_saving_us": -280.0,
+            "plain_median_us": 3390.0,
+            "candidate_median_us": 3662.5,
+            "plain_p95_us": 4102,
+            "candidate_p95_us": 4255,
+            "p95_regression_percent": 3.729887859580683,
+            "plain_max_us": 4357,
+            "candidate_max_us": 4324,
+            "largest_regressions": [
+              {
+                "index": 17,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 3579,
+                "candidate_us": 4132,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 18,
+                "order": [
+                  "plain",
+                  "candidate"
+                ],
+                "plain_us": 3542,
+                "candidate_us": 4064,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 7,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 3272,
+                "candidate_us": 3766,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 23,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 3372,
+                "candidate_us": 3857,
+                "new_meshes": 0,
+                "new_topologies": 0
+              },
+              {
+                "index": 21,
+                "order": [
+                  "candidate",
+                  "plain"
+                ],
+                "plain_us": 3797,
+                "candidate_us": 4255,
+                "new_meshes": 0,
+                "new_topologies": 0
+              }
+            ]
+          },
+          "first_pair": {
+            "actual_order": [
+              "plain",
+              "candidate"
+            ],
+            "cache_after": {
+              "candidate": {
+                "batches": 85,
+                "edge_mask_builds": 279,
+                "edge_mask_hits": 19969,
+                "fallbacks": 0,
+                "hits": 13142,
+                "meshes": 85,
+                "phase_marks": 0,
+                "topologies": 5,
+                "topology_builds": 5,
+                "topology_hits": 212,
+                "uploads": 85
+              },
+              "plain": {
+                "batches": 85,
+                "edge_mask_builds": 279,
+                "edge_mask_hits": 19969,
+                "fallbacks": 0,
+                "hits": 13142,
+                "meshes": 85,
+                "phase_marks": 0,
+                "topologies": 5,
+                "topology_builds": 5,
+                "topology_hits": 212,
+                "uploads": 85
+              }
+            },
+            "cache_before": {
+              "candidate": {
+                "batches": 85,
+                "edge_mask_builds": 254,
+                "edge_mask_hits": 19944,
+                "fallbacks": 0,
+                "hits": 13127,
+                "meshes": 85,
+                "phase_marks": 0,
+                "topologies": 4,
+                "topology_builds": 4,
+                "topology_hits": 212,
+                "uploads": 85
+              },
+              "plain": {
+                "batches": 85,
+                "edge_mask_builds": 254,
+                "edge_mask_hits": 19944,
+                "fallbacks": 0,
+                "hits": 13127,
+                "meshes": 85,
+                "phase_marks": 0,
+                "topologies": 4,
+                "topology_builds": 4,
+                "topology_hits": 212,
+                "uploads": 85
+              }
+            },
+            "candidate": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 4324,
+              "mark_draws": 25,
+              "okay": true,
+              "prepared_cells": 25,
+              "projectile_ok": true
+            },
+            "index": 0,
+            "new_meshes": 0,
+            "new_topologies": 1,
+            "plain": {
+              "authority_unchanged": true,
+              "body_ok": true,
+              "context_ok": true,
+              "court_projectile_draws": 0,
+              "expanded_projectile_draws": 0,
+              "ground_us": 4102,
+              "mark_draws": 25,
+              "okay": true,
+              "prepared_cells": 25,
+              "projectile_ok": true
+            }
+          },
+          "measured_new_meshes": 0,
+          "measured_new_topologies": 0
+        }
+      },
+      "helper_sha256": "94a11838fceef302053a9361cdc177d850dae4c16151c24274721bb85a88138f",
+      "runner_receipt_sha256": "28ccc1f5ab8fdc335a08993ccc1891f38f7f9c2a0f5721c93b07da728f958a85",
+      "host_memory_before": {
+        "available": true,
+        "observed_utc": "2026-10-14T11:18:22.9015924Z",
+        "available_bytes": 939823104,
+        "total_visible_bytes": 7817785344,
+        "scope": "Host OS memory endpoint; not diagnostic-process memory or dedicated idle-machine proof."
+      },
+      "host_memory_after": {
+        "available": true,
+        "observed_utc": "2026-10-14T11:20:53.9947831Z",
+        "available_bytes": 875331584,
+        "total_visible_bytes": 7817785344,
+        "scope": "Host OS memory endpoint; not diagnostic-process memory or dedicated idle-machine proof."
+      },
+      "engine_memory": {
+        "after_cleanup": {
+          "static": 216271864,
+          "textures": 36335003,
+          "video": 49136211
+        },
+        "before_cleanup": {
+          "static": 285632852,
+          "textures": 51315847,
+          "video": 64208679
+        },
+        "entry": {
+          "static": 83270125,
+          "textures": 7401763,
+          "video": 13812395
+        },
+        "scope": "Godot monitor endpoints, not host/process/private peaks or physical GPU allocation."
+      }
+    }
+  },
+  "primary_gates": [
+    {
+      "run": "probe-forward-c",
+      "label": "six_active_low_normal",
+      "flags": {
+        "mean_saving_at_least_10_percent": true,
+        "mean_saving_at_least_500_us": true,
+        "positive_paired_median": true,
+        "both_order_mean_savings_positive": true
+      },
+      "passed": true
+    },
+    {
+      "run": "probe-forward-c",
+      "label": "six_active_low_reduced",
+      "flags": {
+        "mean_saving_at_least_10_percent": false,
+        "mean_saving_at_least_500_us": true,
+        "positive_paired_median": true,
+        "both_order_mean_savings_positive": true
+      },
+      "passed": false
+    },
+    {
+      "run": "probe-reverse-c",
+      "label": "six_active_low_normal",
+      "flags": {
+        "mean_saving_at_least_10_percent": false,
+        "mean_saving_at_least_500_us": true,
+        "positive_paired_median": true,
+        "both_order_mean_savings_positive": true
+      },
+      "passed": false
+    },
+    {
+      "run": "probe-reverse-c",
+      "label": "six_active_low_reduced",
+      "flags": {
+        "mean_saving_at_least_10_percent": false,
+        "mean_saving_at_least_500_us": true,
+        "positive_paired_median": true,
+        "both_order_mean_savings_positive": true
+      },
+      "passed": false
+    }
+  ],
+  "primary_passed": 1,
+  "primary_required": 4,
+  "repeated_all_frame_p95_regressions_over_5_percent": [],
+  "repeated_unchanged_mean_regressions_over_3_percent_and_100_us": [
+    "one_product_low_normal"
+  ],
+  "performance_gate_passed": false,
+  "visual_acceptance": "Not established by this analyzer; root must assess actual threat-density images independently.",
+  "disposition": "WITHDRAW: predeclared performance gate fails",
+  "scope": "Exact frozen sources, receipts/logs/images and native counters are checked. Movement source is the explicitly pinned archived predecessor because root integrated a separate retained branch after this trial; the other337 inputs remain current. The immutable prior338-source readback is linked. Helper performed strict packet/event purity checks; raw packets are not present for independent recapture. No whole-game FPS, GPU/present, physical input or smoothness claim. No partial-run timing selection, post-hoc pooling rescue or extra native experiment."
+}

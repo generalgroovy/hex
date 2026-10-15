@@ -1,0 +1,401 @@
+{
+  "schema": "hex.conflagration-gameplay-review.v1",
+  "passed": true,
+  "checks": 9106,
+  "runs": [
+    {
+      "run": "probe-forward-c",
+      "receipt_sha256": "4e4709033740f45b9b5638918d7b6afa0c2c9fa69117c8f62a25d154688c5989",
+      "helper_checks": 7459,
+      "prepared_control_checks": 91,
+      "paid_sequences": [
+        {
+          "label": "single_fire_then_natural_reentry",
+          "attempts": 2,
+          "admitted": 2,
+          "refused": 0,
+          "matter_paid": 1200,
+          "ticks": 1008,
+          "fully_expired": true
+        },
+        {
+          "label": "twelve_fire",
+          "attempts": 12,
+          "admitted": 12,
+          "refused": 0,
+          "matter_paid": 7200,
+          "ticks": 816,
+          "fully_expired": true
+        },
+        {
+          "label": "twelve_all_six_mantle_attempts",
+          "attempts": 12,
+          "admitted": 12,
+          "refused": 0,
+          "matter_paid": 7200,
+          "ticks": 2717,
+          "fully_expired": true
+        },
+        {
+          "label": "two_fire_one_conflagration",
+          "attempts": 2,
+          "admitted": 2,
+          "refused": 0,
+          "matter_paid": 1200,
+          "ticks": 496,
+          "fully_expired": true
+        },
+        {
+          "label": "two_owners_two_fire_each",
+          "attempts": 4,
+          "admitted": 4,
+          "refused": 0,
+          "matter_paid": 2400,
+          "ticks": 496,
+          "fully_expired": true
+        }
+      ],
+      "cases": [
+        {
+          "label": "six_active_low_normal",
+          "tick": 396,
+          "active_products": 6,
+          "skipped": 125,
+          "retained": 25,
+          "changed_rgba": 1157,
+          "authority_hash": "c74b98c185375f540476778869c4e6ac536998815f47ac077f016d075f3aab72"
+        },
+        {
+          "label": "six_active_low_reduced",
+          "tick": 396,
+          "active_products": 6,
+          "skipped": 125,
+          "retained": 25,
+          "changed_rgba": 14,
+          "authority_hash": "c74b98c185375f540476778869c4e6ac536998815f47ac077f016d075f3aab72"
+        },
+        {
+          "label": "six_active_standard_normal",
+          "tick": 396,
+          "active_products": 6,
+          "skipped": 0,
+          "retained": 150,
+          "changed_rgba": 0,
+          "authority_hash": "c74b98c185375f540476778869c4e6ac536998815f47ac077f016d075f3aab72"
+        },
+        {
+          "label": "fire_active_low_normal",
+          "tick": 48,
+          "active_products": 0,
+          "skipped": 0,
+          "retained": 0,
+          "changed_rgba": 0,
+          "authority_hash": "8ebca1bf5d9eab8648e0196033ecb174ccebc9ae3f7718bdfafaa2ec8bfc81d6"
+        },
+        {
+          "label": "mantle_active_low_normal",
+          "tick": 1171,
+          "active_products": 0,
+          "skipped": 0,
+          "retained": 0,
+          "changed_rgba": 0,
+          "authority_hash": "ada280485b58f58e11a136bfa9c5772a64cd579c84e4bcf94c2461aff1ae4943"
+        },
+        {
+          "label": "one_product_low_normal",
+          "tick": 76,
+          "active_products": 1,
+          "skipped": 0,
+          "retained": 25,
+          "changed_rgba": 0,
+          "authority_hash": "bcd005c36db14e82558cf4de96bc42a747b27680881e865f206d25d0a24de318"
+        },
+        {
+          "label": "six_active_standard_reduced",
+          "tick": 396,
+          "active_products": 6,
+          "skipped": 0,
+          "retained": 150,
+          "changed_rgba": 0,
+          "authority_hash": "c74b98c185375f540476778869c4e6ac536998815f47ac077f016d075f3aab72"
+        },
+        {
+          "label": "mixed_phase_low_normal",
+          "tick": 116,
+          "active_products": 1,
+          "skipped": 0,
+          "retained": 25,
+          "changed_rgba": 0,
+          "authority_hash": "d053fffd77cc91758efe9c481abe4930ef3da6a4bee1d6cda4fea08607b55c67"
+        },
+        {
+          "label": "partial_expiry_low_normal",
+          "tick": 496,
+          "active_products": 5,
+          "skipped": 100,
+          "retained": 25,
+          "changed_rgba": 838,
+          "authority_hash": "52eef3a5a4c07cc4c747482900a1edcbc394e3a00fa4ca5d0a89d6d16a2cc1f8"
+        },
+        {
+          "label": "last_active_low_normal",
+          "tick": 692,
+          "active_products": 1,
+          "skipped": 0,
+          "retained": 25,
+          "changed_rgba": 0,
+          "authority_hash": "0fe93ed65a92197aed683d1243d78a8db16b932158462d68c0a74e7e2af5e1ae"
+        },
+        {
+          "label": "active_with_flight_low_normal",
+          "tick": 76,
+          "active_products": 1,
+          "skipped": 0,
+          "retained": 25,
+          "changed_rgba": 0,
+          "authority_hash": "8a2af212b4005ede0177b27e5d7582e3957ccf70014fad9e1605db38f016149d"
+        },
+        {
+          "label": "conflagration_forming_low_normal",
+          "tick": 52,
+          "active_products": 0,
+          "skipped": 0,
+          "retained": 0,
+          "changed_rgba": 0,
+          "authority_hash": "1de0a7a8c751ed03484954986056b4e09aeae62907c98cd679f3a38a34c902a4"
+        },
+        {
+          "label": "one_cooling_low_normal",
+          "tick": 436,
+          "active_products": 0,
+          "skipped": 0,
+          "retained": 0,
+          "changed_rgba": 0,
+          "authority_hash": "dd0bfc0643747dc891d9ea887fa77bf2de343e00046b331971873dd09354bf8b"
+        },
+        {
+          "label": "two_conflagration_owners_low_normal",
+          "tick": 76,
+          "active_products": 2,
+          "skipped": 0,
+          "retained": 50,
+          "changed_rgba": 0,
+          "authority_hash": "e5c9ed50c38ff7efc764511ffc289bc9cf1a1bae521ca0f3bd4417874249744d"
+        },
+        {
+          "label": "expired_low_normal",
+          "tick": 504,
+          "active_products": 0,
+          "skipped": 0,
+          "retained": 0,
+          "changed_rgba": 0,
+          "authority_hash": "272b7621ca82361160f5d52cfe0a116c2ee0df13faaa3b034b05fc25ecd3d36e"
+        }
+      ]
+    },
+    {
+      "run": "probe-reverse-c",
+      "receipt_sha256": "94a11838fceef302053a9361cdc177d850dae4c16151c24274721bb85a88138f",
+      "helper_checks": 7459,
+      "prepared_control_checks": 91,
+      "paid_sequences": [
+        {
+          "label": "single_fire_then_natural_reentry",
+          "attempts": 2,
+          "admitted": 2,
+          "refused": 0,
+          "matter_paid": 1200,
+          "ticks": 1008,
+          "fully_expired": true
+        },
+        {
+          "label": "twelve_fire",
+          "attempts": 12,
+          "admitted": 12,
+          "refused": 0,
+          "matter_paid": 7200,
+          "ticks": 816,
+          "fully_expired": true
+        },
+        {
+          "label": "twelve_all_six_mantle_attempts",
+          "attempts": 12,
+          "admitted": 12,
+          "refused": 0,
+          "matter_paid": 7200,
+          "ticks": 2717,
+          "fully_expired": true
+        },
+        {
+          "label": "two_fire_one_conflagration",
+          "attempts": 2,
+          "admitted": 2,
+          "refused": 0,
+          "matter_paid": 1200,
+          "ticks": 496,
+          "fully_expired": true
+        },
+        {
+          "label": "two_owners_two_fire_each",
+          "attempts": 4,
+          "admitted": 4,
+          "refused": 0,
+          "matter_paid": 2400,
+          "ticks": 496,
+          "fully_expired": true
+        }
+      ],
+      "cases": [
+        {
+          "label": "six_active_low_normal",
+          "tick": 396,
+          "active_products": 6,
+          "skipped": 125,
+          "retained": 25,
+          "changed_rgba": 1157,
+          "authority_hash": "c74b98c185375f540476778869c4e6ac536998815f47ac077f016d075f3aab72"
+        },
+        {
+          "label": "six_active_low_reduced",
+          "tick": 396,
+          "active_products": 6,
+          "skipped": 125,
+          "retained": 25,
+          "changed_rgba": 14,
+          "authority_hash": "c74b98c185375f540476778869c4e6ac536998815f47ac077f016d075f3aab72"
+        },
+        {
+          "label": "six_active_standard_normal",
+          "tick": 396,
+          "active_products": 6,
+          "skipped": 0,
+          "retained": 150,
+          "changed_rgba": 0,
+          "authority_hash": "c74b98c185375f540476778869c4e6ac536998815f47ac077f016d075f3aab72"
+        },
+        {
+          "label": "fire_active_low_normal",
+          "tick": 48,
+          "active_products": 0,
+          "skipped": 0,
+          "retained": 0,
+          "changed_rgba": 0,
+          "authority_hash": "8ebca1bf5d9eab8648e0196033ecb174ccebc9ae3f7718bdfafaa2ec8bfc81d6"
+        },
+        {
+          "label": "mantle_active_low_normal",
+          "tick": 1171,
+          "active_products": 0,
+          "skipped": 0,
+          "retained": 0,
+          "changed_rgba": 0,
+          "authority_hash": "ada280485b58f58e11a136bfa9c5772a64cd579c84e4bcf94c2461aff1ae4943"
+        },
+        {
+          "label": "one_product_low_normal",
+          "tick": 76,
+          "active_products": 1,
+          "skipped": 0,
+          "retained": 25,
+          "changed_rgba": 0,
+          "authority_hash": "bcd005c36db14e82558cf4de96bc42a747b27680881e865f206d25d0a24de318"
+        },
+        {
+          "label": "six_active_standard_reduced",
+          "tick": 396,
+          "active_products": 6,
+          "skipped": 0,
+          "retained": 150,
+          "changed_rgba": 0,
+          "authority_hash": "c74b98c185375f540476778869c4e6ac536998815f47ac077f016d075f3aab72"
+        },
+        {
+          "label": "mixed_phase_low_normal",
+          "tick": 116,
+          "active_products": 1,
+          "skipped": 0,
+          "retained": 25,
+          "changed_rgba": 0,
+          "authority_hash": "d053fffd77cc91758efe9c481abe4930ef3da6a4bee1d6cda4fea08607b55c67"
+        },
+        {
+          "label": "partial_expiry_low_normal",
+          "tick": 496,
+          "active_products": 5,
+          "skipped": 100,
+          "retained": 25,
+          "changed_rgba": 838,
+          "authority_hash": "52eef3a5a4c07cc4c747482900a1edcbc394e3a00fa4ca5d0a89d6d16a2cc1f8"
+        },
+        {
+          "label": "last_active_low_normal",
+          "tick": 692,
+          "active_products": 1,
+          "skipped": 0,
+          "retained": 25,
+          "changed_rgba": 0,
+          "authority_hash": "0fe93ed65a92197aed683d1243d78a8db16b932158462d68c0a74e7e2af5e1ae"
+        },
+        {
+          "label": "active_with_flight_low_normal",
+          "tick": 76,
+          "active_products": 1,
+          "skipped": 0,
+          "retained": 25,
+          "changed_rgba": 0,
+          "authority_hash": "8a2af212b4005ede0177b27e5d7582e3957ccf70014fad9e1605db38f016149d"
+        },
+        {
+          "label": "conflagration_forming_low_normal",
+          "tick": 52,
+          "active_products": 0,
+          "skipped": 0,
+          "retained": 0,
+          "changed_rgba": 0,
+          "authority_hash": "1de0a7a8c751ed03484954986056b4e09aeae62907c98cd679f3a38a34c902a4"
+        },
+        {
+          "label": "one_cooling_low_normal",
+          "tick": 436,
+          "active_products": 0,
+          "skipped": 0,
+          "retained": 0,
+          "changed_rgba": 0,
+          "authority_hash": "dd0bfc0643747dc891d9ea887fa77bf2de343e00046b331971873dd09354bf8b"
+        },
+        {
+          "label": "two_conflagration_owners_low_normal",
+          "tick": 76,
+          "active_products": 2,
+          "skipped": 0,
+          "retained": 50,
+          "changed_rgba": 0,
+          "authority_hash": "e5c9ed50c38ff7efc764511ffc289bc9cf1a1bae521ca0f3bd4417874249744d"
+        },
+        {
+          "label": "expired_low_normal",
+          "tick": 504,
+          "active_products": 0,
+          "skipped": 0,
+          "retained": 0,
+          "changed_rgba": 0,
+          "authority_hash": "272b7621ca82361160f5d52cfe0a116c2ee0df13faaa3b034b05fc25ecd3d36e"
+        }
+      ]
+    }
+  ],
+  "visual_review": {
+    "decision": "accept captured threat readability; performance gate remains independent",
+    "viewed_pngs": 16,
+    "observations": [
+      "Six-product candidate retains visibly brighter/orange filled footprint than one-product scene while removing overlapping inner flame detail.",
+      "Partial expiry remains visibly active. Mixed-phase and last-active comparisons are exact; cooling is dim embers and expired has no field.",
+      "Reduced dense change is visually slight; actor, actual paid flight and separate owners remain readable."
+    ],
+    "limits": [
+      "Fixed 640x480 scenes at0.75 zoom; not exact stack-count recognition, animation continuity, physical play, all backgrounds or player feel.",
+      "Active deadline/paid/event/PNG results are independently recounted. Strict simulation snapshot validity and polygon ROI containment are the preserved driver assertions, not independently re-executed engine tests.",
+      "No performance acceptance from this gameplay review."
+    ]
+  }
+}

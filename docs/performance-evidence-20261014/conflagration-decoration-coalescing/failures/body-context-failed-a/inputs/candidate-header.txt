@@ -1,0 +1,34 @@
+extends "res://src/presentation/hex_court_presenter.gd"
+## Low-only active decoration experiment. Every authoritative fill/border remains.
+const COALESCE_SCRIPT := "res://.godot/iteration-20261014/conflagration-next/candidate_court.gd"
+
+func _coalescing_enabled(material: String) -> bool:
+	return material == "conflagration" and Quality.profile == "low" \
+		and get_script().resource_path == COALESCE_SCRIPT \
+		and _language != null and _language.get_script() == VisualLanguage \
+		and retro_marks != null and retro_marks.get_script() == RetroMarks
+
+
+func _coalesced_active_indices(rows: Array) -> Dictionary:
+	# Call-local only. No membership or phase can survive a draw/expiry.
+	var last: Dictionary = {}
+	var keys: Array[Array] = []
+	for index: int in rows.size():
+		var region: Dictionary = rows[index]
+		var key: Array = []
+		# Canonical product owners are integers. Generic custom-owner rows retain
+		# every mark instead of inventing a new serialization/equality contract.
+		if region.get("phase") == "active" and region.get("material") == "conflagration" \
+			and region.get("owner_key") is int and region.get("polygon") is PackedVector2Array \
+			and region.get("direction") is Vector2i and region.get("danger") is bool \
+			and region.get("intensity") is int:
+			key = [region.polygon, region.owner_key, region.direction, region.danger, region.intensity]
+			last[key] = index
+		keys.append(key)
+	var skipped: Dictionary = {}
+	for index: int in keys.size():
+		if not keys[index].is_empty() and int(last[keys[index]]) != index:
+			skipped[index] = true
+	return skipped
+
+

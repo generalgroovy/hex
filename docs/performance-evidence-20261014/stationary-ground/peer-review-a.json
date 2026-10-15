@@ -1,0 +1,541 @@
+{
+  "schema": "hex.stationary-independent-gameplay-review.v1",
+  "passed": true,
+  "checks": 5031,
+  "recommendation": "RETAIN_FOR_INTEGRATION_GATES",
+  "runs": {
+    "forward-a": {
+      "receipt_sha256": "663161d69acde32a3faade0e8e74fafd1cd97823633b18596f15dc9ffc94ce3d",
+      "cases": {
+        "fire": {
+          "measured": {
+            "n": 44,
+            "reference_mean_us": 1054.0227272727273,
+            "candidate_mean_us": 992.6363636363636,
+            "saved_mean_us": 61.38636363636363,
+            "saved_percent": 5.824007589969165,
+            "paired_saved_median_us": 85.0,
+            "reference_p95_us": 1451,
+            "candidate_p95_us": 1707,
+            "p95_change_percent": 17.643004824259133,
+            "reference_max_us": 2625,
+            "candidate_max_us": 2345
+          },
+          "order": {
+            "candidate": {
+              "n": 22,
+              "reference_mean_us": 1024.5454545454545,
+              "candidate_mean_us": 989.1818181818181,
+              "saved_mean_us": 35.36363636363637,
+              "saved_percent": 3.451641526175688,
+              "paired_saved_median_us": 81.0,
+              "reference_p95_us": 1420,
+              "candidate_p95_us": 1707,
+              "p95_change_percent": 20.211267605633804,
+              "reference_max_us": 1973,
+              "candidate_max_us": 1972
+            },
+            "reference": {
+              "n": 22,
+              "reference_mean_us": 1083.5,
+              "candidate_mean_us": 996.0909090909091,
+              "saved_mean_us": 87.4090909090909,
+              "saved_percent": 8.06729034693963,
+              "paired_saved_median_us": 91.0,
+              "reference_p95_us": 1451,
+              "candidate_p95_us": 1475,
+              "p95_change_percent": 1.6540317022742936,
+              "reference_max_us": 2625,
+              "candidate_max_us": 2345
+            }
+          },
+          "first_four": {
+            "n": 4,
+            "reference_mean_us": 930.5,
+            "candidate_mean_us": 1001.5,
+            "saved_mean_us": -71,
+            "saved_percent": -7.6303062869425045,
+            "paired_saved_median_us": 29.5,
+            "reference_p95_us": 1093,
+            "candidate_p95_us": 1537,
+            "p95_change_percent": 40.62214089661482,
+            "reference_max_us": 1093,
+            "candidate_max_us": 1537
+          },
+          "flight_present": {
+            "n": 15,
+            "reference_mean_us": 1271.7333333333333,
+            "candidate_mean_us": 1245,
+            "saved_mean_us": 26.733333333333334,
+            "saved_percent": 2.1021178444118265,
+            "paired_saved_median_us": 98,
+            "reference_p95_us": 1973,
+            "candidate_p95_us": 1972,
+            "p95_change_percent": -0.05068423720223011,
+            "reference_max_us": 1973,
+            "candidate_max_us": 1972
+          },
+          "ground_present": {
+            "n": 25,
+            "reference_mean_us": 953.56,
+            "candidate_mean_us": 859.92,
+            "saved_mean_us": 93.64,
+            "saved_percent": 9.820042787029658,
+            "paired_saved_median_us": 84,
+            "reference_p95_us": 987,
+            "candidate_p95_us": 899,
+            "p95_change_percent": -8.915906788247213,
+            "reference_max_us": 2625,
+            "candidate_max_us": 2345
+          },
+          "first_flight_tick": 9,
+          "first_ground_tick": 24,
+          "one_paid_admission": 1,
+          "one_release_tick": 9
+        },
+        "mantle": {
+          "measured": {
+            "n": 44,
+            "reference_mean_us": 1130.2954545454545,
+            "candidate_mean_us": 1065.1136363636363,
+            "saved_mean_us": 65.18181818181819,
+            "saved_percent": 5.766794683610481,
+            "paired_saved_median_us": 82.0,
+            "reference_p95_us": 1439,
+            "candidate_p95_us": 1490,
+            "p95_change_percent": 3.54412786657401,
+            "reference_max_us": 1692,
+            "candidate_max_us": 1694
+          },
+          "order": {
+            "candidate": {
+              "n": 22,
+              "reference_mean_us": 1177.6363636363637,
+              "candidate_mean_us": 1092.3181818181818,
+              "saved_mean_us": 85.31818181818181,
+              "saved_percent": 7.244866450517215,
+              "paired_saved_median_us": 88.0,
+              "reference_p95_us": 1660,
+              "candidate_p95_us": 1630,
+              "p95_change_percent": -1.8072289156626506,
+              "reference_max_us": 1692,
+              "candidate_max_us": 1694
+            },
+            "reference": {
+              "n": 22,
+              "reference_mean_us": 1082.9545454545455,
+              "candidate_mean_us": 1037.909090909091,
+              "saved_mean_us": 45.04545454545455,
+              "saved_percent": 4.159496327387198,
+              "paired_saved_median_us": 74.5,
+              "reference_p95_us": 1230,
+              "candidate_p95_us": 1278,
+              "p95_change_percent": 3.902439024390244,
+              "reference_max_us": 1373,
+              "candidate_max_us": 1490
+            }
+          },
+          "first_four": {
+            "n": 4,
+            "reference_mean_us": 894.75,
+            "candidate_mean_us": 825.25,
+            "saved_mean_us": 69.5,
+            "saved_percent": 7.767532830399553,
+            "paired_saved_median_us": 72.0,
+            "reference_p95_us": 1020,
+            "candidate_p95_us": 982,
+            "p95_change_percent": -3.7254901960784315,
+            "reference_max_us": 1020,
+            "candidate_max_us": 982
+          },
+          "flight_present": {
+            "n": 36,
+            "reference_mean_us": 1191.1666666666667,
+            "candidate_mean_us": 1131.2222222222222,
+            "saved_mean_us": 59.94444444444444,
+            "saved_percent": 5.032414532904249,
+            "paired_saved_median_us": 82.0,
+            "reference_p95_us": 1660,
+            "candidate_p95_us": 1630,
+            "p95_change_percent": -1.8072289156626506,
+            "reference_max_us": 1692,
+            "candidate_max_us": 1694
+          },
+          "ground_present": {
+            "n": 32,
+            "reference_mean_us": 1179.84375,
+            "candidate_mean_us": 1105.9375,
+            "saved_mean_us": 73.90625,
+            "saved_percent": 6.264070983975633,
+            "paired_saved_median_us": 82.0,
+            "reference_p95_us": 1439,
+            "candidate_p95_us": 1301,
+            "p95_change_percent": -9.589993050729673,
+            "reference_max_us": 1660,
+            "candidate_max_us": 1630
+          },
+          "first_flight_tick": 13,
+          "first_ground_tick": 17,
+          "one_paid_admission": 1,
+          "one_release_tick": 13
+        },
+        "moving_fire": {
+          "measured": {
+            "n": 44,
+            "reference_mean_us": 572.7045454545455,
+            "candidate_mean_us": 576.6136363636364,
+            "saved_mean_us": -3.909090909090909,
+            "saved_percent": -0.6825667685225604,
+            "paired_saved_median_us": 1.0,
+            "reference_p95_us": 828,
+            "candidate_p95_us": 843,
+            "p95_change_percent": 1.8115942028985508,
+            "reference_max_us": 1499,
+            "candidate_max_us": 1585
+          },
+          "order": {
+            "candidate": {
+              "n": 22,
+              "reference_mean_us": 555.5909090909091,
+              "candidate_mean_us": 563.4090909090909,
+              "saved_mean_us": -7.818181818181818,
+              "saved_percent": -1.4071831792522294,
+              "paired_saved_median_us": -1.5,
+              "reference_p95_us": 828,
+              "candidate_p95_us": 837,
+              "p95_change_percent": 1.0869565217391304,
+              "reference_max_us": 928,
+              "candidate_max_us": 1024
+            },
+            "reference": {
+              "n": 22,
+              "reference_mean_us": 589.8181818181819,
+              "candidate_mean_us": 589.8181818181819,
+              "saved_mean_us": 0,
+              "saved_percent": 0.0,
+              "paired_saved_median_us": 3.0,
+              "reference_p95_us": 826,
+              "candidate_p95_us": 843,
+              "p95_change_percent": 2.0581113801452786,
+              "reference_max_us": 1499,
+              "candidate_max_us": 1585
+            }
+          },
+          "first_four": {
+            "n": 4,
+            "reference_mean_us": 434.75,
+            "candidate_mean_us": 436.75,
+            "saved_mean_us": -2,
+            "saved_percent": -0.46003450258769407,
+            "paired_saved_median_us": -2.5,
+            "reference_p95_us": 781,
+            "candidate_p95_us": 794,
+            "p95_change_percent": 1.6645326504481435,
+            "reference_max_us": 781,
+            "candidate_max_us": 794
+          },
+          "flight_present": {
+            "n": 15,
+            "reference_mean_us": 595.8666666666667,
+            "candidate_mean_us": 584,
+            "saved_mean_us": 11.866666666666667,
+            "saved_percent": 1.9914969791899755,
+            "paired_saved_median_us": 5,
+            "reference_p95_us": 823,
+            "candidate_p95_us": 837,
+            "p95_change_percent": 1.701093560145808,
+            "reference_max_us": 823,
+            "candidate_max_us": 837
+          },
+          "ground_present": {
+            "n": 25,
+            "reference_mean_us": 598.64,
+            "candidate_mean_us": 612.04,
+            "saved_mean_us": -13.4,
+            "saved_percent": -2.2384070559935854,
+            "paired_saved_median_us": -20,
+            "reference_p95_us": 928,
+            "candidate_p95_us": 1024,
+            "p95_change_percent": 10.344827586206897,
+            "reference_max_us": 1499,
+            "candidate_max_us": 1585
+          },
+          "first_flight_tick": 9,
+          "first_ground_tick": 24,
+          "one_paid_admission": 1,
+          "one_release_tick": 9
+        }
+      }
+    },
+    "reverse-a": {
+      "receipt_sha256": "854479c50e539edc5a4768a8fbc47982e1f21d05b50cdb3d8b155cc3a92d202a",
+      "cases": {
+        "fire": {
+          "measured": {
+            "n": 44,
+            "reference_mean_us": 1067.9772727272727,
+            "candidate_mean_us": 970.2727272727273,
+            "saved_mean_us": 97.70454545454545,
+            "saved_percent": 9.14856036262263,
+            "paired_saved_median_us": 88.0,
+            "reference_p95_us": 1665,
+            "candidate_p95_us": 1438,
+            "p95_change_percent": -13.633633633633634,
+            "reference_max_us": 2211,
+            "candidate_max_us": 2311
+          },
+          "order": {
+            "candidate": {
+              "n": 22,
+              "reference_mean_us": 1127.9545454545455,
+              "candidate_mean_us": 1013.6818181818181,
+              "saved_mean_us": 114.27272727272727,
+              "saved_percent": 10.13096917187185,
+              "paired_saved_median_us": 90.0,
+              "reference_p95_us": 1665,
+              "candidate_p95_us": 1438,
+              "p95_change_percent": -13.633633633633634,
+              "reference_max_us": 2211,
+              "candidate_max_us": 2311
+            },
+            "reference": {
+              "n": 22,
+              "reference_mean_us": 1008,
+              "candidate_mean_us": 926.8636363636364,
+              "saved_mean_us": 81.13636363636364,
+              "saved_percent": 8.049242424242424,
+              "paired_saved_median_us": 79.0,
+              "reference_p95_us": 1223,
+              "candidate_p95_us": 1148,
+              "p95_change_percent": -6.132461161079314,
+              "reference_max_us": 1731,
+              "candidate_max_us": 1600
+            }
+          },
+          "first_four": {
+            "n": 4,
+            "reference_mean_us": 907.75,
+            "candidate_mean_us": 835.25,
+            "saved_mean_us": 72.5,
+            "saved_percent": 7.986780501239328,
+            "paired_saved_median_us": 63.0,
+            "reference_p95_us": 1093,
+            "candidate_p95_us": 969,
+            "p95_change_percent": -11.344922232387923,
+            "reference_max_us": 1093,
+            "candidate_max_us": 969
+          },
+          "flight_present": {
+            "n": 15,
+            "reference_mean_us": 1331.2666666666667,
+            "candidate_mean_us": 1189.4,
+            "saved_mean_us": 141.86666666666667,
+            "saved_percent": 10.656517602283541,
+            "paired_saved_median_us": 121,
+            "reference_p95_us": 1731,
+            "candidate_p95_us": 1600,
+            "p95_change_percent": -7.5678798382437895,
+            "reference_max_us": 1731,
+            "candidate_max_us": 1600
+          },
+          "ground_present": {
+            "n": 25,
+            "reference_mean_us": 947.8,
+            "candidate_mean_us": 872.24,
+            "saved_mean_us": 75.56,
+            "saved_percent": 7.972146022367588,
+            "paired_saved_median_us": 81,
+            "reference_p95_us": 1141,
+            "candidate_p95_us": 1083,
+            "p95_change_percent": -5.083260297984224,
+            "reference_max_us": 2211,
+            "candidate_max_us": 2311
+          },
+          "first_flight_tick": 9,
+          "first_ground_tick": 24,
+          "one_paid_admission": 1,
+          "one_release_tick": 9
+        },
+        "mantle": {
+          "measured": {
+            "n": 44,
+            "reference_mean_us": 1201.4318181818182,
+            "candidate_mean_us": 1093.0454545454545,
+            "saved_mean_us": 108.38636363636364,
+            "saved_percent": 9.021432760153605,
+            "paired_saved_median_us": 109.5,
+            "reference_p95_us": 1608,
+            "candidate_p95_us": 1417,
+            "p95_change_percent": -11.878109452736318,
+            "reference_max_us": 1727,
+            "candidate_max_us": 1734
+          },
+          "order": {
+            "candidate": {
+              "n": 22,
+              "reference_mean_us": 1173.3636363636363,
+              "candidate_mean_us": 1055.8181818181818,
+              "saved_mean_us": 117.54545454545455,
+              "saved_percent": 10.017819787712094,
+              "paired_saved_median_us": 118.5,
+              "reference_p95_us": 1460,
+              "candidate_p95_us": 1340,
+              "p95_change_percent": -8.219178082191782,
+              "reference_max_us": 1608,
+              "candidate_max_us": 1417
+            },
+            "reference": {
+              "n": 22,
+              "reference_mean_us": 1229.5,
+              "candidate_mean_us": 1130.2727272727273,
+              "saved_mean_us": 99.22727272727273,
+              "saved_percent": 8.070538652075863,
+              "paired_saved_median_us": 96.5,
+              "reference_p95_us": 1699,
+              "candidate_p95_us": 1569,
+              "p95_change_percent": -7.651559741024132,
+              "reference_max_us": 1727,
+              "candidate_max_us": 1734
+            }
+          },
+          "first_four": {
+            "n": 4,
+            "reference_mean_us": 916.25,
+            "candidate_mean_us": 839.75,
+            "saved_mean_us": 76.5,
+            "saved_percent": 8.34924965893588,
+            "paired_saved_median_us": 82.5,
+            "reference_p95_us": 1036,
+            "candidate_p95_us": 935,
+            "p95_change_percent": -9.749034749034749,
+            "reference_max_us": 1036,
+            "candidate_max_us": 935
+          },
+          "flight_present": {
+            "n": 36,
+            "reference_mean_us": 1275.138888888889,
+            "candidate_mean_us": 1163.611111111111,
+            "saved_mean_us": 111.52777777777777,
+            "saved_percent": 8.746323929855135,
+            "paired_saved_median_us": 117.0,
+            "reference_p95_us": 1699,
+            "candidate_p95_us": 1569,
+            "p95_change_percent": -7.651559741024132,
+            "reference_max_us": 1727,
+            "candidate_max_us": 1734
+          },
+          "ground_present": {
+            "n": 32,
+            "reference_mean_us": 1278,
+            "candidate_mean_us": 1166.78125,
+            "saved_mean_us": 111.21875,
+            "saved_percent": 8.702562597809077,
+            "paired_saved_median_us": 117.0,
+            "reference_p95_us": 1608,
+            "candidate_p95_us": 1417,
+            "p95_change_percent": -11.878109452736318,
+            "reference_max_us": 1727,
+            "candidate_max_us": 1734
+          },
+          "first_flight_tick": 13,
+          "first_ground_tick": 17,
+          "one_paid_admission": 1,
+          "one_release_tick": 13
+        },
+        "moving_fire": {
+          "measured": {
+            "n": 44,
+            "reference_mean_us": 449.1363636363636,
+            "candidate_mean_us": 451.97727272727275,
+            "saved_mean_us": -2.840909090909091,
+            "saved_percent": -0.6325270721586883,
+            "paired_saved_median_us": -1.0,
+            "reference_p95_us": 694,
+            "candidate_p95_us": 628,
+            "p95_change_percent": -9.510086455331413,
+            "reference_max_us": 1532,
+            "candidate_max_us": 1548
+          },
+          "order": {
+            "candidate": {
+              "n": 22,
+              "reference_mean_us": 460,
+              "candidate_mean_us": 465.1818181818182,
+              "saved_mean_us": -5.181818181818182,
+              "saved_percent": -1.1264822134387351,
+              "paired_saved_median_us": -2.5,
+              "reference_p95_us": 568,
+              "candidate_p95_us": 602,
+              "p95_change_percent": 5.985915492957746,
+              "reference_max_us": 1532,
+              "candidate_max_us": 1548
+            },
+            "reference": {
+              "n": 22,
+              "reference_mean_us": 438.27272727272725,
+              "candidate_mean_us": 438.77272727272725,
+              "saved_mean_us": -0.5,
+              "saved_percent": -0.11408421489317569,
+              "paired_saved_median_us": -0.5,
+              "reference_p95_us": 694,
+              "candidate_p95_us": 628,
+              "p95_change_percent": -9.510086455331413,
+              "reference_max_us": 817,
+              "candidate_max_us": 823
+            }
+          },
+          "first_four": {
+            "n": 4,
+            "reference_mean_us": 446,
+            "candidate_mean_us": 455.5,
+            "saved_mean_us": -9.5,
+            "saved_percent": -2.1300448430493275,
+            "paired_saved_median_us": -11.5,
+            "reference_p95_us": 805,
+            "candidate_p95_us": 844,
+            "p95_change_percent": 4.84472049689441,
+            "reference_max_us": 805,
+            "candidate_max_us": 844
+          },
+          "flight_present": {
+            "n": 15,
+            "reference_mean_us": 581.1333333333333,
+            "candidate_mean_us": 581.2,
+            "saved_mean_us": -0.06666666666666667,
+            "saved_percent": -0.011471836641046233,
+            "paired_saved_median_us": -6,
+            "reference_p95_us": 817,
+            "candidate_p95_us": 823,
+            "p95_change_percent": 0.7343941248470012,
+            "reference_max_us": 817,
+            "candidate_max_us": 823
+          },
+          "ground_present": {
+            "n": 25,
+            "reference_mean_us": 381.24,
+            "candidate_mean_us": 382.08,
+            "saved_mean_us": -0.84,
+            "saved_percent": -0.22033364809568776,
+            "paired_saved_median_us": 1,
+            "reference_p95_us": 459,
+            "candidate_p95_us": 475,
+            "p95_change_percent": 3.485838779956427,
+            "reference_max_us": 1532,
+            "candidate_max_us": 1548
+          },
+          "first_flight_tick": 9,
+          "first_ground_tick": 24,
+          "one_paid_admission": 1,
+          "one_release_tick": 9
+        }
+      }
+    }
+  },
+  "limits": [
+    "48 ticks per case and44 primary pairs per process; one admission/release only, no sustained multi-cast or FPS claim.",
+    "Forward Fire p95 worsens17.643% while reverse improves13.634%; retain this tail counterevidence.",
+    "Moving negative mean worsens3.909us/.683% and2.841us/.633%, below preset rejection.",
+    "Direct controls are prepared compatibility evidence; native paid trajectories independently require actual flight/ground.",
+    "Every step compares canonical actor bytes/events/payment; strict whole-world state/packets only at entry and exit."
+  ]
+}

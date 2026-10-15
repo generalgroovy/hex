@@ -1,0 +1,295 @@
+extends SceneTree
+## Native rendering fixture, not a player session. No boot, LAN, save, input or FPS proof.
+const Before = preload("res://.godot/iteration-20261013/environment-depth-before/practice_wall_skin.gd")
+const After = preload("res://src/presentation/practice_wall_skin.gd")
+const Harness = preload("res://tests/support/chemistry_coach_harness.gd")
+const PerformanceView = preload("res://src/presentation/performance_panel.gd")
+const FAMILIES := ["limestone", "slate", "coast", "foundry", "observatory", "garden"]
+const WATCHED := [
+	"res://.godot/iteration-20261013/environment-depth/capture-environment-depth.gd",
+	"res://.godot/iteration-20261013/environment-depth-before/practice_wall_skin.gd",
+	"res://src/presentation/practice_wall_skin.gd", "res://src/presentation/wellspring_illustrated_kit.gd",
+	"res://src/presentation/sanctum_campus_renderer.gd", "res://src/presentation/pov_terrain_backdrop.gd",
+	"res://src/presentation/wellspring_terrain_stream.gd", "res://src/presentation/wellspring_async_terrain_stream.gd",
+	"res://src/presentation/performance_panel.gd", "res://src/presentation/player_camera_rig.gd",
+	"res://src/app/player_preferences.gd",
+	"res://src/presentation/cartoon_champion_presenter.gd", "res://src/presentation/visual_language.gd",
+	"res://src/presentation/fullbody_cast_presenter.gd", "res://src/presentation/pixel_flipbook_presenter.gd",
+	"res://src/presentation/pixel_wallrun_pose.gd", "res://src/presentation/pixel_action_bank.gd",
+	"res://assets/sprites/fullbody_cast_v1/manifest.json", "res://assets/sprites/fullbody_cast_v1/motions.json",
+	"res://assets/sprites/pixel_cast_v1/manifest.json", "res://assets/sprites/pixel_cast_v1/oh_tipi.png",
+	"res://assets/sprites/pixel_actions_v1/manifest.json", "res://assets/sprites/pixel_actions_v1/oh_tipi.png",
+	"res://src/app/bootstrap.gd", "res://tests/support/chemistry_coach_harness.gd",
+	"res://src/sim/core/sim_world.gd", "res://src/sim/movement/movement_system.gd",
+	"res://content/maps/sanctum_campus_g2_v1.json", "res://content/champions/foundation_champions_v1.json",
+	"res://content/abilities/foundation_abilities_v1.json", "res://content/runtime/runtime_build_identity_v1.json"
+]
+
+class Sheet:
+	extends Node2D
+	var scale_factor := 1.0
+	var tiles: Array[Dictionary] = []
+	func _draw() -> void:
+		draw_rect(Rect2(0, 0, 1280, 1080), Color("17242b"))
+		draw_string(ThemeDB.fallback_font, Vector2(20, 30), "Existing wall footprints | before / candidate | %d%% actual scale" % roundi(scale_factor * 100), HORIZONTAL_ALIGNMENT_LEFT, 1240, 20, Color("eee0b8"))
+		for index: int in FAMILIES.size():
+			draw_string(ThemeDB.fallback_font, Vector2(12, 86 + index * 164), FAMILIES[index], HORIZONTAL_ALIGNMENT_LEFT, 160, 17, Color("eee0b8"))
+		for tile: Dictionary in tiles:
+			draw_texture_rect(tile.texture, Rect2(tile.position, Vector2(tile.size) * scale_factor), false)
+
+class PanelSheet:
+	extends Node2D
+	var panel = PerformanceView.new()
+	var preferences := PlayerPreferences.new()
+	var physical_size := Vector2(1280, 720)
+	var text_scale := 1.0
+	func _draw() -> void:
+		draw_rect(Rect2(Vector2.ZERO, physical_size), Color("17242b"))
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE * text_scale)
+		panel.draw(self, ThemeDB.fallback_font, physical_size / text_scale, preferences)
+
+var output := ""
+var mode := ""
+var authorized := false
+var finished := false
+var checks := 0
+var errors: Array[String] = []
+var pins := {}
+var captures: Array[Dictionary] = []
+var observations: Array[Dictionary] = []
+var viewport: SubViewport
+var game: Node2D
+var created := 0
+var freed := 0
+var original_mouse_mode: int
+
+func _initialize() -> void:
+	original_mouse_mode = Input.mouse_mode
+	_run.call_deferred()
+
+func _run() -> void:
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--output="): output = argument.trim_prefix("--output=")
+		if argument.begins_with("--mode="): mode = argument.trim_prefix("--mode=")
+	var prefix := "res://.godot/iteration-20261013/environment-depth/runs/"
+	var suffix := output.trim_prefix(prefix)
+	if not _check(mode in ["sheet", "world", "panel"], "Explicit sheet/world/panel mode"): return _finish()
+	if not _check(output.begins_with(prefix) and not suffix.is_empty() and suffix.is_valid_filename() and not DirAccess.dir_exists_absolute(output) and not FileAccess.file_exists(output), "Fresh contained output directory"): return _finish()
+	if not _check(DirAccess.make_dir_recursive_absolute(output) == OK, "Create owned output"): return _finish()
+	authorized = true
+	create_timer(150.0).timeout.connect(_timeout, CONNECT_ONE_SHOT)
+	if not _check(DisplayServer.get_name() != "headless", "Native renderer required"): return _finish()
+	for path: String in WATCHED:
+		if not _check(FileAccess.file_exists(path), "Watched source exists: " + path): return _finish()
+		pins[path] = FileAccess.get_sha256(path)
+	if mode == "sheet": await _sheets()
+	elif mode == "world": await _worlds()
+	else: await _panels()
+	_finish()
+
+func _new_view(size: Vector2i) -> void:
+	viewport = SubViewport.new()
+	viewport.size = size
+	viewport.disable_3d = true
+	viewport.gui_disable_input = true
+	viewport.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
+	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	root.add_child(viewport)
+	created += 1
+
+func _sheets() -> void:
+	for scale_factor: float in [0.75, 1.0]:
+		_new_view(Vector2i(1280, 1080))
+		var board := Sheet.new()
+		board.scale_factor = scale_factor
+		board.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		var shapes: Array[Vector2i] = [Vector2i(96, 128), Vector2i(28, 144), Vector2i(320, 28)]
+		var offsets: Array[Vector2] = [Vector2.ZERO, Vector2(140, 0), Vector2(190, 36)]
+		for row: int in FAMILIES.size():
+			for shape: int in shapes.size():
+				var bounds := Rect2i(Vector2i(352, 1728), shapes[shape])
+				var old_image: Image = Before.compose(bounds, FAMILIES[row])
+				var new_image: Image = After.compose(bounds, FAMILIES[row])
+				if not _check(old_image != null and new_image != null and old_image.get_size() == shapes[shape] and new_image.get_size() == old_image.get_size() and new_image.get_data().size() == old_image.get_data().size(), "Exact sheet dimensions and decoded bytes"): board.free(); return
+				for column: int in 2:
+					var texture := ImageTexture.create_from_image(old_image if column == 0 else new_image)
+					board.tiles.append({"texture": texture, "position": Vector2(178 + column * 548, 66 + row * 164) + offsets[shape] * scale_factor, "size": shapes[shape]})
+		viewport.add_child(board)
+		await _capture("textures-%d" % roundi(scale_factor * 100))
+		_drop_view()
+		if not errors.is_empty(): return
+
+func _worlds() -> void:
+	for spec: Dictionary in [{"wall": 115, "approach": -1000, "reduced": false, "name": "thin-south-normal"}, {"wall": 305, "approach": 1000, "reduced": true, "name": "deep-north-reduced"}]:
+		_new_view(Vector2i(1280, 720))
+		game = Harness.new()
+		if not _check(game.configure_fixture(true), "Actual inherited-draw harness setup"): return
+		if not _check(game.cartoon_champion_presenter.configure_fullbody_startup(game.visual_language, false, true), "Current fullbody/pixel-cast startup route"): return
+		var identities: Array[String] = ["oh_tipi"]
+		if not _check(game.cartoon_champion_presenter.prepare_override_pages(identities), "Current actor pages resident"): return
+		var body = game.cartoon_champion_presenter.fullbody_art
+		if not _check(body != null and body.pixel_pilot != null and body.pixel_pilot.action_bank != null and body.pixel_pilot.entries.has("oh_tipi") and body.pixel_pilot.action_bank.entries.has("oh_tipi"), "Actual registered body/action banks admitted"): return
+		game.requested_capture_reduced_effects = bool(spec.reduced)
+		game.player_preferences.camera_look_ahead = false
+		viewport.add_child(game)
+		var state: PlayerState = game.world.player()
+		var bounds: Rect2i = SanctumCampusLayout._parse_bounds(game.campus_layout.buildings_by_id[int(spec.wall)].bounds)
+		var start_y := bounds.end.y * 1000 + state.radius + 16000 if int(spec.approach) < 0 else bounds.position.y * 1000 - state.radius - 16000
+		# Prepared ground position only. Mirror the ordinary press/release approach
+		# in test_movement_route_decisions; wallrun requires real earned air height.
+		state.reset_for_spawn(Vector2i(bounds.get_center().x * 1000, start_y))
+		if not _step(0, int(spec.approach), SimCommand.PRESSED_JUMP, SimCommand.HELD_JUMP): return
+		if not _check(state.jumpsquat_active and not state.is_airborne(), "Grounded Jump press prepares the actual approach"): return
+		var jump_before := state.stamina
+		var jump_cost: int = MovementSystem._movement_action_cost(state, MovementTuning.HOP_COST)
+		if not _step(0, int(spec.approach)): return
+		var jump_paid := jump_before - state.stamina
+		if not _check(state.is_airborne() and jump_paid == jump_cost and jump_paid > 0, "Ordinary Jump release earns height and pays current Stamina cost"): return
+		for unused: int in 60:
+			if state.wall_contact_id == int(spec.wall) and state.movement_commitment_ticks == 0: break
+			if not _step(0, int(spec.approach)): return
+		if not _check(state.wall_contact_id == int(spec.wall) and state.movement_commitment_ticks == 0 and state.is_airborne(), "Real paid airborne approach contacts selected wall before its finite window ends"): return
+		var stamina_before := state.stamina
+		var run_cost: int = MovementSystem._movement_action_cost(state, MovementTuning.WALL_SKIM_COST)
+		if not _step(1000, 0, SimCommand.PRESSED_JUMP, SimCommand.HELD_JUMP): return
+		if not _check(state.last_event == "wall_skim" and state.wall_skim_ticks > 0 and state.wall_skim_surface_id == int(spec.wall) and stamina_before - state.stamina == run_cost and run_cost > 0, "Ordinary held Jump wallrun admits and pays exact current chain cost"): return
+		var stamina_paid := stamina_before - state.stamina
+		for unused: int in range(game.world.config.milliseconds_to_ticks(MovementTuning.WALL_RUN_COMMITMENT_MS) + 1):
+			if not _step(1000, 0, 0, SimCommand.HELD_JUMP): return
+		game.current_position = Vector2(state.position_x, state.position_y) / SimConfig.FIXED_SCALE
+		game.previous_position = game.current_position
+		game.previous_air_height = state.air_height
+		game.actor_motion_history.capture(game.world.players)
+		var body_query_hash: String = game.world.state_hash()
+		var body_frame: Dictionary = game.cartoon_champion_presenter.movement_frame("oh_tipi", state, MinimalChampionMotion.tick_at_visual_rate(game.world.tick, game.tick_rate, 0.0), game.world.config, bool(spec.reduced))
+		if not _check(bool(body_frame.get("fullbody_art", false)) and bool(body_frame.get("wallrun_pose", false)) and String(body_frame.get("visual_mode", "")) == "pixel_cast" and game.world.state_hash() == body_query_hash, "Actual current fullbody wallrun frame is pure"): return
+		var origin: Vector2 = game._camera_origin(game._camera_focus_position(game.current_position))
+		var visible := Rect2(origin, Vector2(viewport.size) / game._camera_zoom_scale())
+		if not _check(visible.intersects(Rect2(bounds)), "Target wall visible in actual camera"): return
+		var kit = game.campus_renderer.illustrated_kit
+		# Existing synchronous tooling API, outside any timing claim. No async tokens pending.
+		if not _check(kit.prepare_ground_view(visible.grow(192)) and kit.ground_ready_for(visible.grow(160)), "Complete actual terrain ready before capture"): return
+		var candidate_skins: Dictionary[int, Texture2D] = kit.practice_skins.duplicate()
+		var predecessor_skins: Dictionary[int, Texture2D] = {}
+		var bytes := 0
+		for building: Dictionary in game.campus_layout.buildings_by_id.values():
+			if String(building.get("style", "")) != "practice_wall": continue
+			var footprint: Rect2i = SanctumCampusLayout._parse_bounds(building.bounds)
+			var family: String = Before.family_for(footprint, game.campus_layout.data.get("activity_areas", []), game.campus_layout.data.get("districts", []))
+			var image: Image = Before.compose(footprint, family)
+			if not _check(image != null, "Predecessor composes actual wall"): return
+			bytes += image.get_data().size()
+			predecessor_skins[int(building.id)] = ImageTexture.create_from_image(image)
+		if not _check(predecessor_skins.size() == 41 and bytes == kit.practice_skin_bytes and bytes == 2248960, "Exact existing41 footprints and decoded residency"): return
+		var state_hash: String = game.world.state_hash()
+		var layout_hash: String = CanonicalContent.sha256(game.campus_layout.data)
+		var captured: Array[Image] = []
+		for variant: String in ["before", "candidate"]:
+			if variant == "before": kit.practice_skins = predecessor_skins
+			else: kit.practice_skins = candidate_skins
+			# Refresh the existing static POV target so both arms use their own complete art.
+			if game.pov_terrain_backdrop != null:
+				game.pov_terrain_backdrop.free()
+				game.pov_terrain_backdrop = null
+			game._configure_pov_terrain_backdrop()
+			var image: Image = await _capture(String(spec.name) + "-" + variant)
+			if image == null: return
+			captured.append(image)
+			if not _check(game.world.state_hash() == state_hash and CanonicalContent.sha256(game.campus_layout.data) == layout_hash, "Drawing leaves authority and collision layout unchanged"): return
+		if not _check(captured[0].get_data() != captured[1].get_data(), "Actual before/candidate world images differ"): return
+		observations.append({"case": spec, "tick": game.world.tick, "last_event": state.last_event, "wall_contact_id": state.wall_contact_id, "jump_stamina_paid": jump_paid, "stamina_paid": stamina_paid, "stamina_remaining": state.stamina, "state_hash": state_hash, "layout_hash": layout_hash, "camera_origin": [origin.x, origin.y], "zoom": game._camera_zoom_scale(), "texture_bytes": bytes, "walls": 41, "body": {"fullbody_art": body_frame.fullbody_art, "wallrun_pose": body_frame.wallrun_pose, "visual_mode": body_frame.visual_mode}})
+		kit.practice_skins = candidate_skins
+		_drop_view()
+
+func _step(x: int, y: int, pressed: int = 0, held: int = 0) -> bool:
+	var commands: Array[SimCommand] = [SimCommand.new(game.world.tick, 1, x, y, held, pressed)]
+	return _check(game.world.step(commands), "Complete ordinary movement step")
+
+func _panels() -> void:
+	for spec: Dictionary in [{"size": Vector2i(960, 540), "text": 200}, {"size": Vector2i(1280, 720), "text": 100}]:
+		for look_ahead: bool in [false, true]:
+			_new_view(spec.size)
+			var board := PanelSheet.new()
+			board.physical_size = Vector2(spec.size)
+			board.text_scale = float(spec.text) / 100.0
+			board.preferences.ui_text_percent = int(spec.text)
+			board.preferences.camera_look_ahead = look_ahead
+			board.panel.open()
+			board.panel.selected = 5
+			var logical := board.physical_size / board.text_scale
+			var panel: Rect2 = PerformanceView.panel_rect(logical)
+			var row: Rect2 = PerformanceView.row_rect(logical, 5)
+			if not _check(Rect2(Vector2.ZERO, logical).encloses(panel) and panel.encloses(row), "Actual sixth-row geometry enclosed at reading scale"): board.free(); return
+			if not _check(ThemeDB.fallback_font.get_string_size("Camera look-ahead", HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x <= row.size.x * 0.58 - 12, "Real sixth-row label fits actual draw width"): board.free(); return
+			var pointer := InputEventMouseButton.new()
+			pointer.button_index = MOUSE_BUTTON_LEFT
+			pointer.pressed = true
+			pointer.position = row.get_center()
+			var before: Dictionary = board.preferences.to_dictionary()
+			var intent: Dictionary = board.panel.handle_input(pointer, logical, board.preferences)
+			if not _check(intent == {"camera_look_ahead": not look_ahead} and board.preferences.to_dictionary() == before, "Actual sixth-row pointer emits only the expected preference intent"): board.free(); return
+			viewport.add_child(board)
+			await _capture("settings-%d-%d-look-%s" % [int(spec.size.x), int(spec.text), "on" if look_ahead else "off"])
+			_drop_view()
+			if not errors.is_empty(): return
+
+func _capture(label: String) -> Image:
+	# Three completed native draws allow the real static POV target to publish.
+	for unused: int in 3:
+		for child: Node in viewport.get_children():
+			if child is CanvasItem: child.queue_redraw()
+		await process_frame
+		if finished: return null
+		await RenderingServer.frame_post_draw
+		if finished: return null
+	var image := viewport.get_texture().get_image()
+	if not _check(image != null and image.get_size() == viewport.size and image.get_format() == Image.FORMAT_RGBA8, "Native RGBA8 size: " + label): return null
+	var path := output.path_join(label + ".png")
+	if not _check(image.save_png(path) == OK, "Save PNG: " + label): return null
+	var readback := Image.load_from_file(path)
+	if not _check(readback != null and readback.get_data() == image.get_data(), "Exact PNG pixel readback: " + label): return null
+	var hasher := HashingContext.new()
+	if not _check(hasher.start(HashingContext.HASH_SHA256) == OK and hasher.update(image.get_data()) == OK, "Pixel hash computed: " + label): return null
+	captures.append({"file": label + ".png", "sha256": FileAccess.get_sha256(path), "width": image.get_width(), "height": image.get_height(), "rgba_sha256": hasher.finish().hex_encode()})
+	return image
+
+func _drop_view() -> void:
+	if game != null and is_instance_valid(game):
+		if game.campus_renderer != null: game.campus_renderer.finish_terrain_shutdown()
+		if not game.is_inside_tree(): game.free()
+	game = null
+	if viewport != null and is_instance_valid(viewport):
+		viewport.free()
+		freed += 1
+	viewport = null
+
+func _check(condition: bool, label: String) -> bool:
+	checks += 1
+	if not condition: errors.append(label)
+	return condition
+
+func _timeout() -> void:
+	if finished: return
+	_check(false, "150-second native fixture watchdog")
+	_finish()
+
+func _finish() -> void:
+	if finished: return
+	finished = true
+	_drop_view()
+	Input.mouse_mode = original_mouse_mode
+	for path: String in pins: _check(FileAccess.get_sha256(path) == pins[path], "Frozen source: " + path)
+	_check(created == freed, "All owned viewports released")
+	if errors.is_empty(): _check(captures.size() == (2 if mode == "sheet" else 4), "Exact declared capture count")
+	var receipt := {"schema": "hex.environment-depth.native.v1", "mode": mode, "passed": errors.is_empty(), "checks": checks, "errors": errors, "source_hashes": pins, "captures": captures, "observations": observations, "cleanup": {"created": created, "freed": freed}, "scope": "Prepared native rendering fixture; world mode uses actual inherited Bootstrap draw and two ordinary paid wallruns in the existing no-boot legacy movement harness. Sheets show code-native texture composition; panel mode uses actual settings draw and pointer intent only. No user profile, sockets, audio, physical input, full boot, human depth judgment, setup-cost or FPS claim; no collision/elevation change."}
+	if authorized:
+		var path := output.path_join("receipt.json")
+		var file := FileAccess.open(path, FileAccess.WRITE)
+		if file == null: errors.append("Receipt open failed")
+		else:
+			var body := JSON.stringify(receipt, "\t") + "\n"
+			file.store_string(body)
+			file.close()
+			if FileAccess.get_file_as_string(path) != body: errors.append("Receipt readback failed")
+	print(("PASS" if errors.is_empty() else "FAIL") + ": environment-depth " + mode + " checks=" + str(checks) + " captures=" + str(captures.size()) + " errors=" + JSON.stringify(errors))
+	quit(0 if errors.is_empty() else 1)

@@ -111,7 +111,10 @@ func challenge_paragraphs() -> Array[String]:
 			var next: Dictionary=path.get("next",{})
 			values.append("Optional learning path: "+String(path.title))
 			values.append(String(path.lesson))
-			if not next.is_empty(): values.append("Recommended next: "+String(next.name)+". "+String(next.reuse))
+			var earned_reuse: Dictionary = path.get("earned_reuse", {})
+			var selected_reuse := String(earned_reuse.get(String(row.id), ""))
+			if not selected_reuse.is_empty(): values.append(selected_reuse)
+			if not next.is_empty(): values.append("Recommended next: " + String(next.name) + ". Learn " + String(next.spell_name) + ".")
 	return values
 
 

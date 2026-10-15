@@ -1,0 +1,164 @@
+extends "res://.godot/iteration-20261013/environment-depth/capture-environment-depth.gd"
+## Reuses only the approved native viewport, source-check and owner-cleanup seams.
+const Adapter = preload("res://.godot/iteration-20261013/architecture-prototype/architecture_renderer.gd")
+const EXTRA_PINS := ["res://.godot/iteration-20261013/architecture-prototype/capture-architecture.gd", "res://.godot/iteration-20261013/architecture-prototype/architecture_renderer.gd", "res://.godot/iteration-20261013/architecture-prototype/architecture_skin.gd", "res://content/visual/wellspring_illustrated_v1.json", "res://assets/environment/wellspring_v3/surfaces.png", "res://assets/environment/wellspring_v3/props.png"]
+
+func _run() -> void:
+	mode = "architecture"
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--output="): output = argument.trim_prefix("--output=")
+	var prefix := "res://.godot/iteration-20261013/architecture-prototype/runs/"
+	var suffix := output.trim_prefix(prefix)
+	if not _check(output.begins_with(prefix) and not suffix.is_empty() and suffix.is_valid_filename() and not DirAccess.dir_exists_absolute(output) and not FileAccess.file_exists(output), "Fresh contained architecture output"): return _finish()
+	if not _check(DirAccess.make_dir_recursive_absolute(output) == OK, "Create owned architecture output"): return _finish()
+	authorized = true
+	create_timer(180.0).timeout.connect(_timeout, CONNECT_ONE_SHOT)
+	if not _check(DisplayServer.get_name() != "headless", "Native rendering required"): return _finish()
+	for path: String in WATCHED + EXTRA_PINS:
+		if not _check(FileAccess.file_exists(path), "Source/asset exists: " + path): return _finish()
+		pins[path] = FileAccess.get_sha256(path)
+	for id: int in [105, 108]:
+		for approach: String in ["front", "rear", "corner"]:
+			await _case(id, approach)
+			_drop_view()
+			if finished or not errors.is_empty(): return _finish()
+	_finish()
+
+func _case(id: int, approach: String) -> void:
+	_new_view(Vector2i(1280, 720))
+	game = Harness.new()
+	if not _check(game.configure_fixture(true), "Actual inherited-draw harness configured"): return
+	if not _check(game.cartoon_champion_presenter.configure_fullbody_startup(game.visual_language, false, true), "Current fullbody startup"): return
+	var ids: Array[String] = ["oh_tipi"]
+	if not _check(game.cartoon_champion_presenter.prepare_override_pages(ids), "Current Oh Tipi pages resident"): return
+	game.player_preferences.camera_look_ahead = false
+	game.requested_capture_reduced_effects = approach == "rear"
+	var source: SanctumCampusRenderer = game.campus_renderer
+	var adapter := Adapter.new()
+	if not _check(adapter.bind(source, game.campus_layout), "Exact two-structure compositor admitted: " + adapter.prototype.error): return
+	game.campus_renderer = adapter
+	# Backdrop was prepared by the inherited fixture against the original renderer.
+	if game.pov_terrain_backdrop != null:
+		game.pov_terrain_backdrop.free()
+		game.pov_terrain_backdrop = null
+	viewport.add_child(game)
+	var building: Dictionary = game.campus_layout.buildings_by_id[id]
+	var bounds: Rect2i = SanctumCampusLayout._parse_bounds(building.bounds)
+	var state: PlayerState = game.world.player()
+	var x := bounds.get_center().x * 1000
+	var y := bounds.end.y * 1000 + state.radius + 1000
+	var direction := Vector2i(0, -1000)
+	if approach == "rear":
+		y = bounds.position.y * 1000 - state.radius - 1000
+		direction.y = 1000
+	elif approach == "corner":
+		x = bounds.position.x * 1000 - state.radius - 1000
+		y = (bounds.end.y - 16) * 1000
+		direction = Vector2i(1000, 0)
+	# Independent prepared pose; subsequent approach is ordinary movement.
+	state.reset_for_spawn(Vector2i(x, y))
+	state.velocity_x = direction.x * MovementTuning.BASE_SPEED / 1000
+	state.velocity_y = direction.y * MovementTuning.BASE_SPEED / 1000
+	if not _step(direction.x, direction.y): return
+	if not _check(state.wall_contact_id == id and state.wall_skim_ticks == 0, "Actual solid non-wallrun structure stops ordinary approach"): return
+	# One actual finite paid shot travels along the exterior on front/rear views.
+	var paid := false
+	if approach != "corner":
+		var flux_before := state.flux
+		var wire := state.spell_wire_id(1)
+		var command := SimCommand.new(game.world.tick, 1, 0, 0, 0, SimCommand.PRESSED_SPELL_1, 1000, 0, state.position_x + 260000, state.position_y)
+		var commands: Array[SimCommand] = [command]
+		if not _check(game.world.step(commands), "Exterior shot enters ordinary complete step"): return
+		if not _check(state.flux == flux_before - int(CombatTuning.cast_definition(wire).flux_cost), "Exterior shot pays exact current cost"): return
+		for unused: int in 90:
+			if not game.world.projectiles.is_empty(): paid = true; break
+			if not _step(0, 0): return
+		if not _check(paid, "Actual exterior flight survives at capture boundary"): return
+	game.current_position = Vector2(state.position_x, state.position_y) / SimConfig.FIXED_SCALE
+	game.previous_position = game.current_position
+	game.previous_air_height = state.air_height
+	game.actor_motion_history.capture(game.world.players)
+	var pose_hash: String = game.world.state_hash()
+	var frame: Dictionary = game.cartoon_champion_presenter.movement_frame("oh_tipi", state, MinimalChampionMotion.tick_at_visual_rate(game.world.tick, game.tick_rate, 0.0), game.world.config, game.requested_capture_reduced_effects)
+	if not _check(bool(frame.get("fullbody_art", false)) and String(frame.get("visual_mode", "")) == "pixel_cast", "Actual current body frame"): return
+	if not _check(game.world.state_hash() == pose_hash, "Current body lookup is authority-pure"): return
+	var origin: Vector2 = game._camera_origin(game._camera_focus_position(game.current_position))
+	var view := Rect2(origin, Vector2(viewport.size) / game._camera_zoom_scale())
+	if not _check(adapter.illustrated_kit.prepare_ground_view(view.grow(192)) and adapter.terrain_ready_for(view.grow(160)), "Exact visible terrain prepared through tooling API"): return
+	var hash_before: String = game.world.state_hash()
+	var layout_hash: String = CanonicalContent.sha256(game.campus_layout.data)
+	var opaque: Array[Rect2] = game._pov_opaque_bounds().duplicate()
+	var images: Array[Image] = []
+	for enabled: bool in [false, true]:
+		adapter.enabled = enabled
+		if game.pov_terrain_backdrop != null:
+			game.pov_terrain_backdrop.free()
+			game.pov_terrain_backdrop = null
+		game._configure_pov_terrain_backdrop()
+		var image: Image = await _frame()
+		if image == null: return
+		images.append(image)
+		if not _check(game.world.state_hash() == hash_before and CanonicalContent.sha256(game.campus_layout.data) == layout_hash and game._pov_opaque_bounds() == opaque, "Rendering preserves authority, map and sight polygons"): return
+	var changed := 0
+	var external := 0
+	var permitted: Array[Rect2] = []
+	for changed_id: int in [105, 108]:
+		var world_bounds := Rect2(SanctumCampusLayout._parse_bounds(game.campus_layout.buildings_by_id[changed_id].bounds))
+		var screen := Rect2(PixelPresentation.world_to_screen(world_bounds.position, origin, PlayerCameraRig.ZOOM_PERCENT), world_bounds.size * game._camera_zoom_scale())
+		permitted.append(screen.grow(1.0)) # One native pixel admits boundary raster rounding only.
+	var a := images[0].get_data()
+	var b := images[1].get_data()
+	for pixel: int in viewport.size.x * viewport.size.y:
+		var offset := pixel * 4
+		if a[offset] == b[offset] and a[offset + 1] == b[offset + 1] and a[offset + 2] == b[offset + 2] and a[offset + 3] == b[offset + 3]: continue
+		changed += 1
+		var point := Vector2(pixel % viewport.size.x, pixel / viewport.size.x)
+		if not permitted[0].has_point(point) and not permitted[1].has_point(point): external += 1
+	if not _check(changed > 100 and external == 0, "Appreciable change confined to existing structure screen bounds"): return
+	var joined := Image.create(2560, 720, false, Image.FORMAT_RGBA8)
+	joined.blit_rect(images[0], Rect2i(Vector2i.ZERO, viewport.size), Vector2i.ZERO)
+	joined.blit_rect(images[1], Rect2i(Vector2i.ZERO, viewport.size), Vector2i(1280, 0))
+	var name := "%d-%s-before-left-candidate-right.png" % [id, approach]
+	var path := output.path_join(name)
+	if not _check(joined.save_png(path) == OK, "Save exact side-by-side native pixels"): return
+	var loaded := Image.load_from_file(path)
+	if not _check(loaded != null and loaded.get_data() == joined.get_data(), "Read back exact pair pixels"): return
+	captures.append({"file": name, "sha256": FileAccess.get_sha256(path), "width": 2560, "height": 720})
+	observations.append({"id": id, "approach": approach, "reduced": game.requested_capture_reduced_effects, "tick": game.world.tick, "paid_flight": paid, "state_hash": hash_before, "layout_hash": layout_hash, "changed_pixels": changed, "changed_outside_bounds": external, "incremental_texture_bytes": adapter.prototype.decoded_bytes, "composition_usec": adapter.prototype.composition_usec, "retained_original_roof_bytes": adapter.illustrated_kit.roof_skin_bytes, "body_mode": frame.visual_mode})
+
+func _frame() -> Image:
+	for unused: int in 3:
+		game.queue_redraw()
+		await process_frame
+		if finished: return null
+		await RenderingServer.frame_post_draw
+		if finished: return null
+	var image := viewport.get_texture().get_image()
+	if not _check(image != null and image.get_size() == viewport.size and image.get_format() == Image.FORMAT_RGBA8, "Native RGBA8 world frame"): return null
+	return image
+
+func _timeout() -> void:
+	if finished: return
+	_check(false, "180-second architecture fixture watchdog")
+	_finish()
+
+func _finish() -> void:
+	if finished: return
+	finished = true
+	_drop_view()
+	Input.mouse_mode = original_mouse_mode
+	for path: String in pins: _check(FileAccess.get_sha256(path) == pins[path], "Frozen source: " + path)
+	_check(created == freed, "All owned viewports released")
+	if errors.is_empty(): _check(captures.size() == 6, "Six declared native comparison pairs")
+	var receipt := {"schema": "hex.architecture.prototype.v1", "passed": errors.is_empty(), "checks": checks, "errors": errors, "source_hashes": pins, "captures": captures, "observations": observations, "cleanup": {"created": created, "freed": freed}, "scope": "Ignored two-structure visual prototype. Same exact frozen current-body world in each A/B pair; prepared legacy no-boot harness, ordinary approach and finite exterior shots. Changed image pixels stay within existing structure bounds plus1px native rounding. No collision, height, sight or traversal change; no full boot, physical input, FPS or human depth acceptance. Composition clock excludes ImageTexture upload, construction and whole setup. Prototype retains old roofs plus205824B for A/B; integrated replacement would require explicit old-cache release."}
+	if authorized:
+		var path := output.path_join("receipt.json")
+		var file := FileAccess.open(path, FileAccess.WRITE)
+		if file == null: errors.append("Receipt open failed")
+		else:
+			var text := JSON.stringify(receipt, "\t") + "\n"
+			file.store_string(text)
+			file.close()
+			if FileAccess.get_file_as_string(path) != text: errors.append("Receipt readback failed")
+	print(("PASS" if errors.is_empty() else "FAIL") + ": architecture prototype checks=" + str(checks) + " captures=" + str(captures.size()) + " errors=" + JSON.stringify(errors))
+	quit(0 if errors.is_empty() else 1)

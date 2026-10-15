@@ -1,0 +1,51 @@
+{
+  "schema": "hex.garden-sample-transform.v1",
+  "files": [
+    {
+      "canonical": "res://src/presentation/element_garden_surface.gd",
+      "before": "res://.godot/iteration-20261014/garden-sample-next/before/element_garden_surface.gd",
+      "candidate": "res://.godot/iteration-20261014/garden-sample-next/candidate_surface.gd",
+      "changes": [
+        {
+          "old": "func prepare(entry: Dictionary, ground: HexCourtPresenter, reduced: bool) -> Dictionary:\n",
+          "new": "func prepare(entry: Dictionary, ground: HexCourtPresenter, reduced: bool) -> Dictionary:\n\treturn _prepare_samples(entry, ground, reduced, MAX_SAMPLES)\n\n\nfunc prepare_for_draw(entry: Dictionary, ground: HexCourtPresenter, reduced: bool, sample_limit: int) -> Dictionary:\n\t# Preserve existing virtual calls for derived Surface, ground or court hooks.\n\tvar court: Variant = entry.get(\"court\")\n\tif get_script().resource_path != \"res://.godot/iteration-20261014/garden-sample-next/candidate_surface.gd\" or ground == null or ground.get_script().resource_path != \"res://src/presentation/hex_court_presenter.gd\" or not court is HexChemistryWorld:\n\t\treturn prepare(entry, ground, reduced)\n\tif court.get_script().resource_path not in [\"res://src/app/element_garden_court.gd\", \"res://src/sim/hex/hex_chemistry_world.gd\"]:\n\t\treturn prepare(entry, ground, reduced)\n\treturn _prepare_samples(entry, ground, reduced, clampi(sample_limit, 1, MAX_SAMPLES))\n\n\nfunc _prepare_samples(entry: Dictionary, ground: HexCourtPresenter, reduced: bool, sample_limit: int) -> Dictionary:\n"
+        },
+        {
+          "old": "\t\trow[\"sample_phase\"] = \"\"\n",
+          "new": "\t\trow[\"sample_phase\"] = \"\"\n\t\trow[\"sample_limit\"] = 0\n"
+        },
+        {
+          "old": "\tif String(row.sample_phase) != String(entry.phase):\n",
+          "new": "\tif String(row.sample_phase) != String(entry.phase) or int(row.sample_limit) != sample_limit:\n\t\tif int(row.sample_limit) != sample_limit: row.style_key = []\n\t\trow.sample_limit = sample_limit\n"
+        },
+        {
+          "old": "\t\t\tif not region.is_empty(): row.samples.append(region)\n",
+          "new": "\t\t\tif not region.is_empty(): row.samples.append(region)\n\t\t\tif row.samples.size() >= sample_limit: break\n"
+        },
+        {
+          "old": "\tvar row := prepare(entry, ground, reduced)\n",
+          "new": "\tvar row := prepare_for_draw(entry, ground, reduced, sample_limit)\n"
+        }
+      ]
+    },
+    {
+      "canonical": "res://src/presentation/element_garden_presenter.gd",
+      "before": "res://.godot/iteration-20261014/garden-sample-next/before/element_garden_presenter.gd",
+      "candidate": "res://.godot/iteration-20261014/garden-sample-next/candidate_presenter.gd",
+      "changes": [
+        {
+          "old": "const Surface = preload(\"res://src/presentation/element_garden_surface.gd\")",
+          "new": "const Surface = preload(\"res://.godot/iteration-20261014/garden-sample-next/candidate_surface.gd\")"
+        },
+        {
+          "old": "reduced, _configuration_generation, _plaque_font_revision]",
+          "new": "reduced, _configuration_generation, _plaque_font_revision, _sample_limit]"
+        },
+        {
+          "old": "_surface.prepare(entry, _ground, reduced)",
+          "new": "_surface.prepare_for_draw(entry, _ground, reduced, _sample_limit)"
+        }
+      ]
+    }
+  ]
+}

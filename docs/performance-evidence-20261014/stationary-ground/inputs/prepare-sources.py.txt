@@ -1,0 +1,76 @@
+"""Create fresh exact-source experiment copies; never edits canonical input."""
+import hashlib
+import json
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+BASE = "res://" + HERE.relative_to(ROOT).as_posix() + "/"
+MOVEMENT_SHA = "3e195007a624088d211ce6d5c52f849f7213280eaf83e03ef9e5e30302a7e830"
+WORLD_SHA = "2a8e32069c800d70644f222d4ce1e2378e3b2c79991e7e5d58b4de2df4548a1e"
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def write_fresh(name, content):
+    data = content.encode() if isinstance(content, str) else content
+    with (HERE / name).open("xb") as handle:
+        handle.write(data)
+    assert (HERE / name).read_bytes() == data
+    return sha(data)
+
+
+movement_bytes = (ROOT / "src/sim/movement/movement_system.gd").read_bytes()
+world_bytes = (ROOT / "src/sim/core/sim_world.gd").read_bytes()
+assert sha(movement_bytes) == MOVEMENT_SHA
+assert sha(world_bytes) == WORLD_SHA
+movement = movement_bytes.decode().replace("\r\n", "\n")
+world = world_bytes.decode().replace("\r\n", "\n")
+assert movement.startswith("class_name MovementSystem\n")
+reference = movement.removeprefix("class_name MovementSystem\n")
+anchor = "\t# Perk windows follow this tick's paid admission, including release/refusal.\n\tstate.sprinting = sprinting\n"
+assert reference.count(anchor) == 1
+recovery = "\t\t_apply_stamina_rate(state, ResourceRecoveryScript.rate_per_second(state.stamina_recovery_per_second, state.stamina_recovery_idle_ticks, config.tick_rate), config)"
+assert reference.count(recovery) == 1
+branch = (
+    "\t# STATIONARY_BEGIN\n"
+    "\tif not moving and state.velocity_x == 0 and state.velocity_y == 0 and state.get_script() == PlayerState and config.get_script() == SimConfig:\n"
+    "\t\tif allow_recovery and state.stamina_recovery_delay_ticks == 0:\n"
+    "\t" + recovery + "\n"
+    "\t\treturn\n"
+    "\t# STATIONARY_END\n"
+)
+candidate = reference.replace(anchor, anchor + branch)
+assert candidate.replace(branch, "", 1) == reference
+counted = candidate.replace("extends RefCounted\n", "extends RefCounted\nstatic var stationary_calls := 0 # STATIONARY_COUNTER\nstatic var fallback_calls := 0 # STATIONARY_COUNTER\n", 1)
+counted = counted.replace(branch.splitlines()[1] + "\n", branch.splitlines()[1] + "\n\t\tstationary_calls += 1 # STATIONARY_COUNTER\n", 1)
+counted = counted.replace("\t# STATIONARY_END\n", "\t# STATIONARY_END\n\tfallback_calls += 1 # STATIONARY_COUNTER\n", 1)
+assert "\n".join(line for line in counted.split("\n") if "# STATIONARY_COUNTER" not in line) == candidate
+start = world.index("func step(")
+end = world.index("\nfunc ", start + 1)
+step = world[start:end].strip()
+assert "MovementSystem." in step
+files = {
+    "reference_movement.gd": write_fresh("reference_movement.gd", reference),
+    "candidate_movement.gd": write_fresh("candidate_movement.gd", candidate),
+    "candidate_counted.gd": write_fresh("candidate_counted.gd", counted),
+}
+for side in ["reference", "candidate"]:
+    source = 'extends "res://src/sim/core/sim_world.gd"\nconst Move = preload("' + BASE + side + '_movement.gd")\n\n' + step.replace("MovementSystem.", "Move.") + "\n"
+    assert source[source.index("func step("):].strip().replace("Move.", "MovementSystem.") == step
+    files[side + "_world.gd"] = write_fresh(side + "_world.gd", source)
+proof = {
+    "schema": "hex.stationary-source-transform.v1",
+    "movement_source_sha256": MOVEMENT_SHA,
+    "world_source_sha256": WORLD_SHA,
+    "reference_class_removal": "class_name MovementSystem\n",
+    "candidate_insertion": branch,
+    "candidate_insertion_sha256": sha(branch.encode()),
+    "world_redirect_count": step.count("MovementSystem."),
+    "files": files,
+    "scope": "Exact movement copies; candidate only inserts the guarded stationary/recovery return. Counted copy is outside timings. World step only redirects MovementSystem references.",
+}
+write_fresh("source-transform.json", json.dumps(proof, indent=2) + "\n")
+print(json.dumps(files, indent=2))

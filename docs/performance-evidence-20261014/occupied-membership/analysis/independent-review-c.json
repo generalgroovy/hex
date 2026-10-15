@@ -1,0 +1,146 @@
+{
+  "schema": "hex.membership-independent-review.v1",
+  "decision": "withdraw_unapplied",
+  "canonical_changed": false,
+  "correctness_evidence_passed": true,
+  "performance_gate_passed": false,
+  "analysis_path": ".godot/iteration-20261014/performance-next/runs/paired-analysis-c.json",
+  "analysis_sha256": "8afaf24ccc648aaf4bcd78039496426f629bce1be4e79b1c97a8aadbb1ddfd71",
+  "receipt_sha256": {
+    "forward": "1f7f2c6c49ae699b185460fe0c1c85f105ed9ed025381c7b6e99ea5542386fcd",
+    "reverse": "9cc3508e866c8bc608f7090ef0b5e9747833b8a64f7fb993b7b44ca6ccd9b883"
+  },
+  "source_pins_sha256": "499adfebce1b194995442b36b9d75e32403d7c776d721b0c37d0909c024d77bb",
+  "qualification": {
+    "path": "res://.godot/iteration-20261014/performance-next/runs/verify-functional-d/receipt.json",
+    "sha256": "0b95b6194fdaaa1b2851d46e12b01b97f464a5c12db76d538d7269c149546593"
+  },
+  "verification": {
+    "native_checks_per_process": 8612,
+    "functional_checks": 1262,
+    "functional_cases": 13,
+    "functional_owners": {
+      "created": 24,
+      "freed": 24,
+      "live": 0
+    },
+    "timing_cases_per_process": 22,
+    "timed_cases_per_process": 12,
+    "measured_pairs_per_case": 32,
+    "warmup_pairs_per_case": 4,
+    "timing_png_hashes_read_back": 88,
+    "current_source_pins_read_back": 338,
+    "strict_parse_and_native_stderr_empty": true,
+    "actual_order_verified_all_rows": true,
+    "cache_counter_parity_verified_all_rows": true,
+    "measured_new_meshes_and_topologies": 0,
+    "timing_owners_per_process": {
+      "created": 2,
+      "freed": 2,
+      "live": 0
+    },
+    "four_paid_route_admissions": [
+      2,
+      12,
+      12,
+      2
+    ],
+    "four_paid_route_refusals": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "finite_paid_route_ticks_per_process": 5045,
+    "full_route_paid_matter": [
+      1200,
+      7200,
+      7200,
+      1200
+    ],
+    "complete_finite_expiry_all_routes": true
+  },
+  "primary": {
+    "fire_dense_normal": {
+      "forward": {
+        "mean_plain_us": 14463.46875,
+        "mean_candidate_us": 14252.6875,
+        "mean_saving_us": 210.78125,
+        "mean_saving_fraction": 0.014573353988820974,
+        "paired_median_saving_us": 67.5,
+        "primary_gate": false
+      },
+      "reverse": {
+        "mean_plain_us": 14532.625,
+        "mean_candidate_us": 14272.40625,
+        "mean_saving_us": 260.21875,
+        "mean_saving_fraction": 0.017905832566380817,
+        "paired_median_saving_us": 168.0,
+        "primary_gate": false
+      }
+    },
+    "fire_dense_reduced": {
+      "forward": {
+        "mean_plain_us": 14493.53125,
+        "mean_candidate_us": 14444.0625,
+        "mean_saving_us": 49.46875,
+        "mean_saving_fraction": 0.0034131606126008803,
+        "paired_median_saving_us": 3.5,
+        "primary_gate": false
+      },
+      "reverse": {
+        "mean_plain_us": 14531.21875,
+        "mean_candidate_us": 14445.4375,
+        "mean_saving_us": 85.78125,
+        "mean_saving_fraction": 0.005903238501588175,
+        "paired_median_saving_us": 93.0,
+        "primary_gate": false
+      }
+    },
+    "mantle_active_normal": {
+      "forward": {
+        "mean_plain_us": 10681.34375,
+        "mean_candidate_us": 10519.9375,
+        "mean_saving_us": 161.40625,
+        "mean_saving_fraction": 0.01511104349581484,
+        "paired_median_saving_us": 112.0,
+        "primary_gate": false
+      },
+      "reverse": {
+        "mean_plain_us": 10585.96875,
+        "mean_candidate_us": 10484.6875,
+        "mean_saving_us": 101.28125,
+        "mean_saving_fraction": 0.009567499431735994,
+        "paired_median_saving_us": 37.0,
+        "primary_gate": false
+      }
+    },
+    "mantle_active_reduced": {
+      "forward": {
+        "mean_plain_us": 10555.5625,
+        "mean_candidate_us": 10419.78125,
+        "mean_saving_us": 135.78125,
+        "mean_saving_fraction": 0.01286347837929054,
+        "paired_median_saving_us": 11.5,
+        "primary_gate": false
+      },
+      "reverse": {
+        "mean_plain_us": 10643.09375,
+        "mean_candidate_us": 10609.78125,
+        "mean_saving_us": 33.3125,
+        "mean_saving_fraction": 0.0031299639731163695,
+        "paired_median_saving_us": 117.0,
+        "primary_gate": false
+      }
+    }
+  },
+  "repeated_other_case_p95_regressions_over_5_percent": [],
+  "reason": "All eight primary case/process combinations fail the predeclared 3 percent threshold; saving fractions range from 0.313 to 1.791 percent. Dense reduced Fire also reverses the mean saving sign by invocation order in both processes. The absence of repeated other-case p95 regressions does not override the failed primary gate. Preserve every warmup, measured row and outlier.",
+  "limits": [
+    "Pristine native offscreen draw elapsed, not thread CPU counters, GPU time, whole-game FPS or a current ProfileB speed comparison.",
+    "Actual candidate path and fallback contracts are established separately by the functional mirror plus exact pristine script eligibility; derived profiling presenters intentionally retain predecessor behavior.",
+    "Paid snapshot coverage and full-route matter totals are separate; active Mantle snapshot matter is not the full 7200 route total. These routes had no refusals, unlike ProfileB.",
+    "Host available-memory endpoints and engine allocator/render monitors are contextual only; no process-private/RSS peak or dedicated idle-machine baseline.",
+    "No canonical promotion or new performance experiment follows automatically from this review."
+  ]
+}

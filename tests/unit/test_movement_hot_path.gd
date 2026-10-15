@@ -35,6 +35,24 @@ class HeldBitProbe:
 		return super.has_held(action)
 
 
+class GroundPerkProbe:
+	extends PlayerState
+	var airborne_calls := 0
+	func is_airborne() -> bool:
+		airborne_calls += 1
+		if airborne_calls == 1: velocity_x = 100_000
+		return super.is_airborne()
+
+class GroundConfigProbe:
+	extends SimConfig
+	var per_tick_calls := 0
+	var observed_actor: PlayerState
+	func per_tick(_value_per_second: int) -> int:
+		per_tick_calls += 1
+		observed_actor.velocity_x = 10_000
+		return 7
+
+
 func run() -> int:
 	_test_timer_boundaries()
 	_test_simultaneous_transitions()
@@ -42,6 +60,9 @@ func run() -> int:
 	_test_repeating_held_masks()
 	_test_cooldown_slots()
 	_test_fixed_step_equivalence()
+	_test_stationary_ground_recovery()
+	_test_stationary_recovery_gates()
+	_test_ground_motion_and_virtual_fallbacks()
 	return finish("movement-hot-path")
 
 
@@ -347,3 +368,78 @@ func _test_cooldown_slots() -> void:
 	equal(shared.spell_cooldown_ticks[0],9,"duplicate aliases merge the largest old clock before decrement")
 	equal(shared.spell_cooldown_ticks[1],19,"duplicate slot preserves first-match alias semantics")
 	equal([shared.primary_cooldown_ticks,shared.active_1_cooldown_ticks,shared.active_2_cooldown_ticks],[9,9,9],"all duplicate aliases sync to the same first slot")
+
+
+func _test_stationary_ground_recovery() -> void:
+	var config := SimConfig.new(120)
+	var actor := PlayerState.new(1)
+	actor.stamina = 100_000
+	actor.stamina_remainder = 119
+	actor.stamina_recovery_per_second = 121
+	actor.sprinting = true
+	for tick: int in 4:
+		MovementSystem._apply_ground_velocity(actor, SimCommand.new(tick, 1, 0, 0, SimCommand.HELD_SPRINT), Vector2i(1000, 0), config)
+	equal([actor.stamina, actor.stamina_remainder], [100_005, 3], "stationary recovery preserves fractional 119 + 4*121 at120Hz")
+	equal(Vector2i(actor.velocity_x, actor.velocity_y), Vector2i.ZERO, "stationary recovery introduces no planar impulse")
+	check(not actor.sprinting, "held Sprint without movement clears stale sprint admission")
+	# Full movement still advances timers and delay before ordinary recovery.
+	var idle := PlayerState.new(2)
+	idle.position_x = 1_000_000
+	idle.position_y = 1_000_000
+	idle.stamina = 100_000
+	idle.stamina_remainder = 119
+	idle.stamina_recovery_per_second = 121
+	idle.stamina_recovery_delay_ticks = 2
+	idle.landing_ticks = 3
+	var collision := CollisionWorld.new(2_000_000, 2_000_000)
+	MovementSystem.step(idle, SimCommand.new(0, 2), config, collision)
+	equal([idle.stamina, idle.stamina_remainder, idle.stamina_recovery_delay_ticks], [100_000, 119, 1], "first stationary step preserves the remaining recovery delay")
+	MovementSystem.step(idle, SimCommand.new(1, 2), config, collision)
+	equal([idle.stamina, idle.stamina_remainder, idle.stamina_recovery_delay_ticks], [100_002, 0, 0], "expiry step performs exactly one ordinary fractional recovery")
+	equal(idle.landing_ticks, 1, "stationary path does not skip surrounding movement timers")
+	equal(Vector2i(idle.position_x, idle.position_y), Vector2i(1_000_000, 1_000_000), "stationary full steps remain at their real position")
+
+
+func _test_stationary_recovery_gates() -> void:
+	var config := SimConfig.new(120)
+	for mode: String in ["disabled", "delayed", "chemistry_block", "preserve_idle"]:
+		var actor := PlayerState.new(1)
+		actor.stamina = 100_000
+		actor.stamina_remainder = 119
+		actor.stamina_recovery_per_second = 121
+		actor.sprinting = true
+		if mode == "delayed": actor.stamina_recovery_delay_ticks = 2
+		if mode == "chemistry_block": actor.chemistry_regen_block_ticks = 2
+		MovementSystem._apply_ground_velocity(actor, SimCommand.new(), Vector2i(1000, 0), config, mode != "disabled", 900_000, mode == "preserve_idle", 1, 1, 1)
+		equal([actor.stamina, actor.stamina_remainder], [100_000, 119], mode + " does not recover or discard a fractional remainder")
+		check(not actor.sprinting and actor.velocity_x == 0 and actor.velocity_y == 0, mode + " retains idle motion even with a minimum speed and lane modifiers")
+	var capped := PlayerState.new(1)
+	capped.stamina_remainder = 119
+	capped.stamina_recovery_per_second = 121
+	MovementSystem._apply_ground_velocity(capped, SimCommand.new(), Vector2i(1000, 0), config)
+	equal(capped.stamina, capped.stamina_maximum, "stationary recovery respects finite Stamina maximum")
+	equal(capped.stamina_remainder, 0, "resource cap does not bypass the ordinary fractional calculation")
+
+
+func _test_ground_motion_and_virtual_fallbacks() -> void:
+	var config := SimConfig.new(120)
+	var walking := PlayerState.new(1)
+	MovementSystem._apply_ground_velocity(walking, SimCommand.new(0, 1, 1000, 0), Vector2i(1000, 0), config, false)
+	equal(walking.velocity_x, 22_000, "fresh input still applies authored2640000-per-second acceleration")
+	var braking := PlayerState.new(1)
+	braking.velocity_x = 100_000
+	MovementSystem._apply_ground_velocity(braking, SimCommand.new(), Vector2i(1000, 0), config, false)
+	equal(braking.velocity_x, 67_000, "released moving actor still pays authored3960000-per-second braking")
+	# These public virtual seams have observable behavior even when the actor
+	# entered with zero input/velocity; they cannot be replaced by an idle return.
+	var derived_actor := GroundPerkProbe.new(1)
+	derived_actor.champion_wire_id = 1 # Oh Tipi: real walking/high-Flux braking perk.
+	MovementSystem._apply_ground_velocity(derived_actor, SimCommand.new(), Vector2i(1000, 0), config, false)
+	check(derived_actor.airborne_calls > 0, "derived actor still receives identity-policy airborne queries")
+	equal(derived_actor.velocity_x, 60_400, "observable actor callback precedes current120-percent braking")
+	var derived_config := GroundConfigProbe.new(120)
+	var configured := PlayerState.new(1)
+	derived_config.observed_actor = configured
+	MovementSystem._apply_ground_velocity(configured, SimCommand.new(), Vector2i(1000, 0), derived_config, false)
+	equal(derived_config.per_tick_calls, 1, "derived tick conversion remains an observable call")
+	equal(configured.velocity_x, 9_993, "movement honors the derived tick callback and its returned step")

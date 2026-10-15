@@ -1,0 +1,33 @@
+"""Pin the ignored diagnostic to the admitted Profile B source; no engine."""
+from pathlib import Path
+import hashlib
+import json
+
+ROOT = Path(__file__).resolve().parents[3]
+HERE = Path(__file__).resolve().parent
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+metrics = json.loads((ROOT / ".godot/iteration-20261014/foreground-6459-desktop-b/metrics.json").read_text(encoding="utf-8"))
+pins = {}
+for row in metrics["observed_source_before"]["files"]:
+    path = ROOT / row["path"].removeprefix("res://")
+    assert digest(path) == row["sha256"], row["path"]
+    pins[row["path"]] = row["sha256"]
+for name in ("candidate_surface.gd", "candidate_presenter.gd", "compare-garden-samples.gd", "controls.gd", "source-transform.json", "before/element_garden_surface.gd", "before/element_garden_presenter.gd", "PLAN.md", "freeze-inputs.py"):
+    path = HERE / name
+    pins["res://" + path.relative_to(ROOT).as_posix()] = digest(path)
+record = {
+    "schema": "hex.garden-sample-pins.v1",
+    "status": "Prepared, source review required; parser/native execution unrun.",
+    "runtime_identity": metrics["manifest"],
+    "source_hashes": dict(sorted(pins.items())),
+    "baseline_metrics_sha256": digest(ROOT / ".godot/iteration-20261014/foreground-6459-desktop-b/metrics.json"),
+    "scope": "The 326 exact admitted source inputs plus nine ignored candidate/control/driver inputs. Native asset identity remains the qualified runtime's recorded source identity; this is not an independently expanded native asset manifest.",
+}
+target = HERE / "source-pins.json"
+target.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+for name in ("candidate_surface.gd", "candidate_presenter.gd", "compare-garden-samples.gd", "controls.gd", "source-transform.json", "PLAN.md", "source-pins.json"):
+    path = HERE / name
+    print(name, len(path.read_bytes()), digest(path))

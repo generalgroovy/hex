@@ -1,0 +1,124 @@
+from pathlib import Path
+import hashlib
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+s = (ROOT / '.godot/iteration-20261014/performance-next/run-membership.ps1').read_text(encoding='utf-8')
+s = s.replace("[ValidateSet('functional','forward','reverse')]", "[ValidateSet('forward','reverse')]")
+s = s.replace("[Parameter(Mandatory)][string]$OutputDirectory,\n    [string]$QualificationSha256 = ''", "[Parameter(Mandatory)][string]$OutputDirectory")
+s = s.replace('iteration-20261014/performance-next', 'iteration-20261014/conflagration-next')
+s = s.replace('499adfebce1b194995442b36b9d75e32403d7c776d721b0c37d0909c024d77bb', 'c655886839952c8876037d1e97fbec2b8728be180ee04b4ae1eabb8370329084')
+s = s.replace('-le 16MB', '-le 32MB')
+start = s.index('function Assert-Functional(')
+end = s.index('function Get-MemoryBoundary', start)
+s = s[:start] + r'''function Assert-Result([System.Collections.IDictionary]$Receipt, [string]$Directory) {
+    Assert-CommonReceipt $Receipt $Directory
+    Assert-Condition ($Receipt.schema -ceq 'hex.conflagration-decorations.v1' -and $Receipt.reverse_order -is [bool] -and $Receipt.reverse_order -ceq ($Case -eq 'reverse')) 'Helper schema/order differs.'
+    Assert-Condition ($Receipt.failure_context -is [System.Collections.IDictionary] -and $Receipt.failure_context.Count -eq 0) 'Draw/context failure witness is nonempty.'
+    $expected = @('six_active_low_normal','six_active_low_reduced','six_active_standard_normal','fire_active_low_normal','mantle_active_low_normal','one_product_low_normal','six_active_standard_reduced','mixed_phase_low_normal','partial_expiry_low_normal','last_active_low_normal','active_with_flight_low_normal','conflagration_forming_low_normal','one_cooling_low_normal','two_conflagration_owners_low_normal','expired_low_normal')
+    Assert-Labels $Receipt.cases $expected
+    Assert-Condition ($Receipt.cleanup.viewports_created -eq 2 -and $Receipt.cleanup.viewports_freed -eq 2 -and $Receipt.cleanup.live_viewports -eq 0) 'Viewport owners did not close.'
+    Assert-Condition ($Receipt.measured_pairs_per_timed_case -eq 32 -and $Receipt.warmups_per_timed_case -eq 4 -and $Receipt.timed_cases -eq 6 -and $Receipt.pixel_only_cases -eq 9) 'Declared run bounds differ.'
+    $controls = $Receipt.prepared_controls
+    Assert-Condition ($controls.passed -is [bool] -and $controls.passed -ceq $true -and $controls.checks -gt 0 -and $controls.errors -is [array] -and $controls.errors.Count -eq 0 -and $controls.cases.Count -eq 27) 'Prepared classification/compatibility controls failed or changed.'
+    $controlLabels = @('quality_and_dependency_gates','empty','single','six_same_cell_last_seed_survives','other_cell_independent_single','same_rows_reentry')
+    foreach ($field in @('owner_key','direction','danger','intensity','polygon','phase','material')) { $controlLabels += 'separate_' + $field }
+    $controlLabels += @('same_triangle_different_vertex_order_retained','forming_and_decaying_marks_retained','last_active_retires_previous_live_seed_survives','expired_row_removed','all_decaying_no_active_coalescing','new_products_after_retirement','staggered_active_metadata_same_classification')
+    foreach ($field in @('owner_dictionary','owner_float','danger_int','intensity_float','direction_float','polygon_array')) { $controlLabels += 'unsupported_' + $field }
+    $controlLabels += 'readonly_input_metadata'
+    Assert-Labels $controls.cases $controlLabels
+    $timedCount = 0; $imagePaths = @(); $caseIndex = 0
+    foreach ($row in $Receipt.cases) {
+        $timed = $row.timed -ceq $true
+        Assert-Condition ($row.timed -is [bool] -and $timed -eq ($caseIndex -lt 6)) 'Timed/pixel-only placement differs.'
+        $caseIndex++
+        if ($timed) { $timedCount++ }
+        $standard = $row.label -clike '*_standard_*'
+        Assert-Condition ($row.profile -ceq $(if ($standard) { 'standard' } else { 'low' }) -and $row.reduced -ceq ($row.label -clike '*_reduced')) 'Actual quality/reduced state differs.'
+        Assert-Condition ($row.rows.Count -eq $(if ($timed) { 32 } else { 1 }) -and $row.warmups.Count -eq $(if ($timed) { 4 } else { 0 })) 'Draw row bounds differ.'
+        Assert-Condition ($row.physical_size.Count -eq 2 -and $row.physical_size[0] -eq 640 -and $row.physical_size[1] -eq 480 -and $row.zoom -eq 0.75 -and $row.world_tick -gt 0 -and $row.render_tick -eq $row.world_tick-1) 'Native size/scale/complete-step boundary differs.'
+        Assert-Condition ($row.context.current_fullbody_pixel_cast -ceq $true -and $row.context.actual_actor_count -gt 0 -and $row.authority_hash.Length -gt 0) 'Actual body/authority context missing.'
+        $cohort = $row.cohort; $pixel = $row.pixel_proof
+        Assert-Condition ($cohort.active_regions -eq $cohort.retained_active+$cohort.skipped_active -and $cohort.skipped_crown_lines -eq 2*$cohort.skipped_active -and $cohort.groups.Count -eq $cohort.cells) 'Active decorative accounting differs.'
+        $skippedTotal = 0; $retainedTotal = 0
+        foreach ($group in $cohort.groups) { $skippedTotal += $group.skipped_footprints.Count; $retainedTotal += $group.retained_footprints.Count }
+        Assert-Condition ($skippedTotal -eq $cohort.skipped_active -and $retainedTotal -eq $cohort.retained_active) 'Per-cell representative recount differs.'
+        Assert-Condition ($pixel.outside_eligible_polygons -eq 0 -and $pixel.expected_skipped_marks -eq $cohort.skipped_active -and $pixel.exact_rgba -is [bool]) 'Changed pixels escape actual eligible polygons.'
+        if ($cohort.skipped_active -eq 0) {
+            Assert-Condition ($pixel.exact_rgba -ceq $true -and $pixel.changed_pixels -eq 0) 'Unchanged context is not RGBA-exact.'
+        } else {
+            Assert-Condition ($pixel.exact_rgba -ceq $false -and $pixel.changed_pixels -gt 0) 'Positive simplification did not produce its declared art change.'
+        }
+        if ($row.label -in @('six_active_low_normal','six_active_low_reduced')) {
+            Assert-Condition ($cohort.active_products -eq 6 -and $cohort.active_regions -eq 150 -and $cohort.cells -eq 25 -and $cohort.skipped_active -eq 125 -and $cohort.retained_active -eq 25) 'Actual dense150-to25 witness differs.'
+        }
+        if ($standard -or $row.label -in @('fire_active_low_normal','mantle_active_low_normal','one_product_low_normal','conflagration_forming_low_normal','one_cooling_low_normal','two_conflagration_owners_low_normal','expired_low_normal')) {
+            Assert-Condition ($cohort.skipped_active -eq 0) 'An unaffected context lost decoration.'
+        }
+        if ($row.label -ceq 'one_product_low_normal') { Assert-Condition ($cohort.active_products -eq 1) 'Single-product visual control is not single.' }
+        if ($row.label -ceq 'active_with_flight_low_normal') { Assert-Condition ($row.context.actual_projectile_count -gt 0 -and $cohort.active_products -gt 0) 'Actual paid flight witness is absent.' }
+        if ($row.label -ceq 'two_conflagration_owners_low_normal') { Assert-Condition ($row.context.actual_actor_count -eq 2 -and $cohort.active_products -eq 2 -and $row.coverage.owners.Count -eq 2) 'Actual independent-owner control differs.' }
+        $drawIndex = 0
+        foreach ($draw in @($row.warmups) + @($row.rows)) {
+            Assert-Condition ($draw.index -eq $drawIndex) 'Draw indices are not contiguous.'
+            $candidateFirst = (($drawIndex % 2 -eq 0) -ne ($Case -eq 'reverse'))
+            $first = if ($candidateFirst) { 'candidate' } else { 'plain' }; $second = if ($candidateFirst) { 'plain' } else { 'candidate' }
+            Assert-Condition ($draw.actual_order.Count -eq 2 -and $draw.actual_order[0] -ceq $first -and $draw.actual_order[1] -ceq $second) 'Actual callback order differs.'
+            Assert-Condition ($draw.plain.okay -ceq $true -and $draw.candidate.okay -ceq $true -and $draw.plain.context_ok -ceq $true -and $draw.candidate.context_ok -ceq $true -and $draw.plain.authority_unchanged -ceq $true -and $draw.candidate.authority_unchanged -ceq $true) 'Ground/context/authority gate failed.'
+            foreach ($arm in @('plain','candidate')) {
+                $observed = $draw[$arm]
+                Assert-Condition ($observed.body_ok -ceq $true -and $observed.projectile_ok -ceq $true -and $observed.expanded_projectile_draws -ge 0 -and $observed.court_projectile_draws -ge 0 -and $observed.expanded_projectile_draws+$observed.court_projectile_draws -eq $row.context.actual_projectile_count) 'Actual body/expanded/fallback dispatch accounting differs.'
+                if ($row.label -ceq 'mantle_active_low_normal') { Assert-Condition ($row.context.actual_projectile_count -gt 0 -and $observed.expanded_projectile_draws -eq $row.context.actual_projectile_count -and $observed.court_projectile_draws -eq 0) 'Mantle expanded context path was not actually exercised.' }
+            }
+            Assert-Condition ($draw.plain.mark_draws-$draw.candidate.mark_draws -eq $cohort.skipped_active -and $draw.plain.prepared_cells -eq $draw.candidate.prepared_cells -and (-not $timed -or $draw.plain.prepared_cells -gt 0)) 'Actual flame submission or prepared-cell accounting differs.'
+            Assert-Condition ($draw.plain.ground_us -ge 0 -and $draw.candidate.ground_us -ge 0 -and $draw.new_meshes -ge 0 -and $draw.new_topologies -ge 0) 'Elapsed/build counters invalid.'
+            foreach ($phase in @('cache_before','cache_after')) {
+                $left = $draw[$phase].plain; $right = $draw[$phase].candidate
+                Assert-Condition ($left.Count -eq $right.Count) 'Boundary counter inventory differs.'
+                foreach ($key in $left.Keys) { Assert-Condition ($right.Contains($key) -and $left[$key] -eq $right[$key]) 'Fill/boundary cache counters differ.' }
+            }
+            $drawIndex++
+        }
+        Assert-Condition ($row.images.Count -eq 2 -and $row.images.Contains('plain') -and $row.images.Contains('candidate')) 'Paired image inventory differs.'
+        foreach ($role in @('plain','candidate')) {
+            $image = $row.images[$role]
+            Assert-Image $image $Directory
+            $path = Resolve-Source $image.path
+            Assert-Condition ([IO.Path]::GetFileName($path) -ceq "$($row.label)_$role.png") 'PNG name does not match actual case/role.'
+            $imagePaths += $path
+        }
+        Assert-Condition (($row.images.plain.sha256 -ceq $row.images.candidate.sha256) -eq $pixel.exact_rgba) 'PNG pair hashes disagree with exact/change proof.'
+    }
+    Assert-Condition ($timedCount -eq 6 -and $imagePaths.Count -eq 30 -and @($imagePaths | Select-Object -Unique).Count -eq 30 -and @(Get-ChildItem -LiteralPath $Directory -File -Filter '*.png').Count -eq 30) 'Measured case/image count differs.'
+    Assert-Labels $Receipt.paid_sequences @('single_fire_then_natural_reentry','twelve_fire','twelve_all_six_mantle_attempts','two_fire_one_conflagration','two_owners_two_fire_each')
+    foreach ($sequence in $Receipt.paid_sequences) {
+        Assert-Condition ($sequence.resource_refill -ceq $false -and $sequence.status_or_timer_injection -ceq $false -and $sequence.fully_expired -ceq $true -and $sequence.admitted -gt 0 -and $sequence.admitted+$sequence.refused -eq $sequence.attempts -and $sequence.matter_paid -gt 0) 'Finite ordinary paid sequence contract differs.'
+        $starts = @($sequence.outcomes | Where-Object { $_.event.type -ceq 'cast_started' }); $refusals = @($sequence.outcomes | Where-Object { $_.event.type -ceq 'cast_refused' })
+        Assert-Condition ($starts.Count -eq $sequence.admitted -and $refusals.Count -eq $sequence.refused -and $starts.Count+$refusals.Count -eq $sequence.outcomes.Count) 'Actual paid event recount differs.'
+        if ($sequence.label -ceq 'twelve_all_six_mantle_attempts') { Assert-Condition ($sequence.attempts -eq 12) 'Mantle attempts changed.' }
+        else {
+            $expectedAdmissions = if ($sequence.label -ceq 'twelve_fire') { 12 } elseif ($sequence.label -ceq 'two_owners_two_fire_each') { 4 } else { 2 }
+            Assert-Condition ($sequence.attempts -eq $expectedAdmissions -and $sequence.admitted -eq $expectedAdmissions -and $sequence.refused -eq 0 -and $sequence.matter_paid -eq 600*$expectedAdmissions) 'Fire ordinary payment/admission contract differs.'
+        }
+    }
+    Assert-Condition (Select-String -LiteralPath "$Directory.log" -SimpleMatch "CONFLAGRATION_PASS checks=$($Receipt.checks) cases=15" -Quiet) 'Native terminal marker differs.'
+}
+''' + s[end:]
+s = s.replace("$hexPins.schema -ceq 'hex.membership-source-pins.v2' -and $hexPins.runtime_identity.build_id -ceq 'p61-64590c45c7a5'", "$hexPins.schema -ceq 'hex.conflagration-pins.v1' -and $hexPins.source_hashes.Count -eq 338 -and $hexPins.runtime_identity.build_id -ceq 'p61-64590c45c7a5' -and $hexPins.runtime_identity.runtime_source_sha256 -ceq '64590c45c7a5aa4b1b6fc492a3a11b32a4a3429d49fa792a729cabdec838c212'")
+s = s.replace("$hexExpectedPrefix = if ($Case -eq 'functional') { 'verify-functional-' } else { \"probe-$Case-\" }", "$hexExpectedPrefix = \"probe-$Case-\"")
+start = s.index("$hexQualificationPath = '';")
+end = s.index('$hexRunnerSha =', start)
+s = s[:start] + s[end:]
+s = s.replace("$hexDriver = if ($Case -eq 'functional') { 'verify-membership-contract.gd' } else { 'compare-occupied-membership.gd' }", "$hexDriver = 'compare-conflagration.gd'")
+s = '\n'.join(line for line in s.split('\n') if not line.startswith("if ($Case -ne 'functional')") and not line.strip().startswith('if ($hexQualificationPath)'))
+s = s.replace("$hexNativeLimit = if ($Case -eq 'functional') { 180 } else { 300 }", "$hexNativeLimit = 300")
+s = s.replace("'desktop-membership-diagnostic'", "'desktop-conflagration-diagnostic'")
+s = s.replace("if ($Case -eq 'functional') { Assert-Functional $receipt $hexOutput } else { Assert-Timing $receipt $hexOutput }", "Assert-Result $receipt $hexOutput")
+s = s.replace("schema='hex.membership-launcher-run.v1'", "schema='hex.conflagration-launcher-run.v1'")
+s = s.replace('qualification_path=$hexQualificationResource;qualification_sha256=$QualificationSha256;', '')
+s = s.replace('Native offscreen paid draw/compatibility evidence; no whole-game FPS, GPU/present or idle-machine claim.', 'Native offscreen paid whole-ground draw and intentional Low art-change evidence. Passing this runner does not accept performance or threat-density readability; opposite-order analysis and root visual review remain mandatory. No whole-game FPS, GPU/present or idle-machine claim.')
+s = s.replace('Membership $Case failed', 'Conflagration $Case failed').replace('PASS membership $Case', 'PASS conflagration $Case')
+assert 'Qualification' not in s and 'Assert-Functional' not in s and 'Assert-Timing' not in s
+path = HERE / 'run-conflagration.ps1'
+path.write_text(s, encoding='utf-8')
+print(path.name, len(path.read_bytes()), hashlib.sha256(path.read_bytes()).hexdigest())

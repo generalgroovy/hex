@@ -1,0 +1,174 @@
+"""Read-only four-process final review; first pair and all raw files remain unchanged."""
+import hashlib
+import json
+import math
+import statistics as stats
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+RUNS = HERE / "runs"
+PINS_SHA = "3484442cfc13a331f8f019d535a58ccd7061f5f52aa00c88c7e7b53334e268fa"
+RUNNER_SHA = "8c0791c41be59e91d109507ef1e7b45d2737cf546394b0f6183068f590c8f0cd"
+RECEIPTS = {
+    "forward-a": "663161d69acde32a3faade0e8e74fafd1cd97823633b18596f15dc9ffc94ce3d",
+    "reverse-a": "854479c50e539edc5a4768a8fbc47982e1f21d05b50cdb3d8b155cc3a92d202a",
+    "forward-b": "e3b50dcd92ab27420cb58907470f50917544d727b4513bc86d193cf242cec123",
+    "reverse-b": "8e94cc5020ff88c49ea7e1eb26cbc3c0e057f9f7f902a69f53d5ef9da8ca487b",
+}
+checks = 0
+
+
+def check(value, label):
+    global checks
+    checks += 1
+    if not value:
+        raise AssertionError(label)
+
+
+def sha(path):
+    with path.open("rb") as handle:
+        return hashlib.file_digest(handle, "sha256").hexdigest()
+
+
+def load(path):
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def step(source):
+    start = source.index("func step(")
+    end = source.find("\nfunc ", start + 1)
+    return source[start:end if end >= 0 else None].strip()
+
+
+def p95(values):
+    return sorted(values)[math.ceil(len(values) * .95) - 1]
+
+
+def describe(rows):
+    a = [r["result"]["reference"]["whole_step_us"] for r in rows]
+    b = [r["result"]["candidate"]["whole_step_us"] for r in rows]
+    saving = [x - y for x, y in zip(a, b)]
+    mean = stats.mean(saving)
+    return {"count": len(rows), "reference_mean_us": stats.mean(a), "candidate_mean_us": stats.mean(b),
+            "mean_saving_us": mean, "mean_saving_percent": mean / stats.mean(a) * 100,
+            "paired_median_saving_us": stats.median(saving), "reference_p95_us": p95(a), "candidate_p95_us": p95(b),
+            "p95_regression_percent": (p95(b) / p95(a) - 1) * 100,
+            "reference_max_us": max(a), "candidate_max_us": max(b),
+            "largest_candidate_regressions": [{"tick_before": row["tick_before"], "order": row["order"],
+                "reference_us": row["result"]["reference"]["whole_step_us"], "candidate_us": row["result"]["candidate"]["whole_step_us"],
+                "events": [e["type"] for e in row["events"]]} for row in sorted(rows, key=lambda r: r["result"]["candidate"]["whole_step_us"] - r["result"]["reference"]["whole_step_us"], reverse=True)[:5]]}
+
+
+check(sha(HERE / "source-pins.json") == PINS_SHA, "Exact source manifest")
+check(sha(HERE / "run-stationary.ps1") == RUNNER_SHA, "Exact executed runner")
+pins = load(HERE / "source-pins.json")
+check(len(pins["source_hashes"]) == 342, "342 source inputs")
+for resource, digest in pins["source_hashes"].items():
+    check(resource.startswith("res://") and ".." not in resource and "\\" not in resource, "Contained resource")
+    check(sha(ROOT / resource[6:]) == digest, "Current exact source " + resource)
+proof = load(HERE / "source-transform.json")
+live = (ROOT / "src/sim/movement/movement_system.gd").read_text()
+reference = (HERE / "reference_movement.gd").read_text()
+candidate = (HERE / "candidate_movement.gd").read_text()
+check(reference == live.removeprefix("class_name MovementSystem\n"), "Full reference inverse")
+check(candidate.count(proof["candidate_insertion"]) == 1 and candidate.replace(proof["candidate_insertion"], "", 1) == reference, "Full candidate inverse")
+counted = (HERE / "candidate_counted.gd").read_text()
+check("\n".join(line for line in counted.split("\n") if "# STATIONARY_COUNTER" not in line) == candidate, "Counter-only mirror inverse")
+for side in ["reference", "candidate"]:
+    check(step((HERE / (side + "_world.gd")).read_text()).replace("Move.", "MovementSystem.") == step((ROOT / "src/sim/core/sim_world.gd").read_text()), "Exact world redirect " + side)
+
+reports = {}
+raw = {}
+for name, digest in RECEIPTS.items():
+    path = RUNS / name / "receipt.json"
+    check(sha(path) == digest, "Exact native receipt " + name)
+    d = load(path)
+    r = load(path.parent / "runner.json")
+    raw[name] = d
+    reverse = name.startswith("reverse")
+    check(d["schema"] == "hex.stationary-ground.v1" and d["passed"] is True and d["errors"] == [] and d["checks"] == 5080, "Helper terminal status")
+    check(d["reverse_order"] is reverse and d["source_hashes"] == pins["source_hashes"] and d["source_pins_sha256"] == PINS_SHA, "Helper exact inputs/order")
+    check(d["cleanup"] == {"created": 9, "released": 9, "live_worlds": 0, "live_courts": 0, "factory_live": False}, "Exact owner cleanup")
+    check(r["schema"] == "hex.stationary-launcher-run.v1" and r["passed"] is True and r["failure"] is None and r["appdata_restored"] is True, "Runner completion and restore")
+    check(r["runner_sha256"] == RUNNER_SHA and r["source_pins_sha256"] == PINS_SHA and r["helper_receipt_sha256"] == digest, "Runner linkage")
+    check(r["parse_timeout_seconds"] == 180 and r["native_timeout_seconds"] == 180, "Unchanged external bounds")
+    check(len(r["logs"]) == 4, "Exactly parse/native stdout/stderr")
+    for relative, log_digest in r["logs"].items():
+        log = (path.parent / relative).resolve()
+        check(log.parent == RUNS and log.name.startswith(name), "Contained log")
+        check(sha(log) == log_digest, "Exact raw log")
+        if log.suffix == ".err": check(log.stat().st_size == 0, "Empty strict stderr")
+    check("STATIONARY_GROUND_PASS checks=5080 cases=3" in (RUNS / (name + ".log")).read_text(), "Exact terminal raw marker")
+    for key in ["direct_controls", "path_controls"]:
+        c = d[key]
+        check(c["passed"] is True and c["errors"] == [] and c["checks"] == 305 and len(c["cases"]) == 20, "Complete bounded direct controls")
+        check(len({row["label"] for row in c["cases"]}) == 20 and all(row["direct_calls_per_arm"] == 4 for row in c["cases"]), "Unique four-call controls")
+        for row in c["cases"]:
+            if row["label"] in ["derived_actor", "derived_both"]: check(row["actor_virtual_calls"] > 0, "Derived actor calls retained")
+            if row["label"] in ["derived_config", "derived_both"]: check(row["config_virtual_calls"] == 4, "Derived config calls retained")
+    check(d["direct_controls"]["cases"] == d["path_controls"]["cases"], "Mirror preserves all direct outcomes")
+    check(d["path_controls"]["stationary_calls"] == 48 and d["path_controls"]["fallback_calls"] == 28, "Actual separate fast/fallback calls plus four preserve-idle returns")
+    check([c["label"] for c in d["cases"]] == ["fire", "mantle", "moving_fire"], "Exact paid case inventory")
+    case_reports = {}
+    for c in d["cases"]:
+        label = c["label"]
+        check(c["actor_count"] == (1 if label == "moving_fire" else 5) and len(c["rows"]) == 48 and c["serial"] == 96, "Exact roster/rows/serial")
+        check(c["admissions"] == c["releases"] == 1 and c["refusals"] == 0 and c["flight_seen"] is True and c["ground_seen"] is True, "Finite real paid path")
+        expected_first = (13, 17) if label == "mantle" else (9, 24)
+        check((c["first_flight_tick"], c["first_ground_tick"]) == expected_first, "Actual flight/ground boundary")
+        starts = releases = refusals = 0
+        for i, row in enumerate(c["rows"]):
+            check(row["index"] == row["tick_before"] == i and row["tick_after"] == i + 1 and row["first_four"] is (i < 4), "Every actual tick retained")
+            order = ["candidate", "reference"] if ((i % 2 == 0) != reverse) else ["reference", "candidate"]
+            check(row["order"] == order and row["result"][order[0]]["serial"] == 2 * i + 1 and row["result"][order[1]]["serial"] == 2 * i + 2, "Actual invocation order")
+            for side in ["canonical", "reference", "candidate"]:
+                check(row["result"][side]["success"] is True and row["result"][side]["last_error"] == "", "Every successful arm")
+            if i:
+                check(row["actor_before_sha256"] == c["rows"][i - 1]["actor_after_sha256"] and row["matter_paid_before"] == c["rows"][i - 1]["matter_paid"], "Actor/payment continuity")
+            for event in row["events"]:
+                starts += event["type"] == "cast_started"
+                releases += event["type"] == "projectile_spawned"
+                refusals += event["type"] == "cast_refused"
+            check(row["matter_paid"] == starts * 600, "Paid event-to-stock accounting")
+            if label == "moving_fire": check(row["moving_negative_passed"] is True and row["player_position_before"] != row["player_position_after"], "Actual moving fallback each row")
+        check((starts, releases, refusals) == (1, 1, 0), "Raw paid outcome recount")
+        check([(b["label"], b["tick"], b["matter_paid"]) for b in c["boundaries"]] == [("entry", 0, 0), ("exit", 48, 600)], "Complete strict boundary inventory")
+        check(c["boundaries"][0]["actor_sha256"] == c["rows"][0]["actor_before_sha256"] and c["boundaries"][1]["actor_sha256"] == c["rows"][-1]["actor_after_sha256"], "Strict endpoint links")
+        measured = c["rows"][4:]
+        main = describe(measured)
+        by_order = {side + "_first": describe([row for row in measured if row["order"][0] == side]) for side in ["reference", "candidate"]}
+        primary = main["mean_saving_us"] >= 30 and main["mean_saving_percent"] >= 3 and main["paired_median_saving_us"] > 0 and all(v["mean_saving_us"] > 0 for v in by_order.values())
+        case_reports[label] = {"all48": describe(c["rows"]), "first4": describe(c["rows"][:4]), "primary_remaining44": main, "order_remaining44": by_order,
+            "primary_gate_passed": primary if label != "moving_fire" else None,
+            "moving_mean_regression_limit_exceeded": main["mean_saving_us"] < -30 and main["mean_saving_percent"] < -3 if label == "moving_fire" else None,
+            "moving_p95_regression_limit_exceeded": main["p95_regression_percent"] > 5 if label == "moving_fire" else None,
+            "admission": describe([row for row in c["rows"] if any(e["type"] == "cast_started" for e in row["events"])]),
+            "release": describe([row for row in c["rows"] if any(e["type"] == "projectile_spawned" for e in row["events"])]),
+            "ground_present": describe([row for row in c["rows"] if row["occupied"] > 0]),
+            "paid_events": [starts, releases, refusals], "first_flight_ground_ticks": list(expected_first)}
+    reports[name] = {"receipt_sha256": digest, "runner_sha256": sha(path.parent / "runner.json"), "cases": case_reports,
+        "controls": {"direct_checks": 305, "path_checks": 305, "stationary_calls": 48, "fallback_calls": 28, "preserve_idle_returns": 4},
+        "host_memory_before": r["host_memory_before"], "host_memory_after": r["host_memory_after"], "wall_elapsed_ms": d["wall_elapsed_ms"]}
+
+for run in ["reverse-a", "forward-b", "reverse-b"]:
+    for left, right in zip(raw["forward-a"]["cases"], raw[run]["cases"]):
+        check(left["boundaries"] == right["boundaries"], "Cross-process complete strict state/packet endpoints")
+        for a, b in zip(left["rows"], right["rows"]):
+            for key in a.keys() - {"order", "result"}: check(a[key] == b[key], "Cross-process exact semantic row " + key)
+
+primary_passed = all(reports[run]["cases"][case]["primary_gate_passed"] for run in reports for case in ["fire", "mantle"])
+moving_mean_failures = sum(reports[run]["cases"]["moving_fire"]["moving_mean_regression_limit_exceeded"] for run in reports)
+moving_p95_failures = sum(reports[run]["cases"]["moving_fire"]["moving_p95_regression_limit_exceeded"] for run in reports)
+moving_repeated_failure = moving_mean_failures >= 2 or moving_p95_failures >= 2
+review = {"schema": "hex.stationary-independent-review.v1", "passed_readback": True, "checks": checks,
+    "source_pins_sha256": PINS_SHA, "runner_sha256": RUNNER_SHA, "analyzer_sha256": sha(Path(__file__)), "runs": reports,
+    "original_primary_gates_passed": primary_passed, "original_moving_rejection_triggered": moving_repeated_failure,
+    "moving_mean_limit_exceedances": moving_mean_failures, "moving_p95_limit_exceedances": moving_p95_failures,
+    "disposition": "RETAIN for canonical integration and regression qualification only. All8 primary process/workload gates pass with positive medians and all16 primary order means positive. No repeated moving rejection. Fire forward-a p95+17.64percent did not recur in B; moving forward-b p95+6.31percent is the sole moving exceedance. No broad tail/FPS guarantee or already-qualified production claim.",
+    "limits": "48 finite ticks per fresh case, primary44 only; admission/release one row each. Per-step actors/events/payment exact, full strict state/packets only entry/exit. Native elapsed calls with a concrete control outside clocks and proof between calls; not contiguous catch-up, whole application, thread CPU or FPS. Host endpoints are contextual and do not prove an idle machine. First pair is preserved; no retuned thresholds."}
+target = RUNS / "independent-review-final.json"
+encoded = (json.dumps(review, indent=2) + "\n").encode()
+with target.open("xb") as handle: handle.write(encoded)
+assert target.read_bytes() == encoded
+print(json.dumps({"checks": checks, "review_sha256": sha(target), "primary_passed": primary_passed, "moving_rejection": moving_repeated_failure}, indent=2))

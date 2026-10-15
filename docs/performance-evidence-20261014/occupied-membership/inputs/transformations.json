@@ -1,0 +1,22 @@
+[
+  {
+    "method": "draw_ground",
+    "old": "\tcanvas.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST",
+    "new": "\t# A changed native setter can emit a synchronous property-list signal.\n\tvar occupied_filter_unchanged := canvas.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST\n\tcanvas.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST"
+  },
+  {
+    "method": "draw_ground",
+    "old": "\tvar frame: Dictionary = _prepare_draw_bundle(court, tick)",
+    "new": "\tvar previous_occupied_court_id := _prepared_occupied_court_id\n\t_prepared_occupied_court_id = int(court.get_instance_id()) if occupied_filter_unchanged and not draw_district_base and get_script().resource_path == OCCUPIED_MEMBERSHIP_SCRIPT_PATH and (court.get_script() == HexChemistryWorldScript or court.get_script() == HexCourtScript) else 0\n\tvar frame: Dictionary = _prepare_draw_bundle(court, tick)\n\t_prepared_occupied_court_id = previous_occupied_court_id"
+  },
+  {
+    "method": "_prepare_draw_bundle",
+    "old": "func _prepare_draw_bundle(court: RefCounted, tick: float) -> Dictionary:\n\tvar previous := _compact_draw_bundle",
+    "new": "func _prepare_draw_bundle(court: RefCounted, tick: float) -> Dictionary:\n\t# Consume before downstream virtual work; direct/nested calls get no token.\n\tvar prepared_occupied_court_id := _prepared_occupied_court_id\n\t_prepared_occupied_court_id = 0\n\tvar previous := _compact_draw_bundle"
+  },
+  {
+    "method": "_prepare_draw_bundle",
+    "old": "\t\tif aggregate_coverage:",
+    "new": "\t\tif aggregate_coverage and prepared_occupied_court_id != int(court.get_instance_id()):"
+  }
+]

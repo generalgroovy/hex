@@ -1,0 +1,115 @@
+"""Prepare ignored source pins only; never invoke Godot or change canonical inputs."""
+from pathlib import Path
+import hashlib
+import json
+import re
+
+BASE = Path(__file__).resolve().parent
+ROOT = BASE.parents[2]
+OLD_PREFIX = "res://.godot/iteration-20261013/occupied-render-membership/"
+NEW_PREFIX = "res://.godot/iteration-20261014/performance-next/"
+BEFORE_SHA = "3190aa2683205bfdd1ebcc297e1002b3f3e624e4b59a61ecf64b76889733b92c"
+BUILD_SHA = "64590c45c7a5aa4b1b6fc492a3a11b32a4a3429d49fa792a729cabdec838c212"
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def write(path, value):
+    path.write_text(value, encoding="utf-8", newline="\n")
+
+
+def json_write(path, value):
+    write(path, json.dumps(value, indent=2, ensure_ascii=False) + "\n")
+
+
+def method(text, name):
+    start = text.index("func " + name + "(")
+    end = text.find("\nfunc ", start + 1)
+    return text[start:end if end >= 0 else len(text)].strip()
+
+
+assert digest(ROOT / "src/presentation/hex_court_presenter.gd") == BEFORE_SHA
+assert digest(BASE / "hex_court_presenter.before.gd") == BEFORE_SHA
+old = json.loads((BASE / "preserved/functional-source-pins.json").read_text())
+old_candidate = (BASE / "preserved/candidate_court.gd").read_text()
+candidate = (BASE / "candidate_court.gd").read_text()
+assert candidate == old_candidate.replace(OLD_PREFIX, NEW_PREFIX)
+assert digest(BASE / "transformations.json") == digest(BASE / "preserved/transformations.json")
+identity = json.loads((ROOT / "content/runtime/runtime_build_identity_v1.json").read_text())
+assert identity["runtime_source_sha256"] == BUILD_SHA and identity["record_count"] == 3446
+changes = []
+for resource, expected in old["source_hashes"].items():
+    if resource.startswith("res://.godot/"):
+        continue
+    path = ROOT / resource[6:]
+    actual = digest(path)
+    if actual != expected:
+        assert resource == "res://content/runtime/runtime_build_identity_v1.json"
+        assert actual == "29807c25db4c9559de98d1eb28d9ced592cddc9ac7ce983566b9a27136966bb9"
+        changes.append({"path": resource, "before": expected, "after": actual,
+                        "reason": "Current already-qualified 6459 identity; original rendering/simulation inputs remain exact."})
+assert len(changes) == 1
+
+# Replace only metadata literals after relocation; source methods remain guarded.
+path = BASE / "verify-membership-contract.gd"
+text = path.read_text()
+text, count = re.subn(r'(FileAccess\.get_sha256\(ROOT\+"candidate_court.gd"\)==")[0-9a-f]{64}',
+                     lambda m: m[1] + digest(BASE / "candidate_court.gd"), text)
+assert count == 1
+write(path, text)
+path = BASE / "compare-occupied-membership.gd"
+text = path.read_text()
+for constant, filename in [("HEADER_SHA", "candidate-header.txt"), ("TRANSFORM_SHA", "transformations.json")]:
+    text, count = re.subn(r'(const ' + constant + r' := ")[0-9a-f]{64}', lambda m: m[1] + digest(BASE / filename), text)
+    assert count == 1
+if "const WATCHED :=" in text:
+    start = text.index("const WATCHED :=")
+    end = text.index("\n\nclass Board", start)
+    text = text[:start] + text[end+2:]
+reference = (BASE / "paid-route-reference.gd.txt").read_text()
+for name in ["_world", "_ready", "_step", "_record", "_empty", "_coverage", "_capture", "_fire_route", "_mantle_route", "_owners_route"]:
+    assert method(text, name) == method(reference, name), name
+write(path, text)
+mirror = candidate
+for change in json.loads((BASE / "path-transformations.json").read_text()):
+    assert mirror.count(change["old"]) == 1
+    mirror = mirror.replace(change["old"], change["new"])
+assert mirror == (BASE / "path_counter_court.gd").read_text()
+
+paths = {resource[6:] for resource in old["source_hashes"] if not resource.startswith("res://.godot/")}
+paths |= {p.relative_to(ROOT).as_posix() for p in (ROOT / "src").rglob("*.gd")}
+paths |= {p.relative_to(ROOT).as_posix() for p in (ROOT / "content").rglob("*.json")}
+paths |= {"project.godot", "scripts/flux2-common.ps1", "scripts/engine-guard.ps1"}
+for filename in ["candidate_court.gd", "candidate-header.txt", "transformations.json", "path_counter_court.gd",
+                 "path-transformations.json", "hex_court_presenter.before.gd", "paid-route-reference.gd.txt",
+                 "verify-membership-contract.gd", "compare-occupied-membership.gd"]:
+    paths.add((BASE / filename).relative_to(ROOT).as_posix())
+pins = {"schema": "hex.membership-source-pins.v2", "runtime_identity": identity,
+        "scope": "Current canonical source/content plus original renderer asset inputs and exact ignored transforms/drivers. Runner is separately SHA-pinned by the desktop dispatcher; this file does not include itself or runner to avoid a hash cycle.",
+        "source_hashes": {"res://" + name: digest(ROOT / name) for name in sorted(paths)}}
+json_write(BASE / "source-pins.json", pins)
+runner = BASE / "run-membership.ps1"
+text = runner.read_text()
+text, count = re.subn(r"(\$hexPinsSha256 = ')[^']+'", lambda m: m[1] + digest(BASE / "source-pins.json") + "'", text)
+assert count == 1
+write(runner, text)
+acceptance_path = BASE / "acceptance-before-timing.json"
+if acceptance_path.exists():
+    acceptance = json.loads(acceptance_path.read_text())
+    acceptance["runner_sha256"] = digest(runner)
+    acceptance["source_pins_sha256"] = digest(BASE / "source-pins.json")
+    json_write(acceptance_path, acceptance)
+provenance = {"schema": "hex.membership-refresh-provenance.v1", "status": "Prepared, unexecuted; root alone owns parser/native gates.",
+              "preserved": {p.name: {"sha256": digest(p), "bytes": p.stat().st_size} for p in sorted((BASE / "preserved").iterdir()) if p.is_file()},
+              "original_canonical_pin_changes": changes,
+              "candidate_change": "Only literal self-script resource path relocation; four optimization edits remain byte-identical to reviewed deferred transform.",
+              "paid_preparation": "All ten paid world/step/capture methods exactly equal preserved prefix-driver reference; withdrawn prefix optimization is not loaded.",
+              "additional_instrumentation": "Three untimed counter-only native mirror controls plus actual pristine path eligibility outside timing. No TimedCourt is timed.",
+              "source_hashes_count": len(pins["source_hashes"]), "source_pins_sha256": digest(BASE / "source-pins.json"),
+              "files": {p.name: {"sha256": digest(p), "bytes": p.stat().st_size} for p in sorted(BASE.iterdir()) if p.is_file() and p.name not in {"manifest.json"}}}
+json_write(BASE / "manifest.json", provenance)
+for name in ["candidate_court.gd", "path_counter_court.gd", "verify-membership-contract.gd", "compare-occupied-membership.gd", "source-pins.json", "run-membership.ps1", "manifest.json"]:
+    print(name, digest(BASE / name))
+print("source_hashes_count", len(pins["source_hashes"]))

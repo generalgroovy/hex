@@ -1113,6 +1113,12 @@ static func _apply_ground_velocity(state: PlayerState, command: SimCommand, dire
 	var sprinting: bool = moving and not state.crouching and command.has_held(SimCommand.HELD_SPRINT) and state.stamina > 0 and state.stamina >= sprint_cost
 	# Perk windows follow this tick's paid admission, including release/refusal.
 	state.sprinting = sprinting
+	# Stationary actors need recovery, but no target or acceleration arithmetic.
+	# Derived actors/configurations retain their observable policy callbacks.
+	if not moving and state.velocity_x == 0 and state.velocity_y == 0 and state.get_script() == PlayerState and config.get_script() == SimConfig:
+		if allow_recovery and state.stamina_recovery_delay_ticks == 0:
+			_apply_stamina_rate(state, ResourceRecoveryScript.rate_per_second(state.stamina_recovery_per_second, state.stamina_recovery_idle_ticks, config.tick_rate), config)
+		return
 	@warning_ignore("integer_division")
 	var speed: int = Perks.scale(state, "ground_speed_ratio", MovementTuning.BASE_SPEED * state.movement_speed_ratio / 1000)
 	@warning_ignore("integer_division")

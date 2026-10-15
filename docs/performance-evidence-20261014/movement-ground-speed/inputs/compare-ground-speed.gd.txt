@@ -1,0 +1,315 @@
+extends SceneTree
+## Isolated whole-step disproof experiment; no production mutation or FPS claim.
+@warning_ignore_start("integer_division")
+const BASE := "res://.godot/iteration-20261014/movement-next/"
+const Factory = preload("res://src/app/bootstrap.gd")
+const Packet = preload("res://src/net/hex_world_snapshot.gd")
+const RefWorld = preload("res://.godot/iteration-20261014/movement-next/reference_world.gd")
+const CandidateWorld = preload("res://.godot/iteration-20261014/movement-next/candidate_world.gd")
+const RefCountedMove = preload("res://.godot/iteration-20261014/movement-next/reference_counted.gd")
+const CandidateCountedMove = preload("res://.godot/iteration-20261014/movement-next/candidate_counted.gd")
+const CASES: Array[String] = ["identity", "idle", "fire", "mantle"]
+const DEADLINE_MS := 540000
+var output := ""
+var selected := ""
+var functional := false
+var reverse := false
+var authorized := false
+var finished := false
+var checks := 0
+var errors: Array[String] = []
+var hashes: Dictionary = {}
+var rows: Array[Dictionary] = []
+var qualification := ""
+var qualification_sha := ""
+var qualified_rows: Array = []
+var worlds: Array[SimWorld] = []
+var references: Array[WeakRef] = []
+var factory_owner: Node
+var started_ms := 0
+var created := 0
+var admissions := 0
+var releases := 0
+var refusals := 0
+var flight_seen := false
+var ground_seen := false
+var initial_packet_sha := ""
+var abilities := AbilityCatalog.new()
+var champions := ChampionCatalog.new()
+var layout := SanctumCampusLayout.new()
+
+
+func _initialize() -> void:
+	call_deferred("_run")
+
+
+func _check(value: bool, label: String) -> bool:
+	checks += 1
+	if not value: errors.append(label)
+	return value
+
+
+func _run() -> void:
+	started_ms = Time.get_ticks_msec()
+	var case_args := 0
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--output="): output = argument.trim_prefix("--output=")
+		elif argument.begins_with("--case="): selected = argument.trim_prefix("--case="); case_args += 1
+		elif argument == "--functional-only": functional = true
+		elif argument == "--reverse-order": reverse = true
+		elif argument == "--no-lan-discovery": pass
+		elif argument.begins_with("--functional-receipt="): qualification = argument.trim_prefix("--functional-receipt=")
+		elif argument.begins_with("--functional-sha256="): qualification_sha = argument.trim_prefix("--functional-sha256=")
+		else: _check(false, "Unknown experiment argument: " + argument)
+	if not _check(output.get_base_dir() == BASE + "runs" and output.get_file().begins_with("probe-")
+		and output.get_file().is_valid_filename() and not output.contains("..") and not output.contains("\\")
+		and not FileAccess.file_exists(output) and not DirAccess.dir_exists_absolute(output), "Fresh single-child owned output required"):
+		_finish(); return
+	if not _check(DirAccess.make_dir_recursive_absolute(output) == OK, "Create fresh output"): _finish(); return
+	authorized = true
+	if not _check(case_args == 1 and selected in CASES and (functional or selected != "identity"), "One declared case and supported mode required"): _finish(); return
+	if not _check(functional or DisplayServer.get_name() != "headless", "Cost requires native process; no focus/presentation claim"): _finish(); return
+	if not _pins() or not _source_guard(): _finish(); return
+	if not _check(abilities.load_from_file("res://content/abilities/foundation_abilities_v1.json")
+		and champions.load_from_file("res://content/champions/foundation_champions_v1.json", abilities)
+		and layout.load_from_file("res://content/maps/sanctum_campus_g2_v1.json"), "Real current catalogs and campus load"): _finish(); return
+	if functional:
+		if not _check(qualification.is_empty() and qualification_sha.is_empty(), "Functional mode cannot substitute a receipt"): _finish(); return
+	elif not _qualification(): _finish(); return
+	if selected == "identity": _identity_controls()
+	else: await _workload()
+	_finish()
+
+
+func _pins() -> bool:
+	var manifest: Variant = JSON.parse_string(FileAccess.get_file_as_string(BASE + "manifest.json"))
+	if not _check(manifest is Dictionary and manifest.get("source_sha256") is Dictionary, "Exact reviewed source manifest required"): return false
+	for path: String in manifest.source_sha256:
+		if not _check(path.begins_with("res://") and not path.contains(".."), "Contained source pin"): return false
+		hashes[path] = FileAccess.get_sha256(path)
+		if not _check(hashes[path] == manifest.source_sha256[path], "Frozen source differs: " + path): return false
+	hashes[BASE + "manifest.json"] = FileAccess.get_sha256(BASE + "manifest.json")
+	return errors.is_empty()
+
+
+func _method(source: String, name: String) -> String:
+	var start := source.find("func " + name + "(")
+	if start < 0: return ""
+	var end := source.find("\nfunc ", start + 1)
+	return source.substr(start, end - start if end >= 0 else -1).strip_edges()
+
+
+func _source_guard() -> bool:
+	var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(BASE + "source-transform.json"))
+	var live := FileAccess.get_file_as_string("res://src/sim/movement/movement_system.gd").replace("\r\n", "\n")
+	var original := FileAccess.get_file_as_string(BASE + "movement.before.gd").replace("\r\n", "\n")
+	var reference := FileAccess.get_file_as_string(BASE + "reference_movement.gd")
+	var candidate := FileAccess.get_file_as_string(BASE + "candidate_movement.gd")
+	_check(live == original and reference == original.replace("class_name MovementSystem\n", ""), "Reference is exact current movement source without global class registration")
+	_check(candidate.replace(String(proof.new), String(proof.old)).replace(String(proof.new2), String(proof.old2)) == reference, "Candidate has only declared call-local reuse")
+	var step := _method(FileAccess.get_file_as_string("res://src/sim/core/sim_world.gd").replace("\r\n", "\n"), "step")
+	_check(step == _method(FileAccess.get_file_as_string(BASE + "world.before.gd").replace("\r\n", "\n"), "step"), "World predecessor is unchanged")
+	for side: String in ["reference", "candidate"]:
+		_check(_method(FileAccess.get_file_as_string(BASE + side + "_world.gd"), "step").replace("Move.step(", "MovementSystem.step(") == step, "Exact world step substitution: " + side)
+		var stripped := PackedStringArray()
+		for line: String in FileAccess.get_file_as_string(BASE + side + "_counted.gd").split("\n"):
+			if line.contains("# COUNT_ONLY") or line == "static var speed_calls: int = 0": continue
+			stripped.append(line)
+		_check("\n".join(stripped) == FileAccess.get_file_as_string(BASE + side + "_movement.gd"), "Counter mirror inverse-transforms exactly: " + side)
+	return errors.is_empty()
+
+
+func _qualification() -> bool:
+	if not _check(qualification.get_base_dir().get_base_dir() == BASE + "runs" and qualification.get_file() == "receipt.json"
+		and not qualification.contains("..") and FileAccess.get_sha256(qualification) == qualification_sha and qualification_sha.length() == 64, "Exact owned functional receipt required"): return false
+	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(qualification))
+	if not _check(data is Dictionary and data.get("schema") == "hex-ground-speed-experiment-v1" and data.get("passed") == true
+		and data.get("mode") == "functional" and data.get("case") == selected and data.get("errors") is Array and data.errors.is_empty()
+		and data.get("cleanup") is Dictionary and int(data.cleanup.get("created", -1)) == 3 and int(data.cleanup.get("live", -1)) == 0
+		and data.get("rows") is Array and data.rows.size() == 240 and data.get("source_hashes") is Dictionary, "Complete same-case every-step functional proof required"): return false
+	for path: String in data.source_hashes:
+		if not _check(hashes.has(path) and hashes[path] == data.source_hashes[path], "Qualification source inventory remains exact: " + path): return false
+	if not _check(data.source_hashes.size() == hashes.size(), "Qualification pins cover exact current inventory"): return false
+	qualified_rows = data.rows
+	for index: int in qualified_rows.size():
+		if not _check(int(qualified_rows[index].tick) == index + 1 and int(qualified_rows[index].steps) == 1, "Functional rows preserve every tick"): return false
+	hashes[qualification] = qualification_sha
+	return true
+
+
+func _identity_controls() -> void:
+	var config := SimConfig.new(120)
+	for wire: int in range(1, 31):
+		for kind: String in ["idle", "walk", "sprint_empty", "sprint_paid", "carry", "counterstrafe", "slow", "pending", "crouch", "preserve_idle"]:
+			var actors: Array[PlayerState] = []
+			for unused: int in 3:
+				var actor := PlayerState.new(1)
+				if not _check(champions.apply_to_player(actor, String(champions.champion_ids_by_wire[wire])), "Actual identity initializes"): return
+				actor.reset_for_spawn(Vector2i(1_536_000, 880_000))
+				actor.flux = actor.flux_maximum * 2 / 3
+				actor.health = actor.health_maximum / 3
+				actor.stamina = actor.stamina_maximum * 2 / 3
+				if kind == "sprint_empty": actor.stamina = 1; actor.stamina_remainder = -119
+				if kind == "carry": actor.velocity_x = MovementTuning.BASE_SPEED * 2
+				if kind == "counterstrafe": actor.velocity_x = -MovementTuning.BASE_SPEED; actor.landing_ticks = 3
+				if kind == "slow": actor.control_state = PlayerState.ControlState.SLOWED; actor.control_ticks = 10; actor.slow_ratio = 880
+				if kind == "pending": actor.pending_cast_wire_id = MixtureCatalog.wire_for(2, "bolt"); actor.pending_cast_ticks = 3; actor.flux = actor.flux_maximum / 3
+				if kind == "crouch": actor.crouching = true; actor.health = actor.health_maximum * 3 / 4
+				actors.append(actor)
+			var move := 0 if kind in ["idle", "carry", "preserve_idle"] else 1000
+			var held := SimCommand.HELD_SPRINT if kind.begins_with("sprint") else 0
+			var command := SimCommand.new(0, 1, move, 0, held)
+			var ground := 1175 if kind == "carry" else 880 if kind == "slow" else 1000
+			RefCountedMove.speed_calls = 0; CandidateCountedMove.speed_calls = 0
+			MovementSystem._apply_ground_velocity(actors[0], command, Vector2i(1000, 0), config, true, 0, kind == "preserve_idle", ground)
+			RefCountedMove._apply_ground_velocity(actors[1], command, Vector2i(1000, 0), config, true, 0, kind == "preserve_idle", ground)
+			CandidateCountedMove._apply_ground_velocity(actors[2], command, Vector2i(1000, 0), config, true, 0, kind == "preserve_idle", ground)
+			_check(actors[0].canonical_values() == actors[1].canonical_values() and actors[0].canonical_values() == actors[2].canonical_values(), "Prepared identity/ordinary-movement boundary is exact: %d/%s" % [wire, kind])
+			_check(RefCountedMove.speed_calls == (0 if kind == "preserve_idle" else 2) and CandidateCountedMove.speed_calls == (0 if kind == "preserve_idle" else 1), "Actual call-local lookup count and early return")
+			rows.append({"identity":wire,"control":kind,"reference_calls":RefCountedMove.speed_calls,"candidate_calls":CandidateCountedMove.speed_calls})
+
+
+func _worlds() -> bool:
+	var game := Factory.new()
+	factory_owner = game
+	game.campus_layout = layout; game.ability_catalog = abilities; game.champion_catalog = champions
+	var actual: SimWorld = game._new_wellspring_world(120)
+	if not _check(actual != null and actual.is_valid(), "Actual campus world factory"): return false
+	worlds.append(actual); references.append(weakref(actual)); created += 1
+	game.world = actual
+	var actor := actual.player()
+	if not _check(champions.apply_to_player(actor, "oh_tipi"), "Ordinary actual local champion"): return false
+	actor.reset_for_spawn(Vector2i(1_536_000, 880_000))
+	if not _check(game.character_weaves.configure(champions, abilities, false, output + "/absent-weaves.json") and game.character_weaves.restore_actor(actor, true), "Fresh nonpersistent starter weave"): return false
+	if selected != "idle" and not _check(actor.place_proven_spell(0, MixtureCatalog.wire_for(63, "mantle") if selected == "mantle" else MixtureCatalog.wire_for(2, "bolt")), "Declared initial ordinary loadout"): return false
+	game._spawn_practice_targets(actual)
+	game.authoritative_session = AuthoritativeSession.new()
+	if not _check(game.authoritative_session.bind(actual, champions, layout.spawn, "Speed probe") and actual.players.size() == 5, "Actual five-actor charter and target roster"): return false
+	var initial := Packet.capture(actual)
+	if not _check(not initial.is_empty(), "Actual initial world is strictly capturable"): return false
+	initial_packet_sha = CanonicalBytes.sha256_hex(var_to_bytes(initial))
+	var definition := HexWorldDefinition.from_campus(layout)
+	for script: Script in [RefWorld, CandidateWorld]:
+		var other: SimWorld = script.new(120, actual.seed, layout.build_collision_world(), actual.map_id, actual.map_hash)
+		worlds.append(other); references.append(weakref(other)); created += 1
+		if not _check(definition.bind_world(other) and Packet.restore(initial, other), "Independent fresh paired court restores exact initial packet"): return false
+		_check(other.hex_court != actual.hex_court and not other.profile_enabled, "No shared court or diagnostic step observer")
+	_check(not FileAccess.file_exists(output + "/absent-weaves.json"), "No profile persistence")
+	game.free(); factory_owner = null
+	return bool(_boundary(0).get("okay", false))
+
+
+func _command(tick: int) -> SimCommand:
+	return SimCommand.new(tick, 1, 0, 0, 0, SimCommand.PRESSED_SPELL_1 if selected != "idle" and tick % 120 == 0 else 0, 1000, 0, 1_736_000, 880_000)
+
+
+func _group(world: SimWorld, inputs: Array) -> Dictionary:
+	var events: Array = []; events.resize(inputs.size())
+	var success := PackedInt32Array(); success.resize(inputs.size())
+	var start := Time.get_ticks_usec()
+	for index: int in inputs.size():
+		var commands: Array[SimCommand] = inputs[index]
+		success[index] = 1 if world.step(commands) else 0
+		events[index] = world.combat_events
+		if success[index] == 0: break
+	var elapsed := Time.get_ticks_usec() - start
+	return {"whole_group_us":elapsed,"events":events,"success":success,"last_error":world.last_error}
+
+
+func _boundary(tick: int) -> Dictionary:
+	var state := worlds[0].state_hash()
+	var canonical_packet := Packet.capture(worlds[0])
+	var bytes := var_to_bytes(canonical_packet)
+	_check(not canonical_packet.is_empty(), "Canonical strict boundary packet")
+	for world: SimWorld in worlds:
+		var packet := canonical_packet if world == worlds[0] else Packet.capture(world)
+		_check(world.tick == tick and world.state_hash() == state and world.last_error.is_empty(), "Actual complete boundary state/tick/error")
+		_check(not packet.is_empty() and var_to_bytes(packet) == bytes, "Three concrete complete packets match")
+		_check(world.hex_court.conservation_valid(), "Actual finite matter conservation")
+	return {"okay":errors.is_empty(),"tick":tick,"state_hash":state,"packet_sha256":CanonicalBytes.sha256_hex(bytes),"matter_paid":int(worlds[0].hex_court.metrics.matter_paid)}
+
+
+func _workload() -> void:
+	if not _worlds(): return
+	var serial := 0
+	var group_index := 0
+	while worlds[0].tick < 240 and errors.is_empty():
+		if not _check(Time.get_ticks_msec() - started_ms < DEADLINE_MS, "Bounded experiment wall deadline"): return
+		var count: int = 1 if functional else [0, 1, 8][group_index % 3]
+		count = mini(count, 240 - worlds[0].tick)
+		var tick := worlds[0].tick
+		var inputs_ref: Array = []; var inputs_candidate: Array = []
+		var expected_events: Array = []
+		var commands_hex: Array[String] = []
+		for index: int in count:
+			var command := _command(tick + index)
+			var canonical_inputs: Array[SimCommand] = [command]
+			var reference_inputs: Array[SimCommand] = [command.copy()]
+			var candidate_inputs: Array[SimCommand] = [command.copy()]
+			inputs_ref.append(reference_inputs); inputs_candidate.append(candidate_inputs)
+			commands_hex.append(command.canonical_bytes().hex_encode())
+			if not _check(worlds[0].step(canonical_inputs), "Untimed concrete production step succeeds"): return
+			expected_events.append(worlds[0].combat_events.duplicate(true))
+			flight_seen = flight_seen or not worlds[0].projectiles.is_empty()
+			ground_seen = ground_seen or not worlds[0].hex_court.occupied_cells().is_empty()
+			for event: Dictionary in worlds[0].combat_events:
+				if event.get("type", "") == "cast_started": admissions += 1
+				elif event.get("type", "") == "cast_refused": refusals += 1
+				elif event.get("type", "") == "projectile_spawned": releases += 1
+		var candidate_first := (group_index % 2 == 0) != reverse
+		var order: Array = [2, 1] if candidate_first else [1, 2]
+		var measured: Dictionary = {}
+		for side: int in order:
+			serial += 1
+			measured[side] = _group(worlds[side], inputs_ref if side == 1 else inputs_candidate)
+			measured[side].serial = serial
+			_check(measured[side].last_error == "" and measured[side].events == expected_events, "Every retained ordered event matches concrete production")
+			for okay: int in measured[side].success: _check(okay == 1, "Every paired step succeeds")
+		for index: int in count:
+			_check(inputs_ref[index][0].canonical_bytes().hex_encode() == commands_hex[index] and inputs_candidate[index][0].canonical_bytes().hex_encode() == commands_hex[index], "Both arms preserve actual command bytes")
+		var boundary := _boundary(worlds[0].tick)
+		if not functional and count > 0:
+			var qualified: Dictionary = qualified_rows[worlds[0].tick - 1]
+			_check(qualified.state_hash == boundary.state_hash and qualified.packet_sha256 == boundary.packet_sha256, "Group terminal authority matches every-step functional trace")
+			for index: int in count:
+				_check(JSON.parse_string(JSON.stringify(expected_events[index])) == qualified_rows[tick + index].events[0] and commands_hex[index] == qualified_rows[tick + index].commands_hex[0], "Each command/event still matches the frozen functional trace")
+		var phase := "functional" if functional else "warmup" if tick < 18 else "measured" if tick + count <= 234 else "verification_tail"
+		rows.append({"phase":phase,"steps":count,"tick_before":tick,"tick":worlds[0].tick,"order":order,"state_hash":boundary.state_hash,"packet_sha256":boundary.packet_sha256,
+			"commands_hex":commands_hex,"events":expected_events,"reference_us":measured[1].whole_group_us,"candidate_us":measured[2].whole_group_us,
+			"serial_reference":measured[1].serial,"serial_candidate":measured[2].serial,"matter_paid":boundary.matter_paid,
+			"pending":worlds[0].player().pending_cast_wire_id,"projectiles":worlds[0].projectiles.size(),"occupied":worlds[0].hex_court.occupied_cells().size()})
+		group_index += 1
+		if group_index % 16 == 0:
+			print("GROUND_SPEED_PROGRESS ", selected, " tick=", worlds[0].tick, " rows=", rows.size())
+			await process_frame
+			if finished: return
+	if selected != "idle":
+		_check(admissions > 0 and releases > 0 and flight_seen and ground_seen, "Actual paid flight/release/ground occur; never infer success from requested input")
+		_check(int(worlds[0].hex_court.metrics.matter_paid) == admissions * 600, "Each admission owns exactly its finite stock")
+	else: _check(admissions == 0 and int(worlds[0].hex_court.metrics.matter_paid) == 0, "Idle remains genuinely unpaid")
+
+
+func _finish() -> void:
+	if finished: return
+	finished = true
+	if is_instance_valid(factory_owner): factory_owner.free()
+	factory_owner = null
+	worlds.clear()
+	var live := 0
+	for reference: WeakRef in references:
+		if reference.get_ref() != null: live += 1
+	_check(live == 0, "All experiment world owners released")
+	for path: String in hashes: _check(FileAccess.get_sha256(path) == hashes[path], "Input remains unchanged: " + path)
+	var receipt := {"schema":"hex-ground-speed-experiment-v1","passed":errors.is_empty(),"case":selected,"mode":"functional" if functional else "cost", "reverse_order":reverse,
+		"checks":checks,"errors":errors,"source_hashes":hashes,"rows":rows,"admissions":admissions,"refusals":refusals,"releases":releases,
+		"flight_seen":flight_seen,"ground_seen":ground_seen,"initial_packet_sha256":initial_packet_sha,"cleanup":{"created":created,"live":live,"factory_live":false},
+		"scope":"Exact current whole SimWorld steps through two copied movement bodies and third concrete control. No render, physical input, Bootstrap process scheduling, GPU or FPS claim. Cost groups preserve events/commands each step and strict full authority only at group boundaries; functional mode verifies each tick. Default simulation observers off in all three worlds. Initial setup only; no trajectory grants. Whole-group clocks include equal event-reference storage and success lanes.",
+		"qualification":{"path":qualification,"sha256":qualification_sha},"wall_elapsed_ms":Time.get_ticks_msec()-started_ms}
+	if authorized:
+		var file := FileAccess.open(output + "/receipt.json", FileAccess.WRITE)
+		if file == null: errors.append("Receipt creation failed")
+		else:
+			file.store_string(JSON.stringify(receipt, "\t") + "\n"); file.close()
+			if JSON.parse_string(FileAccess.get_file_as_string(output + "/receipt.json")) != JSON.parse_string(JSON.stringify(receipt)): errors.append("Receipt readback differs")
+	print("GROUND_SPEED_RESULT ", "PASS" if errors.is_empty() else "FAIL", " checks=", checks, " errors=", JSON.stringify(errors))
+	quit(0 if errors.is_empty() else 1)

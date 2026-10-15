@@ -1,27 +1,27 @@
 # H.E.X. player guide
 
-Status: **development is active; this guide's qualified portable is p61-500be306a26a.**
-The [October 13 iteration](iteration-20261013/README.md) tracks current work and checks.
-Open the [current launcher](../exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd),
-or extract the [Windows x64 ZIP](../exports/hex-iteration-20261013-500be/HEX-p61-500be306a26a-Windows-x64.zip)
-(161,186,435 bytes; 153.7 MiB) into its own folder before launching.
+Status: **development is active; the qualified playable build is p61-d6d1bfb9c529.**
+Use the **H.E.X. desktop shortcut** on this PC. It opens the stable
+`C:/Users/sende/Documents/ChatGPT/H.E.X/PLAY-HEX.cmd` launcher and the qualified build.
+For another Windows PC, extract the [Windows x64 ZIP](../exports/hex-performance-20261014-d6d1/HEX-p61-d6d1bfb9c529-Windows-x64.zip)
+(161,194,910 bytes; 153.7 MiB) into its own folder and use its `PLAY-HEX.cmd`.
 These are local files. The [README](../README.md#install-or-play-on-windows)
 explains source setup and portable use.
 
-The [independent delivery review](iteration-20261013/delivery-review-500be/review.json)
+The [independent delivery review](performance-evidence-20261014/stationary-qualification-d6d1/delivery-review/review.json)
 links passed Full tests, package/archive, terrain and normal-close/reopen checks.
-The [current performance record](iteration-20261013/foreground-500be-allsteps/review.json)
-passes its focus and source checks, but steady 60 FPS is not yet achieved.
-Physical-controller behavior, human balance and movement feel remain acceptance work.
+**Current-build foreground performance and portable FPS remain unmeasured.**
+The [previous-build 6459 source performance review](performance-evidence-20261014/foreground-6459-b/review.json)
+retains Garden/sustained Fire/Mantle p95 engine intervals of 73.910/117.084/110.507 ms
+with full instrumentation. These are previous-build source results, not d6d1 FPS.
+Steady 60 FPS, physical-controller behavior, human balance and movement feel remain
+acceptance work.
 
-The [be680 fallback launcher](../exports/hex-smoothness-20261012/windows/PLAY-HEX.cmd)
-and [smoothness record](smoothness-20261012/README.md) remain available.
-The [845f fallback](../exports/hex-comprehensive-20261012/windows/PLAY-HEX.cmd)
-retains its [comprehensive record and 196 UI captures](implementation-20261012/README.md).
-The [d8 audit](audit-implementation-20261011/README.md) and
-[be3 performance evidence](performance-implementation-20261010.md) describe their own earlier builds.
-The [portable record](iteration-20261012/README.md) owns the evidence for this playable build;
-the [active iteration](iteration-20261013/README.md) owns ongoing work.
+The [qualified checkpoint record](performance-evidence-20261014/stationary-qualification-d6d1/README.md) owns this delivery;
+the [single queue](../.agent/OVERHAUL-IMPLEMENTATION.md) owns ongoing work.
+The immediate [6459 fallback](depth-clarity-evidence-20261014/delivery-review/review.json),
+older [7804 fallback](iteration-20261013/delivery-review-7804/review.json) and earlier
+working builds remain preserved through the [documentation index](README.md).
 
 ## Start small
 
@@ -73,6 +73,10 @@ glow and extra Garden details; **Standard** restores those embellishments.
 Spell footprints, warnings, character poses and movement rules stay readable in
 both. **Reduced Effects/Motion** remains a separate accessibility preference.
 
+**Camera Look-ahead** controls the gentle pan toward movement and aim. Turn it
+off for steadier framing without changing Reduced Effects/Motion. Both choices
+save independently; the world keeps its fixed 75% camera scale.
+
 The default limit is **60 FPS**, with **120 FPS** and **Unlimited** available.
 This is a maximum, not a promise that the hardware will reach it. Changes save
 locally. Arrow keys or the controller select and change a row; clicking the
@@ -112,8 +116,8 @@ In enlarged Controls, **Aim cue** toggles the visible aim highlight.
 
 Fast travel can briefly show **Preparing this area…** while terrain and Garden
 exhibits become ready. Offline control resumes when the complete view is ready.
-Walking keeps its normal controls. The [current performance record](iteration-20261012/README.md)
-records the tested build and remaining limits; steady 60 FPS is not yet achieved.
+Walking keeps its normal controls. The [previous-build 6459 measurement](performance-evidence-20261014/foreground-6459-b/review.json)
+retains its own tested scope; current-build foreground performance and steady 60 FPS remain unestablished.
 
 ## Read the current view
 
@@ -320,6 +324,10 @@ setting does not heal or refill anyone. **Reset statistics** begins a new
 observation window without resetting combat state. Use **More / O / L3** to
 reach the separate refill/reset/clear, guide and delivery controls.
 
+The results also show how many seconds each status was active on the target in
+this observation window. Status channels can overlap, so their times need not
+add up to the window length. These are durations, not extra damage totals.
+
 Opening the Range while inspecting an **Element Garden** plot selects that
 plot's mixture. The exhibit itself is harmless and bounded; explicitly equip
 and cast the preset in the Range to test paid combat effects.
@@ -351,6 +359,9 @@ The optional suggested path is **Wa Bidi in Conservatory Gap Court**,
 It teaches pressure gaps, delayed-area exits and bank geometry in distinct
 courts. The suggestion follows earned progress; every challenge remains
 selectable in any order.
+A selected lesson you have earned keeps its own equip-and-practice advice. The
+next recommendation names the spell to learn and its rival; it does not ask you
+to equip a still-locked reward.
 Read the spell, windup and counter before beginning. Rivals cast through the
 ordinary paid simulation; they can run out of resources or have a cast refused.
 A visible pause means no new rival commands, not that existing shots or fields

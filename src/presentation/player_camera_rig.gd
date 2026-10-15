@@ -40,7 +40,7 @@ func advance(
 	viewport_pixels: Vector2,
 	world_bounds: Rect2,
 	reserved_ui_top: float = 112.0,
-	reduced_motion: bool = false,
+	suppress_look_ahead: bool = false,
 	suspended: bool = false,
 	force_snap: bool = false,
 ) -> Vector2:
@@ -54,7 +54,7 @@ func advance(
 		framing_offset = Vector2.ZERO
 		initialized = true
 		_was_suspended = suspended
-	elif reduced_motion:
+	elif suppress_look_ahead:
 		# Stable feet-following remains smooth through existing actor interpolation;
 		# disabling the anticipatory pan avoids extra screen motion entirely.
 		framing_offset = Vector2.ZERO

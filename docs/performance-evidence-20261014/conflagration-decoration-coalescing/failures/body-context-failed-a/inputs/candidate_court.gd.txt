@@ -1,0 +1,85 @@
+extends "res://src/presentation/hex_court_presenter.gd"
+## Low-only active decoration experiment. Every authoritative fill/border remains.
+const COALESCE_SCRIPT := "res://.godot/iteration-20261014/conflagration-next/candidate_court.gd"
+
+func _coalescing_enabled(material: String) -> bool:
+	return material == "conflagration" and Quality.profile == "low" \
+		and get_script().resource_path == COALESCE_SCRIPT \
+		and _language != null and _language.get_script() == VisualLanguage \
+		and retro_marks != null and retro_marks.get_script() == RetroMarks
+
+
+func _coalesced_active_indices(rows: Array) -> Dictionary:
+	# Call-local only. No membership or phase can survive a draw/expiry.
+	var last: Dictionary = {}
+	var keys: Array[Array] = []
+	for index: int in rows.size():
+		var region: Dictionary = rows[index]
+		var key: Array = []
+		# Canonical product owners are integers. Generic custom-owner rows retain
+		# every mark instead of inventing a new serialization/equality contract.
+		if region.get("phase") == "active" and region.get("material") == "conflagration" \
+			and region.get("owner_key") is int and region.get("polygon") is PackedVector2Array \
+			and region.get("direction") is Vector2i and region.get("danger") is bool \
+			and region.get("intensity") is int:
+			key = [region.polygon, region.owner_key, region.direction, region.danger, region.intensity]
+			last[key] = index
+		keys.append(key)
+	var skipped: Dictionary = {}
+	for index: int in keys.size():
+		if not keys[index].is_empty() and int(last[keys[index]]) != index:
+			skipped[index] = true
+	return skipped
+
+
+func _draw_mirror_product(canvas: CanvasItem, regions_by_cell: Dictionary, material: String, tick: float, reduced: bool) -> void:
+	# COALESCE_GUARD_BEGIN
+	if not _coalescing_enabled(material):
+		super._draw_mirror_product(canvas, regions_by_cell, material, tick, reduced)
+		return
+	# COALESCE_GUARD_END
+	var counts := _region_edge_counts(regions_by_cell)
+	var base := _language.reaction_color(material, "base")
+	var bright := _language.reaction_color(material, "bright")
+	var dark := _language.reaction_color(material, "dark")
+	var surface_styles: Dictionary = {}
+	for cell: Vector2i in regions_by_cell:
+		var skipped := _coalesced_active_indices(regions_by_cell[cell])
+		var region_index := -1
+		for region: Dictionary in regions_by_cell[cell]:
+			region_index += 1
+			var active: bool = region.phase == "active"
+			var decaying: bool = region.phase == "decaying"
+			var intensity := clampf(float(region.intensity) / 1000.0, 0.1, 1.5)
+			var opacity := ((0.19 if reduced else 0.25) + 0.06 * intensity) * (0.45 if decaying else 1.0)
+			_draw_retained_region_fill(canvas, region.polygon, Color(base, opacity))
+			var phase_key := String(region.phase)
+			if not surface_styles.has(phase_key):
+				surface_styles[phase_key] = {"dark": dark, "base": base, "bright": bright, "phase": phase_key}
+			var surface_style: Dictionary = surface_styles[phase_key]
+			var painted := _draw_material_surface(canvas, material, region, surface_style, tick, reduced)
+			_draw_region_outline(canvas, region, counts, Color(bright if active else dark, 0.80 if active else 0.50), 2.0)
+			var layout := _region_layout(region.polygon)
+			var center: Vector2 = layout.center
+			var radius: float = float(layout.clearance) - 3.0
+			if radius < 5.0: continue
+			if material == "flood":
+				var direction := Vector2(region.direction).normalized()
+				var side := Vector2(-direction.y, direction.x)
+				var drift := 0.0 if reduced or not active else sin(tick * 0.08) * minf(2.0, radius * 0.1)
+				for offset: float in [-0.30, 0.30]:
+					var anchor := center + direction * (radius * offset + drift)
+					canvas.draw_line(anchor - direction * radius * 0.18 - side * radius * 0.28, anchor + direction * radius * 0.15, Color(bright, 0.85), 2.0)
+					canvas.draw_line(anchor + direction * radius * 0.15, anchor - direction * radius * 0.18 + side * radius * 0.28, Color(bright, 0.85), 2.0)
+			else:
+				if active and skipped.has(region_index): continue
+				var phase := "active" if active else "cooling" if decaying else "ignition"
+				if not painted or not active:
+					_draw_fire_region_mark(canvas, region.polygon, phase, dark, base, bright, _language.reaction_color(material, "danger"), tick, int(region.footprint_id), reduced)
+				# A restrained three-point crown distinguishes the mirror product
+				# from one ordinary Fire ingredient without obscuring its footprint.
+				if active:
+					for offset: float in [-0.45, 0.45]:
+						var anchor := center + Vector2(radius * offset, radius * 0.12)
+						canvas.draw_line(anchor, anchor + Vector2(0, -radius * 0.35), Color(bright, 0.78), 2.0)
+

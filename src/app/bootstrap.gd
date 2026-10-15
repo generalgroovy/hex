@@ -5497,7 +5497,7 @@ func _apply_performance_preferences() -> void:
 func _change_performance_preferences(changes: Dictionary) -> bool:
 	var candidate := player_preferences.to_dictionary()
 	for key: String in changes:
-		if key not in ["render_quality", "frame_limit", "ui_text_percent", "movement_deadzone_percent", "aim_deadzone_percent"]: return false
+		if key not in ["render_quality", "frame_limit", "ui_text_percent", "movement_deadzone_percent", "aim_deadzone_percent", "camera_look_ahead"]: return false
 		candidate[key] = changes[key]
 	if not player_preferences.apply_dictionary(candidate): return false
 	_apply_performance_preferences()
@@ -5708,6 +5708,10 @@ func _local_player_state() -> PlayerState:
 	return state if state != null else world.player(SessionTransport.SERVER_PEER_ID)
 
 
+func _camera_look_ahead_enabled() -> bool:
+	return not requested_capture_reduced_effects and (player_preferences == null or player_preferences.camera_look_ahead)
+
+
 func _advance_player_camera(delta: float, blocked: bool) -> void:
 	if campus_layout == null and not _is_hex_practice():
 		return
@@ -5726,7 +5730,7 @@ func _advance_player_camera(delta: float, blocked: bool) -> void:
 		look = Vector2(state.aim_x, state.aim_y).normalized()
 	elif capture_pointer_world.x >= 0:
 		look = (Vector2(capture_pointer_world) - feet).limit_length(320.0) / 320.0
-	player_camera.advance(feet, Vector2(state.velocity_x,state.velocity_y) / SimConfig.FIXED_SCALE, look, delta, viewport, bounds, top, _reduced_effects_enabled(), blocked or not get_window().has_focus(), camera_focus_entity != state.entity_id)
+	player_camera.advance(feet, Vector2(state.velocity_x,state.velocity_y) / SimConfig.FIXED_SCALE, look, delta, viewport, bounds, top, not _camera_look_ahead_enabled(), blocked or not get_window().has_focus(), camera_focus_entity != state.entity_id)
 	camera_focus_entity = state.entity_id
 
 

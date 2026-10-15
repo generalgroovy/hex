@@ -1,21 +1,18 @@
 # H.E.X. current design contract
 
-Status: **paused at the qualified October 13 checkpoint, p61-7804a23eb300.**
-The [iteration](docs/iteration-20261013/README.md) owns implementation and checks.
-The closing batch repairs victory audio tails, remapped hints and Jump teaching.
-[Full](docs/iteration-20261013/full-7804/README.md) passes 265 suites / 7,573,807
-assertions with zero failures/error output and 120 Hz boot. The
-[delivery review](docs/iteration-20261013/delivery-review-7804/review.json) links
-the matching package/archive, 133-image terrain and five-case lifecycle checks.
-Use the [launcher](exports/hex-checkpoint-20261013-7804/windows/PLAY-HEX.cmd);
-the prior 500be portable and all older working builds remain preserved.
+Status: **implemented rules; qualified portable p61-d6d1bfb9c529.**
+The [single queue](.agent/OVERHAUL-IMPLEMENTATION.md) owns current work; the
+[resume](.agent/HEX-RESUME.md) and [delivery pointer](docs/current-delivery.json)
+own exact source/package identity and acceptance limits. Current-build foreground
+performance and portable FPS remain unmeasured. The
+[6459 source diagnostic](docs/performance-evidence-20261014/foreground-6459-b/review.json)
+is historical and does not qualify d6d1 performance.
 
-The [last admitted foreground record](docs/iteration-20261013/foreground-500be-allsteps/review.json)
-belongs to 500be: Garden/default Fire/Mantle p95 engine intervals are
-24.743/28.217/39.999 ms. Its workload differs from earlier sustained Fire, so it
-does not establish a matched speedup. Newer builds require their own measurement.
-Steady 60 FPS and human gameplay acceptance remain open. The
-[resume](.agent/HEX-RESUME.md) owns exact source/package identity and limits.
+The [October 15 overhaul design](docs/OVERHAUL-DESIGN-20261015.md) targets the
+user-selected illustrated 2.5D animated-sprite direction. It is a cross-reviewed
+proposal, not implemented rules. This contract remains in force until individual
+changes pass their stated gates. Use the **H.E.X. desktop shortcut** for player
+sessions; preserve the qualified fallback and older working builds.
 
 H.E.X. (Help, Everything eXploded!) is a movement-led, top-down elemental combat
 sandbox for Windows. Its depth comes from movement execution, finite resources,
@@ -43,7 +40,7 @@ The [player guide](docs/PLAYER-GUIDE.md), [roster](docs/CURRENT-CAST.md) and
 | Chemistry | 63 bounded reactions: six self-pairs and every distinct subset of two through six elements; stationary whole-hex impact fields |
 | Grid | 24 px face-to-face; 59,466 eligible Wellspring cells; topology cap 65,536 and selection cap 511; unchanged 64 paid casts / 32 products |
 | Wire | Protocol 61 / SessionSnapshot 24 / SessionRound 2 / HexWorldSnapshot 5 / HexChemistrySnapshot 5; protocol 61 clears defeated actors' unfired reservations in the same completed Hex step as paid-source retirement |
-| Delivery | Current p61-7804a23eb300 passes Full, package/archive, exact exported terrain and five-case portable lifecycle checks. Previous working builds remain preserved. The last admitted foreground timing belongs to 500be and covers default workloads only; sustained stress, steady 60 FPS, installer and binary publication remain unqualified. Exact evidence lives in the resume |
+| Delivery | Current p61-d6d1bfb9c529 passes Full, package/archive, exact exported terrain and five-case portable lifecycle checks. Current-build foreground performance and portable FPS remain unmeasured; steady 60 FPS remains unqualified. Previous working builds remain preserved. Installer and binary publication remain unqualified. Exact evidence lives in the resume |
 
 The October 11 presentation revision expands the character-centered 360-degree
 view to cover every viewport corner, including camera lead, world edges and
@@ -607,8 +604,7 @@ for the four-body motion fixtures and current review limits; the
 [earlier animation decision record](docs/reference-refinement-evidence-20261009/animation-followup.md)
 retains its original cadence measurements and precedents.
 
-The single 75% gameplay zoom uses subtle bounded look/velocity lead; reduced
-motion removes anticipatory pan. Screen-cardinal floors use the approved
+The single 75% gameplay zoom uses subtle bounded look/velocity lead. Camera Look-ahead independently controls that pan; Reduced Effects/Motion controls other presentation effects. Screen-cardinal floors use the approved
 illustrated elevation, without automatic scenery fading. Characters and active
 danger get strongest contrast; floors and decorative wear stay quiet.
 Shapes/value/timing supplement element colors. Normal/reduced effects preserve

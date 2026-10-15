@@ -1,0 +1,2814 @@
+{
+  "schema": "hex.stationary-independent-review.v1",
+  "passed_readback": true,
+  "checks": 5641,
+  "source_pins_sha256": "3484442cfc13a331f8f019d535a58ccd7061f5f52aa00c88c7e7b53334e268fa",
+  "runner_sha256": "8c0791c41be59e91d109507ef1e7b45d2737cf546394b0f6183068f590c8f0cd",
+  "analyzer_sha256": "527122a751a002f1b1ac3b60186671e4e1a1f1d033da06592316790b5c8ddbd6",
+  "runs": {
+    "forward-a": {
+      "receipt_sha256": "663161d69acde32a3faade0e8e74fafd1cd97823633b18596f15dc9ffc94ce3d",
+      "runner_sha256": "64fd6330d42e6d1be642087946b07bc30aa9e7b074032b1c7fcb52cf4f118f29",
+      "cases": {
+        "fire": {
+          "all48": {
+            "count": 48,
+            "reference_mean_us": 1043.7291666666667,
+            "candidate_mean_us": 993.375,
+            "mean_saving_us": 50.354166666666664,
+            "mean_saving_percent": 4.824447593764345,
+            "paired_median_saving_us": 84.0,
+            "reference_p95_us": 1451,
+            "candidate_p95_us": 1707,
+            "p95_regression_percent": 17.643004824259133,
+            "reference_max_us": 2625,
+            "candidate_max_us": 2345,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 0,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1093,
+                "candidate_us": 1537,
+                "events": [
+                  "cast_started"
+                ]
+              },
+              {
+                "tick_before": 10,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1420,
+                "candidate_us": 1707,
+                "events": []
+              },
+              {
+                "tick_before": 6,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 897,
+                "candidate_us": 1181,
+                "events": []
+              },
+              {
+                "tick_before": 11,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1238,
+                "candidate_us": 1475,
+                "events": []
+              },
+              {
+                "tick_before": 12,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1214,
+                "candidate_us": 1451,
+                "events": []
+              }
+            ]
+          },
+          "first4": {
+            "count": 4,
+            "reference_mean_us": 930.5,
+            "candidate_mean_us": 1001.5,
+            "mean_saving_us": -71,
+            "mean_saving_percent": -7.630306286942504,
+            "paired_median_saving_us": 29.5,
+            "reference_p95_us": 1093,
+            "candidate_p95_us": 1537,
+            "p95_regression_percent": 40.62214089661482,
+            "reference_max_us": 1093,
+            "candidate_max_us": 1537,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 0,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1093,
+                "candidate_us": 1537,
+                "events": [
+                  "cast_started"
+                ]
+              },
+              {
+                "tick_before": 1,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 879,
+                "candidate_us": 892,
+                "events": []
+              },
+              {
+                "tick_before": 2,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 876,
+                "candidate_us": 804,
+                "events": []
+              },
+              {
+                "tick_before": 3,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 874,
+                "candidate_us": 773,
+                "events": []
+              }
+            ]
+          },
+          "primary_remaining44": {
+            "count": 44,
+            "reference_mean_us": 1054.0227272727273,
+            "candidate_mean_us": 992.6363636363636,
+            "mean_saving_us": 61.38636363636363,
+            "mean_saving_percent": 5.824007589969166,
+            "paired_median_saving_us": 85.0,
+            "reference_p95_us": 1451,
+            "candidate_p95_us": 1707,
+            "p95_regression_percent": 17.643004824259133,
+            "reference_max_us": 2625,
+            "candidate_max_us": 2345,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 10,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1420,
+                "candidate_us": 1707,
+                "events": []
+              },
+              {
+                "tick_before": 6,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 897,
+                "candidate_us": 1181,
+                "events": []
+              },
+              {
+                "tick_before": 11,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1238,
+                "candidate_us": 1475,
+                "events": []
+              },
+              {
+                "tick_before": 12,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1214,
+                "candidate_us": 1451,
+                "events": []
+              },
+              {
+                "tick_before": 33,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 883,
+                "candidate_us": 897,
+                "events": []
+              }
+            ]
+          },
+          "order_remaining44": {
+            "reference_first": {
+              "count": 22,
+              "reference_mean_us": 1083.5,
+              "candidate_mean_us": 996.0909090909091,
+              "mean_saving_us": 87.4090909090909,
+              "mean_saving_percent": 8.067290346939632,
+              "paired_median_saving_us": 91.0,
+              "reference_p95_us": 1451,
+              "candidate_p95_us": 1475,
+              "p95_regression_percent": 1.6540317022742945,
+              "reference_max_us": 2625,
+              "candidate_max_us": 2345,
+              "largest_candidate_regressions": [
+                {
+                  "tick_before": 11,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 1238,
+                  "candidate_us": 1475,
+                  "events": []
+                },
+                {
+                  "tick_before": 33,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 883,
+                  "candidate_us": 897,
+                  "events": []
+                },
+                {
+                  "tick_before": 37,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 822,
+                  "candidate_us": 774,
+                  "events": []
+                },
+                {
+                  "tick_before": 39,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 876,
+                  "candidate_us": 824,
+                  "events": []
+                },
+                {
+                  "tick_before": 29,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 825,
+                  "candidate_us": 759,
+                  "events": []
+                }
+              ]
+            },
+            "candidate_first": {
+              "count": 22,
+              "reference_mean_us": 1024.5454545454545,
+              "candidate_mean_us": 989.1818181818181,
+              "mean_saving_us": 35.36363636363637,
+              "mean_saving_percent": 3.4516415261756883,
+              "paired_median_saving_us": 81.0,
+              "reference_p95_us": 1420,
+              "candidate_p95_us": 1707,
+              "p95_regression_percent": 20.211267605633807,
+              "reference_max_us": 1973,
+              "candidate_max_us": 1972,
+              "largest_candidate_regressions": [
+                {
+                  "tick_before": 10,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 1420,
+                  "candidate_us": 1707,
+                  "events": []
+                },
+                {
+                  "tick_before": 6,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 897,
+                  "candidate_us": 1181,
+                  "events": []
+                },
+                {
+                  "tick_before": 12,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 1214,
+                  "candidate_us": 1451,
+                  "events": []
+                },
+                {
+                  "tick_before": 8,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 1973,
+                  "candidate_us": 1972,
+                  "events": [
+                    "projectile_spawned"
+                  ]
+                },
+                {
+                  "tick_before": 24,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 912,
+                  "candidate_us": 878,
+                  "events": []
+                }
+              ]
+            }
+          },
+          "primary_gate_passed": true,
+          "moving_mean_regression_limit_exceeded": null,
+          "moving_p95_regression_limit_exceeded": null,
+          "admission": {
+            "count": 1,
+            "reference_mean_us": 1093,
+            "candidate_mean_us": 1537,
+            "mean_saving_us": -444,
+            "mean_saving_percent": -40.62214089661482,
+            "paired_median_saving_us": -444,
+            "reference_p95_us": 1093,
+            "candidate_p95_us": 1537,
+            "p95_regression_percent": 40.62214089661482,
+            "reference_max_us": 1093,
+            "candidate_max_us": 1537,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 0,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1093,
+                "candidate_us": 1537,
+                "events": [
+                  "cast_started"
+                ]
+              }
+            ]
+          },
+          "release": {
+            "count": 1,
+            "reference_mean_us": 1973,
+            "candidate_mean_us": 1972,
+            "mean_saving_us": 1,
+            "mean_saving_percent": 0.05068423720223011,
+            "paired_median_saving_us": 1,
+            "reference_p95_us": 1973,
+            "candidate_p95_us": 1972,
+            "p95_regression_percent": -0.05068423720222537,
+            "reference_max_us": 1973,
+            "candidate_max_us": 1972,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 8,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1973,
+                "candidate_us": 1972,
+                "events": [
+                  "projectile_spawned"
+                ]
+              }
+            ]
+          },
+          "ground_present": {
+            "count": 25,
+            "reference_mean_us": 953.56,
+            "candidate_mean_us": 859.92,
+            "mean_saving_us": 93.64,
+            "mean_saving_percent": 9.820042787029658,
+            "paired_median_saving_us": 84,
+            "reference_p95_us": 987,
+            "candidate_p95_us": 899,
+            "p95_regression_percent": -8.915906788247218,
+            "reference_max_us": 2625,
+            "candidate_max_us": 2345,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 33,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 883,
+                "candidate_us": 897,
+                "events": []
+              },
+              {
+                "tick_before": 24,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 912,
+                "candidate_us": 878,
+                "events": []
+              },
+              {
+                "tick_before": 37,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 822,
+                "candidate_us": 774,
+                "events": []
+              },
+              {
+                "tick_before": 39,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 876,
+                "candidate_us": 824,
+                "events": []
+              },
+              {
+                "tick_before": 26,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 939,
+                "candidate_us": 878,
+                "events": []
+              }
+            ]
+          },
+          "paid_events": [
+            1,
+            1,
+            0
+          ],
+          "first_flight_ground_ticks": [
+            9,
+            24
+          ]
+        },
+        "mantle": {
+          "all48": {
+            "count": 48,
+            "reference_mean_us": 1110.6666666666667,
+            "candidate_mean_us": 1045.125,
+            "mean_saving_us": 65.54166666666667,
+            "mean_saving_percent": 5.901110444177672,
+            "paired_median_saving_us": 82.0,
+            "reference_p95_us": 1439,
+            "candidate_p95_us": 1490,
+            "p95_regression_percent": 3.5441278665740095,
+            "reference_max_us": 1692,
+            "candidate_max_us": 1694,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 13,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1050,
+                "candidate_us": 1490,
+                "events": []
+              },
+              {
+                "tick_before": 17,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1145,
+                "candidate_us": 1185,
+                "events": []
+              },
+              {
+                "tick_before": 12,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1692,
+                "candidate_us": 1694,
+                "events": [
+                  "projectile_spawned"
+                ]
+              },
+              {
+                "tick_before": 19,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1076,
+                "candidate_us": 1059,
+                "events": []
+              },
+              {
+                "tick_before": 39,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1230,
+                "candidate_us": 1212,
+                "events": []
+              }
+            ]
+          },
+          "first4": {
+            "count": 4,
+            "reference_mean_us": 894.75,
+            "candidate_mean_us": 825.25,
+            "mean_saving_us": 69.5,
+            "mean_saving_percent": 7.767532830399553,
+            "paired_median_saving_us": 72.0,
+            "reference_p95_us": 1020,
+            "candidate_p95_us": 982,
+            "p95_regression_percent": -3.7254901960784292,
+            "reference_max_us": 1020,
+            "candidate_max_us": 982,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 0,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1020,
+                "candidate_us": 982,
+                "events": [
+                  "cast_started"
+                ]
+              },
+              {
+                "tick_before": 1,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 846,
+                "candidate_us": 794,
+                "events": []
+              },
+              {
+                "tick_before": 3,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 843,
+                "candidate_us": 751,
+                "events": []
+              },
+              {
+                "tick_before": 2,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 870,
+                "candidate_us": 774,
+                "events": []
+              }
+            ]
+          },
+          "primary_remaining44": {
+            "count": 44,
+            "reference_mean_us": 1130.2954545454545,
+            "candidate_mean_us": 1065.1136363636363,
+            "mean_saving_us": 65.18181818181819,
+            "mean_saving_percent": 5.766794683610481,
+            "paired_median_saving_us": 82.0,
+            "reference_p95_us": 1439,
+            "candidate_p95_us": 1490,
+            "p95_regression_percent": 3.5441278665740095,
+            "reference_max_us": 1692,
+            "candidate_max_us": 1694,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 13,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1050,
+                "candidate_us": 1490,
+                "events": []
+              },
+              {
+                "tick_before": 17,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1145,
+                "candidate_us": 1185,
+                "events": []
+              },
+              {
+                "tick_before": 12,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1692,
+                "candidate_us": 1694,
+                "events": [
+                  "projectile_spawned"
+                ]
+              },
+              {
+                "tick_before": 19,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1076,
+                "candidate_us": 1059,
+                "events": []
+              },
+              {
+                "tick_before": 39,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1230,
+                "candidate_us": 1212,
+                "events": []
+              }
+            ]
+          },
+          "order_remaining44": {
+            "reference_first": {
+              "count": 22,
+              "reference_mean_us": 1082.9545454545455,
+              "candidate_mean_us": 1037.909090909091,
+              "mean_saving_us": 45.04545454545455,
+              "mean_saving_percent": 4.159496327387199,
+              "paired_median_saving_us": 74.5,
+              "reference_p95_us": 1230,
+              "candidate_p95_us": 1278,
+              "p95_regression_percent": 3.9024390243902474,
+              "reference_max_us": 1373,
+              "candidate_max_us": 1490,
+              "largest_candidate_regressions": [
+                {
+                  "tick_before": 13,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 1050,
+                  "candidate_us": 1490,
+                  "events": []
+                },
+                {
+                  "tick_before": 17,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 1145,
+                  "candidate_us": 1185,
+                  "events": []
+                },
+                {
+                  "tick_before": 19,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 1076,
+                  "candidate_us": 1059,
+                  "events": []
+                },
+                {
+                  "tick_before": 39,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 1230,
+                  "candidate_us": 1212,
+                  "events": []
+                },
+                {
+                  "tick_before": 5,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 818,
+                  "candidate_us": 771,
+                  "events": []
+                }
+              ]
+            },
+            "candidate_first": {
+              "count": 22,
+              "reference_mean_us": 1177.6363636363637,
+              "candidate_mean_us": 1092.3181818181818,
+              "mean_saving_us": 85.31818181818181,
+              "mean_saving_percent": 7.244866450517214,
+              "paired_median_saving_us": 88.0,
+              "reference_p95_us": 1660,
+              "candidate_p95_us": 1630,
+              "p95_regression_percent": -1.8072289156626509,
+              "reference_max_us": 1692,
+              "candidate_max_us": 1694,
+              "largest_candidate_regressions": [
+                {
+                  "tick_before": 12,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 1692,
+                  "candidate_us": 1694,
+                  "events": [
+                    "projectile_spawned"
+                  ]
+                },
+                {
+                  "tick_before": 16,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 1660,
+                  "candidate_us": 1630,
+                  "events": []
+                },
+                {
+                  "tick_before": 36,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 1135,
+                  "candidate_us": 1080,
+                  "events": []
+                },
+                {
+                  "tick_before": 44,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 1152,
+                  "candidate_us": 1091,
+                  "events": []
+                },
+                {
+                  "tick_before": 32,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 1256,
+                  "candidate_us": 1191,
+                  "events": []
+                }
+              ]
+            }
+          },
+          "primary_gate_passed": true,
+          "moving_mean_regression_limit_exceeded": null,
+          "moving_p95_regression_limit_exceeded": null,
+          "admission": {
+            "count": 1,
+            "reference_mean_us": 1020,
+            "candidate_mean_us": 982,
+            "mean_saving_us": 38,
+            "mean_saving_percent": 3.7254901960784315,
+            "paired_median_saving_us": 38,
+            "reference_p95_us": 1020,
+            "candidate_p95_us": 982,
+            "p95_regression_percent": -3.7254901960784292,
+            "reference_max_us": 1020,
+            "candidate_max_us": 982,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 0,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1020,
+                "candidate_us": 982,
+                "events": [
+                  "cast_started"
+                ]
+              }
+            ]
+          },
+          "release": {
+            "count": 1,
+            "reference_mean_us": 1692,
+            "candidate_mean_us": 1694,
+            "mean_saving_us": -2,
+            "mean_saving_percent": -0.1182033096926714,
+            "paired_median_saving_us": -2,
+            "reference_p95_us": 1692,
+            "candidate_p95_us": 1694,
+            "p95_regression_percent": 0.11820330969267712,
+            "reference_max_us": 1692,
+            "candidate_max_us": 1694,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 12,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1692,
+                "candidate_us": 1694,
+                "events": [
+                  "projectile_spawned"
+                ]
+              }
+            ]
+          },
+          "ground_present": {
+            "count": 32,
+            "reference_mean_us": 1179.84375,
+            "candidate_mean_us": 1105.9375,
+            "mean_saving_us": 73.90625,
+            "mean_saving_percent": 6.264070983975632,
+            "paired_median_saving_us": 82.0,
+            "reference_p95_us": 1439,
+            "candidate_p95_us": 1301,
+            "p95_regression_percent": -9.589993050729673,
+            "reference_max_us": 1660,
+            "candidate_max_us": 1630,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 17,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1145,
+                "candidate_us": 1185,
+                "events": []
+              },
+              {
+                "tick_before": 19,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1076,
+                "candidate_us": 1059,
+                "events": []
+              },
+              {
+                "tick_before": 39,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1230,
+                "candidate_us": 1212,
+                "events": []
+              },
+              {
+                "tick_before": 16,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1660,
+                "candidate_us": 1630,
+                "events": []
+              },
+              {
+                "tick_before": 31,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1115,
+                "candidate_us": 1068,
+                "events": []
+              }
+            ]
+          },
+          "paid_events": [
+            1,
+            1,
+            0
+          ],
+          "first_flight_ground_ticks": [
+            13,
+            17
+          ]
+        },
+        "moving_fire": {
+          "all48": {
+            "count": 48,
+            "reference_mean_us": 561.2083333333334,
+            "candidate_mean_us": 564.9583333333334,
+            "mean_saving_us": -3.75,
+            "mean_saving_percent": -0.6682010542727745,
+            "paired_median_saving_us": -1.0,
+            "reference_p95_us": 828,
+            "candidate_p95_us": 843,
+            "p95_regression_percent": 1.8115942028985588,
+            "reference_max_us": 1499,
+            "candidate_max_us": 1585,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 40,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 419,
+                "candidate_us": 641,
+                "events": []
+              },
+              {
+                "tick_before": 35,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 525,
+                "candidate_us": 658,
+                "events": []
+              },
+              {
+                "tick_before": 36,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 388,
+                "candidate_us": 489,
+                "events": []
+              },
+              {
+                "tick_before": 38,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 928,
+                "candidate_us": 1024,
+                "events": []
+              },
+              {
+                "tick_before": 23,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1499,
+                "candidate_us": 1585,
+                "events": [
+                  "projectile_expired"
+                ]
+              }
+            ]
+          },
+          "first4": {
+            "count": 4,
+            "reference_mean_us": 434.75,
+            "candidate_mean_us": 436.75,
+            "mean_saving_us": -2,
+            "mean_saving_percent": -0.46003450258769407,
+            "paired_median_saving_us": -2.5,
+            "reference_p95_us": 781,
+            "candidate_p95_us": 794,
+            "p95_regression_percent": 1.6645326504481472,
+            "reference_max_us": 781,
+            "candidate_max_us": 794,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 0,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 781,
+                "candidate_us": 794,
+                "events": [
+                  "cast_started"
+                ]
+              },
+              {
+                "tick_before": 3,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 311,
+                "candidate_us": 314,
+                "events": []
+              },
+              {
+                "tick_before": 2,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 317,
+                "candidate_us": 319,
+                "events": []
+              },
+              {
+                "tick_before": 1,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 330,
+                "candidate_us": 320,
+                "events": []
+              }
+            ]
+          },
+          "primary_remaining44": {
+            "count": 44,
+            "reference_mean_us": 572.7045454545455,
+            "candidate_mean_us": 576.6136363636364,
+            "mean_saving_us": -3.909090909090909,
+            "mean_saving_percent": -0.6825667685225604,
+            "paired_median_saving_us": 1.0,
+            "reference_p95_us": 828,
+            "candidate_p95_us": 843,
+            "p95_regression_percent": 1.8115942028985588,
+            "reference_max_us": 1499,
+            "candidate_max_us": 1585,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 40,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 419,
+                "candidate_us": 641,
+                "events": []
+              },
+              {
+                "tick_before": 35,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 525,
+                "candidate_us": 658,
+                "events": []
+              },
+              {
+                "tick_before": 36,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 388,
+                "candidate_us": 489,
+                "events": []
+              },
+              {
+                "tick_before": 38,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 928,
+                "candidate_us": 1024,
+                "events": []
+              },
+              {
+                "tick_before": 23,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1499,
+                "candidate_us": 1585,
+                "events": [
+                  "projectile_expired"
+                ]
+              }
+            ]
+          },
+          "order_remaining44": {
+            "reference_first": {
+              "count": 22,
+              "reference_mean_us": 589.8181818181819,
+              "candidate_mean_us": 589.8181818181819,
+              "mean_saving_us": 0,
+              "mean_saving_percent": 0.0,
+              "paired_median_saving_us": 3.0,
+              "reference_p95_us": 826,
+              "candidate_p95_us": 843,
+              "p95_regression_percent": 2.058111380145289,
+              "reference_max_us": 1499,
+              "candidate_max_us": 1585,
+              "largest_candidate_regressions": [
+                {
+                  "tick_before": 35,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 525,
+                  "candidate_us": 658,
+                  "events": []
+                },
+                {
+                  "tick_before": 23,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 1499,
+                  "candidate_us": 1585,
+                  "events": [
+                    "projectile_expired"
+                  ]
+                },
+                {
+                  "tick_before": 31,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 458,
+                  "candidate_us": 535,
+                  "events": []
+                },
+                {
+                  "tick_before": 41,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 577,
+                  "candidate_us": 635,
+                  "events": []
+                },
+                {
+                  "tick_before": 13,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 562,
+                  "candidate_us": 614,
+                  "events": []
+                }
+              ]
+            },
+            "candidate_first": {
+              "count": 22,
+              "reference_mean_us": 555.5909090909091,
+              "candidate_mean_us": 563.4090909090909,
+              "mean_saving_us": -7.818181818181818,
+              "mean_saving_percent": -1.4071831792522294,
+              "paired_median_saving_us": -1.5,
+              "reference_p95_us": 828,
+              "candidate_p95_us": 837,
+              "p95_regression_percent": 1.0869565217391353,
+              "reference_max_us": 928,
+              "candidate_max_us": 1024,
+              "largest_candidate_regressions": [
+                {
+                  "tick_before": 40,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 419,
+                  "candidate_us": 641,
+                  "events": []
+                },
+                {
+                  "tick_before": 36,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 388,
+                  "candidate_us": 489,
+                  "events": []
+                },
+                {
+                  "tick_before": 38,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 928,
+                  "candidate_us": 1024,
+                  "events": []
+                },
+                {
+                  "tick_before": 24,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 403,
+                  "candidate_us": 436,
+                  "events": []
+                },
+                {
+                  "tick_before": 34,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 464,
+                  "candidate_us": 492,
+                  "events": []
+                }
+              ]
+            }
+          },
+          "primary_gate_passed": null,
+          "moving_mean_regression_limit_exceeded": false,
+          "moving_p95_regression_limit_exceeded": false,
+          "admission": {
+            "count": 1,
+            "reference_mean_us": 781,
+            "candidate_mean_us": 794,
+            "mean_saving_us": -13,
+            "mean_saving_percent": -1.6645326504481435,
+            "paired_median_saving_us": -13,
+            "reference_p95_us": 781,
+            "candidate_p95_us": 794,
+            "p95_regression_percent": 1.6645326504481472,
+            "reference_max_us": 781,
+            "candidate_max_us": 794,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 0,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 781,
+                "candidate_us": 794,
+                "events": [
+                  "cast_started"
+                ]
+              }
+            ]
+          },
+          "release": {
+            "count": 1,
+            "reference_mean_us": 823,
+            "candidate_mean_us": 837,
+            "mean_saving_us": -14,
+            "mean_saving_percent": -1.701093560145808,
+            "paired_median_saving_us": -14,
+            "reference_p95_us": 823,
+            "candidate_p95_us": 837,
+            "p95_regression_percent": 1.7010935601458055,
+            "reference_max_us": 823,
+            "candidate_max_us": 837,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 8,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 823,
+                "candidate_us": 837,
+                "events": [
+                  "projectile_spawned"
+                ]
+              }
+            ]
+          },
+          "ground_present": {
+            "count": 25,
+            "reference_mean_us": 598.64,
+            "candidate_mean_us": 612.04,
+            "mean_saving_us": -13.4,
+            "mean_saving_percent": -2.238407055993586,
+            "paired_median_saving_us": -20,
+            "reference_p95_us": 928,
+            "candidate_p95_us": 1024,
+            "p95_regression_percent": 10.344827586206895,
+            "reference_max_us": 1499,
+            "candidate_max_us": 1585,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 40,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 419,
+                "candidate_us": 641,
+                "events": []
+              },
+              {
+                "tick_before": 35,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 525,
+                "candidate_us": 658,
+                "events": []
+              },
+              {
+                "tick_before": 36,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 388,
+                "candidate_us": 489,
+                "events": []
+              },
+              {
+                "tick_before": 38,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 928,
+                "candidate_us": 1024,
+                "events": []
+              },
+              {
+                "tick_before": 23,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1499,
+                "candidate_us": 1585,
+                "events": [
+                  "projectile_expired"
+                ]
+              }
+            ]
+          },
+          "paid_events": [
+            1,
+            1,
+            0
+          ],
+          "first_flight_ground_ticks": [
+            9,
+            24
+          ]
+        }
+      },
+      "controls": {
+        "direct_checks": 305,
+        "path_checks": 305,
+        "stationary_calls": 48,
+        "fallback_calls": 28,
+        "preserve_idle_returns": 4
+      },
+      "host_memory_before": {
+        "available": true,
+        "observed_utc": "2026-10-14T10:36:06.2847669Z",
+        "available_bytes": 858411008,
+        "total_visible_bytes": 7817785344,
+        "scope": "Host OS endpoint only, not process memory or idle-machine proof."
+      },
+      "host_memory_after": {
+        "available": true,
+        "observed_utc": "2026-10-14T10:36:45.1081264Z",
+        "available_bytes": 904790016,
+        "total_visible_bytes": 7817785344,
+        "scope": "Host OS endpoint only, not process memory or idle-machine proof."
+      },
+      "wall_elapsed_ms": 23357
+    },
+    "reverse-a": {
+      "receipt_sha256": "854479c50e539edc5a4768a8fbc47982e1f21d05b50cdb3d8b155cc3a92d202a",
+      "runner_sha256": "19d071725aafe1010b69f0aca2dda7e3cbff55370f82ee2ff01caaaa6c05fc0d",
+      "cases": {
+        "fire": {
+          "all48": {
+            "count": 48,
+            "reference_mean_us": 1054.625,
+            "candidate_mean_us": 959.0208333333334,
+            "mean_saving_us": 95.60416666666667,
+            "mean_saving_percent": 9.065228556753981,
+            "paired_median_saving_us": 86.0,
+            "reference_p95_us": 1665,
+            "candidate_p95_us": 1438,
+            "p95_regression_percent": -13.633633633633636,
+            "reference_max_us": 2211,
+            "candidate_max_us": 2311,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 35,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 907,
+                "candidate_us": 1083,
+                "events": []
+              },
+              {
+                "tick_before": 19,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1278,
+                "candidate_us": 1434,
+                "events": []
+              },
+              {
+                "tick_before": 21,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1187,
+                "candidate_us": 1292,
+                "events": []
+              },
+              {
+                "tick_before": 23,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 2211,
+                "candidate_us": 2311,
+                "events": [
+                  "projectile_expired"
+                ]
+              },
+              {
+                "tick_before": 11,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1419,
+                "candidate_us": 1438,
+                "events": []
+              }
+            ]
+          },
+          "first4": {
+            "count": 4,
+            "reference_mean_us": 907.75,
+            "candidate_mean_us": 835.25,
+            "mean_saving_us": 72.5,
+            "mean_saving_percent": 7.986780501239328,
+            "paired_median_saving_us": 63.0,
+            "reference_p95_us": 1093,
+            "candidate_p95_us": 969,
+            "p95_regression_percent": -11.344922232387923,
+            "reference_max_us": 1093,
+            "candidate_max_us": 969,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 2,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 815,
+                "candidate_us": 775,
+                "events": []
+              },
+              {
+                "tick_before": 1,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 853,
+                "candidate_us": 802,
+                "events": []
+              },
+              {
+                "tick_before": 3,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 870,
+                "candidate_us": 795,
+                "events": []
+              },
+              {
+                "tick_before": 0,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1093,
+                "candidate_us": 969,
+                "events": [
+                  "cast_started"
+                ]
+              }
+            ]
+          },
+          "primary_remaining44": {
+            "count": 44,
+            "reference_mean_us": 1067.9772727272727,
+            "candidate_mean_us": 970.2727272727273,
+            "mean_saving_us": 97.70454545454545,
+            "mean_saving_percent": 9.148560362622629,
+            "paired_median_saving_us": 88.0,
+            "reference_p95_us": 1665,
+            "candidate_p95_us": 1438,
+            "p95_regression_percent": -13.633633633633636,
+            "reference_max_us": 2211,
+            "candidate_max_us": 2311,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 35,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 907,
+                "candidate_us": 1083,
+                "events": []
+              },
+              {
+                "tick_before": 19,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1278,
+                "candidate_us": 1434,
+                "events": []
+              },
+              {
+                "tick_before": 21,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1187,
+                "candidate_us": 1292,
+                "events": []
+              },
+              {
+                "tick_before": 23,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 2211,
+                "candidate_us": 2311,
+                "events": [
+                  "projectile_expired"
+                ]
+              },
+              {
+                "tick_before": 11,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1419,
+                "candidate_us": 1438,
+                "events": []
+              }
+            ]
+          },
+          "order_remaining44": {
+            "reference_first": {
+              "count": 22,
+              "reference_mean_us": 1008,
+              "candidate_mean_us": 926.8636363636364,
+              "mean_saving_us": 81.13636363636364,
+              "mean_saving_percent": 8.049242424242424,
+              "paired_median_saving_us": 79.0,
+              "reference_p95_us": 1223,
+              "candidate_p95_us": 1148,
+              "p95_regression_percent": -6.132461161079316,
+              "reference_max_us": 1731,
+              "candidate_max_us": 1600,
+              "largest_candidate_regressions": [
+                {
+                  "tick_before": 30,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 893,
+                  "candidate_us": 879,
+                  "events": []
+                },
+                {
+                  "tick_before": 4,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 817,
+                  "candidate_us": 792,
+                  "events": []
+                },
+                {
+                  "tick_before": 14,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 1181,
+                  "candidate_us": 1148,
+                  "events": []
+                },
+                {
+                  "tick_before": 42,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 827,
+                  "candidate_us": 785,
+                  "events": []
+                },
+                {
+                  "tick_before": 46,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 833,
+                  "candidate_us": 783,
+                  "events": []
+                }
+              ]
+            },
+            "candidate_first": {
+              "count": 22,
+              "reference_mean_us": 1127.9545454545455,
+              "candidate_mean_us": 1013.6818181818181,
+              "mean_saving_us": 114.27272727272727,
+              "mean_saving_percent": 10.13096917187185,
+              "paired_median_saving_us": 90.0,
+              "reference_p95_us": 1665,
+              "candidate_p95_us": 1438,
+              "p95_regression_percent": -13.633633633633636,
+              "reference_max_us": 2211,
+              "candidate_max_us": 2311,
+              "largest_candidate_regressions": [
+                {
+                  "tick_before": 35,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 907,
+                  "candidate_us": 1083,
+                  "events": []
+                },
+                {
+                  "tick_before": 19,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 1278,
+                  "candidate_us": 1434,
+                  "events": []
+                },
+                {
+                  "tick_before": 21,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 1187,
+                  "candidate_us": 1292,
+                  "events": []
+                },
+                {
+                  "tick_before": 23,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 2211,
+                  "candidate_us": 2311,
+                  "events": [
+                    "projectile_expired"
+                  ]
+                },
+                {
+                  "tick_before": 11,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 1419,
+                  "candidate_us": 1438,
+                  "events": []
+                }
+              ]
+            }
+          },
+          "primary_gate_passed": true,
+          "moving_mean_regression_limit_exceeded": null,
+          "moving_p95_regression_limit_exceeded": null,
+          "admission": {
+            "count": 1,
+            "reference_mean_us": 1093,
+            "candidate_mean_us": 969,
+            "mean_saving_us": 124,
+            "mean_saving_percent": 11.344922232387923,
+            "paired_median_saving_us": 124,
+            "reference_p95_us": 1093,
+            "candidate_p95_us": 969,
+            "p95_regression_percent": -11.344922232387923,
+            "reference_max_us": 1093,
+            "candidate_max_us": 969,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 0,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1093,
+                "candidate_us": 969,
+                "events": [
+                  "cast_started"
+                ]
+              }
+            ]
+          },
+          "release": {
+            "count": 1,
+            "reference_mean_us": 1731,
+            "candidate_mean_us": 1600,
+            "mean_saving_us": 131,
+            "mean_saving_percent": 7.5678798382437895,
+            "paired_median_saving_us": 131,
+            "reference_p95_us": 1731,
+            "candidate_p95_us": 1600,
+            "p95_regression_percent": -7.567879838243785,
+            "reference_max_us": 1731,
+            "candidate_max_us": 1600,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 8,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1731,
+                "candidate_us": 1600,
+                "events": [
+                  "projectile_spawned"
+                ]
+              }
+            ]
+          },
+          "ground_present": {
+            "count": 25,
+            "reference_mean_us": 947.8,
+            "candidate_mean_us": 872.24,
+            "mean_saving_us": 75.56,
+            "mean_saving_percent": 7.972146022367589,
+            "paired_median_saving_us": 81,
+            "reference_p95_us": 1141,
+            "candidate_p95_us": 1083,
+            "p95_regression_percent": -5.083260297984227,
+            "reference_max_us": 2211,
+            "candidate_max_us": 2311,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 35,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 907,
+                "candidate_us": 1083,
+                "events": []
+              },
+              {
+                "tick_before": 23,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 2211,
+                "candidate_us": 2311,
+                "events": [
+                  "projectile_expired"
+                ]
+              },
+              {
+                "tick_before": 30,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 893,
+                "candidate_us": 879,
+                "events": []
+              },
+              {
+                "tick_before": 42,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 827,
+                "candidate_us": 785,
+                "events": []
+              },
+              {
+                "tick_before": 46,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 833,
+                "candidate_us": 783,
+                "events": []
+              }
+            ]
+          },
+          "paid_events": [
+            1,
+            1,
+            0
+          ],
+          "first_flight_ground_ticks": [
+            9,
+            24
+          ]
+        },
+        "mantle": {
+          "all48": {
+            "count": 48,
+            "reference_mean_us": 1177.6666666666667,
+            "candidate_mean_us": 1071.9375,
+            "mean_saving_us": 105.72916666666667,
+            "mean_saving_percent": 8.977851684121143,
+            "paired_median_saving_us": 102.5,
+            "reference_p95_us": 1608,
+            "candidate_p95_us": 1417,
+            "p95_regression_percent": -11.878109452736318,
+            "reference_max_us": 1727,
+            "candidate_max_us": 1734,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 44,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1110,
+                "candidate_us": 1183,
+                "events": []
+              },
+              {
+                "tick_before": 16,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1727,
+                "candidate_us": 1734,
+                "events": []
+              },
+              {
+                "tick_before": 43,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1105,
+                "candidate_us": 1092,
+                "events": []
+              },
+              {
+                "tick_before": 30,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1327,
+                "candidate_us": 1307,
+                "events": []
+              },
+              {
+                "tick_before": 47,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1123,
+                "candidate_us": 1089,
+                "events": []
+              }
+            ]
+          },
+          "first4": {
+            "count": 4,
+            "reference_mean_us": 916.25,
+            "candidate_mean_us": 839.75,
+            "mean_saving_us": 76.5,
+            "mean_saving_percent": 8.34924965893588,
+            "paired_median_saving_us": 82.5,
+            "reference_p95_us": 1036,
+            "candidate_p95_us": 935,
+            "p95_regression_percent": -9.749034749034745,
+            "reference_max_us": 1036,
+            "candidate_max_us": 935,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 2,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 933,
+                "candidate_us": 893,
+                "events": []
+              },
+              {
+                "tick_before": 1,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 845,
+                "candidate_us": 766,
+                "events": []
+              },
+              {
+                "tick_before": 3,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 851,
+                "candidate_us": 765,
+                "events": []
+              },
+              {
+                "tick_before": 0,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1036,
+                "candidate_us": 935,
+                "events": [
+                  "cast_started"
+                ]
+              }
+            ]
+          },
+          "primary_remaining44": {
+            "count": 44,
+            "reference_mean_us": 1201.4318181818182,
+            "candidate_mean_us": 1093.0454545454545,
+            "mean_saving_us": 108.38636363636364,
+            "mean_saving_percent": 9.021432760153605,
+            "paired_median_saving_us": 109.5,
+            "reference_p95_us": 1608,
+            "candidate_p95_us": 1417,
+            "p95_regression_percent": -11.878109452736318,
+            "reference_max_us": 1727,
+            "candidate_max_us": 1734,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 44,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1110,
+                "candidate_us": 1183,
+                "events": []
+              },
+              {
+                "tick_before": 16,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1727,
+                "candidate_us": 1734,
+                "events": []
+              },
+              {
+                "tick_before": 43,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1105,
+                "candidate_us": 1092,
+                "events": []
+              },
+              {
+                "tick_before": 30,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1327,
+                "candidate_us": 1307,
+                "events": []
+              },
+              {
+                "tick_before": 47,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1123,
+                "candidate_us": 1089,
+                "events": []
+              }
+            ]
+          },
+          "order_remaining44": {
+            "reference_first": {
+              "count": 22,
+              "reference_mean_us": 1229.5,
+              "candidate_mean_us": 1130.2727272727273,
+              "mean_saving_us": 99.22727272727273,
+              "mean_saving_percent": 8.070538652075863,
+              "paired_median_saving_us": 96.5,
+              "reference_p95_us": 1699,
+              "candidate_p95_us": 1569,
+              "p95_regression_percent": -7.651559741024128,
+              "reference_max_us": 1727,
+              "candidate_max_us": 1734,
+              "largest_candidate_regressions": [
+                {
+                  "tick_before": 44,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 1110,
+                  "candidate_us": 1183,
+                  "events": []
+                },
+                {
+                  "tick_before": 16,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 1727,
+                  "candidate_us": 1734,
+                  "events": []
+                },
+                {
+                  "tick_before": 30,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 1327,
+                  "candidate_us": 1307,
+                  "events": []
+                },
+                {
+                  "tick_before": 6,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 839,
+                  "candidate_us": 804,
+                  "events": []
+                },
+                {
+                  "tick_before": 10,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 810,
+                  "candidate_us": 751,
+                  "events": []
+                }
+              ]
+            },
+            "candidate_first": {
+              "count": 22,
+              "reference_mean_us": 1173.3636363636363,
+              "candidate_mean_us": 1055.8181818181818,
+              "mean_saving_us": 117.54545454545455,
+              "mean_saving_percent": 10.017819787712096,
+              "paired_median_saving_us": 118.5,
+              "reference_p95_us": 1460,
+              "candidate_p95_us": 1340,
+              "p95_regression_percent": -8.21917808219178,
+              "reference_max_us": 1608,
+              "candidate_max_us": 1417,
+              "largest_candidate_regressions": [
+                {
+                  "tick_before": 43,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 1105,
+                  "candidate_us": 1092,
+                  "events": []
+                },
+                {
+                  "tick_before": 47,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 1123,
+                  "candidate_us": 1089,
+                  "events": []
+                },
+                {
+                  "tick_before": 19,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 1319,
+                  "candidate_us": 1268,
+                  "events": []
+                },
+                {
+                  "tick_before": 5,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 821,
+                  "candidate_us": 750,
+                  "events": []
+                },
+                {
+                  "tick_before": 45,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 1152,
+                  "candidate_us": 1070,
+                  "events": []
+                }
+              ]
+            }
+          },
+          "primary_gate_passed": true,
+          "moving_mean_regression_limit_exceeded": null,
+          "moving_p95_regression_limit_exceeded": null,
+          "admission": {
+            "count": 1,
+            "reference_mean_us": 1036,
+            "candidate_mean_us": 935,
+            "mean_saving_us": 101,
+            "mean_saving_percent": 9.749034749034749,
+            "paired_median_saving_us": 101,
+            "reference_p95_us": 1036,
+            "candidate_p95_us": 935,
+            "p95_regression_percent": -9.749034749034745,
+            "reference_max_us": 1036,
+            "candidate_max_us": 935,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 0,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1036,
+                "candidate_us": 935,
+                "events": [
+                  "cast_started"
+                ]
+              }
+            ]
+          },
+          "release": {
+            "count": 1,
+            "reference_mean_us": 1699,
+            "candidate_mean_us": 1569,
+            "mean_saving_us": 130,
+            "mean_saving_percent": 7.651559741024132,
+            "paired_median_saving_us": 130,
+            "reference_p95_us": 1699,
+            "candidate_p95_us": 1569,
+            "p95_regression_percent": -7.651559741024128,
+            "reference_max_us": 1699,
+            "candidate_max_us": 1569,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 12,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1699,
+                "candidate_us": 1569,
+                "events": [
+                  "projectile_spawned"
+                ]
+              }
+            ]
+          },
+          "ground_present": {
+            "count": 32,
+            "reference_mean_us": 1278,
+            "candidate_mean_us": 1166.78125,
+            "mean_saving_us": 111.21875,
+            "mean_saving_percent": 8.702562597809077,
+            "paired_median_saving_us": 117.0,
+            "reference_p95_us": 1608,
+            "candidate_p95_us": 1417,
+            "p95_regression_percent": -11.878109452736318,
+            "reference_max_us": 1727,
+            "candidate_max_us": 1734,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 44,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1110,
+                "candidate_us": 1183,
+                "events": []
+              },
+              {
+                "tick_before": 16,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1727,
+                "candidate_us": 1734,
+                "events": []
+              },
+              {
+                "tick_before": 43,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1105,
+                "candidate_us": 1092,
+                "events": []
+              },
+              {
+                "tick_before": 30,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 1327,
+                "candidate_us": 1307,
+                "events": []
+              },
+              {
+                "tick_before": 47,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1123,
+                "candidate_us": 1089,
+                "events": []
+              }
+            ]
+          },
+          "paid_events": [
+            1,
+            1,
+            0
+          ],
+          "first_flight_ground_ticks": [
+            13,
+            17
+          ]
+        },
+        "moving_fire": {
+          "all48": {
+            "count": 48,
+            "reference_mean_us": 448.875,
+            "candidate_mean_us": 452.2708333333333,
+            "mean_saving_us": -3.3958333333333335,
+            "mean_saving_percent": -0.7565209319595285,
+            "paired_median_saving_us": -1.0,
+            "reference_p95_us": 805,
+            "candidate_p95_us": 823,
+            "p95_regression_percent": 2.2360248447204967,
+            "reference_max_us": 1532,
+            "candidate_max_us": 1548,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 7,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 534,
+                "candidate_us": 602,
+                "events": []
+              },
+              {
+                "tick_before": 0,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 805,
+                "candidate_us": 844,
+                "events": [
+                  "cast_started"
+                ]
+              },
+              {
+                "tick_before": 46,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 320,
+                "candidate_us": 355,
+                "events": []
+              },
+              {
+                "tick_before": 2,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 314,
+                "candidate_us": 346,
+                "events": []
+              },
+              {
+                "tick_before": 6,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 363,
+                "candidate_us": 389,
+                "events": []
+              }
+            ]
+          },
+          "first4": {
+            "count": 4,
+            "reference_mean_us": 446,
+            "candidate_mean_us": 455.5,
+            "mean_saving_us": -9.5,
+            "mean_saving_percent": -2.130044843049327,
+            "paired_median_saving_us": -11.5,
+            "reference_p95_us": 805,
+            "candidate_p95_us": 844,
+            "p95_regression_percent": 4.844720496894417,
+            "reference_max_us": 805,
+            "candidate_max_us": 844,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 0,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 805,
+                "candidate_us": 844,
+                "events": [
+                  "cast_started"
+                ]
+              },
+              {
+                "tick_before": 2,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 314,
+                "candidate_us": 346,
+                "events": []
+              },
+              {
+                "tick_before": 3,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 321,
+                "candidate_us": 312,
+                "events": []
+              },
+              {
+                "tick_before": 1,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 344,
+                "candidate_us": 320,
+                "events": []
+              }
+            ]
+          },
+          "primary_remaining44": {
+            "count": 44,
+            "reference_mean_us": 449.1363636363636,
+            "candidate_mean_us": 451.97727272727275,
+            "mean_saving_us": -2.840909090909091,
+            "mean_saving_percent": -0.6325270721586884,
+            "paired_median_saving_us": -1.0,
+            "reference_p95_us": 694,
+            "candidate_p95_us": 628,
+            "p95_regression_percent": -9.510086455331413,
+            "reference_max_us": 1532,
+            "candidate_max_us": 1548,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 7,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 534,
+                "candidate_us": 602,
+                "events": []
+              },
+              {
+                "tick_before": 46,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 320,
+                "candidate_us": 355,
+                "events": []
+              },
+              {
+                "tick_before": 6,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 363,
+                "candidate_us": 389,
+                "events": []
+              },
+              {
+                "tick_before": 17,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 553,
+                "candidate_us": 576,
+                "events": []
+              },
+              {
+                "tick_before": 22,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 553,
+                "candidate_us": 572,
+                "events": []
+              }
+            ]
+          },
+          "order_remaining44": {
+            "reference_first": {
+              "count": 22,
+              "reference_mean_us": 438.27272727272725,
+              "candidate_mean_us": 438.77272727272725,
+              "mean_saving_us": -0.5,
+              "mean_saving_percent": -0.11408421489317569,
+              "paired_median_saving_us": -0.5,
+              "reference_p95_us": 694,
+              "candidate_p95_us": 628,
+              "p95_regression_percent": -9.510086455331413,
+              "reference_max_us": 817,
+              "candidate_max_us": 823,
+              "largest_candidate_regressions": [
+                {
+                  "tick_before": 46,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 320,
+                  "candidate_us": 355,
+                  "events": []
+                },
+                {
+                  "tick_before": 6,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 363,
+                  "candidate_us": 389,
+                  "events": []
+                },
+                {
+                  "tick_before": 22,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 553,
+                  "candidate_us": 572,
+                  "events": []
+                },
+                {
+                  "tick_before": 24,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 459,
+                  "candidate_us": 475,
+                  "events": []
+                },
+                {
+                  "tick_before": 10,
+                  "order": [
+                    "reference",
+                    "candidate"
+                  ],
+                  "reference_us": 554,
+                  "candidate_us": 568,
+                  "events": []
+                }
+              ]
+            },
+            "candidate_first": {
+              "count": 22,
+              "reference_mean_us": 460,
+              "candidate_mean_us": 465.1818181818182,
+              "mean_saving_us": -5.181818181818182,
+              "mean_saving_percent": -1.1264822134387351,
+              "paired_median_saving_us": -2.5,
+              "reference_p95_us": 568,
+              "candidate_p95_us": 602,
+              "p95_regression_percent": 5.98591549295775,
+              "reference_max_us": 1532,
+              "candidate_max_us": 1548,
+              "largest_candidate_regressions": [
+                {
+                  "tick_before": 7,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 534,
+                  "candidate_us": 602,
+                  "events": []
+                },
+                {
+                  "tick_before": 17,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 553,
+                  "candidate_us": 576,
+                  "events": []
+                },
+                {
+                  "tick_before": 11,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 563,
+                  "candidate_us": 579,
+                  "events": []
+                },
+                {
+                  "tick_before": 23,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 1532,
+                  "candidate_us": 1548,
+                  "events": [
+                    "projectile_expired"
+                  ]
+                },
+                {
+                  "tick_before": 13,
+                  "order": [
+                    "candidate",
+                    "reference"
+                  ],
+                  "reference_us": 547,
+                  "candidate_us": 557,
+                  "events": []
+                }
+              ]
+            }
+          },
+          "primary_gate_passed": null,
+          "moving_mean_regression_limit_exceeded": false,
+          "moving_p95_regression_limit_exceeded": false,
+          "admission": {
+            "count": 1,
+            "reference_mean_us": 805,
+            "candidate_mean_us": 844,
+            "mean_saving_us": -39,
+            "mean_saving_percent": -4.84472049689441,
+            "paired_median_saving_us": -39,
+            "reference_p95_us": 805,
+            "candidate_p95_us": 844,
+            "p95_regression_percent": 4.844720496894417,
+            "reference_max_us": 805,
+            "candidate_max_us": 844,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 0,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 805,
+                "candidate_us": 844,
+                "events": [
+                  "cast_started"
+                ]
+              }
+            ]
+          },
+          "release": {
+            "count": 1,
+            "reference_mean_us": 817,
+            "candidate_mean_us": 823,
+            "mean_saving_us": -6,
+            "mean_saving_percent": -0.7343941248470013,
+            "paired_median_saving_us": -6,
+            "reference_p95_us": 817,
+            "candidate_p95_us": 823,
+            "p95_regression_percent": 0.7343941248469932,
+            "reference_max_us": 817,
+            "candidate_max_us": 823,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 8,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 817,
+                "candidate_us": 823,
+                "events": [
+                  "projectile_spawned"
+                ]
+              }
+            ]
+          },
+          "ground_present": {
+            "count": 25,
+            "reference_mean_us": 381.24,
+            "candidate_mean_us": 382.08,
+            "mean_saving_us": -0.84,
+            "mean_saving_percent": -0.22033364809568773,
+            "paired_median_saving_us": 1,
+            "reference_p95_us": 459,
+            "candidate_p95_us": 475,
+            "p95_regression_percent": 3.4858387799564294,
+            "reference_max_us": 1532,
+            "candidate_max_us": 1548,
+            "largest_candidate_regressions": [
+              {
+                "tick_before": 46,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 320,
+                "candidate_us": 355,
+                "events": []
+              },
+              {
+                "tick_before": 23,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 1532,
+                "candidate_us": 1548,
+                "events": [
+                  "projectile_expired"
+                ]
+              },
+              {
+                "tick_before": 24,
+                "order": [
+                  "reference",
+                  "candidate"
+                ],
+                "reference_us": 459,
+                "candidate_us": 475,
+                "events": []
+              },
+              {
+                "tick_before": 43,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 329,
+                "candidate_us": 339,
+                "events": []
+              },
+              {
+                "tick_before": 47,
+                "order": [
+                  "candidate",
+                  "reference"
+                ],
+                "reference_us": 347,
+                "candidate_us": 357,
+                "events": []
+              }
+            ]
+          },
+          "paid_events": [
+            1,
+            1,
+            0
+          ],
+          "first_flight_ground_ticks": [
+            9,
+            24
+          ]
+        }
+      },
+      "controls": {
+        "direct_checks": 305,
+        "path_checks": 305,
+        "stationary_calls": 48,
+        "fallback_calls": 28,
+        "preserve_idle_returns": 4
+      },
+      "host_memory_before": {
+        "available": true,
+        "observed_utc": "2026-10-14T10:37:38.8604236Z",
+        "available_bytes": 966017024,
+        "total_visible_bytes": 7817785344,
+        "scope": "Host OS endpoint only, not process memory or idle-machine proof."
+      },
+      "host_memory_after": {
+        "available": true,
+        "observed_utc": "2026-10-14T10:38:17.2940270Z",
+        "available_bytes": 939081728,
+        "total_visible_bytes": 7817785344,
+        "scope": "Host OS endpoint only, not process memory or idle-machine proof."
+      },
+      "wall_elapsed_ms": 23130
+    }
+  },
+  "original_primary_gates_passed": true,
+  "original_moving_rejection_triggered": false,
+  "disposition": "Primary benefit gate passed. No canonical promotion: root requested a fresh unchanged opposite-order pair to investigate the forward Fire p95 regression.",
+  "limits": "48 finite ticks per fresh case, primary44 only; admission/release one row each. Per-step actors/events/payment exact, full strict state/packets only entry/exit. Native elapsed calls with a concrete control outside clocks and proof between calls; not contiguous catch-up, whole application, thread CPU or FPS. Host endpoints are contextual and do not prove an idle machine. First pair is preserved; no retuned thresholds."
+}

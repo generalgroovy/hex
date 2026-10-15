@@ -1,0 +1,9 @@
+@echo off
+setlocal
+set "HEX_PWSH=C:\Users\sende\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\pwsh.exe"
+if not exist "%HEX_PWSH%" (
+    >&2 echo The H.E.X. PowerShell runtime is unavailable. Open Codex to repair its local runtime.
+    exit /b 1
+)
+"%HEX_PWSH%" -NoLogo -NoProfile -File "C:\Users\sende\Projects\hex\scripts\launch-hex.ps1" %*
+exit /b %ERRORLEVEL%

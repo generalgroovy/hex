@@ -1,0 +1,143 @@
+"""Read fixed completed receipts and preserve all cost strata; never run an engine."""
+from pathlib import Path
+import hashlib
+import json
+import math
+import statistics
+
+BASE = Path(__file__).resolve().parent
+ROOT = BASE.parents[2]
+OUT = BASE / "runs" / "independent-paired-analysis-a.json"
+assert not OUT.exists(), "Preserve prior evidence"
+checks = 0
+
+
+def need(condition, message):
+    global checks
+    assert condition, message
+    checks += 1
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def stats(rows):
+    if not rows:
+        return {"n": 0}
+    reference = [r["reference_us"] / r["steps"] for r in rows]
+    candidate = [r["candidate_us"] / r["steps"] for r in rows]
+    savings = [a - b for a, b in zip(reference, candidate)]
+    fractions = [(a - b) / a for a, b in zip(reference, candidate)]
+    percentile = lambda values: sorted(values)[math.ceil(.95 * len(values)) - 1]
+    return {
+        "n": len(rows), "completed_steps": sum(r["steps"] for r in rows),
+        "reference_mean_per_step_us": statistics.mean(reference),
+        "candidate_mean_per_step_us": statistics.mean(candidate),
+        "paired_mean_saving_per_step_us": statistics.mean(savings),
+        "paired_median_saving_per_step_us": statistics.median(savings),
+        "paired_median_saving_fraction": statistics.median(fractions),
+        "median_saving_over_reference_median": statistics.median(savings) / statistics.median(reference),
+        "reference_p95_per_step_us": percentile(reference),
+        "candidate_p95_per_step_us": percentile(candidate),
+        "reference_max_per_step_us": max(reference),
+        "candidate_max_per_step_us": max(candidate),
+        "reference_whole_group_p95_us": percentile([r["reference_us"] for r in rows]),
+        "candidate_whole_group_p95_us": percentile([r["candidate_us"] for r in rows]),
+        "reference_total_us": sum(r["reference_us"] for r in rows),
+        "candidate_total_us": sum(r["candidate_us"] for r in rows),
+    }
+
+
+identity_path = BASE / "runs/probe-identity-a/receipt.json"
+qualification_path = BASE / "runs/probe-fire-functional-a/receipt.json"
+identity = json.loads(identity_path.read_text())
+qualification = json.loads(qualification_path.read_text())
+need(identity["passed"] is True and identity["errors"] == [] and len(identity["rows"]) == 300, "identity gate")
+need(identity["checks"] == 2542 and identity["cleanup"] == {"created": 0, "live": 0, "factory_live": False}, "identity ownership")
+need(qualification["passed"] is True and qualification["errors"] == [] and qualification["checks"] == 5145, "paid qualification")
+need(len(qualification["rows"]) == 240 and qualification["cleanup"] == {"created": 3, "live": 0, "factory_live": False}, "qualification completeness")
+need(identity["source_hashes"] == qualification["source_hashes"], "same identity/paid inputs")
+need(len({(r["identity"], r["control"]) for r in identity["rows"]}) == 300, "unique prepared boundaries")
+for row in identity["rows"]:
+    idle = row["control"] == "preserve_idle"
+    need(row["reference_calls"] == (0 if idle else 2) and row["candidate_calls"] == (0 if idle else 1), "actual lookup counts")
+for path, pin in qualification["source_hashes"].items():
+    need(sha(ROOT / path[6:]) == pin, "input " + path)
+
+results = {}
+raw = {}
+for name, reverse in [("forward", False), ("reverse", True)]:
+    path = BASE / f"runs/probe-fire-{name}-a/receipt.json"
+    data = json.loads(path.read_text())
+    raw[name] = data
+    need(data["schema"] == "hex-ground-speed-experiment-v1" and data["passed"] is True and data["errors"] == [] and data["checks"] == 3958, "cost gate")
+    need(data["case"] == "fire" and data["mode"] == "cost" and data["reverse_order"] is reverse, "selection")
+    need(data["cleanup"] == {"created": 3, "live": 0, "factory_live": False}, "cost owners")
+    need(data["qualification"]["sha256"] == sha(qualification_path), "qualification bytes")
+    expected_pins = dict(qualification["source_hashes"])
+    expected_pins[data["qualification"]["path"]] = sha(qualification_path)
+    need(data["source_hashes"] == expected_pins, "exact cost inputs")
+    need((data["admissions"], data["releases"], data["refusals"]) == (2, 2, 0), "finite outcomes")
+    need(data["flight_seen"] and data["ground_seen"], "actual paid flight and ground")
+    need(data["initial_packet_sha256"] == qualification["initial_packet_sha256"], "initial full authority")
+    need(len(data["rows"]) == 81 and sum(r["steps"] for r in data["rows"]) == 240, "cost horizon")
+    for suffix in [".log.err", "-parse.log.err"]:
+        need((BASE / f"runs/probe-fire-{name}-a{suffix}").stat().st_size == 0, "empty strict stderr")
+    last_tick = 0
+    for index, row in enumerate(data["rows"]):
+        need(row["tick_before"] == last_tick and row["tick"] == last_tick + row["steps"], "continuous ticks")
+        need(row["order"] == ([2, 1] if ((index % 2 == 0) != reverse) else [1, 2]), "actual order")
+        need(row["serial_reference"] == index * 2 + row["order"].index(1) + 1 and row["serial_candidate"] == index * 2 + row["order"].index(2) + 1, "invocation serials")
+        if row["steps"]:
+            q = qualification["rows"][row["tick"] - 1]
+            for key in ["state_hash", "packet_sha256", "matter_paid", "pending", "projectiles", "occupied"]:
+                need(row[key] == q[key], "complete group boundary " + key)
+        for offset in range(row["steps"]):
+            q = qualification["rows"][last_tick + offset]
+            need(row["commands_hex"][offset] == q["commands_hex"][0], "every input byte")
+            need(row["events"][offset] == q["events"][0], "every ordered event")
+        last_tick = row["tick"]
+    measured = [r for r in data["rows"] if r["phase"] == "measured" and r["steps"] > 0]
+    need(len(measured) == 48 and sum(r["steps"] for r in measured) == 216, "measurement split")
+    aggregate = stats(measured)
+    strata = {"all": aggregate}
+    for size in [1, 8]:
+        strata[f"steps_{size}"] = stats([r for r in measured if r["steps"] == size])
+    for side, label in [(1, "reference_first"), (2, "candidate_first")]:
+        strata[label] = stats([r for r in measured if r["order"][0] == side])
+    for label, event_type in [("admission", "cast_started"), ("release", "projectile_spawned")]:
+        strata[label] = stats([r for r in measured if any(e.get("type") == event_type for events in r["events"] for e in events)])
+    for label, key in [("pending_at_endpoint", "pending"), ("flight_at_endpoint", "projectiles"), ("ground_at_endpoint", "occupied")]:
+        strata[label] = stats([r for r in measured if r[key] > 0])
+    for phase in ["warmup", "verification_tail"]:
+        strata[phase] = stats([r for r in data["rows"] if r["phase"] == phase and r["steps"] > 0])
+    results[name] = {
+        "receipt_sha256": sha(path), "strata": strata,
+        "passes_primary_median_screen": aggregate["paired_median_saving_per_step_us"] >= 10 and aggregate["paired_median_saving_fraction"] >= .01,
+        "largest_regressions": [{key: r[key] for key in ["tick", "steps", "order", "reference_us", "candidate_us"]} for r in sorted(measured, key=lambda r: (r["candidate_us"] - r["reference_us"]) / r["steps"], reverse=True)[:5]],
+        "zero_step_groups": [{key: r[key] for key in ["phase", "tick", "order", "reference_us", "candidate_us"]} for r in data["rows"] if r["steps"] == 0],
+    }
+for a, b in zip(raw["forward"]["rows"], raw["reverse"]["rows"]):
+    for key in ["phase", "steps", "tick_before", "tick", "state_hash", "packet_sha256", "commands_hex", "events", "matter_paid", "pending", "projectiles", "occupied"]:
+        need(a[key] == b[key], "cross-process trajectory " + key)
+
+record = {
+    "schema": "hex.ground-speed-independent-paired-review.v1", "checks": checks,
+    "decision": "stop_unapplied", "canonical_changed": False,
+    "identity_sha256": sha(identity_path), "qualification_sha256": sha(qualification_path),
+    "analyzer_sha256": sha(Path(__file__)), "results": results,
+    "reason": "Reverse process fails both preset 10us per-step and1% paired-median thresholds. Mean order strata reverse direction in both processes. Do not expand to idle/Mantle or promote this CSE.",
+    "limits": [
+        "Per-step normalized means/medians give one weight per positive group; raw whole-group totals/p95 and1/8 groups are retained separately.",
+        "Only one measured admission group and one release group per process; these cannot establish active-event tail reliability.",
+        "Endpoint pending/flight/ground labels do not classify every interior step. Every ordered command/event still matches the qualified trace.",
+        "Zero-step elapsed is excluded from normalized gains. Warmups and verification tails are retained separately.",
+        "Strict packet/state proof at each boundary perturbs cache/thermal history outside clocks. No FPS, full-process or GPU claim.",
+        "Actor equality in300 prepared controls is a passed engine assertion; complete actor bytes are not serialized in that receipt."
+    ],
+}
+with OUT.open("x", encoding="utf-8", newline="\n") as handle:
+    handle.write(json.dumps(record, indent=2) + "\n")
+assert json.loads(OUT.read_text()) == record
+print(json.dumps({"checks": checks, "output": str(OUT), "sha256": sha(OUT), "decision": record["decision"]}))

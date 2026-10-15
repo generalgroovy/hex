@@ -1,0 +1,4394 @@
+{
+  "schema": "hex.membership-paired-analysis.v1",
+  "receipt_sha256": {
+    "forward": "1f7f2c6c49ae699b185460fe0c1c85f105ed9ed025381c7b6e99ea5542386fcd",
+    "reverse": "9cc3508e866c8bc608f7090ef0b5e9747833b8a64f7fb993b7b44ca6ccd9b883"
+  },
+  "analyzer_sha256": "cbfd68a335335eedc7a087df524a6710a9138f7285fc63c9e29e2c023e267c56",
+  "predeclared_gate_sha256": "84010a23ca3cbc945b01faf936e5db66c5df0fcdd93dd78b5252489b32f694e3",
+  "source_pins_sha256": "499adfebce1b194995442b36b9d75e32403d7c776d721b0c37d0909c024d77bb",
+  "qualification": {
+    "path": "res://.godot/iteration-20261014/performance-next/runs/verify-functional-d/receipt.json",
+    "sha256": "0b95b6194fdaaa1b2851d46e12b01b97f464a5c12db76d538d7269c149546593"
+  },
+  "forward": {
+    "fire_ignition_normal": {
+      "plain_us": {
+        "n": 32,
+        "mean": 3206,
+        "median": 3107.5,
+        "p95_nearest_rank": 4160,
+        "max": 4397,
+        "min": 3034
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 3187.5625,
+        "median": 3111.5,
+        "p95_nearest_rank": 3541,
+        "max": 3879,
+        "min": 3016
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 18.4375,
+        "median": 10.0,
+        "p95_nearest_rank": 820,
+        "max": 1118,
+        "min": -807
+      },
+      "mean_saving_fraction": 0.00575093574547723,
+      "candidate_p95_change_fraction": -0.14879807692307692,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 3302.1875,
+            "median": 3152.0,
+            "p95_nearest_rank": 4397,
+            "max": 4397,
+            "min": 3061
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 3186.875,
+            "median": 3104.5,
+            "p95_nearest_rank": 3879,
+            "max": 3879,
+            "min": 3016
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 115.3125,
+            "median": 91.0,
+            "p95_nearest_rank": 1118,
+            "max": 1118,
+            "min": -807
+          },
+          "mean_saving_fraction": 0.03492003406832592,
+          "candidate_p95_change_fraction": -0.11780759608824198
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 3109.8125,
+            "median": 3091.0,
+            "p95_nearest_rank": 3285,
+            "max": 3285,
+            "min": 3034
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 3188.25,
+            "median": 3136.0,
+            "p95_nearest_rank": 3541,
+            "max": 3541,
+            "min": 3037
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": -78.4375,
+            "median": -19.0,
+            "p95_nearest_rank": 193,
+            "max": 193,
+            "min": -428
+          },
+          "mean_saving_fraction": -0.025222581747291837,
+          "candidate_p95_change_fraction": 0.07792998477929985
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 4383,
+          "median": 3409.0,
+          "p95_nearest_rank": 7558,
+          "max": 7558,
+          "min": 3156
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 5714.5,
+          "median": 3250.0,
+          "p95_nearest_rank": 13183,
+          "max": 13183,
+          "min": 3175
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": -1331.5,
+          "median": -60.5,
+          "p95_nearest_rank": 420,
+          "max": 420,
+          "min": -5625
+        },
+        "mean_saving_fraction": -0.3037873602555327,
+        "candidate_p95_change_fraction": 0.7442445091293993
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 27,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 3072,
+          "candidate_us": 3879
+        },
+        {
+          "index": 34,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 3113,
+          "candidate_us": 3541
+        },
+        {
+          "index": 28,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 3127,
+          "candidate_us": 3531
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/ignition"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "matter_paid": 600
+    },
+    "fire_ignition_reduced": {
+      "plain_us": {
+        "n": 32,
+        "mean": 3308.4375,
+        "median": 3094.0,
+        "p95_nearest_rank": 4640,
+        "max": 5550,
+        "min": 3013
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 3223.875,
+        "median": 3070.5,
+        "p95_nearest_rank": 3615,
+        "max": 5399,
+        "min": 2995
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 84.5625,
+        "median": 21.0,
+        "p95_nearest_rank": 731,
+        "max": 1590,
+        "min": -455
+      },
+      "mean_saving_fraction": 0.025559648625672997,
+      "candidate_p95_change_fraction": -0.2209051724137931,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 3399.3125,
+            "median": 3191.5,
+            "p95_nearest_rank": 5550,
+            "max": 5550,
+            "min": 3046
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 3294.0625,
+            "median": 3070.5,
+            "p95_nearest_rank": 5399,
+            "max": 5399,
+            "min": 2995
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 105.25,
+            "median": 68.0,
+            "p95_nearest_rank": 731,
+            "max": 731,
+            "min": -151
+          },
+          "mean_saving_fraction": 0.030962143080402287,
+          "candidate_p95_change_fraction": -0.027207207207207207
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 3217.5625,
+            "median": 3052.0,
+            "p95_nearest_rank": 4640,
+            "max": 4640,
+            "min": 3013
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 3153.6875,
+            "median": 3074.0,
+            "p95_nearest_rank": 3500,
+            "max": 3500,
+            "min": 3011
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 63.875,
+            "median": 2.5,
+            "p95_nearest_rank": 1590,
+            "max": 1590,
+            "min": -455
+          },
+          "mean_saving_fraction": 0.019851984227190613,
+          "candidate_p95_change_fraction": -0.24568965517241378
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 3523,
+          "median": 3568.0,
+          "p95_nearest_rank": 3714,
+          "max": 3714,
+          "min": 3242
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 3527,
+          "median": 3345.5,
+          "p95_nearest_rank": 4272,
+          "max": 4272,
+          "min": 3145
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": -4,
+          "median": 132.5,
+          "p95_nearest_rank": 361,
+          "max": 361,
+          "min": -642
+        },
+        "mean_saving_fraction": -0.0011353959693443088,
+        "candidate_p95_change_fraction": 0.15024232633279483
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 16,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 3045,
+          "candidate_us": 3500
+        },
+        {
+          "index": 18,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 3156,
+          "candidate_us": 3432
+        },
+        {
+          "index": 28,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 3029,
+          "candidate_us": 3271
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/ignition"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "matter_paid": 600
+    },
+    "fire_active_normal": {
+      "plain_us": {
+        "n": 32,
+        "mean": 2451.84375,
+        "median": 2382.5,
+        "p95_nearest_rank": 2703,
+        "max": 3494,
+        "min": 2311
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 2380.46875,
+        "median": 2358.5,
+        "p95_nearest_rank": 2595,
+        "max": 2711,
+        "min": 2264
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 71.375,
+        "median": 37.5,
+        "p95_nearest_rank": 177,
+        "max": 1184,
+        "min": -125
+      },
+      "mean_saving_fraction": 0.029110745739813152,
+      "candidate_p95_change_fraction": -0.03995560488346282,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 2415.875,
+            "median": 2380.0,
+            "p95_nearest_rank": 2703,
+            "max": 2703,
+            "min": 2329
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 2367.0625,
+            "median": 2347.5,
+            "p95_nearest_rank": 2566,
+            "max": 2566,
+            "min": 2264
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 48.8125,
+            "median": 46.0,
+            "p95_nearest_rank": 177,
+            "max": 177,
+            "min": -68
+          },
+          "mean_saving_fraction": 0.020204894706886738,
+          "candidate_p95_change_fraction": -0.05068442471328154
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 2487.8125,
+            "median": 2395.5,
+            "p95_nearest_rank": 3494,
+            "max": 3494,
+            "min": 2311
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 2393.875,
+            "median": 2365.5,
+            "p95_nearest_rank": 2711,
+            "max": 2711,
+            "min": 2281
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 93.9375,
+            "median": 37.0,
+            "p95_nearest_rank": 1184,
+            "max": 1184,
+            "min": -125
+          },
+          "mean_saving_fraction": 0.03775907549302852,
+          "candidate_p95_change_fraction": -0.22409845449341728
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 2912.25,
+          "median": 2788.5,
+          "p95_nearest_rank": 3590,
+          "max": 3590,
+          "min": 2482
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 2598,
+          "median": 2464.5,
+          "p95_nearest_rank": 3031,
+          "max": 3031,
+          "min": 2432
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 314.25,
+          "median": 181.0,
+          "p95_nearest_rank": 1105,
+          "max": 1105,
+          "min": -210
+        },
+        "mean_saving_fraction": 0.1079062580479011,
+        "candidate_p95_change_fraction": -0.15571030640668523
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 18,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 2366,
+          "candidate_us": 2491
+        },
+        {
+          "index": 6,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 2311,
+          "candidate_us": 2408
+        },
+        {
+          "index": 20,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 2635,
+          "candidate_us": 2711
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "matter_paid": 600
+    },
+    "fire_active_reduced": {
+      "plain_us": {
+        "n": 32,
+        "mean": 2426.3125,
+        "median": 2351.5,
+        "p95_nearest_rank": 2637,
+        "max": 4154,
+        "min": 2265
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 2380.53125,
+        "median": 2289.5,
+        "p95_nearest_rank": 2761,
+        "max": 3536,
+        "min": 2237
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 45.78125,
+        "median": 44.5,
+        "p95_nearest_rank": 183,
+        "max": 618,
+        "min": -467
+      },
+      "mean_saving_fraction": 0.018868653563792793,
+      "candidate_p95_change_fraction": 0.04702313234736443,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 2382.5625,
+            "median": 2374.5,
+            "p95_nearest_rank": 2580,
+            "max": 2580,
+            "min": 2271
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 2380.375,
+            "median": 2331.5,
+            "p95_nearest_rank": 2761,
+            "max": 2761,
+            "min": 2244
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 2.1875,
+            "median": 32.0,
+            "p95_nearest_rank": 183,
+            "max": 183,
+            "min": -467
+          },
+          "mean_saving_fraction": 0.0009181291151858556,
+          "candidate_p95_change_fraction": 0.07015503875968992
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 2470.0625,
+            "median": 2342.0,
+            "p95_nearest_rank": 4154,
+            "max": 4154,
+            "min": 2265
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 2380.6875,
+            "median": 2271.0,
+            "p95_nearest_rank": 3536,
+            "max": 3536,
+            "min": 2237
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 89.375,
+            "median": 58.0,
+            "p95_nearest_rank": 618,
+            "max": 618,
+            "min": -39
+          },
+          "mean_saving_fraction": 0.03618329495711141,
+          "candidate_p95_change_fraction": -0.14877226769378912
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 2490,
+          "median": 2465.0,
+          "p95_nearest_rank": 2627,
+          "max": 2627,
+          "min": 2403
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 2699.25,
+          "median": 2344.0,
+          "p95_nearest_rank": 3861,
+          "max": 3861,
+          "min": 2248
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": -209.25,
+          "median": 73.0,
+          "p95_nearest_rank": 251,
+          "max": 251,
+          "min": -1234
+        },
+        "mean_saving_fraction": -0.08403614457831325,
+        "candidate_p95_change_fraction": 0.4697373429767796
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 7,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 2294,
+          "candidate_us": 2761
+        },
+        {
+          "index": 13,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 2300,
+          "candidate_us": 2513
+        },
+        {
+          "index": 29,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 2580,
+          "candidate_us": 2687
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "matter_paid": 600
+    },
+    "fire_cooling_normal": {
+      "plain_us": {
+        "n": 32,
+        "mean": 3292.6875,
+        "median": 3208.5,
+        "p95_nearest_rank": 3679,
+        "max": 4274,
+        "min": 3059
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 3204.96875,
+        "median": 3199.0,
+        "p95_nearest_rank": 3587,
+        "max": 3693,
+        "min": 3034
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 87.71875,
+        "median": 50.5,
+        "p95_nearest_rank": 432,
+        "max": 1117,
+        "min": -282
+      },
+      "mean_saving_fraction": 0.026640472258603345,
+      "candidate_p95_change_fraction": -0.025006795324816526,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 3294.6875,
+            "median": 3202.5,
+            "p95_nearest_rank": 4274,
+            "max": 4274,
+            "min": 3103
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 3183.8125,
+            "median": 3156.0,
+            "p95_nearest_rank": 3693,
+            "max": 3693,
+            "min": 3034
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 110.875,
+            "median": 49.5,
+            "p95_nearest_rank": 1117,
+            "max": 1117,
+            "min": -176
+          },
+          "mean_saving_fraction": 0.03365266053305511,
+          "candidate_p95_change_fraction": -0.13593823116518483
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 3290.6875,
+            "median": 3252.0,
+            "p95_nearest_rank": 3626,
+            "max": 3626,
+            "min": 3059
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 3226.125,
+            "median": 3223.5,
+            "p95_nearest_rank": 3587,
+            "max": 3587,
+            "min": 3064
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 64.5625,
+            "median": 57.5,
+            "p95_nearest_rank": 432,
+            "max": 432,
+            "min": -282
+          },
+          "mean_saving_fraction": 0.019619760308446182,
+          "candidate_p95_change_fraction": -0.01075565361279647
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 3435,
+          "median": 3421.5,
+          "p95_nearest_rank": 3799,
+          "max": 3799,
+          "min": 3098
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 3374.25,
+          "median": 3318.0,
+          "p95_nearest_rank": 3816,
+          "max": 3816,
+          "min": 3045
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 60.75,
+          "median": 18.0,
+          "p95_nearest_rank": 260,
+          "max": 260,
+          "min": -53
+        },
+        "mean_saving_fraction": 0.017685589519650654,
+        "candidate_p95_change_fraction": 0.004474861805738352
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 12,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 3305,
+          "candidate_us": 3587
+        },
+        {
+          "index": 9,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 3159,
+          "candidate_us": 3335
+        },
+        {
+          "index": 30,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 3188,
+          "candidate_us": 3358
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/cooling"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "matter_paid": 600
+    },
+    "fire_cooling_reduced": {
+      "plain_us": {
+        "n": 32,
+        "mean": 3202,
+        "median": 3157.5,
+        "p95_nearest_rank": 3373,
+        "max": 4053,
+        "min": 3033
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 3171.71875,
+        "median": 3122.5,
+        "p95_nearest_rank": 3457,
+        "max": 3601,
+        "min": 2987
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 30.28125,
+        "median": 37.0,
+        "p95_nearest_rank": 210,
+        "max": 452,
+        "min": -288
+      },
+      "mean_saving_fraction": 0.009456980012492192,
+      "candidate_p95_change_fraction": 0.02490364660539579,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 3241.625,
+            "median": 3173.0,
+            "p95_nearest_rank": 4053,
+            "max": 4053,
+            "min": 3046
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 3200.1875,
+            "median": 3142.0,
+            "p95_nearest_rank": 3601,
+            "max": 3601,
+            "min": 2987
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 41.4375,
+            "median": 61.0,
+            "p95_nearest_rank": 452,
+            "max": 452,
+            "min": -288
+          },
+          "mean_saving_fraction": 0.0127829406547642,
+          "candidate_p95_change_fraction": -0.11152232913890944
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 3162.375,
+            "median": 3130.5,
+            "p95_nearest_rank": 3373,
+            "max": 3373,
+            "min": 3033
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 3143.25,
+            "median": 3112.0,
+            "p95_nearest_rank": 3338,
+            "max": 3338,
+            "min": 3014
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 19.125,
+            "median": 30.0,
+            "p95_nearest_rank": 210,
+            "max": 210,
+            "min": -136
+          },
+          "mean_saving_fraction": 0.006047669868374244,
+          "candidate_p95_change_fraction": -0.010376519418914912
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 3277,
+          "median": 3207.0,
+          "p95_nearest_rank": 3596,
+          "max": 3596,
+          "min": 3098
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 3314.25,
+          "median": 3322.0,
+          "p95_nearest_rank": 3496,
+          "max": 3496,
+          "min": 3117
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": -37.25,
+          "median": 44.0,
+          "p95_nearest_rank": 100,
+          "max": 100,
+          "min": -337
+        },
+        "mean_saving_fraction": -0.011367104058590174,
+        "candidate_p95_change_fraction": -0.027808676307007785
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 15,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 3169,
+          "candidate_us": 3457
+        },
+        {
+          "index": 35,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 3125,
+          "candidate_us": 3289
+        },
+        {
+          "index": 24,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 3202,
+          "candidate_us": 3338
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/cooling"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "matter_paid": 600
+    },
+    "fire_dense_normal": {
+      "plain_us": {
+        "n": 32,
+        "mean": 14463.46875,
+        "median": 14413.5,
+        "p95_nearest_rank": 15436,
+        "max": 15667,
+        "min": 13938
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 14252.6875,
+        "median": 14137.5,
+        "p95_nearest_rank": 15188,
+        "max": 15228,
+        "min": 13854
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 210.78125,
+        "median": 67.5,
+        "p95_nearest_rank": 996,
+        "max": 1225,
+        "min": -785
+      },
+      "mean_saving_fraction": 0.014573353988820974,
+      "candidate_p95_change_fraction": -0.016066338429644986,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 14497.4375,
+            "median": 14276.0,
+            "p95_nearest_rank": 15667,
+            "max": 15667,
+            "min": 13938
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 14331.25,
+            "median": 14235.5,
+            "p95_nearest_rank": 15188,
+            "max": 15188,
+            "min": 13925
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 166.1875,
+            "median": -19.0,
+            "p95_nearest_rank": 1225,
+            "max": 1225,
+            "min": -785
+          },
+          "mean_saving_fraction": 0.011463232726473213,
+          "candidate_p95_change_fraction": -0.030573817578349396
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 14429.5,
+            "median": 14435.5,
+            "p95_nearest_rank": 14979,
+            "max": 14979,
+            "min": 14002
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 14174.125,
+            "median": 14098.5,
+            "p95_nearest_rank": 15228,
+            "max": 15228,
+            "min": 13854
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 255.375,
+            "median": 231.0,
+            "p95_nearest_rank": 996,
+            "max": 996,
+            "min": -338
+          },
+          "mean_saving_fraction": 0.017698118437922312,
+          "candidate_p95_change_fraction": 0.01662327258161426
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 16278,
+          "median": 14559.0,
+          "p95_nearest_rank": 21797,
+          "max": 21797,
+          "min": 14197
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 16803,
+          "median": 14410.0,
+          "p95_nearest_rank": 24622,
+          "max": 24622,
+          "min": 13770
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": -525,
+          "median": 67.0,
+          "p95_nearest_rank": 591,
+          "max": 591,
+          "min": -2825
+        },
+        "mean_saving_fraction": -0.03225211942499079,
+        "candidate_p95_change_fraction": 0.12960499151259347
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 7,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 14403,
+          "candidate_us": 15188
+        },
+        {
+          "index": 20,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 14890,
+          "candidate_us": 15228
+        },
+        {
+          "index": 31,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 14484,
+          "candidate_us": 14811
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "conflagration": 150
+        },
+        "occupied_cells": 25,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "conflagration/active",
+          "conflagration/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 75,
+            "created": 51,
+            "decay_tick": 435,
+            "expiry_tick": 495,
+            "id": 1,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1000,
+              1001
+            ]
+          },
+          {
+            "active_tick": 139,
+            "created": 115,
+            "decay_tick": 499,
+            "expiry_tick": 559,
+            "id": 2,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1002,
+              1003
+            ]
+          },
+          {
+            "active_tick": 203,
+            "created": 179,
+            "decay_tick": 563,
+            "expiry_tick": 623,
+            "id": 3,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1004,
+              1005
+            ]
+          },
+          {
+            "active_tick": 267,
+            "created": 243,
+            "decay_tick": 627,
+            "expiry_tick": 687,
+            "id": 4,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1006,
+              1007
+            ]
+          },
+          {
+            "active_tick": 331,
+            "created": 307,
+            "decay_tick": 691,
+            "expiry_tick": 751,
+            "id": 5,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1008,
+              1009
+            ]
+          },
+          {
+            "active_tick": 395,
+            "created": 371,
+            "decay_tick": 755,
+            "expiry_tick": 815,
+            "id": 6,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1010,
+              1011
+            ]
+          }
+        ],
+        "regions": 150
+      },
+      "matter_paid": 7200,
+      "primary_gate": false
+    },
+    "fire_dense_reduced": {
+      "plain_us": {
+        "n": 32,
+        "mean": 14493.53125,
+        "median": 14296.5,
+        "p95_nearest_rank": 15277,
+        "max": 17881,
+        "min": 14133
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 14444.0625,
+        "median": 14300.5,
+        "p95_nearest_rank": 16218,
+        "max": 16350,
+        "min": 13939
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 49.46875,
+        "median": 3.5,
+        "p95_nearest_rank": 1192,
+        "max": 1531,
+        "min": -1928
+      },
+      "mean_saving_fraction": 0.0034131606126008803,
+      "candidate_p95_change_fraction": 0.061595863062119525,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 14386.5625,
+            "median": 14296.5,
+            "p95_nearest_rank": 15277,
+            "max": 15277,
+            "min": 14133
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 14542.125,
+            "median": 14385.5,
+            "p95_nearest_rank": 16218,
+            "max": 16218,
+            "min": 13939
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": -155.5625,
+            "median": -91.5,
+            "p95_nearest_rank": 1096,
+            "max": 1096,
+            "min": -1928
+          },
+          "mean_saving_fraction": -0.010813041683862979,
+          "candidate_p95_change_fraction": 0.061595863062119525
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 14600.5,
+            "median": 14304.5,
+            "p95_nearest_rank": 17881,
+            "max": 17881,
+            "min": 14141
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 14346,
+            "median": 14092.0,
+            "p95_nearest_rank": 16350,
+            "max": 16350,
+            "min": 13961
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 254.5,
+            "median": 149.0,
+            "p95_nearest_rank": 1531,
+            "max": 1531,
+            "min": -513
+          },
+          "mean_saving_fraction": 0.01743090990034588,
+          "candidate_p95_change_fraction": -0.08562160952966837
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 14488.75,
+          "median": 14375.5,
+          "p95_nearest_rank": 15162,
+          "max": 15162,
+          "min": 14042
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 14393.25,
+          "median": 14395.0,
+          "p95_nearest_rank": 14725,
+          "max": 14725,
+          "min": 14058
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 95.5,
+          "median": 76.0,
+          "p95_nearest_rank": 593,
+          "max": 593,
+          "min": -363
+        },
+        "mean_saving_fraction": 0.006591320852385472,
+        "candidate_p95_change_fraction": -0.02882205513784461
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 25,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 14290,
+          "candidate_us": 16218
+        },
+        {
+          "index": 7,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 14314,
+          "candidate_us": 15031
+        },
+        {
+          "index": 28,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 14323,
+          "candidate_us": 14836
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "conflagration": 150
+        },
+        "occupied_cells": 25,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "conflagration/active",
+          "conflagration/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 75,
+            "created": 51,
+            "decay_tick": 435,
+            "expiry_tick": 495,
+            "id": 1,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1000,
+              1001
+            ]
+          },
+          {
+            "active_tick": 139,
+            "created": 115,
+            "decay_tick": 499,
+            "expiry_tick": 559,
+            "id": 2,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1002,
+              1003
+            ]
+          },
+          {
+            "active_tick": 203,
+            "created": 179,
+            "decay_tick": 563,
+            "expiry_tick": 623,
+            "id": 3,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1004,
+              1005
+            ]
+          },
+          {
+            "active_tick": 267,
+            "created": 243,
+            "decay_tick": 627,
+            "expiry_tick": 687,
+            "id": 4,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1006,
+              1007
+            ]
+          },
+          {
+            "active_tick": 331,
+            "created": 307,
+            "decay_tick": 691,
+            "expiry_tick": 751,
+            "id": 5,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1008,
+              1009
+            ]
+          },
+          {
+            "active_tick": 395,
+            "created": 371,
+            "decay_tick": 755,
+            "expiry_tick": 815,
+            "id": 6,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1010,
+              1011
+            ]
+          }
+        ],
+        "regions": 150
+      },
+      "matter_paid": 7200,
+      "primary_gate": false
+    },
+    "mantle_active_normal": {
+      "plain_us": {
+        "n": 32,
+        "mean": 10681.34375,
+        "median": 10571.5,
+        "p95_nearest_rank": 11594,
+        "max": 11644,
+        "min": 10216
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 10519.9375,
+        "median": 10403.5,
+        "p95_nearest_rank": 10930,
+        "max": 11269,
+        "min": 10121
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 161.40625,
+        "median": 112.0,
+        "p95_nearest_rank": 769,
+        "max": 1302,
+        "min": -536
+      },
+      "mean_saving_fraction": 0.01511104349581484,
+      "candidate_p95_change_fraction": -0.05727100224253925,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 10656.4375,
+            "median": 10565.5,
+            "p95_nearest_rank": 11644,
+            "max": 11644,
+            "min": 10216
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 10552.5625,
+            "median": 10427.5,
+            "p95_nearest_rank": 10924,
+            "max": 10924,
+            "min": 10320
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 103.875,
+            "median": 14.5,
+            "p95_nearest_rank": 1302,
+            "max": 1302,
+            "min": -536
+          },
+          "mean_saving_fraction": 0.009747629073975238,
+          "candidate_p95_change_fraction": -0.06183442116111302
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 10706.25,
+            "median": 10586.5,
+            "p95_nearest_rank": 11594,
+            "max": 11594,
+            "min": 10279
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 10487.3125,
+            "median": 10358.5,
+            "p95_nearest_rank": 11269,
+            "max": 11269,
+            "min": 10121
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 218.9375,
+            "median": 189.5,
+            "p95_nearest_rank": 769,
+            "max": 769,
+            "min": -173
+          },
+          "mean_saving_fraction": 0.02044950379451255,
+          "candidate_p95_change_fraction": -0.02803174055545972
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 14925,
+          "median": 10699.5,
+          "p95_nearest_rank": 28052,
+          "max": 28052,
+          "min": 10249
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 14766,
+          "median": 10471.0,
+          "p95_nearest_rank": 27955,
+          "max": 27955,
+          "min": 10167
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 159,
+          "median": 89.5,
+          "p95_nearest_rank": 675,
+          "max": 675,
+          "min": -218
+        },
+        "mean_saving_fraction": 0.010653266331658291,
+        "candidate_p95_change_fraction": -0.0034578639669185797
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 29,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 10216,
+          "candidate_us": 10752
+        },
+        {
+          "index": 5,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 10418,
+          "candidate_us": 10924
+        },
+        {
+          "index": 19,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 10376,
+          "candidate_us": 10662
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "compound_63": 84,
+          "water": 7
+        },
+        "occupied_cells": 33,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "water/forming",
+          "compound_63/decaying",
+          "compound_63/active",
+          "compound_63/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 824,
+            "created": 758,
+            "decay_tick": 1124,
+            "expiry_tick": 1172,
+            "id": 4,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1003
+            ]
+          },
+          {
+            "active_tick": 1017,
+            "created": 951,
+            "decay_tick": 1317,
+            "expiry_tick": 1365,
+            "id": 5,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1004
+            ]
+          },
+          {
+            "active_tick": 1210,
+            "created": 1144,
+            "decay_tick": 1510,
+            "expiry_tick": 1558,
+            "id": 6,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1005
+            ]
+          }
+        ],
+        "regions": 91
+      },
+      "matter_paid": 4200,
+      "primary_gate": false
+    },
+    "mantle_active_reduced": {
+      "plain_us": {
+        "n": 32,
+        "mean": 10555.5625,
+        "median": 10433.5,
+        "p95_nearest_rank": 11264,
+        "max": 13659,
+        "min": 10106
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 10419.78125,
+        "median": 10372.0,
+        "p95_nearest_rank": 10757,
+        "max": 11299,
+        "min": 10145
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 135.78125,
+        "median": 11.5,
+        "p95_nearest_rank": 1074,
+        "max": 3280,
+        "min": -802
+      },
+      "mean_saving_fraction": 0.01286347837929054,
+      "candidate_p95_change_fraction": -0.04501065340909091,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 10593.8125,
+            "median": 10409.5,
+            "p95_nearest_rank": 13659,
+            "max": 13659,
+            "min": 10106
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 10432.9375,
+            "median": 10365.0,
+            "p95_nearest_rank": 11299,
+            "max": 11299,
+            "min": 10145
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 160.875,
+            "median": -26.5,
+            "p95_nearest_rank": 3280,
+            "max": 3280,
+            "min": -802
+          },
+          "mean_saving_fraction": 0.015185751116512587,
+          "candidate_p95_change_fraction": -0.1727798521121605
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 10517.3125,
+            "median": 10468.0,
+            "p95_nearest_rank": 11264,
+            "max": 11264,
+            "min": 10194
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 10406.625,
+            "median": 10394.0,
+            "p95_nearest_rank": 10643,
+            "max": 10643,
+            "min": 10190
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 110.6875,
+            "median": 72.0,
+            "p95_nearest_rank": 1074,
+            "max": 1074,
+            "min": -224
+          },
+          "mean_saving_fraction": 0.010524314077384312,
+          "candidate_p95_change_fraction": -0.055131392045454544
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 10409.25,
+          "median": 10301.5,
+          "p95_nearest_rank": 10845,
+          "max": 10845,
+          "min": 10189
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 10381.5,
+          "median": 10330.0,
+          "p95_nearest_rank": 10745,
+          "max": 10745,
+          "min": 10121
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 27.75,
+          "median": 24.0,
+          "p95_nearest_rank": 410,
+          "max": 410,
+          "min": -347
+        },
+        "mean_saving_fraction": 0.0026658981194610564,
+        "candidate_p95_change_fraction": -0.009220839096357769
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 29,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 10497,
+          "candidate_us": 11299
+        },
+        {
+          "index": 7,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 10227,
+          "candidate_us": 10631
+        },
+        {
+          "index": 16,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 10385,
+          "candidate_us": 10609
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "compound_63": 84,
+          "water": 7
+        },
+        "occupied_cells": 33,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "water/forming",
+          "compound_63/decaying",
+          "compound_63/active",
+          "compound_63/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 824,
+            "created": 758,
+            "decay_tick": 1124,
+            "expiry_tick": 1172,
+            "id": 4,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1003
+            ]
+          },
+          {
+            "active_tick": 1017,
+            "created": 951,
+            "decay_tick": 1317,
+            "expiry_tick": 1365,
+            "id": 5,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1004
+            ]
+          },
+          {
+            "active_tick": 1210,
+            "created": 1144,
+            "decay_tick": 1510,
+            "expiry_tick": 1558,
+            "id": 6,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1005
+            ]
+          }
+        ],
+        "regions": 91
+      },
+      "matter_paid": 4200,
+      "primary_gate": false
+    },
+    "two_owners_normal": {
+      "plain_us": {
+        "n": 32,
+        "mean": 4366.59375,
+        "median": 4291.0,
+        "p95_nearest_rank": 4774,
+        "max": 5941,
+        "min": 4096
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 4211.375,
+        "median": 4167.0,
+        "p95_nearest_rank": 4478,
+        "max": 4498,
+        "min": 4026
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 155.21875,
+        "median": 87.5,
+        "p95_nearest_rank": 394,
+        "max": 1486,
+        "min": -274
+      },
+      "mean_saving_fraction": 0.03554687220444998,
+      "candidate_p95_change_fraction": -0.062002513615416845,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 4469.875,
+            "median": 4377.5,
+            "p95_nearest_rank": 5941,
+            "max": 5941,
+            "min": 4197
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 4173.6875,
+            "median": 4144.0,
+            "p95_nearest_rank": 4455,
+            "max": 4455,
+            "min": 4026
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 296.1875,
+            "median": 208.0,
+            "p95_nearest_rank": 1486,
+            "max": 1486,
+            "min": 41
+          },
+          "mean_saving_fraction": 0.06626303867557817,
+          "candidate_p95_change_fraction": -0.25012624137350614
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 4263.3125,
+            "median": 4221.5,
+            "p95_nearest_rank": 4774,
+            "max": 4774,
+            "min": 4096
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 4249.0625,
+            "median": 4201.5,
+            "p95_nearest_rank": 4498,
+            "max": 4498,
+            "min": 4067
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 14.25,
+            "median": 19.0,
+            "p95_nearest_rank": 344,
+            "max": 344,
+            "min": -274
+          },
+          "mean_saving_fraction": 0.0033424713764238488,
+          "candidate_p95_change_fraction": -0.057813154587348134
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 5514.5,
+          "median": 4282.0,
+          "p95_nearest_rank": 9257,
+          "max": 9257,
+          "min": 4237
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 5472.25,
+          "median": 4374.0,
+          "p95_nearest_rank": 9089,
+          "max": 9089,
+          "min": 4052
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 42.25,
+          "median": 118.5,
+          "p95_nearest_rank": 271,
+          "max": 271,
+          "min": -339
+        },
+        "mean_saving_fraction": 0.007661619367123039,
+        "candidate_p95_change_fraction": -0.01814842821648482
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 34,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 4201,
+          "candidate_us": 4475
+        },
+        {
+          "index": 26,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 4231,
+          "candidate_us": 4381
+        },
+        {
+          "index": 16,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 4104,
+          "candidate_us": 4218
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "fire": 27
+        },
+        "occupied_cells": 27,
+        "owners": [
+          "1",
+          "2"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 27
+      },
+      "matter_paid": 1200
+    },
+    "two_owners_reduced": {
+      "plain_us": {
+        "n": 32,
+        "mean": 4313.5625,
+        "median": 4240.5,
+        "p95_nearest_rank": 5172,
+        "max": 5467,
+        "min": 4043
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 4161.59375,
+        "median": 4121.5,
+        "p95_nearest_rank": 4428,
+        "max": 4442,
+        "min": 3986
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 151.96875,
+        "median": 121.5,
+        "p95_nearest_rank": 816,
+        "max": 1338,
+        "min": -347
+      },
+      "mean_saving_fraction": 0.0352304504687251,
+      "candidate_p95_change_fraction": -0.14385150812064965,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 4386.375,
+            "median": 4244.5,
+            "p95_nearest_rank": 5467,
+            "max": 5467,
+            "min": 4050
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 4125.125,
+            "median": 4116.5,
+            "p95_nearest_rank": 4357,
+            "max": 4357,
+            "min": 4006
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 261.25,
+            "median": 164.5,
+            "p95_nearest_rank": 1338,
+            "max": 1338,
+            "min": -118
+          },
+          "mean_saving_fraction": 0.05955943119318344,
+          "candidate_p95_change_fraction": -0.2030364002194988
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 4240.75,
+            "median": 4240.5,
+            "p95_nearest_rank": 4560,
+            "max": 4560,
+            "min": 4043
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 4198.0625,
+            "median": 4132.0,
+            "p95_nearest_rank": 4442,
+            "max": 4442,
+            "min": 3986
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 42.6875,
+            "median": 27.0,
+            "p95_nearest_rank": 354,
+            "max": 354,
+            "min": -347
+          },
+          "mean_saving_fraction": 0.010066026056711667,
+          "candidate_p95_change_fraction": -0.02587719298245614
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 4428,
+          "median": 4211.5,
+          "p95_nearest_rank": 5182,
+          "max": 5182,
+          "min": 4107
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 4169,
+          "median": 4121.0,
+          "p95_nearest_rank": 4453,
+          "max": 4453,
+          "min": 3981
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 259,
+          "median": 156.5,
+          "p95_nearest_rank": 729,
+          "max": 729,
+          "min": -6
+        },
+        "mean_saving_fraction": 0.05849141824751581,
+        "candidate_p95_change_fraction": -0.14067927441142417
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 6,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 4043,
+          "candidate_us": 4390
+        },
+        {
+          "index": 34,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 4261,
+          "candidate_us": 4428
+        },
+        {
+          "index": 10,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 4068,
+          "candidate_us": 4229
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "fire": 27
+        },
+        "occupied_cells": 27,
+        "owners": [
+          "1",
+          "2"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 27
+      },
+      "matter_paid": 1200
+    }
+  },
+  "reverse": {
+    "fire_ignition_normal": {
+      "plain_us": {
+        "n": 32,
+        "mean": 3208.15625,
+        "median": 3144.5,
+        "p95_nearest_rank": 3589,
+        "max": 3722,
+        "min": 3070
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 3151.40625,
+        "median": 3102.5,
+        "p95_nearest_rank": 3478,
+        "max": 3810,
+        "min": 3031
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 56.75,
+        "median": 57.5,
+        "p95_nearest_rank": 468,
+        "max": 515,
+        "min": -739
+      },
+      "mean_saving_fraction": 0.017689288045119374,
+      "candidate_p95_change_fraction": -0.030927835051546393,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 3216.5,
+            "median": 3146.5,
+            "p95_nearest_rank": 3722,
+            "max": 3722,
+            "min": 3071
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 3160.5,
+            "median": 3084.5,
+            "p95_nearest_rank": 3810,
+            "max": 3810,
+            "min": 3031
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 56,
+            "median": 84.5,
+            "p95_nearest_rank": 468,
+            "max": 468,
+            "min": -739
+          },
+          "mean_saving_fraction": 0.017410228509249184,
+          "candidate_p95_change_fraction": 0.023643202579258463
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 3199.8125,
+            "median": 3131.0,
+            "p95_nearest_rank": 3589,
+            "max": 3589,
+            "min": 3070
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 3142.3125,
+            "median": 3107.0,
+            "p95_nearest_rank": 3478,
+            "max": 3478,
+            "min": 3050
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 57.5,
+            "median": 27.5,
+            "p95_nearest_rank": 515,
+            "max": 515,
+            "min": -239
+          },
+          "mean_saving_fraction": 0.017969802918139734,
+          "candidate_p95_change_fraction": -0.030927835051546393
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 5531.25,
+          "median": 3151.0,
+          "p95_nearest_rank": 12722,
+          "max": 12722,
+          "min": 3101
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 4232.75,
+          "median": 3117.5,
+          "p95_nearest_rank": 7638,
+          "max": 7638,
+          "min": 3058
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 1298.5,
+          "median": 43.0,
+          "p95_nearest_rank": 5084,
+          "max": 5084,
+          "min": 24
+        },
+        "mean_saving_fraction": 0.23475706214689265,
+        "candidate_p95_change_fraction": -0.39962270083320234
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 14,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 3071,
+          "candidate_us": 3810
+        },
+        {
+          "index": 16,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 3098,
+          "candidate_us": 3473
+        },
+        {
+          "index": 19,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 3239,
+          "candidate_us": 3478
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/ignition"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "matter_paid": 600
+    },
+    "fire_ignition_reduced": {
+      "plain_us": {
+        "n": 32,
+        "mean": 3218.03125,
+        "median": 3153.0,
+        "p95_nearest_rank": 3611,
+        "max": 4464,
+        "min": 3045
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 3170.59375,
+        "median": 3083.0,
+        "p95_nearest_rank": 3621,
+        "max": 3797,
+        "min": 2996
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 47.4375,
+        "median": 58.0,
+        "p95_nearest_rank": 299,
+        "max": 929,
+        "min": -691
+      },
+      "mean_saving_fraction": 0.014741155792070073,
+      "candidate_p95_change_fraction": 0.0027693159789531985,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 3182.6875,
+            "median": 3149.0,
+            "p95_nearest_rank": 3611,
+            "max": 3611,
+            "min": 3045
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 3144.3125,
+            "median": 3066.5,
+            "p95_nearest_rank": 3579,
+            "max": 3579,
+            "min": 2996
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 38.375,
+            "median": 74.5,
+            "p95_nearest_rank": 299,
+            "max": 299,
+            "min": -501
+          },
+          "mean_saving_fraction": 0.01205742002631424,
+          "candidate_p95_change_fraction": -0.008861811132650235
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 3253.375,
+            "median": 3157.0,
+            "p95_nearest_rank": 4464,
+            "max": 4464,
+            "min": 3048
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 3196.875,
+            "median": 3096.5,
+            "p95_nearest_rank": 3797,
+            "max": 3797,
+            "min": 3007
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 56.5,
+            "median": 41.5,
+            "p95_nearest_rank": 929,
+            "max": 929,
+            "min": -691
+          },
+          "mean_saving_fraction": 0.017366580858339416,
+          "candidate_p95_change_fraction": -0.14941756272401432
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 3254.75,
+          "median": 3219.5,
+          "p95_nearest_rank": 3505,
+          "max": 3505,
+          "min": 3075
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 3161,
+          "median": 3141.5,
+          "p95_nearest_rank": 3366,
+          "max": 3366,
+          "min": 2995
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 93.75,
+          "median": 18.5,
+          "p95_nearest_rank": 436,
+          "max": 436,
+          "min": -98
+        },
+        "mean_saving_fraction": 0.028804055611030034,
+        "candidate_p95_change_fraction": -0.03965763195435093
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 17,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 3106,
+          "candidate_us": 3797
+        },
+        {
+          "index": 34,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 3078,
+          "candidate_us": 3579
+        },
+        {
+          "index": 31,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 3378,
+          "candidate_us": 3621
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/ignition"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "matter_paid": 600
+    },
+    "fire_active_normal": {
+      "plain_us": {
+        "n": 32,
+        "mean": 2394.90625,
+        "median": 2364.0,
+        "p95_nearest_rank": 2572,
+        "max": 2610,
+        "min": 2310
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 2431.0625,
+        "median": 2419.0,
+        "p95_nearest_rank": 2663,
+        "max": 2706,
+        "min": 2293
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": -36.15625,
+        "median": -36.5,
+        "p95_nearest_rank": 129,
+        "max": 185,
+        "min": -312
+      },
+      "mean_saving_fraction": -0.015097146287041507,
+      "candidate_p95_change_fraction": 0.035381026438569205,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 2408.25,
+            "median": 2398.0,
+            "p95_nearest_rank": 2572,
+            "max": 2572,
+            "min": 2323
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 2424.9375,
+            "median": 2419.0,
+            "p95_nearest_rank": 2663,
+            "max": 2663,
+            "min": 2296
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": -16.6875,
+            "median": -5.0,
+            "p95_nearest_rank": 185,
+            "max": 185,
+            "min": -312
+          },
+          "mean_saving_fraction": -0.006929305512301464,
+          "candidate_p95_change_fraction": 0.035381026438569205
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 2381.5625,
+            "median": 2350.5,
+            "p95_nearest_rank": 2610,
+            "max": 2610,
+            "min": 2310
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 2437.1875,
+            "median": 2418.0,
+            "p95_nearest_rank": 2706,
+            "max": 2706,
+            "min": 2293
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": -55.625,
+            "median": -36.5,
+            "p95_nearest_rank": 65,
+            "max": 65,
+            "min": -290
+          },
+          "mean_saving_fraction": -0.023356514893058653,
+          "candidate_p95_change_fraction": 0.0367816091954023
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 2533.5,
+          "median": 2473.5,
+          "p95_nearest_rank": 2808,
+          "max": 2808,
+          "min": 2379
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 2480.25,
+          "median": 2397.0,
+          "p95_nearest_rank": 2789,
+          "max": 2789,
+          "min": 2338
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 53.25,
+          "median": 45.0,
+          "p95_nearest_rank": 104,
+          "max": 104,
+          "min": 19
+        },
+        "mean_saving_fraction": 0.021018354055654234,
+        "candidate_p95_change_fraction": -0.006766381766381766
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 32,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 2351,
+          "candidate_us": 2663
+        },
+        {
+          "index": 9,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 2416,
+          "candidate_us": 2706
+        },
+        {
+          "index": 15,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 2407,
+          "candidate_us": 2628
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "matter_paid": 600
+    },
+    "fire_active_reduced": {
+      "plain_us": {
+        "n": 32,
+        "mean": 2387.75,
+        "median": 2353.5,
+        "p95_nearest_rank": 2617,
+        "max": 2635,
+        "min": 2264
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 2366.46875,
+        "median": 2322.0,
+        "p95_nearest_rank": 2604,
+        "max": 2630,
+        "min": 2232
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 21.28125,
+        "median": 26.5,
+        "p95_nearest_rank": 266,
+        "max": 312,
+        "min": -293
+      },
+      "mean_saving_fraction": 0.008912679300596795,
+      "candidate_p95_change_fraction": -0.004967520061138708,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 2375.5625,
+            "median": 2347.0,
+            "p95_nearest_rank": 2617,
+            "max": 2617,
+            "min": 2264
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 2400.375,
+            "median": 2392.5,
+            "p95_nearest_rank": 2630,
+            "max": 2630,
+            "min": 2232
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": -24.8125,
+            "median": 6.5,
+            "p95_nearest_rank": 312,
+            "max": 312,
+            "min": -293
+          },
+          "mean_saving_fraction": -0.010444894630219158,
+          "candidate_p95_change_fraction": 0.004967520061138708
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 2399.9375,
+            "median": 2377.5,
+            "p95_nearest_rank": 2635,
+            "max": 2635,
+            "min": 2268
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 2332.5625,
+            "median": 2314.5,
+            "p95_nearest_rank": 2597,
+            "max": 2597,
+            "min": 2244
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 67.375,
+            "median": 53.0,
+            "p95_nearest_rank": 266,
+            "max": 266,
+            "min": -133
+          },
+          "mean_saving_fraction": 0.028073647751243522,
+          "candidate_p95_change_fraction": -0.014421252371916509
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 2415.75,
+          "median": 2431.5,
+          "p95_nearest_rank": 2540,
+          "max": 2540,
+          "min": 2260
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 2286.5,
+          "median": 2302.5,
+          "p95_nearest_rank": 2313,
+          "max": 2313,
+          "min": 2228
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 129.25,
+          "median": 161.0,
+          "p95_nearest_rank": 228,
+          "max": 228,
+          "min": -33
+        },
+        "mean_saving_fraction": 0.05350305288212771,
+        "candidate_p95_change_fraction": -0.08937007874015748
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 6,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 2337,
+          "candidate_us": 2630
+        },
+        {
+          "index": 28,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 2264,
+          "candidate_us": 2481
+        },
+        {
+          "index": 34,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 2383,
+          "candidate_us": 2581
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "matter_paid": 600
+    },
+    "fire_cooling_normal": {
+      "plain_us": {
+        "n": 32,
+        "mean": 3247.40625,
+        "median": 3194.0,
+        "p95_nearest_rank": 3648,
+        "max": 3744,
+        "min": 3077
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 3226.53125,
+        "median": 3195.0,
+        "p95_nearest_rank": 3622,
+        "max": 3657,
+        "min": 3052
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 20.875,
+        "median": 25.5,
+        "p95_nearest_rank": 402,
+        "max": 552,
+        "min": -470
+      },
+      "mean_saving_fraction": 0.006428207126841614,
+      "candidate_p95_change_fraction": -0.00712719298245614,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 3254.125,
+            "median": 3191.5,
+            "p95_nearest_rank": 3744,
+            "max": 3744,
+            "min": 3101
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 3219.9375,
+            "median": 3164.5,
+            "p95_nearest_rank": 3657,
+            "max": 3657,
+            "min": 3056
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 34.1875,
+            "median": 32.0,
+            "p95_nearest_rank": 552,
+            "max": 552,
+            "min": -470
+          },
+          "mean_saving_fraction": 0.010505896362309376,
+          "candidate_p95_change_fraction": -0.023237179487179488
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 3240.6875,
+            "median": 3194.0,
+            "p95_nearest_rank": 3648,
+            "max": 3648,
+            "min": 3077
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 3233.125,
+            "median": 3203.5,
+            "p95_nearest_rank": 3621,
+            "max": 3621,
+            "min": 3052
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 7.5625,
+            "median": 5.0,
+            "p95_nearest_rank": 287,
+            "max": 287,
+            "min": -196
+          },
+          "mean_saving_fraction": 0.002333609766446163,
+          "candidate_p95_change_fraction": -0.007401315789473684
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 3282.25,
+          "median": 3179.5,
+          "p95_nearest_rank": 3653,
+          "max": 3653,
+          "min": 3117
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 3255,
+          "median": 3101.5,
+          "p95_nearest_rank": 3735,
+          "max": 3735,
+          "min": 3082
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 27.25,
+          "median": 52.5,
+          "p95_nearest_rank": 86,
+          "max": 86,
+          "min": -82
+        },
+        "mean_saving_fraction": 0.00830223170081499,
+        "candidate_p95_change_fraction": 0.022447303586093623
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 32,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 3152,
+          "candidate_us": 3622
+        },
+        {
+          "index": 12,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 3256,
+          "candidate_us": 3657
+        },
+        {
+          "index": 29,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 3202,
+          "candidate_us": 3398
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/cooling"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "matter_paid": 600
+    },
+    "fire_cooling_reduced": {
+      "plain_us": {
+        "n": 32,
+        "mean": 3300,
+        "median": 3145.0,
+        "p95_nearest_rank": 4827,
+        "max": 5082,
+        "min": 3038
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 3229.8125,
+        "median": 3117.5,
+        "p95_nearest_rank": 3799,
+        "max": 5283,
+        "min": 3024
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 70.1875,
+        "median": 23.0,
+        "p95_nearest_rank": 465,
+        "max": 1639,
+        "min": -727
+      },
+      "mean_saving_fraction": 0.021268939393939396,
+      "candidate_p95_change_fraction": -0.21296871762999792,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 3380.375,
+            "median": 3145.0,
+            "p95_nearest_rank": 5082,
+            "max": 5082,
+            "min": 3061
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 3315.8125,
+            "median": 3117.5,
+            "p95_nearest_rank": 5283,
+            "max": 5283,
+            "min": 3076
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 64.5625,
+            "median": 23.0,
+            "p95_nearest_rank": 1639,
+            "max": 1639,
+            "min": -727
+          },
+          "mean_saving_fraction": 0.019099212365491995,
+          "candidate_p95_change_fraction": 0.03955135773317592
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 3219.625,
+            "median": 3148.5,
+            "p95_nearest_rank": 3601,
+            "max": 3601,
+            "min": 3038
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 3143.8125,
+            "median": 3121.5,
+            "p95_nearest_rank": 3380,
+            "max": 3380,
+            "min": 3024
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 75.8125,
+            "median": 48.5,
+            "p95_nearest_rank": 465,
+            "max": 465,
+            "min": -163
+          },
+          "mean_saving_fraction": 0.023546996932872617,
+          "candidate_p95_change_fraction": -0.061371841155234655
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 3467,
+          "median": 3496.0,
+          "p95_nearest_rank": 3618,
+          "max": 3618,
+          "min": 3258
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 3270,
+          "median": 3246.5,
+          "p95_nearest_rank": 3468,
+          "max": 3468,
+          "min": 3119
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 197,
+          "median": 197.0,
+          "p95_nearest_rank": 367,
+          "max": 367,
+          "min": 27
+        },
+        "mean_saving_fraction": 0.056821459475050476,
+        "candidate_p95_change_fraction": -0.04145936981757877
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 6,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 3072,
+          "candidate_us": 3799
+        },
+        {
+          "index": 26,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 3195,
+          "candidate_us": 3505
+        },
+        {
+          "index": 32,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 5082,
+          "candidate_us": 5283
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "fire": 13
+        },
+        "occupied_cells": 13,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "fire/cooling"
+        ],
+        "products": [],
+        "regions": 13
+      },
+      "matter_paid": 600
+    },
+    "fire_dense_normal": {
+      "plain_us": {
+        "n": 32,
+        "mean": 14532.625,
+        "median": 14387.0,
+        "p95_nearest_rank": 15115,
+        "max": 17197,
+        "min": 13960
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 14272.40625,
+        "median": 14270.0,
+        "p95_nearest_rank": 14774,
+        "max": 14821,
+        "min": 13952
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 260.21875,
+        "median": 168.0,
+        "p95_nearest_rank": 1111,
+        "max": 2831,
+        "min": -357
+      },
+      "mean_saving_fraction": 0.017905832566380817,
+      "candidate_p95_change_fraction": -0.02256037049288786,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 14399.125,
+            "median": 14360.5,
+            "p95_nearest_rank": 14988,
+            "max": 14988,
+            "min": 13960
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 14343.6875,
+            "median": 14277.0,
+            "p95_nearest_rank": 14821,
+            "max": 14821,
+            "min": 14087
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 55.4375,
+            "median": 61.5,
+            "p95_nearest_rank": 695,
+            "max": 695,
+            "min": -357
+          },
+          "mean_saving_fraction": 0.003850060333527211,
+          "candidate_p95_change_fraction": -0.011142247131038164
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 14666.125,
+            "median": 14461.5,
+            "p95_nearest_rank": 17197,
+            "max": 17197,
+            "min": 14181
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 14201.125,
+            "median": 14220.0,
+            "p95_nearest_rank": 14472,
+            "max": 14472,
+            "min": 13952
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 465,
+            "median": 278.0,
+            "p95_nearest_rank": 2831,
+            "max": 2831,
+            "min": 21
+          },
+          "mean_saving_fraction": 0.03170571640429902,
+          "candidate_p95_change_fraction": -0.1584578705588184
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 16811.75,
+          "median": 14489.0,
+          "p95_nearest_rank": 24065,
+          "max": 24065,
+          "min": 14204
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 16148.75,
+          "median": 14424.5,
+          "p95_nearest_rank": 21635,
+          "max": 21635,
+          "min": 14111
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 663,
+          "median": 166.5,
+          "p95_nearest_rank": 2430,
+          "max": 2430,
+          "min": -111
+        },
+        "mean_saving_fraction": 0.03943670349606674,
+        "candidate_p95_change_fraction": -0.10097652191980054
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 10,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 14190,
+          "candidate_us": 14547
+        },
+        {
+          "index": 32,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 14230,
+          "candidate_us": 14506
+        },
+        {
+          "index": 16,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 14549,
+          "candidate_us": 14821
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "conflagration": 150
+        },
+        "occupied_cells": 25,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "conflagration/active",
+          "conflagration/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 75,
+            "created": 51,
+            "decay_tick": 435,
+            "expiry_tick": 495,
+            "id": 1,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1000,
+              1001
+            ]
+          },
+          {
+            "active_tick": 139,
+            "created": 115,
+            "decay_tick": 499,
+            "expiry_tick": 559,
+            "id": 2,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1002,
+              1003
+            ]
+          },
+          {
+            "active_tick": 203,
+            "created": 179,
+            "decay_tick": 563,
+            "expiry_tick": 623,
+            "id": 3,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1004,
+              1005
+            ]
+          },
+          {
+            "active_tick": 267,
+            "created": 243,
+            "decay_tick": 627,
+            "expiry_tick": 687,
+            "id": 4,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1006,
+              1007
+            ]
+          },
+          {
+            "active_tick": 331,
+            "created": 307,
+            "decay_tick": 691,
+            "expiry_tick": 751,
+            "id": 5,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1008,
+              1009
+            ]
+          },
+          {
+            "active_tick": 395,
+            "created": 371,
+            "decay_tick": 755,
+            "expiry_tick": 815,
+            "id": 6,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1010,
+              1011
+            ]
+          }
+        ],
+        "regions": 150
+      },
+      "matter_paid": 7200,
+      "primary_gate": false
+    },
+    "fire_dense_reduced": {
+      "plain_us": {
+        "n": 32,
+        "mean": 14531.21875,
+        "median": 14377.5,
+        "p95_nearest_rank": 16013,
+        "max": 16057,
+        "min": 14047
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 14445.4375,
+        "median": 14383.5,
+        "p95_nearest_rank": 15976,
+        "max": 16054,
+        "min": 13997
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 85.78125,
+        "median": 93.0,
+        "p95_nearest_rank": 538,
+        "max": 728,
+        "min": -475
+      },
+      "mean_saving_fraction": 0.005903238501588175,
+      "candidate_p95_change_fraction": -0.0023106226191219634,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 14451.4375,
+            "median": 14297.5,
+            "p95_nearest_rank": 16057,
+            "max": 16057,
+            "min": 14047
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 14506.8125,
+            "median": 14383.5,
+            "p95_nearest_rank": 16054,
+            "max": 16054,
+            "min": 14066
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": -55.375,
+            "median": -8.0,
+            "p95_nearest_rank": 370,
+            "max": 370,
+            "min": -475
+          },
+          "mean_saving_fraction": -0.0038317987397447485,
+          "candidate_p95_change_fraction": -0.00018683440244130286
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 14611,
+            "median": 14432.0,
+            "p95_nearest_rank": 16013,
+            "max": 16013,
+            "min": 14183
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 14384.0625,
+            "median": 14276.5,
+            "p95_nearest_rank": 15976,
+            "max": 15976,
+            "min": 13997
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 226.9375,
+            "median": 183.0,
+            "p95_nearest_rank": 728,
+            "max": 728,
+            "min": -312
+          },
+          "mean_saving_fraction": 0.015531962220245022,
+          "candidate_p95_change_fraction": -0.0023106226191219634
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 14485,
+          "median": 14452.5,
+          "p95_nearest_rank": 14945,
+          "max": 14945,
+          "min": 14090
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 14358.5,
+          "median": 14388.0,
+          "p95_nearest_rank": 14645,
+          "max": 14645,
+          "min": 14013
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 126.5,
+          "median": 161.5,
+          "p95_nearest_rank": 474,
+          "max": 474,
+          "min": -291
+        },
+        "mean_saving_fraction": 0.008733172247152227,
+        "candidate_p95_change_fraction": -0.020073603211776515
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 22,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 14291,
+          "candidate_us": 14766
+        },
+        {
+          "index": 16,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 14122,
+          "candidate_us": 14563
+        },
+        {
+          "index": 32,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 14223,
+          "candidate_us": 14641
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "conflagration": 150
+        },
+        "occupied_cells": 25,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "conflagration/active",
+          "conflagration/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 75,
+            "created": 51,
+            "decay_tick": 435,
+            "expiry_tick": 495,
+            "id": 1,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1000,
+              1001
+            ]
+          },
+          {
+            "active_tick": 139,
+            "created": 115,
+            "decay_tick": 499,
+            "expiry_tick": 559,
+            "id": 2,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1002,
+              1003
+            ]
+          },
+          {
+            "active_tick": 203,
+            "created": 179,
+            "decay_tick": 563,
+            "expiry_tick": 623,
+            "id": 3,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1004,
+              1005
+            ]
+          },
+          {
+            "active_tick": 267,
+            "created": 243,
+            "decay_tick": 627,
+            "expiry_tick": 687,
+            "id": 4,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1006,
+              1007
+            ]
+          },
+          {
+            "active_tick": 331,
+            "created": 307,
+            "decay_tick": 691,
+            "expiry_tick": 751,
+            "id": 5,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1008,
+              1009
+            ]
+          },
+          {
+            "active_tick": 395,
+            "created": 371,
+            "decay_tick": 755,
+            "expiry_tick": 815,
+            "id": 6,
+            "material": "conflagration",
+            "owner": 1,
+            "recipe_wire_id": 309,
+            "source_ids": [
+              1010,
+              1011
+            ]
+          }
+        ],
+        "regions": 150
+      },
+      "matter_paid": 7200,
+      "primary_gate": false
+    },
+    "mantle_active_normal": {
+      "plain_us": {
+        "n": 32,
+        "mean": 10585.96875,
+        "median": 10537.5,
+        "p95_nearest_rank": 11159,
+        "max": 11288,
+        "min": 10237
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 10484.6875,
+        "median": 10484.0,
+        "p95_nearest_rank": 10749,
+        "max": 10756,
+        "min": 10153
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 101.28125,
+        "median": 37.0,
+        "p95_nearest_rank": 586,
+        "max": 609,
+        "min": -327
+      },
+      "mean_saving_fraction": 0.009567499431735994,
+      "candidate_p95_change_fraction": -0.03674164351644413,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 10539.25,
+            "median": 10445.0,
+            "p95_nearest_rank": 11288,
+            "max": 11288,
+            "min": 10250
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 10488.5625,
+            "median": 10479.0,
+            "p95_nearest_rank": 10756,
+            "max": 10756,
+            "min": 10269
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 50.6875,
+            "median": -20.5,
+            "p95_nearest_rank": 532,
+            "max": 532,
+            "min": -327
+          },
+          "mean_saving_fraction": 0.004809402946129943,
+          "candidate_p95_change_fraction": -0.04712969525159461
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 10632.6875,
+            "median": 10609.0,
+            "p95_nearest_rank": 11159,
+            "max": 11159,
+            "min": 10237
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 10480.8125,
+            "median": 10504.5,
+            "p95_nearest_rank": 10743,
+            "max": 10743,
+            "min": 10153
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 151.875,
+            "median": 118.0,
+            "p95_nearest_rank": 609,
+            "max": 609,
+            "min": -143
+          },
+          "mean_saving_fraction": 0.014283782910012168,
+          "candidate_p95_change_fraction": -0.03727932610448965
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 14939,
+          "median": 10514.0,
+          "p95_nearest_rank": 28253,
+          "max": 28253,
+          "min": 10475
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 14849.75,
+          "median": 10418.0,
+          "p95_nearest_rank": 28324,
+          "max": 28324,
+          "min": 10239
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 89.25,
+          "median": 96.0,
+          "p95_nearest_rank": 236,
+          "max": 236,
+          "min": -71
+        },
+        "mean_saving_fraction": 0.005974295468237499,
+        "candidate_p95_change_fraction": 0.002513007468233462
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 34,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 10275,
+          "candidate_us": 10602
+        },
+        {
+          "index": 22,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 10442,
+          "candidate_us": 10619
+        },
+        {
+          "index": 24,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 10400,
+          "candidate_us": 10562
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "compound_63": 84,
+          "water": 7
+        },
+        "occupied_cells": 33,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "water/forming",
+          "compound_63/decaying",
+          "compound_63/active",
+          "compound_63/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 824,
+            "created": 758,
+            "decay_tick": 1124,
+            "expiry_tick": 1172,
+            "id": 4,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1003
+            ]
+          },
+          {
+            "active_tick": 1017,
+            "created": 951,
+            "decay_tick": 1317,
+            "expiry_tick": 1365,
+            "id": 5,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1004
+            ]
+          },
+          {
+            "active_tick": 1210,
+            "created": 1144,
+            "decay_tick": 1510,
+            "expiry_tick": 1558,
+            "id": 6,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1005
+            ]
+          }
+        ],
+        "regions": 91
+      },
+      "matter_paid": 4200,
+      "primary_gate": false
+    },
+    "mantle_active_reduced": {
+      "plain_us": {
+        "n": 32,
+        "mean": 10643.09375,
+        "median": 10434.0,
+        "p95_nearest_rank": 11576,
+        "max": 14760,
+        "min": 10093
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 10609.78125,
+        "median": 10258.0,
+        "p95_nearest_rank": 11268,
+        "max": 17752,
+        "min": 10072
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 33.3125,
+        "median": 117.0,
+        "p95_nearest_rank": 915,
+        "max": 1377,
+        "min": -2992
+      },
+      "mean_saving_fraction": 0.0031299639731163695,
+      "candidate_p95_change_fraction": -0.026606772633033862,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 10462.5,
+            "median": 10349.0,
+            "p95_nearest_rank": 11193,
+            "max": 11193,
+            "min": 10093
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 10451.75,
+            "median": 10266.0,
+            "p95_nearest_rank": 11268,
+            "max": 11268,
+            "min": 10118
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 10.75,
+            "median": 58.5,
+            "p95_nearest_rank": 914,
+            "max": 914,
+            "min": -883
+          },
+          "mean_saving_fraction": 0.001027479091995221,
+          "candidate_p95_change_fraction": 0.006700616456714018
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 10823.6875,
+            "median": 10510.5,
+            "p95_nearest_rank": 14760,
+            "max": 14760,
+            "min": 10170
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 10767.8125,
+            "median": 10256.0,
+            "p95_nearest_rank": 17752,
+            "max": 17752,
+            "min": 10072
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 55.875,
+            "median": 145.5,
+            "p95_nearest_rank": 1377,
+            "max": 1377,
+            "min": -2992
+          },
+          "mean_saving_fraction": 0.005162288730157814,
+          "candidate_p95_change_fraction": 0.202710027100271
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 10396.75,
+          "median": 10264.5,
+          "p95_nearest_rank": 10868,
+          "max": 10868,
+          "min": 10190
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 10235.5,
+          "median": 10235.5,
+          "p95_nearest_rank": 10330,
+          "max": 10330,
+          "min": 10141
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 161.25,
+          "median": 102.5,
+          "p95_nearest_rank": 538,
+          "max": 538,
+          "min": -98
+        },
+        "mean_saving_fraction": 0.015509654459326231,
+        "candidate_p95_change_fraction": -0.04950312845049687
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 9,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 14760,
+          "candidate_us": 17752
+        },
+        {
+          "index": 34,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 10093,
+          "candidate_us": 10976
+        },
+        {
+          "index": 4,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 10354,
+          "candidate_us": 10892
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "compound_63": 84,
+          "water": 7
+        },
+        "occupied_cells": 33,
+        "owners": [
+          "1"
+        ],
+        "phases": [
+          "water/forming",
+          "compound_63/decaying",
+          "compound_63/active",
+          "compound_63/forming"
+        ],
+        "products": [
+          {
+            "active_tick": 824,
+            "created": 758,
+            "decay_tick": 1124,
+            "expiry_tick": 1172,
+            "id": 4,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1003
+            ]
+          },
+          {
+            "active_tick": 1017,
+            "created": 951,
+            "decay_tick": 1317,
+            "expiry_tick": 1365,
+            "id": 5,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1004
+            ]
+          },
+          {
+            "active_tick": 1210,
+            "created": 1144,
+            "decay_tick": 1510,
+            "expiry_tick": 1558,
+            "id": 6,
+            "material": "compound_63",
+            "owner": 1,
+            "recipe_wire_id": 463,
+            "source_ids": [
+              1005
+            ]
+          }
+        ],
+        "regions": 91
+      },
+      "matter_paid": 4200,
+      "primary_gate": false
+    },
+    "two_owners_normal": {
+      "plain_us": {
+        "n": 32,
+        "mean": 4294.6875,
+        "median": 4279.0,
+        "p95_nearest_rank": 4617,
+        "max": 4636,
+        "min": 4116
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 4315.4375,
+        "median": 4269.5,
+        "p95_nearest_rank": 4726,
+        "max": 5100,
+        "min": 4065
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": -20.75,
+        "median": -19.5,
+        "p95_nearest_rank": 214,
+        "max": 217,
+        "min": -515
+      },
+      "mean_saving_fraction": -0.0048315506075820415,
+      "candidate_p95_change_fraction": 0.02360840372536279,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 4324.3125,
+            "median": 4300.0,
+            "p95_nearest_rank": 4636,
+            "max": 4636,
+            "min": 4182
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 4268.25,
+            "median": 4226.0,
+            "p95_nearest_rank": 4575,
+            "max": 4575,
+            "min": 4065
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 56.0625,
+            "median": 81.5,
+            "p95_nearest_rank": 217,
+            "max": 217,
+            "min": -195
+          },
+          "mean_saving_fraction": 0.012964488574773447,
+          "candidate_p95_change_fraction": -0.013157894736842105
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 4265.0625,
+            "median": 4212.0,
+            "p95_nearest_rank": 4617,
+            "max": 4617,
+            "min": 4116
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 4362.625,
+            "median": 4288.0,
+            "p95_nearest_rank": 5100,
+            "max": 5100,
+            "min": 4166
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": -97.5625,
+            "median": -65.5,
+            "p95_nearest_rank": 214,
+            "max": 214,
+            "min": -515
+          },
+          "mean_saving_fraction": -0.02287481133043185,
+          "candidate_p95_change_fraction": 0.1046133853151397
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 5516.25,
+          "median": 4223.0,
+          "p95_nearest_rank": 9475,
+          "max": 9475,
+          "min": 4144
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 5556,
+          "median": 4318.5,
+          "p95_nearest_rank": 9484,
+          "max": 9484,
+          "min": 4103
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": -39.75,
+          "median": 2.5,
+          "p95_nearest_rank": 84,
+          "max": 84,
+          "min": -248
+        },
+        "mean_saving_fraction": -0.007205982324949014,
+        "candidate_p95_change_fraction": 0.000949868073878628
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 9,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 4211,
+          "candidate_us": 4726
+        },
+        {
+          "index": 11,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 4617,
+          "candidate_us": 5100
+        },
+        {
+          "index": 21,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 4191,
+          "candidate_us": 4493
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "fire": 27
+        },
+        "occupied_cells": 27,
+        "owners": [
+          "1",
+          "2"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 27
+      },
+      "matter_paid": 1200
+    },
+    "two_owners_reduced": {
+      "plain_us": {
+        "n": 32,
+        "mean": 4264.0625,
+        "median": 4226.0,
+        "p95_nearest_rank": 4512,
+        "max": 4660,
+        "min": 4074
+      },
+      "candidate_us": {
+        "n": 32,
+        "mean": 4194.34375,
+        "median": 4151.0,
+        "p95_nearest_rank": 4652,
+        "max": 4672,
+        "min": 4003
+      },
+      "paired_saving_us": {
+        "n": 32,
+        "mean": 69.71875,
+        "median": 80.0,
+        "p95_nearest_rank": 374,
+        "max": 390,
+        "min": -434
+      },
+      "mean_saving_fraction": 0.01635031146940271,
+      "candidate_p95_change_fraction": 0.03102836879432624,
+      "order": {
+        "plain_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 4296.6875,
+            "median": 4281.0,
+            "p95_nearest_rank": 4660,
+            "max": 4660,
+            "min": 4132
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 4162.5625,
+            "median": 4109.5,
+            "p95_nearest_rank": 4581,
+            "max": 4581,
+            "min": 4003
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 134.125,
+            "median": 156.0,
+            "p95_nearest_rank": 390,
+            "max": 390,
+            "min": -434
+          },
+          "mean_saving_fraction": 0.031215907603240868,
+          "candidate_p95_change_fraction": -0.016952789699570814
+        },
+        "candidate_first": {
+          "plain_us": {
+            "n": 16,
+            "mean": 4231.4375,
+            "median": 4214.5,
+            "p95_nearest_rank": 4512,
+            "max": 4512,
+            "min": 4074
+          },
+          "candidate_us": {
+            "n": 16,
+            "mean": 4226.125,
+            "median": 4181.5,
+            "p95_nearest_rank": 4672,
+            "max": 4672,
+            "min": 4010
+          },
+          "paired_saving_us": {
+            "n": 16,
+            "mean": 5.3125,
+            "median": 24.5,
+            "p95_nearest_rank": 185,
+            "max": 185,
+            "min": -427
+          },
+          "mean_saving_fraction": 0.0012554835088548514,
+          "candidate_p95_change_fraction": 0.03546099290780142
+        }
+      },
+      "warmups": {
+        "plain_us": {
+          "n": 4,
+          "mean": 4625,
+          "median": 4708.0,
+          "p95_nearest_rank": 4923,
+          "max": 4923,
+          "min": 4161
+        },
+        "candidate_us": {
+          "n": 4,
+          "mean": 4122,
+          "median": 4035.5,
+          "p95_nearest_rank": 4425,
+          "max": 4425,
+          "min": 3992
+        },
+        "paired_saving_us": {
+          "n": 4,
+          "mean": 503,
+          "median": 490.5,
+          "p95_nearest_rank": 862,
+          "max": 862,
+          "min": 169
+        },
+        "mean_saving_fraction": 0.10875675675675675,
+        "candidate_p95_change_fraction": -0.10115783059110299
+      },
+      "measured_new_topologies": 0,
+      "measured_new_meshes": 0,
+      "largest_candidate_regressions": [
+        {
+          "index": 30,
+          "actual_order": [
+            "plain",
+            "candidate"
+          ],
+          "plain_us": 4147,
+          "candidate_us": 4581
+        },
+        {
+          "index": 19,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 4225,
+          "candidate_us": 4652
+        },
+        {
+          "index": 23,
+          "actual_order": [
+            "candidate",
+            "plain"
+          ],
+          "plain_us": 4495,
+          "candidate_us": 4672
+        }
+      ],
+      "coverage": {
+        "materials": {
+          "fire": 27
+        },
+        "occupied_cells": 27,
+        "owners": [
+          "1",
+          "2"
+        ],
+        "phases": [
+          "fire/active"
+        ],
+        "products": [],
+        "regions": 27
+      },
+      "matter_paid": 1200
+    }
+  },
+  "all_primary_case_process_order_gates_pass": false,
+  "repeated_other_case_p95_regressions_over_5_percent": [],
+  "meets_declared_microbenchmark_gate": false,
+  "decision_scope": "Passing this screen permits review only, not automatic canonical promotion. Paired phase-correlated native draw elapsed samples are not GPU/FPS or current full-profiler speed evidence. Warmups and invocation-order strata remain separate; p95 uses nearest rank; positive savings mean lower candidate elapsed."
+}

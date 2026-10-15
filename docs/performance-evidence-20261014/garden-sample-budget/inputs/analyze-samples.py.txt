@@ -1,0 +1,77 @@
+from pathlib import Path
+import json,hashlib,statistics,math
+ROOT=Path(__file__).resolve().parents[3]
+HERE=Path(__file__).resolve().parent
+checks=0
+def check(value,label):
+ global checks
+ checks+=1
+ if not value: raise AssertionError(label)
+def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
+def stats(values):
+ values=list(values);ordered=sorted(values)
+ return {'n':len(values),'mean':statistics.mean(values),'median':statistics.median(values),'p95_nearest_rank':ordered[math.ceil(len(values)*.95)-1],'min':min(values),'max':max(values)}
+def summary(rows):
+ p=stats(x['draw']['plain']['whole_pipeline_us'] for x in rows);c=stats(x['draw']['candidate']['whole_pipeline_us'] for x in rows)
+ savings=stats(x['draw']['plain']['whole_pipeline_us']-x['draw']['candidate']['whole_pipeline_us'] for x in rows)
+ return {'plain_whole_us':p,'candidate_whole_us':c,'paired_saved_us':savings,'mean_saved_percent':100*(p['mean']-c['mean'])/p['mean'],'p95_change_percent':100*(c['p95_nearest_rank']-p['p95_nearest_rank'])/p['p95_nearest_rank'],'actual_order_strata':{first:stats(x['draw']['plain']['whole_pipeline_us']-x['draw']['candidate']['whole_pipeline_us'] for x in rows if x['draw']['actual_order'][0]==first) for first in ['plain','candidate'] if any(x['draw']['actual_order'][0]==first for x in rows)}}
+record={'schema':'hex.garden-sample-review.v1','status':'passed','decision':'WITHDRAW','canonical_applied':False,'baseline':'p61-64590c45c7a5','runs':{},'errors':[]}
+data=[]
+for name,reverse in [('normal-forward-a',False),('normal-reverse-a',True)]:
+ p=HERE/'runs'/name/'receipt.json';d=json.loads(p.read_text());runner=json.loads((p.parent/'runner.json').read_text());data.append(d)
+ check(d['schema']=='hex.garden-samples.v1' and d['passed'] and d['complete'] and not d['errors'] and d['checks']==38844,'helper terminal')
+ check(d['reverse_order']==reverse and not d['reduced'],'mode')
+ check(runner['passed'] and runner['helper_receipt_sha256']==sha(p) and runner['source_pins_sha256']==d['source_pins_sha256'],'runner link')
+ check(d['source_pins_sha256']==sha(HERE/'source-pins.json') and len(d['source_hashes'])==335,'inventory')
+ for resource,digest in d['source_hashes'].items():check(sha(ROOT/resource.removeprefix('res://'))==digest,'source '+resource)
+ for relative,digest in runner['logs'].items():check(sha(p.parent/relative)==digest,'log '+relative)
+ for suffix in ['.log.err','-parse.log.err']:check((HERE/'runs'/(name+suffix)).stat().st_size==0,'stderr')
+ check(sha(HERE/'run-garden-samples.ps1')==runner['runner_sha256'],'executed runner')
+ check(d['cleanup']=={'created':2,'freed':2,'live':0},'owner cleanup')
+ check(d['controls']['checks']==750 and not d['controls']['errors'],'functional controls')
+ evidence=d['controls']['evidence'];check(evidence['exact_candidate_low_samples']==1 and evidence['direct_default_samples']==3 and evidence['derived_surface_calls']==1,'actual path')
+ check(evidence['derived_ground_preparation_calls']==[3,3] and evidence['derived_court_region_calls'][0]==evidence['derived_court_region_calls'][1]>3,'virtual fallbacks')
+ check(evidence['cancel_and_reconfigure_mesh_release'] and any(x['warning'] for x in evidence['phase_rows']) and evidence['phase_rows'][-1]['empty_mesh'],'lifecycle controls')
+ check(len(d['images'])==7 and len(d['cases'])==7 and len(d['arrival_rows'])==50,'bounded controls')
+ for x in d['images']:check(sha(ROOT/x['path'].removeprefix('res://'))==x['sha256'],'PNG '+x['label'])
+ check(len(d['final_cycles'])==25 and min(d['final_cycles'].values())>=3,'real3cycle horizon')
+ groups=[x for x in d['groups'] if not x.get('departure')];check(len(groups)==498 and sum(x['steps'] for x in groups)==1494,'real groups/steps')
+ prev=None; phase_masks=0; pixel_rows=0; pulses=0;rest=0;render_refresh=0
+ for i,x in enumerate(groups):
+  order=['candidate','plain'] if (i%2==0)!=reverse else ['plain','candidate']
+  check(x['index']==i and x['steps']==[0,1,8][i%3] and x['warmup']==(i<6) and x['actual_order']==order,'group order/budget')
+  for arm in x['arms'].values():check(arm['okay'] and arm['completed']==x['steps'] and arm['whole_exhibit_frame_us']>=0,'group success')
+  markers=x['markers'];check(len(markers)==25,'current25')
+  if prev is not None:
+   changed=[int(k) for k in prev if prev[k]['phase']!=markers[k]['phase'] or prev[k]['cycle']!=markers[k]['cycle'] or prev[k]['material']!=markers[k]['material']]
+   check(sorted(changed)==sorted(x['phase_changes']),'independent actual phase row')
+   check(sum(markers[k]['cycle']-prev[k]['cycle'] for k in prev)==x['transitions']['restarts'],'restart recount')
+  row=x['draw'];check(row['actual_order']==order and row['sample_limit']==1 and row['quality_profile']=='low','native order/detail')
+  check(row['plain']['entries']==row['candidate']['entries']==25,'draw full inventory')
+  proof=bool(x['phase_changes']) or x['transitions']['value_revision_changes']>0 or x['transitions']['render_revision_changes']>0 or i%32==0 or row['warning_changed']
+  check(not proof or row['exact_rgba_checked'] and row['authority_hash_checked'],'actual boundary proof')
+  for key in ['resident','retained_geometry','geometry_builds','geometry_reuses']:check(row['cache_after']['plain']['surface'][key]==row['cache_after']['candidate']['surface'][key],'equal retained geometry counters')
+  check(row['cache_after']['candidate']['samples']<=25 and row['cache_after']['candidate']['samples']<=row['cache_after']['plain']['samples'],'bounded actual sample storage')
+  pixel_rows+=row['exact_rgba_checked'];phase_masks+=len(x['phase_changes']);pulses+=x['transitions']['product_pulse_mutations'];rest+=x['transitions']['restarts'];render_refresh+=x['transitions']['render_revision_changes'];prev=markers
+ for x in d['cases']:check(x['exact_rgba_checked'] and x['authority_hash_checked'],'untimed actual native control')
+ departed=d['cases'][-2]
+ for arm in ['plain','candidate']:check(departed['cache_after'][arm]['surface']['resident']==departed['cache_after'][arm]['surface']['retained_geometry']==0,'departure pruned')
+ measured=[x for x in groups if not x['warmup']];phase=[x for x in measured if x['phase_changes']];non=[x for x in measured if not x['phase_changes']]
+ sets={'all_measured':summary(measured),'actual_phase_refresh':summary(phase),'nonphase':summary(non),'warmup':summary(groups[:6])}
+ z=sets['actual_phase_refresh']; gate={'mean_percent':z['mean_saved_percent']>=5,'mean_us':z['paired_saved_us']['mean']>=50,'paired_median':z['paired_saved_us']['median']>0,'each_callback_order':all(x['mean']>0 for x in z['actual_order_strata'].values()),'all_frame_p95_no_5pct_regression':sets['all_measured']['p95_change_percent']<=5}
+ arrival={}
+ for label in ['initial','reentry']:
+  rs=[x for x in d['arrival_rows'] if x['label']==label]
+  arrival[label]={a:stats(x['arms'][a]['whole_preparation_us'] for x in rs) for a in ['plain','candidate']}
+ record['runs'][name]={'receipt_sha256':sha(p),'runner_sha256':sha(p.parent/'runner.json'),'helper_checks':d['checks'],'controls_checks':d['controls']['checks'],'measured_groups':len(measured),'evolution_steps':1494,'phase_rows':len(phase),'phase_mask_changes':phase_masks,'exact_evolution_pixel_checks':pixel_rows,'restarts':rest,'product_pulse_mutations':pulses,'render_revision_changes':render_refresh,'final_cycles':d['final_cycles'],'strata':sets,'gate':gate,'arrival_separate':arrival,'memory':d['memory'],'host_memory_before':runner['host_memory_before'],'host_memory_after':runner['host_memory_after'],'untimed_cases':d['cases']}
+check(data[0]['source_hashes']==data[1]['source_hashes'],'same source inventory')
+check(data[0]['controls']==data[1]['controls'],'same compatibility result')
+for a,b in zip(data[0]['groups'][:-1],data[1]['groups'][:-1]):
+ for key in ['steps','markers','phase_changes','transitions','warmup']:check(a[key]==b[key],'same evolving authority '+key)
+for a,b in zip(data[0]['images'],data[1]['images']):check(a['label']==b['label'] and a['sha256']==b['sha256'],'cross-process exact PNGs')
+record['checks']=checks
+record['scope']='Independent readback of two normal-effect source diagnostic processes; no reduced run or production application. Helper-reported exact RGBA and current court hash/conservation checks are validated through their flags and source, not reconstructed by this Python reader.'
+record['limits']=['The predeclared phase gate fails; no reduced expansion or second variant can rescue this candidate.','Pristine candidate draw includes compatibility guards and sample-budget bookkeeping. Nonphase regressions are observed, but this experiment does not isolate which added operation causes them.','Everydraw current phase/samples/caches are checked outside clocks; these checks and native readbacks perturb wall cadence/cache warmth. Neither elapseddraw nor0/1/8Exhibition groups are Bootstrap wholeframes, GPU/threadtime, physical input or FPS.','Full25 cycles3-10 and phase rows are naturally reached; no sparse accumulated phase label is used as isolated-expiry latency. Standard controls are functional only, not an independent standard-cost measurement.','335 current hashes plus exact inverse/copies pin source. Archive is a replay overlay on qualified6459, not a self-contained copy of all runtime assets.']
+path=HERE/'analysis.json';path.write_text(json.dumps(record,indent=2)+'\n')
+check(json.loads(path.read_text())==record,'final readback')
+print('Independent conditions',checks,'analysis SHA',sha(path))

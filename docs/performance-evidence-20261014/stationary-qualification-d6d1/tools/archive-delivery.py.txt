@@ -1,0 +1,416 @@
+"""Archive completed d6d1 qualification only; never runs producers or promotes a build.
+
+Prepare-only until the root confirms all gates are terminal. Run before changing the
+qualified delivery pointer, which belongs to the frozen 1693-input inventory.
+No recursive discovery/copy, package binaries, profiles, assets or shader caches.
+"""
+from pathlib import Path
+from datetime import datetime, timezone
+import argparse
+import hashlib
+import json
+import re
+import shutil
+
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+DEST = ROOT / "docs/performance-evidence-20261014/stationary-qualification-d6d1"
+BUILD_ID = "p61-d6d1bfb9c529"
+SOURCE_SHA = "d6d1bfb9c5292d8dffbeade6e1cf460cd3a23ee54a655da7069d75e4cb572d44"
+PINS_SHA = "d005817977a72b2bb38355906dd6d4db4bd05ba66aab58aca006fe08c9f9867d"
+RUNNER_SHA = "ef3918880971a558c124cdbae4d357cd4d3eb6663a1b013b8473fba973089fe9"
+ROUTE_RUNNER_SHA = "a2ec44d93e72b4be5a467750e65e3df656fac7dbc33d4e2a6168d681cea23c9d"
+BUILD = ROOT / "exports/hex-performance-20261014-d6d1"
+FALLBACK = ROOT / "exports/hex-depth-clarity-20261014-6459"
+FULL = HERE / "runs/full-a"
+PACKAGE_RUN = HERE / "runs/package-a"
+TERRAIN = PACKAGE_RUN / "terrain"
+LIFECYCLE = HERE / "runs/lifecycle-a"
+EXTERNAL_ROUTE = HERE / "runs/desktop-route-a/receipt.json"
+REVIEWER = ROOT / ".godot/iteration-20261013/delivery-review-launcher"
+FINAL_PINS = REVIEWER / "freezes/d6d1-a/pins.json"
+FINAL_REVIEW = REVIEWER / "runs/d6d1-a/review.json"
+CASES = ("hearth", "garden", "paid-fire", "paid-all-six-mantle", "reopen")
+DELIVERY_CHECKS = {
+    "packageReceiptPassed", "runtimeIdentity", "packHash", "zipHash",
+    "payloadInventory", "zipInventory", "launcherPixelFlags", "instructionsPixelChoice",
+    "instructionsInteraction", "instructionsAttune", "instructionsLimits",
+    "instructionsExtract", "instructionsSeparateFolders", "instructionsStandalone",
+    "instructionsPerformance", "instructionsPerformanceRules", "fallbackPackUnchanged",
+    "fallbackZipUnchanged",
+}
+INERT_SUFFIXES = {".gd", ".py", ".ps1", ".cmd", ".godot", ".tres"}
+ALLOWED_SUFFIXES = INERT_SUFFIXES | {".json", ".log", ".err", ".txt", ".md"}
+
+
+def require(condition, message):
+    if not condition:
+        raise RuntimeError(message)
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def physical_path(value):
+    path = Path(value)
+    if not path.is_absolute():
+        path = ROOT / path
+    require(".." not in path.parts, "Parent path traversal refused: " + str(path))
+    path = path.absolute()
+    require(path.is_relative_to(ROOT), "Path outside repository: " + str(path))
+    for part in (path, *path.parents):
+        require(not part.is_symlink() and not (hasattr(part, "is_junction") and part.is_junction()),
+                "Linked path refused: " + str(part))
+        if part == ROOT:
+            break
+    return path
+
+
+def source_path(value):
+    path = physical_path(value)
+    require(path.is_file(), "Missing required source: " + str(path))
+    return path
+
+
+def document(path):
+    return json.loads(source_path(path).read_text(encoding="utf-8-sig"))
+
+
+def same_identity(record):
+    require(record["build_id"] == BUILD_ID and record["runtime_source_sha256"] == SOURCE_SHA,
+            "Different runtime identity")
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--complete-gates", action="store_true",
+                        help="Required explicit execution switch after all root-run gates finish.")
+    args = parser.parse_args()
+    require(args.complete_gates, "Prepare-only: --complete-gates is required after all gates finish")
+    physical_path(DEST)
+    require(not DEST.exists(), "Preserve existing archive; destination must be fresh")
+    items = []
+    checked = {}
+
+    def pin(path, expected=None):
+        path = source_path(path)
+        sha = digest(path)
+        require(expected is None or sha == expected, "Source hash differs: " + str(path))
+        row = {"source": path.relative_to(ROOT).as_posix(), "bytes": path.stat().st_size, "sha256": sha}
+        require(path not in checked or checked[path] == row, "Source changed during admission")
+        checked[path] = row
+        return path
+
+    def include(path, relative, expected=None):
+        path = pin(path, expected)
+        target = Path(relative)
+        require(not target.is_absolute() and ".." not in target.parts, "Invalid archive target")
+        require(path.suffix.lower() in ALLOWED_SUFFIXES, "Non-evidence source refused: " + str(path))
+        require(not any(x.lower() in {"isolated-roaming", "roaming", "shader_cache", "__pycache__"}
+                        for x in path.parts), "Profile/cache source refused")
+        if path.suffix.lower() in INERT_SUFFIXES:
+            target = target.with_name(target.name + ".txt")
+        items.append((path, target))
+
+    pins_path = pin(HERE / "source-pins.json", PINS_SHA)
+    pins = document(pins_path)
+    require(pins["schema"] == "hex.performance-qualification-pins.v1", "Wrong qualification pins schema")
+    same_identity(pins)
+    require(len(pins["sources"]) == 1693 and pins["registered_suites"] == 265,
+            "Frozen qualification inventory changed")
+    require(pins["package_run_id"] == BUILD.name, "Package run differs")
+    for path, sha in pins["sources"].items():
+        pin(path, sha)
+    pin(HERE / "run-qualification.ps1", RUNNER_SHA)
+    identity = document("content/runtime/runtime_build_identity_v1.json")
+    same_identity(identity)
+    integration = document(HERE / "integration.json")
+    require(integration["schema"] == "hex.stationary-integration.v1", "Wrong integration receipt")
+    pin("src/sim/movement/movement_system.gd", integration["movement_source_sha256"])
+    pin("tests/unit/test_movement_hot_path.gd", integration["test_source_sha256"])
+
+    full = document(FULL / "tests.json")
+    require(full["result"] == "passed" and full["failure"] is None and full["stderr_bytes"] == 0
+            and full["tier"] == "full" and full["requested_suite_ids"] == [], "Full not passed")
+    require(full["supervision"]["suite_timeout_seconds"] == 2700
+            and full["supervision"]["import_timeout_seconds"] == 600
+            and full["isolation"]["caller_appdata_restored"] is True, "Full supervision differs")
+    executed = full["executed"]
+    require(executed["suite_count"] == pins["registered_suites"]
+            and [x["id"] for x in executed["suites"]] == pins["suite_ids"]
+            and all(x["failures"] == 0 for x in executed["suites"]), "Full suite inventory differs")
+    require(sum(x["assertions"] for x in executed["suites"]) == executed["assertion_count"],
+            "Full assertion count differs")
+    for flag in ("current_state_check", "asset_inventory", "doctor", "import",
+                 "post_import_identity_check", "deterministic_suite_runner", "boot_120_hz"):
+        require(executed[flag] is True, "Full omitted " + flag)
+    raw_state = full["source"]["current_state_path"]
+    require(re.fullmatch(r"\.godot/windows-tests/[a-f0-9]{32}/current-state\.json", raw_state),
+            "Unexpected Full log root")
+    raw_root = ROOT / raw_state
+    raw_root = raw_root.parent
+    require(source_path(full["source"]["asset_inventory_path"]) == raw_root / "asset-inventory.json",
+            "Asset inventory outside Full root")
+    pin(raw_root / "current-state.json", full["source"]["current_state_sha256"])
+    pin(raw_root / "asset-inventory.json", full["source"]["asset_inventory_sha256"])
+    same_identity(document(raw_root / "current-state.json")["runtime"]["build_identity"])
+    require(len(full["logs"]) == 3, "Full must retain exactly three raw logs")
+    require({source_path(x["path"]).name for x in full["logs"]}
+            == {"import.log", "suite.log", "boot-120.log"}, "Full log names differ")
+    for row in full["logs"]:
+        path = pin(row["path"], row["sha256"])
+        require(path.parent == raw_root and row["stderr_bytes"] == 0
+                and source_path(str(path) + ".err").stat().st_size == 0, "Full log/stderr differs")
+    require(document(raw_root / "receipt.json") == full, "Raw Full receipt differs")
+
+    package = document(BUILD / "receipt.json")
+    same_identity(package)
+    require(package["status"] == "passed", "Package is not terminal passed")
+    delivery = document(BUILD / "delivery-files.json")
+    require(delivery["status"] == "passed" and delivery["mode"] == "standalone"
+            and delivery["build_id"] == BUILD_ID and set(delivery["checks"]) == DELIVERY_CHECKS
+            and all(v is True for v in delivery["checks"].values()), "Delivery 18 gates differ")
+    same_identity(document(BUILD / "windows/SOURCE-IDENTITY.json"))
+    for directory, case, producer in ((FULL, "full", FULL / "tests.json"),
+                                      (PACKAGE_RUN, "package", BUILD / "receipt.json")):
+        run = document(directory / "runner.json")
+        require(run["schema"] == "hex.performance-qualification-run.v1" and run["passed"] is True
+                and run["failure"] is None and run["case"] == case and run["build_id"] == BUILD_ID
+                and run["source_pins_sha256"] == PINS_SHA and run["runner_sha256"] == RUNNER_SHA
+                and source_path(run["producer_path"]) == producer
+                and run["producer_sha256"] == digest(producer), "Qualification runner not passed: " + case)
+        pin("docs/current-delivery.json", run["default_pointer_sha256"])
+
+    terrain = document(TERRAIN / "terrain-pack.json")
+    provenance = document(TERRAIN / "pack-provenance.json")
+    require(terrain["status"] == "passed" and not terrain["error"]
+            and terrain["decoded_image_count"] == 133 and terrain["release_identity"] == identity,
+            "Native terrain gate incomplete")
+    require(provenance["status"] == "passed" and provenance["error"] is None
+            and provenance["decoded_terrain_receipt_sha256"] == digest(TERRAIN / "terrain-pack.json"),
+            "Terrain mount provenance incomplete")
+
+    lifecycle = document(LIFECYCLE / "receipt.json")
+    same_identity(lifecycle)
+    require(lifecycle["schema"] == "hex-launcher-lifecycle-v1" and lifecycle["status"] == "passed"
+            and lifecycle["failure"] is None and lifecycle["failed_case"] is None
+            and lifecycle["selection"] == "explicit_candidate_package", "Lifecycle not passed")
+    for flag in ("default_selection_unchanged", "input_pins_unchanged",
+                 "shared_isolated_profile_verified", "caller_appdata_restored"):
+        require(lifecycle[flag] is True, "Lifecycle missing " + flag)
+    require(source_path(lifecycle["package_receipt"]) == BUILD / "receipt.json"
+            and lifecycle["package_receipt_sha256"] == digest(BUILD / "receipt.json"), "Lifecycle package differs")
+    require([x["case"] for x in lifecycle["cases"]] == list(CASES), "Lifecycle case inventory differs")
+    for row in lifecycle["cases"]:
+        expected = 12 if row["case"] in ("paid-fire", "paid-all-six-mantle") else 0
+        require(row["status"] == "passed" and row["safe_close_marker"] is True
+                and row["exit_mode"] == "front-door-supervised-owned-process-normal-window-close"
+                and row["stderr_bytes"] == 0 and row["accepted_casts"] == expected
+                and row["released_casts"] == expected and row["refused_casts"] == 0,
+                "Lifecycle count/close differs: " + row["case"])
+        log = pin(row["log"], row["log_sha256"])
+        require(log == LIFECYCLE / (row["case"] + ".log"), "Lifecycle log path differs")
+        error = pin(str(log) + ".err", row["stderr_sha256"])
+        require(error.stat().st_size == 0, "Lifecycle stderr not empty")
+
+    route_path = source_path(EXTERNAL_ROUTE)
+    route = document(route_path)
+    same_identity(route)
+    pin(HERE / "run-desktop-lifecycle.ps1", ROUTE_RUNNER_SHA)
+    require(route["schema"] == "hex.desktop-candidate-lifecycle-route.v1"
+            and route["source_pins_sha256"] == PINS_SHA and route["runner_sha256"] == ROUTE_RUNNER_SHA
+            and route["status"] == "passed" and route["error"] is None and route["exit_code"] == 0
+            and route["caller_appdata_unchanged"] is True
+            and set(route["before"]) == {"shortcut", "wrapper"}
+            and route["before"] == route["after"]
+            and all(re.fullmatch(r"[a-f0-9]{64}", x) for x in route["before"].values()),
+            "External root invocation/hash evidence incomplete")
+    require(source_path(route["lifecycle_receipt"]) == LIFECYCLE / "receipt.json"
+            and route["lifecycle_receipt_sha256"] == digest(LIFECYCLE / "receipt.json"),
+            "External route does not bind actual lifecycle receipt")
+    expected_sources = {key: pins["sources"][key] for key in (
+        "content/runtime/runtime_build_identity_v1.json", "docs/current-delivery.json",
+        "scripts/launch-hex.ps1", "scripts/verify-launcher-lifecycle.ps1",
+        "scripts/flux2-common.ps1", "scripts/engine-guard.ps1")}
+    require(route["source_before"] == route["source_after"] == expected_sources,
+            "External route source/default hash inventory differs")
+    package_relative = BUILD.relative_to(ROOT).as_posix()
+    expected_package = {}
+    for row in delivery["zip_entries"]:
+        name = row["name"]
+        require(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", name), "Unexpected delivered payload name")
+        key = package_relative + "/windows/" + name
+        require(key not in expected_package, "Duplicate delivered payload")
+        expected_package[key] = row["sha256"]
+    require("SHA256SUMS.txt" in {x["name"] for x in delivery["zip_entries"]}, "Delivery lacks manifest")
+    expected_package[package_relative + "/receipt.json"] = digest(BUILD / "receipt.json")
+    expected_package[package_relative + "/HEX-" + BUILD_ID + "-Windows-x64.zip"] = package["zip_sha256"]
+    require(route["package_before"] == route["package_after"] == expected_package,
+            "External route package hash inventory differs")
+    expected_cases = [{key: row[key] for key in ("case", "accepted_casts", "released_casts",
+                      "refused_casts", "log_sha256", "stderr_sha256")} for row in lifecycle["cases"]]
+    require(route["cases"] == expected_cases, "External route lifecycle summaries differ")
+    admission_path = route_path.with_name("admission.json")
+    admission = document(admission_path)
+    require(admission["status"] == "running" and admission["error"] is None
+            and admission["exit_code"] is None and admission["finished_utc"] is None,
+            "Root route admission was not the original pending receipt")
+    for key in ("schema", "build_id", "runtime_source_sha256", "source_pins_sha256", "runner_sha256",
+                "route", "shortcut", "target", "working_directory", "shortcut_arguments", "wrapper",
+                "arguments", "before", "package_before", "source_before", "inspection",
+                "lifecycle_receipt", "started_utc"):
+        require(admission[key] == route[key], "Root route admission changed: " + key)
+    arguments = route["arguments"]
+    require(isinstance(arguments, list) and all(isinstance(x, str) for x in arguments), "Route arguments missing")
+    for flag, expected in (("-CandidatePackageReceipt", BUILD / "receipt.json"),
+                           ("-OutputDirectory", LIFECYCLE)):
+        require(arguments.count(flag) == 1 and arguments.index(flag) + 1 < len(arguments), "Route flag differs")
+        supplied = Path(arguments[arguments.index(flag) + 1])
+        require((supplied if supplied.is_absolute() else ROOT / supplied).absolute() == expected,
+                "External route target differs: " + flag)
+    require(arguments.count("-Lifecycle") == 1 and arguments.count("-CandidatePackageReceiptSha256") == 1,
+            "External route did not request fixed candidate lifecycle")
+    require(arguments[arguments.index("-CandidatePackageReceiptSha256") + 1] == digest(BUILD / "receipt.json"),
+            "External route package pin differs")
+
+    final_pins = document(FINAL_PINS)
+    review = document(FINAL_REVIEW)
+    require(final_pins["schema"] == "hex-frozen-launcher-delivery-review-pins-v1"
+            and final_pins["identity"] == identity and final_pins["suite_ids"] == pins["suite_ids"],
+            "Final independent inventory differs")
+    require(review["schema"] == "hex-independent-launcher-delivery-review-v1"
+            and review["status"] == "passed" and review["failure"] is None and review["checks"] > 0,
+            "Final independent review not passed")
+    gates = {"full": FULL / "tests.json", "package": BUILD / "receipt.json",
+             "delivery": BUILD / "delivery-files.json", "terrain": TERRAIN / "terrain-pack.json",
+             "terrain_provenance": TERRAIN / "pack-provenance.json",
+             "lifecycle": LIFECYCLE / "receipt.json", "fallback": FALLBACK / "receipt.json"}
+    require(set(final_pins["gate_inputs"]) == set(gates), "Final gate set differs")
+    for key, path in gates.items():
+        row = final_pins["gate_inputs"][key]
+        require(source_path(row["path"]) == path, "Final gate path differs: " + key)
+        pin(path, row["sha256"])
+    for path, sha in final_pins["source_sha256"].items():
+        pin(path, sha)
+    # The independent reviewer verifies binary/profile bytes. Archive admission binds
+    # its receipt to these exact terminal gate inputs; it does not copy/reopen profiles.
+    review_inputs = {source_path(x["path"]): x for x in review["inputs"]}
+    require(len(review_inputs) == len(review["inputs"]), "Duplicate independent-review inputs")
+    for path in (*gates.values(), FINAL_PINS):
+        require(path in review_inputs and review_inputs[path]["sha256"] == digest(path)
+                and review_inputs[path]["bytes"] == path.stat().st_size,
+                "Independent review does not bind terminal evidence: " + str(path))
+    require(review["sections"]["full"]["suites"] == 265
+            and review["sections"]["full"]["assertions"] == executed["assertion_count"]
+            and review["sections"]["full"]["stderr_bytes"] == 0
+            and review["sections"]["terrain"]["images"] == 133
+            and [x["case"] for x in review["sections"]["lifecycle"]["cases"]] == list(CASES),
+            "Independent review summary differs")
+
+    # Every copy is named here. No recursive directory copy or arbitrary reviewer-input copy.
+    for name in ("source-pins.json", "integration.json", "run-qualification.ps1",
+                 "freeze-inputs.py", "runtime-identity-before.json"):
+        include(HERE / name, "qualification/" + name)
+    for name in ("tests.json", "runner.json"):
+        include(FULL / name, "full/" + name)
+    for name in ("asset-inventory.json", "current-state.json", "script-class-cache.json", "receipt.json",
+                 "import.log", "import.log.err", "suite.log", "suite.log.err", "boot-120.log", "boot-120.log.err"):
+        include(raw_root / name, "full/raw/" + name)
+    include("content/runtime/runtime_build_identity_v1.json", "runtime-identity.json")
+    include("docs/current-delivery.json", "qualified-default-before-promotion.json")
+    for path in ("src/sim/movement/movement_system.gd", "tests/unit/test_movement_hot_path.gd", "tests/run_all.gd",
+                 "scripts/test.ps1", "scripts/package-hex.ps1", "scripts/verify-hex-portable.ps1",
+                 "scripts/verify-terrain-pack.ps1", "scripts/launch-hex.ps1",
+                 "scripts/verify-launcher-lifecycle.ps1", "scripts/test-launcher-lifecycle.ps1"):
+        include(path, "inputs/" + path)
+    for name in ("receipt.json", "delivery-files.json"):
+        include(BUILD / name, "package/" + name)
+    include(PACKAGE_RUN / "runner.json", "package/runner.json")
+    for name in ("BUILD-STATE.json", "SOURCE-IDENTITY.json", "README-FIRST.txt", "SHA256SUMS.txt",
+                 "PLAY-HEX.cmd", "TEST-OH-TIPI.cmd", "TEST-RED-BARON.cmd", "TEST-S-WAYNE.cmd"):
+        include(BUILD / "windows" / name, "package/windows/" + name)
+    for name in ("export.log", "export.log.err", "export-smoke.log", "export-smoke.log.err", "script-class-cache.json"):
+        include(BUILD / "logs" / name, "package/logs/" + name)
+    for name in ("terrain-pack.json", "pack-provenance.json", "engine.log", "engine.log.err"):
+        include(TERRAIN / name, "terrain/" + name)
+    for name in ("expected-identity.json", "expected-provenance.json", "expected-terrain-manifest.tres",
+                 "project.godot", "verify-terrain-pack.gd"):
+        include(TERRAIN / "isolated-project" / name, "terrain/inputs/" + name)
+    include(LIFECYCLE / "receipt.json", "lifecycle/receipt.json")
+    include(route_path, "lifecycle/external-route.json")
+    include(admission_path, "lifecycle/external-route-admission.json")
+    include(HERE / "run-desktop-lifecycle.ps1", "lifecycle/run-desktop-lifecycle.ps1", ROUTE_RUNNER_SHA)
+    for name in CASES:
+        for suffix in (".log", ".log.err"):
+            include(LIFECYCLE / (name + suffix), "lifecycle/" + name + suffix)
+    include(FINAL_PINS, "delivery-review/pins.json")
+    include(FINAL_REVIEW, "delivery-review/review.json")
+    for name in ("review_delivery.py", "freeze_pins.py", "test_review.py"):
+        include(REVIEWER / name, "delivery-review/" + name)
+    include(FALLBACK / "receipt.json", "fallback-6459-receipt.json")
+    include(Path(__file__), "tools/archive-delivery.py")
+    require(len({str(target).lower() for _, target in items}) == len(items), "Archive target collision")
+    for path, expected in checked.items():
+        require(digest(path) == expected["sha256"] and path.stat().st_size == expected["bytes"],
+                "Source changed before copy: " + str(path))
+
+    # No output exists before all terminal gates, exact sources and every allowlisted file pass.
+    physical_path(DEST)
+    DEST.mkdir(parents=True, exist_ok=False)
+    rows = []
+    for source, relative in items:
+        target = DEST / relative
+        physical_path(target)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        physical_path(target)
+        with source.open("rb") as input_file, target.open("xb") as output_file:
+            shutil.copyfileobj(input_file, output_file)
+        expected = checked[source]
+        require(target.read_bytes() == source.read_bytes() and digest(target) == expected["sha256"],
+                "Archive byte verification failed: " + str(relative))
+        rows.append({**expected, "archive": relative.as_posix()})
+    for path, expected in checked.items():
+        require(digest(path) == expected["sha256"], "Source changed during archive: " + str(path))
+    manifest = {"schema": "hex-stationary-qualification-copy-v1", "build_id": BUILD_ID,
+                "runtime_source_sha256": SOURCE_SHA, "created_utc": datetime.now(timezone.utc).isoformat(),
+                "scope": "Exact completed qualification evidence, before default promotion. No binary packages, private profiles, assets or caches copied. Code/resource filenames are inert .txt copies; payload bytes unchanged. Independent delivery review retains its own scope. No current-build foreground/FPS or human input acceptance is added.",
+                "payload_count": len(rows), "payload_bytes": sum(x["bytes"] for x in rows), "files": rows}
+    encoded = (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
+    manifest_path = DEST / "copy-manifest.json"
+    physical_path(manifest_path)
+    with manifest_path.open("xb") as stream:
+        stream.write(encoded)
+    require(manifest_path.read_bytes() == encoded, "Manifest readback failed")
+    readme = (
+        "# Stationary movement qualification — d6d1\n\n"
+        f"Completed source and delivery gates for **{BUILD_ID}** (`{SOURCE_SHA}`). "
+        "This archive is captured before default promotion; its older default descriptor is historical.\n\n"
+        f"[Full](full/tests.json) passed {executed['suite_count']:,} suites / {executed['assertion_count']:,} assertions "
+        "with zero failures/stderr and the 120 Hz boot. [Package](package/receipt.json), "
+        "[18 portable checks](package/delivery-files.json), [133 native terrain images](terrain/terrain-pack.json), "
+        "and [five lifecycle cases](lifecycle/receipt.json) passed. Fire and Mantle each retain 12 paid starts "
+        "and 12 releases, zero refusals; idle cases contain no casts. "
+        f"[Independent delivery review](delivery-review/review.json) passed {review['checks']:,} conditions.\n\n"
+        "[Root route evidence](lifecycle/external-route.json) records the supervised desktop shortcut target/wrapper "
+        "invocation and unchanged host-file hashes. It does not claim a physical desktop click. "
+        "[Integration](qualification/integration.json) links the retained stationary movement change; "
+        "the [measured experiment](../stationary-ground/README.md) remains a separate bounded comparison. "
+        "No current-build foreground performance, portable FPS, physical input, leak-proof soak, or broader "
+        "player-feel acceptance is inferred. Conflagration decoration coalescing was withdrawn.\n\n"
+        "[Copy manifest](copy-manifest.json) records every original source, archive path, byte count and SHA-256. "
+        "All payloads retain exact bytes; code and Godot resource filenames end in `.txt`. "
+        "The generated README and manifest describe this copy operation. EXE/PCK/ZIP files, profile contents, "
+        "assets and caches are excluded. Existing raw receipts retain their original paths and historical claims.\n"
+    )
+    physical_path(DEST / "README.md")
+    with (DEST / "README.md").open("x", encoding="utf-8", newline="\n") as stream:
+        stream.write(readme)
+    require((DEST / "README.md").read_text(encoding="utf-8") == readme, "README readback failed")
+    print(json.dumps({"status": "archived", "payload_count": len(rows), "payload_bytes": manifest["payload_bytes"],
+                      "manifest": str(manifest_path), "sha256": digest(manifest_path)}))
+
+
+if __name__ == "__main__":
+    main()

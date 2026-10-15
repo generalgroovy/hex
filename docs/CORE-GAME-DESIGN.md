@@ -1,20 +1,20 @@
 # H.E.X. game design overview
 
-Status: **paused at the qualified October 13 checkpoint, p61-7804a23eb300.**
-The [iteration](iteration-20261013/README.md) records implemented changes,
-independent reviews and deferred work. The closing usability batch repairs
-victory audio tails, remapped shortcut hints and Jump press/release teaching.
-[Full](iteration-20261013/full-7804/README.md) passes 265 suites / 7,573,807
-assertions, with zero failures/error output and 120 Hz boot. The matching
-package, archive, exact terrain and five-case lifecycle checks pass;
-[delivery review](iteration-20261013/delivery-review-7804/review.json) links them.
+Status: **implemented design overview; qualified portable p61-d6d1bfb9c529.**
+The [single queue](../.agent/OVERHAUL-IMPLEMENTATION.md) owns current work.
+The [resume](../.agent/HEX-RESUME.md), [delivery pointer](current-delivery.json)
+and [qualification](performance-evidence-20261014/stationary-qualification-d6d1/README.md)
+own exact identities, checks and acceptance limits. Use the **H.E.X. desktop
+shortcut** for player sessions. Preserve the immediate 6459 fallback and older
+working builds. Current-build foreground performance and portable FPS remain
+unmeasured; the [6459 diagnostic](performance-evidence-20261014/foreground-6459-b/review.json)
+is historical.
 
-Use the [current launcher](../exports/hex-checkpoint-20261013-7804/windows/PLAY-HEX.cmd).
-The [500be fallback](../exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd)
-and older working builds remain preserved. Steady 60 FPS remains unestablished;
-the last admitted foreground measurement belongs to 500be. The
-[resume](../.agent/HEX-RESUME.md) owns exact identities and measurement limits;
-SPECIFICATION.md owns gameplay rules.
+The [October 15 overhaul design](OVERHAUL-DESIGN-20261015.md) covers the selected
+illustrated 2.5D animated-sprite direction, clear area effects, tall architecture,
+real interiors, learning and technical optimization. It is a cross-reviewed
+proposal, not a description of changes already implemented. SPECIFICATION.md
+continues to own executable gameplay rules.
 
 H.E.X. combines movement execution, aimed spell combat and finite elemental
 terrain. Players learn a small set of actions, then express skill through timing,
@@ -36,7 +36,7 @@ from intended viability and uniqueness.
 | Earned single-player progression | All 30 rivals remain selectable. An optional Rapid→Fuse→Rebound lesson route uses real Conservatory, Tideglass and Basalt courts. A joined paid fixture observes introduction, movement chain, mixed hit, protected crossing, three victories, saved rewards and learned releases | These are three lessons, not a complete campaign. Difficulty progression, varied longer runs and human learning transfer remain open |
 | A larger, varied world with compact UI | Seven districts, thirteen map travel arrivals and 63 harmless Garden exhibits; optional district practice and authored map cues. Small-window/200% reading views retain selection and expose detail pages; mouse, keyboard and pad share compact actions | Human wayfinding and active-device transitions; native fit/navigation checks and source tests do not alone establish comprehension |
 | More dimensional, readable characters and magic | Wall attachment/release use directional poses. Ground characters retain aerial tuck during casting; flyers keep flight bodies with independent hands. Actual protection cues, receiving-surface shadows and a bounded four-voice priority audio batch support feedback | Bespoke authored movement cycles, listening comfort and moving-combat readability remain open |
-| Smooth play on modest hardware | Bounded terrain residency and worker validation, interpolation, Low/Standard settings, exact Garden selection reuse and staged funded/visual preparation during fast travel. Immediate campus drawing remains the default after moving-view measurements rejected the retained alternative | The last admitted 500be source run has Garden/default-Fire/Mantle p95 engine intervals of 24.743/28.217/39.999 ms with complete-step observation; steady 60 FPS remains unachieved. Newer source does not inherit these measurements. Older sustained Fire uses a different fixture, so these are not matched gains. Full/package qualification is separate; smaller preparation peaks do not imply lower total work |
+| Smooth play on modest hardware | Bounded terrain residency and worker validation, interpolation, Low/Standard settings, exact Garden selection reuse, staged preparation during fast travel and the qualified stationary movement shortcut. Immediate campus drawing remains the default after moving-view measurements rejected the retained alternative | Current d6d1 foreground performance and portable FPS remain unmeasured. The previous-build 6459 instrumented source diagnostic and isolated stationary-step savings have their own scopes in the resume; neither establishes current smooth gameplay. Whole-workload frame pacing, observer calibration and memory pressure remain open. Full/package qualification is separate |
 
 The [reference adaptations](../SPECIFICATION.md#reference-game-adaptations),
 [combat decisions](element-expansion-evidence-20261009/combat-design.md),

@@ -1,20 +1,22 @@
 # H.E.X. development on Windows
 
-Status: current source-development guide, October 13, 2026. Git contains source and relevant assets/evidence; local exports are separate.
+Status: current source-development guide, October 14, 2026. Git contains source and relevant assets/evidence; local exports are separate.
 
 Use the repository root containing `project.godot` and `hex.cmd`. Do not run
 development commands from a wrapper folder or an extracted portable. Current
-working source is `p61-7804a23eb300` on `codex/hex-screen-smoothness-20261011`:
+working branch is `codex/hex-screen-smoothness-20261011`, with qualified local
+`p61-64590c45c7a5` source and portable. Later changes need their own qualification:
 protocol 61, SessionSnapshot 24, 120 Hz, six ingredients, 63 compositions, eight
-deliveries and 504 spells. The [active iteration](iteration-20261013/README.md)
-owns checkpoint checks and measurements; previous qualified portables stay preserved.
+deliveries and 504 spells. The [single queue](../.agent/OVERHAUL-IMPLEMENTATION.md)
+owns current work; the [closed checkpoint](iteration-20261013/README.md)
+retains its checks and measurements. Qualified portables stay preserved.
 The [resume](../.agent/HEX-RESUME.md) owns exact identities and qualification;
 the [specification](../SPECIFICATION.md) owns behavior.
 
 ## Select the current working source
 
-The October 11 presentation checkpoint is commit `791b00a`; `main` remains at
-`95ca630` as of this documentation refresh. Inspect local changes before switching
+The current batch is based on Git `38f1bc3`; its source changes are local and
+not yet committed. `main` remains at `95ca630`. Inspect local changes before switching
 branches. Preserve them without a reset, clean or automatic stash.
 
 For a clean checkout, update the existing presentation branch or create its
@@ -61,8 +63,14 @@ merely by cloning this repository.
 
 ## Run and test source
 
+For actual player sessions on this PC, always use the **H.E.X. desktop shortcut**,
+whose stable target is `C:/Users/sende/Documents/ChatGPT/H.E.X/PLAY-HEX.cmd`.
+The commands below are development/validation tools, not an alternative current
+playable selection. Root serializes engine work and qualifies a new portable
+before changing the default launch target.
+
 ```powershell
-.\hex.cmd play --fullbody-art --pixel-cast
+& 'C:\Users\sende\Documents\ChatGPT\H.E.X\PLAY-HEX.cmd' -Mode Source
 .\hex.cmd check
 .\hex.cmd assets
 .\hex.cmd list-tests
@@ -70,7 +78,7 @@ merely by cloning this repository.
 .\hex.cmd test -Tier Full
 ```
 
-The equivalent explicit source launcher is:
+On another PC, the equivalent checkout source launcher is:
 
 ```powershell
 pwsh -NoProfile -File scripts/run.ps1 --fullbody-art --pixel-cast
@@ -102,11 +110,22 @@ and receipts for fourteen days on success or failure, excluding isolated profile
 Run profiles alone after source identity is frozen and import is complete:
 
 ```powershell
-.\scripts\profile-gameplay.ps1 -OutputDirectory .godot/profile-new-run `
-  -Profiles low -Cases hearth_idle,garden_middle,paid_all_six_mantle,movement_boundary,paid_fire_bolt_close `
-  -SecondsPerCase 10 -FrameLimit 60 -Width 1280 -Height 720
+& 'C:\Users\sende\Documents\ChatGPT\H.E.X\PLAY-HEX.cmd' -Mode Profile -OutputDirectory .godot/profile-new-run
 .\scripts\test-gameplay-profile.ps1
 ```
+
+Prepared native diagnostics also use this desktop launcher with `-Mode Diagnostic`,
+an explicit contained `-DiagnosticRunner`, its reviewed `-DiagnosticRunnerSha256`,
+a fixed `-DiagnosticCase`, and a fresh `-OutputDirectory` in that experiment's
+`runs` directory. `-Inspect` validates the selection without launching. A timing
+runner can additionally require `-DiagnosticQualificationSha256` for its passed
+functional prerequisite. The runner owns isolated data, input pins and the engine
+guard; this route preserves the normal qualified play selection.
+
+Profile mode selects Low/60 FPS at 1280×720 and the Garden, sustained
+Fire Bolt and sustained all-six Mantle cases, 15 seconds each with all fixed-step
+attribution. It waits for a manual foreground Start and accepts no extra game
+arguments. Its result is a source diagnostic, not packaged-release FPS.
 
 Each output directory must be new. The wrapper validates the owned native window,
 physical client dimensions, foreground state and paid workload as well as source
@@ -114,9 +133,10 @@ identity before and after. Preserve a failed admission check as failed evidence.
 A configured 60 FPS limit and a 120 Hz
 simulation are separate from measured presentation intervals.
 
-For sustained ordinary casting, select `paid_fire_bolt_sustained` and
-`paid_all_six_mantle_sustained`; use `-SoakSeconds` for a longer workload.
-These cases do not refill resources or bypass cooldowns. Compare admitted
+The lower-level profiler supports longer soaks and alternative fixed cases for
+engineering comparisons; on this PC, expose any such experiment explicitly
+through the launcher before using it for a player/performance session. Sustained
+cases do not refill resources or bypass cooldowns. Compare admitted
 casts, active/idle intervals, visible-field draw costs, process/draw stages,
 streaming counters and actual simulated ticks. A finite twelve-shot burst
 followed by idle frames is not sustained pressure. Cold startup/travel rows

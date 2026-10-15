@@ -1,0 +1,27 @@
+# Paid-ground duplicate-membership experiment
+
+Prepared only. Canonical runtime remains p61-64590c45c7a5. The earlier source-reviewed experiment was never executed; its exact inputs remain under `preserved/`. This refresh changes the candidate's self-path only. All original canonical/asset pins still match except the expected current runtime-identity descriptor. The ten finite paid preparation methods are byte-equivalent to their preserved reference.
+
+The proposed shortcut reuses membership already prepared in the same synchronous draw. `occupied_cells()` already memoizes its union; the removed work is the second detached copy/intersection/sort, not the union computation. It applies only to the exact candidate script, exact ordinary court, non-base drawing, valid aggregate coverage and a texture filter already set to NEAREST. Direct, base, generic, missing-aggregate, derived-presenter/court and changed-filter callback paths keep predecessor work. No cross-call cache or authority state changes.
+
+Run only through the user's desktop front door. Root owns all engine execution. The launcher admits the exact SHA of `run-membership.ps1`; it accepts only Case, a fresh OutputDirectory and, for timing, QualificationSha256. The runner owns the engine lease, isolated APPDATA, strict parse/native logs, readback and final source/pointer checks. It never changes the qualified delivery selection. Desktop shortcut and wrapper identity are separate root route evidence.
+
+Initial cases and outputs:
+
+- `functional`: `.godot/iteration-20261014/performance-next/runs/verify-functional-a`
+- `forward`: `.godot/iteration-20261014/performance-next/runs/probe-forward-a`
+- `reverse`: `.godot/iteration-20261014/performance-next/runs/probe-reverse-a`
+
+Timing requires the exact successful functional receipt hash. The runner searches at most 64 direct `verify-functional-*` children of this experiment's runs directory, rejects reparse paths, requires a unique hash match and validates that receipt, raw logs, images, source pins and checked runner evidence. Both timing processes bind that same qualification. Existing paths are never overwritten; a reviewed retry uses a fresh suffix.
+
+Functional acceptance is all 13 cases / 28 native PNGs / 24 viewports created and freed. The original ten prepared compatibility cases retain direct mutations, same-count cast/product changes, origin/style changes and real changed-filter callback/reentry. Three extra untimed native cases use a source-guarded counter-only mirror: exact non-base must reuse once, standalone base and a derived presenter must recompute once. The mirror differs only by counters and an equivalent own-script path; it is never used for timing. Native Godot 4.7.1 must establish callback behavior; older engine documentation is not acceptance.
+
+Timing uses pristine exact Reference and Candidate scripts. Every timed callback records their actual script/court/filter/aggregate eligibility outside the interval, and requires a nonempty prepared material path. A TimedCourt subclass would deliberately fall back and is not used. Two processes reverse invocation order; each has 12 timed paid states × (4 retained warmups + 32 measured pairs), plus 10 phase/transform pixel-only cases. All 22 cases compare first/final native RGBA, cache counters, state, packet and events. Four finite ordinary paid routes include single Fire and reentry, 12 Fire admissions, 12 all-six Mantle attempts including natural refusals, and two friendly owners. No refills, timer overrides or manufactured phase are added.
+
+Only `draw_ground_in_view` is inside whole-draw elapsed clocks. This is main-thread elapsed submission, not thread CPU, GPU execution, presentation latency or FPS. World preparation, source checks, exact state/packet proof, image readback and branch observations are outside. Same presenter lifetimes retain their ordinary caches across cases; first samples are not universally cold. Actual order, warmups, measured samples, p95/max and outliers remain in raw receipts. Whole-draw benefit must be repeatable across both processes and order strata in dense Fire and Mantle, with no repeatable material negative-control regression. Mixed signs, tail regressions or only nested/isolated wins are grounds to withhold promotion. No speed claim follows from functional success.
+
+The host recently had about 420–455 MB free of 7.46 GB during a separate profile. Each runner records available/total OS memory before/after native execution. Helpers record engine allocator/render monitor endpoints only. No process-private sampler, per-frame memory observer, application closing or power-setting change is introduced. These are contextual endpoints, not an idle-machine or peak-memory guarantee.
+
+Bounds: headless strict parse 180 seconds; functional native 180 seconds externally / 120 seconds internally; each timing native 300 seconds externally / 240 seconds internally. Native runs are hidden offscreen diagnostics through the launcher. Fresh runner and helper receipts retain failures; a helper watchdog cannot interrupt one blocked synchronous call, so the external checked runner remains authoritative. All success and failure cleanup frees views, restores APPDATA/releases the lease, and rechecks input/qualification/runner/default-pointer bytes.
+
+Before execution, both peer source reviews and root's strict parser gate are required. This experiment does not authorize canonical promotion. Full-game Garden, input, network, saves and player-facing frame timing remain outside its scope.

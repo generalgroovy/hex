@@ -1,0 +1,135 @@
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory)][ValidateSet('functional-identity','functional-idle','functional-fire','functional-mantle','idle-forward','idle-reverse','fire-forward','fire-reverse','mantle-forward','mantle-reverse')][string]$Case,
+    [Parameter(Mandatory)][string]$OutputDirectory,
+    [string]$QualificationSha256 = ''
+)
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+$hexRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../..'))
+. (Join-Path $hexRoot 'scripts/flux2-common.ps1')
+function Assert-MovementPhysicalPath([string]$Path) {
+    $hexAncestor = [IO.Path]::GetFullPath($Path)
+    while ($hexAncestor) {
+        if ((Test-Path -LiteralPath $hexAncestor) -and ((Get-Item -LiteralPath $hexAncestor -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { throw 'Movement inputs and outputs must not traverse a reparse point.' }
+        $hexAncestor = [IO.Path]::GetDirectoryName($hexAncestor)
+    }
+}
+function Resolve-MovementSource([string]$ResourcePath) {
+    if (-not $ResourcePath.StartsWith('res://', [StringComparison]::Ordinal) -or $ResourcePath.Contains('..') -or $ResourcePath.Contains('\')) { throw 'Invalid movement source path.' }
+    $hexResolved = [IO.Path]::GetFullPath((Join-Path $hexRoot $ResourcePath.Substring(6)))
+    if (-not $hexResolved.StartsWith($hexRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw 'Movement source escapes the repository.' }
+    Assert-MovementPhysicalPath $hexResolved
+    if (-not (Test-Path -LiteralPath $hexResolved -PathType Leaf)) { throw "Movement source is absent: $ResourcePath" }
+    return $hexResolved
+}
+function Assert-MovementInventory($Actual, [hashtable]$Expected) {
+    if (@($Actual.PSObject.Properties).Count -ne $Expected.Count) { throw 'Movement receipt source inventory count differs.' }
+    foreach ($hexEntry in $Actual.PSObject.Properties) {
+        if (-not $Expected.ContainsKey($hexEntry.Name) -or $hexEntry.Value -isnot [string] -or $hexEntry.Value -cne $Expected[$hexEntry.Name]) { throw "Movement receipt source inventory differs: $($hexEntry.Name)" }
+        $hexVerifiedPath = Resolve-MovementSource $hexEntry.Name
+        if ((Get-FileHash -LiteralPath $hexVerifiedPath).Hash.ToLowerInvariant() -cne $hexEntry.Value) { throw "Movement input changed: $($hexEntry.Name)" }
+    }
+}
+$hexDriver = '.godot/iteration-20261014/movement-next/compare-ground-speed.gd'
+$hexDriverSha = '0c2812976adf58fa2e16f7f203bfcc4e5495a280cc20e2d324316bf650cc859b'
+$hexManifestResource = 'res://.godot/iteration-20261014/movement-next/manifest.json'
+$hexManifestSha = '70aa9b1a6224875bcb41ccc9c3b7ded18d2895203aad56d59bebdb9f03686ef5'
+$hexManifestPath = Resolve-MovementSource $hexManifestResource
+if ((Get-FileHash -LiteralPath $hexManifestPath).Hash.ToLowerInvariant() -cne $hexManifestSha) { throw 'Reviewed movement manifest changed.' }
+$hexManifest = Get-Content -LiteralPath $hexManifestPath -Raw | ConvertFrom-Json
+if ($hexManifest.schema -cne 'hex-ground-speed-source-manifest-v1') { throw 'Movement manifest schema differs.' }
+$hexExpectedSources = @{}
+foreach ($hexSource in $hexManifest.source_sha256.PSObject.Properties) {
+    if ($hexSource.Value -isnot [string] -or $hexSource.Value -cnotmatch '^[a-f0-9]{64}$' -or $hexExpectedSources.ContainsKey($hexSource.Name)) { throw 'Invalid or duplicate movement manifest entry.' }
+    $hexExpectedSources.Add($hexSource.Name, $hexSource.Value)
+}
+$hexExpectedSources.Add($hexManifestResource, $hexManifestSha)
+Assert-MovementInventory ([pscustomobject]$hexExpectedSources) $hexExpectedSources
+Assert-MovementPhysicalPath $PSCommandPath
+$hexRunnerSha = (Get-FileHash -LiteralPath $PSCommandPath).Hash.ToLowerInvariant()
+$hexRuns = Join-Path $PSScriptRoot 'runs'
+$hexOutput = [IO.Path]::GetFullPath($OutputDirectory)
+if ([IO.Path]::GetDirectoryName($hexOutput) -cne [IO.Path]::GetFullPath($hexRuns) -or [IO.Path]::GetFileName($hexOutput) -cnotmatch '^probe-[a-z0-9]+(?:-[a-z0-9]+)*$') { throw 'Fresh direct owned probe output required.' }
+Assert-MovementPhysicalPath $hexOutput
+if ((Get-FileHash -LiteralPath (Join-Path $hexRoot $hexDriver)).Hash.ToLowerInvariant() -cne $hexDriverSha) { throw 'Reviewed movement driver changed.' }
+$hexFunctional = $Case.StartsWith('functional-', [StringComparison]::Ordinal)
+$hexSelected = if ($hexFunctional) { $Case.Substring('functional-'.Length) } else { $Case.Split('-')[0] }
+$hexReverse = $Case.EndsWith('-reverse', [StringComparison]::Ordinal)
+$hexQualification = ''
+if ($hexFunctional) {
+    if ($QualificationSha256) { throw 'Functional gate takes no substituted qualification.' }
+} else {
+    if ($QualificationSha256 -cnotmatch '^[a-f0-9]{64}$') { throw 'Cost gate requires exact passing same-case functional receipt SHA.' }
+    $hexFound = @()
+    Assert-MovementPhysicalPath $hexRuns
+    if (-not (Test-Path -LiteralPath $hexRuns -PathType Container)) { throw 'Qualification runs directory is absent.' }
+    $hexChildren = @(Get-ChildItem -LiteralPath $hexRuns -Directory -Force)
+    if ($hexChildren.Count -gt 64) { throw 'Bounded direct child lookup exceeded; archive completed experiments first.' }
+    $hexReceipts = @()
+    foreach ($hexChild in $hexChildren) {
+        Assert-MovementPhysicalPath $hexChild.FullName
+        if ($hexChild.Name -cnotmatch '^probe-[a-z0-9]+(?:-[a-z0-9]+)*$') { continue }
+        $hexChildReceipt = Join-Path $hexChild.FullName 'receipt.json'
+        Assert-MovementPhysicalPath $hexChildReceipt
+        if (Test-Path -LiteralPath $hexChildReceipt -PathType Leaf) { $hexReceipts += $hexChildReceipt }
+    }
+    foreach ($hexReceiptPath in $hexReceipts) {
+        if ((Get-FileHash -LiteralPath $hexReceiptPath).Hash.ToLowerInvariant() -ceq $QualificationSha256) { $hexFound += $hexReceiptPath }
+    }
+    if ($hexFound.Count -ne 1) { throw 'Expected one exact local qualification receipt.' }
+    $hexQualification = $hexFound[0]
+    $hexQualified = Get-Content -LiteralPath $hexQualification -Raw | ConvertFrom-Json
+    if ($hexQualified.schema -cne 'hex-ground-speed-experiment-v1' -or $hexQualified.mode -cne 'functional' -or $hexQualified.case -cne $hexSelected -or $hexQualified.passed -isnot [bool] -or -not $hexQualified.passed -or $hexQualified.errors.Count -ne 0 -or $hexQualified.rows.Count -ne 240) { throw 'Functional qualification is failed, incomplete or different.' }
+    Assert-MovementInventory $hexQualified.source_hashes $hexExpectedSources
+    foreach ($hexPriorLog in @("$([IO.Path]::GetDirectoryName($hexQualification)).log.err", "$([IO.Path]::GetDirectoryName($hexQualification))-parse.log.err")) {
+        Assert-MovementPhysicalPath $hexPriorLog
+        if (-not (Test-Path -LiteralPath $hexPriorLog -PathType Leaf) -or (Get-Item -LiteralPath $hexPriorLog).Length -ne 0) { throw 'Functional qualification stderr is absent or nonempty.' }
+    }
+}
+foreach ($hexFresh in @($hexOutput, "$hexOutput.log", "$hexOutput.log.err", "$hexOutput-parse.log", "$hexOutput-parse.log.err", "$hexOutput-roaming")) {
+    Assert-MovementPhysicalPath $hexFresh
+    if (Test-Path -LiteralPath $hexFresh) { throw "Output is not fresh: $hexFresh" }
+}
+$hexHadRoaming = Test-Path Env:APPDATA
+$hexSavedRoaming = $env:APPDATA
+$hexLease = Enter-FluxEngineRun 'movement-ground-speed'
+try {
+    New-Item -ItemType Directory -Path $hexRuns -Force | Out-Null
+    $env:APPDATA = "$hexOutput-roaming"
+    New-Item -ItemType Directory -Path $env:APPDATA | Out-Null
+    Invoke-FluxGodotChecked (Get-FluxGodot) @('--headless','--path',$hexRoot,'--check-only','--script',"res://$hexDriver") "$hexOutput-parse.log" -RejectWarnings -TimeoutSeconds 180 | Out-Null
+    if ((Get-Item -LiteralPath "$hexOutput-parse.log.err").Length -ne 0) { throw 'Movement parse stderr must be empty.' }
+    $hexRelative = $hexOutput.Substring($hexRoot.Length + 1).Replace('\','/')
+    $hexArguments = @('--path',$hexRoot,'--audio-driver','Dummy','--script',"res://$hexDriver",'--','--no-lan-discovery',"--output=res://$hexRelative","--case=$hexSelected")
+    if ($hexFunctional) { $hexArguments = @('--headless') + $hexArguments + @('--functional-only') }
+    else {
+        $hexRelativeQualification = $hexQualification.Substring($hexRoot.Length + 1).Replace('\','/')
+        $hexArguments += @("--functional-receipt=res://$hexRelativeQualification", "--functional-sha256=$QualificationSha256")
+    }
+    if ($hexReverse) { $hexArguments += '--reverse-order' }
+    Invoke-FluxGodotChecked (Get-FluxGodot) $hexArguments "$hexOutput.log" -RejectWarnings -TimeoutSeconds 600 | Out-Null
+    if ((Get-Item -LiteralPath "$hexOutput.log.err").Length -ne 0) { throw 'Movement execution stderr must be empty.' }
+    $hexReceipt = Get-Content -LiteralPath "$hexOutput/receipt.json" -Raw | ConvertFrom-Json
+    $hexMode = if ($hexFunctional) { 'functional' } else { 'cost' }
+    if ($hexReceipt.schema -cne 'hex-ground-speed-experiment-v1' -or $hexReceipt.passed -isnot [bool] -or -not $hexReceipt.passed -or $hexReceipt.errors.Count -ne 0 -or $hexReceipt.mode -cne $hexMode -or $hexReceipt.case -cne $hexSelected -or $hexReceipt.reverse_order -cne $hexReverse) { throw 'Actual movement receipt failed or mismatched selection.' }
+    $hexExpectedWorlds = if ($hexSelected -ceq 'identity') { 0 } else { 3 }
+    if ($hexReceipt.cleanup.created -ne $hexExpectedWorlds -or $hexReceipt.cleanup.live -ne 0 -or $hexReceipt.cleanup.factory_live -cne $false) { throw 'World/factory ownership did not close.' }
+    if ($hexFunctional -and $hexReceipt.rows.Count -ne $(if ($hexSelected -ceq 'identity') { 300 } else { 240 })) { throw 'Functional case is incomplete.' }
+    if (-not $hexFunctional) {
+        if ($hexReceipt.qualification.sha256 -cne $QualificationSha256 -or $hexReceipt.qualification.path -cne "res://$hexRelativeQualification" -or $hexReceipt.rows[-1].tick -ne 240) { throw 'Cost qualification or completed horizon differs.' }
+    }
+    $hexReceiptSources = $hexExpectedSources.Clone()
+    if (-not $hexFunctional) { $hexReceiptSources.Add("res://$hexRelativeQualification", $QualificationSha256) }
+    Assert-MovementInventory $hexReceipt.source_hashes $hexReceiptSources
+    Write-Output "PASS: $Case; $($hexReceipt.checks) checks. Source-only isolated step diagnostic, no FPS claim."
+    Get-FileHash -LiteralPath "$hexOutput/receipt.json" -Algorithm SHA256
+} finally {
+    if ($hexHadRoaming) { $env:APPDATA = $hexSavedRoaming } else { Remove-Item Env:APPDATA -ErrorAction SilentlyContinue }
+    Exit-FluxEngineRun $hexLease
+    if ((Get-FileHash -LiteralPath $PSCommandPath).Hash.ToLowerInvariant() -cne $hexRunnerSha) { throw 'Movement runner changed during execution.' }
+    if ((Get-FileHash -LiteralPath $hexManifestPath).Hash.ToLowerInvariant() -cne $hexManifestSha) { throw 'Movement manifest changed during execution.' }
+    Assert-MovementInventory ([pscustomobject]$hexExpectedSources) $hexExpectedSources
+    if ((Get-FileHash -LiteralPath (Join-Path $hexRoot $hexDriver)).Hash.ToLowerInvariant() -cne $hexDriverSha) { throw 'Movement driver changed during execution.' }
+    if ($hexQualification -and (Get-FileHash -LiteralPath $hexQualification).Hash.ToLowerInvariant() -cne $QualificationSha256) { throw 'Functional qualification changed during execution.' }
+}

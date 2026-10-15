@@ -1,0 +1,58 @@
+{
+  "schema": "hex-foreground-setup-review-v1",
+  "status": "unmeasured_setup_expired",
+  "source_build_id": "p61-64590c45c7a5",
+  "scope": "Failed setup only; no TimedGame instantiation, paid gameplay, or performance data. Original failed raw evidence remains ignored at the recorded paths.",
+  "wrapper_status": "incomplete_or_failed",
+  "complete": false,
+  "manual_confirmation_received": false,
+  "armed": false,
+  "game_instantiation_started_utc_msec": null,
+  "wait_elapsed_ms": 300000,
+  "recorded_results": 0,
+  "appdata_restored": true,
+  "validation_errors": [
+    "Godot emitted a script/import/runtime error.",
+    "Complete metrics.json is missing; any partial report remains unqualified evidence.",
+    "Expected exactly one matching complete-report marker in the native log.",
+    "Manual measurement requires exactly one matching run/UTC arming marker.",
+    "Native stderr is missing or nonempty; inspect the preserved log.",
+    "Requested foreground arming did not complete.",
+    "Manual arming requires a recorded Start button event during setup; engine focus alone cannot arm the run.",
+    "Foreground arming lacks a finite nonnegative integer: manual_confirmation_utc_msec.",
+    "Foreground arming lacks a finite nonnegative integer: manual_confirmation_monotonic_usec.",
+    "Foreground arming lacks a finite nonnegative integer: armed_utc_msec.",
+    "Foreground arming lacks a finite nonnegative integer: armed_monotonic_usec.",
+    "Foreground arming lacks a finite nonnegative integer: game_instantiation_started_utc_msec.",
+    "Foreground arming lacks a finite nonnegative integer: game_instantiation_started_monotonic_usec.",
+    "Post-arm engine focus was lost or insufficiently observed, including between measured cases.",
+    "At least three owned-window samples spanning one second are required; shorter runs remain diagnostic."
+  ],
+  "raw_files": [
+    {
+      "path": ".godot/iteration-20261013/foreground-6459-desktop-a/summary.json",
+      "bytes": 1012619,
+      "sha256": "9abebd7aa68583c9b152ad2dcaa0c31bcac84a5b1ec0111ba639bd3dafd63962"
+    },
+    {
+      "path": ".godot/iteration-20261013/foreground-6459-desktop-a/metrics.json.partial.json",
+      "bytes": 278632,
+      "sha256": "344602a5d076b236e7cbec1465e84e14840c644f4a6bad367444ca924f7c1578"
+    },
+    {
+      "path": ".godot/iteration-20261013/foreground-6459-desktop-a/engine.log",
+      "bytes": 288,
+      "sha256": "7a0b1313fe78917e39c0168dbfcf48eaca1aef5e6bf0c990df729522f813a33d"
+    },
+    {
+      "path": ".godot/iteration-20261013/foreground-6459-desktop-a/engine.log.err",
+      "bytes": 366,
+      "sha256": "de706e9e141a786c3afdb001faf196c653aada423b5a8ba49b02d66eb35f8fb7"
+    },
+    {
+      "path": ".godot/iteration-20261013/foreground-6459-desktop-a/runtime-identity.input.json",
+      "bytes": 576,
+      "sha256": "29807c25db4c9559de98d1eb28d9ced592cddc9ac7ce983566b9a27136966bb9"
+    }
+  ]
+}

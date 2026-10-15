@@ -1,0 +1,66 @@
+"""Freeze this bounded experiment once; no canonical input mutation."""
+import hashlib
+import json
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+BASELINE = ROOT / ".godot/iteration-20261014/movement-next/manifest.json"
+BASELINE_SHA = "70aa9b1a6224875bcb41ccc9c3b7ded18d2895203aad56d59bebdb9f03686ef5"
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def step(source):
+    start = source.index("func step(")
+    end = source.find("\nfunc ", start + 1)
+    return source[start:end if end >= 0 else None].strip()
+
+
+assert sha(BASELINE) == BASELINE_SHA
+baseline = json.loads(BASELINE.read_text())
+pins = {p: h for p, h in baseline["source_sha256"].items() if not p.startswith("res://.godot/")}
+assert len(pins) == 331
+for path, digest in pins.items():
+    assert path.startswith("res://") and ".." not in path and "\\" not in path
+    assert sha(ROOT / path[6:]) == digest, path
+proof = json.loads((HERE / "source-transform.json").read_text())
+movement = ROOT / "src/sim/movement/movement_system.gd"
+world = ROOT / "src/sim/core/sim_world.gd"
+assert sha(movement) == proof["movement_source_sha256"]
+assert sha(world) == proof["world_source_sha256"]
+reference = (HERE / "reference_movement.gd").read_text()
+candidate = (HERE / "candidate_movement.gd").read_text()
+assert reference == movement.read_text().removeprefix("class_name MovementSystem\n")
+assert candidate.count(proof["candidate_insertion"]) == 1
+assert candidate.replace(proof["candidate_insertion"], "", 1) == reference
+counted = (HERE / "candidate_counted.gd").read_text()
+assert "\n".join(line for line in counted.split("\n") if "# STATIONARY_COUNTER" not in line) == candidate
+for side in ["reference", "candidate"]:
+    assert step((HERE / (side + "_world.gd")).read_text()).replace("Move.", "MovementSystem.") == step(world.read_text())
+for leaf, digest in proof["files"].items():
+    assert sha(HERE / leaf) == digest
+identity = json.loads((ROOT / "content/runtime/runtime_build_identity_v1.json").read_text())
+assert identity["build_id"] == "p61-64590c45c7a5" and identity["record_count"] == 3446
+assert identity["runtime_source_sha256"] == "64590c45c7a5aa4b1b6fc492a3a11b32a4a3429d49fa792a729cabdec838c212"
+for leaf in ["PLAN.md", "prepare-sources.py", "freeze-inputs.py", "compare-stationary.gd", "controls.gd",
+             "reference_movement.gd", "candidate_movement.gd", "candidate_counted.gd",
+             "reference_world.gd", "candidate_world.gd", "source-transform.json"]:
+    path = HERE / leaf
+    pins["res://" + path.relative_to(ROOT).as_posix()] = sha(path)
+payload = {
+    "schema": "hex.stationary-pins.v1",
+    "status": "Source checkpoint only; no native result or adoption inferred.",
+    "runtime_identity": {key: identity[key] for key in ["build_id", "runtime_source_sha256", "record_count"]},
+    "source_hashes": dict(sorted(pins.items())),
+    "provenance": {"inventory": "res://.godot/iteration-20261014/movement-next/manifest.json", "sha256": BASELINE_SHA,
+        "canonical_input_count": 331, "scope": "Same current canonical inputs; new stationary-only candidate, direct controls and short three-world proof. No previous CSE retained. Runner excluded to avoid a manifest cycle and pinned separately by desktop admission plus self-readback."},
+}
+encoded = (json.dumps(payload, indent=2) + "\n").encode()
+target = HERE / "source-pins.json"
+with target.open("xb") as handle:
+    handle.write(encoded)
+assert target.read_bytes() == encoded
+print(len(pins), sha(target))

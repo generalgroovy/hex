@@ -1,0 +1,159 @@
+extends "res://src/sim/core/sim_world.gd"
+const Move = preload("res://.godot/iteration-20261014/movement-next/candidate_movement.gd")
+
+func step(commands: Array[SimCommand]) -> bool:
+	var cumulative_epoch := 0
+	if profile_enabled and _profile_cumulative_enabled:
+		cumulative_epoch = _profile_cumulative_epoch
+		_profile_cumulative_attempted_steps += 1
+	if not is_valid():
+		return _profile_cumulative_failed(cumulative_epoch)
+	var profile_started := Time.get_ticks_usec() if profile_enabled else 0
+	if profile_enabled: profile_stages_us.clear()
+	if hex_court != null:
+		if not deposits.is_empty() or not reactions.is_empty() or not fields.is_empty():
+			last_error = "hex court rejects concurrent legacy chemistry state"
+			return _profile_cumulative_failed(cumulative_epoch)
+		hex_court.expire_at(tick)
+		hex_court.fracture_products(tick)
+		if not (collision is HexCollisionWorld):
+			collision = HexCollisionWorld.new(collision)
+			reaction_movement = collision
+		hex_court.collision = collision.base_world
+		if not collision.set_hex_surfaces(hex_court, tick):
+			last_error = "invalid trusted hex physics topology"
+			return _profile_cumulative_failed(cumulative_epoch)
+		hex_court.move_products(tick, collision)
+	profile_started = _profile_stage("surfaces_expiry", profile_started)
+	var ordered: Array[SimCommand] = commands.duplicate()
+	ordered.sort_custom(func(left: SimCommand, right: SimCommand) -> bool: return left.entity_id < right.entity_id)
+	var commands_by_entity: Dictionary[int, SimCommand] = {}
+	var hex_paths: Dictionary = {}
+	combat_events = []
+	for command: SimCommand in ordered:
+		if command.tick != tick:
+			last_error = "command tick %d does not match world tick %d" % [command.tick, tick]
+			return _profile_cumulative_failed(cumulative_epoch)
+		if commands_by_entity.has(command.entity_id):
+			last_error = "duplicate command for entity %d at tick %d" % [command.entity_id, tick]
+			return _profile_cumulative_failed(cumulative_epoch)
+		if player(command.entity_id) == null:
+			last_error = "unknown entity %d" % command.entity_id
+			return _profile_cumulative_failed(cumulative_epoch)
+		commands_by_entity[command.entity_id] = command
+	var ordered_players: Array[PlayerState] = players.duplicate()
+	ordered_players.sort_custom(func(left: PlayerState, right: PlayerState) -> bool: return left.entity_id < right.entity_id)
+	if hex_court == null:
+		reaction_movement.set_surfaces(ReactionMovementWorld.capture_surfaces(reactions, tick), tick)
+	var frostway_lanes := FrostwayFieldPolicy.capture(reactions, tick) if hex_court == null else PackedInt32Array()
+	var capacitor_lanes := CapacitorFieldPolicy.capture(reactions, tick) if hex_court == null else PackedInt32Array()
+	profile_started = _profile_stage("command_order", profile_started)
+	for state: PlayerState in ordered_players:
+		if hex_court != null:
+			hex_paths[state.entity_id] = {"point": Vector2i(state.position_x, state.position_y), "height": state.air_height}
+		if state.health <= 0:
+			_idle_defeated(state)
+			continue
+		var command: SimCommand = commands_by_entity.get(state.entity_id, null)
+		if command == null:
+			command = SimCommand.new(tick, state.entity_id, 0, 0, 0, 0, state.aim_x, state.aim_y)
+		state.aim_x = command.aim_x
+		state.aim_y = command.aim_y
+		state.primary_held = command.has_held(SimCommand.HELD_PRIMARY)
+		PlayerResourcesSystem.step(state, config)
+		SpellStatusPolicy.advance(state,config,combat_events)
+		if state.health <= 0: continue
+		reaction_movement.begin_actor(Vector2i(state.position_x, state.position_y), MovementTuning.PLAYER_RADIUS)
+		ReactionMovementWorld.clear_stale_contact(state, reaction_movement)
+		var point := Vector2i(state.position_x, state.position_y)
+		var ground_ratio := FrostwayFieldPolicy.movement_ratio(frostway_lanes, point, tick)
+		if ground_ratio == 1000:
+			ground_ratio = CapacitorFieldPolicy.movement_ratio(capacitor_lanes, point, tick)
+		var acceleration_ratio := 1000
+		var braking_ratio := 1000
+		if hex_court != null:
+			var modifiers := HexProductEffects.pre_movement(hex_court, state, tick, point, config)
+			ground_ratio = int(modifiers.ground_target_ratio)
+			acceleration_ratio = int(modifiers.acceleration_ratio)
+			braking_ratio = int(modifiers.braking_ratio)
+		ground_ratio = mini(ground_ratio,SpellStatusPolicy.movement_ratio(state))
+		Move.step(state, command, config, reaction_movement, ground_ratio, acceleration_ratio, braking_ratio)
+		var capacity := Vector2i.ZERO
+		var admission_offer: Dictionary = {}
+		if state.pending_cast_wire_id == 0 and (command.first_pressed_spell_slot() > 0 or command.first_held_spell_slot() > 0 or command.has_pressed(SimCommand.PRESSED_ACTIVE_1) or command.has_held(SimCommand.HELD_PRIMARY)):
+			admission_offer = _cast_admission_offer(state.entity_id)
+			capacity = admission_offer.capacity
+		var spawned: Variant = CombatSystem.step_player(
+			state, command, config, next_projectile_id, next_field_id, collision, combat_events, transition_policy, capacity.x, capacity.y, hex_court
+		)
+		if hex_court != null:
+			var released: bool = spawned is ProjectileState or (spawned is Dictionary and spawned.has("instant_cast_id")) or (spawned is Array and not spawned.is_empty())
+			if released:
+				var release_direction := Vector2i(state.pending_cast_aim_x, state.pending_cast_aim_y)
+				if spawned is Array and not spawned.is_empty():
+					var released_shot: ProjectileState = spawned[0]
+					release_direction = SimCommand._normalized_direction(released_shot.velocity_x, released_shot.velocity_y)
+				elif spawned is Dictionary:
+					for release_event: Dictionary in combat_events:
+						if int(release_event.get("source_cast_id", 0)) == next_projectile_id and release_event.has("aim_x"):
+							release_direction = Vector2i(int(release_event.aim_x), int(release_event.aim_y))
+				hex_court.bind_release(state.entity_id, next_projectile_id, Vector2i(state.position_x, state.position_y), release_direction, state.team_id)
+		if not admission_offer.is_empty() and state.pending_cast_wire_id != 0:
+			# The existing combat admission path has accepted and paid for the
+			# whole cast. Refusals never reach this commit, including Flux/control
+			# and cooldown failures. Commit before the next owner's admission.
+			_commit_trail_reclamation(state, admission_offer)
+		_store_combat_result(spawned)
+	profile_started = _profile_stage("movement_cast_admission", profile_started)
+	if hex_court != null:
+		HexProjectileCombat.resolve_sprays(self)
+		if not last_error.is_empty(): return _profile_cumulative_failed(cumulative_epoch)
+	else:
+		SprayInterception.resolve(self)
+		CombatSystem.resolve_instant_casts(players, config, collision, combat_events, reactions, tick)
+	profile_started = _profile_stage("spray_contacts", profile_started)
+	fields.sort_custom(func(left: FieldState, right: FieldState) -> bool: return left.entity_id < right.entity_id)
+	fields = CombatSystem.advance_fields(fields, players, config, combat_events)
+	projectiles.sort_custom(func(left: ProjectileState, right: ProjectileState) -> bool: return left.entity_id < right.entity_id)
+	if hex_court != null:
+		HexProjectileCombat.advance(self)
+		if not last_error.is_empty(): return _profile_cumulative_failed(cumulative_epoch)
+	else:
+		var owner_material_slots := _owner_material_slots()
+		projectiles = CombatSystem.advance_projectiles(projectiles, players, config, collision, combat_events, reactions, tick, _free_material_slots(), owner_material_slots)
+	profile_started = _profile_stage("projectile_contacts", profile_started)
+	_consume_projectile_terminals()
+	profile_started = _profile_stage("terminal_deposits", profile_started)
+	if hex_court == null:
+		next_reaction_id = ElementChemistrySystem.step(deposits, reactions, players, collision, config, tick, next_reaction_id, combat_events)
+	else:
+		# Mantle alone spends a bounded25% trail allocation from its paid stock.
+		HexTrailEmitter.emit(self,"mantle")
+		hex_court.apply_product_effects(players, tick, config, collision, combat_events, hex_paths)
+		profile_started = _profile_stage("actor_product_effects", profile_started)
+		hex_court.advance(players, hex_paths, tick, config, combat_events)
+		# The following sync already retires a defeated owner's unfired paid
+		# stock. Clear its matching actor reservation at this same boundary so
+		# every completed Hex step retains the strict snapshot relation.
+		for state: PlayerState in ordered_players:
+			if state.health <= 0:
+				state.pending_cast_wire_id = 0
+				state.pending_cast_ticks = 0
+		hex_court.sync_flights(players, projectiles)
+	profile_started = _profile_stage("chemistry_exposure", profile_started)
+	# Discharge follows combat/chemistry, using the current temporary cover view.
+	# One shared helper predicts this finite movement without any control reset.
+	if CapacitorFieldPolicy.discharge_due(capacitor_lanes, tick):
+		reaction_movement.set_surfaces(ReactionMovementWorld.capture_surfaces(reactions, tick), tick)
+		for state: PlayerState in ordered_players:
+			reaction_movement.begin_actor(Vector2i(state.position_x, state.position_y), MovementTuning.PLAYER_RADIUS)
+			CapacitorFieldPolicy.apply_discharge(capacitor_lanes, state, tick, reaction_movement, config)
+	if hex_court == null:
+		_exhaust_reacted_cast_payloads()
+	for state: PlayerState in ordered_players:
+		TrainingTargetSystemScript.step_target(state, config)
+	tick += 1
+	_profile_stage("finalize", profile_started)
+	if cumulative_epoch > 0:
+		_profile_cumulative_commit(cumulative_epoch)
+	return true

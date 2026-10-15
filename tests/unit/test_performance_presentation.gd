@@ -172,7 +172,20 @@ func _test_panel() -> void:
 	var viewport := Vector2(960, 540)
 	var rect: Rect2 = PerformancePanel.panel_rect(viewport)
 	check(Rect2(Vector2.ZERO, viewport).encloses(rect), "performance PerformancePanel fits smallest supported window")
-	for index: int in 2: check(rect.encloses(PerformancePanel.row_rect(viewport, index)), "controls remain inside compact PerformancePanel")
+	for physical: Vector2 in [Vector2(960, 540), Vector2(1280, 720)]:
+		for percent: int in [100, 125, 150, 200]:
+			var logical := physical / (float(percent) / 100.0)
+			var panel: Rect2 = PerformancePanel.panel_rect(logical)
+			check(Rect2(Vector2.ZERO, logical).encloses(panel), "all supported text sizes keep the display menu inside the window")
+			var previous := Rect2()
+			for index: int in PerformancePanel.ROW_COUNT:
+				var row: Rect2 = PerformancePanel.row_rect(logical, index)
+				check(panel.encloses(row) and row.size.y >= 21.0, "every display setting has a reachable bounded row")
+				check(index == 0 or not previous.intersects(row), "adjacent settings never overlap at large text size")
+				check(row.end.y < panel.end.y - 48.0, "setting rows leave room for hint and navigation footer")
+				previous = row
+			var camera_row: Rect2 = PerformancePanel.row_rect(logical, PerformancePanel.ROW_COUNT - 1)
+			check(ThemeDB.fallback_font.get_string_size("Camera look-ahead", HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x <= camera_row.size.x * 0.58 - 12.0, "camera label fits its declared column without shrinking text")
 	PerformancePanel.open()
 	var key := InputEventKey.new()
 	key.keycode = KEY_RIGHT
@@ -191,6 +204,26 @@ func _test_panel() -> void:
 	click.button_index = MOUSE_BUTTON_LEFT
 	click.position = PerformancePanel.row_rect(viewport, 0).get_center() + Vector2(70, 0)
 	equal(PerformancePanel.handle_input(click, viewport, prefs), {"render_quality": "standard"}, "pointer reaches quality control")
+	PerformancePanel.open()
+	key.keycode = KEY_DOWN
+	for _row: int in 5:
+		PerformancePanel.handle_input(key, viewport, prefs)
+	key.keycode = KEY_ENTER
+	var camera_change: Dictionary = PerformancePanel.handle_input(key, viewport, prefs)
+	equal(camera_change, {"camera_look_ahead": false}, "keyboard reaches and switches the independent camera row")
+	check(prefs.camera_look_ahead, "menu intent cannot mutate preferences before owner admission")
+	var candidate := prefs.to_dictionary()
+	candidate.merge(camera_change, true)
+	check(prefs.apply_dictionary(candidate), "real preference validation accepts the camera menu intent")
+	check(not prefs.camera_look_ahead and not prefs.reduced_motion, "camera can be off with ordinary effects")
+	prefs.reduced_motion = true
+	equal(PerformancePanel.handle_input(pad, viewport, prefs), {"camera_look_ahead": true}, "controller switches camera independently while effects are reduced")
+	click.position = PerformancePanel.row_rect(viewport, 5).get_center()
+	equal(PerformancePanel.handle_input(click, viewport, prefs), {"camera_look_ahead": true}, "pointer reaches the compact camera setting")
+	key.keycode = KEY_DOWN
+	PerformancePanel.handle_input(key, viewport, prefs)
+	key.keycode = KEY_RIGHT
+	equal(PerformancePanel.handle_input(key, viewport, prefs), {"render_quality": "standard"}, "selection wraps from the last setting to the first")
 	key.keycode = KEY_ESCAPE
 	equal(PerformancePanel.handle_input(key, viewport, prefs), {"close": true}, "Escape dismisses without changing settings")
 	PerformancePanel.close()

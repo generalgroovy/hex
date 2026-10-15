@@ -1,0 +1,333 @@
+"""Read two terminal Conflagration runs; never select from partial timings.
+
+This source-only analyzer writes one fresh owned JSON file. It does not run
+Godot, alter inputs, accept visual readability, or promote a candidate.
+"""
+import argparse
+import hashlib
+import json
+import math
+import re
+import statistics as stats
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+RUNS = HERE / "runs"
+PINS_SHA = "c655886839952c8876037d1e97fbec2b8728be180ee04b4ae1eabb8370329084"
+RUNNER_SHA = "dc2ecb23b80cc0638923d32e496178639b97bd999b40475de85b7940eeecd112"
+BEFORE_READBACK_SHA = "ce1fbdc87feddd2b92aec10f501ad1d73ecb33eba62632485a91478202a103da"
+# Root integrated the separately retained stationary branch after this trial.
+# Only that changed dependency is read from its exact archived predecessor.
+PREDECESSOR = {
+    "res://src/sim/movement/movement_system.gd":
+        ROOT / "docs/performance-evidence-20261014/stationary-ground/inputs/movement_system.before.gd.txt"
+}
+RECEIPTS = {
+    "probe-forward-c": "4e4709033740f45b9b5638918d7b6afa0c2c9fa69117c8f62a25d154688c5989",
+    "probe-reverse-c": "94a11838fceef302053a9361cdc177d850dae4c16151c24274721bb85a88138f",
+}
+LABELS = [
+    "six_active_low_normal", "six_active_low_reduced", "six_active_standard_normal",
+    "fire_active_low_normal", "mantle_active_low_normal", "one_product_low_normal",
+    "six_active_standard_reduced", "mixed_phase_low_normal", "partial_expiry_low_normal",
+    "last_active_low_normal", "active_with_flight_low_normal", "conflagration_forming_low_normal",
+    "one_cooling_low_normal", "two_conflagration_owners_low_normal", "expired_low_normal",
+]
+PRIMARY = LABELS[:2]
+NEGATIVE = LABELS[2:6]
+PAID = ["single_fire_then_natural_reentry", "twelve_fire", "twelve_all_six_mantle_attempts",
+        "two_fire_one_conflagration", "two_owners_two_fire_each"]
+checks = 0
+
+
+def check(value, label):
+    global checks
+    checks += 1
+    if not value:
+        raise AssertionError(label)
+
+
+def sha(path):
+    with path.open("rb") as stream:
+        return hashlib.file_digest(stream, "sha256").hexdigest()
+
+
+def physical(path):
+    for part in (path, *path.parents):
+        if part.exists():
+            check(not part.is_symlink() and not part.is_junction(), "No reparse source/output")
+    return path
+
+
+def load(path):
+    physical(path)
+    check(path.stat().st_size <= 32 * 1024 * 1024, "Bounded JSON")
+    result = json.loads(path.read_text(encoding="utf-8-sig"))
+    check(type(result) is dict, "JSON object")
+    return result
+
+
+def resource(value):
+    check(value.startswith("res://") and "\\" not in value, "Resource path")
+    parts = value[6:].split("/")
+    check(all(p and p not in (".", "..") for p in parts), "Contained resource components")
+    path = ROOT.joinpath(*parts)
+    physical(path)
+    check(path.resolve().is_relative_to(ROOT), "Resource stays in repository")
+    return path
+
+
+def method(source, name):
+    start = source.index("func " + name + "(")
+    end = source.find("\nfunc ", start + 1)
+    return source[start:end if end >= 0 else None].strip()
+
+
+def source_proof():
+    check(sha(HERE / "source-pins.json") == PINS_SHA, "Exact final source pins")
+    check(sha(HERE / "run-conflagration.ps1") == RUNNER_SHA, "Exact executed runner")
+    pins = load(HERE / "source-pins.json")
+    check(pins["schema"] == "hex.conflagration-pins.v1" and len(pins["source_hashes"]) == 338,
+          "338 exact inputs")
+    check(sha(HERE / "final-source-readback.json") == BEFORE_READBACK_SHA, "Exact pre-integration source readback")
+    readback = load(HERE / "final-source-readback.json")
+    check(readback["source_hashes"] == pins["source_hashes"] and readback["source_count"] == 338
+          and readback["source_pins_sha256"] == PINS_SHA and readback["passed"] is True
+          and readback["errors"] == [], "Complete pre-integration source inventory")
+    substitutions = []
+    total_bytes = 0
+    for path, digest in pins["source_hashes"].items():
+        current = resource(path)
+        origin = physical(PREDECESSOR.get(path, current))
+        check(sha(origin) == digest, "Exact frozen source/original " + path)
+        total_bytes += origin.stat().st_size
+        if origin != current:
+            substitutions.append({"resource": path, "archived_predecessor": str(origin),
+                                  "sha256": digest, "current_sha256_not_used": sha(current)})
+    check(total_bytes == readback["total_input_bytes"], "Full338 original input byte total")
+    proof = load(HERE / "source-transform.json")
+    before_path = HERE / "hex_court_presenter.before.gd"
+    check(sha(before_path) == proof["before_sha256"] ==
+          sha(ROOT / "src/presentation/hex_court_presenter.gd"), "Exact production predecessor")
+    before = before_path.read_text(encoding="utf-8")
+    body = method(before, "_draw_mirror_product")
+    newline = body.index("\n") + 1
+    body = body[:newline] + proof["guard"] + body[newline:]
+    for change in proof["replacements"]:
+        check(body.count(change["old"]) == 1, "Unique candidate transform")
+        body = body.replace(change["old"], change["new"])
+    header = (HERE / "candidate-header.txt").read_text(encoding="utf-8")
+    check(hashlib.sha256(header.encode()).hexdigest() == proof["header_sha256"], "Normalized header")
+    check((HERE / "candidate_court.gd").read_text(encoding="utf-8") == header + body + "\n\n",
+          "Full declared candidate reconstruction")
+    return pins, substitutions
+
+
+def admit(name, digest, pins):
+    """Both calls must finish before the caller computes any statistics."""
+    directory = physical(RUNS / name)
+    receipt_path = directory / "receipt.json"
+    check(sha(receipt_path) == digest, "Exact complete native receipt")
+    data = load(receipt_path)
+    runner = load(directory / "runner.json")
+    reverse = name.startswith("probe-reverse-")
+    check(data["schema"] == "hex.conflagration-decorations.v1" and data["passed"] is True
+          and data["errors"] == [] and data["failure_context"] == {} and data["checks"] == 7459,
+          "Complete helper pass; partial results refused")
+    check(data["reverse_order"] is reverse and [c["label"] for c in data["cases"]] == LABELS,
+          "All15 exact contexts in order")
+    check(data["cleanup"] == {"viewports_created": 2, "viewports_freed": 2, "live_viewports": 0},
+          "Actual owner cleanup")
+    check(runner["schema"] == "hex.conflagration-launcher-run.v1" and runner["passed"] is True
+          and runner["failure"] is None and runner["appdata_restored"] is True,
+          "Complete runner pass")
+    check(runner["case"] == ("reverse" if reverse else "forward")
+          and runner["helper_receipt_sha256"] == digest and runner["runner_sha256"] == RUNNER_SHA
+          and runner["source_pins_sha256"] == data["source_pins_sha256"] == PINS_SHA,
+          "Exact helper/runner/source linkage")
+    check(data["source_hashes"] == pins["source_hashes"], "Exact receipt input inventory")
+    check(runner["parse_timeout_seconds"] == 180 and runner["native_timeout_seconds"] == 300,
+          "Unchanged supervision")
+    expected_logs = [name + ".log", name + ".log.err", name + "-parse.log", name + "-parse.log.err"]
+    check(set(runner["logs"]) == {"../" + n for n in expected_logs}, "Four exact logs")
+    for filename in expected_logs:
+        path = physical(RUNS / filename)
+        check(sha(path) == runner["logs"]["../" + filename], "Raw log hash")
+        if filename.endswith(".err"):
+            check(path.stat().st_size == 0, "Empty strict stderr")
+        else:
+            text = path.read_text(encoding="utf-8-sig")
+            check(text and not re.search(r"^(?:WARNING|ERROR|FAIL):|SCRIPT ERROR|Parse Error|Compile Error|leaked",
+                                        text, re.M), "No raw engine diagnostics")
+    text = (RUNS / (name + ".log")).read_text(encoding="utf-8-sig")
+    check(text.splitlines().count("CONFLAGRATION_PASS checks=7459 cases=15") == 1, "One exact terminal marker")
+    controls = data["prepared_controls"]
+    check(controls["passed"] is True and controls["errors"] == [] and len(controls["cases"]) == 27,
+          "All prepared controls")
+    check(len({x["label"] for x in controls["cases"]}) == 27, "Unique prepared controls")
+    images = []
+    for number, case in enumerate(data["cases"]):
+        timed = number < 6
+        check(case["timed"] is timed and len(case["rows"]) == (32 if timed else 1)
+              and len(case["warmups"]) == (4 if timed else 0), "Exact warm/measured/pixel bounds")
+        check(case["physical_size"] == [640, 480] and case["zoom"] == .75
+              and case["render_tick"] == case["world_tick"] - 1, "Actual view/completed-tick boundary")
+        cohort = case["cohort"]
+        check(cohort["active_regions"] == cohort["retained_active"] + cohort["skipped_active"]
+              and cohort["skipped_crown_lines"] == 2 * cohort["skipped_active"]
+              and len(cohort["groups"]) == cohort["cells"], "Decorative count conservation")
+        check(sum(len(x["skipped_footprints"]) for x in cohort["groups"]) == cohort["skipped_active"]
+              and sum(len(x["retained_footprints"]) for x in cohort["groups"]) == cohort["retained_active"],
+              "Independent per-cell recount")
+        pixel = case["pixel_proof"]
+        check(pixel["outside_eligible_polygons"] == 0
+              and pixel["expected_skipped_marks"] == cohort["skipped_active"]
+              and pixel["exact_rgba"] is (cohort["skipped_active"] == 0)
+              and (pixel["changed_pixels"] > 0) is (cohort["skipped_active"] > 0), "Pixel ROI/negative contract")
+        if case["label"] in PRIMARY:
+            check([cohort[k] for k in ("active_products", "active_regions", "cells", "skipped_active", "retained_active")]
+                  == [6, 150, 25, 125, 25], "Actual150-to25 positive witness")
+        if case["label"] in NEGATIVE:
+            check(cohort["skipped_active"] == 0, "Unchanged timed control")
+        for index, row in enumerate(case["warmups"] + case["rows"]):
+            candidate_first = (index % 2 == 0) != reverse
+            expected = ["candidate", "plain"] if candidate_first else ["plain", "candidate"]
+            check(row["index"] == index and row["actual_order"] == expected, "Actual invocation order")
+            check(row["plain"]["mark_draws"] - row["candidate"]["mark_draws"] == cohort["skipped_active"],
+                  "Actual flame submissions")
+            for arm in ("plain", "candidate"):
+                item = row[arm]
+                check(all(item[k] is True for k in ("okay", "context_ok", "body_ok", "projectile_ok", "authority_unchanged")),
+                      "Ground/context/authority clauses")
+                check(type(item["ground_us"]) is int and item["ground_us"] >= 0, "Native elapsed scalar")
+                check(item["expanded_projectile_draws"] + item["court_projectile_draws"] == case["context"]["actual_projectile_count"],
+                      "Actual projectile dispatch count")
+                if case["label"] == "mantle_active_low_normal":
+                    check(item["expanded_projectile_draws"] > 0 and item["court_projectile_draws"] == 0,
+                          "Actual expanded Mantle context")
+            for phase in ("cache_before", "cache_after"):
+                check(row[phase]["plain"] == row[phase]["candidate"], "Boundary/cache counters equal")
+        check(set(case["images"]) == {"plain", "candidate"}, "Two declared images")
+        for arm, image in case["images"].items():
+            path = resource(image["path"])
+            check(path.parent == directory and path.name == case["label"] + "_" + arm + ".png", "Owned PNG name")
+            check(sha(path) == image["sha256"], "Actual PNG hash")
+            images.append(path)
+        check((case["images"]["plain"]["sha256"] == case["images"]["candidate"]["sha256"]) is pixel["exact_rgba"],
+              "PNG equality matches native pixels")
+    check(len(images) == len(set(images)) == len(list(directory.glob("*.png"))) == 30, "Exact30PNG inventory")
+    check([x["label"] for x in data["paid_sequences"]] == PAID, "Exact paid routes")
+    for seq in data["paid_sequences"]:
+        check(seq["fully_expired"] is True and seq["resource_refill"] is False
+              and seq["status_or_timer_injection"] is False, "Natural finite trajectory")
+        starts = [x for x in seq["outcomes"] if x["event"]["type"] == "cast_started"]
+        refused = [x for x in seq["outcomes"] if x["event"]["type"] == "cast_refused"]
+        check(len(starts) == seq["admitted"] and len(refused) == seq["refused"]
+              and len(starts) + len(refused) == seq["attempts"] == len(seq["outcomes"]), "Actual paid outcome recount")
+        if seq["label"] == PAID[2]:
+            check(seq["attempts"] == 12 and seq["admitted"] > 0 and seq["matter_paid"] > 0, "Actual Mantle attempts")
+        else:
+            expected = 12 if seq["label"] == PAID[1] else 4 if seq["label"] == PAID[4] else 2
+            check(seq["attempts"] == seq["admitted"] == expected and seq["refused"] == 0
+                  and seq["matter_paid"] == 600 * expected, "Exact Fire payment")
+    return data, runner
+
+
+def p95(values):
+    return sorted(values)[math.ceil(len(values) * .95) - 1]
+
+
+def describe(rows):
+    a = [r["plain"]["ground_us"] for r in rows]
+    b = [r["candidate"]["ground_us"] for r in rows]
+    savings = [x - y for x, y in zip(a, b)]
+    return {"count": len(rows), "plain_mean_us": stats.mean(a), "candidate_mean_us": stats.mean(b),
+            "mean_saving_us": stats.mean(savings), "mean_saving_percent": 100 * stats.mean(savings) / stats.mean(a),
+            "paired_median_saving_us": stats.median(savings), "plain_median_us": stats.median(a),
+            "candidate_median_us": stats.median(b), "plain_p95_us": p95(a), "candidate_p95_us": p95(b),
+            "p95_regression_percent": 100 * (p95(b) / p95(a) - 1), "plain_max_us": max(a), "candidate_max_us": max(b),
+            "largest_regressions": [{"index": r["index"], "order": r["actual_order"],
+                "plain_us": r["plain"]["ground_us"], "candidate_us": r["candidate"]["ground_us"],
+                "new_meshes": r["new_meshes"], "new_topologies": r["new_topologies"]}
+                for r in sorted(rows, key=lambda r: r["candidate"]["ground_us"] - r["plain"]["ground_us"], reverse=True)[:5]]}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", required=True, help="Fresh direct runs/review-*.json path")
+    args = parser.parse_args()
+    output = Path(args.output).absolute()
+    physical(output)
+    check(output.parent == RUNS and re.fullmatch(r"review-[a-z0-9]+(?:-[a-z0-9]+)*\.json", output.name)
+          and not output.exists(), "Fresh owned review output")
+    pins, substitutions = source_proof()
+    # Admission of BOTH complete runs precedes all timing calculations.
+    loaded = {name: admit(name, digest, pins) for name, digest in RECEIPTS.items()}
+    first, second = [loaded[n][0] for n in RECEIPTS]
+    check(first["prepared_controls"] == second["prepared_controls"] and first["paid_sequences"] == second["paid_sequences"],
+          "Cross-process controls and full paid trajectories identical")
+    for left, right in zip(first["cases"], second["cases"]):
+        for key in ("label", "profile", "reduced", "world_tick", "render_tick", "coverage", "matter_paid",
+                    "authority_hash", "cohort", "pixel_proof", "context", "focus", "jitter", "zoom"):
+            check(left[key] == right[key], "Cross-process exact snapshot metadata " + key)
+        for arm in ("plain", "candidate"):
+            check(left["images"][arm]["sha256"] == right["images"][arm]["sha256"], "Cross-process exact native PNG")
+    reports = {}
+    primary_gates = []
+    for name, (data, runner) in loaded.items():
+        rows = {}
+        for case in data["cases"][:6]:
+            measured = describe(case["rows"])
+            order = {arm: describe([r for r in case["rows"] if r["actual_order"][0] == arm]) for arm in ("plain", "candidate")}
+            rows[case["label"]] = {"measured": measured, "actual_order_strata": order,
+                "warmup_first_use": describe(case["warmups"]), "all_frames": describe(case["warmups"] + case["rows"]),
+                "first_pair": case["warmups"][0], "measured_new_meshes": sum(r["new_meshes"] for r in case["rows"]),
+                "measured_new_topologies": sum(r["new_topologies"] for r in case["rows"])}
+            if case["label"] in PRIMARY:
+                flags = {"mean_saving_at_least_10_percent": measured["mean_saving_percent"] >= 10,
+                         "mean_saving_at_least_500_us": measured["mean_saving_us"] >= 500,
+                         "positive_paired_median": measured["paired_median_saving_us"] > 0,
+                         "both_order_mean_savings_positive": all(x["mean_saving_us"] > 0 for x in order.values())}
+                primary_gates.append({"run": name, "label": case["label"], "flags": flags, "passed": all(flags.values())})
+        reports[name] = {"cases": rows, "helper_sha256": RECEIPTS[name], "runner_receipt_sha256": sha(RUNS / name / "runner.json"),
+                         "host_memory_before": runner["host_memory_before"], "host_memory_after": runner["host_memory_after"],
+                         "engine_memory": data["memory"]}
+    repeated_p95 = [label for label in LABELS[:6] if all(r["cases"][label]["all_frames"]["p95_regression_percent"] > 5 for r in reports.values())]
+    repeated_negative = [label for label in NEGATIVE if all(r["cases"][label]["measured"]["mean_saving_percent"] < -3
+                           and r["cases"][label]["measured"]["mean_saving_us"] < -100 for r in reports.values())]
+    cost_pass = all(x["passed"] for x in primary_gates) and not repeated_p95 and not repeated_negative
+    result = {"schema": "hex.conflagration-independent-readback.v1", "integrity_passed": True, "checks": checks,
+        "analyzer_sha256": sha(Path(__file__)), "source_pins_sha256": PINS_SHA, "runner_sha256": RUNNER_SHA,
+        "pre_integration_source_readback_sha256": BEFORE_READBACK_SHA,
+        "explicit_archived_source_substitutions": substitutions,
+        "complete_receipts": RECEIPTS, "helper_checks_total": sum(d[0]["checks"] for d in loaded.values()),
+        "measured_pairs": 384, "warmup_pairs": 48, "pixel_only_pairs": 18, "png_count": 60,
+        "statistics": "Microsecond native elapsed draw submission; arithmetic means, paired plain-minus-candidate median; nearest-rank p95. Each process/quality/reduced case kept separate. All-frame tails include four warmups plus32 measured. Order strata use actual callback order.",
+        "reports": reports, "primary_gates": primary_gates, "primary_passed": sum(x["passed"] for x in primary_gates),
+        "primary_required": len(primary_gates), "repeated_all_frame_p95_regressions_over_5_percent": repeated_p95,
+        "repeated_unchanged_mean_regressions_over_3_percent_and_100_us": repeated_negative,
+        "performance_gate_passed": cost_pass, "visual_acceptance": "Not established by this analyzer; root must assess actual threat-density images independently.",
+        "disposition": "ELIGIBLE FOR VISUAL REVIEW ONLY" if cost_pass else "WITHDRAW: predeclared performance gate fails",
+        "scope": "Exact frozen sources, receipts/logs/images and native counters are checked. Movement source is the explicitly pinned archived predecessor because root integrated a separate retained branch after this trial; the other337 inputs remain current. The immutable prior338-source readback is linked. Helper performed strict packet/event purity checks; raw packets are not present for independent recapture. No whole-game FPS, GPU/present, physical input or smoothness claim. No partial-run timing selection, post-hoc pooling rescue or extra native experiment."}
+    # Recheck raw inputs before committing a fresh review result.
+    for name, digest in RECEIPTS.items():
+        check(sha(RUNS / name / "receipt.json") == digest, "Final raw receipt unchanged")
+    check(sha(HERE / "source-pins.json") == PINS_SHA and sha(HERE / "run-conflagration.ps1") == RUNNER_SHA,
+          "Final source inventory and runner unchanged")
+    result["checks"] = checks
+    encoded = (json.dumps(result, indent=2) + "\n").encode("utf-8")
+    check(len(encoded) < 32 * 1024 * 1024, "Bounded final review")
+    result["checks"] = checks
+    encoded = (json.dumps(result, indent=2) + "\n").encode("utf-8")
+    with output.open("xb") as stream:
+        stream.write(encoded)
+    if output.read_bytes() != encoded:
+        raise RuntimeError("Review readback mismatch")
+    print(json.dumps({"output": str(output), "sha256": sha(output), "checks": checks,
+                      "disposition": result["disposition"], "primary_passed": result["primary_passed"],
+                      "repeated_negative": repeated_negative}))
+
+
+if __name__ == "__main__":
+    main()

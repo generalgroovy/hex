@@ -1,0 +1,106 @@
+"""Copy exact reviewed evidence to a fresh, inert archive. No engine or assets."""
+from pathlib import Path
+import argparse
+import hashlib
+import json
+import shutil
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+DEST = ROOT/'docs/performance-evidence-20261014/conflagration-decoration-coalescing'
+parser = argparse.ArgumentParser()
+parser.add_argument('--technical-review', required=True)
+parser.add_argument('--technical-analyzer', required=True)
+args = parser.parse_args()
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def inert(path):
+    return path.with_name(path.name+'.txt') if path.suffix in ('.gd', '.py', '.ps1') else path
+
+
+items = []
+
+
+def include(source, relative):
+    source = source.resolve()
+    assert source.is_file() and source.is_relative_to(ROOT)
+    relative = inert(Path(relative))
+    assert not relative.is_absolute() and '..' not in relative.parts
+    items.append((source, relative))
+
+
+pins_path = HERE/'source-pins.json'
+assert digest(pins_path) == 'c655886839952c8876037d1e97fbec2b8728be180ee04b4ae1eabb8370329084'
+pins = json.loads(pins_path.read_text())
+for resource, expected in pins['source_hashes'].items():
+    if resource.startswith('res://.godot/iteration-20261014/conflagration-next/'):
+        source = ROOT/resource[6:]
+        assert digest(source) == expected
+        include(source, Path('inputs')/source.name)
+for name in ('source-pins.json', 'run-conflagration.ps1', 'prepare-runner.py'):
+    include(HERE/name, Path('inputs')/name)
+for mode, expected in {
+    'forward-c':'4e4709033740f45b9b5638918d7b6afa0c2c9fa69117c8f62a25d154688c5989',
+    'reverse-c':'94a11838fceef302053a9361cdc177d850dae4c16151c24274721bb85a88138f',
+}.items():
+    folder = HERE/'runs'/('probe-'+mode)
+    assert digest(folder/'receipt.json') == expected
+    data = json.loads((folder/'receipt.json').read_text())
+    assert data['passed'] and not data['errors'] and len(data['cases']) == 15
+    for name in ('receipt.json','runner.json'):
+        include(folder/name, Path('runs')/mode/name)
+    for case in data['cases']:
+        for image in case['images'].values():
+            source = ROOT/image['path'][6:]
+            assert source.parent == folder and digest(source) == image['sha256']
+            include(source, Path('runs')/mode/source.name)
+    for suffix in ('.log','.log.err','-parse.log','-parse.log.err'):
+        source = HERE/'runs'/('probe-'+mode+suffix)
+        include(source, Path('runs')/(mode+suffix))
+for name in ('parse-generation-failed-a','body-context-failed-a','projectile-context-failed-b'):
+    folder = HERE/name
+    for source in sorted(folder.rglob('*')):
+        if source.is_file(): include(source, Path('failures')/name/source.relative_to(folder))
+for name in ('root-candidate-parse-a.log','root-candidate-parse-a.log.err','root-driver-parse-b.log','root-driver-parse-b.log.err'):
+    include(HERE/name, Path('parse')/name)
+include(HERE/'withdrawal-review.json', 'review.json')
+include(HERE/'final-source-readback.json', 'final-source-readback.json')
+include(HERE/'independent-gameplay-review-c.json', 'reviews/gameplay.json')
+technical = (ROOT/args.technical_review).resolve()
+analyzer = (ROOT/args.technical_analyzer).resolve()
+assert technical.is_relative_to(HERE) and analyzer.is_relative_to(HERE)
+include(technical, 'reviews/technical.json')
+include(analyzer, Path('tools')/analyzer.name)
+technical_record = json.loads(technical.read_text())
+for substitution in technical_record['explicit_archived_source_substitutions']:
+    source = Path(substitution['archived_predecessor'])
+    assert digest(source) == substitution['sha256'] == pins['source_hashes'][substitution['resource']]
+    include(source, Path('inputs')/source.name)
+for name in ('analyze-conflagration.py','archive-conflagration.py'):
+    include(HERE/name, Path('tools')/name)
+include(HERE/'archive-README.md', 'README.md')
+assert len({str(relative) for _,relative in items}) == len(items)
+assert not DEST.exists(), 'Archive already exists; preserve it.'
+DEST.mkdir(parents=True)
+rows = []
+for source, relative in items:
+    target = DEST/relative
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(source, target)
+    assert source.read_bytes() == target.read_bytes()
+    rows.append({'path':relative.as_posix(), 'source':source.relative_to(ROOT).as_posix(),
+                 'sha256':digest(target), 'bytes':target.stat().st_size})
+record = {'schema':'hex.conflagration-evidence-archive.v1','decision':'WITHDRAW',
+          'scope':'Exact complete pair, source proof and failed fixture evidence. Source scripts are inert filename copies; no runtime integration.',
+          'payload_count':len(rows),'payload_bytes':sum(x['bytes'] for x in rows),
+          'packaging':'Only .gd/.py/.ps1 filename suffixes gain .txt; payload bytes and original manifests remain exact.',
+          'payloads':rows}
+path = DEST/'manifest.json'
+path.write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8')
+assert json.loads(path.read_text()) == record
+assert not list(DEST.rglob('*.gd')) and not list(DEST.rglob('*.py'))
+print('archived',len(rows),record['payload_bytes'],'bytes; manifest',digest(path))

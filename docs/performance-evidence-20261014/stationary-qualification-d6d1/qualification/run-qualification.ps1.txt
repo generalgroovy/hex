@@ -1,0 +1,110 @@
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory)][ValidateSet('focused-movement','focused-rendering','full','package')][string]$Case,
+    [Parameter(Mandatory)][string]$OutputDirectory
+)
+# Draft until pins are generated after canonical integration. Desktop Diagnostic
+# invokes this fixed workflow; repository producers own their engine leases.
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+$hexRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../..'))
+$hexPinsPath = Join-Path $PSScriptRoot 'source-pins.json'
+$hexPinsSha = 'd005817977a72b2bb38355906dd6d4db4bd05ba66aab58aca006fe08c9f9867d'
+. (Join-Path $hexRoot 'scripts/flux2-common.ps1')
+. (Join-Path $hexRoot 'scripts/ci-focused-suites.ps1') | Out-Null
+function Assert-Qualification([bool]$Value,[string]$Message) { if (-not $Value) { throw $Message } }
+function Assert-Physical([string]$Path) {
+    $hexPart=[IO.Path]::GetFullPath($Path)
+    while($hexPart) {
+        if((Test-Path -LiteralPath $hexPart) -and ((Get-Item -LiteralPath $hexPart -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)) { throw 'Qualification rejects reparse paths.' }
+        $hexPart=[IO.Path]::GetDirectoryName($hexPart)
+    }
+}
+function Assert-Inputs {
+    Assert-Qualification ((Get-FluxFileSha256 $hexPinsPath) -ceq $hexPinsSha) 'Qualification pin inventory changed.'
+    foreach($hexEntry in $hexPins.sources.GetEnumerator()) {
+        Assert-Qualification ($hexEntry.Key -cmatch '^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$' -and $hexEntry.Key -notmatch '(^|/)\.\.?(/|$)') 'Unsafe source path.'
+        $hexPath=[IO.Path]::GetFullPath((Join-Path $hexRoot $hexEntry.Key)); Assert-Physical $hexPath
+        Assert-Qualification ($hexPath.StartsWith($hexRoot+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)) 'Source escapes repository.'
+        Assert-Qualification ((Get-FluxFileSha256 $hexPath) -ceq $hexEntry.Value) "Source differs: $($hexEntry.Key)"
+    }
+    & (Join-Path $hexRoot 'scripts/runtime-build-identity.ps1') -Mode Check
+    $hexActual=Get-Content -LiteralPath (Join-Path $hexRoot 'content/runtime/runtime_build_identity_v1.json') -Raw|ConvertFrom-Json
+    Assert-Qualification ($hexActual.build_id -ceq $hexPins.build_id -and $hexActual.runtime_source_sha256 -ceq $hexPins.runtime_source_sha256) 'Runtime identity differs.'
+}
+Assert-Physical $PSScriptRoot
+Assert-Qualification ((Get-FluxFileSha256 $hexPinsPath) -ceq $hexPinsSha) 'Final reviewed qualification pins required.'
+$hexPins=Get-Content -LiteralPath $hexPinsPath -Raw|ConvertFrom-Json -AsHashtable
+Assert-Qualification ($hexPins.schema -ceq 'hex.performance-qualification-pins.v1' -and $hexPins.sources.Count -gt 300) 'Wrong qualification inventory.'
+Assert-Inputs
+$hexRegistry=@(Get-HexRegisteredSuiteIds (Get-Content -LiteralPath (Join-Path $hexRoot 'tests/run_all.gd') -Raw))
+Assert-Qualification (($hexRegistry -join ',') -ceq ($hexPins.suite_ids -join ',') -and $hexRegistry.Count -eq $hexPins.registered_suites) 'Frozen registry IDs differ.'
+$hexOutput=[IO.Path]::GetFullPath($OutputDirectory); Assert-Physical $hexOutput
+Assert-Qualification ([IO.Path]::GetDirectoryName($hexOutput) -ceq (Join-Path $PSScriptRoot 'runs') -and [IO.Path]::GetFileName($hexOutput) -cmatch ('^'+[regex]::Escape($Case)+'-[a-z0-9]+(?:-[a-z0-9]+)*$')) 'Fresh case-qualified direct output child required.'
+Assert-Qualification (-not (Test-Path -LiteralPath $hexOutput)) 'Preserve existing qualification output.'
+$hexPointer=Join-Path $hexRoot 'docs/current-delivery.json'
+$hexPointerSha=Get-FluxFileSha256 $hexPointer
+$hexRunnerSha=Get-FluxFileSha256 $PSCommandPath
+$hexEngine=Get-FluxGodot; $hexEngineSha=Get-FluxFileSha256 $hexEngine
+$hexHadAppData=Test-Path Env:APPDATA; $hexSavedAppData=$env:APPDATA
+$hexPassed=$false; $hexFailure=$null; $hexProducer=$null
+$hexStarted=[DateTime]::UtcNow.ToString('o')
+New-Item -ItemType Directory -Path $hexOutput|Out-Null
+try {
+    if($Case -eq 'package') {
+        $hexRunId=[string]$hexPins.package_run_id
+        Assert-Qualification ($hexRunId -cmatch '^hex-performance-20261014-[a-z0-9-]+$') 'Fixed package run ID required.'
+        $hexBuild=Join-Path $hexRoot ('exports/'+$hexRunId)
+        Assert-Qualification (-not (Test-Path -LiteralPath $hexBuild)) 'Preserve existing package.'
+        & (Join-Path $hexRoot 'scripts/package-hex.ps1') -RunId $hexRunId -PixelCast
+        & (Join-Path $hexRoot 'scripts/verify-hex-portable.ps1') -BuildDir $hexBuild -ExpectedBuildId $hexPins.build_id -FallbackBuildDir (Join-Path $hexRoot 'exports/hex-depth-clarity-20261014-6459') -Standalone
+        & (Join-Path $hexRoot 'scripts/verify-terrain-pack.ps1') -PackPath (Join-Path $hexBuild 'windows/hex.pck') -OutputDirectory (Join-Path $hexOutput 'terrain')
+        $hexProducer=Join-Path $hexBuild 'receipt.json'
+        $hexPackage=Get-Content -LiteralPath $hexProducer -Raw|ConvertFrom-Json
+        Assert-Qualification ($hexPackage.status -ceq 'passed' -and $hexPackage.build_id -ceq $hexPins.build_id) 'Package producer did not qualify current identity.'
+    } else {
+        $hexProducer=Join-Path $hexOutput 'tests.json'
+        $hexRequested=@()
+        if($Case -eq 'full') {
+            & (Join-Path $hexRoot 'scripts/test.ps1') -Tier Full -ReceiptPath $hexProducer
+        } elseif($Case -eq 'focused-movement') {
+            $hexRequested=@('movement-hot-path','identity-perks','movement-response','movement-height','movement-float')
+            & (Join-Path $hexRoot 'scripts/test.ps1') -Tier Focused -Suite $hexRequested -ReceiptPath $hexProducer
+        } else {
+            $hexRequested=@('paid-field-rendering','element-garden-exhibition')
+            & (Join-Path $hexRoot 'scripts/test.ps1') -Tier Focused -Suite $hexRequested -ReceiptPath $hexProducer
+        }
+        $hexTest=Get-Content -LiteralPath $hexProducer -Raw|ConvertFrom-Json
+        Assert-Qualification ($hexTest.result -ceq 'passed' -and $hexTest.stderr_bytes -eq 0 -and $null -eq $hexTest.failure) 'Test producer did not pass cleanly.'
+        if($Case -eq 'full') {
+            Assert-Qualification ($hexTest.tier -ceq 'full' -and $hexTest.requested_suite_ids.Count -eq 0 -and $hexTest.executed.suite_count -eq $hexPins.registered_suites -and $hexTest.executed.suites.Count -eq $hexPins.suite_paths.Count) 'Full scope differs from frozen registry.'
+            Assert-Qualification ($hexTest.supervision.suite_timeout_seconds -eq 2700 -and $hexTest.supervision.import_timeout_seconds -eq 600 -and $hexTest.isolation.caller_appdata_restored -ceq $true) 'Full supervision/isolation differs.'
+            foreach($hexFlag in @('current_state_check','asset_inventory','doctor','import','post_import_identity_check','deterministic_suite_runner','boot_120_hz')) { Assert-Qualification ($hexTest.executed.$hexFlag -ceq $true) ('Full omitted gate: '+$hexFlag) }
+            for($hexIndex=0;$hexIndex -lt $hexPins.suite_paths.Count;$hexIndex++) {
+                $hexExpectedId=$hexPins.suite_ids[$hexIndex]
+                Assert-Qualification ($hexTest.executed.suites[$hexIndex].id -ceq $hexExpectedId -and $hexTest.executed.suites[$hexIndex].failures -eq 0) 'Full executed registry order or outcome differs.'
+            }
+        } else {
+            Assert-Qualification ($hexTest.logs.Count -eq 1 -and $hexTest.logs[0].path -cmatch '^\.godot/windows-tests/[0-9a-f]{32}/suite\.log$' -and $hexTest.logs[0].stderr_bytes -eq 0) 'Focused raw log inventory differs.'
+            $hexSuiteLog=Join-Path $hexRoot $hexTest.logs[0].path
+            Assert-Qualification ((Get-FluxFileSha256 $hexSuiteLog) -ceq $hexTest.logs[0].sha256 -and (Get-Item -LiteralPath "$hexSuiteLog.err").Length -eq 0) 'Focused raw log hashes/stderr differ.'
+            Assert-HexFocusedReceipt $hexTest $hexRequested $hexRegistry (Get-Content -LiteralPath $hexSuiteLog -Raw)
+        }
+    }
+    $hexPassed=$true
+} catch { $hexFailure=$_.Exception.Message }
+finally {
+    try {
+        Assert-Inputs
+        Assert-Qualification ((Get-FluxFileSha256 $hexPointer) -ceq $hexPointerSha -and (Get-FluxFileSha256 $PSCommandPath) -ceq $hexRunnerSha -and (Get-FluxFileSha256 $hexEngine) -ceq $hexEngineSha) 'Delivery pointer, runner or engine changed.'
+        Assert-Qualification ((Test-Path Env:APPDATA) -eq $hexHadAppData -and $env:APPDATA -ceq $hexSavedAppData) 'Producer did not restore APPDATA.'
+    } catch { $hexPassed=$false; $hexFailure=([string]$hexFailure+'; '+$_.Exception.Message).Trim(';',' ') }
+}
+$hexRecord=[ordered]@{schema='hex.performance-qualification-run.v1';passed=$hexPassed;case=$Case;failure=$hexFailure;started_utc=$hexStarted;ended_utc=[DateTime]::UtcNow.ToString('o');build_id=$hexPins.build_id;source_pins_sha256=$hexPinsSha;runner_sha256=$hexRunnerSha;engine_sha256=$hexEngineSha;default_pointer_sha256=$hexPointerSha;producer_path=$hexProducer;producer_sha256=$(if($hexProducer -and (Test-Path -LiteralPath $hexProducer -PathType Leaf)){Get-FluxFileSha256 $hexProducer}else{$null});scope='Fixed repository validation/package workflow entered through desktop Diagnostic. Producer receipts retain their own limits; no implicit default promotion or gameplay FPS acceptance.'}
+$hexRecordPath=Join-Path $hexOutput 'runner.json'
+$hexEncoded=($hexRecord|ConvertTo-Json -Depth 8)+"`n"
+$hexStream=[IO.File]::Open($hexRecordPath,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::None)
+try { $hexBytes=[Text.UTF8Encoding]::new($false).GetBytes($hexEncoded); $hexStream.Write($hexBytes,0,$hexBytes.Length) } finally { $hexStream.Dispose() }
+Assert-Qualification ([IO.File]::ReadAllText($hexRecordPath) -ceq $hexEncoded) 'Runner receipt readback differs.'
+if(-not $hexPassed) { throw "Qualification $Case failed: $hexFailure" }
+Write-Output "PASS qualification $Case for $($hexPins.build_id)"

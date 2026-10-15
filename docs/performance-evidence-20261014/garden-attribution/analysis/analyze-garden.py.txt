@@ -1,0 +1,220 @@
+"""Read exactly four completed Garden runs and write one fresh bounded review."""
+from pathlib import Path
+import argparse
+import hashlib
+import json
+import math
+import re
+import statistics
+
+BASE = Path(__file__).resolve().parent
+ROOT = BASE.parents[2]
+RUNS = BASE / "runs"
+PINS_SHA = "c6fc23afac0b0e31c8f554ae1f0359c3f8fb1b7a7a07d1b44a1578e8dc50e618"
+RUNNER_SHA = "f6f64879232ba01da3437bb386fb9a8e07213c6ae93bf653be3260a7f961fe2e"
+NAMES = ("normal-forward", "normal-reverse", "reduced-forward", "reduced-reverse")
+LABELS = ("published", "first_active_boundary", "first_expiry", "first_restart", "departed", "reentered")
+checks = 0
+
+
+def require(condition, message):
+    global checks
+    checks += 1
+    if not condition:
+        raise ValueError(message)
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def physical(path):
+    path = path.absolute()
+    for part in (path, *path.parents):
+        if part.exists():
+            require(not (part.lstat().st_file_attributes & 0x400), f"Reparse path: {part}")
+    return path
+
+
+def resource(value):
+    require(isinstance(value, str) and value.startswith("res://"), "Resource path")
+    relative = value[6:]
+    require("\\" not in relative and ":" not in relative and all(x not in ("", ".", "..") for x in relative.split("/")), "Contained resource")
+    path = physical(ROOT / relative)
+    require(path.is_file() and path.resolve().is_relative_to(ROOT), "Existing contained input")
+    return path
+
+
+def number(value, minimum=0):
+    require(type(value) in (int, float) and math.isfinite(value) and value >= minimum, "Finite numeric value")
+    return value
+
+
+def exact(value, expected):
+    return type(value) in (int, float) and math.isfinite(value) and value == expected
+
+
+def stats(values):
+    require(bool(values), "Nonempty statistic")
+    ordered = sorted(values)
+    require(all(type(x) in (int, float) and math.isfinite(x) for x in ordered), "Finite statistic")
+    return {"n": len(ordered), "mean": statistics.mean(ordered), "median": statistics.median(ordered),
+            "p95_nearest_rank": ordered[math.ceil(.95 * len(ordered)) - 1], "max": ordered[-1], "min": ordered[0]}
+
+
+def paired(rows, field, arms=False):
+    def value(row, arm):
+        return (row["arms"] if arms else row)[arm][field]
+    return {"plain_us": stats([value(r, "plain") for r in rows]),
+            "observed_us": stats([value(r, "observed") for r in rows]),
+            "paired_observer_overhead_us": stats([value(r, "observed") - value(r, "plain") for r in rows])}
+
+
+def order(row, index, reverse):
+    first = "observed" if (index % 2 == 0) != reverse else "plain"
+    require(row["actual_order"] == [first, "plain" if first == "observed" else "observed"], "Actual invocation order")
+
+
+def draw_summary(rows):
+    result = paired(rows, "whole_pipeline_us")
+    result["invocation_order"] = {role + "_first": paired([r for r in rows if r["actual_order"][0] == role], "whole_pipeline_us") for role in ("plain", "observed")}
+    result["nested_observed_us"] = {"projection": stats([r["observed"]["model"]["projection_us"] for r in rows])}
+    for key in ("retain_us", "prepare_us", "geometry_us", "build_us"):
+        result["nested_observed_us"][key.removesuffix("_us")] = stats([r["observed"]["surface"][key] for r in rows])
+    result["prepare_outside_geometry_us"] = stats([r["observed"]["surface"]["prepare_us"] - r["observed"]["surface"]["geometry_us"] for r in rows])
+    result["geometry_outside_build_us"] = stats([r["observed"]["surface"]["geometry_us"] - r["observed"]["surface"]["build_us"] for r in rows])
+    stage_names = sorted({k for r in rows for k in r["observed"]["existing_stages_us"]})
+    result["existing_inclusive_stages_us"] = {key: stats([r["observed"]["existing_stages_us"].get(key, 0) for r in rows]) for key in stage_names}
+    result["unassigned_outer_residual_us"] = stats([r["observed"]["whole_pipeline_us"] - r["observed"]["model"]["projection_us"] - r["observed"]["surface"]["retain_us"] - r["observed"]["surface"]["prepare_us"] for r in rows])
+    result["geometry_build_calls"] = sum(r["observed"]["surface"]["build_calls"] for r in rows)
+    result["geometry_validation_calls"] = sum(r["observed"]["surface"]["geometry_calls"] for r in rows)
+    result["new_geometry_builds"] = sum(r["cache_after"]["plain"]["surface"]["geometry_builds"] - r["cache_before"]["plain"]["surface"]["geometry_builds"] for r in rows)
+    result["new_plaque_builds"] = sum(r["cache_after"]["plain"]["plaque_builds"] - r["cache_before"]["plain"]["plaque_builds"] for r in rows)
+    return result
+
+
+def update_summary(rows):
+    result = paired(rows, "whole_exhibit_frame_us", True)
+    result["nested_step_us"] = stats([r["arms"]["observed"]["observer"]["step_us"] for r in rows])
+    result["nested_emission_us"] = stats([r["arms"]["observed"]["observer"]["emit_us"] for r in rows])
+    result["emission_calls"] = sum(r["arms"]["observed"]["observer"]["emit_calls"] for r in rows)
+    return result
+
+
+def arrival_summary(rows):
+    result = paired(rows, "whole_preparation_us", True)
+    result["nested_observed_emission_us"] = stats([r["arms"]["observed"]["model"]["emit_us"] for r in rows])
+    for key in ("retain_us", "prepare_us", "geometry_us", "build_us"):
+        result["nested_observed_" + key] = stats([r["arms"]["observed"]["surface"][key] for r in rows])
+    return result
+
+
+def load_run(directory, name, pins):
+    directory = physical(directory)
+    require(directory.parent == RUNS and re.fullmatch(re.escape(name) + r"-[a-z0-9]+(?:-[a-z0-9]+)*", directory.name), "Case-qualified direct run child")
+    rp, wp = physical(directory / "receipt.json"), physical(directory / "runner.json")
+    require(rp.stat().st_size <= 16 * 1024 * 1024, "Bounded receipt")
+    record, runner = json.loads(rp.read_text()), json.loads(wp.read_text())
+    reverse, reduced = name.endswith("reverse"), name.startswith("reduced")
+    require(record["schema"] == "hex.garden-attribution.v1" and record["passed"] is True and record["errors"] == [] and number(record["checks"]) > 0, "Helper terminal result")
+    require(type(record["reverse_order"]) is bool and record["reverse_order"] == reverse and type(record["reduced"]) is bool and record["reduced"] == reduced, "Exact case flags")
+    require(record["source_pins_sha256"] == PINS_SHA and record["source_hashes"] == pins["source_hashes"], "Exact helper inventory")
+    require(set(record["cleanup"]) == {"created", "freed", "live"} and all(exact(record["cleanup"][k], v) for k, v in (("created", 2), ("freed", 2), ("live", 0))), "Owner closure")
+    require(record["physical_size"] == [1280, 720] and record["focus"] == [4736, 1152] and record["world_scale"] == .75, "Declared view")
+    require(runner["schema"] == "hex.garden-launcher-run.v1" and runner["passed"] is True and runner["failure"] is None and runner["case"] == name and runner["appdata_restored"] is True, "Runner terminal result")
+    require(runner["runner_sha256"] == RUNNER_SHA and runner["source_pins_sha256"] == PINS_SHA and runner["helper_receipt_sha256"] == sha(rp), "Runner linkage")
+    required_logs = {"../" + directory.name + suffix for suffix in (".log", ".log.err", "-parse.log", "-parse.log.err")}
+    require(set(runner["logs"]) == required_logs, "Exact raw log inventory")
+    for relative, digest in runner["logs"].items():
+        path = physical(RUNS / Path(relative).name)
+        require(path.parent == RUNS and sha(path) == digest, "Raw log hash")
+        if path.suffix == ".err":
+            require(path.stat().st_size == 0, "Empty strict stderr")
+    require(f"GARDEN_ATTRIBUTION_PASS checks={record['checks']} cases=6" in (RUNS / (directory.name + ".log")).read_text(), "Raw success marker")
+    require(record["warmups"] == 4 and record["measured_pairs"] == 16 and [c["label"] for c in record["cases"]] == list(LABELS), "Six declared states")
+    summary = {}
+    for case in record["cases"]:
+        rows = case["rows"]
+        require(len(rows) == 20 and case["exact_rgba_first_and_final"] is True, "Complete paired draw rows")
+        for index, row in enumerate(rows):
+            require(exact(row["index"], index) and row["warmup"] is (index < 4), "Exact sample/warmup index")
+            order(row, index, reverse)
+            require(row["cache_before"]["plain"] == row["cache_before"]["observed"] and row["cache_after"]["plain"] == row["cache_after"]["observed"], "Cache parity")
+            a, b = row["plain"], row["observed"]
+            number(a["whole_pipeline_us"]); number(b["whole_pipeline_us"])
+            require(a["entries"] == b["entries"], "Projection row parity")
+            child, model = b["surface"], b["model"]
+            for value in (*child.values(), *model.values(), *b["existing_stages_us"].values()):
+                number(value)
+            require(child["build_us"] <= child["geometry_us"] <= child["prepare_us"] and child["prepare_us"] + child["retain_us"] + model["projection_us"] <= b["whole_pipeline_us"], "Nested elapsed containment")
+            require(exact(model["projection_calls"], 1) and child["prepare_calls"] == b["entries"], "Actual delegate counts")
+            if case["label"] == "departed":
+                for arm in ("plain", "observed"):
+                    d = row["cache_after"][arm]["surface"]
+                    require(exact(d["resident"], 0) and exact(d["retained_geometry"], 0), "Both departed geometry owners empty")
+        image = resource(case["image"]["path"])
+        require(image.parent == directory and image.name == case["label"] + ".png" and sha(image) == case["image"]["sha256"], "Exact PNG input")
+        summary[case["label"]] = {"measured": draw_summary(rows[4:]), "warmups": draw_summary(rows[:4]), "image_sha256": case["image"]["sha256"]}
+    require(len(record["arrival_rows"]) == 50, "Two complete staged arrivals")
+    for i, row in enumerate(record["arrival_rows"]):
+        index = i % 25
+        require(exact(row["index"], index) and row["label"] == ("initial" if i < 25 else "reentry"), "Arrival sequence")
+        order(row, index, reverse)
+        for arm in ("plain", "observed"):
+            require(exact(row["arms"][arm]["prepared"], index + 1), "One additional prepared entry")
+            number(row["arms"][arm]["whole_preparation_us"])
+        observed = row["arms"]["observed"]
+        require(exact(observed["model"]["emit_calls"], 1) and exact(observed["surface"]["prepare_calls"], 1), "One finite emission and visual preparation")
+        require(observed["model"]["emit_us"] <= observed["whole_preparation_us"], "Arrival emission containment")
+    groups = record["groups"]
+    require(3 < len(groups) <= 501 and sum(g["steps"] for g in groups) <= 1501, "Bounded actual evolution")
+    for index, row in enumerate(groups):
+        require(exact(row["index"], index) and exact(row["steps"], 1 if index == len(groups) - 1 else (0, 1, 8)[index % 3]), "Actual step/departure schedule")
+        order(row, index, reverse)
+        for arm in ("plain", "observed"):
+            require(row["arms"][arm]["okay"] is True and row["arms"][arm]["completed"] == row["steps"], "Every actual step completed")
+            number(row["arms"][arm]["whole_exhibit_frame_us"])
+        observation = row["arms"]["observed"]["observer"]
+        require(observation["step_calls"] == row["steps"] and observation["emit_calls"] <= 1 and observation["emit_us"] <= observation["step_us"] <= row["arms"]["observed"]["whole_exhibit_frame_us"], "Update count and nested clocks")
+    updates = {str(n) + "_steps": update_summary([g for g in groups[:-1] if g["steps"] == n]) for n in (0, 1, 8)}
+    return record, {"receipt_sha256": sha(rp), "runner_sha256": sha(wp), "helper_checks": record["checks"], "draw": summary,
+                    "arrival": {label: arrival_summary([r for r in record["arrival_rows"] if r["label"] == label]) for label in ("initial", "reentry")},
+                    "evolution": updates, "evolution_steps": sum(g["steps"] for g in groups[:-1]), "departure": groups[-1],
+                    "host_memory_before": runner["host_memory_before"], "host_memory_after": runner["host_memory_after"], "engine_memory": record["memory"]}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    for name in NAMES:
+        parser.add_argument("--" + name, required=True, type=Path)
+    parser.add_argument("--output", required=True, type=Path)
+    args = parser.parse_args()
+    output = physical(args.output)
+    require(output.parent == RUNS and output.suffix == ".json" and not output.exists(), "Fresh contained review output")
+    pins_path = BASE / "source-pins.json"
+    require(sha(pins_path) == PINS_SHA and sha(BASE / "run-garden.ps1") == RUNNER_SHA, "Frozen reviewed launcher inputs")
+    pins = json.loads(pins_path.read_text())
+    require(len(pins["source_hashes"]) == 330 and pins["runtime_identity"]["build_id"] == "p61-64590c45c7a5", "Pinned current scope")
+    for path, digest in pins["source_hashes"].items():
+        require(sha(resource(path)) == digest, "Current input hash: " + path)
+    records, summaries = {}, {}
+    for name in NAMES:
+        records[name], summaries[name] = load_run(getattr(args, name.replace("-", "_")), name, pins)
+    states = [[c["state"] for c in records[n]["cases"]] for n in NAMES]
+    require(all(value == states[0] for value in states), "All four exact authority state sequences")
+    schedules = [[(g["index"], g["steps"], g.get("transitions")) for g in records[n]["groups"]] for n in NAMES]
+    require(all(value == schedules[0] for value in schedules), "All four exact phase/update sequences")
+    image_pairs = {effect: all(a["image"]["sha256"] == b["image"]["sha256"] for a, b in zip(records[effect + "-forward"]["cases"], records[effect + "-reverse"]["cases"])) for effect in ("normal", "reduced")}
+    require(all(image_pairs.values()), "Same-effect opposite-order representative PNGs")
+    result = {"schema": "hex.garden-attribution-readback.v1", "passed": True, "checks": checks, "analyzer_sha256": sha(Path(__file__)),
+              "source_pins_sha256": PINS_SHA, "same_effect_opposite_order_png_hashes_equal": image_pairs, "runs": summaries,
+              "scope": "Four current native attribution runs, not an optimization or FPS/GPU/foreground qualification. Projection is a sibling of presenter work. Geometry and builds are nested inside prepare; existing inclusive stages must not be added again. Residuals remain unlabeled. Observer-minus-plain includes existing profiling and added wrappers; order/phase-correlated samples and proof work between groups limit extrapolation. Engine and host endpoints are not process peaks or idle-machine evidence."}
+    encoded = json.dumps(result, indent=2) + "\n"
+    with output.open("x", encoding="utf-8", newline="\n") as handle:
+        handle.write(encoded)
+    require(output.read_text() == encoded, "Review readback")
+    print(json.dumps({"output": str(output), "sha256": sha(output), "checks": checks, "passed": True}))
+
+
+if __name__ == "__main__":
+    main()

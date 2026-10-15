@@ -8,6 +8,7 @@ const MapLibrary = preload("res://src/presentation/pixel_map_library.gd")
 const GroundStyle = preload("res://art_batches/wellspring_style_v2/ground_style.gd")
 const HexTerrain = preload("res://src/presentation/hex_environment_layout.gd")
 const WallSkin = preload("res://src/presentation/practice_wall_skin.gd")
+const ArchitectureSkin = preload("res://src/presentation/wellspring_architecture_skin.gd")
 const ROOF_SKIN_VERSION := "slate-roofs-1"
 const ROOF_CACHE_MAX_BYTES := 1024 * 1024
 const PRACTICE_CACHE_MAX_BYTES := 3 * 1024 * 1024
@@ -263,12 +264,14 @@ func configure(layout: SanctumCampusLayout, path: String = PATH, use_prebaked: b
 			practice_skins[int(building["id"])] = ImageTexture.create_from_image(skin)
 			practice_skin_bytes += skin.get_data().size()
 		else:
-			bounds.size.y -= minf(float(data["camera"]["maximum_facade_pixels"]), bounds.size.y * 0.42)
+			var architecture := ArchitectureSkin.supports(building)
+			if not architecture:
+				bounds.size.y -= minf(float(data["camera"]["maximum_facade_pixels"]), bounds.size.y * 0.42)
 			var size := Vector2i(bounds.size.ceil())
 			if roof_skin_bytes + size.x * size.y * 4 >= ROOF_CACHE_MAX_BYTES:
 				ground = null
 				return _fail("Slate roofs exceed their setup-only texture budget")
-			var skin := compose_roof_skin(size, tiles[10])
+			var skin: Image = ArchitectureSkin.compose_building(building, tiles[10], tiles[11]) if architecture else compose_roof_skin(size, tiles[10])
 			if skin == null:
 				ground = null
 				return _fail("Slate roofs require bounded footprints and the validated slate tile")
@@ -280,7 +283,7 @@ func configure(layout: SanctumCampusLayout, path: String = PATH, use_prebaked: b
 	# the player to collide with geometry that the simulation does not own.
 	ground_generation_ms = Time.get_ticks_msec() - started
 	# Decoded pixel hashes also work in exported builds where PNGs are remapped.
-	content_hash = (source + layout.content_hash + pixel_map.content_hash + ground_style.content_hash + HexTerrain.VERSION + WallSkin.VERSION + ROOF_SKIN_VERSION).sha256_text()
+	content_hash = (source + layout.content_hash + pixel_map.content_hash + ground_style.content_hash + HexTerrain.VERSION + WallSkin.VERSION + ROOF_SKIN_VERSION + ArchitectureSkin.VERSION).sha256_text()
 	bake_signature = CanonicalContent.sha256({"map": CanonicalContent.sha256(layout.data), "art": source.sha256_text(), "base": pixel_map.content_hash, "style": ground_style.content_hash, "composer": HexTerrain.VERSION, "sampler": GROUND_SAMPLER_VERSION, "baker": TerrainStream.VERSION})
 	if ground == null and use_prebaked:
 		if not ResourceLoader.exists(TerrainStream.MANIFEST): return _fail("Prepared campus terrain is missing; run scripts/bake_wellspring_terrain.gd")
@@ -666,6 +669,9 @@ func draw_building(canvas: CanvasItem, building: Dictionary, _focus: Vector2) ->
 		if skin != null:
 			canvas.draw_texture(skin, bounds.position)
 		return
+	if ArchitectureSkin.supports(building):
+		_draw_tall_architecture(canvas, building, bounds)
+		return
 	var facade_height := minf(float(data["camera"]["maximum_facade_pixels"]), bounds.size.y * 0.42)
 	var facade := Rect2(bounds.position.x, bounds.end.y - facade_height, bounds.size.x, facade_height)
 	var roof := Rect2(bounds.position, Vector2(bounds.size.x, bounds.size.y - facade_height))
@@ -688,6 +694,23 @@ func draw_building(canvas: CanvasItem, building: Dictionary, _focus: Vector2) ->
 	draw_prop(canvas, "doorway", Vector2(bounds.get_center().x, bounds.end.y + 4), minf(110, bounds.size.y * 0.8))
 	for side: float in [-1.0, 1.0]:
 		draw_prop(canvas, "planter", Vector2(bounds.get_center().x + side * 82, bounds.end.y + 10), 45)
+	canvas.draw_rect(bounds, Color(0.82, 0.71, 0.48, 0.3), false, 1)
+
+
+func _draw_tall_architecture(canvas: CanvasItem, building: Dictionary, bounds: Rect2) -> void:
+	var skin: Texture2D = roof_skins.get(int(building.id))
+	if skin == null: return
+	var old_face_height := minf(float(data.camera.maximum_facade_pixels), bounds.size.y * 0.42)
+	var old_roof := Rect2(bounds.position, Vector2(bounds.size.x, bounds.size.y - old_face_height))
+	# Keep the original external shadow and roof-outline fringe. The new opaque
+	# image overwrites only the interior, then the same exterior props paint once.
+	canvas.draw_rect(Rect2(bounds.position + Vector2(5, 9), bounds.size), Color(0.06, 0.09, 0.07, 0.5))
+	canvas.draw_rect(old_roof, Color(0.20, 0.15, 0.11, 1.0), false, 5)
+	canvas.draw_line(old_roof.position + Vector2(0, old_roof.size.y * 0.32), old_roof.position + Vector2(old_roof.size.x, old_roof.size.y * 0.32), Color("aa8650"), 4)
+	canvas.draw_line(Vector2(bounds.position.x, old_roof.end.y), Vector2(bounds.end.x, old_roof.end.y), Color("4b3025"), 6)
+	canvas.draw_texture(skin, bounds.position)
+	draw_prop(canvas, "doorway", Vector2(bounds.get_center().x, bounds.end.y + 4), minf(110, bounds.size.y * 0.8))
+	for side: float in [-1.0, 1.0]: draw_prop(canvas, "planter", Vector2(bounds.get_center().x + side * 82, bounds.end.y + 10), 45)
 	canvas.draw_rect(bounds, Color(0.82, 0.71, 0.48, 0.3), false, 1)
 
 

@@ -3,7 +3,7 @@ extends RefCounted
 
 const LIMITS := [60, 120, 0]
 const TEXT_SIZES := [100, 125, 150, 200]
-const ROW_COUNT := 5
+const ROW_COUNT := 6
 var is_open := false
 var selected := 0
 var message := ""
@@ -39,6 +39,8 @@ static func changed_value(index: int, direction: int, preferences: PlayerPrefere
 		return {"movement_deadzone_percent":clampi(preferences.movement_deadzone_percent+direction*5,5,50)}
 	if index == 4:
 		return {"aim_deadzone_percent":clampi(preferences.aim_deadzone_percent+direction*5,5,50)}
+	if index == 5:
+		return {"camera_look_ahead": not preferences.camera_look_ahead}
 	return {}
 
 func handle_input(event: InputEvent, viewport: Vector2, preferences: PlayerPreferences) -> Dictionary:
@@ -83,13 +85,13 @@ func draw(canvas: CanvasItem, font: Font, viewport: Vector2, preferences: Player
 	canvas.draw_rect(rect, Color("6a9394"), false, 1)
 	canvas.draw_string(font, rect.position + Vector2(16, 28), "DISPLAY & INPUT", HORIZONTAL_ALIGNMENT_LEFT, rect.size.x-140, 18, ink)
 	canvas.draw_string(font, rect.position + Vector2(rect.size.x-116, 28), "Esc / B: close", HORIZONTAL_ALIGNMENT_LEFT, 104, 12, muted)
-	var values := ["Low" if preferences.render_quality == "low" else "Standard", "Unlimited" if preferences.frame_limit == 0 else "%d FPS" % preferences.frame_limit,"%d%%" % preferences.ui_text_percent,"%d%%" % preferences.movement_deadzone_percent,"%d%%" % preferences.aim_deadzone_percent]
+	var values := ["Low" if preferences.render_quality == "low" else "Standard", "Unlimited" if preferences.frame_limit == 0 else "%d FPS" % preferences.frame_limit,"%d%%" % preferences.ui_text_percent,"%d%%" % preferences.movement_deadzone_percent,"%d%%" % preferences.aim_deadzone_percent,"On" if preferences.camera_look_ahead else "Off"]
 	for index: int in ROW_COUNT:
 		var row := row_rect(viewport, index)
 		var baseline := minf(24,row.size.y-5)
 		if selected == index: canvas.draw_rect(row, Color("305157"))
-		canvas.draw_string(font, row.position + Vector2(10, baseline), ["Visual detail", "Frame limit", "Text size", "Movement deadzone", "Aim deadzone"][index], HORIZONTAL_ALIGNMENT_LEFT, row.size.x*0.58-12, 14, ink)
+		canvas.draw_string(font, row.position + Vector2(10, baseline), ["Visual detail", "Frame limit", "Text size", "Movement deadzone", "Aim deadzone", "Camera look-ahead"][index], HORIZONTAL_ALIGNMENT_LEFT, row.size.x*0.58-12, 14, ink)
 		canvas.draw_string(font, row.position + Vector2(row.size.x*0.58, baseline), "<  %s  >" % values[index], HORIZONTAL_ALIGNMENT_CENTER, row.size.x*0.42-6, 14, ink)
-	var hints := ["Low reduces decoration; danger stays complete.","A target cap, not measured frame speed.","Larger text reflows spell setup and controls.","Left stick: higher values ignore more drift.","Right stick: independent of movement drift."]
+	var hints := ["Low reduces decoration; danger stays complete.","A target cap, not measured frame speed.","Larger text reflows spell setup and controls.","Left stick: higher values ignore more drift.","Right stick: independent of movement drift.","Look and movement gently shift the view."]
 	canvas.draw_string(font,rect.position+Vector2(16,rect.size.y-36),hints[selected],HORIZONTAL_ALIGNMENT_LEFT,rect.size.x-32,12,muted)
 	canvas.draw_string(font, rect.position + Vector2(16, rect.size.y-14), message if not message.is_empty() else "Up / Down select; Left / Right / A change", HORIZONTAL_ALIGNMENT_LEFT, rect.size.x-32, 12, muted)

@@ -312,6 +312,7 @@ var keyboard_bindings: Dictionary[StringName, int] = {}
 var mouse_bindings: Dictionary[StringName, int] = {}
 var controller_bindings: Dictionary = {}
 var reduced_motion: bool = false
+var camera_look_ahead: bool = true
 var direction_indicator: bool = true
 var high_contrast: bool = false
 var sound_volume_percent: int = 30
@@ -341,6 +342,7 @@ func reset_to_defaults() -> void:
 	mouse_bindings = DEFAULT_MOUSE_BINDINGS.duplicate()
 	controller_bindings = DEFAULT_CONTROLLER_BINDINGS.duplicate(true)
 	reduced_motion = false
+	camera_look_ahead = true
 	direction_indicator = true
 	high_contrast = false
 	sound_volume_percent = 30
@@ -426,6 +428,12 @@ func apply_dictionary(data: Dictionary) -> bool:
 			last_error = "reduced_motion must be a boolean"
 			return false
 		requested_reduced_motion = raw_reduced_motion
+	# Preserve historical framing when the independent camera preference is absent.
+	# Explicit choices remain independent from reduced effects after migration.
+	var requested_camera_look_ahead: Variant = data.get("camera_look_ahead", not requested_reduced_motion)
+	if not requested_camera_look_ahead is bool:
+		last_error = "camera_look_ahead must be a boolean"
+		return false
 	var requested_high_contrast: bool = false
 	if requested_schema >= 8:
 		var raw_high_contrast: Variant = data.get("high_contrast", false)
@@ -697,6 +705,7 @@ func apply_dictionary(data: Dictionary) -> bool:
 	mouse_bindings = requested_mouse_bindings
 	controller_bindings = requested_controller_bindings
 	reduced_motion = requested_reduced_motion
+	camera_look_ahead = requested_camera_look_ahead
 	direction_indicator = requested_direction_indicator
 	high_contrast = requested_high_contrast
 	sound_volume_percent = requested_sound_volume
@@ -728,6 +737,7 @@ func to_dictionary() -> Dictionary:
 		"mouse_bindings": mouse_bindings,
 		"controller_bindings": controller_bindings,
 		"reduced_motion": reduced_motion,
+		"camera_look_ahead": camera_look_ahead,
 		"direction_indicator": direction_indicator,
 		"high_contrast": high_contrast,
 		"sound_volume_percent": sound_volume_percent,

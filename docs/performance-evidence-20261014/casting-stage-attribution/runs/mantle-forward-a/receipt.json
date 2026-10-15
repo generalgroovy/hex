@@ -1,0 +1,4696 @@
+{
+	"admissions": 1,
+	"boundaries": [
+		{
+			"actor_sha256": "49485c25fb479db138824a12e5a366d926972ff1c684044c2d7debbbefd0ef86",
+			"label": "entry",
+			"matter_paid": 0,
+			"packet_sha256": "673ecfb048776ded14afe775d084578ca48aa1b098dfad930f4d80207b09cdf9",
+			"state_hash": "f3a43045598e4f7608387a3828d81e14cba5feb605070b0546eaa528a1e8f357",
+			"tick": 0
+		},
+		{
+			"actor_sha256": "56658e24fb6dba51347f402c2c2defeaaddbe4b2e2adcc696cb3aa5e1802948a",
+			"label": "exit",
+			"matter_paid": 600,
+			"packet_sha256": "421cb04938a8185783968c1adbf67bfd98e8f62e6c88a77050802ba8e17b91d3",
+			"state_hash": "529263c6730bebb04c8f07d6685b8452a992dc6ecce5f9807c93d97ad4b41e60",
+			"tick": 48
+		}
+	],
+	"case": "mantle",
+	"checks": 2348,
+	"child_names": [
+		"setup_resources_status",
+		"reaction_contact_ratios",
+		"hex_pre_movement",
+		"movement",
+		"admission_offer",
+		"combat_player",
+		"release_store"
+	],
+	"cleanup": {
+		"created": 2,
+		"ended": 2,
+		"factory_live": false,
+		"live_courts": 0,
+		"live_worlds": 0
+	},
+	"continuation_ticks": 0,
+	"display": "Windows",
+	"engine": {
+		"build": "official",
+		"hash": "a13da4feb8d8aefc283c3763d33a2f170a18d541",
+		"hex": 263937,
+		"major": 4,
+		"minor": 7,
+		"patch": 1,
+		"status": "stable",
+		"string": "4.7.1-stable (official)",
+		"timestamp": 0
+	},
+	"errors": [],
+	"first_flight_tick": 13,
+	"first_ground_tick": 17,
+	"flight_seen": true,
+	"ground_seen": true,
+	"ground_window_ticks": 0,
+	"initial_ticks": 48,
+	"passed": true,
+	"refusals": 0,
+	"releases": 1,
+	"reverse_order": false,
+	"rows": [
+		{
+			"actor_after_sha256": "1b0f42cec5610c92e15f6639dd90ae963db18341fbd77e075d3bde67a9404355",
+			"actor_before_sha256": "49485c25fb479db138824a12e5a366d926972ff1c684044c2d7debbbefd0ef86",
+			"actor_byte_count": 8608,
+			"child_sum_us": 1209,
+			"command_hex": "000000000000000001000000000000000000000000000000000000000000000000000000000000001000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 1,
+			"events": [
+				{
+					"entity_id": 1,
+					"type": "cast_started",
+					"wire_id": 1319
+				}
+			],
+			"first_four_initial": true,
+			"index": 0,
+			"matter_paid": 600,
+			"matter_paid_before": 0,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 1,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					208,
+					45,
+					77,
+					531,
+					40,
+					284,
+					24
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 0,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 29,
+			"pending": 1319,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 0,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 1,
+					"stages_us": {
+						"actor_product_effects": 15,
+						"chemistry_exposure": 34,
+						"command_order": 28,
+						"finalize": 16,
+						"movement_cast_admission": 1238,
+						"projectile_contacts": 56,
+						"spray_contacts": 57,
+						"surfaces_expiry": 82,
+						"terminal_deposits": 8
+					},
+					"success": true,
+					"whole_step_us": 1578
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 2,
+					"stages_us": {
+						"actor_product_effects": 10,
+						"chemistry_exposure": 23,
+						"command_order": 19,
+						"finalize": 12,
+						"movement_cast_admission": 880,
+						"projectile_contacts": 36,
+						"spray_contacts": 38,
+						"surfaces_expiry": 31,
+						"terminal_deposits": 5
+					},
+					"success": true,
+					"whole_step_us": 1080
+				}
+			},
+			"tick_after": 1,
+			"tick_before": 0,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "f815269879a7d7847204c3fca8c674d6d23646f5120b05f8ce54d3c9a31097f8",
+			"actor_before_sha256": "1b0f42cec5610c92e15f6639dd90ae963db18341fbd77e075d3bde67a9404355",
+			"actor_byte_count": 8608,
+			"child_sum_us": 700,
+			"command_hex": "010000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 2,
+			"events": [],
+			"first_four_initial": true,
+			"index": 1,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					125,
+					29,
+					52,
+					408,
+					13,
+					63,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 0,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 34,
+			"pending": 1319,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 0,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 4,
+					"stages_us": {
+						"actor_product_effects": 9,
+						"chemistry_exposure": 19,
+						"command_order": 15,
+						"finalize": 11,
+						"movement_cast_admission": 734,
+						"projectile_contacts": 34,
+						"spray_contacts": 34,
+						"surfaces_expiry": 27,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 908
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 3,
+					"stages_us": {
+						"actor_product_effects": 10,
+						"chemistry_exposure": 19,
+						"command_order": 17,
+						"finalize": 12,
+						"movement_cast_admission": 688,
+						"projectile_contacts": 35,
+						"spray_contacts": 33,
+						"surfaces_expiry": 31,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 867
+				}
+			},
+			"tick_after": 2,
+			"tick_before": 1,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "55615f402bfb5e078f2d94aefda9e84c0122458f0a4c760201d6fc3f2a2f29bc",
+			"actor_before_sha256": "f815269879a7d7847204c3fca8c674d6d23646f5120b05f8ce54d3c9a31097f8",
+			"actor_byte_count": 8608,
+			"child_sum_us": 704,
+			"command_hex": "020000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 3,
+			"events": [],
+			"first_four_initial": true,
+			"index": 2,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					128,
+					27,
+					52,
+					402,
+					15,
+					69,
+					11
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 0,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 24,
+			"pending": 1319,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 0,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 5,
+					"stages_us": {
+						"actor_product_effects": 10,
+						"chemistry_exposure": 19,
+						"command_order": 14,
+						"finalize": 12,
+						"movement_cast_admission": 728,
+						"projectile_contacts": 35,
+						"spray_contacts": 34,
+						"surfaces_expiry": 28,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 903
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 6,
+					"stages_us": {
+						"actor_product_effects": 9,
+						"chemistry_exposure": 19,
+						"command_order": 13,
+						"finalize": 11,
+						"movement_cast_admission": 682,
+						"projectile_contacts": 34,
+						"spray_contacts": 32,
+						"surfaces_expiry": 25,
+						"terminal_deposits": 2
+					},
+					"success": true,
+					"whole_step_us": 845
+				}
+			},
+			"tick_after": 3,
+			"tick_before": 2,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "5a5e45e9420a0112ed4478384aaaf990aa6be0845a46b0ae39bcf7ccd84de6a0",
+			"actor_before_sha256": "55615f402bfb5e078f2d94aefda9e84c0122458f0a4c760201d6fc3f2a2f29bc",
+			"actor_byte_count": 8608,
+			"child_sum_us": 728,
+			"command_hex": "030000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 4,
+			"events": [],
+			"first_four_initial": true,
+			"index": 3,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					125,
+					28,
+					51,
+					436,
+					13,
+					65,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 0,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 30,
+			"pending": 1319,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 0,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 8,
+					"stages_us": {
+						"actor_product_effects": 9,
+						"chemistry_exposure": 20,
+						"command_order": 13,
+						"finalize": 11,
+						"movement_cast_admission": 758,
+						"projectile_contacts": 34,
+						"spray_contacts": 42,
+						"surfaces_expiry": 25,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 934
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 7,
+					"stages_us": {
+						"actor_product_effects": 9,
+						"chemistry_exposure": 20,
+						"command_order": 13,
+						"finalize": 11,
+						"movement_cast_admission": 675,
+						"projectile_contacts": 35,
+						"spray_contacts": 33,
+						"surfaces_expiry": 28,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 845
+				}
+			},
+			"tick_after": 4,
+			"tick_before": 3,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "da243da846d219b5e7ee7454496e4fc017021d89223dcad66b3536b0df5208a6",
+			"actor_before_sha256": "5a5e45e9420a0112ed4478384aaaf990aa6be0845a46b0ae39bcf7ccd84de6a0",
+			"actor_byte_count": 8608,
+			"child_sum_us": 790,
+			"command_hex": "040000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 5,
+			"events": [],
+			"first_four_initial": false,
+			"index": 4,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					142,
+					36,
+					66,
+					433,
+					14,
+					87,
+					12
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 0,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 28,
+			"pending": 1319,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 0,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 9,
+					"stages_us": {
+						"actor_product_effects": 14,
+						"chemistry_exposure": 24,
+						"command_order": 13,
+						"finalize": 14,
+						"movement_cast_admission": 818,
+						"projectile_contacts": 47,
+						"spray_contacts": 50,
+						"surfaces_expiry": 28,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1035
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 10,
+					"stages_us": {
+						"actor_product_effects": 10,
+						"chemistry_exposure": 20,
+						"command_order": 16,
+						"finalize": 11,
+						"movement_cast_admission": 691,
+						"projectile_contacts": 35,
+						"spray_contacts": 53,
+						"surfaces_expiry": 31,
+						"terminal_deposits": 2
+					},
+					"success": true,
+					"whole_step_us": 890
+				}
+			},
+			"tick_after": 5,
+			"tick_before": 4,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "14d549ed6ff0e3c3b8407e3a9ec17c8eecdd371563f42afc52bd4f760c66d46b",
+			"actor_before_sha256": "da243da846d219b5e7ee7454496e4fc017021d89223dcad66b3536b0df5208a6",
+			"actor_byte_count": 8608,
+			"child_sum_us": 687,
+			"command_hex": "050000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 6,
+			"events": [],
+			"first_four_initial": false,
+			"index": 5,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					124,
+					29,
+					51,
+					393,
+					14,
+					65,
+					11
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 0,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 23,
+			"pending": 1319,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 0,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 12,
+					"stages_us": {
+						"actor_product_effects": 9,
+						"chemistry_exposure": 19,
+						"command_order": 14,
+						"finalize": 21,
+						"movement_cast_admission": 710,
+						"projectile_contacts": 33,
+						"spray_contacts": 32,
+						"surfaces_expiry": 26,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 887
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 11,
+					"stages_us": {
+						"actor_product_effects": 10,
+						"chemistry_exposure": 18,
+						"command_order": 12,
+						"finalize": 12,
+						"movement_cast_admission": 679,
+						"projectile_contacts": 34,
+						"spray_contacts": 32,
+						"surfaces_expiry": 28,
+						"terminal_deposits": 2
+					},
+					"success": true,
+					"whole_step_us": 845
+				}
+			},
+			"tick_after": 6,
+			"tick_before": 5,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "d69ad3cca095a6d62dd77b716a6b04b2f061f746172e583eed9f679bf87fa34f",
+			"actor_before_sha256": "14d549ed6ff0e3c3b8407e3a9ec17c8eecdd371563f42afc52bd4f760c66d46b",
+			"actor_byte_count": 8608,
+			"child_sum_us": 687,
+			"command_hex": "060000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 7,
+			"events": [],
+			"first_four_initial": false,
+			"index": 6,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					125,
+					27,
+					52,
+					396,
+					13,
+					65,
+					9
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 0,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 28,
+			"pending": 1319,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 0,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 13,
+					"stages_us": {
+						"actor_product_effects": 9,
+						"chemistry_exposure": 18,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 715,
+						"projectile_contacts": 35,
+						"spray_contacts": 32,
+						"surfaces_expiry": 27,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 884
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 14,
+					"stages_us": {
+						"actor_product_effects": 9,
+						"chemistry_exposure": 19,
+						"command_order": 12,
+						"finalize": 11,
+						"movement_cast_admission": 661,
+						"projectile_contacts": 34,
+						"spray_contacts": 31,
+						"surfaces_expiry": 24,
+						"terminal_deposits": 2
+					},
+					"success": true,
+					"whole_step_us": 820
+				}
+			},
+			"tick_after": 7,
+			"tick_before": 6,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "841a74f64f018eda5f8774c01ee4f69662c2b0a693aa24a776050db21d6c3539",
+			"actor_before_sha256": "d69ad3cca095a6d62dd77b716a6b04b2f061f746172e583eed9f679bf87fa34f",
+			"actor_byte_count": 8608,
+			"child_sum_us": 680,
+			"command_hex": "070000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 8,
+			"events": [],
+			"first_four_initial": false,
+			"index": 7,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					125,
+					27,
+					49,
+					392,
+					14,
+					63,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 0,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 27,
+			"pending": 1319,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 0,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 16,
+					"stages_us": {
+						"actor_product_effects": 9,
+						"chemistry_exposure": 19,
+						"command_order": 13,
+						"finalize": 11,
+						"movement_cast_admission": 707,
+						"projectile_contacts": 34,
+						"spray_contacts": 32,
+						"surfaces_expiry": 25,
+						"terminal_deposits": 2
+					},
+					"success": true,
+					"whole_step_us": 871
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 15,
+					"stages_us": {
+						"actor_product_effects": 10,
+						"chemistry_exposure": 19,
+						"command_order": 13,
+						"finalize": 11,
+						"movement_cast_admission": 731,
+						"projectile_contacts": 37,
+						"spray_contacts": 33,
+						"surfaces_expiry": 27,
+						"terminal_deposits": 2
+					},
+					"success": true,
+					"whole_step_us": 902
+				}
+			},
+			"tick_after": 8,
+			"tick_before": 7,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "17eaa6961a75c9e7cdab202f019e942f28fb197347f723f36a4f9504fc7e7649",
+			"actor_before_sha256": "841a74f64f018eda5f8774c01ee4f69662c2b0a693aa24a776050db21d6c3539",
+			"actor_byte_count": 8608,
+			"child_sum_us": 747,
+			"command_hex": "080000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 9,
+			"events": [],
+			"first_four_initial": false,
+			"index": 8,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					126,
+					28,
+					49,
+					437,
+					15,
+					81,
+					11
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 0,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 33,
+			"pending": 1319,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 0,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 17,
+					"stages_us": {
+						"actor_product_effects": 12,
+						"chemistry_exposure": 26,
+						"command_order": 13,
+						"finalize": 14,
+						"movement_cast_admission": 780,
+						"projectile_contacts": 43,
+						"spray_contacts": 52,
+						"surfaces_expiry": 27,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 994
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 18,
+					"stages_us": {
+						"actor_product_effects": 11,
+						"chemistry_exposure": 21,
+						"command_order": 18,
+						"finalize": 12,
+						"movement_cast_admission": 748,
+						"projectile_contacts": 40,
+						"spray_contacts": 37,
+						"surfaces_expiry": 29,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 940
+				}
+			},
+			"tick_after": 9,
+			"tick_before": 8,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "3bfb3a87afe5205893c8ac711b5780a93038ec972ffae0e94a6f65164f099f08",
+			"actor_before_sha256": "17eaa6961a75c9e7cdab202f019e942f28fb197347f723f36a4f9504fc7e7649",
+			"actor_byte_count": 8608,
+			"child_sum_us": 695,
+			"command_hex": "090000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 10,
+			"events": [],
+			"first_four_initial": false,
+			"index": 9,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					128,
+					30,
+					51,
+					395,
+					14,
+					66,
+					11
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 0,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 30,
+			"pending": 1319,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 0,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 20,
+					"stages_us": {
+						"actor_product_effects": 9,
+						"chemistry_exposure": 19,
+						"command_order": 14,
+						"finalize": 11,
+						"movement_cast_admission": 725,
+						"projectile_contacts": 42,
+						"spray_contacts": 34,
+						"surfaces_expiry": 28,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 907
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 19,
+					"stages_us": {
+						"actor_product_effects": 15,
+						"chemistry_exposure": 21,
+						"command_order": 14,
+						"finalize": 11,
+						"movement_cast_admission": 684,
+						"projectile_contacts": 35,
+						"spray_contacts": 33,
+						"surfaces_expiry": 29,
+						"terminal_deposits": 4
+					},
+					"success": true,
+					"whole_step_us": 875
+				}
+			},
+			"tick_after": 10,
+			"tick_before": 9,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "4ef24a4d6a74ff2c38670c34ddfc75b17387e92b49007a6b54d1724c2431bee1",
+			"actor_before_sha256": "3bfb3a87afe5205893c8ac711b5780a93038ec972ffae0e94a6f65164f099f08",
+			"actor_byte_count": 8608,
+			"child_sum_us": 716,
+			"command_hex": "0a0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 11,
+			"events": [],
+			"first_four_initial": false,
+			"index": 10,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					139,
+					29,
+					53,
+					401,
+					15,
+					69,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 0,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 23,
+			"pending": 1319,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 0,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 21,
+					"stages_us": {
+						"actor_product_effects": 11,
+						"chemistry_exposure": 19,
+						"command_order": 13,
+						"finalize": 11,
+						"movement_cast_admission": 739,
+						"projectile_contacts": 43,
+						"spray_contacts": 33,
+						"surfaces_expiry": 28,
+						"terminal_deposits": 2
+					},
+					"success": true,
+					"whole_step_us": 919
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 22,
+					"stages_us": {
+						"actor_product_effects": 9,
+						"chemistry_exposure": 19,
+						"command_order": 13,
+						"finalize": 11,
+						"movement_cast_admission": 677,
+						"projectile_contacts": 34,
+						"spray_contacts": 33,
+						"surfaces_expiry": 27,
+						"terminal_deposits": 2
+					},
+					"success": true,
+					"whole_step_us": 846
+				}
+			},
+			"tick_after": 11,
+			"tick_before": 10,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "bbb746d0cb9d4683e5e6d1e0f0eaf94cf4628c6c62ac98ee62c77603102499c5",
+			"actor_before_sha256": "4ef24a4d6a74ff2c38670c34ddfc75b17387e92b49007a6b54d1724c2431bee1",
+			"actor_byte_count": 8608,
+			"child_sum_us": 684,
+			"command_hex": "0b0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 12,
+			"events": [],
+			"first_four_initial": false,
+			"index": 11,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					124,
+					28,
+					50,
+					394,
+					13,
+					65,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 0,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 30,
+			"pending": 1319,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 0,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 24,
+					"stages_us": {
+						"actor_product_effects": 10,
+						"chemistry_exposure": 18,
+						"command_order": 13,
+						"finalize": 11,
+						"movement_cast_admission": 714,
+						"projectile_contacts": 33,
+						"spray_contacts": 32,
+						"surfaces_expiry": 26,
+						"terminal_deposits": 2
+					},
+					"success": true,
+					"whole_step_us": 880
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 23,
+					"stages_us": {
+						"actor_product_effects": 10,
+						"chemistry_exposure": 19,
+						"command_order": 13,
+						"finalize": 11,
+						"movement_cast_admission": 694,
+						"projectile_contacts": 34,
+						"spray_contacts": 33,
+						"surfaces_expiry": 28,
+						"terminal_deposits": 2
+					},
+					"success": true,
+					"whole_step_us": 862
+				}
+			},
+			"tick_after": 12,
+			"tick_before": 11,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "7c9c4fad9beade94047a6ccf556ef9b02b8929964fcc5a51c7482b836a89dffa",
+			"actor_before_sha256": "bbb746d0cb9d4683e5e6d1e0f0eaf94cf4628c6c62ac98ee62c77603102499c5",
+			"actor_byte_count": 8608,
+			"child_sum_us": 1532,
+			"command_hex": "0c0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 13,
+			"events": [
+				{
+					"lane_angle_degrees": 0,
+					"lane_count": 1,
+					"lane_index": 0,
+					"owner_id": 1,
+					"projectile_id": 1000,
+					"type": "projectile_spawned",
+					"wire_id": 1319
+				}
+			],
+			"first_four_initial": false,
+			"index": 12,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					168,
+					39,
+					67,
+					490,
+					14,
+					595,
+					159
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 1,
+				"unfinished_interval": false
+			},
+			"occupied": 0,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 33,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 25,
+					"stages_us": {
+						"actor_product_effects": 50,
+						"chemistry_exposure": 27,
+						"command_order": 20,
+						"finalize": 14,
+						"movement_cast_admission": 1565,
+						"projectile_contacts": 574,
+						"spray_contacts": 103,
+						"surfaces_expiry": 74,
+						"terminal_deposits": 8
+					},
+					"success": true,
+					"whole_step_us": 2475
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 26,
+					"stages_us": {
+						"actor_product_effects": 35,
+						"chemistry_exposure": 32,
+						"command_order": 18,
+						"finalize": 12,
+						"movement_cast_admission": 1283,
+						"projectile_contacts": 173,
+						"spray_contacts": 92,
+						"surfaces_expiry": 35,
+						"terminal_deposits": 5
+					},
+					"success": true,
+					"whole_step_us": 1710
+				}
+			},
+			"tick_after": 13,
+			"tick_before": 12,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "e547778c320b347e0522cec6ac6a1fcdc5efc17728015858f2ff847c722c2fba",
+			"actor_before_sha256": "7c9c4fad9beade94047a6ccf556ef9b02b8929964fcc5a51c7482b836a89dffa",
+			"actor_byte_count": 8608,
+			"child_sum_us": 711,
+			"command_hex": "0d0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 14,
+			"events": [],
+			"first_four_initial": false,
+			"index": 13,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					129,
+					27,
+					52,
+					399,
+					15,
+					80,
+					9
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 0,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 32,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 28,
+					"stages_us": {
+						"actor_product_effects": 32,
+						"chemistry_exposure": 19,
+						"command_order": 22,
+						"finalize": 11,
+						"movement_cast_admission": 743,
+						"projectile_contacts": 170,
+						"spray_contacts": 86,
+						"surfaces_expiry": 29,
+						"terminal_deposits": 2
+					},
+					"success": true,
+					"whole_step_us": 1136
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 27,
+					"stages_us": {
+						"actor_product_effects": 33,
+						"chemistry_exposure": 20,
+						"command_order": 14,
+						"finalize": 11,
+						"movement_cast_admission": 684,
+						"projectile_contacts": 170,
+						"spray_contacts": 106,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 2
+					},
+					"success": true,
+					"whole_step_us": 1089
+				}
+			},
+			"tick_after": 14,
+			"tick_before": 13,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "bff0b8b216f71a2774e9cd013c34666661945f2053dffa45cb1be90274a166a4",
+			"actor_before_sha256": "e547778c320b347e0522cec6ac6a1fcdc5efc17728015858f2ff847c722c2fba",
+			"actor_byte_count": 8608,
+			"child_sum_us": 737,
+			"command_hex": "0e0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 15,
+			"events": [],
+			"first_four_initial": false,
+			"index": 14,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					129,
+					29,
+					53,
+					424,
+					19,
+					73,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 0,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 24,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 29,
+					"stages_us": {
+						"actor_product_effects": 35,
+						"chemistry_exposure": 20,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 761,
+						"projectile_contacts": 174,
+						"spray_contacts": 89,
+						"surfaces_expiry": 29,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1156
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 30,
+					"stages_us": {
+						"actor_product_effects": 33,
+						"chemistry_exposure": 19,
+						"command_order": 14,
+						"finalize": 11,
+						"movement_cast_admission": 696,
+						"projectile_contacts": 168,
+						"spray_contacts": 86,
+						"surfaces_expiry": 27,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1077
+				}
+			},
+			"tick_after": 15,
+			"tick_before": 14,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "342e9776be5adccf6e0521de2ed4fe5774f355caddad61f91381f987d327aed1",
+			"actor_before_sha256": "bff0b8b216f71a2774e9cd013c34666661945f2053dffa45cb1be90274a166a4",
+			"actor_byte_count": 8608,
+			"child_sum_us": 739,
+			"command_hex": "0f0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 16,
+			"events": [],
+			"first_four_initial": false,
+			"index": 15,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					143,
+					31,
+					57,
+					409,
+					16,
+					73,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 0,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 40,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 32,
+					"stages_us": {
+						"actor_product_effects": 34,
+						"chemistry_exposure": 20,
+						"command_order": 15,
+						"finalize": 12,
+						"movement_cast_admission": 779,
+						"projectile_contacts": 180,
+						"spray_contacts": 94,
+						"surfaces_expiry": 32,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1195
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 31,
+					"stages_us": {
+						"actor_product_effects": 47,
+						"chemistry_exposure": 23,
+						"command_order": 16,
+						"finalize": 13,
+						"movement_cast_admission": 764,
+						"projectile_contacts": 197,
+						"spray_contacts": 124,
+						"surfaces_expiry": 45,
+						"terminal_deposits": 4
+					},
+					"success": true,
+					"whole_step_us": 1257
+				}
+			},
+			"tick_after": 16,
+			"tick_before": 15,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "c56cfc6f03bb37e20d14158feaf6f44c61212ddd3aa8dbf702868a93ad46908d",
+			"actor_before_sha256": "342e9776be5adccf6e0521de2ed4fe5774f355caddad61f91381f987d327aed1",
+			"actor_byte_count": 8608,
+			"child_sum_us": 717,
+			"command_hex": "100000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 17,
+			"events": [],
+			"first_four_initial": false,
+			"index": 16,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					127,
+					30,
+					54,
+					399,
+					24,
+					72,
+					11
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 24,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 33,
+					"stages_us": {
+						"actor_product_effects": 658,
+						"chemistry_exposure": 20,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 741,
+						"projectile_contacts": 170,
+						"spray_contacts": 88,
+						"surfaces_expiry": 29,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1755
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 34,
+					"stages_us": {
+						"actor_product_effects": 572,
+						"chemistry_exposure": 21,
+						"command_order": 14,
+						"finalize": 12,
+						"movement_cast_admission": 705,
+						"projectile_contacts": 171,
+						"spray_contacts": 89,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1636
+				}
+			},
+			"tick_after": 17,
+			"tick_before": 16,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "ef3b329b76fa7dff6cbcf0610497784aede79c3e15adbef518b5d0f2b0eb2fe6",
+			"actor_before_sha256": "c56cfc6f03bb37e20d14158feaf6f44c61212ddd3aa8dbf702868a93ad46908d",
+			"actor_byte_count": 8608,
+			"child_sum_us": 723,
+			"command_hex": "110000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 18,
+			"events": [],
+			"first_four_initial": false,
+			"index": 17,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					130,
+					28,
+					62,
+					404,
+					16,
+					72,
+					11
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 31,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 36,
+					"stages_us": {
+						"actor_product_effects": 37,
+						"chemistry_exposure": 21,
+						"command_order": 14,
+						"finalize": 11,
+						"movement_cast_admission": 754,
+						"projectile_contacts": 208,
+						"spray_contacts": 86,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1185
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 35,
+					"stages_us": {
+						"actor_product_effects": 41,
+						"chemistry_exposure": 21,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 721,
+						"projectile_contacts": 225,
+						"spray_contacts": 88,
+						"surfaces_expiry": 32,
+						"terminal_deposits": 4
+					},
+					"success": true,
+					"whole_step_us": 1176
+				}
+			},
+			"tick_after": 18,
+			"tick_before": 17,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "ae5332387dc15e6305802d251487d9b3b9bd6839f8bfdc8dfdf016efd08c69ca",
+			"actor_before_sha256": "ef3b329b76fa7dff6cbcf0610497784aede79c3e15adbef518b5d0f2b0eb2fe6",
+			"actor_byte_count": 8608,
+			"child_sum_us": 730,
+			"command_hex": "120000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 19,
+			"events": [],
+			"first_four_initial": false,
+			"index": 18,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					129,
+					29,
+					51,
+					418,
+					15,
+					77,
+					11
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 29,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 37,
+					"stages_us": {
+						"actor_product_effects": 43,
+						"chemistry_exposure": 20,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 759,
+						"projectile_contacts": 208,
+						"spray_contacts": 88,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1195
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 38,
+					"stages_us": {
+						"actor_product_effects": 34,
+						"chemistry_exposure": 19,
+						"command_order": 13,
+						"finalize": 11,
+						"movement_cast_admission": 677,
+						"projectile_contacts": 213,
+						"spray_contacts": 85,
+						"surfaces_expiry": 29,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1102
+				}
+			},
+			"tick_after": 19,
+			"tick_before": 18,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "3147295b3bdd095d6db95bc8ac36431b4c24e86f270000effa0bacb0fd749c9d",
+			"actor_before_sha256": "ae5332387dc15e6305802d251487d9b3b9bd6839f8bfdc8dfdf016efd08c69ca",
+			"actor_byte_count": 8608,
+			"child_sum_us": 736,
+			"command_hex": "130000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 20,
+			"events": [],
+			"first_four_initial": false,
+			"index": 19,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					131,
+					28,
+					78,
+					398,
+					16,
+					74,
+					11
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 32,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 40,
+					"stages_us": {
+						"actor_product_effects": 36,
+						"chemistry_exposure": 21,
+						"command_order": 14,
+						"finalize": 12,
+						"movement_cast_admission": 768,
+						"projectile_contacts": 223,
+						"spray_contacts": 93,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1221
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 39,
+					"stages_us": {
+						"actor_product_effects": 41,
+						"chemistry_exposure": 21,
+						"command_order": 14,
+						"finalize": 13,
+						"movement_cast_admission": 746,
+						"projectile_contacts": 226,
+						"spray_contacts": 95,
+						"surfaces_expiry": 36,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1216
+				}
+			},
+			"tick_after": 20,
+			"tick_before": 19,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "9b7e4476bc51853b8853ab739e75e065876075e53b33f8f3a58a0aa7b93398cb",
+			"actor_before_sha256": "3147295b3bdd095d6db95bc8ac36431b4c24e86f270000effa0bacb0fd749c9d",
+			"actor_byte_count": 8608,
+			"child_sum_us": 724,
+			"command_hex": "140000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 21,
+			"events": [],
+			"first_four_initial": false,
+			"index": 20,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					130,
+					30,
+					52,
+					404,
+					16,
+					81,
+					11
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 27,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 41,
+					"stages_us": {
+						"actor_product_effects": 37,
+						"chemistry_exposure": 20,
+						"command_order": 14,
+						"finalize": 14,
+						"movement_cast_admission": 751,
+						"projectile_contacts": 210,
+						"spray_contacts": 87,
+						"surfaces_expiry": 31,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1188
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 42,
+					"stages_us": {
+						"actor_product_effects": 35,
+						"chemistry_exposure": 19,
+						"command_order": 16,
+						"finalize": 12,
+						"movement_cast_admission": 715,
+						"projectile_contacts": 210,
+						"spray_contacts": 88,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1147
+				}
+			},
+			"tick_after": 21,
+			"tick_before": 20,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "031cec17183de081e050296477792d1ca4721d2d64b7eea9ff3e647e132dc8a5",
+			"actor_before_sha256": "9b7e4476bc51853b8853ab739e75e065876075e53b33f8f3a58a0aa7b93398cb",
+			"actor_byte_count": 8608,
+			"child_sum_us": 696,
+			"command_hex": "150000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 22,
+			"events": [],
+			"first_four_initial": false,
+			"index": 21,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					127,
+					28,
+					53,
+					394,
+					15,
+					69,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 29,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 44,
+					"stages_us": {
+						"actor_product_effects": 33,
+						"chemistry_exposure": 20,
+						"command_order": 13,
+						"finalize": 11,
+						"movement_cast_admission": 725,
+						"projectile_contacts": 208,
+						"spray_contacts": 110,
+						"surfaces_expiry": 28,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1172
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 43,
+					"stages_us": {
+						"actor_product_effects": 35,
+						"chemistry_exposure": 19,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 688,
+						"projectile_contacts": 214,
+						"spray_contacts": 87,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1120
+				}
+			},
+			"tick_after": 22,
+			"tick_before": 21,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "6ae262be305e55eefe9b3a6adb5efb0eec1f834e83981681e165a8800452c9f8",
+			"actor_before_sha256": "031cec17183de081e050296477792d1ca4721d2d64b7eea9ff3e647e132dc8a5",
+			"actor_byte_count": 8608,
+			"child_sum_us": 737,
+			"command_hex": "160000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 23,
+			"events": [],
+			"first_four_initial": false,
+			"index": 22,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					141,
+					30,
+					54,
+					409,
+					17,
+					75,
+					11
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 23,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 45,
+					"stages_us": {
+						"actor_product_effects": 35,
+						"chemistry_exposure": 19,
+						"command_order": 14,
+						"finalize": 12,
+						"movement_cast_admission": 760,
+						"projectile_contacts": 214,
+						"spray_contacts": 90,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1197
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 46,
+					"stages_us": {
+						"actor_product_effects": 35,
+						"chemistry_exposure": 21,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 697,
+						"projectile_contacts": 214,
+						"spray_contacts": 85,
+						"surfaces_expiry": 29,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1128
+				}
+			},
+			"tick_after": 23,
+			"tick_before": 22,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "234a1a086a3be50c54f1fe74b239649e98713fa3a1d7c7534f9aeb449b3b8818",
+			"actor_before_sha256": "6ae262be305e55eefe9b3a6adb5efb0eec1f834e83981681e165a8800452c9f8",
+			"actor_byte_count": 8608,
+			"child_sum_us": 700,
+			"command_hex": "170000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 24,
+			"events": [],
+			"first_four_initial": false,
+			"index": 23,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					128,
+					29,
+					52,
+					396,
+					16,
+					70,
+					9
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 26,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 48,
+					"stages_us": {
+						"actor_product_effects": 35,
+						"chemistry_exposure": 20,
+						"command_order": 14,
+						"finalize": 11,
+						"movement_cast_admission": 726,
+						"projectile_contacts": 207,
+						"spray_contacts": 95,
+						"surfaces_expiry": 29,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1161
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 47,
+					"stages_us": {
+						"actor_product_effects": 38,
+						"chemistry_exposure": 19,
+						"command_order": 20,
+						"finalize": 12,
+						"movement_cast_admission": 697,
+						"projectile_contacts": 207,
+						"spray_contacts": 86,
+						"surfaces_expiry": 31,
+						"terminal_deposits": 56
+					},
+					"success": true,
+					"whole_step_us": 1185
+				}
+			},
+			"tick_after": 24,
+			"tick_before": 23,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "cfcdbedb32ae133b4a0d8c05388e6a1e392e90440bdcbd0abde51f37e61d58c6",
+			"actor_before_sha256": "234a1a086a3be50c54f1fe74b239649e98713fa3a1d7c7534f9aeb449b3b8818",
+			"actor_byte_count": 8608,
+			"child_sum_us": 936,
+			"command_hex": "180000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 25,
+			"events": [],
+			"first_four_initial": false,
+			"index": 24,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					178,
+					42,
+					75,
+					506,
+					19,
+					102,
+					14
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 28,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 49,
+					"stages_us": {
+						"actor_product_effects": 239,
+						"chemistry_exposure": 27,
+						"command_order": 23,
+						"finalize": 16,
+						"movement_cast_admission": 964,
+						"projectile_contacts": 274,
+						"spray_contacts": 126,
+						"surfaces_expiry": 87,
+						"terminal_deposits": 5
+					},
+					"success": true,
+					"whole_step_us": 1801
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 50,
+					"stages_us": {
+						"actor_product_effects": 164,
+						"chemistry_exposure": 21,
+						"command_order": 16,
+						"finalize": 12,
+						"movement_cast_admission": 698,
+						"projectile_contacts": 208,
+						"spray_contacts": 93,
+						"surfaces_expiry": 36,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1276
+				}
+			},
+			"tick_after": 25,
+			"tick_before": 24,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "f8305ca60ed9ec933592eb8b932f67ae703b23ca1d8704275b1bdeede5d36d1d",
+			"actor_before_sha256": "cfcdbedb32ae133b4a0d8c05388e6a1e392e90440bdcbd0abde51f37e61d58c6",
+			"actor_byte_count": 8608,
+			"child_sum_us": 703,
+			"command_hex": "190000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 26,
+			"events": [],
+			"first_four_initial": false,
+			"index": 25,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					134,
+					29,
+					52,
+					393,
+					16,
+					69,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 30,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 52,
+					"stages_us": {
+						"actor_product_effects": 34,
+						"chemistry_exposure": 20,
+						"command_order": 15,
+						"finalize": 12,
+						"movement_cast_admission": 733,
+						"projectile_contacts": 205,
+						"spray_contacts": 87,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1161
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 51,
+					"stages_us": {
+						"actor_product_effects": 38,
+						"chemistry_exposure": 20,
+						"command_order": 14,
+						"finalize": 12,
+						"movement_cast_admission": 716,
+						"projectile_contacts": 213,
+						"spray_contacts": 92,
+						"surfaces_expiry": 32,
+						"terminal_deposits": 4
+					},
+					"success": true,
+					"whole_step_us": 1161
+				}
+			},
+			"tick_after": 26,
+			"tick_before": 25,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "d3cfe0b66e3a3f73525e4563231fe3abfc29bb694ee60f03799c4aeda17533ff",
+			"actor_before_sha256": "f8305ca60ed9ec933592eb8b932f67ae703b23ca1d8704275b1bdeede5d36d1d",
+			"actor_byte_count": 8608,
+			"child_sum_us": 790,
+			"command_hex": "1a0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 27,
+			"events": [],
+			"first_four_initial": false,
+			"index": 26,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					150,
+					35,
+					57,
+					437,
+					17,
+					82,
+					12
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 34,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 53,
+					"stages_us": {
+						"actor_product_effects": 52,
+						"chemistry_exposure": 23,
+						"command_order": 13,
+						"finalize": 13,
+						"movement_cast_admission": 824,
+						"projectile_contacts": 253,
+						"spray_contacts": 100,
+						"surfaces_expiry": 31,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1335
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 54,
+					"stages_us": {
+						"actor_product_effects": 42,
+						"chemistry_exposure": 22,
+						"command_order": 17,
+						"finalize": 13,
+						"movement_cast_admission": 855,
+						"projectile_contacts": 232,
+						"spray_contacts": 104,
+						"surfaces_expiry": 32,
+						"terminal_deposits": 4
+					},
+					"success": true,
+					"whole_step_us": 1346
+				}
+			},
+			"tick_after": 27,
+			"tick_before": 26,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "01bad104c4613b18fbe960464ec518c6f039b565da1467fd287ca8efd744da39",
+			"actor_before_sha256": "d3cfe0b66e3a3f73525e4563231fe3abfc29bb694ee60f03799c4aeda17533ff",
+			"actor_byte_count": 8608,
+			"child_sum_us": 697,
+			"command_hex": "1b0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 28,
+			"events": [],
+			"first_four_initial": false,
+			"index": 27,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					128,
+					30,
+					53,
+					392,
+					16,
+					68,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 27,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 56,
+					"stages_us": {
+						"actor_product_effects": 34,
+						"chemistry_exposure": 20,
+						"command_order": 15,
+						"finalize": 11,
+						"movement_cast_admission": 724,
+						"projectile_contacts": 206,
+						"spray_contacts": 85,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1152
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 55,
+					"stages_us": {
+						"actor_product_effects": 36,
+						"chemistry_exposure": 20,
+						"command_order": 15,
+						"finalize": 11,
+						"movement_cast_admission": 694,
+						"projectile_contacts": 217,
+						"spray_contacts": 87,
+						"surfaces_expiry": 31,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1134
+				}
+			},
+			"tick_after": 28,
+			"tick_before": 27,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "1a53efb2da9e30c822b74ff072df695d636878f7ddc621d30b9b35158c1c3125",
+			"actor_before_sha256": "01bad104c4613b18fbe960464ec518c6f039b565da1467fd287ca8efd744da39",
+			"actor_byte_count": 8608,
+			"child_sum_us": 707,
+			"command_hex": "1c0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 29,
+			"events": [],
+			"first_four_initial": false,
+			"index": 28,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					126,
+					29,
+					52,
+					405,
+					16,
+					69,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 29,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 57,
+					"stages_us": {
+						"actor_product_effects": 37,
+						"chemistry_exposure": 19,
+						"command_order": 12,
+						"finalize": 11,
+						"movement_cast_admission": 736,
+						"projectile_contacts": 207,
+						"spray_contacts": 86,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1161
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 58,
+					"stages_us": {
+						"actor_product_effects": 33,
+						"chemistry_exposure": 19,
+						"command_order": 12,
+						"finalize": 11,
+						"movement_cast_admission": 677,
+						"projectile_contacts": 200,
+						"spray_contacts": 85,
+						"surfaces_expiry": 27,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1086
+				}
+			},
+			"tick_after": 29,
+			"tick_before": 28,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "15d4ba8da7f55b789aa08c3fec8a47d71a5da37987aac4c3aa46bd2c6b467fe9",
+			"actor_before_sha256": "1a53efb2da9e30c822b74ff072df695d636878f7ddc621d30b9b35158c1c3125",
+			"actor_byte_count": 8608,
+			"child_sum_us": 701,
+			"command_hex": "1d0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 30,
+			"events": [],
+			"first_four_initial": false,
+			"index": 29,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					125,
+					34,
+					51,
+					396,
+					16,
+					69,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 27,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 60,
+					"stages_us": {
+						"actor_product_effects": 45,
+						"chemistry_exposure": 19,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 728,
+						"projectile_contacts": 204,
+						"spray_contacts": 85,
+						"surfaces_expiry": 28,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1156
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 59,
+					"stages_us": {
+						"actor_product_effects": 34,
+						"chemistry_exposure": 19,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 694,
+						"projectile_contacts": 205,
+						"spray_contacts": 85,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1113
+				}
+			},
+			"tick_after": 30,
+			"tick_before": 29,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "06123ce2d54d1a1c948743ff76f9c58c14c28724ad215df0bfe90cf29454a6cf",
+			"actor_before_sha256": "15d4ba8da7f55b789aa08c3fec8a47d71a5da37987aac4c3aa46bd2c6b467fe9",
+			"actor_byte_count": 8608,
+			"child_sum_us": 774,
+			"command_hex": "1e0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 31,
+			"events": [],
+			"first_four_initial": false,
+			"index": 30,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					143,
+					35,
+					60,
+					430,
+					17,
+					78,
+					11
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 29,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 61,
+					"stages_us": {
+						"actor_product_effects": 49,
+						"chemistry_exposure": 22,
+						"command_order": 16,
+						"finalize": 14,
+						"movement_cast_admission": 803,
+						"projectile_contacts": 240,
+						"spray_contacts": 102,
+						"surfaces_expiry": 48,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1329
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 62,
+					"stages_us": {
+						"actor_product_effects": 36,
+						"chemistry_exposure": 20,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 704,
+						"projectile_contacts": 205,
+						"spray_contacts": 87,
+						"surfaces_expiry": 32,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1137
+				}
+			},
+			"tick_after": 31,
+			"tick_before": 30,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "a0d09ded39ce18a8ab646ea6af4d46e182035a5a8ee1fc47a9ac5e9dd3fac832",
+			"actor_before_sha256": "06123ce2d54d1a1c948743ff76f9c58c14c28724ad215df0bfe90cf29454a6cf",
+			"actor_byte_count": 8608,
+			"child_sum_us": 703,
+			"command_hex": "1f0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 32,
+			"events": [],
+			"first_four_initial": false,
+			"index": 31,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					126,
+					30,
+					50,
+					395,
+					16,
+					77,
+					9
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 29,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 64,
+					"stages_us": {
+						"actor_product_effects": 34,
+						"chemistry_exposure": 20,
+						"command_order": 15,
+						"finalize": 12,
+						"movement_cast_admission": 732,
+						"projectile_contacts": 205,
+						"spray_contacts": 87,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1159
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 63,
+					"stages_us": {
+						"actor_product_effects": 47,
+						"chemistry_exposure": 20,
+						"command_order": 14,
+						"finalize": 12,
+						"movement_cast_admission": 704,
+						"projectile_contacts": 210,
+						"spray_contacts": 89,
+						"surfaces_expiry": 33,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1151
+				}
+			},
+			"tick_after": 32,
+			"tick_before": 31,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "763c92f57d0300b91fad975792913cc66afdacc72b2873f8f84a74c44f16516e",
+			"actor_before_sha256": "a0d09ded39ce18a8ab646ea6af4d46e182035a5a8ee1fc47a9ac5e9dd3fac832",
+			"actor_byte_count": 8608,
+			"child_sum_us": 758,
+			"command_hex": "200000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 33,
+			"events": [],
+			"first_four_initial": false,
+			"index": 32,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					171,
+					31,
+					52,
+					409,
+					15,
+					70,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 30,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 65,
+					"stages_us": {
+						"actor_product_effects": 194,
+						"chemistry_exposure": 19,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 788,
+						"projectile_contacts": 208,
+						"spray_contacts": 87,
+						"surfaces_expiry": 29,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1374
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 66,
+					"stages_us": {
+						"actor_product_effects": 159,
+						"chemistry_exposure": 19,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 683,
+						"projectile_contacts": 202,
+						"spray_contacts": 85,
+						"surfaces_expiry": 29,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1223
+				}
+			},
+			"tick_after": 33,
+			"tick_before": 32,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "464f909ca776cbe2aa8baa871efa9fda0b7add04945083a8bd6b304884fa8ac5",
+			"actor_before_sha256": "763c92f57d0300b91fad975792913cc66afdacc72b2873f8f84a74c44f16516e",
+			"actor_byte_count": 8608,
+			"child_sum_us": 1104,
+			"command_hex": "210000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 34,
+			"events": [],
+			"first_four_initial": false,
+			"index": 33,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					199,
+					44,
+					88,
+					613,
+					22,
+					122,
+					16
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 45,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 68,
+					"stages_us": {
+						"actor_product_effects": 130,
+						"chemistry_exposure": 36,
+						"command_order": 20,
+						"finalize": 20,
+						"movement_cast_admission": 1149,
+						"projectile_contacts": 344,
+						"spray_contacts": 152,
+						"surfaces_expiry": 38,
+						"terminal_deposits": 5
+					},
+					"success": true,
+					"whole_step_us": 1927
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 67,
+					"stages_us": {
+						"actor_product_effects": 37,
+						"chemistry_exposure": 19,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 693,
+						"projectile_contacts": 225,
+						"spray_contacts": 88,
+						"surfaces_expiry": 31,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1140
+				}
+			},
+			"tick_after": 34,
+			"tick_before": 33,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "7eeb3eac14725c252acf55ad93286072596a8dba543d2d3d8ccdb28bf2a52711",
+			"actor_before_sha256": "464f909ca776cbe2aa8baa871efa9fda0b7add04945083a8bd6b304884fa8ac5",
+			"actor_byte_count": 8608,
+			"child_sum_us": 794,
+			"command_hex": "220000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 35,
+			"events": [],
+			"first_four_initial": false,
+			"index": 34,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					148,
+					34,
+					59,
+					442,
+					16,
+					83,
+					12
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 29,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 69,
+					"stages_us": {
+						"actor_product_effects": 47,
+						"chemistry_exposure": 23,
+						"command_order": 16,
+						"finalize": 13,
+						"movement_cast_admission": 823,
+						"projectile_contacts": 242,
+						"spray_contacts": 102,
+						"surfaces_expiry": 48,
+						"terminal_deposits": 4
+					},
+					"success": true,
+					"whole_step_us": 1342
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 70,
+					"stages_us": {
+						"actor_product_effects": 36,
+						"chemistry_exposure": 20,
+						"command_order": 15,
+						"finalize": 11,
+						"movement_cast_admission": 692,
+						"projectile_contacts": 207,
+						"spray_contacts": 89,
+						"surfaces_expiry": 44,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1137
+				}
+			},
+			"tick_after": 35,
+			"tick_before": 34,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "43e329a8c923bb7e8fac813146ac9c28982f18528dfd29122adda7cecb1ff1f1",
+			"actor_before_sha256": "7eeb3eac14725c252acf55ad93286072596a8dba543d2d3d8ccdb28bf2a52711",
+			"actor_byte_count": 8608,
+			"child_sum_us": 701,
+			"command_hex": "230000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 36,
+			"events": [],
+			"first_four_initial": false,
+			"index": 35,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					128,
+					29,
+					53,
+					397,
+					15,
+					69,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 29,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 72,
+					"stages_us": {
+						"actor_product_effects": 35,
+						"chemistry_exposure": 20,
+						"command_order": 14,
+						"finalize": 12,
+						"movement_cast_admission": 730,
+						"projectile_contacts": 214,
+						"spray_contacts": 86,
+						"surfaces_expiry": 29,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1164
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 71,
+					"stages_us": {
+						"actor_product_effects": 38,
+						"chemistry_exposure": 20,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 703,
+						"projectile_contacts": 278,
+						"spray_contacts": 89,
+						"surfaces_expiry": 31,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1206
+				}
+			},
+			"tick_after": 36,
+			"tick_before": 35,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "c8aa6939cfd7eaf5af412551458b1fb2c307f8365a6c9a8859f3af699191b842",
+			"actor_before_sha256": "43e329a8c923bb7e8fac813146ac9c28982f18528dfd29122adda7cecb1ff1f1",
+			"actor_byte_count": 8608,
+			"child_sum_us": 945,
+			"command_hex": "240000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 37,
+			"events": [],
+			"first_four_initial": false,
+			"index": 36,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					181,
+					39,
+					71,
+					519,
+					18,
+					103,
+					14
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 32,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 73,
+					"stages_us": {
+						"actor_product_effects": 66,
+						"chemistry_exposure": 30,
+						"command_order": 23,
+						"finalize": 16,
+						"movement_cast_admission": 977,
+						"projectile_contacts": 294,
+						"spray_contacts": 137,
+						"surfaces_expiry": 87,
+						"terminal_deposits": 5
+					},
+					"success": true,
+					"whole_step_us": 1677
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 74,
+					"stages_us": {
+						"actor_product_effects": 36,
+						"chemistry_exposure": 21,
+						"command_order": 16,
+						"finalize": 12,
+						"movement_cast_admission": 707,
+						"projectile_contacts": 211,
+						"spray_contacts": 92,
+						"surfaces_expiry": 37,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1159
+				}
+			},
+			"tick_after": 37,
+			"tick_before": 36,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "f27a186fdcf80cae3611d7e84ef3fbece05955bb93c002dcf49573ec25be0508",
+			"actor_before_sha256": "c8aa6939cfd7eaf5af412551458b1fb2c307f8365a6c9a8859f3af699191b842",
+			"actor_byte_count": 8608,
+			"child_sum_us": 700,
+			"command_hex": "250000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 38,
+			"events": [],
+			"first_four_initial": false,
+			"index": 37,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					129,
+					29,
+					52,
+					394,
+					15,
+					70,
+					11
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 24,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 76,
+					"stages_us": {
+						"actor_product_effects": 34,
+						"chemistry_exposure": 20,
+						"command_order": 14,
+						"finalize": 11,
+						"movement_cast_admission": 724,
+						"projectile_contacts": 204,
+						"spray_contacts": 84,
+						"surfaces_expiry": 28,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1143
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 75,
+					"stages_us": {
+						"actor_product_effects": 35,
+						"chemistry_exposure": 19,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 744,
+						"projectile_contacts": 207,
+						"spray_contacts": 87,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1169
+				}
+			},
+			"tick_after": 38,
+			"tick_before": 37,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "c07f7a150e3f04a746ef7ce88da330e216ef0a57eb52722cdf6ef143241f7d4e",
+			"actor_before_sha256": "f27a186fdcf80cae3611d7e84ef3fbece05955bb93c002dcf49573ec25be0508",
+			"actor_byte_count": 8608,
+			"child_sum_us": 701,
+			"command_hex": "260000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 39,
+			"events": [],
+			"first_four_initial": false,
+			"index": 38,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					128,
+					28,
+					51,
+					398,
+					15,
+					70,
+					11
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 30,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 77,
+					"stages_us": {
+						"actor_product_effects": 35,
+						"chemistry_exposure": 20,
+						"command_order": 14,
+						"finalize": 11,
+						"movement_cast_admission": 731,
+						"projectile_contacts": 208,
+						"spray_contacts": 91,
+						"surfaces_expiry": 31,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1164
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 78,
+					"stages_us": {
+						"actor_product_effects": 33,
+						"chemistry_exposure": 19,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 675,
+						"projectile_contacts": 202,
+						"spray_contacts": 96,
+						"surfaces_expiry": 28,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1099
+				}
+			},
+			"tick_after": 39,
+			"tick_before": 38,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "64fa699ebf3a459db32a3379835769377faa83c3ba5a07901ad4ed0c37cf0bb1",
+			"actor_before_sha256": "c07f7a150e3f04a746ef7ce88da330e216ef0a57eb52722cdf6ef143241f7d4e",
+			"actor_byte_count": 8608,
+			"child_sum_us": 716,
+			"command_hex": "270000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 40,
+			"events": [],
+			"first_four_initial": false,
+			"index": 39,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					133,
+					31,
+					55,
+					398,
+					16,
+					73,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 30,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 80,
+					"stages_us": {
+						"actor_product_effects": 36,
+						"chemistry_exposure": 20,
+						"command_order": 17,
+						"finalize": 11,
+						"movement_cast_admission": 746,
+						"projectile_contacts": 209,
+						"spray_contacts": 90,
+						"surfaces_expiry": 38,
+						"terminal_deposits": 2
+					},
+					"success": true,
+					"whole_step_us": 1199
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 79,
+					"stages_us": {
+						"actor_product_effects": 84,
+						"chemistry_exposure": 26,
+						"command_order": 28,
+						"finalize": 14,
+						"movement_cast_admission": 859,
+						"projectile_contacts": 259,
+						"spray_contacts": 118,
+						"surfaces_expiry": 84,
+						"terminal_deposits": 4
+					},
+					"success": true,
+					"whole_step_us": 1511
+				}
+			},
+			"tick_after": 40,
+			"tick_before": 39,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "41257a912c3a371941857cdd04bfe7042558dc944eb9905ca597e748b6c650e8",
+			"actor_before_sha256": "64fa699ebf3a459db32a3379835769377faa83c3ba5a07901ad4ed0c37cf0bb1",
+			"actor_byte_count": 8608,
+			"child_sum_us": 805,
+			"command_hex": "280000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 41,
+			"events": [],
+			"first_four_initial": false,
+			"index": 40,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					149,
+					33,
+					63,
+					450,
+					17,
+					83,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 32,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 81,
+					"stages_us": {
+						"actor_product_effects": 247,
+						"chemistry_exposure": 24,
+						"command_order": 16,
+						"finalize": 14,
+						"movement_cast_admission": 837,
+						"projectile_contacts": 244,
+						"spray_contacts": 106,
+						"surfaces_expiry": 49,
+						"terminal_deposits": 5
+					},
+					"success": true,
+					"whole_step_us": 1571
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 82,
+					"stages_us": {
+						"actor_product_effects": 160,
+						"chemistry_exposure": 20,
+						"command_order": 16,
+						"finalize": 12,
+						"movement_cast_admission": 696,
+						"projectile_contacts": 220,
+						"spray_contacts": 89,
+						"surfaces_expiry": 34,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1272
+				}
+			},
+			"tick_after": 41,
+			"tick_before": 40,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "d3bb80a5cadd9dd9d2789941dfba1b9cff0ca69b858aaf599d838dcf78366b66",
+			"actor_before_sha256": "41257a912c3a371941857cdd04bfe7042558dc944eb9905ca597e748b6c650e8",
+			"actor_byte_count": 8608,
+			"child_sum_us": 711,
+			"command_hex": "290000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 42,
+			"events": [],
+			"first_four_initial": false,
+			"index": 41,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					128,
+					30,
+					50,
+					407,
+					16,
+					70,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 27,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 84,
+					"stages_us": {
+						"actor_product_effects": 33,
+						"chemistry_exposure": 19,
+						"command_order": 14,
+						"finalize": 11,
+						"movement_cast_admission": 738,
+						"projectile_contacts": 204,
+						"spray_contacts": 85,
+						"surfaces_expiry": 27,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1156
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 83,
+					"stages_us": {
+						"actor_product_effects": 36,
+						"chemistry_exposure": 19,
+						"command_order": 12,
+						"finalize": 11,
+						"movement_cast_admission": 688,
+						"projectile_contacts": 204,
+						"spray_contacts": 85,
+						"surfaces_expiry": 31,
+						"terminal_deposits": 2
+					},
+					"success": true,
+					"whole_step_us": 1108
+				}
+			},
+			"tick_after": 42,
+			"tick_before": 41,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "fb492ee3fe62ecb72b3fa99719a7790ab89f999a3428b497c8afd546af512288",
+			"actor_before_sha256": "d3bb80a5cadd9dd9d2789941dfba1b9cff0ca69b858aaf599d838dcf78366b66",
+			"actor_byte_count": 8608,
+			"child_sum_us": 701,
+			"command_hex": "2a0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 43,
+			"events": [],
+			"first_four_initial": false,
+			"index": 42,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					128,
+					29,
+					52,
+					398,
+					15,
+					69,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 30,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 85,
+					"stages_us": {
+						"actor_product_effects": 64,
+						"chemistry_exposure": 29,
+						"command_order": 14,
+						"finalize": 13,
+						"movement_cast_admission": 731,
+						"projectile_contacts": 266,
+						"spray_contacts": 88,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 7
+					},
+					"success": true,
+					"whole_step_us": 1266
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 86,
+					"stages_us": {
+						"actor_product_effects": 41,
+						"chemistry_exposure": 21,
+						"command_order": 18,
+						"finalize": 12,
+						"movement_cast_admission": 765,
+						"projectile_contacts": 235,
+						"spray_contacts": 100,
+						"surfaces_expiry": 45,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1262
+				}
+			},
+			"tick_after": 43,
+			"tick_before": 42,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "117f8329f5a13080cccbd870db363de4cda52fee65f94ede31521c5654e85b8c",
+			"actor_before_sha256": "fb492ee3fe62ecb72b3fa99719a7790ab89f999a3428b497c8afd546af512288",
+			"actor_byte_count": 8608,
+			"child_sum_us": 703,
+			"command_hex": "2b0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 44,
+			"events": [],
+			"first_four_initial": false,
+			"index": 43,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					127,
+					30,
+					53,
+					399,
+					15,
+					69,
+					10
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 32,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 88,
+					"stages_us": {
+						"actor_product_effects": 89,
+						"chemistry_exposure": 22,
+						"command_order": 14,
+						"finalize": 13,
+						"movement_cast_admission": 735,
+						"projectile_contacts": 210,
+						"spray_contacts": 89,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1231
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 87,
+					"stages_us": {
+						"actor_product_effects": 36,
+						"chemistry_exposure": 19,
+						"command_order": 13,
+						"finalize": 12,
+						"movement_cast_admission": 706,
+						"projectile_contacts": 206,
+						"spray_contacts": 85,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1129
+				}
+			},
+			"tick_after": 44,
+			"tick_before": 43,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "d4c9d7e517a3f01f3fbe371c69b346f9ff3dabfa8474f2cef5123af026c4b66e",
+			"actor_before_sha256": "117f8329f5a13080cccbd870db363de4cda52fee65f94ede31521c5654e85b8c",
+			"actor_byte_count": 8608,
+			"child_sum_us": 722,
+			"command_hex": "2c0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 45,
+			"events": [],
+			"first_four_initial": false,
+			"index": 44,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					131,
+					29,
+					55,
+					409,
+					15,
+					72,
+					11
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 30,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 89,
+					"stages_us": {
+						"actor_product_effects": 41,
+						"chemistry_exposure": 21,
+						"command_order": 15,
+						"finalize": 12,
+						"movement_cast_admission": 752,
+						"projectile_contacts": 225,
+						"spray_contacts": 95,
+						"surfaces_expiry": 31,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1218
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 90,
+					"stages_us": {
+						"actor_product_effects": 36,
+						"chemistry_exposure": 20,
+						"command_order": 15,
+						"finalize": 11,
+						"movement_cast_admission": 705,
+						"projectile_contacts": 206,
+						"spray_contacts": 86,
+						"surfaces_expiry": 33,
+						"terminal_deposits": 2
+					},
+					"success": true,
+					"whole_step_us": 1134
+				}
+			},
+			"tick_after": 45,
+			"tick_before": 44,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "5d3fd90fcc037b55f82ccc4272fd19a09f18ffb03dd1c4ac1ed80c55e5e7b029",
+			"actor_before_sha256": "d4c9d7e517a3f01f3fbe371c69b346f9ff3dabfa8474f2cef5123af026c4b66e",
+			"actor_byte_count": 8608,
+			"child_sum_us": 703,
+			"command_hex": "2d0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 46,
+			"events": [],
+			"first_four_initial": false,
+			"index": 45,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					127,
+					27,
+					51,
+					406,
+					15,
+					69,
+					8
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 33,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 92,
+					"stages_us": {
+						"actor_product_effects": 33,
+						"chemistry_exposure": 19,
+						"command_order": 14,
+						"finalize": 12,
+						"movement_cast_admission": 736,
+						"projectile_contacts": 203,
+						"spray_contacts": 85,
+						"surfaces_expiry": 27,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1154
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 91,
+					"stages_us": {
+						"actor_product_effects": 34,
+						"chemistry_exposure": 19,
+						"command_order": 12,
+						"finalize": 11,
+						"movement_cast_admission": 687,
+						"projectile_contacts": 204,
+						"spray_contacts": 84,
+						"surfaces_expiry": 30,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1103
+				}
+			},
+			"tick_after": 46,
+			"tick_before": 45,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "16d113b84b80e466e256e6e082298e3b4c2e03f20d93e97548325f5cf76326d9",
+			"actor_before_sha256": "5d3fd90fcc037b55f82ccc4272fd19a09f18ffb03dd1c4ac1ed80c55e5e7b029",
+			"actor_byte_count": 8608,
+			"child_sum_us": 847,
+			"command_hex": "2e0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 47,
+			"events": [],
+			"first_four_initial": false,
+			"index": 46,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					157,
+					37,
+					67,
+					471,
+					17,
+					87,
+					11
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"observed",
+				"plain"
+			],
+			"parent_residual_us": 29,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 93,
+					"stages_us": {
+						"actor_product_effects": 51,
+						"chemistry_exposure": 23,
+						"command_order": 17,
+						"finalize": 14,
+						"movement_cast_admission": 876,
+						"projectile_contacts": 251,
+						"spray_contacts": 106,
+						"surfaces_expiry": 55,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1423
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 94,
+					"stages_us": {
+						"actor_product_effects": 40,
+						"chemistry_exposure": 22,
+						"command_order": 15,
+						"finalize": 12,
+						"movement_cast_admission": 697,
+						"projectile_contacts": 216,
+						"spray_contacts": 89,
+						"surfaces_expiry": 32,
+						"terminal_deposits": 4
+					},
+					"success": true,
+					"whole_step_us": 1149
+				}
+			},
+			"tick_after": 47,
+			"tick_before": 46,
+			"timed": true
+		},
+		{
+			"actor_after_sha256": "56658e24fb6dba51347f402c2c2defeaaddbe4b2e2adcc696cb3aa5e1802948a",
+			"actor_before_sha256": "16d113b84b80e466e256e6e082298e3b4c2e03f20d93e97548325f5cf76326d9",
+			"actor_byte_count": 8608,
+			"child_sum_us": 722,
+			"command_hex": "2f0000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000e8030000000000000000000000000000407d1a0000000000806d0d0000000000",
+			"cumulative_completed": 48,
+			"events": [],
+			"first_four_initial": false,
+			"index": 47,
+			"matter_paid": 600,
+			"matter_paid_before": 600,
+			"observation": {
+				"actors_entered": 5,
+				"admission_offers": 0,
+				"dead_after_status": 0,
+				"dead_at_entry": 0,
+				"elapsed_us": [
+					129,
+					30,
+					54,
+					411,
+					15,
+					72,
+					11
+				],
+				"executions": [
+					5,
+					5,
+					5,
+					5,
+					5,
+					5,
+					5
+				],
+				"missing_command": 4,
+				"release_results": 0,
+				"unfinished_interval": false
+			},
+			"occupied": 7,
+			"order": [
+				"plain",
+				"observed"
+			],
+			"parent_residual_us": 27,
+			"pending": 0,
+			"phase": "initial",
+			"products": 0,
+			"projectiles": 1,
+			"result": {
+				"observed": {
+					"last_error": "",
+					"serial": 96,
+					"stages_us": {
+						"actor_product_effects": 36,
+						"chemistry_exposure": 20,
+						"command_order": 15,
+						"finalize": 11,
+						"movement_cast_admission": 749,
+						"projectile_contacts": 207,
+						"spray_contacts": 89,
+						"surfaces_expiry": 33,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1188
+				},
+				"plain": {
+					"last_error": "",
+					"serial": 95,
+					"stages_us": {
+						"actor_product_effects": 44,
+						"chemistry_exposure": 23,
+						"command_order": 16,
+						"finalize": 12,
+						"movement_cast_admission": 734,
+						"projectile_contacts": 227,
+						"spray_contacts": 97,
+						"surfaces_expiry": 37,
+						"terminal_deposits": 3
+					},
+					"success": true,
+					"whole_step_us": 1214
+				}
+			},
+			"tick_after": 48,
+			"tick_before": 47,
+			"timed": true
+		}
+	],
+	"schema": "hex.stage-attribution.v1",
+	"scope": "Short evolving five-actor simulation source attribution. Plain concrete world and exact 22-line observed step both retain existing full nine-stage/cumulative profiling. Seven child clocks are disjoint, nested in the movement/cast parent; their timestamp/counter overhead is included in observed elapsed times. Per-attempt actor bytes/events/payment/counters are checked outside clocks. Strict full state/packets occur at entry/exit and optional ground-window entry only, not at interior ticks. Inter-step proof perturbs locality; no Bootstrap catch-up, rendering, exhibition, frame/FPS/GPU or optimization claim. First four initial rows and all admission/release rows remain visible. Optional untimed continuation reaches ground by absolute tick120 before a separately labeled24-step window; world/payment history never resets. Host memory endpoints belong to the launcher runner, not process memory sampling.",
+	"source_hashes": {
+		"res://.godot/iteration-20261014/stage-next/README.md": "55103c8de0aef81a53784af32be1e7e1dd3e018817a1cb24a348fb71b3f24d37",
+		"res://.godot/iteration-20261014/stage-next/compare-stages.gd": "9b1f82470bd351ce2b4c252079a0e6d744b5d3d042d6d517ca46738edde8d130",
+		"res://.godot/iteration-20261014/stage-next/freeze-inputs.py": "e5510c64cdb1beb65c61169e403d3ee4d9ba34263dec8eba4fdcee90c17e43ae",
+		"res://.godot/iteration-20261014/stage-next/observed_world.gd": "18e0c8baed1c3a89a7f7f86dc55dbdd9246993e49f261eac27428cfd828fd4fe",
+		"res://.godot/iteration-20261014/stage-next/sim_world.before.gd": "2a8e32069c800d70644f222d4ce1e2378e3b2c79991e7e5d58b4de2df4548a1e",
+		"res://.godot/iteration-20261014/stage-next/source-transform.json": "4c1689e547bc1d39465c86965bd46771b776909dad50baeb17f6786802e9523d",
+		"res://art_batches/pixel_v1/magic/export/magic_00.png": "386294dc11e3f0f51761dead2ce5cd57736be6f9e279d4999b9c633528291127",
+		"res://art_batches/pixel_v1/magic/export/magic_01.png": "16400cd0f13ba72d89a40d23f731371a8f7cb9b969bc992d794f6ce9e76224da",
+		"res://art_batches/pixel_v1/magic/export/magic_02.png": "b04292f71fcecc0cded80e4e522b43c2f0345cb91fd3f01d27460bfca57c3445",
+		"res://art_batches/pixel_v1/magic/manifest.json": "6cdf1d12d08dc80ac6605bbffc1cc81b01c3d0931a0067057888b71f32259638",
+		"res://assets/sprites/hex_court_v1/projectile_atlas.png": "e6eb434b7a2d53e19760992e8663cd9f1c1c24d7e59b12fa051b14af1f1847a5",
+		"res://assets/sprites/hex_water_pilot_v1/manifest.json": "33c59cb56cb4ad83db1e4fcdf18fb575c47797ee642d4d74f213c7e0c53408d2",
+		"res://assets/sprites/hex_water_pilot_v1/water-normal.png": "e1fcfe9050503b01186ecc465e064eb11a30986666e41615f97e5e0061ecce76",
+		"res://assets/sprites/hex_water_pilot_v1/water-reduced.png": "0cbd1a1a207a282d6c8224e338313d458331c0cd11e60ee6fc78a57b3f0d0a8b",
+		"res://content/abilities/element_mixtures_v1.json": "395cbc2169a8d14908236f9683e3c2c2e61d5c8f248b3c6c01e6da44a8de4686",
+		"res://content/abilities/foundation_abilities_v1.json": "2909419ec614172bce603c38f38a844a5b491fc676d5d81c9568d24b6dbc0bec",
+		"res://content/animations/skeleton_animation_manifest_v1.json": "cea6b658e77d87c72341d32e72d8806239737405682a7f991ad598e9532508b2",
+		"res://content/assets/sanctum_modular_kit_candidate_v2.json": "072509ce26e5a2e148af019f40b8dfaeffae77e4d849f21bea88b5464ef0fb7b",
+		"res://content/assets/sanctum_runtime_kit_v1.json": "ff6de903d0512cec7333e91f763344e093e02c33dba487b28175bc0109e53763",
+		"res://content/assets/wellspring_environment_runtime_v2.json": "8f796c9bb29238a6f22d3ba57a306e93ab6e6135d0d20f5e75f4eb2263823a2c",
+		"res://content/assets/wellspring_environment_source_v2.json": "9519ec5bc9563cfa97a543b1bd5c9cfaa7de017c627aa9124160b56fa0ef5737",
+		"res://content/champions/body_type_profiles_v1.json": "e3f386409159a431e43648efec8b8762c9424217208db683b02a07acf350ad13",
+		"res://content/champions/champion_affinities_first_eight_v1.json": "b28c517e2ad889e18bc9254340e2d5355d324b2abae2f6cc6e12cc77e30d83dd",
+		"res://content/champions/champion_identity_migrations_v1.json": "f3a8a87d0ea545d7f9ad04133ab8c2c55b7cef52f4886bd57aaa07f538470334",
+		"res://content/champions/champion_roster_plan_v1.json": "a2b25f15274f450e1f2747433a18d021ab677708c128e51c9947b3519a0a2501",
+		"res://content/champions/foundation_champions_v1.json": "0125f9c55c976eb274ba51e1319f69f4ea62d5d6183bcab14a590aaa695a5b1a",
+		"res://content/champions/full_cast_candidate_v1.json": "def92dacedc5d6c0ec09fe2b1c6fb2c2460a05c8dfa4f75856177e5678aae99d",
+		"res://content/gameplay/action_transition_matrix_v1.json": "9d7be015fced48de1bb269f8de97803ad69e746efda10cd8bdb1714123bec19c",
+		"res://content/loadouts/foundation_practitioner_v1.json": "9572ff041ecd39f48557e1e8643e1156393e2a6db715dcb9a6d8291d6665de41",
+		"res://content/maps/districts/alchemical_proving_grounds_visual_v1.json": "5d3fe6786d06ae815751d19b985cb7601c1d42ff0a9425bf2d89856da7cdae78",
+		"res://content/maps/districts/crown_observatory_visual_v1.json": "e656e27da859c03906e6a4b36f5d6e0b3c5c8d6433482d2343ead068486c1c07",
+		"res://content/maps/districts/foundry_deep_visual_v1.json": "17b6675a01ad1b13d7ae953386977d3749e6a648966c7370629dc24a321020d8",
+		"res://content/maps/districts/living_archive_visual_v1.json": "520316f9656bdcc8faf5ceee4a3931dd235e25c38341ce92a4ae500cda14b664",
+		"res://content/maps/districts/movement_conservatory_visual_v1.json": "e3a7ff1cb68bec449121c75f2100fa2b00dc052ebafd9f8dc60d36cd9fe286bb",
+		"res://content/maps/districts/nexus_court_visual_v1.json": "7a99f449fb9531f522b091babba41107937557b4acd8785b60cef3e682bfbf14",
+		"res://content/maps/districts/seasonal_expanse_visual_v1.json": "6f62b6eee2f36bc6ca21196b21a61cc6bff887f98406307e1bf67af46b4943dd",
+		"res://content/maps/districts/verdant_recovery_visual_v1.json": "ecf82a0d8ed4319e39232e3c4f84b1471640ed8126705bcc4af49e6c425bbee5",
+		"res://content/maps/districts/wayfarer_concourse_visual_v1.json": "7c666c8373357bbf1efe39875510f1761dff8caf29d75d9a965055bfd9bc2740",
+		"res://content/maps/nexus_to_conservatory_visual_v1.json": "53c9654f109345534568dfc5235568b867dc8460b42acda50c8e111f913b1965",
+		"res://content/maps/sanctum_campus_g2_v1.json": "70b46882a541e871fba661d01061ff03789410337d8eee71edb31d7b01f41317",
+		"res://content/maps/sanctum_hub_v1.json": "cc6c128bbda90e218326abfcd352bddf8d05acde35dd037ce75af48f9e1e2c83",
+		"res://content/maps/sanctum_material_yard_v1.json": "eb98cadfda054a394f741cd67a5f6552d3c197e17a433342deb68dc6f788bdce",
+		"res://content/maps/sanctum_to_wellspring_alias_v2.json": "34c5decba60fc88c8c089f24b2b86f77cfe588e54fefacef506eb373c05c9459",
+		"res://content/maps/wellspring/districts/deep_foundry_v2.json": "c24ad8d25efe39e8289a4e5c5810a2df7afc8a9520ca76807de84c3cd25848e1",
+		"res://content/maps/wellspring/districts/elemental_proving_grounds_v2.json": "07bc6b785a2f9c0d1ba02fa07797f637e7d724c63b0b2bde0168fdcb4dc91b05",
+		"res://content/maps/wellspring/districts/farflow_concourse_v2.json": "b2866982f1404d0c7f8985de8309e5115fe906ebcbe7bc310abdfa4071df1042",
+		"res://content/maps/wellspring/districts/living_archive_v2.json": "1bf22db2fa993e2809ea0227ca3b7b770433680ec29ce0bdcd4eed2ce9063092",
+		"res://content/maps/wellspring/districts/movement_gardens_v2.json": "78f415a0607200ef1c7610161949be31eefab0f764fe7d68f2671b8ddeacaaf8",
+		"res://content/maps/wellspring/districts/restoration_grove_v2.json": "d481d14cf9a1844dde4cb626ec4afe5ee179122857303f90be70efbb6d7d9ef6",
+		"res://content/maps/wellspring/districts/seasonal_reaches_v2.json": "a9a7acf32547b0c204d46b6e827793ceb7a4a6def0dd899535adc204a28402c8",
+		"res://content/maps/wellspring/districts/source_court_v2.json": "b8a8194d2afe04c8f654287ab3b6a4a389f6e7a26c0033a0412631b5eb605450",
+		"res://content/maps/wellspring/districts/starward_crown_v2.json": "d3ad59dc15eb1ef0703487508b53b9d8ad9bf75b733a2204f54099afef99177e",
+		"res://content/maps/wellspring_hub_v2.json": "0f234b9c7a4b5c5ba60b517249724c060013dd9d520b20f8632cc2a816619bfc",
+		"res://content/materials/foundation_materials_v1.json": "61c071f551d458186c56708ba4daa40f2b5d92b71899ac08ab849ecd81c21c06",
+		"res://content/presentation/wellspring_floor_guides_v1.json": "e9fa8e6ce1074c1359b1d52d9687a0543807d9bbbd48005b38a4e0736c45e012",
+		"res://content/reactions/first_eight_element_reactions_v1.json": "4431e33377773874f24037dd8382772903622c38bc2c79e6ed525e5124662cbc",
+		"res://content/reactions/six_element_reactions_v2.json": "34576ef65f0105f9892f434dff41165ae675f5b28807d8f37a12f409b5ba8cc9",
+		"res://content/runtime/runtime_build_identity_v1.json": "29807c25db4c9559de98d1eb28d9ced592cddc9ac7ce983566b9a27136966bb9",
+		"res://content/visual/accessibility_profiles_v1.json": "f8b7418be443f579ef7da44af43c8605e27665ce9de6bcbd84d301b171f4e387",
+		"res://content/visual/burst_projectile_runtime_v3.json": "9657f7599a3af634f06e65814e1b9b1aef6c073baa40d186f8984a95ef26649a",
+		"res://content/visual/champion_page_overrides_v1.json": "c2108084f19456e54e0e57eb40795b4d6ed1aea9631a4637d62f1c3846acba05",
+		"res://content/visual/compact_hud_v1.json": "55d33e6634ece1f3bb0418f8feb71ea3f4630f1dce1735d4a5347f9f39525763",
+		"res://content/visual/complete_visual_catalog_v1.json": "2ed708b1477fb5078b71772aaf48da0810c69ecdfb9d2bb1ff07151d0eca50e3",
+		"res://content/visual/complete_visual_hashes_v1.json": "a8954b5d7133ba5044f670020698f3012088de5d9c486fd6ddacea35546a3d5d",
+		"res://content/visual/foundation_champion_visuals_v1.json": "42f8a690d0288190e20154ed9d4529b2c6dac95c04ec8fc1d3f1e557e958ecdd",
+		"res://content/visual/foundation_spell_visuals_v1.json": "e99d40aa92944b08971828b0f20673a2858db53d6fc7a562b14ef45286199033",
+		"res://content/visual/minimal_champion_motion_v1.json": "5ace2b571120838df6566c949b10817088b9a50a6166d3a2f0a05f80fe7f281a",
+		"res://content/visual/natural_map_kit_v1.json": "d234eb206bd45db124775bb070e0589502faa6c46358c0fa476c236a99b9b625",
+		"res://content/visual/reference_style_front_catalog_v3.json": "a343162ad063183f137f65a444ac0d2e50e3e90b62818d6bf783f8bac2fe7f83",
+		"res://content/visual/spell_animation_skeletons_v1.json": "b8cff0a65bb145471c43ef1a2aebbd3b6a872c000c930da5520735310261cbd5",
+		"res://content/visual/spell_delivery_direction_v1.json": "e4f67a894f6579ae9af564153b001972cc8ea3ea7086097ba820528b7160929d",
+		"res://content/visual/visual_asset_hashes_v1.json": "5aff23a51c313df756ed28fabf9612c3181ab1b55ebb9822a0dccf1898b9702c",
+		"res://content/visual/visual_asset_registry_v1.json": "ef177e303b8eee111b4eef3d8037e35d0347b60ee90d7f842566b68f88526122",
+		"res://content/visual/visual_iteration_manifest_v3.json": "4c1bdc838c3197e70986809d030d102807813ee4f1fa0ebb1108310d0ed1e1b3",
+		"res://content/visual/visual_language_v1.json": "7b248f724f4698701b39ffd25779ccbfbdc4117dbc00c6858a40e8e59ef25ce5",
+		"res://content/visual/wellspring_architecture_kit_v1.json": "bf4f29f408ab17a5e17f702c717af13865b41911eddbe926ed6dca56eff7afa0",
+		"res://content/visual/wellspring_illustrated_v1.json": "ea6ab4420fb69328a954d8aae0db7b411203ee78f4c198dd64cd077d25e1053d",
+		"res://content/visual/wellspring_interaction_language_v1.json": "6ddebf6e50def1109260327e4babc86b1620d1fd9ad41e8d7c11c103cf34d62a",
+		"res://content/visual/wellspring_visual_catalog_v2.json": "b029c42228486536e142a0cdf7db6975b0f9a80735c1021ea3effffce88bcfeb",
+		"res://content/visual/wellspring_visual_hashes_v2.json": "a298529c39df1d6b28851c79963b6deba1e49116f36e0ae645bb9b703f1e8fa0",
+		"res://content/visual/wellspring_wayfinding_v1.json": "0ce8275e0b9838679e7f3ab0b304014ee8fdb5d5c04f10b275671e9d47c37092",
+		"res://project.godot": "17c68ea0840a04e489f72c64de92f0d0738251695be584b0c560ddd844caf5ab",
+		"res://scripts/engine-guard.ps1": "9de3d4ae5d09dc59abc56e40bb78f626875db92ceee63136bfa99f62d4b38cd1",
+		"res://scripts/flux2-common.ps1": "06dcded01022fa9ae5c9a371e98f0b9577f01f258a8ad9f531450c35ddb3d040",
+		"res://scripts/launch-hex.ps1": "83b36d3633c08430b2075df94569d5f157e04a66ef085ed3d8266fe2df7c68ca",
+		"res://scripts/launcher-diagnostic.ps1": "534ae311e5176b988d711c459c9f2db24b8757a938ee123a785197260c013b1c",
+		"res://src/app/bootstrap.gd": "fdcb2e608e6cde89d62d19e8dd4264bae9cf6da7f1b806df5750e8f81b635f3f",
+		"res://src/app/champion_attunement.gd": "712fea9f1d7d769e8b567c28a7d8692c636c66e80d1e0b08cff8688d0b0b4df4",
+		"res://src/app/character_overview_model.gd": "f8d2f49f38c2bf617130f0da6102f050697f560e9c6c0f2c7fc2ee7f5931cade",
+		"res://src/app/character_selection_model.gd": "f4cf1b1fd9aed83c48814f612e0979cfb15b1c5861c0379b143e5af86e9295f3",
+		"res://src/app/character_weave_coordinator.gd": "0d5ec49722a1ad77c2e9c35d4440e596ad31a931d498c04a9672649d761c1003",
+		"res://src/app/character_weave_library.gd": "beac2677b8e485232185807efba9bbace92cfc70a7ea858c3ba61cbe4e04da49",
+		"res://src/app/character_weave_policy.gd": "eb5a5aef9efb58aa42e42bbd2440aad3ac0cf5e8a873d7231df285e828b9b919",
+		"res://src/app/control_binding_editor.gd": "f66c3435483f0f3ce5a1b914b34f92e8a11e47446d6040aecf01c553a5388982",
+		"res://src/app/developer_testing_session.gd": "6c6a7481ef0f8a0237a57e66262ff38421f5fbc946bfb5bb91270d8340870b6f",
+		"res://src/app/diagnostic_replay_session.gd": "037bd922eee27a0817bbe09571a30df95f95648836e6058800bd0887fbe0e0a6",
+		"res://src/app/element_expansion_controller.gd": "42877b8900674aa181d8c2f993a01283ed40bd6f1a9a7c7a973ca82c44475119",
+		"res://src/app/element_garden_court.gd": "1e872614214e830cae84ab4253ad396974af1022b22b1ed058697112ba33465c",
+		"res://src/app/element_garden_exhibition.gd": "f5dcef0cf557643be2e6f9e9745c74ba54f62f0f6f5c49c987b8902678a37170",
+		"res://src/app/hex_playground_demo.gd": "aca30de57f04d30de6be25416712690c0969cc1160c0979e63a974450c34d68e",
+		"res://src/app/input_router.gd": "d9c63b24c1c4fb18ee1516b962840e91fd461cca1f86d65c210f5fab80d5099f",
+		"res://src/app/interception_showcase.gd": "98dcc384afba7e42f24d5f8e1c1723b34a2c57ec5802a6637840fde8d2c87e79",
+		"res://src/app/local_navigation_controller.gd": "3de822cf2aa8c6e453183bf51dac147c12110026c7cd581c53a8829a1a36cc59",
+		"res://src/app/optional_introduction.gd": "3fdd6012b56d7a8669d832ef582976b68a61de0ca1b468256d95b87bb70ec56a",
+		"res://src/app/player_preferences.gd": "e6b252e8bfdd3a8c27dba18d438c21fa65d676cf0782b8f07bc953f23a76a6c9",
+		"res://src/app/range_target_scenario.gd": "2e3e4864408a42834841872a3fb400aafbcfda9e7db4d538c39715875161cdb1",
+		"res://src/app/runtime_content_summary.gd": "eba559acf7afa821feea5aba6c631af7c058623ef9ceb0798eebd8a990c7ed78",
+		"res://src/app/sanctum_station_model.gd": "fec45772839d1a8ab5e57ff9897dc2cafc5a8c9218e8a9924308b2378d45b0bb",
+		"res://src/app/signature_challenge_session.gd": "56d55cf5ca7982926d2ae85a4e71a725a652424c1d241e251981c75d2de18582",
+		"res://src/app/signature_progression.gd": "16c58c5682501519ed3e18512699dede5a50e16d0c133e9657ba37b38c581058",
+		"res://src/app/signature_rival_policy.gd": "a733b4f9f0943a59d4f672c190e99dc1557bd3617141e21e5afd198ae9b12a1a",
+		"res://src/app/solo_duel_rival.gd": "2f416c735c478411c37087dd3540d86e950f2725fc7a90ed81b1b85e7600ec53",
+		"res://src/app/solo_duel_trial.gd": "0aada7cbe463584d6e06794776236472faecc8eee867aa883cc677536d6fa682",
+		"res://src/app/spectator_focus.gd": "d5ebb36783d39e5cfbe266eac86236e40ec6a7f86719238ffc9ac6196f36fb18",
+		"res://src/app/spell_loom_editor.gd": "388cc44b382d80b2fa8adae9d29ad0d5a2fc6d5c9bbb458b124e544f661cb6e9",
+		"res://src/app/spell_training_range.gd": "3cedb4996cb9c45a857258f3a6b853fc149df8ad85faded5dc079bfd22f008fb",
+		"res://src/app/ui_grid_navigation.gd": "2f85e9c37fe4bf93e068e732e07a8f3e2d9674f4eab1b858328fe0c21c2ebeec",
+		"res://src/app/wellspring_map_model.gd": "dc39030e559bf12704f59399b37d660e526328502cbf6281a9bbfb9ff6909732",
+		"res://src/app/wellspring_service_directory.gd": "e0f5b4b7fea8a51b4da2ff39061e2e88ba7da5daac597a24c8ec266fb3954720",
+		"res://src/content/ability_catalog.gd": "bacf88ae2194dec5fc4c9828eb5b07dcce8311300998b54bdf87ebf3adfa42a0",
+		"res://src/content/body_type_profile_catalog.gd": "5a4b06f1911500624cddd6e31e4d89ab57ff260e5e340fb3845e42a7194989e0",
+		"res://src/content/canonical_content.gd": "0acfb4e7da0fa7078a2447c13cea0d86981f048e2bc2832ee9c5da451da9dd8e",
+		"res://src/content/champion_catalog.gd": "e6a4d7bbbb451fdb510bf1f77d8884bfddd14a50aea201ad48e2a5ba6825be79",
+		"res://src/content/champion_roster_plan.gd": "55a500a1964ba90e53c396c75cabf4949cea2f6f9c088f81606c5efdaa8c1a65",
+		"res://src/content/character_perk_catalog.gd": "78421570187d5905e9a192750377de089bd6eba0ed4157257c07e2976ded4da1",
+		"res://src/content/character_starter_kit.gd": "12b53d4960dde7ddf2465f00f6b438d2f856bc78a3a0ad72ff86132c60120f05",
+		"res://src/content/element_rules.gd": "032e26f213605028df007d57f9348a7de1327218f3c92f3d82b85547a7fcd3eb",
+		"res://src/content/environment_kit_manifest.gd": "54126c0ab2c8d7648cd3d2d479ccb7e3acb34dc85a859b48881df76f87076e97",
+		"res://src/content/hub_definition.gd": "2403991ca08e9544679c5c68e1f552dfb5c957f2a73b3663056ae348b13338f2",
+		"res://src/content/image_asset_inspector.gd": "ffd64987bf15d8a71fe5dbdfcdc912b2dfa3814ebdd409fa9085d36907ac809a",
+		"res://src/content/loadout_definition.gd": "99212b23f267e672e08e9da68173ea9c3cd3f79b42475defce9ce52fafb8566a",
+		"res://src/content/material_registry.gd": "11de0b32a30cb3ca527d2fc732e7f88b7e6c701c895a718980be14ad16271b29",
+		"res://src/content/material_yard_definition.gd": "80e2837e6ad3daf9097ccb01527e1421eeee8fa1b7ac27b9d193da3aa10bf1ab",
+		"res://src/content/mixture_catalog.gd": "f9745cac92e1e57aacf37e80cc51812332c553ad1e731106caa8678f06b1215b",
+		"res://src/content/race_perk_catalog.gd": "007d3bfdc582e1c9910985725803f9523dfe630e4c328be5fb7bcb354bc5a284",
+		"res://src/content/reaction_catalog.gd": "b276a24521ba5af83d6159ca1618b945983c5c093e73eeb9971d9f93ddb3ec93",
+		"res://src/content/recipe_tactical_catalog.gd": "0c38879c01cbe8a910a8afc96cb972da05c4d6bb3ee8b959b7709725099597d2",
+		"res://src/content/runtime_build_identity.gd": "68cbd2cb431da0c1f9e22ba3db90b1ddf32e465d53aa1b13da8fd4dc5b1e655f",
+		"res://src/content/sanctum_campus_layout.gd": "e6a20c05ef797e796afbf82bf02de62b6b4fd8ecbc55666d5a77d36320c9d293",
+		"res://src/content/sanctum_runtime_kit.gd": "1452a2ef283ab337bcabf38d2bb24025ef3843bbbeff1f1e75f3977430be5322",
+		"res://src/content/signature_arena_catalog.gd": "c4ec424f95df6052c2c8b481ed71d81578a5e18a792fea7b3e37764e1b373df1",
+		"res://src/content/signature_challenge_catalog.gd": "155ae59bfb5734442ca3219454ca69d4dd137c787b2cc7ad8068f44cf8723b08",
+		"res://src/content/signature_learning_path.gd": "d4401bde5a369ea2f54949bb49c684952aab7b0fccae3c9ca90d624578a987cc",
+		"res://src/content/spell_status_catalog.gd": "70b6a4c41f140522089fcd10be45be5eea748c1f8e9b7b0e18fc825b046d6754",
+		"res://src/content/wellspring_environment_kit.gd": "cd757ca31b36e245bda96238c897b951ac850ba9e115441bee964b468ef7830c",
+		"res://src/net/authoritative_session.gd": "d333060d52e19c7c955ab554d49fadf29f8ae972cb9f14006d289b2798c50abd",
+		"res://src/net/client_prediction.gd": "b181a18ef16865b3808cc87c7fb5c30faf22984676637c1110a07e50cc98dd29",
+		"res://src/net/expanded_spell_state_codec.gd": "ae611c899568d8db29526d32d565aa32ff7dea3e2b478aa68f251dc8902aa57a",
+		"res://src/net/hex_chemistry_snapshot.gd": "407f8130a6045c8c9fdb46fa1cac339fe48dae2eb9121147afbc06d1cf5c3d5f",
+		"res://src/net/hex_snapshot_wire_packing.gd": "cb11367b13a502e6f94937932b1a3eeca482df61cadcc2d28f9acfae07ca6156",
+		"res://src/net/hex_world_snapshot.gd": "403deec77f6e24d02416895917b5e8d2496900496f99c89a9c4ac95c99646bce",
+		"res://src/net/lan_lobby.gd": "a36c39453319614904d9a1f77a59e70f40fe8454970a3529a162508d46014a04",
+		"res://src/net/reconciliation_order_buffer.gd": "f14a19b6fb3a09aec5b326ff2d1b1b1c23c0185d649eb7a7ec016c37e1dac462",
+		"res://src/net/session_charter.gd": "df19d790ce2762991eec1892b4bb5cb3ab83cc151073a1bbc1c84d0be43fe68a",
+		"res://src/net/session_event_inbox.gd": "3474a1e72a364426dc3693306612d3d93fe6b8c7d5a96d01258a6ebdcefd2b82",
+		"res://src/net/session_hearth.gd": "63ad401c6e6d2fabc6469a0ab8db24bad15e056a73d80bacd38318d83e9b7fb7",
+		"res://src/net/session_request_policy.gd": "a756f178ef5bc77531d0d21b9f4f8b1f8b6298f71a112c5c75db9eb900cbf0c4",
+		"res://src/net/session_round.gd": "7fef63165f756934e35f4b7b19db5bbc142c5e8911fd8543690f23d5e634ecac",
+		"res://src/net/session_snapshot.gd": "832920a2d449772599af5d64e421ea6ed3ffad57ef4d7aa5d5a44a8f48b86501",
+		"res://src/net/session_steward.gd": "c2ee2d8fe558db2622c16c4ca0b8e67420ba4a8a119d10a8f430caab860c367f",
+		"res://src/net/session_transport.gd": "0ed6a10dfe7ac21f6f08f186e69684e6b5afb5f3f827329f136d57b67440923a",
+		"res://src/net/world_snapshot_envelope.gd": "614b5b0a91f859e9e19723ba6b7a3b6fe31d9ca43f68ae66a330ebc50c4d1004",
+		"res://src/presentation/actor_motion_history.gd": "a937cf2ca3f6276567f392b2c62e4e38e6a03336f606e09b1dc13c6734004df4",
+		"res://src/presentation/aim_reticle_presenter.gd": "2f969394b22b5c495076fbafc1925337db4c7e1c1774c8c6af86adb1b507513d",
+		"res://src/presentation/archive_magic_contract.gd": "a1d72c1bc77ef492424bd927bffa8b50badf380286fc9a27b8ffc905161a25ef",
+		"res://src/presentation/burst_projectile_presenter.gd": "6512c7aa788812316d1f4e6860ed4d5f255f5bc23b8186620f2e18dd405926f9",
+		"res://src/presentation/cartoon_champion_presenter.gd": "0cbee62ff69ba81becf1e723b61f178af667dc216784800496324743b68d2850",
+		"res://src/presentation/cast_startup_witness.gd": "b38f0d45bb23901295d24cb63b5369562b434f1509356d120c42dcfc9892effc",
+		"res://src/presentation/champion_portrait_library.gd": "0b8bb32dfc00e517e55e5e6f3115477471a5917e1c8dbb2ba5b0f4781e8a720a",
+		"res://src/presentation/character_movement_trail.gd": "2eaf62e315d5233ea0f62ecad120a32efeb8f088d28df5ea39f4ff90d6cde6f5",
+		"res://src/presentation/character_selection_grid.gd": "08eaaf101feff15c5aed85f191e1f302b6696184793ab09b701596ac27df4325",
+		"res://src/presentation/character_viewport_policy.gd": "26bcc318fcfad89bd37b0776f0ee142df14ddf4111fc830964b86a91402189db",
+		"res://src/presentation/chemistry_guide_model.gd": "4c75d29d3c68611f8ccf3c126ad09077b84612e1cd8c42ed70bf10cedc751d10",
+		"res://src/presentation/chemistry_practice_coach.gd": "85e6e6116c7b733710c05e7f3abf0b957ba23cfb4d72bf8ac63f10a415998ea9",
+		"res://src/presentation/combat_feedback_model.gd": "f2c9384bf4c49cfac89e96eac0be37d2c6ff4b37b7ad73cde0471951bb3f30f4",
+		"res://src/presentation/compact_combat_hud.gd": "62d17fa1c5125a9f1d259f2b42f677234073a8135c22ed48db4fb85375f89280",
+		"res://src/presentation/compact_hud_layout_cache.gd": "22a09074b3fe8a47b002b2c9a6e56798395a6b62a299dc1b95a8a97b15b50a25",
+		"res://src/presentation/complete_visual_catalog.gd": "15af870669f51d8eacbaca37e8f780bff0286e7d5501966356a986de3271a8de",
+		"res://src/presentation/complete_visual_gallery.gd": "b3002492f6fbdcc266470152f14182bc93afef7e370497c3a9f6907b2d54cacb",
+		"res://src/presentation/district_practice_coach.gd": "1cc092e85e5afd67408b73c8cbcb7b39e3c571982a382536cfc23d725b69b2e4",
+		"res://src/presentation/eight_direction_resolver.gd": "de6b2bf98748bbede0e48269c3e634b939f082fbbd9b2e6384f470c5f9da37f2",
+		"res://src/presentation/element_audio.gd": "4e3b74a97529f1bfd5cc0a39fc8b964e8e2a21fe485194317ff39fbcb3212d12",
+		"res://src/presentation/element_chemistry_presenter.gd": "bb37459d0ff414c0178ac7e3feec29dfe295cea77337c8292d319e6cee150942",
+		"res://src/presentation/element_garden_presenter.gd": "34cf2b6c83814ac9e22a66b19003c29a36b33ed038accff67934b2f6a677e916",
+		"res://src/presentation/element_garden_surface.gd": "403a462102b33e1ff852e115d34cf3d5136d0392f9e41b099c93194170dac18d",
+		"res://src/presentation/element_glyph_renderer.gd": "802330a87639902f31fbf5ba94ceed2f849646d4dc3e59747c801db50093d6df",
+		"res://src/presentation/element_status_presenter.gd": "b3e964a5017cea7ec7f5e176196835162bcb82e8e1be171fb99ea4e4e2471c33",
+		"res://src/presentation/foundation_spell_presenter.gd": "0dbfb3f21a07b8e9de9bd28c6d8d962042b89ef8f96838f772741f979e7f8e2a",
+		"res://src/presentation/fullbody_cast_presenter.gd": "c644a85c6109fc151fd62e3dc3d486b9030d7aa76ccdd46bb47d9e988789d26f",
+		"res://src/presentation/ground_skid_presentation.gd": "95f85eed88cf21f92f98c5a9800798e48ff6ae23fc5ba2ea41b6a3b341631f9b",
+		"res://src/presentation/heavy_blast_presenter.gd": "1ed784aba999a697d52f709b5b62a85bf65603455f72f3ec7a9a86bccea07ab8",
+		"res://src/presentation/hex_cast_release.gd": "be1cdc61301f7db50500d9d3812a0393077ab7adbd39c08dcefc8f5f2688a9e3",
+		"res://src/presentation/hex_combat_label.gd": "12c76741871d7e31d142f4a6e7240d88c84b482136bb7609ee87bd635fd1d6b2",
+		"res://src/presentation/hex_contact_punctuation.gd": "d9f15248e2c57b3159e75484376b1c594d52c94876dafb95be860a3fbabbeb89",
+		"res://src/presentation/hex_court_presenter.gd": "3190aa2683205bfdd1ebcc297e1002b3f3e624e4b59a61ecf64b76889733b92c",
+		"res://src/presentation/hex_demo_result_card.gd": "445a2d76dc30327b9ca2373c3643500612b9b2c7fbd9d2b07197b9b72051a51f",
+		"res://src/presentation/hex_environment_layout.gd": "906a429c233b76e5ac06c5c77619a2a7393cc56f965d36a00ce97f3c909e7698",
+		"res://src/presentation/hex_magic_glow.gd": "4dff9c0ae52cb3aaed3a507bec6d00a4cd6b885fd739cbddc4ba5b8ece8fbdca",
+		"res://src/presentation/hex_material_surface.gd": "6f2d3ca43e8e1eadfa3144a280c63d20138cdaaca8d5dda524ea7dbed66b0aae",
+		"res://src/presentation/hex_playground_panel.gd": "e5daa574cbad0c76389f328e1a50b1ad96dee58c8f814b002dedbd0145904731",
+		"res://src/presentation/hex_projectile_facets.gd": "f3c90457b20911b9610a950ff10cbdbc5d8e0431cead65b27ebd81607beab7e6",
+		"res://src/presentation/hex_stone_floor.gd": "1a364b6317b88bea708c4732c8e979e0b6e5b1edee77e0100085340a996040f2",
+		"res://src/presentation/hex_surface_glow_cache.gd": "435b2ee56b588e6bd43d1fc4aa29747c662d8533b9dae4cde369b022a6126a06",
+		"res://src/presentation/hex_water_material_presenter.gd": "487e0b674476f6fb125ee97a2b7136d8236c3f58b8cabf85d0b62f49c9bbc8c2",
+		"res://src/presentation/interception_feedback.gd": "3e5c624a5fbff55b4e5bf07670d21a0848b53dca107869e2211b5457a4a64929",
+		"res://src/presentation/interception_practice_card.gd": "43cb3662c84983895b62e3f30a180fcb71b656f82180586e4e01ddedccf8c3d7",
+		"res://src/presentation/jump_presentation.gd": "0b34756959a99d226e96601d36af799ef4fb0e885e88d3c0ba37b560d5fa0c02",
+		"res://src/presentation/landing_presentation.gd": "6714bcab117861e479c33d8f07d0ca09cf4b2eeacca0b9401a20634a1605152a",
+		"res://src/presentation/minimal_champion_motion.gd": "f1650539cceaed4e978174b9e228979291fde671e9030b206c845d33d3d228f3",
+		"res://src/presentation/movement_guide_model.gd": "f605bfe9e2667646720126366d41a5f4f34fa281f27c44e33a35b6db38ec1b3b",
+		"res://src/presentation/movement_practice_coach.gd": "d4ab790c562aef04c1cc56a2e18b0d5145a95acc7b7ab9773645599ef208e25c",
+		"res://src/presentation/movement_practice_trace.gd": "16bfb7a64ec9f724961006cb10112733e7dc1a3eb1c03b87d87edda3af724126",
+		"res://src/presentation/natural_map_kit.gd": "46a65ad19e56f4b20b9474ad45d8939d5fb7461ce8f0b8c293da892008375682",
+		"res://src/presentation/performance_panel.gd": "f5efe19e5c544842055f015b965fc6c04469ca000962cabe809815d21c578923",
+		"res://src/presentation/pixel_action_bank.gd": "dc14972fb04004774d15accfcbd32254d65e1429702082d73e5dc6e2dc5e1a65",
+		"res://src/presentation/pixel_aerial_pose.gd": "741f4ac8607bdbf709abd63bc5b6f2cfeb57f608f4ba1b6db24b5294a29250e4",
+		"res://src/presentation/pixel_cast_hands.gd": "a9e21e7e6c81f786e5dd9c8a13d0bb7e893882ca41a9746124265771026d6245",
+		"res://src/presentation/pixel_effect_geometry.gd": "7e11d1d53cccf86473fe1aba779bfb07fcbdaeb388ca0598cebb06bbe733f9f3",
+		"res://src/presentation/pixel_flipbook_presenter.gd": "be92678f2614ba261216bb924b5665a550f4755c838423da5df91fd087a961c1",
+		"res://src/presentation/pixel_magic_library.gd": "4103a634ab1b46897a00fb88de0b5bd141962a96c6b73caa53410c8959d2fca5",
+		"res://src/presentation/pixel_map_library.gd": "02b2d41e082bee3fd2d037939cadbe8f6db556e6aa6a780eaacc9c7370366882",
+		"res://src/presentation/pixel_movement_effects.gd": "52c7b60158c8a6d7dd1072e520a802a874d2f4b4e3133c45e8da70ff4135d8e4",
+		"res://src/presentation/pixel_presentation.gd": "e0eb9564015374be10d9fd8b2c107c36884d21b7922a6f0ac0377adf390591f1",
+		"res://src/presentation/pixel_primitives.gd": "091ebf6905700f64b5ae80a961be648f8c278c706e37d85bb6624dfab97ff700",
+		"res://src/presentation/pixel_spell_effects.gd": "fd81453cef079520467c980eb4e91738dda63c4aafae27357d8604f33145dfd2",
+		"res://src/presentation/pixel_wallrun_pose.gd": "e2504d15aecad0884e8abd344000fc88bd1ed8c8f2a8373299050b4c6c053620",
+		"res://src/presentation/player_camera_rig.gd": "aea04deef6683a58d3b9ff54939f2ae75a7fafbddb51f6bc1f0ea8ac0ad64cf3",
+		"res://src/presentation/player_compendium.gd": "c134dafa18cea1e5e3e74f99e5a1171fc0545fb145631abf2fec93370cf037c7",
+		"res://src/presentation/pov_terrain_backdrop.gd": "9faacb3cc2870eefae914470bee7c385a93386917ecbd99af4e4cb26ecc2ff04",
+		"res://src/presentation/pov_terrain_batch.gd": "2d27915ede5a36a5133c02e0109ca3348992bffec77a1f10fd1a028c7b117196",
+		"res://src/presentation/practice_coach_card.gd": "01dec6db3626eb2b8b318cbd01037734f706d8e1ce3170e434ed065023bdfc77",
+		"res://src/presentation/practice_wall_skin.gd": "eb96b5871b1bbc2afd781c1976b8d57b8d8119e0432650da1df75a98abdfdcfa",
+		"res://src/presentation/projectile_presentation_motion.gd": "8dea9dea68ebce00021e76d94eb65c8681e34621aa4b9f314e3949aeccc2c556",
+		"res://src/presentation/range_scenario_panel.gd": "fe2f47cc844c819e9d1da7c7477b4ca137c835691787176d750fb0b14c20f294",
+		"res://src/presentation/readable_chemistry_demo.gd": "7fbcc3470de09ab67dec7a90b127257210abdeff6a8b45e99127314768068ab9",
+		"res://src/presentation/readable_controls.gd": "82253109da3608451eb980db80c111bb58bf34042bca332cec182e8d4d1219b1",
+		"res://src/presentation/readable_reference_panel.gd": "ee332c8967ff5ead88f764a10a6e790d4863528f7c233d708b23ca528297f17d",
+		"res://src/presentation/readable_service_directory.gd": "398ba33dc5b5059e6aa4ca83dd9a0c6b5edd937cf780cdf8f02351719a7da94a",
+		"res://src/presentation/readable_spell_loom.gd": "cb1e9072c607037e856f71a03884ea04c5cf17703781870411669c015cdd92ce",
+		"res://src/presentation/readable_testing_panel.gd": "c20be0185688da2cc66667b4d7dff0232a032125b862a26d25f7d8e726bb723b",
+		"res://src/presentation/render_quality.gd": "e1c3390480693d94ee0653e87cc4a4987769ef1c3b931ea84da5500fc3f19498",
+		"res://src/presentation/retained_campus_canvas.gd": "6933119d00dbd6c7bc90019f1c97fc71662953a494193f7524af21f99333f006",
+		"res://src/presentation/retro_material_marks.gd": "18a0da897da90b31c12699bc40bc7dc3c7407a1e008bc481b3f81dadabfea942",
+		"res://src/presentation/sanctum_campus_renderer.gd": "16a0f64295444dc2a7ffc2876d091317445bcc4d5dadef40adee8fc19a564ed5",
+		"res://src/presentation/session_round_label.gd": "3f4b21dfd65b312f90b34ad4d79adf6f558c5b485350856c285bc8ea088053fd",
+		"res://src/presentation/sight_occlusion.gd": "366c2c26c1f18337c2fcbc3995643a422de1d150cacd94cdf0940bbe95d139b3",
+		"res://src/presentation/skeleton_animation_library.gd": "547c3db74b0161529a37b203f6a0ade1aede313e43dfbd31317985582ee0d7e9",
+		"res://src/presentation/solo_duel_trial_panel.gd": "76907ada47696160588828e985efeb0733dac46d7e6918c6ef5cc1d28e68eaf5",
+		"res://src/presentation/spell_animation_skeleton_library.gd": "a30fa17efe5e5188949cb0bc53df27c80835e35ca92126004955beac927fbb95",
+		"res://src/presentation/spell_binding_labels.gd": "4de28ecfafed9a13e796b0b168fa3368b7ee9f83dab8e06f2e2beae7f429388e",
+		"res://src/presentation/spell_delivery_direction_contract.gd": "78ec19ce7b77b433744eee29231851ef715ec6fc3d2b010d9722841835b60731",
+		"res://src/presentation/spell_inspector_model.gd": "349f604c972bb07523ec07225a5c7c97be8ba78f4447e8f74852bd604db8162c",
+		"res://src/presentation/spell_loom_presenter.gd": "18059d05e99da37efbb1e41beb8af5a1c0676fa79730fcf5e72f245844d7cd06",
+		"res://src/presentation/spell_testing_panel.gd": "1c52b64b2abba82405867338977b5bc06906814643052735b40d47c8c9ec5a15",
+		"res://src/presentation/team_match_presentation.gd": "5466a25da5789e5e12d3fd645a7aa5ea86f5fc1a7cb74b958b383117fa0196f0",
+		"res://src/presentation/terrain_hash_job.gd": "fd3c440709d9ba61575830b25daf0d9013d708005553f6da5d06ea2a7e76d5b2",
+		"res://src/presentation/ui_reading_policy.gd": "83c2ae51c52684af5d01b9caf33ab8b171b9af556a11687c19ac0cee71a752a1",
+		"res://src/presentation/visual_accessibility_filter.gd": "328ed835a2300b6148e39936bf89ea8c50719ca0d10b676b28e124bd677cf275",
+		"res://src/presentation/visual_asset_gallery.gd": "74381e1c83df18d6fb2f8a342143ca4f8ac05e7bbee14d36ab3ab80785c6401f",
+		"res://src/presentation/visual_asset_registry.gd": "b33616c4d5f84288abb5b625d985ce0301168ee4368b31d42f6d510f6db53df2",
+		"res://src/presentation/visual_language.gd": "71a8cf338a174b892baae96b97b71cd091c59af4ef05f02953f83a126bf9a880",
+		"res://src/presentation/visual_specimen.gd": "27fcf01ac3183f4a788a9a54a1f8d9722af0a38b04e22f567f2dadc0a9e4754b",
+		"res://src/presentation/wellspring_architecture_kit.gd": "645cc5a685c109d595192f264fffe2f349e1f780d51a76ba9ead2d9effe3a6f7",
+		"res://src/presentation/wellspring_architecture_skin.gd": "d86a19d4773a9326eb64436ca5fe2be52e5a4078d3716856470a08439d994d6a",
+		"res://src/presentation/wellspring_async_terrain_stream.gd": "2bf2835dc76eaeb0aa4d2cb5964ec15169c430391f4cd58c16c4ed007caa526b",
+		"res://src/presentation/wellspring_character_sprite.gd": "b0c48c790cb299441ad8367bf9dc7664c02fc78582bd852a200ff1ba13932c17",
+		"res://src/presentation/wellspring_district_style.gd": "5c3611361ce6654950ba8ed9c6aaaeb24b910556b054ea678dc8859061a929de",
+		"res://src/presentation/wellspring_district_view.gd": "a6bc3c910d3d9d6e3fcfc3cbb1b146e172803642e18c2f0eab25ef74109c1569",
+		"res://src/presentation/wellspring_environment_details.gd": "e50de7e1119084e62d4417b340c3a09854f71f0dc5ec58a966877a1876a40fe4",
+		"res://src/presentation/wellspring_illustrated_kit.gd": "34983ad79caf2a4ec14f98b2e90b6582cb83874d78f0d63ce61c8395e20cd380",
+		"res://src/presentation/wellspring_interaction_presenter.gd": "493056798fb0233decdc694a17502438d020f20b40c6a92075d90a037c5ed638",
+		"res://src/presentation/wellspring_map_panel.gd": "31bda44e1ba1f20d8ac3ab990cc94ea1b2a106ef682ed227832c68460a9f857f",
+		"res://src/presentation/wellspring_service_buildings.gd": "e71bd6ece9acac64c3e3a0113ee3c1a6e7fdaa08d7f87ef8a9a25c6967ee3307",
+		"res://src/presentation/wellspring_terrain_manifest.gd": "d490c74599b8c09ca33eb06ce71faca2f24af43794637ce18f8ce80a92838542",
+		"res://src/presentation/wellspring_terrain_stream.gd": "83c1ee7a896ca60a92f2b691c9c7cfd54faff32fffdc33d84181e38ccdcdf0ca",
+		"res://src/presentation/wellspring_visual_catalog.gd": "311ed3fb5d5d1dacf3969d738d11a6329eac8813eb2314d734ecd23415132518",
+		"res://src/presentation/wellspring_wayfinding.gd": "c0e1c443eb958e9f446fed3a6b2e400ea283dbd286d3e41075440f96f3632f6a",
+		"res://src/presentation/wireframe_body_presenter.gd": "b67dd330500d29b0a3f65df314543141c3aedf6921f0b16cc3d7b91097cfc950",
+		"res://src/sim/chemistry/capacitor_field_policy.gd": "677d1065e18d524a7b5e5f05e6ff27c3c456e373a4624146a4c2affda21c4d43",
+		"res://src/sim/chemistry/element_chemistry_system.gd": "3b33d02830660e76a402c0cc4c50aaa736fc092e8ab261f1fe9a9245436160d3",
+		"res://src/sim/chemistry/element_deposit_state.gd": "bd19f58948217fd479c3dad50ee10b1d69f58c3632cf68b134af6628f2404a2d",
+		"res://src/sim/chemistry/element_reaction_state.gd": "698e6c69ce2057f25b9955837298de4bea7d69bde5ab768649299eab0c4e09e1",
+		"res://src/sim/chemistry/frostway_field_policy.gd": "cad2360964ecbcc09a85113f020a12b1e3a5006e9fe2c8ab5a8719e1865a99f4",
+		"res://src/sim/chemistry/reaction_definition_table.gd": "f1a7dae81f7bb71e89cef8fb9c5f8c9806b76b9f61aadda7cd1188dc94e8b5ef",
+		"res://src/sim/combat/combat_damage_event.gd": "d0f33001d00b943701d8043d55b6365e3d4cdf96262b7ba1429d45df4437a58c",
+		"res://src/sim/combat/combat_definition_table.gd": "371ba7c8d592d51921fe9ffb848107585bfc4636c1c60624557072e2688ed1f8",
+		"res://src/sim/combat/combat_system.gd": "e37ed42da20ec1b603b36735c9e299a304ffff55071970a02ac6fe55d7bf15fc",
+		"res://src/sim/combat/combat_tuning.gd": "b9d716d2b0cf4e0578916017ace2d574e13dd8c3bac66beee2a3022abf976cb7",
+		"res://src/sim/combat/continuous_contact.gd": "c4f0c35485e7deca4bfc732afaeddd323b625d310e8088a8e6d510546f8965fe",
+		"res://src/sim/combat/field_state.gd": "1921cca91aa39faf08a8d84ceba0a37945b918c9c61859363b88cead7135dbd5",
+		"res://src/sim/combat/interception_practice.gd": "cc3a3d8bfd0f622b6bf40de0a8be1dab138ccdc724d0341b0d66f851de49240b",
+		"res://src/sim/combat/projectile_contact_order.gd": "08fb68eda08503f343e3dd908841e577fb574a82e9c5a3d5271e769544635e0b",
+		"res://src/sim/combat/projectile_state.gd": "87ce744475d538eefbe2d4b87cb68eba81d620d97f9c4a5d3c113ca03ad1b3fc",
+		"res://src/sim/combat/spell_status_policy.gd": "81e26bd6e5f349d206a4bf9b155673876ecb23e792efcb0e36b6ccb85a2efd4a",
+		"res://src/sim/combat/spray_contact_geometry.gd": "dbccf6708463d849de7c7b390d6e47f2bebac6226f633cdac9ad252a9ef8a00a",
+		"res://src/sim/combat/spray_interception.gd": "2d3cefe75560bd8f938c915fa1733f5aa2efd66b6c9ee6023313817e7344df3b",
+		"res://src/sim/combat/strength_budget.gd": "c206c16de173eb768d9439ef379ff93d5f71cdf9c4bb3848168eb4bec9622ce8",
+		"res://src/sim/combat/training_target_system.gd": "fc6dc3970c078a922afc9fd6c3bd505ea4eaa37e83cab631386e83df594c92f4",
+		"res://src/sim/core/action_transition_policy.gd": "a591f723d853d19b57ef73affa16956f1e20d3db650664bd2c0ae56057ffef18",
+		"res://src/sim/core/canonical_bytes.gd": "11de76f54bd1f420fe925d2683dcdaeca1ef59d253810cbbfc42f5ff12250d2a",
+		"res://src/sim/core/sim_command.gd": "373570ad226315e719a79b987b245cfbc6d710543e54f6b8c6dab7c4ca36d654",
+		"res://src/sim/core/sim_config.gd": "0805015a85ba138ee0c024c01b614c908e3ea714202a1410be6b11ee60390d98",
+		"res://src/sim/core/sim_world.gd": "2a8e32069c800d70644f222d4ce1e2378e3b2c79991e7e5d58b4de2df4548a1e",
+		"res://src/sim/entities/identity_perk_policy.gd": "c78f1ad8a93b0fc215bc8ca5b0c0ee8a6481fa54efdd7014ab83a38cef205cb0",
+		"res://src/sim/entities/player_resources_system.gd": "1b766628aa018333c13e702f986d426ce0b2f84b3a5df4a364179d7bc306828a",
+		"res://src/sim/entities/player_state.gd": "9cc8465cade92f1d29220efb6087bac80497c037ca4082b89af2ea97543084cd",
+		"res://src/sim/entities/player_tuning.gd": "9d444df43f0254fbeaf925adf445d79380d8b1c6dce30d751d0d16275b46587b",
+		"res://src/sim/entities/resource_recovery.gd": "c43d050b84819e20dfa4550cbac4ac5e5bb993e9e1073b9ad160222f18615d3b",
+		"res://src/sim/hex/hex_canonical_state.gd": "f59aed162a15c824e37971a30b4cdbc274725f7ecb4482c10bbfc8373a6bc6c3",
+		"res://src/sim/hex/hex_cast_parts.gd": "3a1bb8f7fe8b3bb05e752caed48dafc2f65cb84b0076da47903817a508602047",
+		"res://src/sim/hex/hex_cell_topology.gd": "c7f3a32b957f12b4b94828e7ed3fbabb62c569fbdc27a251fbbb59c4c68e03ff",
+		"res://src/sim/hex/hex_chemistry_world.gd": "5618b81316329bba8524022365db2f30a5f613603fe1e08b3abd98d18637a567",
+		"res://src/sim/hex/hex_collision_world.gd": "7e1691facb93a524029ff2664a011df95cd7e8932b9217788246cdb52f3fe718",
+		"res://src/sim/hex/hex_composite_policy.gd": "f4d4e636a6fa5fdd21d4943b9fe4e2a804b465fd58ccd4e9184a9aea7fe16ef2",
+		"res://src/sim/hex/hex_contact_workset.gd": "6b545be93a34064bf00bf0c8330533d90cedb7b6bfa39ef26c05dddea801465b",
+		"res://src/sim/hex/hex_convex_geometry.gd": "5b3e9fda00c69022cd5f8310931d785c13c09362ded10663d211f99f7b442dd1",
+		"res://src/sim/hex/hex_court.gd": "c577334fc6f520d2694e8139b4130f25a73110c8da0374db342a2079006efddf",
+		"res://src/sim/hex/hex_court_practice.gd": "e3cdad4c5294175ef1de402fb748d5e2a661bef7e1d19486cac3c088c07cb30b",
+		"res://src/sim/hex/hex_expanded_delivery.gd": "266a385febc099789439a05b1797bd5dc4c7ce14faff132f163d4d3e53e885b9",
+		"res://src/sim/hex/hex_footprint.gd": "07e2fefe0b41ddc6d49708fe30023b6091f20384e5815d6383f839328f88351d",
+		"res://src/sim/hex/hex_grid.gd": "bd74d8d6b28505a38a55c0e7b4c8558ca8128982886a0c8c8b72c2b5120fb502",
+		"res://src/sim/hex/hex_product_effects.gd": "14e8d59bf65b389cbd9df2330698ce67d2c87ccf25f25870cd42243c6fca9acf",
+		"res://src/sim/hex/hex_projectile_combat.gd": "18a41839460e39bcdcb9cee34b53a166ef42ddeada3a6d23e8b949cdbf2d0611",
+		"res://src/sim/hex/hex_reaction_damage.gd": "f0e73a2afb7bbfaab993392e3b32a2440fedb05945a32824aa796cc08409be77",
+		"res://src/sim/hex/hex_reaction_funding.gd": "3c92ccb0917c1cb65e7db0c5851a85f0f686827e19f8ae52ca65af74ae381e7b",
+		"res://src/sim/hex/hex_reaction_fusion.gd": "68fd046b415d6c98b34a202e0d11962270de868bc3d694277bd6539532b585d5",
+		"res://src/sim/hex/hex_recipe_policy.gd": "e326bcee56b5bcce728dd75ea974e9d960e28c8e7988284daca9c90d564e4e80",
+		"res://src/sim/hex/hex_trail_emitter.gd": "ce4e45d9ce1bb00712f9f37a0c694b1c68e9dbdb539aa957702d3ae4d92101db",
+		"res://src/sim/hex/hex_world_definition.gd": "bf97f33f64b800760759da4c9fc1470a48e0309d65a6237e54c888115ba85b8b",
+		"res://src/sim/materials/material_grid.gd": "b85cdd30e47f96a98b945f9a2b477ea1bbbb1572f746c82c30f4fe524f693959",
+		"res://src/sim/movement/movement_system.gd": "3e195007a624088d211ce6d5c52f849f7213280eaf83e03ef9e5e30302a7e830",
+		"res://src/sim/movement/movement_tuning.gd": "1c0eb351e740d3bc1303c8828d7c3530720491d7c63a844a32c4555d7d76bd3b",
+		"res://src/sim/movement/surface_motion_policy.gd": "b74f39aeb9bc87a7633524dac0793d63501f14b633e1d8e2da41d8e2aec67c0c",
+		"res://src/sim/replay/current_world_replay.gd": "1d55e0b38a0a9051d016fbdaf88bac2b22e7cc1e6094d3621de8145cb080eb35",
+		"res://src/sim/replay/replay_data.gd": "4ddad69e59e38084641d656a4d59875f958be7f644d8d05380f4f23f44997685",
+		"res://src/sim/world/collision_world.gd": "9cb7f568995f8176b85dd6fc278592541a7f309a65ed0aa7cdc669be53207460",
+		"res://src/sim/world/reaction_movement_world.gd": "4f7b5c9483b97a455915159ec206d6f2c8d34047069148b486c161a0a798ac3e"
+	},
+	"source_pins_sha256": "d809ff83afac845d440ab0fe06f6fda9e28084a56597f9ee20b47a37f4706f3d",
+	"wall_elapsed_ms": 6804
+}

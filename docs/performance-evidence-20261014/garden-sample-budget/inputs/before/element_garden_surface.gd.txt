@@ -1,0 +1,212 @@
+extends RefCounted
+## Retained display geometry for harmless, isolated teaching courts. Real
+## chemistry supplies every polygon and phase; no replay, fabricated coverage,
+## second recipe table, or authoritative state is stored here. Shared production
+## textures animate over each exact merged footprint, with bounded extra cues.
+
+const MAX_PLOTS := 63
+const MAX_SAMPLES := 3
+var _cache: Dictionary = {}
+var _last_geometry: Dictionary = {}
+var _geometry_builds := 0
+var _geometry_reuses := 0
+var profile_enabled := false
+var profile_stages_us: Dictionary = {}
+
+
+func retain(entries: Array[Dictionary]) -> void:
+	var visible := {}
+	for entry: Dictionary in entries: visible[int(entry.mask)] = true
+	for mask: int in _cache.keys():
+		if not visible.has(mask): _cache.erase(mask)
+	for mask: int in _last_geometry.keys():
+		if not visible.has(mask): _last_geometry.erase(mask)
+
+
+func prepare(entry: Dictionary, ground: HexCourtPresenter, reduced: bool) -> Dictionary:
+	var mask := int(entry.mask)
+	if mask < 1 or mask > MAX_PLOTS: return {}
+	var court: HexChemistryWorld = entry.court
+	var row: Dictionary = _cache.get(mask, {})
+	var geometry_key: Array = [court.get_instance_id(), court.render_revision, court.value_revision, String(entry.material)]
+	if row.is_empty() or row.geometry_key != geometry_key:
+		row = _geometry_for(entry, ground)
+		row["geometry_key"] = geometry_key
+		row["style_key"] = []
+		row["sample_phase"] = ""
+		row["samples"] = []
+		row["style"] = {}
+		_cache[mask] = row
+	if String(row.sample_phase) != String(entry.phase):
+		# Phase remains a current input even when coverage/value revisions do not
+		# change. Re-read the actual public region contract at each boundary.
+		row.sample_phase = String(entry.phase)
+		row["samples"] = []
+		for cell: Vector2i in row.sample_cells:
+			var regions := court.render_regions(cell, String(entry.material), float(entry.tick))
+			if regions.is_empty(): continue
+			var region := ground._prepare_region(regions[0], String(entry.material))
+			if not region.is_empty(): row.samples.append(region)
+	var warning: bool = not row.samples.is_empty() and ground.backdraft_warning(row.samples[0], float(entry.tick))
+	var style_key: Array = [String(entry.phase), reduced, warning]
+	if row.style_key != style_key:
+		row.style_key = style_key
+		row["style"] = {}
+		if not row.samples.is_empty():
+			var region: Dictionary = row.samples[0]
+			match String(entry.material):
+				"water": row.style = ground._water_region_style(region, reduced)
+				"fire": row.style = ground._fire_region_style(region, reduced)
+				"steam":
+					row.style = ground._steam_region_style(region, maxi(1000, int(region.intensity)), reduced)
+					row.style["edge"] = row.style.dark
+				_: row.style = ground._shared_material_style(String(entry.material), region, reduced)
+			if warning:
+				row.style.fill_opacity = 0.06
+				row.style.edge = ground._language.element_color("fire", "bright")
+				row.style.edge_opacity = 1.0
+				row.style.edge_width = 3.0
+		row["native_entry"] = {}
+		row["native_opacity"] = 0.0
+		if not row.samples.is_empty() and not warning and ground.material_surfaces_enabled and ground._surface_palette_matches(String(entry.material), row.style):
+			var wire := int(ground.ELEMENT_WIRES.get(String(entry.material), 0))
+			if wire == 0: wire = ground._material_wire(String(entry.material))
+			row.native_entry = ground.material_surface._frame_entry(wire, String(entry.phase), float(entry.tick), reduced)
+			row.native_opacity = (0.64 if reduced else 0.82) * ground._intensity_ratio(row.samples[0])
+			if entry.phase in ["forming", "ignition"]: row.native_opacity *= 0.70
+			elif entry.phase in ["decaying", "cooling"]: row.native_opacity *= 0.46
+	return row
+
+
+func draw(canvas: CanvasItem, entry: Dictionary, ground: HexCourtPresenter, reduced: bool, sample_limit: int) -> void:
+	var started := Time.get_ticks_usec() if profile_enabled else 0
+	var row := prepare(entry, ground, reduced)
+	started = _profile("prepare", started)
+	if row.is_empty() or row.style.is_empty() or row.mesh == null: return
+	var style: Dictionary = row.style
+	canvas.draw_mesh(row.mesh, null, Transform2D.IDENTITY, Color(style.base, float(style.fill_opacity)))
+	canvas.draw_multiline(row.boundary, Color(style.edge, float(style.edge_opacity)), float(style.edge_width))
+	var native_painted: bool = row.native_mesh != null and not row.native_entry.is_empty()
+	if native_painted:
+		# One retained UV mesh samples the same shared native frames over every
+		# occupied cell. Wrapped pieces come from the production clipping helper;
+		# no atlas duplication, texture_repeat changes, or per-cell submission.
+		var frame: int = ground.material_surface._frame_index(row.native_entry, String(entry.phase), float(entry.tick), reduced)
+		var texture: Texture2D = row.native_entry.textures[frame]
+		canvas.draw_mesh(row.native_mesh, texture, Transform2D.IDENTITY, Color(1, 1, 1, float(row.native_opacity)))
+	started = _profile("merged_mesh", started)
+	# Bound essential extra cues independently of footprint size. Backdraft's
+	# imminent burst and physical cover retain the production marker grammar.
+	var explicit_cue: bool = ground.backdraft_warning(row.samples[0], float(entry.tick)) or (int(row.samples[0].recipe_wire_id) == 301 and entry.phase == "active")
+	if native_painted and not explicit_cue: return
+	var limit := mini(clampi(sample_limit, 1, MAX_SAMPLES), row.samples.size())
+	for index: int in limit:
+		var region: Dictionary = row.samples[index]
+		var cell: Vector2i = row.sample_cells[index]
+		_draw_sample(canvas, String(entry.material), cell, region, ground, float(entry.tick), reduced)
+	_profile("explicit_cues", started)
+
+
+func _profile(label: String, started: int) -> int:
+	if not profile_enabled: return 0
+	var now := Time.get_ticks_usec()
+	profile_stages_us[label] = int(profile_stages_us.get(label, 0)) + now - started
+	return now
+
+
+func _draw_sample(canvas: CanvasItem, material: String, cell: Vector2i, region: Dictionary, ground: HexCourtPresenter, tick: float, reduced: bool) -> void:
+	var regions := {cell: [region]}
+	# Keep the production dispatch, including Frostway's shared glacier grammar
+	# despite its historical internal layer name "flood".
+	match material:
+		"water": ground._draw_water(canvas, {}, regions, tick, reduced)
+		"fire": ground._draw_fire(canvas, {}, regions, tick, reduced)
+		"steam": ground._draw_steam(canvas, {cell: {"steam_heat": maxi(1000, int(region.intensity))}}, regions, tick, reduced)
+		"conflagration": ground._draw_mirror_product(canvas, regions, material, tick, reduced)
+		_: ground._draw_shared_material(canvas, regions, material, tick, reduced)
+
+
+func _geometry_for(entry: Dictionary, ground: HexCourtPresenter) -> Dictionary:
+	var court: HexChemistryWorld = entry.court
+	var source := {}
+	for cell: Vector2i in court.occupied_cells():
+		var regions := court.render_regions(cell, String(entry.material), float(entry.tick))
+		if not regions.is_empty(): source[cell] = (regions[0].polygon as PackedVector2Array).duplicate()
+	if source.is_empty():
+		return {"mesh": null, "native_mesh": null, "native_vertices": 0, "boundary": PackedVector2Array(), "cells": [], "sample_cells": []}
+	var mask := int(entry.mask)
+	var previous: Dictionary = _last_geometry.get(mask, {})
+	# Exact current public polygons prove reuse; identity/revision alone never
+	# lets a later source inherit stale coverage. Keep only the last nonempty
+	# geometry per visible plot, so expiry renders nothing but does not force
+	# clipping and GPU mesh upload again for an identical fresh paid cycle.
+	if not previous.is_empty() and previous.source == source:
+		_geometry_reuses += 1
+		return (previous.geometry as Dictionary).duplicate()
+	var geometry := _build_geometry(source, ground)
+	_last_geometry[mask] = {"source": source, "geometry": geometry}
+	_geometry_builds += 1
+	return geometry.duplicate()
+
+
+func _build_geometry(source: Dictionary, ground: HexCourtPresenter) -> Dictionary:
+	var vertices := PackedVector3Array()
+	var indices := PackedInt32Array()
+	var edges := {}
+	var native_vertices := PackedVector3Array()
+	var native_uvs := PackedVector2Array()
+	var native_indices := PackedInt32Array()
+	var cells: Array[Vector2i] = []
+	for cell: Vector2i in source:
+		cells.append(cell)
+		var polygon: PackedVector2Array = source[cell]
+		var start := vertices.size()
+		var pixel_polygon := PackedVector2Array()
+		for point: Vector2 in polygon: vertices.append(Vector3(point.x / 1000.0, point.y / 1000.0, 0.0))
+		for point: Vector2 in polygon: pixel_polygon.append(point / 1000.0)
+		var native := ground.material_surface.geometry_for_polygon(pixel_polygon)
+		if not native.is_empty():
+			var base := native_vertices.size()
+			for point: Vector2 in native.points: native_vertices.append(Vector3(point.x, point.y, 0.0))
+			native_uvs.append_array(native.uvs)
+			for index: int in native.indices: native_indices.append(base + index)
+		for index: int in range(1, polygon.size() - 1): indices.append_array(PackedInt32Array([start, start + index, start + index + 1]))
+		for index: int in polygon.size():
+			var first := Vector2i(polygon[index])
+			var second := Vector2i(polygon[(index + 1) % polygon.size()])
+			var key: Array[Vector2i] = []
+			key.assign([first, second] if first.x < second.x or (first.x == second.x and first.y < second.y) else [second, first])
+			edges[key] = int(edges.get(key, 0)) + 1
+	var boundary := PackedVector2Array()
+	for edge: Array in edges:
+		if int(edges[edge]) == 1: boundary.append_array(PackedVector2Array([Vector2(edge[0]) / 1000.0, Vector2(edge[1]) / 1000.0]))
+	var mesh: ArrayMesh = null
+	if not vertices.is_empty():
+		var arrays: Array = []
+		arrays.resize(Mesh.ARRAY_MAX)
+		arrays[Mesh.ARRAY_VERTEX] = vertices
+		arrays[Mesh.ARRAY_INDEX] = indices
+		mesh = ArrayMesh.new()
+		mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	cells.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+		var first := HexGrid.center(a).length_squared()
+		var second := HexGrid.center(b).length_squared()
+		return first < second if first != second else a.x < b.x if a.x != b.x else a.y < b.y)
+	var samples: Array[Vector2i] = []
+	if not cells.is_empty():
+		for index: int in [0, cells.size() / 2, cells.size() - 1]:
+			if cells[index] not in samples: samples.append(cells[index])
+	var native_mesh: ArrayMesh = null
+	if not native_vertices.is_empty():
+		var arrays: Array = []
+		arrays.resize(Mesh.ARRAY_MAX)
+		arrays[Mesh.ARRAY_VERTEX] = native_vertices
+		arrays[Mesh.ARRAY_TEX_UV] = native_uvs
+		arrays[Mesh.ARRAY_INDEX] = native_indices
+		native_mesh = ArrayMesh.new()
+		native_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return {"mesh": mesh, "native_mesh": native_mesh, "native_vertices": native_vertices.size(), "boundary": boundary, "cells": cells, "sample_cells": samples}
+
+
+func diagnostics() -> Dictionary:
+	return {"resident": _cache.size(), "retained_geometry": _last_geometry.size(), "geometry_builds": _geometry_builds, "geometry_reuses": _geometry_reuses}

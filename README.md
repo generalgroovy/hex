@@ -1,32 +1,56 @@
 # H.E.X. — Help, Everything eXploded!
 
-Status: **paused at the qualified October 13, 2026 checkpoint, at the user's request.**
-Current source and local portable are **p61-7804a23eb300** on
-`codex/hex-screen-smoothness-20261011`. The closing batch fixes victory audio
-tails, remapped F5/F6 hints and the movement lesson's Jump press/release instruction.
-Earlier improvements include faster bounded projectiles, actual-path trails,
-paid defeat cleanup, compact HUD identity and bounded worker terrain validation.
+Status: **active improvement pass; October 15 design complete; Windows work paused for Linux handoff.**
+Stop before 20,000 credits remain.
+The [cross-reviewed overhaul proposal](docs/OVERHAUL-DESIGN-20261015.md) targets
+the selected illustrated 2.5D animated-sprite direction, clear spell areas,
+tall enterable architecture, compact learning and measured optimization.
+It is a design deliverable; its runtime changes are not implemented.
 
-[Full validation](docs/iteration-20261013/full-7804/README.md) passes
-**265 suites / 7,573,807 assertions**, with zero failures/error output and a
-120 Hz boot. The fresh package passes archive, exact exported-terrain and
-five-case normal-close/reopen checks. The
-[delivery review](docs/iteration-20261013/delivery-review-7804/review.json)
-links those results to the exact source and package bytes. The previous
-**p61-500be306a26a** portable remains preserved; `main` is unchanged.
+**Continuing on Linux:** clone or pull `codex/hex-screen-smoothness-20261011`, then
+read the [Linux CLI handoff](.agent/LINUX-HANDOFF.md). It contains the restore
+commands, current state, validation limits and receiving prompt. The complete
+checkpoint is carried by Git; the older ZIP overlay is no longer needed.
 
-Smooth 60 FPS remains an open goal. The
-[last admitted foreground recording](docs/iteration-20261013/foreground-500be-allsteps/review.json)
-belongs to **500be**, with Garden/default Fire/Mantle p95 engine intervals of
-24.743/28.217/39.999 ms. It includes observer overhead and is not a matched
-speedup or a performance measurement of this newer portable. Both sustained
-follow-ups expired before Start and measured no gameplay.
+The qualified local portable remains **p61-d6d1bfb9c529**. It includes the reviewed
+stationary movement optimization and the preceding depth/clarity improvements:
+six wall treatments, taller masonry facades on two existing buildings,
+independent camera look-ahead, Range status observations and earned-spell guidance.
+The [qualified checkpoint](docs/performance-evidence-20261014/stationary-qualification-d6d1/README.md) records this delivery;
+the [depth and clarity record](docs/depth-clarity-20261013.md) retains the prior batch.
 
-The [iteration record](docs/iteration-20261013/README.md),
-[single queue](.agent/OVERHAUL-IMPLEMENTATION.md) and
-[resume handoff](.agent/HEX-RESUME.md) record completed, withdrawn and deferred
-work. No new audit, experiment or foreground run is active. User saves, original
-art, older working builds and useful failed evidence remain preserved.
+[Full validation](docs/performance-evidence-20261014/stationary-qualification-d6d1/full/tests.json) passed **265 suites /
+7,574,524 assertions**, with zero failures/error output and a 120 Hz boot.
+Package, all 18 portable checks, 133 exact terrain images and five supervised
+normal-close/reopen cases passed. The [delivery review](docs/performance-evidence-20261014/stationary-qualification-d6d1/delivery-review/review.json)
+passed **4,076 checks** linking exact source and package bytes.
+**p61-64590c45c7a5** is the immediate fallback; 7804 and older builds remain preserved.
+`main` is unchanged.
+
+**Current-build foreground performance and portable FPS remain unmeasured.**
+The [previous-build 6459 source performance review](docs/performance-evidence-20261014/foreground-6459-b/review.json)
+retains Profile B: warm Garden/sustained Fire/Mantle engine interval mean / p95
+**62.105 / 73.910, 92.595 / 117.084, 87.840 / 110.507 ms**. Those full-observer
+source results belong to 6459, not this build. Host memory pressure and observer
+cost remain limits; no causal cross-build speedup or smooth 60 FPS is established.
+The [earlier setup attempt](docs/performance-evidence-20261014/foreground-setup-a/review.json)
+expired before Start and measured no gameplay.
+
+[Casting-stage measurements](docs/performance-evidence-20261014/casting-stage-attribution/README.md)
+identified ordinary actor movement as the largest measured child during short
+Fire and all-six casts. The [retained stationary optimization](docs/performance-evidence-20261014/stationary-ground/README.md)
+passed four native comparisons, saving roughly 6–11% of isolated whole-step time
+in those stationary scenarios; this is not a gameplay FPS gain. It is now qualified
+in the current delivery. The [Garden marker-budget trial](docs/performance-evidence-20261014/garden-sample-budget/README.md)
+and [Low-detail overlapping-Fire decoration trial](docs/performance-evidence-20261014/conflagration-decoration-coalescing/README.md)
+were withdrawn after failing their cost gates. Neither renderer change was applied.
+
+The [single queue](.agent/OVERHAUL-IMPLEMENTATION.md) tracks the approved depth,
+clarity and maintenance pass, with an implementer and independent reviewer for
+each point. The [resume handoff](.agent/HEX-RESUME.md) records the current delivery;
+the [closed iteration record](docs/iteration-20261013/README.md) retains earlier
+completed, withdrawn and deferred work. User saves, original art, older working
+builds and useful failed evidence remain preserved.
 
 A movement-led elemental combat sandbox in Godot. Move and aim independently,
 build a twelve-slot spell weave, combine finite elemental effects, and learn a
@@ -40,6 +64,11 @@ districts and use the compact world map to travel between thirteen named places.
 
 ## Install or play on Windows
 
+On this PC, use the **H.E.X. desktop shortcut** for all player sessions. Its
+stable launcher is `C:/Users/sende/Documents/ChatGPT/H.E.X/PLAY-HEX.cmd` and selects
+the qualified portable. Source testing uses the repository tools below; candidate
+source is not automatically substituted for the qualified play build.
+
 This Git repository contains the game source, required art, tests and qualification
 evidence. Exported EXE/PCK/ZIP files and local profiles are excluded from Git;
 cloning the repository does not download a prebuilt portable.
@@ -48,7 +77,7 @@ The current source is on `codex/hex-screen-smoothness-20261011`. `main` remains 
 with the earlier be3 runtime. Use the [development guide](docs/DEVELOPMENT.md)
 to select and update the intended branch before launching from source.
 
-To run a checkout, install **PowerShell 7.2 or later** and the pinned
+For a checkout on another PC, install **PowerShell 7.2 or later** and the pinned
 **Godot 4.7.1 stable Windows runtime**. Open PowerShell in the repository and point
 the helper at your downloaded executable:
 
@@ -65,23 +94,24 @@ For an independent portable, install matching Windows export templates and run
 `.\hex.cmd package -PixelCast`. Each run creates a fresh folder under `exports/`.
 See [development and verification](docs/DEVELOPMENT.md) for checks and packaging.
 
-The qualified local portable is **p61-7804a23eb300**:
+The qualified local portable is **p61-d6d1bfb9c529**:
 
-- [Launch H.E.X.](exports/hex-checkpoint-20261013-7804/windows/PLAY-HEX.cmd)
-- [Windows x64 ZIP](exports/hex-checkpoint-20261013-7804/HEX-p61-7804a23eb300-Windows-x64.zip) — **153.7 MiB** (161,188,342 bytes). Extract before launching.
+- [Launch H.E.X.](exports/hex-performance-20261014-d6d1/windows/PLAY-HEX.cmd)
+- [Windows x64 ZIP](exports/hex-performance-20261014-d6d1/HEX-p61-d6d1bfb9c529-Windows-x64.zip) — **153.7 MiB** (161,194,910 bytes). Extract before launching.
 
-The [package and archive evidence](docs/iteration-20261013/delivery-7804/README.md)
-verifies the export and all 18 archive checks. Exported terrain passes 2,064
-checks over 133 exact images. The five-case lifecycle run covers Hearth,
-Garden, paid Fire, paid all-six Mantle and reopening with unchanged isolated
-preferences. Fire and Mantle each complete twelve accepted casts with no
-refusals or extra outcomes. These gates establish their recorded lifecycle and
-content checks; frame pacing and human gameplay acceptance remain separate.
+The [package and archive evidence](docs/performance-evidence-20261014/stationary-qualification-d6d1/README.md) records all 18 portable
+checks and 2,064 exported-terrain checks over 133 exact images. Five
+supervised lifecycle cases cover Hearth, Garden, paid Fire, paid all-six Mantle
+and reopening with unchanged isolated preferences. Fire and Mantle each complete
+twelve paid starts and releases with zero refusals. These gates establish their
+recorded content/lifecycle properties; frame pacing and human acceptance remain separate.
 
-The previous **p61-500be306a26a** remains available through its
-[launcher](exports/hex-iteration-20261013-500be/windows/PLAY-HEX.cmd) and
-[qualification](docs/iteration-20261013/delivery-review-500be/review.json).
-The [documentation map](docs/README.md) links older preserved builds.
+The immediate **p61-64590c45c7a5** fallback retains its
+[launcher](exports/hex-depth-clarity-20261014-6459/windows/PLAY-HEX.cmd) and
+[qualification](docs/depth-clarity-evidence-20261014/delivery-review/review.json).
+The older **p61-7804a23eb300** [launcher](exports/hex-checkpoint-20261013-7804/windows/PLAY-HEX.cmd)
+and [qualification](docs/iteration-20261013/delivery-review-7804/review.json) remain preserved.
+The [documentation map](docs/README.md) links earlier builds.
 These are local artifact paths, not GitHub downloads.
 
 The portable needs no Git, Godot installation or administrator permission.
@@ -231,7 +261,7 @@ references to adapt and test, not proof of H.E.X. balance or fun.
 
 - **Balance, movement feel and wayfinding need human play.** Finite budgets and complete definition coverage do not establish equal competitive usefulness or intuitive routes.
 - **The simulation is 2D with depth presentation.** Thirty identities have held action keys; complete authored cycles for every action remain unfinished. Native protection/jump fixtures test presentation correctness separately.
-- **Steady 60 FPS is not achieved.** The [current foreground record](docs/iteration-20261012/foreground-current-record.json) reports Garden/Fire/Mantle p95 engine intervals of 29.420/49.174/51.784 ms. It is an admitted full-observer source recording, not GPU/present or packaged-performance acceptance. Earlier [measurements](docs/smoothness-20261012/performance.md) retain their original source scope. Retained campus drawing remains opt-in after its moving-Garden comparison regressed.
+- **Current-build foreground performance and portable FPS remain unmeasured.** The [previous-build 6459 measurement](docs/performance-evidence-20261014/foreground-6459-b/review.json) retains Garden/sustained Fire/Mantle p95 engine intervals of 73.910/117.084/110.507 ms with full observation. Those figures do not measure d6d1 or establish a causal speedup. GPU/present latency and steady 60 FPS remain unqualified. [Older evidence](docs/iteration-20261013/foreground-500be-allsteps/review.json) retains its unmatched source/workload scope. Retained campus drawing remains opt-in after its moving-Garden comparison regressed.
 - **Multiplayer is experimental.** All participants need the same exact build. Eight players is a cap, not dense-capacity certification; physical two-PC and different-home acceptance remain open. No Internet relay is deployed.
 - **The portable remains local and unsigned.** Source, tests, documentation and relevant receipts are checkpointed on the presentation branch; exported binaries and personal profiles remain excluded. Original assets and earlier working builds are preserved.
 

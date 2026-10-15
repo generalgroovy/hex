@@ -1,0 +1,17 @@
+{
+  "schema": "hex.conflagration-transform.v1",
+  "before_sha256": "3190aa2683205bfdd1ebcc297e1002b3f3e624e4b59a61ecf64b76889733b92c",
+  "guard": "\t# COALESCE_GUARD_BEGIN\n\tif not _coalescing_enabled(material):\n\t\tsuper._draw_mirror_product(canvas, regions_by_cell, material, tick, reduced)\n\t\treturn\n\t# COALESCE_GUARD_END\n",
+  "replacements": [
+    {
+      "old": "\tfor cell: Vector2i in regions_by_cell:\n\t\tfor region: Dictionary in regions_by_cell[cell]:\n",
+      "new": "\tfor cell: Vector2i in regions_by_cell:\n\t\tvar skipped := _coalesced_active_indices(regions_by_cell[cell])\n\t\tvar region_index := -1\n\t\tfor region: Dictionary in regions_by_cell[cell]:\n\t\t\tregion_index += 1\n"
+    },
+    {
+      "old": "\t\t\telse:\n\t\t\t\tvar phase := \"active\" if active else \"cooling\" if decaying else \"ignition\"\n",
+      "new": "\t\t\telse:\n\t\t\t\tif active and skipped.has(region_index): continue\n\t\t\t\tvar phase := \"active\" if active else \"cooling\" if decaying else \"ignition\"\n"
+    }
+  ],
+  "header_sha256": "d6d24091ce4c84b857666f97a30927cd5b7c6778aa3a9825aa23ec841fc3407e",
+  "scope": "Only exact Low presenter/language/RetroMarks active decorations consolidate. All fills, boundaries and non-active warnings retain original order. Standard/derived/custom-owner paths retain all marks."
+}
