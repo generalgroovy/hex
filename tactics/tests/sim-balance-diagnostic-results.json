@@ -1,0 +1,2973 @@
+{
+  "rulesVersion": 3,
+  "sourceSha256": {
+    "lib/sim.ts": "2e9d40730540a60c74aef116691ae444cc009d30773e09b326d7b9df92bc4acd",
+    "lib/game.ts": "3d281fed4de847e159fd97e9a6ff3178cf31a958cf488fbcc3da07e0d7659b2c",
+    "tests/sim-balance-diagnostic.ts": "05ed211441a146cd135d6abecb2611feaa46463b88c7f00c3ec7fb05ce195ca0"
+  },
+  "fixture": "All 20 unique squads in 10 complementary pairs; 3 cyclic deployment orders; native and cautious-hold policies; each matchup repeated with squads exchanging seats. Fully deterministic, no random seed or parameter search.",
+  "games": 120,
+  "seatWins": [
+    60,
+    60
+  ],
+  "draws": 0,
+  "cappedGames": 0,
+  "averageRounds": 9.966666666666667,
+  "mirroredRoundChecks": 598,
+  "totalCasts": 3366,
+  "totalFizzes": 498,
+  "reactionCounts": {
+    "penumbra": 36,
+    "steam": 10,
+    "quagmire": 56,
+    "magma": 44
+  },
+  "policies": [
+    {
+      "name": "native",
+      "games": 60,
+      "seatWins": [
+        30,
+        30
+      ],
+      "draws": 0
+    },
+    {
+      "name": "cautious-hold",
+      "games": 60,
+      "seatWins": [
+        30,
+        30
+      ],
+      "draws": 0
+    }
+  ],
+  "squadResultsByChampion": [
+    {
+      "championId": "oh_tipi",
+      "games": 120,
+      "wins": 58,
+      "draws": 0
+    },
+    {
+      "championId": "wa_bidi",
+      "games": 120,
+      "wins": 66,
+      "draws": 0
+    },
+    {
+      "championId": "grace_reava",
+      "games": 120,
+      "wins": 54,
+      "draws": 0
+    },
+    {
+      "championId": "treevor_mason",
+      "games": 120,
+      "wins": 62,
+      "draws": 0
+    },
+    {
+      "championId": "haara",
+      "games": 120,
+      "wins": 46,
+      "draws": 0
+    },
+    {
+      "championId": "s_wayne",
+      "games": 120,
+      "wins": 74,
+      "draws": 0
+    }
+  ],
+  "elapsedNodeMs": 30012,
+  "limitations": [
+    "Paired-seat equality verifies geometry/resolution and these policy tie breaks; it is a correctness invariant, not evidence of human skill balance.",
+    "Complementary squads only, 3 of 6 roster permutations, one map, two related shallow policies. No hidden opponent orders are accessible to either policy.",
+    "Champion squad results confound teammates, opponent composition, deployment and bot decisions; they do not isolate champion strength.",
+    "No human playtests, phone/browser timing, network latency or commercial success claim. Elapsed Node time is diagnostic runtime only."
+  ],
+  "runs": [
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "grace_reava"
+        ],
+        [
+          "treevor_mason",
+          "haara",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        5,
+        8
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "treevor_mason",
+          "haara",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        8,
+        5
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "wa_bidi",
+          "grace_reava",
+          "oh_tipi"
+        ],
+        [
+          "haara",
+          "s_wayne",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        7,
+        8
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "haara",
+          "s_wayne",
+          "treevor_mason"
+        ],
+        [
+          "wa_bidi",
+          "grace_reava",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        8,
+        7
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "grace_reava",
+          "oh_tipi",
+          "wa_bidi"
+        ],
+        [
+          "s_wayne",
+          "treevor_mason",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        9,
+        7
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "s_wayne",
+          "treevor_mason",
+          "haara"
+        ],
+        [
+          "grace_reava",
+          "oh_tipi",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        7,
+        9
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "treevor_mason"
+        ],
+        [
+          "grace_reava",
+          "haara",
+          "s_wayne"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        8,
+        7
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "grace_reava",
+          "haara",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        7,
+        8
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "oh_tipi"
+        ],
+        [
+          "haara",
+          "s_wayne",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 7,
+      "scores": [
+        8,
+        5
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "haara",
+          "s_wayne",
+          "grace_reava"
+        ],
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 7,
+      "scores": [
+        5,
+        8
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "treevor_mason",
+          "oh_tipi",
+          "wa_bidi"
+        ],
+        [
+          "s_wayne",
+          "grace_reava",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        9,
+        7
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "s_wayne",
+          "grace_reava",
+          "haara"
+        ],
+        [
+          "treevor_mason",
+          "oh_tipi",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        7,
+        9
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "haara"
+        ],
+        [
+          "grace_reava",
+          "treevor_mason",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 7,
+      "scores": [
+        4,
+        8
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "grace_reava",
+          "treevor_mason",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 7,
+      "scores": [
+        8,
+        4
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "wa_bidi",
+          "haara",
+          "oh_tipi"
+        ],
+        [
+          "treevor_mason",
+          "s_wayne",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        8,
+        6
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "treevor_mason",
+          "s_wayne",
+          "grace_reava"
+        ],
+        [
+          "wa_bidi",
+          "haara",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        6,
+        8
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "haara",
+          "oh_tipi",
+          "wa_bidi"
+        ],
+        [
+          "s_wayne",
+          "grace_reava",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        7,
+        8
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "s_wayne",
+          "grace_reava",
+          "treevor_mason"
+        ],
+        [
+          "haara",
+          "oh_tipi",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        8,
+        7
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "s_wayne"
+        ],
+        [
+          "grace_reava",
+          "treevor_mason",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 7,
+      "scores": [
+        8,
+        4
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "grace_reava",
+          "treevor_mason",
+          "haara"
+        ],
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 7,
+      "scores": [
+        4,
+        8
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "wa_bidi",
+          "s_wayne",
+          "oh_tipi"
+        ],
+        [
+          "treevor_mason",
+          "haara",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 11,
+      "scores": [
+        9,
+        10
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "treevor_mason",
+          "haara",
+          "grace_reava"
+        ],
+        [
+          "wa_bidi",
+          "s_wayne",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 11,
+      "scores": [
+        10,
+        9
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "s_wayne",
+          "oh_tipi",
+          "wa_bidi"
+        ],
+        [
+          "haara",
+          "grace_reava",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        7,
+        8
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "haara",
+          "grace_reava",
+          "treevor_mason"
+        ],
+        [
+          "s_wayne",
+          "oh_tipi",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        8,
+        7
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "grace_reava",
+          "treevor_mason"
+        ],
+        [
+          "wa_bidi",
+          "haara",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        6,
+        9
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "wa_bidi",
+          "haara",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "grace_reava",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        9,
+        6
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "grace_reava",
+          "treevor_mason",
+          "oh_tipi"
+        ],
+        [
+          "haara",
+          "s_wayne",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 9,
+      "scores": [
+        8,
+        10
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "haara",
+          "s_wayne",
+          "wa_bidi"
+        ],
+        [
+          "grace_reava",
+          "treevor_mason",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 9,
+      "scores": [
+        10,
+        8
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "treevor_mason",
+          "oh_tipi",
+          "grace_reava"
+        ],
+        [
+          "s_wayne",
+          "wa_bidi",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 9,
+      "scores": [
+        8,
+        5
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "s_wayne",
+          "wa_bidi",
+          "haara"
+        ],
+        [
+          "treevor_mason",
+          "oh_tipi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 9,
+      "scores": [
+        5,
+        8
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 5,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "grace_reava",
+          "haara"
+        ],
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 7,
+      "scores": [
+        4,
+        10
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 5,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "grace_reava",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 7,
+      "scores": [
+        10,
+        4
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 5,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "grace_reava",
+          "haara",
+          "oh_tipi"
+        ],
+        [
+          "treevor_mason",
+          "s_wayne",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        9,
+        7
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 5,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "treevor_mason",
+          "s_wayne",
+          "wa_bidi"
+        ],
+        [
+          "grace_reava",
+          "haara",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        7,
+        9
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 5,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "haara",
+          "oh_tipi",
+          "grace_reava"
+        ],
+        [
+          "s_wayne",
+          "wa_bidi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 11,
+      "scores": [
+        10,
+        9
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 5,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "s_wayne",
+          "wa_bidi",
+          "treevor_mason"
+        ],
+        [
+          "haara",
+          "oh_tipi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 11,
+      "scores": [
+        9,
+        10
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 6,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "grace_reava",
+          "s_wayne"
+        ],
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        9,
+        6
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 6,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "haara"
+        ],
+        [
+          "oh_tipi",
+          "grace_reava",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        6,
+        9
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 6,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "grace_reava",
+          "s_wayne",
+          "oh_tipi"
+        ],
+        [
+          "treevor_mason",
+          "haara",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 10,
+      "scores": [
+        10,
+        11
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 6,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "treevor_mason",
+          "haara",
+          "wa_bidi"
+        ],
+        [
+          "grace_reava",
+          "s_wayne",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 10,
+      "scores": [
+        11,
+        10
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 6,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "s_wayne",
+          "oh_tipi",
+          "grace_reava"
+        ],
+        [
+          "haara",
+          "wa_bidi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 9,
+      "scores": [
+        8,
+        5
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 6,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "haara",
+          "wa_bidi",
+          "treevor_mason"
+        ],
+        [
+          "s_wayne",
+          "oh_tipi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 9,
+      "scores": [
+        5,
+        8
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 7,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "treevor_mason",
+          "haara"
+        ],
+        [
+          "wa_bidi",
+          "grace_reava",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        6,
+        9
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 7,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "wa_bidi",
+          "grace_reava",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "treevor_mason",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        9,
+        6
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 7,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "treevor_mason",
+          "haara",
+          "oh_tipi"
+        ],
+        [
+          "grace_reava",
+          "s_wayne",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 9,
+      "scores": [
+        9,
+        10
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 7,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "grace_reava",
+          "s_wayne",
+          "wa_bidi"
+        ],
+        [
+          "treevor_mason",
+          "haara",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 9,
+      "scores": [
+        10,
+        9
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 7,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "haara",
+          "oh_tipi",
+          "treevor_mason"
+        ],
+        [
+          "s_wayne",
+          "wa_bidi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 9,
+      "scores": [
+        5,
+        8
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 7,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "s_wayne",
+          "wa_bidi",
+          "grace_reava"
+        ],
+        [
+          "haara",
+          "oh_tipi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 9,
+      "scores": [
+        8,
+        5
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 8,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "treevor_mason",
+          "s_wayne"
+        ],
+        [
+          "wa_bidi",
+          "grace_reava",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        9,
+        5
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 8,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "wa_bidi",
+          "grace_reava",
+          "haara"
+        ],
+        [
+          "oh_tipi",
+          "treevor_mason",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        5,
+        9
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 8,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "treevor_mason",
+          "s_wayne",
+          "oh_tipi"
+        ],
+        [
+          "grace_reava",
+          "haara",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        7,
+        9
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 8,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "grace_reava",
+          "haara",
+          "wa_bidi"
+        ],
+        [
+          "treevor_mason",
+          "s_wayne",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        9,
+        7
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 8,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "s_wayne",
+          "oh_tipi",
+          "treevor_mason"
+        ],
+        [
+          "haara",
+          "wa_bidi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 11,
+      "scores": [
+        9,
+        10
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 8,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "haara",
+          "wa_bidi",
+          "grace_reava"
+        ],
+        [
+          "s_wayne",
+          "oh_tipi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 11,
+      "scores": [
+        10,
+        9
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 9,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "haara",
+          "s_wayne"
+        ],
+        [
+          "wa_bidi",
+          "grace_reava",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        9,
+        6
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 9,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "wa_bidi",
+          "grace_reava",
+          "treevor_mason"
+        ],
+        [
+          "oh_tipi",
+          "haara",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        6,
+        9
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 9,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "haara",
+          "s_wayne",
+          "oh_tipi"
+        ],
+        [
+          "grace_reava",
+          "treevor_mason",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        7,
+        9
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 9,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "grace_reava",
+          "treevor_mason",
+          "wa_bidi"
+        ],
+        [
+          "haara",
+          "s_wayne",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        9,
+        7
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 9,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "s_wayne",
+          "oh_tipi",
+          "haara"
+        ],
+        [
+          "treevor_mason",
+          "wa_bidi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 8,
+      "scores": [
+        4,
+        8
+      ]
+    },
+    {
+      "policy": "native",
+      "pair": 9,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "treevor_mason",
+          "wa_bidi",
+          "grace_reava"
+        ],
+        [
+          "s_wayne",
+          "oh_tipi",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 8,
+      "scores": [
+        8,
+        4
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 0,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "grace_reava"
+        ],
+        [
+          "treevor_mason",
+          "haara",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 10,
+      "scores": [
+        6,
+        8
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 0,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "treevor_mason",
+          "haara",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 10,
+      "scores": [
+        8,
+        6
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 0,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "wa_bidi",
+          "grace_reava",
+          "oh_tipi"
+        ],
+        [
+          "haara",
+          "s_wayne",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 10,
+      "scores": [
+        8,
+        5
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 0,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "haara",
+          "s_wayne",
+          "treevor_mason"
+        ],
+        [
+          "wa_bidi",
+          "grace_reava",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 10,
+      "scores": [
+        5,
+        8
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 0,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "grace_reava",
+          "oh_tipi",
+          "wa_bidi"
+        ],
+        [
+          "s_wayne",
+          "treevor_mason",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 14,
+      "scores": [
+        7,
+        8
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 0,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "s_wayne",
+          "treevor_mason",
+          "haara"
+        ],
+        [
+          "grace_reava",
+          "oh_tipi",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 14,
+      "scores": [
+        8,
+        7
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 1,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "treevor_mason"
+        ],
+        [
+          "grace_reava",
+          "haara",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 15,
+      "scores": [
+        6,
+        9
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 1,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "grace_reava",
+          "haara",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 15,
+      "scores": [
+        9,
+        6
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 1,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "oh_tipi"
+        ],
+        [
+          "haara",
+          "s_wayne",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 9,
+      "scores": [
+        8,
+        5
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 1,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "haara",
+          "s_wayne",
+          "grace_reava"
+        ],
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 9,
+      "scores": [
+        5,
+        8
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 1,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "treevor_mason",
+          "oh_tipi",
+          "wa_bidi"
+        ],
+        [
+          "s_wayne",
+          "grace_reava",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 9,
+      "scores": [
+        8,
+        7
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 1,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "s_wayne",
+          "grace_reava",
+          "haara"
+        ],
+        [
+          "treevor_mason",
+          "oh_tipi",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 9,
+      "scores": [
+        7,
+        8
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 2,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "haara"
+        ],
+        [
+          "grace_reava",
+          "treevor_mason",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 15,
+      "scores": [
+        6,
+        9
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 2,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "grace_reava",
+          "treevor_mason",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 15,
+      "scores": [
+        9,
+        6
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 2,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "wa_bidi",
+          "haara",
+          "oh_tipi"
+        ],
+        [
+          "treevor_mason",
+          "s_wayne",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 10,
+      "scores": [
+        8,
+        5
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 2,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "treevor_mason",
+          "s_wayne",
+          "grace_reava"
+        ],
+        [
+          "wa_bidi",
+          "haara",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 10,
+      "scores": [
+        5,
+        8
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 2,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "haara",
+          "oh_tipi",
+          "wa_bidi"
+        ],
+        [
+          "s_wayne",
+          "grace_reava",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 9,
+      "scores": [
+        7,
+        8
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 2,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "s_wayne",
+          "grace_reava",
+          "treevor_mason"
+        ],
+        [
+          "haara",
+          "oh_tipi",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 9,
+      "scores": [
+        8,
+        7
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 3,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "s_wayne"
+        ],
+        [
+          "grace_reava",
+          "treevor_mason",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 12,
+      "scores": [
+        8,
+        0
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 3,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "grace_reava",
+          "treevor_mason",
+          "haara"
+        ],
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 12,
+      "scores": [
+        0,
+        8
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 3,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "wa_bidi",
+          "s_wayne",
+          "oh_tipi"
+        ],
+        [
+          "treevor_mason",
+          "haara",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 10,
+      "scores": [
+        8,
+        5
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 3,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "treevor_mason",
+          "haara",
+          "grace_reava"
+        ],
+        [
+          "wa_bidi",
+          "s_wayne",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 10,
+      "scores": [
+        5,
+        8
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 3,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "s_wayne",
+          "oh_tipi",
+          "wa_bidi"
+        ],
+        [
+          "haara",
+          "grace_reava",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 12,
+      "scores": [
+        12,
+        9
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 3,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "haara",
+          "grace_reava",
+          "treevor_mason"
+        ],
+        [
+          "s_wayne",
+          "oh_tipi",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 12,
+      "scores": [
+        9,
+        12
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 4,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "grace_reava",
+          "treevor_mason"
+        ],
+        [
+          "wa_bidi",
+          "haara",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 12,
+      "scores": [
+        9,
+        10
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 4,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "wa_bidi",
+          "haara",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "grace_reava",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 12,
+      "scores": [
+        10,
+        9
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 4,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "grace_reava",
+          "treevor_mason",
+          "oh_tipi"
+        ],
+        [
+          "haara",
+          "s_wayne",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 13,
+      "scores": [
+        9,
+        5
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 4,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "haara",
+          "s_wayne",
+          "wa_bidi"
+        ],
+        [
+          "grace_reava",
+          "treevor_mason",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 13,
+      "scores": [
+        5,
+        9
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 4,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "treevor_mason",
+          "oh_tipi",
+          "grace_reava"
+        ],
+        [
+          "s_wayne",
+          "wa_bidi",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 10,
+      "scores": [
+        5,
+        8
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 4,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "s_wayne",
+          "wa_bidi",
+          "haara"
+        ],
+        [
+          "treevor_mason",
+          "oh_tipi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 10,
+      "scores": [
+        8,
+        5
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 5,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "grace_reava",
+          "haara"
+        ],
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 9,
+      "scores": [
+        5,
+        9
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 5,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "grace_reava",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 9,
+      "scores": [
+        9,
+        5
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 5,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "grace_reava",
+          "haara",
+          "oh_tipi"
+        ],
+        [
+          "treevor_mason",
+          "s_wayne",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 14,
+      "scores": [
+        6,
+        9
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 5,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "treevor_mason",
+          "s_wayne",
+          "wa_bidi"
+        ],
+        [
+          "grace_reava",
+          "haara",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 14,
+      "scores": [
+        9,
+        6
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 5,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "haara",
+          "oh_tipi",
+          "grace_reava"
+        ],
+        [
+          "s_wayne",
+          "wa_bidi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 10,
+      "scores": [
+        5,
+        9
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 5,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "s_wayne",
+          "wa_bidi",
+          "treevor_mason"
+        ],
+        [
+          "haara",
+          "oh_tipi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 10,
+      "scores": [
+        9,
+        5
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 6,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "grace_reava",
+          "s_wayne"
+        ],
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 10,
+      "scores": [
+        9,
+        5
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 6,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "haara"
+        ],
+        [
+          "oh_tipi",
+          "grace_reava",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 10,
+      "scores": [
+        5,
+        9
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 6,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "grace_reava",
+          "s_wayne",
+          "oh_tipi"
+        ],
+        [
+          "treevor_mason",
+          "haara",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 14,
+      "scores": [
+        6,
+        9
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 6,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "treevor_mason",
+          "haara",
+          "wa_bidi"
+        ],
+        [
+          "grace_reava",
+          "s_wayne",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 14,
+      "scores": [
+        9,
+        6
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 6,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "s_wayne",
+          "oh_tipi",
+          "grace_reava"
+        ],
+        [
+          "haara",
+          "wa_bidi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 14,
+      "scores": [
+        8,
+        4
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 6,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "haara",
+          "wa_bidi",
+          "treevor_mason"
+        ],
+        [
+          "s_wayne",
+          "oh_tipi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 14,
+      "scores": [
+        4,
+        8
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 7,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "treevor_mason",
+          "haara"
+        ],
+        [
+          "wa_bidi",
+          "grace_reava",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 10,
+      "scores": [
+        5,
+        8
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 7,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "wa_bidi",
+          "grace_reava",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "treevor_mason",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 10,
+      "scores": [
+        8,
+        5
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 7,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "treevor_mason",
+          "haara",
+          "oh_tipi"
+        ],
+        [
+          "grace_reava",
+          "s_wayne",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 14,
+      "scores": [
+        9,
+        6
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 7,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "grace_reava",
+          "s_wayne",
+          "wa_bidi"
+        ],
+        [
+          "treevor_mason",
+          "haara",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 14,
+      "scores": [
+        6,
+        9
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 7,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "haara",
+          "oh_tipi",
+          "treevor_mason"
+        ],
+        [
+          "s_wayne",
+          "wa_bidi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 14,
+      "scores": [
+        4,
+        8
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 7,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "s_wayne",
+          "wa_bidi",
+          "grace_reava"
+        ],
+        [
+          "haara",
+          "oh_tipi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 14,
+      "scores": [
+        8,
+        4
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 8,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "treevor_mason",
+          "s_wayne"
+        ],
+        [
+          "wa_bidi",
+          "grace_reava",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 9,
+      "scores": [
+        8,
+        5
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 8,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "wa_bidi",
+          "grace_reava",
+          "haara"
+        ],
+        [
+          "oh_tipi",
+          "treevor_mason",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 9,
+      "scores": [
+        5,
+        8
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 8,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "treevor_mason",
+          "s_wayne",
+          "oh_tipi"
+        ],
+        [
+          "grace_reava",
+          "haara",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 14,
+      "scores": [
+        9,
+        6
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 8,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "grace_reava",
+          "haara",
+          "wa_bidi"
+        ],
+        [
+          "treevor_mason",
+          "s_wayne",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 14,
+      "scores": [
+        6,
+        9
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 8,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "s_wayne",
+          "oh_tipi",
+          "treevor_mason"
+        ],
+        [
+          "haara",
+          "wa_bidi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 10,
+      "scores": [
+        9,
+        5
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 8,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "haara",
+          "wa_bidi",
+          "grace_reava"
+        ],
+        [
+          "s_wayne",
+          "oh_tipi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 10,
+      "scores": [
+        5,
+        9
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 9,
+      "deployment": 0,
+      "swapped": false,
+      "roster": [
+        [
+          "oh_tipi",
+          "haara",
+          "s_wayne"
+        ],
+        [
+          "wa_bidi",
+          "grace_reava",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 12,
+      "scores": [
+        10,
+        9
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 9,
+      "deployment": 0,
+      "swapped": true,
+      "roster": [
+        [
+          "wa_bidi",
+          "grace_reava",
+          "treevor_mason"
+        ],
+        [
+          "oh_tipi",
+          "haara",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 12,
+      "scores": [
+        9,
+        10
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 9,
+      "deployment": 1,
+      "swapped": false,
+      "roster": [
+        [
+          "haara",
+          "s_wayne",
+          "oh_tipi"
+        ],
+        [
+          "grace_reava",
+          "treevor_mason",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 13,
+      "scores": [
+        5,
+        9
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 9,
+      "deployment": 1,
+      "swapped": true,
+      "roster": [
+        [
+          "grace_reava",
+          "treevor_mason",
+          "wa_bidi"
+        ],
+        [
+          "haara",
+          "s_wayne",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 13,
+      "scores": [
+        9,
+        5
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 9,
+      "deployment": 2,
+      "swapped": false,
+      "roster": [
+        [
+          "s_wayne",
+          "oh_tipi",
+          "haara"
+        ],
+        [
+          "treevor_mason",
+          "wa_bidi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "rounds": 9,
+      "scores": [
+        8,
+        5
+      ]
+    },
+    {
+      "policy": "cautious-hold",
+      "pair": 9,
+      "deployment": 2,
+      "swapped": true,
+      "roster": [
+        [
+          "treevor_mason",
+          "wa_bidi",
+          "grace_reava"
+        ],
+        [
+          "s_wayne",
+          "oh_tipi",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "rounds": 9,
+      "scores": [
+        5,
+        8
+      ]
+    }
+  ]
+}

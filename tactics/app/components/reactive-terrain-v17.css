@@ -1,0 +1,23 @@
+/* Material motion uses stepped exposure, never a transform on fixed scenery. */
+.px-board.px-board-v17 .px-world-surface,.px-board.px-board-v17 .px-world-prop image{image-rendering:pixelated}
+.px-board.px-board-v17 .px-world-grid{stroke:#263a2924;stroke-width:.55}
+.px-board.px-board-v17 .px-world-prop>svg{animation:none!important;transform:none!important;filter:none}
+.px-board.px-board-v17 .px-world-water{animation:none;opacity:.55}
+.px-board.px-board-v17 .px-field-rune{opacity:.2}
+.px-board.px-board-v17 .px-field-tint{fill-opacity:.15;stroke-opacity:0}
+.px-board.px-board-v17 .px17-bank>path{fill:none;stroke:#384c32;stroke-width:4}
+.px-board.px-board-v17 .px17-bank .px17-bank-light{stroke:#a8c491;stroke-width:1.2;stroke-dasharray:8 3 5 2}
+.px-board.px-board-v17 .px17-bank.is-ice>path{stroke:#356a86;stroke-width:3}
+.px-board.px-board-v17 .px17-bank.is-ice .px17-bank-light{stroke:#e4f8ee;stroke-width:1.5}
+.px-board.px-board-v17 .px17-terrain-art .px17-ember-seam,.px-board.px-board-v17 .px17-terrain-art .px17-liquid-line,.px-board.px-board-v17 .px17-terrain-art .px17-light-seam,.px-board.px-board-v17 .px17-terrain-art .px17-current-stroke{animation:none}
+.px-board.px-board-v17 .px17-terrain-art.is-live .px17-ember-seam{animation:px17-material-light 960ms steps(1,end) var(--terrain-step) infinite}
+.px-board.px-board-v17 .px17-terrain-art.is-live .px17-liquid-line{animation:px17-water-glint 1440ms steps(1,end) var(--terrain-step) infinite}
+.px-board.px-board-v17 .px17-terrain-art.is-live .px17-light-seam{animation:px17-material-light 1600ms steps(1,end) var(--terrain-step) infinite}
+.px-board.px-board-v17 .px17-terrain-art.is-live .px17-current-stroke{animation:px17-water-glint 1080ms steps(1,end) var(--terrain-step) infinite}
+.px-board.px-board-v17 .px17-terrain-arrival{animation:px17-terrain-arrival 850ms steps(1,end) both}
+.px-board.px-board-v17 .px17-deployment{pointer-events:none;opacity:.72}.px-board.px-board-v17 .px17-deployment text{font:700 11px Arial,sans-serif;text-anchor:middle;paint-order:stroke;stroke:#fff3ce;stroke-width:3;stroke-linejoin:round}
+.px-board.px-board-v17 .px17-prop-material{pointer-events:none}.px-board.px-board-v17 .px17-prop-material.is-frozen path{fill:#a2e0e9;stroke:#164e6d;stroke-width:1}.px-board.px-board-v17 .px17-prop-material.is-scorched path{fill:#722f24;stroke:#ffb760;stroke-width:1}
+@keyframes px17-material-light{0%,100%{opacity:.7}25%{opacity:1}50%{opacity:.85}75%{opacity:.6}}
+@keyframes px17-water-glint{0%,100%{opacity:.6}33%{opacity:.8}66%{opacity:1}}
+@keyframes px17-terrain-arrival{0%,35%{opacity:1}65%{opacity:.55}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.px-board.px-board-v17 .px17-terrain-art *{animation:none!important}.px-board.px-board-v17 .px17-terrain-arrival{display:none}}

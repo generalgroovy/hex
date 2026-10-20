@@ -1,0 +1,440 @@
+/** Rules 7: canonical H.E.X. identities and element membership, with four affinity points per champion. */
+import type {Element} from './game.ts';
+export type Champion = {id:string;name:string;race:string;body:'small'|'middle'|'large';affinities:Partial<Record<Element,number>>;element:Element;description:string;sprite:string;portrait:string};
+export const CHAMPIONS:Champion[] = [
+  {
+    "id": "oh_tipi",
+    "name": "Oh Tipi",
+    "race": "seakin",
+    "body": "middle",
+    "affinities": {
+      "water": 2,
+      "fire": 2
+    },
+    "element": "water",
+    "description": "Steady current keeper with forgiving reserves and deliberate footwork.",
+    "sprite": "/pixel/champions/oh_tipi.png",
+    "portrait": "/pixel/champions/oh_tipi.png"
+  },
+  {
+    "id": "s_wayne",
+    "name": "S. Wayne",
+    "race": "hobbit",
+    "body": "small",
+    "affinities": {
+      "dark": 2,
+      "light": 2
+    },
+    "element": "dark",
+    "description": "Swift boundary tactician with lean reserves and rapid Flux recovery.",
+    "sprite": "/pixel/champions/s_wayne.png",
+    "portrait": "/pixel/champions/s_wayne.png"
+  },
+  {
+    "id": "red_baron",
+    "name": "The Red Baron",
+    "race": "undead",
+    "body": "large",
+    "affinities": {
+      "fire": 2,
+      "water": 2
+    },
+    "element": "fire",
+    "description": "Resolute lane anchor with deep Health and Stamina reserves but deliberate ground tempo and Flux recovery.",
+    "sprite": "/pixel/champions/red_baron.png",
+    "portrait": "/pixel/champions/red_baron.png"
+  },
+  {
+    "id": "grace_reava",
+    "name": "Grace Riva",
+    "race": "sylph",
+    "body": "small",
+    "affinities": {
+      "air": 2,
+      "water": 1,
+      "light": 1
+    },
+    "element": "air",
+    "description": "Nimble stream dancer with broad spell choice and strong Flux reserves, but modest Health.",
+    "sprite": "/pixel/champions/grace_reava.png",
+    "portrait": "/pixel/champions/grace_reava.png"
+  },
+  {
+    "id": "wa_bidi",
+    "name": "Wa Bidi",
+    "race": "goblin",
+    "body": "small",
+    "affinities": {
+      "fire": 2,
+      "air": 2
+    },
+    "element": "fire",
+    "description": "Quick pressure skirmisher with rapid Flux recovery and short, readable burst lanes.",
+    "sprite": "/pixel/champions/wa_bidi.png",
+    "portrait": "/pixel/champions/wa_bidi.png"
+  },
+  {
+    "id": "steezo",
+    "name": "Steezo",
+    "race": "goblin",
+    "body": "small",
+    "affinities": {
+      "fire": 2,
+      "light": 2
+    },
+    "element": "fire",
+    "description": "small-body skirmisher using existing fire pressure and fire Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/steezo.png",
+    "portrait": "/pixel/champions/steezo.png"
+  },
+  {
+    "id": "treevor_mason",
+    "name": "Treevor the Mason",
+    "race": "treefolk",
+    "body": "large",
+    "affinities": {
+      "earth": 2,
+      "air": 1,
+      "fire": 1
+    },
+    "element": "earth",
+    "description": "large-body anchor using existing earth pressure and wind Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/treevor_mason.png",
+    "portrait": "/pixel/champions/treevor_mason.png"
+  },
+  {
+    "id": "oll_i",
+    "name": "Oll' I",
+    "race": "werewolf",
+    "body": "large",
+    "affinities": {
+      "earth": 2,
+      "fire": 1,
+      "light": 1
+    },
+    "element": "earth",
+    "description": "large-body anchor using existing earth pressure and fire Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/oll_i.png",
+    "portrait": "/pixel/champions/oll_i.png"
+  },
+  {
+    "id": "fluup",
+    "name": "Fluup",
+    "race": "orc",
+    "body": "large",
+    "affinities": {
+      "air": 2,
+      "fire": 1,
+      "water": 1
+    },
+    "element": "air",
+    "description": "large-body anchor using existing wind pressure and fire Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/fluup.png",
+    "portrait": "/pixel/champions/fluup.png"
+  },
+  {
+    "id": "nico_lai",
+    "name": "Waka Aren Si",
+    "race": "gnome",
+    "body": "small",
+    "affinities": {
+      "fire": 2,
+      "light": 2
+    },
+    "element": "fire",
+    "description": "small-body skirmisher using existing fire pressure and light Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/nico_lai.png",
+    "portrait": "/pixel/champions/nico_lai.png"
+  },
+  {
+    "id": "spai_si",
+    "name": "Spai Si",
+    "race": "demon",
+    "body": "middle",
+    "affinities": {
+      "air": 2,
+      "earth": 1,
+      "light": 1
+    },
+    "element": "air",
+    "description": "middle-body adapter using existing wind pressure and earth Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/spai_si.png",
+    "portrait": "/pixel/champions/spai_si.png"
+  },
+  {
+    "id": "leaf_hidden",
+    "name": "Leaf the Hidden",
+    "race": "treefolk",
+    "body": "middle",
+    "affinities": {
+      "water": 2,
+      "earth": 1,
+      "light": 1
+    },
+    "element": "water",
+    "description": "middle-body adapter using existing water pressure and earth Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/leaf_hidden.png",
+    "portrait": "/pixel/champions/leaf_hidden.png"
+  },
+  {
+    "id": "ha_rekt",
+    "name": "Ha Rekt",
+    "race": "wyrmborn",
+    "body": "large",
+    "affinities": {
+      "water": 2,
+      "air": 1,
+      "fire": 1
+    },
+    "element": "water",
+    "description": "large-body anchor using existing water pressure and wind Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/ha_rekt.png",
+    "portrait": "/pixel/champions/ha_rekt.png"
+  },
+  {
+    "id": "dr_apex",
+    "name": "Dr. Apex",
+    "race": "stoneborn",
+    "body": "large",
+    "affinities": {
+      "earth": 2,
+      "light": 1,
+      "water": 1
+    },
+    "element": "earth",
+    "description": "large-body anchor using existing earth pressure and light Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/dr_apex.png",
+    "portrait": "/pixel/champions/dr_apex.png"
+  },
+  {
+    "id": "haara",
+    "name": "Haara",
+    "race": "nymph",
+    "body": "small",
+    "affinities": {
+      "light": 2,
+      "air": 2
+    },
+    "element": "light",
+    "description": "small-body skirmisher using existing light pressure and wind Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/haara.png",
+    "portrait": "/pixel/champions/haara.png"
+  },
+  {
+    "id": "hesus_christo",
+    "name": "Hesus Christo",
+    "race": "elf",
+    "body": "middle",
+    "affinities": {
+      "earth": 2,
+      "water": 2
+    },
+    "element": "earth",
+    "description": "middle-body adapter using existing earth pressure and water Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/hesus_christo.png",
+    "portrait": "/pixel/champions/hesus_christo.png"
+  },
+  {
+    "id": "grimm_bow",
+    "name": "Grimm Bow",
+    "race": "troll",
+    "body": "large",
+    "affinities": {
+      "earth": 2,
+      "water": 2
+    },
+    "element": "earth",
+    "description": "large-body anchor using existing earth pressure and water Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/grimm_bow.png",
+    "portrait": "/pixel/champions/grimm_bow.png"
+  },
+  {
+    "id": "biggy_bob",
+    "name": "Biggy Bob",
+    "race": "dwarf",
+    "body": "middle",
+    "affinities": {
+      "earth": 2,
+      "fire": 1,
+      "light": 1
+    },
+    "element": "earth",
+    "description": "middle-body adapter using existing earth pressure and fire Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/biggy_bob.png",
+    "portrait": "/pixel/champions/biggy_bob.png"
+  },
+  {
+    "id": "jan_wicked",
+    "name": "Jan Wicked",
+    "race": "human",
+    "body": "middle",
+    "affinities": {
+      "water": 2,
+      "dark": 1,
+      "fire": 1
+    },
+    "element": "water",
+    "description": "middle-body adapter using existing water pressure and dark Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/jan_wicked.png",
+    "portrait": "/pixel/champions/jan_wicked.png"
+  },
+  {
+    "id": "ba_djoh",
+    "name": "Ba Djoh",
+    "race": "minotaur",
+    "body": "large",
+    "affinities": {
+      "earth": 2,
+      "fire": 1,
+      "water": 1
+    },
+    "element": "earth",
+    "description": "large-body anchor using existing earth pressure and fire Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/ba_djoh.png",
+    "portrait": "/pixel/champions/ba_djoh.png"
+  },
+  {
+    "id": "urzh",
+    "name": "Urzh",
+    "race": "stoneborn",
+    "body": "large",
+    "affinities": {
+      "earth": 2,
+      "fire": 2
+    },
+    "element": "fire",
+    "description": "large-body anchor using existing earth pressure and fire Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/urzh.png",
+    "portrait": "/pixel/champions/urzh.png"
+  },
+  {
+    "id": "donnok",
+    "name": "Don Doko Don",
+    "race": "dwarf",
+    "body": "middle",
+    "affinities": {
+      "earth": 2,
+      "fire": 1,
+      "water": 1
+    },
+    "element": "earth",
+    "description": "middle-body adapter using existing earth pressure and fire Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/donnok.png",
+    "portrait": "/pixel/champions/donnok.png"
+  },
+  {
+    "id": "djonah_thaan",
+    "name": "Djonah Thaan",
+    "race": "vampire",
+    "body": "middle",
+    "affinities": {
+      "dark": 2,
+      "fire": 2
+    },
+    "element": "fire",
+    "description": "middle-body adapter using existing dark pressure and fire Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/djonah_thaan.png",
+    "portrait": "/pixel/champions/djonah_thaan.png"
+  },
+  {
+    "id": "luuh_i_zeh",
+    "name": "Luuh I Zeh",
+    "race": "spiderkin",
+    "body": "small",
+    "affinities": {
+      "dark": 2,
+      "water": 2
+    },
+    "element": "dark",
+    "description": "small-body skirmisher using existing dark pressure and water Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/luuh_i_zeh.png",
+    "portrait": "/pixel/champions/luuh_i_zeh.png"
+  },
+  {
+    "id": "juul_i_yaina",
+    "name": "Juul I Yaina",
+    "race": "demon",
+    "body": "small",
+    "affinities": {
+      "water": 2,
+      "air": 2
+    },
+    "element": "water",
+    "description": "small-body skirmisher using existing water pressure and wind Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/juul_i_yaina.png",
+    "portrait": "/pixel/champions/juul_i_yaina.png"
+  },
+  {
+    "id": "faab_i_yaina",
+    "name": "Faab I Yaina",
+    "race": "angel",
+    "body": "middle",
+    "affinities": {
+      "fire": 2,
+      "light": 2
+    },
+    "element": "fire",
+    "description": "middle-body adapter using existing fire pressure and light Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/faab_i_yaina.png",
+    "portrait": "/pixel/champions/faab_i_yaina.png"
+  },
+  {
+    "id": "joh_haynes",
+    "name": "Joh Haynes",
+    "race": "orc",
+    "body": "large",
+    "affinities": {
+      "earth": 2,
+      "fire": 2
+    },
+    "element": "earth",
+    "description": "large-body anchor using existing earth pressure and fire Spray; race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/joh_haynes.png",
+    "portrait": "/pixel/champions/joh_haynes.png"
+  },
+  {
+    "id": "h_le_ne",
+    "name": "H. Lenee",
+    "race": "stoneborn",
+    "body": "middle",
+    "affinities": {
+      "earth": 2,
+      "air": 1,
+      "fire": 1
+    },
+    "element": "earth",
+    "description": "Middle-body caster using existing earth pressure and wind Spray; shared baseline stats with race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/h_le_ne.png",
+    "portrait": "/pixel/champions/h_le_ne.png"
+  },
+  {
+    "id": "fimu_yashiha",
+    "name": "Mifu",
+    "race": "treefolk",
+    "body": "small",
+    "affinities": {
+      "water": 2,
+      "air": 1,
+      "light": 1
+    },
+    "element": "water",
+    "description": "Small-body caster using existing water pressure and Air Spray; shared baseline stats with race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/fimu_yashiha.png",
+    "portrait": "/pixel/champions/fimu_yashiha.png"
+  },
+  {
+    "id": "sai_laas",
+    "name": "Sai Laas",
+    "race": "nymph",
+    "body": "small",
+    "affinities": {
+      "air": 2,
+      "fire": 2
+    },
+    "element": "air",
+    "description": "Small-body caster using existing Air pressure and Fire Spray; shared baseline stats with race and personal perks apply in their listed windows.",
+    "sprite": "/pixel/champions/sai_laas.png",
+    "portrait": "/pixel/champions/sai_laas.png"
+  }
+];
+export const getChampion = (id:string):Champion => {const c=CHAMPIONS.find(c=>c.id===id);if(!c)throw new Error("Unknown champion.");return c};

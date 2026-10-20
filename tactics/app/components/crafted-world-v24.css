@@ -1,0 +1,44 @@
+/* Ground supports the actors. Texture stays quiet; only material glints move. */
+.px-board.px-crafted-world-v24 .px-stage{background:#273f34;background-image:none}
+.px-board.px-crafted-world-v24 .px-stage:after{box-shadow:inset 0 0 40px #182b271c}
+.px-board.px-crafted-world-v24 .px24-distant-woods{opacity:.44;filter:brightness(.66) saturate(.7);image-rendering:pixelated}
+.px-board.px-crafted-world-v24 .px24-land-shadow{fill:#172f2b;opacity:.6}
+.px-board.px-crafted-world-v24 .px-world-grid{stroke:#2a442629;stroke-width:.55}
+.px-board.px-crafted-world-v24 .px24-ground-detail{opacity:.92}
+.px-board.px-crafted-world-v24 .px24-ground-rim{fill:none;stroke-linejoin:miter}
+.px-board.px-crafted-world-v24 .px-world-prop>ellipse{fill:#1d3c2b;opacity:.35}
+.px-board.px-crafted-world-v24 .px-world-prop>svg{filter:drop-shadow(2px 3px 0 #20362635)}
+.px-board.px-crafted-world-v24 .px17-bank.is-bank>path{stroke:#204f50;stroke-width:3.3;opacity:.8}
+.px-board.px-crafted-world-v24 .px17-bank.is-bank>.px17-bank-light{stroke:#a0b879;stroke-width:1.1;opacity:.86}
+.px-board.px-crafted-world-v24 .px-target-move{stroke:#8ac9b0;stroke-opacity:.45;fill:#69b69e;fill-opacity:.11}
+.px-board.px-crafted-world-v24 .px-target-cast{stroke:#eac56d;stroke-opacity:.45;fill:#eac56d;fill-opacity:.08}
+.px-board.px-crafted-world-v24 .px-target[data-landing-risk=blocked]{stroke:#ee7961;fill:#d75940;fill-opacity:.24}
+.px-board.px-crafted-world-v24 .px-target[data-landing-risk=contested]{stroke:#efc157;fill:#c69025;fill-opacity:.2}
+.px-board.px-crafted-world-v24 .px-landing-risk{paint-order:stroke;stroke:#fff0bd;stroke-width:2px;stroke-linejoin:round}
+.px-board.px-crafted-world-v24 .px24-ground-detail.is-live .px24-water-glints{animation:px24-water-glint 2400ms steps(1,end) var(--world-delay,0ms) infinite}
+.px-board.px-crafted-world-v24 .px24-solid-terrain{animation:none;transform:none}
+.px-board.px-crafted-world-v24 .px-world-prop>svg{animation:none!important;transform:none!important}
+.px-board.px-crafted-world-v24 .px24-solid-terrain .px24-stone-embers{animation:px24-ember-glint 1400ms steps(1,end) infinite}
+.px-board.px-crafted-world-v24.px-tactical-overview .px24-ground-detail{opacity:.65}
+.px-board.px-crafted-world-v24.px-tactical-overview .px-world-prop{opacity:.9}
+.px-board.px-crafted-world-v24.px-tactical-overview .px-world-prop.is-canopy-hidden{opacity:.2}
+.px-board.px-crafted-world-v24.px-compact-world .px24-distant-woods{opacity:.25;filter:none}
+.px-board.px-crafted-world-v24.px-compact-world .px24-ground-detail{opacity:.55}
+.px-board.px-crafted-world-v24.px-compact-world .px24-ground-rim{opacity:1}
+.px-board.px-crafted-world-v24.px-compact-world .px-world-prop>svg{filter:none}
+.px-board.px-crafted-world-v24.px-tactical-overview .px24-ground-detail *,.px-board.px-crafted-world-v24.px-tactical-overview .px24-solid-terrain *{animation:none}
+.px-board.px-crafted-world-v24 .px24-readout,.s18-game .s18-field .px-board.px-crafted-world-v24 .px24-readout{display:flex;flex:0 0 44px;align-items:center;justify-content:flex-start;height:44px;min-height:44px;max-height:44px;padding:3px 6px;gap:5px;overflow:hidden;background:#f4edd9}
+.px-board.px-crafted-world-v24 .px24-readout .b24-insight-trigger{display:inline-flex;min-width:0;max-width:100%;height:36px;min-height:36px;gap:5px;padding:4px 6px;box-shadow:none;border-color:#c2b798;background:#fff8e7;font:600 11px/1.2 Arial,sans-serif;white-space:nowrap;text-align:left}
+.px-board.px-crafted-world-v24 .px24-readout .b24-insight-trigger>span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.px-board.px-crafted-world-v24 .px24-readout .b24-insight-trigger>b,.px-board.px-crafted-world-v24 .px24-readout .b24-insight-trigger>small{flex:none}
+.px-board.px-crafted-world-v24 .px24-tile-insight{flex:0 1 auto}
+.px-board.px-crafted-world-v24 .px24-unit-insight{flex:0 1 auto}
+.px-board.px-crafted-world-v24 .px24-unit-insight>i{color:#9c613a;font-size:9px}
+.px-board.px-crafted-world-v24 .px24-forecast-insight{flex:0 1 auto;margin-left:auto}
+.px-board.px-crafted-world-v24 .px24-move-cost{flex:none;font:700 11px/1.2 Arial,sans-serif;white-space:nowrap;color:#2d6f65}
+.px24-condition-details{display:grid;gap:8px;padding:0;margin:10px 0 0;list-style:none}.px24-condition-details:empty{display:none}.px24-condition-details li{border-top:1px solid #d9c9a5;padding-top:7px}.px24-condition-details p{margin:2px 0 0}.px24-condition-details small{font-weight:500;color:#766448}
+@media(max-width:599px){.px-board.px-crafted-world-v24 .px24-readout .b24-insight-trigger{font-size:10px;padding:4px}.px-board.px-crafted-world-v24 .px24-tile-insight{flex:1 1 0}.px-board.px-crafted-world-v24 .px24-unit-insight,.px-board.px-crafted-world-v24 .px24-forecast-insight{flex:1 1 0}}
+@media(pointer:coarse){.px-board.px-crafted-world-v24 .px24-readout .b24-insight-trigger{height:40px;min-height:40px}}
+@keyframes px24-water-glint{0%,100%{opacity:.6}33%{opacity:.85}66%{opacity:.7}}
+@keyframes px24-ember-glint{0%,100%{opacity:.55}50%{opacity:.95}}
+@media(prefers-reduced-motion:reduce){.px-board.px-crafted-world-v24 .px24-ground-detail *,.px-board.px-crafted-world-v24 .px24-solid-terrain *{animation:none!important}}

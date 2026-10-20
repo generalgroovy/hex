@@ -1,0 +1,75 @@
+name: H.E.X. tactics
+
+on:
+  pull_request:
+    paths:
+      - 'tactics/**'
+      - '.github/workflows/tactics.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tactics/**'
+      - '.github/workflows/tactics.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tactics-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Node 24 / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 35
+    defaults:
+      run:
+        working-directory: tactics
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: tactics
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: tactics/package-lock.json
+      - name: Install locked dependencies
+        run: npm run install:ci
+      - name: Documentation links
+        run: npm run docs:check
+      - name: Type check
+        run: npm run typecheck
+      - name: Native regression suite
+        run: npm test
+      - name: Build Worker and client
+        run: npm run build
+      - name: Verify emitted RSC assets
+        run: npm run assets:check
+      - name: Initialize local D1
+        run: npm run db:local
+      - name: Real HTTP and D1 integration
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm start -- --port 8787 > "$RUNNER_TEMP/hex-worker.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          node --input-type=module -e '
+          let ready=false;
+          for(let i=0;i<90;i++){
+            try { const r=await fetch("http://127.0.0.1:8787/"); if(r.ok){ready=true;break} } catch {}
+            await new Promise(resolve=>setTimeout(resolve,1000));
+          }
+          if(!ready)throw new Error("Local Worker did not become ready.");
+          '
+          node --experimental-strip-types tests/http-v18-smoke.mjs http://127.0.0.1:8787
+          node --experimental-strip-types tests/http-tower-v23-smoke.mjs http://127.0.0.1:8787 --same-room
+          node --experimental-strip-types tests/http-tower-v23-smoke.mjs http://127.0.0.1:8787 --split-rooms

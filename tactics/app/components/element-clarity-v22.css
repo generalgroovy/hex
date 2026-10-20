@@ -1,0 +1,44 @@
+/* One visual hierarchy: a readable traveller, a single material impact,
+   then a quiet ground region. No scenery motion or new resolution delay. */
+.px-board.px-element-clarity-v22 .px-v16-flight-route{opacity:.1;stroke-width:1}
+.px-board.px-element-clarity-v22 .px-v16-flight-shadow{stroke-width:8;opacity:.7}
+.px-board.px-element-clarity-v22 .px-v9-flight-trail{stroke-width:3.5}
+.px-board.px-element-clarity-v22 .px-v9-projectile-lightning .px-v9-flight-trail{stroke-width:5;stroke-dasharray:13 87}
+.px-board.px-element-clarity-v22 .px-v9-projectile-air .px-v9-flight-trail,.px-board.px-element-clarity-v22 .px-v9-projectile-storm .px-v9-flight-trail{stroke-dasharray:3 3 5 89}
+.px-board.px-element-clarity-v22 .px-v9-projectile-dark .px-v9-flight-trail,.px-board.px-element-clarity-v22 .px-v9-projectile-void .px-v9-flight-trail{stroke:var(--fx-main);stroke-width:6;stroke-dasharray:5 4 5 86}
+.px-board.px-element-clarity-v22 .px22-wake-0{opacity:.85}.px-board.px-element-clarity-v22 .px22-wake-1{opacity:.55}.px-board.px-element-clarity-v22 .px22-wake-2{opacity:.3}
+.px-board.px-element-clarity-v22 .px-field-tint{stroke:none;fill-opacity:.31}
+.px-board.px-element-clarity-v22 .px-field-rune{opacity:.4}
+.px22-field-regions,.px22-impact-contours{pointer-events:none}
+.px22-field-regions path,.px22-impact-contours path{fill:none;stroke-linecap:butt;stroke-linejoin:miter;vector-effect:non-scaling-stroke}
+.px22-field-outline{stroke:#273a30;stroke-width:3.5;stroke-opacity:.7}
+.px22-field-edge{stroke:var(--field-color);stroke-width:1.7;stroke-opacity:.92}
+.px22-field-region[data-field-material=steam] .px22-field-edge{stroke-dasharray:5 3;stroke:#e4f0df}
+.px22-field-region[data-field-material=ice] .px22-field-edge{stroke:#c6f0e8;stroke-width:2.2}
+.px22-field-region[data-field-material=fire] .px22-field-edge{stroke:#f5b160}
+.px22-impact-contour{opacity:0;animation:px22-impact-contour 1350ms var(--px-impact-delay,4800ms) steps(1,end) both}
+.px22-impact-contour .px22-field-outline{stroke-width:4.5;stroke-opacity:.9}
+.px22-impact-contour .px22-field-edge{stroke-width:2.5;stroke:#fff1c9;stroke-opacity:1}
+.px-board.px-element-clarity-v22 .px-impact-fill{fill-opacity:.14}
+.px-board.px-element-clarity-v22 .px-impact-edge{stroke-opacity:.1;stroke-width:1}
+.px-board.px-element-clarity-v22 .px-v16-clash-area .px-impact-edge{stroke-opacity:.12}
+.px-board.px-element-clarity-v22 .px16-field-steam{opacity:.54}
+.px-board.px-element-clarity-v22 .px16-fire-field{filter:none}
+.px-board.px-element-clarity-v22 .px16-pressure-cel{stroke-width:4}
+.px-board.px-element-clarity-v22 .px16-pressure-cel.is-second{stroke-width:5}
+.px-board.px-element-clarity-v22 .px-v16-clash-name .px22-recipe-plus{font:700 11px Arial,sans-serif;fill:#d7dbc3}
+.px22-recipe-divider{stroke:#b7c2a9;stroke-opacity:.5;stroke-width:1}
+.px-board.px-element-clarity-v22 .px-v16-clash-name rect{stroke-width:2;fill:#243a32}
+.px22-team-link{opacity:0;animation:px22-link-window 1250ms var(--px-impact-delay,4800ms) steps(1,end) both}
+.px22-link-label text{font:700 12px Arial,sans-serif}
+@keyframes px22-impact-contour{0%,7%{opacity:0}8%,42%{opacity:1}65%{opacity:.7}86%{opacity:.35}100%{opacity:0}}
+@keyframes px22-link-window{0%{opacity:0}5%,60%{opacity:1}80%{opacity:.6}100%{opacity:0}}
+/* Calm terrain while orders move; action artwork takes precedence over the
+   decorative material clock. Steam changes drawings rather than bobbing. */
+.px-board.px-element-clarity-v22[data-playback-phase=move] .px-v8-material *,.px-board.px-element-clarity-v22[data-playback-phase=cast] .px-v8-material *{animation-play-state:paused!important}
+.px-board.px-element-clarity-v22 .is-living .px-v8-glint{animation:none;opacity:.8}
+@media(prefers-reduced-motion:reduce){
+ .px-board.px-element-clarity-v22 .px22-impact-contour,.px-board.px-element-clarity-v22 .px22-team-link{animation:none!important;opacity:.8}
+ .px-board.px-element-clarity-v22[data-playback-phase=move] .px22-impact-contour,.px-board.px-element-clarity-v22[data-playback-phase=cast] .px22-impact-contour,.px-board.px-element-clarity-v22[data-playback-phase=move] .px22-team-link,.px-board.px-element-clarity-v22[data-playback-phase=cast] .px22-team-link{visibility:hidden}
+ .px-board.px-element-clarity-v22 .px22-team-link{opacity:1}
+}

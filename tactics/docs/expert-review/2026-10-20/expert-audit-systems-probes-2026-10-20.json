@@ -1,0 +1,583 @@
+{
+  "source": "592855cbd88c070683d0c1fdc1fa0eaf235a0514",
+  "scope": "Small actual Tower resolver fixtures on controlled flat ground; not population balance or playtest evidence",
+  "light": [
+    {
+      "spell": "sunburst",
+      "substrate": "plain",
+      "cost": 3,
+      "effective": {
+        "id": "sunburst",
+        "name": "Sunburst",
+        "element": "light",
+        "description": "Deal 2 damage to enemies. Apply Blind for 1 round to enemies. Area: 19-hex burst.",
+        "level": 3,
+        "branch": "Radiance",
+        "cost": 3,
+        "cooldown": 2,
+        "range": 5,
+        "shape": "burst",
+        "radius": 2,
+        "damage": 2,
+        "heal": 0,
+        "harm": "enemy",
+        "harmful": [
+          {
+            "id": "blind",
+            "turns": 1,
+            "power": 1
+          }
+        ],
+        "focus": true
+      },
+      "target": {
+        "hp": 6,
+        "statuses": {
+          "clarity": {
+            "turns": 1,
+            "power": 1
+          }
+        }
+      },
+      "events": [
+        {
+          "kind": "guard",
+          "unitId": "rival",
+          "owner": 1,
+          "q": 0,
+          "r": 0,
+          "text": "Wa Bidi Guards: absorb 1 damage, resist 1 push/pull strength, recover +1 Flux."
+        },
+        {
+          "kind": "damage",
+          "unitId": "rival",
+          "owner": 1,
+          "q": 0,
+          "r": 0,
+          "amount": 2,
+          "critical": true,
+          "text": "Wa Bidi takes 2 damage in the exchange."
+        },
+        {
+          "kind": "surface",
+          "unitId": "rival",
+          "owner": 1,
+          "q": 0,
+          "r": 0,
+          "status": "clarity",
+          "text": "Wa Bidi gains Clarity for 1 planning round(s)."
+        }
+      ],
+      "field": "light"
+    },
+    {
+      "spell": "sunburst",
+      "substrate": "earth",
+      "cost": 3,
+      "effective": {
+        "id": "sunburst",
+        "name": "Sunburst",
+        "element": "light",
+        "description": "Deal 2 damage to enemies. Apply Blind for 1 round to enemies. Area: 19-hex burst.",
+        "level": 3,
+        "branch": "Radiance",
+        "cost": 3,
+        "cooldown": 2,
+        "range": 5,
+        "shape": "burst",
+        "radius": 2,
+        "damage": 2,
+        "heal": 0,
+        "harm": "enemy",
+        "harmful": [
+          {
+            "id": "blind",
+            "turns": 1,
+            "power": 1
+          }
+        ],
+        "focus": true
+      },
+      "target": {
+        "hp": 6,
+        "statuses": {
+          "blind": {
+            "turns": 1,
+            "power": 1
+          },
+          "resolve": {
+            "turns": 2,
+            "power": 1
+          },
+          "ward": {
+            "turns": 1,
+            "power": 1
+          }
+        }
+      },
+      "events": [
+        {
+          "kind": "guard",
+          "unitId": "rival",
+          "owner": 1,
+          "q": 0,
+          "r": 0,
+          "text": "Wa Bidi Guards: absorb 1 damage, resist 1 push/pull strength, recover +1 Flux."
+        },
+        {
+          "kind": "damage",
+          "unitId": "rival",
+          "owner": 1,
+          "q": 0,
+          "r": 0,
+          "amount": 2,
+          "critical": true,
+          "text": "Wa Bidi takes 2 damage in the exchange."
+        },
+        {
+          "kind": "surface",
+          "unitId": "rival",
+          "owner": 1,
+          "q": 0,
+          "r": 0,
+          "status": "blind",
+          "text": "Wa Bidi gains Blind for 1 planning round(s)."
+        },
+        {
+          "kind": "surface",
+          "unitId": "rival",
+          "owner": 1,
+          "q": 0,
+          "r": 0,
+          "status": "ward",
+          "text": "Wa Bidi gains Ward for 1 planning round(s)."
+        }
+      ],
+      "field": "crystal_prism"
+    },
+    {
+      "spell": "radiant_bolt",
+      "substrate": "plain",
+      "cost": 1,
+      "effective": {
+        "id": "radiant_bolt",
+        "name": "Radiant Bolt",
+        "element": "light",
+        "description": "Deal 3 damage to enemies. Heal allies for 1. Area: One precise hex.",
+        "level": 1,
+        "branch": "Light",
+        "cost": 1,
+        "cooldown": 0,
+        "range": 5,
+        "shape": "burst",
+        "radius": 2,
+        "damage": 3,
+        "heal": 1,
+        "harm": "enemy",
+        "focus": true
+      },
+      "target": {
+        "hp": 5,
+        "statuses": {
+          "clarity": {
+            "turns": 1,
+            "power": 1
+          }
+        }
+      },
+      "events": [
+        {
+          "kind": "guard",
+          "unitId": "rival",
+          "owner": 1,
+          "q": 0,
+          "r": 0,
+          "text": "Wa Bidi Guards: absorb 1 damage, resist 1 push/pull strength, recover +1 Flux."
+        },
+        {
+          "kind": "damage",
+          "unitId": "rival",
+          "owner": 1,
+          "q": 0,
+          "r": 0,
+          "amount": 3,
+          "critical": true,
+          "text": "Wa Bidi takes 3 damage in the exchange."
+        },
+        {
+          "kind": "surface",
+          "unitId": "rival",
+          "owner": 1,
+          "q": 0,
+          "r": 0,
+          "status": "clarity",
+          "text": "Wa Bidi gains Clarity for 1 planning round(s)."
+        }
+      ],
+      "field": "light"
+    }
+  ],
+  "channels": [
+    {
+      "id": "essence_theft",
+      "shape": "burst",
+      "radius": 2,
+      "bands": {
+        "centre": {
+          "id": "essence_theft",
+          "name": "Essence Theft",
+          "element": "dark",
+          "description": "Deal 1 damage to everyone hit, including allies. Steal up to 2 Flux from enemies after spell costs. Area: One precise hex.",
+          "level": 3,
+          "branch": "Void",
+          "cost": 3,
+          "cooldown": 1,
+          "range": 4,
+          "shape": "burst",
+          "radius": 2,
+          "damage": 2,
+          "heal": 0,
+          "harm": "all",
+          "steal": 2,
+          "focus": true
+        },
+        "inner": {
+          "id": "essence_theft",
+          "name": "Essence Theft",
+          "element": "dark",
+          "description": "Deal 1 damage to everyone hit, including allies. Steal up to 2 Flux from enemies after spell costs. Area: One precise hex.",
+          "level": 3,
+          "branch": "Void",
+          "cost": 3,
+          "cooldown": 1,
+          "range": 4,
+          "shape": "burst",
+          "radius": 2,
+          "damage": 1,
+          "heal": 0,
+          "harm": "all",
+          "steal": 2,
+          "focus": true
+        },
+        "rim": {
+          "id": "essence_theft",
+          "name": "Essence Theft",
+          "element": "dark",
+          "description": "Deal 1 damage to everyone hit, including allies. Steal up to 2 Flux from enemies after spell costs. Area: One precise hex.",
+          "level": 3,
+          "branch": "Void",
+          "cost": 3,
+          "cooldown": 1,
+          "range": 4,
+          "shape": "burst",
+          "radius": 2,
+          "damage": 1,
+          "heal": 0,
+          "harm": "all",
+          "steal": 2,
+          "focus": true,
+          "bonusDamage": 0
+        }
+      }
+    },
+    {
+      "id": "inspire",
+      "shape": "burst",
+      "radius": 2,
+      "bands": {
+        "centre": {
+          "id": "inspire",
+          "name": "Inspire",
+          "element": "light",
+          "description": "Heal allies for 1. Restore 2 Flux to allies at the end of this round. Area: One precise hex.",
+          "level": 5,
+          "branch": "Radiance",
+          "cost": 3,
+          "cooldown": 1,
+          "range": 4,
+          "shape": "burst",
+          "radius": 2,
+          "damage": 0,
+          "heal": 2,
+          "harm": "all",
+          "recharge": 2,
+          "focus": true
+        },
+        "inner": {
+          "id": "inspire",
+          "name": "Inspire",
+          "element": "light",
+          "description": "Heal allies for 1. Restore 2 Flux to allies at the end of this round. Area: One precise hex.",
+          "level": 5,
+          "branch": "Radiance",
+          "cost": 3,
+          "cooldown": 1,
+          "range": 4,
+          "shape": "burst",
+          "radius": 2,
+          "damage": 0,
+          "heal": 1,
+          "harm": "all",
+          "recharge": 2,
+          "focus": true
+        },
+        "rim": {
+          "id": "inspire",
+          "name": "Inspire",
+          "element": "light",
+          "description": "Heal allies for 1. Restore 2 Flux to allies at the end of this round. Area: One precise hex.",
+          "level": 5,
+          "branch": "Radiance",
+          "cost": 3,
+          "cooldown": 1,
+          "range": 4,
+          "shape": "burst",
+          "radius": 2,
+          "damage": 0,
+          "heal": 1,
+          "harm": "all",
+          "recharge": 2,
+          "focus": true,
+          "bonusDamage": 0
+        }
+      }
+    },
+    {
+      "id": "siphon",
+      "shape": "burst",
+      "radius": 2,
+      "bands": {
+        "centre": {
+          "id": "siphon",
+          "name": "Siphon",
+          "element": "dark",
+          "description": "Deal 2 damage to everyone hit, including allies. Heal yourself for 1 if an enemy takes spell damage after protection. Area: One precise hex.",
+          "level": 1,
+          "branch": "Dark",
+          "cost": 3,
+          "cooldown": 1,
+          "range": 4,
+          "shape": "burst",
+          "radius": 2,
+          "damage": 3,
+          "heal": 0,
+          "harm": "all",
+          "drain": 1,
+          "focus": true
+        },
+        "inner": {
+          "id": "siphon",
+          "name": "Siphon",
+          "element": "dark",
+          "description": "Deal 2 damage to everyone hit, including allies. Heal yourself for 1 if an enemy takes spell damage after protection. Area: One precise hex.",
+          "level": 1,
+          "branch": "Dark",
+          "cost": 3,
+          "cooldown": 1,
+          "range": 4,
+          "shape": "burst",
+          "radius": 2,
+          "damage": 2,
+          "heal": 0,
+          "harm": "all",
+          "drain": 1,
+          "focus": true
+        },
+        "rim": {
+          "id": "siphon",
+          "name": "Siphon",
+          "element": "dark",
+          "description": "Deal 2 damage to everyone hit, including allies. Heal yourself for 1 if an enemy takes spell damage after protection. Area: One precise hex.",
+          "level": 1,
+          "branch": "Dark",
+          "cost": 3,
+          "cooldown": 1,
+          "range": 4,
+          "shape": "burst",
+          "radius": 2,
+          "damage": 1,
+          "heal": 0,
+          "harm": "all",
+          "drain": 1,
+          "focus": true,
+          "bonusDamage": 0
+        }
+      }
+    },
+    {
+      "id": "signature_nico_lai",
+      "shape": "burst",
+      "radius": 2,
+      "bands": {
+        "centre": {
+          "id": "signature_nico_lai",
+          "name": "Quiet Circuit",
+          "element": "fire",
+          "description": "Heal allies for 1. Give allies Ward 1 for 1 round. Restore 3 Flux to allies at the end of this round. New Ward and Anchored protect from next round. Area: One precise hex.",
+          "level": 5,
+          "branch": "Lightning",
+          "cost": 5,
+          "cooldown": 3,
+          "range": 4,
+          "shape": "burst",
+          "radius": 2,
+          "damage": 0,
+          "heal": 2,
+          "harm": "all",
+          "recharge": 3,
+          "friendly": [
+            {
+              "id": "ward",
+              "turns": 1,
+              "power": 1
+            }
+          ],
+          "signatureChampionId": "nico_lai",
+          "focus": true
+        },
+        "inner": {
+          "id": "signature_nico_lai",
+          "name": "Quiet Circuit",
+          "element": "fire",
+          "description": "Heal allies for 1. Give allies Ward 1 for 1 round. Restore 3 Flux to allies at the end of this round. New Ward and Anchored protect from next round. Area: One precise hex.",
+          "level": 5,
+          "branch": "Lightning",
+          "cost": 5,
+          "cooldown": 3,
+          "range": 4,
+          "shape": "burst",
+          "radius": 2,
+          "damage": 0,
+          "heal": 1,
+          "harm": "all",
+          "recharge": 3,
+          "friendly": [
+            {
+              "id": "ward",
+              "turns": 1,
+              "power": 1
+            }
+          ],
+          "signatureChampionId": "nico_lai",
+          "focus": true
+        },
+        "rim": {
+          "id": "signature_nico_lai",
+          "name": "Quiet Circuit",
+          "element": "fire",
+          "description": "Heal allies for 1. Give allies Ward 1 for 1 round. Restore 3 Flux to allies at the end of this round. New Ward and Anchored protect from next round. Area: One precise hex.",
+          "level": 5,
+          "branch": "Lightning",
+          "cost": 5,
+          "cooldown": 3,
+          "range": 4,
+          "shape": "burst",
+          "radius": 2,
+          "damage": 0,
+          "heal": 1,
+          "harm": "all",
+          "recharge": 3,
+          "friendly": [
+            {
+              "id": "ward",
+              "turns": 1,
+              "power": 1
+            }
+          ],
+          "signatureChampionId": "nico_lai",
+          "focus": true,
+          "bonusDamage": 0
+        }
+      }
+    },
+    {
+      "id": "signature_juul_i_yaina",
+      "shape": "burst",
+      "radius": 2,
+      "bands": {
+        "centre": {
+          "id": "signature_juul_i_yaina",
+          "name": "Last Ember Step",
+          "element": "water",
+          "description": "Deal 1 damage to everyone hit, including allies. Apply Wet for 2 rounds to everyone hit. Push up to 2 hexes away from the caster; Guard resists 1 strength of the combined push or pull; Anchored stops it completely. Ice can carry a single push farther. Area: One precise hex. A forced step blocked by a ruin or barrier causes 1 environmental damage and Concussed, once per exchange. Guard resists force; Anchored prevents it. Units and map edges cause no impact.",
+          "level": 5,
+          "branch": "Ice",
+          "cost": 5,
+          "cooldown": 3,
+          "range": 4,
+          "shape": "burst",
+          "radius": 2,
+          "damage": 2,
+          "heal": 0,
+          "harm": "all",
+          "push": 2,
+          "harmful": [
+            {
+              "id": "wet",
+              "turns": 2,
+              "power": 1
+            }
+          ],
+          "signatureChampionId": "juul_i_yaina",
+          "focus": true,
+          "forceFromCaster": true
+        },
+        "inner": {
+          "id": "signature_juul_i_yaina",
+          "name": "Last Ember Step",
+          "element": "water",
+          "description": "Deal 1 damage to everyone hit, including allies. Apply Wet for 2 rounds to everyone hit. Push up to 2 hexes away from the caster; Guard resists 1 strength of the combined push or pull; Anchored stops it completely. Ice can carry a single push farther. Area: One precise hex. A forced step blocked by a ruin or barrier causes 1 environmental damage and Concussed, once per exchange. Guard resists force; Anchored prevents it. Units and map edges cause no impact.",
+          "level": 5,
+          "branch": "Ice",
+          "cost": 5,
+          "cooldown": 3,
+          "range": 4,
+          "shape": "burst",
+          "radius": 2,
+          "damage": 1,
+          "heal": 0,
+          "harm": "all",
+          "push": 2,
+          "harmful": [
+            {
+              "id": "wet",
+              "turns": 2,
+              "power": 1
+            }
+          ],
+          "signatureChampionId": "juul_i_yaina",
+          "focus": true,
+          "forceFromCaster": true
+        },
+        "rim": {
+          "id": "signature_juul_i_yaina",
+          "name": "Last Ember Step",
+          "element": "water",
+          "description": "Deal 1 damage to everyone hit, including allies. Apply Wet for 2 rounds to everyone hit. Push up to 2 hexes away from the caster; Guard resists 1 strength of the combined push or pull; Anchored stops it completely. Ice can carry a single push farther. Area: One precise hex. A forced step blocked by a ruin or barrier causes 1 environmental damage and Concussed, once per exchange. Guard resists force; Anchored prevents it. Units and map edges cause no impact.",
+          "level": 5,
+          "branch": "Ice",
+          "cost": 5,
+          "cooldown": 3,
+          "range": 4,
+          "shape": "burst",
+          "radius": 2,
+          "damage": 1,
+          "heal": 0,
+          "harm": "all",
+          "push": 2,
+          "harmful": [
+            {
+              "id": "wet",
+              "turns": 1,
+              "power": 1
+            }
+          ],
+          "signatureChampionId": "juul_i_yaina",
+          "focus": true,
+          "forceFromCaster": true,
+          "bonusDamage": 0
+        }
+      }
+    }
+  ]
+}

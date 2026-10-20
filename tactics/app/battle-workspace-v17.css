@@ -1,0 +1,57 @@
+/* Commands stay beside the player's company; the opposition has its own rail. */
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-multiplayer-link{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding:8px 10px;border:1px solid #8a9a78;border-radius:5px;background:#e5edda;color:#294943;text-decoration:none;font:12px/1.3 Arial,sans-serif}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-multiplayer-link span{font-size:11px}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-battle-grid{position:relative;grid-template-columns:300px minmax(0,1fr) 196px;gap:8px}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-field{grid-area:1/2/2/3}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-orders{grid-area:1/1/2/2}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-enemies{grid-area:1/3/2/4;display:flex;flex-direction:column;gap:8px;min-width:0;min-height:0;padding:8px;border:1px solid #b29b7a;border-radius:7px;background:#f2e9d7;overflow:auto}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemies>header{display:flex;align-items:center;justify-content:space-between;gap:5px;padding:4px 1px;font:700 12px/1.2 Arial,sans-serif;color:#843d2b}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemies>header button{display:none}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-card{display:flex;align-items:center;gap:3px;min-height:126px;padding:7px 4px;text-align:left;border:1px solid #c5ad8a;border-left:3px solid #aa553d;border-radius:5px;background:#fff8e9;color:#322b21;font:12px/1.25 Arial,sans-serif}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-card>.px-champion{flex:0 0 66px;max-width:66px}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-card>span{display:grid;gap:4px;min-width:0}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-card strong{font-size:12px;overflow-wrap:anywhere}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-card small{font-size:10px}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-card b{font-size:11px}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-card.is-down{opacity:.55;filter:saturate(.25)}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-affinities .tx-affinities{display:flex;flex-wrap:wrap;gap:5px;margin:0}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-affinities .tx-affinity-name{display:none}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-affinities .tx-glyph{width:14px;height:14px}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-card .tx-status-list{display:flex;flex-wrap:wrap;gap:3px;font-size:10px}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-card .tx-status-list:empty{display:none}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemies>p{font:10px/1.4 Arial,sans-serif;color:#6f614c;margin:auto 2px 0}
+.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-toggle{display:none}
+@media(min-width:1000px) and (min-height:650px){
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-battle-company>button{height:96px;min-height:96px;max-height:96px;gap:0;padding:3px}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-unit-visual{display:flex;align-items:center;justify-content:center;height:38px;width:100%;overflow:hidden}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-unit-visual>.px-champion{margin-top:-9px}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-unit-visual>b{display:none}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-unit-info strong{text-align:center}
+}
+@media(min-width:1500px){.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-battle-grid{grid-template-columns:320px minmax(0,1fr) 224px}.tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-card>.px-champion{max-width:80px;flex-basis:80px}}
+@media(max-width:999px){
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-battle-grid{grid-template-columns:284px minmax(0,1fr)}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-enemies{display:none;position:absolute;z-index:60;right:0;top:46px;bottom:0;width:min(260px,80vw);box-shadow:-8px 4px 20px #30271840}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-battle-grid[data-enemies-open=true] .tx-enemies{display:flex}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemies>header button{display:block;min-width:44px;min-height:44px;font-size:22px}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-toggle{display:block;position:absolute;z-index:20;right:4px;top:51px;min-height:44px;padding:5px 9px;border:1px solid #ac8966;border-radius:5px;background:#fff5df;font:600 11px/1.2 Arial,sans-serif}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-enemies .tx-enemy-card{flex:none;min-height:95px}
+}
+@media(max-width:599px) and (orientation:portrait){
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-battle-grid{display:flex;flex-direction:column;gap:4px}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-field{order:0;min-height:170px}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-orders{order:1;flex:none}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-enemies{top:45px;bottom:0}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-toggle{top:45px;right:2px;font-size:10px;padding:3px 7px}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-multiplayer-link{gap:4px;font-size:11px}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-multiplayer-link span{font-size:10px}
+}
+@media(orientation:landscape) and (max-height:600px){
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-battle-grid{display:grid;grid-template-columns:282px minmax(0,1fr)}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-field{grid-area:1/2/2/3;min-height:0}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-orders{grid-area:1/1/2/2}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-enemies{display:none;position:absolute;right:0;top:44px;bottom:0;width:250px;z-index:60}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17.tx-playing .tx-battle-grid[data-enemies-open=true] .tx-enemies{display:flex}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemy-toggle{display:block;position:absolute;z-index:20;top:47px;right:3px;min-height:44px;padding:5px 8px;background:#fff5df;border:1px solid #ac8966;border-radius:4px;font-size:11px}
+ .tactics.tx-v16.tx-v16.tx-workspace-v17.tx-workspace-v17 .tx-enemies>header button{display:block;min-width:44px;min-height:44px}
+}

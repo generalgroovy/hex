@@ -1,0 +1,17 @@
+/* Original atlas poses carry anatomy and cloth. Pixel steps carry timing.
+   No sprite rotation, scaling, skew, synthetic breathing or painted blur. */
+.px-champion.px-crafted{will-change:auto;filter:none;animation:none;transform-origin:50% 81.25%}
+.px-champion.px-crafted.px-action-idle{animation:none;transform:none}
+.px-champion.px-crafted.px-action-walk{animation:px-crafted-walk-frames var(--px-gait-duration) steps(1,end) infinite,px-crafted-step var(--px-gait-duration) steps(1,end) infinite;will-change:transform}
+.px-champion.px-crafted.px-action-cast{animation:var(--px-crafted-cast-gesture) var(--px-crafted-cast-total) steps(1,end) both,var(--px-crafted-cast-frames) var(--px-crafted-cast-total) steps(1,end) both;will-change:transform}
+.px-champion.px-crafted.px-action-hit{animation:px-crafted-recoil var(--px-hit-duration) steps(1,end) both;will-change:transform}
+.px-champion.px-crafted.px-action-defeat{animation:px-crafted-fall 580ms 120ms steps(1,end) both;filter:saturate(.55)}
+.px-champion.px-crafted.px-paused{animation:none;transform:none}
+
+/* Contact A, passing pose, contact B, passing pose. The passing pose rises one
+   pixel only for light bodies; heavy heels retain their ground contact. */
+@keyframes px-crafted-walk-frames{0%{background-position-y:calc(var(--px-size)*-1)}38%{background-position-y:0}50%{background-position-y:calc(var(--px-size)*-2)}88%{background-position-y:0}}
+@keyframes px-crafted-step{0%,50%,100%{transform:none}38%,88%{transform:translateY(calc(var(--px-step-lift)*-1))}}
+@keyframes px-crafted-recoil{0%{transform:none;filter:none}12%{transform:translateX(var(--px-hit-pixel));filter:brightness(1.14)}38%{transform:translateX(var(--px-hit-pixel));filter:none}62%{transform:translateX(var(--px-hit-return))}84%,100%{transform:none;filter:none}}
+@keyframes px-crafted-fall{0%,22%{transform:none;opacity:1}45%{transform:translateY(1px);opacity:.72}68%{transform:translateY(2px);opacity:.4}86%,100%{transform:translateY(3px);opacity:0}}
+@media(prefers-reduced-motion:reduce){.px-champion.px-crafted{animation:none!important;transform:none!important;will-change:auto}.px-champion.px-crafted.px-action-defeat{opacity:.35;filter:grayscale(.6)}}

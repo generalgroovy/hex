@@ -1,0 +1,18 @@
+.px45-planning-life{fill:none;stroke:#dce7b1;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;pointer-events:none}
+.px45-planning-life.is-water{stroke:#d5eee3}.px45-planning-life.is-light{stroke:#fff3c9}.px45-planning-life.is-dark{stroke:#bf9cd6}.px45-planning-life.is-earth{stroke:#dfc08c;stroke-width:2}
+.px45-material-cel{opacity:0;animation:px45-material-first 3.6s var(--life-delay,0s) steps(1,end) infinite}
+.px45-material-cel.is-1{animation-name:px45-material-second}.px45-material-cel.is-2{animation-name:px45-material-third}
+.px45-planning-life.is-earth .px45-material-cel{animation-duration:6.4s}
+.px45-planning-life.is-dark .px45-material-cel{animation-duration:4.8s}
+.px-board.px-crafted-world-v24 .px-aura-burn{animation:px45-condition-ember 1.2s steps(1,end) infinite}
+.px-board.px-crafted-world-v24 .px-aura-concussed{animation:px45-condition-stars 2.4s steps(1,end) infinite;transform:none}
+@keyframes px45-condition-ember{0%,100%{opacity:.75}25%{opacity:1}50%{opacity:.85}75%{opacity:.95}}
+@keyframes px45-condition-stars{0%,100%{opacity:.75}35%{opacity:1}70%{opacity:.85}}
+@keyframes px45-material-first{0%,17%{opacity:.7}18%,100%{opacity:0}}
+@keyframes px45-material-second{0%,17%{opacity:0}18%,35%{opacity:.7}36%,100%{opacity:0}}
+@keyframes px45-material-third{0%,35%{opacity:0}36%,53%{opacity:.5}54%,100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){
+ .px45-planning-life .px45-material-cel{animation:none;opacity:0}
+ .px45-planning-life .px45-material-cel.is-0{opacity:.65}
+ .px-board.px-crafted-world-v24 .px-aura-burn,.px-board.px-crafted-world-v24 .px-aura-concussed{animation:none;opacity:1}
+}

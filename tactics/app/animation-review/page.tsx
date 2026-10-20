@@ -1,0 +1,25 @@
+"use client";
+import {useState,type CSSProperties} from 'react';
+import {CHAMPIONS} from '../../lib/roster';
+import {ANIMATED_CHARACTER_IDS} from '../../lib/animation-assets';
+import {animationFrames,type FrameAction} from '../../lib/character-animation';
+import ChampionFrames from '../components/ChampionFrames';
+import {ElementProjectile,ElementImpact,ElementClash} from '../components/ElementEffectsV16';
+import {ELEMENT_PALETTES,ADVANCED_ELEMENT_NAMES,elementPresentation,type ElementPalette} from '../../lib/element-presentation';
+import {ELEMENT_EFFECT_FRAMES,EFFECT_SHADES,IMPACT_CEL_ENDS,STEAM_EFFECT_FRAMES,STEAM_EFFECT_PALETTE,type EffectCel} from '../../lib/element-effect-frames';
+import {CAST_ANTICIPATION_MS,PROJECTILE_FLIGHT_MS} from '../../lib/feedback-v16';
+import type {Element} from '../../lib/game';
+import './review.css';
+
+const actions:{id:FrameAction;name:string}[]=[{id:'walk',name:'Movement'},{id:'cast',name:'Casting'},{id:'hit',name:'Impact'},{id:'defeat',name:'Defeat'}];
+const previewClock={'--px-impact-delay':`${CAST_ANTICIPATION_MS+PROJECTILE_FLIGHT_MS}ms`} as CSSProperties;
+function ImpactStrip({frames,palette,name}:{frames:readonly EffectCel[];palette:ElementPalette;name:string}){
+ return <div className="frame-impact-strip" aria-label={`${name} six impact frames`}>{frames.map((cel,index)=><figure key={index}><svg viewBox="-84 -104 168 168" role="img" aria-label={`${name} frame ${index+1}, ${index?IMPACT_CEL_ENDS[index-1]:0} milliseconds`} shapeRendering="crispEdges">{cel.paths.map((path,shade)=>path?<path key={shade} d={path} fill={palette[EFFECT_SHADES[shade]]}/>:null)}</svg><figcaption>{index+1}</figcaption></figure>)}</div>;
+}
+export default function AnimationReview(){
+ const [action,setAction]=useState<FrameAction>('walk'),[facing,setFacing]=useState(1),[page,setPage]=useState(0),[play,setPlay]=useState(0),[paused,setPaused]=useState(false),[effects,setEffects]=useState(false);
+ const heroes=CHAMPIONS.slice(page*6,page*6+6);
+ return <main className="frame-review"><header><a href="/">← Game</a><h1>Animation review</h1><p>{ANIMATED_CHARACTER_IDS.length}/30 characters · 48 frames each</p></header><nav aria-label="Animation controls">{actions.map(a=><button key={a.id} aria-pressed={!effects&&action===a.id} onClick={()=>{setEffects(false);setAction(a.id);setPlay(x=>x+1)}}>{a.name}</button>)}<button aria-pressed={effects} onClick={()=>{setEffects(true);setPlay(x=>x+1)}}>Elements</button><select aria-label="Facing" disabled={effects} value={facing} onChange={e=>setFacing(Number(e.target.value))}><option value={1}>Front</option><option value={2}>Profile</option><option value={3}>Rear</option><option value={7}>Front left</option><option value={6}>Profile left</option><option value={5}>Rear left</option></select><button onClick={()=>setPlay(x=>x+1)}>Replay</button><button aria-pressed={!effects&&paused} disabled={effects} onClick={()=>setPaused(x=>!x)}>Pause</button></nav>
+ {effects?<section className="frame-fx-grid" key={play}>{(Object.keys(ELEMENT_PALETTES) as Element[]).flatMap(element=>[false,true].map(advanced=>{const visual=elementPresentation(element,advanced);return <article key={`${element}-${advanced}`}><h2>{visual.name}</h2><svg className="frame-fx-live px-board px-combat-pacing-v16" style={previewClock} viewBox="0 0 320 200" role="img" aria-label={`${visual.name} projectile and impact`}><ElementProjectile from={{x:35,y:55}} to={{x:280,y:55}} element={element} branch={advanced?ADVANCED_ELEMENT_NAMES[element]:undefined} delayMs={0}/><g transform="translate(160 140)"><ElementImpact element={element} branch={advanced?ADVANCED_ELEMENT_NAMES[element]:undefined}/></g></svg><ImpactStrip frames={ELEMENT_EFFECT_FRAMES[visual.kind].impact} palette={visual.palette} name={visual.name}/></article>}))}<article><h2>Steam interception</h2><svg className="frame-fx-live px-board px-combat-pacing-v16" viewBox="-120 -100 240 200" role="img" aria-label="Steam formation at a spell interception"><ElementClash elements={['fire','water']} name="Steam" color="#9bbfbb" delayMs={0} revealed/></svg><ImpactStrip frames={STEAM_EFFECT_FRAMES} palette={STEAM_EFFECT_PALETTE} name="Steam"/></article></section>:<><section className="frame-review-grid">{heroes.map(hero=><article key={hero.id} data-review-character={hero.id}><h2>{hero.name}</h2><p>{hero.race} · {animationFrames(hero.id,action).duration} ms</p>{ANIMATED_CHARACTER_IDS.includes(hero.id)?<><div className="frame-stage"><ChampionFrames key={`${action}-${play}`} id={hero.id} action={action} facing={facing} size={192} paused={paused}/></div><div className="frame-strip" aria-label={`${hero.name} six ${action} frames`}>{[0,1,2,3,4,5].map(frame=><figure key={frame}><ChampionFrames id={hero.id} action={action} facing={facing} size={96} frame={frame}/><figcaption>{frame+1}</figcaption></figure>)}</div></>:<p>Atlas pending</p>}</article>)}</section><footer><button disabled={page===0} onClick={()=>setPage(x=>x-1)}>Previous characters</button><span>{page+1}/5</span><button disabled={page===4} onClick={()=>setPage(x=>x+1)}>Next characters</button></footer></>}
+ </main>;
+}

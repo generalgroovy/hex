@@ -1,0 +1,87 @@
+# Fourth independent audit: validation, reliability and counterplay
+
+Auditor: design_audit_validation. Initial review: rules 11 at e750a6961c45f7388190115e95dd6ffe7ae91dfc. Integration review: working rules 12 implementation, 18 October 2026. This document distinguishes source inspection, automated evidence and observations still requiring people. It does not certify fun, commercial potential or competitive balance.
+
+## Initial audit of all 24 design areas
+
+The central promise is simultaneous elemental manipulation. A 63-entry catalogue can support discovery; 63 accumulating rule stacks would defeat readability. Each entry needs an authored tactical consequence, but should use a small shared vocabulary.
+
+| Area | Finding | Creative proposal | Acceptance evidence |
+|---|---|---|---|
+| 1. Identity | Rules are split between spells, ground, pair stacks and timing. | Make the repeated decision predict a landing, shape that ground, exploit or disrupt its field. | A first-session player explains a plan, the actual result and their next adjustment. Requires human observation. |
+| 2. Turn structure | Four equipped spells are weak commitments while swapping every turn. | Freeze four spells plus signature at match start; keep move plus cast or Guard. | Engine, wire and UI reject new-rule kit mutation; older matches retain their original rule. |
+| 3. Tactics | Many overlapping marks can overwhelm positioning. | Compounds exchange advantages: shelter versus speed, healing versus resources, cover versus initiative. | Curated positions have understandable alternative responses, followed by human play. |
+| 4. Elements | Every contained pair runs under larger mixtures. | One exact-mask field for each nonempty subset; no inherited pair stack. | All 63 masks, duplicate/permutation invariance, stable effect descriptions and bounded budgets. |
+| 5. Spells | Existing shapes and resources already provide substantial variety. | Improve consequence previews and fixed-kit tradeoffs before adding spells. | Shared footprint/composition helpers; obstruction, range, cooldown and friendly-fire cases. |
+| 6. Characters and races | Elemental inhabitants do not fit competitive champion schemas. | Separate neutral story actors with silhouette, desire, footprint and visible counter. | No NPC IDs accepted as champions; no team-affinity, defeat-score or roster contamination. |
+| 7. Team composition | Three teams' menus offer facts without a concise joint capability view. | Show selected kits and actual equipped elemental coverage. | Coverage derives from equipped actions, not the whole unlocked library. |
+| 8. Affinity progression | Story points, floors and free camp respec form a coherent existing system. | Preserve it and show the next meaningful unlock. | No reward on repeat/practice/online; migration preserves valid victories and allocations. |
+| 9. Resources and statuses | Pair stacking adds simultaneous status clutter. | Bounded compound packages with explicit now/next-turn wording. | Cleanse/control, Wet/Burn, prior/new Ward, Wither, expiry and anti-lock tests. |
+| 10. Objectives | Five wells already supply a clear contest. | Make creatures alter well approaches, without another capture system or currency. | Creatures never capture, award defeat points or independently win. |
+| 11. Maps and terrain | Meaningful terrain is rendered as isolated board plates. | Continuous ground, actual boundary cliffs and readable environmental clusters. | Art matches solidity/cover and leaves unit centers, wells and targets clear. |
+| 12. Procedural generation | Frozen mirrored connected geography is useful. | Seed decoration independently; preserve the current generator. | Seed determinism, legal placement and mirrored competitive costs. |
+| 13. Balance | Equal affinity ignores thresholds, signature discounts and synergy. | Keep the requested gauge, then investigate distributions and paired seat swaps. | Report bounded simulation results without calling them balance or human demand. |
+| 14. Story | Encounters mainly differ in opponents, seed and strength. | Introduce 63 inhabitants gradually: 1 in first 3, 2 in next 21, 3 in last 6. | Coverage, escalating mixture complexity, visible intentions and encounter-specific reward checks. |
+| 15. AI | Pair-name checks and kit swapping do not fit exact compounds. | Read field properties and public pulse forecasts using the same rules. | Legal deterministic plans, no mutation or hidden-opponent access, hazard-response fixtures. |
+| 16. Multiplayer | Secrecy, CAS and retry recovery already have strong structure. | New immutable protocol/rules 12, with legacy dispatch unchanged. | Two-seat HTTP journeys, race/retry secrecy, identical snapshots and pending legacy locks. |
+| 17. Onboarding | A substantial reference guide precedes understanding. | First encounters teach a landing, a pair, transformation and a visible creature pulse. | A new player completes an encounter without consulting the full catalogue; observe mistakes. |
+| 18. Interface | Selected character, order, status and instruction text compete for space. | One compact action surface and inspectable details. | Selected unit, queued order and readiness remain visible without duplicate commit controls. |
+| 19. Controls/mobile | A 148-pixel short-phone board impairs tactical reading. | Give the board priority; compact actions; retain pan, overview and keyboard paths. | Actual interaction at 320x568, 390x844 and landscape, plus physical-touch evidence separately. |
+| 20. Visuals/animation | Richer art can still bury the game state. | Coherent original H.E.X. atlas use, restrained ambience, clear anticipation/contact/recovery. | Before/during/after sequences, readable landings and reduced-motion information parity. |
+| 21. Audio | Event types largely share sonic character. | Six bounded timbral families; composites use limited layered cues. | Voice limits, cancellation, gesture activation and listening for comfort/personality. |
+| 22. Accessibility | Larger catalogue risks color-only identification. | Field names, ingredient symbols, text, focus and distinct tactical patterns. | Keyboard completion, contrast, motion preference, touch size and concise announcements. |
+| 23. Pacing/replayability | More actors could lengthen thought without adding choices. | Uncommanded inhabitants, small counts and alternating pulses; do not enlarge the map again. | Observe time to contest, idle movement, planning time and match duration. |
+| 24. Validation | Many existing tests encode behavior now intentionally changing. | Freeze legacy tests and add rules12 invariants and full journeys. | Exhaustive fields, malformed restore, NPC intents, progression, multiplayer, phones and published smoke. |
+
+Initial evidence: tactics-v11 `reactionsFor` activates all 15 pairs for six ingredients; `preparation` and `aiPreparation` support in-match kit changes; arena-v7 `biomeElement` means forest/ruins supply Earth and marsh supplies Water; usability-v9.css reduces the short-phone board to 148px; rooms.ts equal-total entry is a gauge, not a strength equivalence proof.
+
+Initial priorities: shared exact-compound contract; fixed kits plus action-surface simplification; separate deterministic inhabitants joining the same chemistry batch; continuous readable landscapes; version-preserving end-to-end validation.
+
+## Integration review of all 24 areas
+
+| Area | Implemented evidence and assessment | Remaining qualification |
+|---|---|---|
+| 1. Identity | Exact fields replace accumulated pairs, and the interactive ingredient guide directly demonstrates transformation. | Whether a first-time player grasps the central decision needs observation. |
+| 2. Turn structure | Rules12 rejects kit edits and training; current AI returns fixed-kit plans. New room tests prove rejection does not consume a lock. | Old rules11 kit changes intentionally remain supported. |
+| 3. Tactics | Examples contain real exchanges: Moonwell health for Flux; Glasswind cover for Concussion; Geyser speed with arrival damage; Duskwood well income for Flux. | Unique JSON descriptors do not by themselves establish equally interesting or viable choices. |
+| 4. Elements | 63 exact-mask definitions, one result per set, bounded shared resolver, no pair inheritance. Worldseed disperses after one exchange. | Higher recipes mostly combine one to three familiar properties. This is learnable structure, not 63 entirely separate systems. |
+| 5. Spells | Existing catalogue retained; shared previewField uses actual substrate and exact results; fixed kits restore commitment. | Forecasts depend on allied landings succeeding and unknown enemy orders. Wording must retain uncertainty. |
+| 6. Characters/races | 63 authored inhabitants use 13 silhouettes, seven footprint types, species-specific elements, names, desires and counters; champions remain canonical. | Shared silhouette families are deliberate reuse, not 63 individually animated sprite sheets. |
+| 7. Team composition | CompanyOverviewV12 adds equipped-element coverage; no mid-match catalogue search is required. | No claim of automated synergy quality scoring; defaults still need first-session play. |
+| 8. Affinity | Story profile key and existing allocations are preserved; awards validate canonical encounter inhabitants. | Profile remains local, not account-backed progression verification. |
+| 9. Resources/statuses | Generic fieldEffects handles movement, cover, mitigation, hazard timing, health, Flux, statuses, cleansing, score bonus and expiry. Anti-lock Resolve remains. | NPC interruption spends a normal cast; avoiding a pulse is always the alternate spatial response, but practical ease varies. |
+| 10. Objectives | NPCs remain separate from the six player units, do not block/capture/score, and influence approaches via fields. | Different fixed story placements can favor a seat; that is story encounter design, not competitive fairness. |
+| 11. Maps | Living-world renderer reads original H.E.X. prop/surface atlases and uses continuous ground/exposed cliffs. | Auditor reviewed code/tests, not the rendered visual; root's browser review supplies image evidence. |
+| 12. Procgen | Frozen arena remains; decorations and perches deterministic; placement tests cover all 30 encounters and reversed input order. | Generator replay remains versioned by existing arena rules. |
+| 13. Balance | New fields cap environmental damage; low shared effect values and counters reduce runaway stacking. Equal-total room entry preserved. | No human matchup study establishes balance. Story-only actors are excluded from online creation even with a story-shaped seed. |
+| 14. Story | All 63 inhabitants appear exactly once across 30 encounters, with 1/2/3 population progression; intentions alternate pulse/rest. | Personalities currently consist of concise identity/desire and behavior; there are no conversations or narrative quests. |
+| 15. AI | AI reads public field forecasts and exact effects, keeps kits, avoids a tested lethal pulse, and now values legal countercasts when they protect projected allies. The counter's own element, already-planned allied casts, surviving creature pulses, Flux cost and friendly-fire checks remain in the evaluation. | This is a bounded one-exchange heuristic over existing legal targets, not a new strategic search or proof of general tactical strength. It does not optimize a new movement plan jointly with interruption. |
+| 16. Multiplayer | Protocol12 dispatch retains legacy resolvers, secrecy, receipts and CAS. Added test preserves an already-pending v11 equipment lock byte-for-byte on retry. | Public deployment and HTTP verification belong to the root release sequence, not this read-only review evidence. |
+| 17. Onboarding | Compact combination guide and short creature tells replace an always-visible wall of recipes. Early species are simple elements. | No scripted guided tutorial or blind first-user study was added. |
+| 18. Interface | Main battle loadout mutation removed; details folded; field/creature inspection and compact action dock implemented. | Root is correcting phone layout concurrently; source review alone does not establish usable layout. |
+| 19. Controls/mobile | New stylesheet increases board allocation, with keyboard tile and creature inspection paths retained. | Physical touch, safe-area/browser chrome and narrow viewport interactions require browser/device evidence. |
+| 20. Visuals/animation | Atlas environment, distinct creature families, field telegraphs, pulse/interruption feedback and reduced-motion paths are present. | Lifelike/charming are aesthetic judgements. Procedural family animation does not equal bespoke animation for every species. |
+| 21. Audio | Six timbral envelopes and effect-aware cues added with bounded voices, cancellation and mute tests. | No listening performed by this auditor; avoid calling timbre pleasant solely from tests. |
+| 22. Accessibility | Creature buttons expose tell text; mixtures have text names and descriptions; keyboard focus/inspect paths and reduced motion retained. | Contrast and real screen-reader announcement load need human/device inspection. |
+| 23. Pacing/replayability | Small inhabitant counts and every-other-turn pulses constrain extra decision load; map remains 271 hexes. | Deterministic completed matches establish termination, not good pacing or replay desire. |
+| 24. Validation | Focused new tests supplement existing exact63, story placement, strict restore, session, art and audio tests. | Final source identity, build, public worker and browser evidence must be captured after all edits stop. |
+
+## Integration checks and findings
+
+- Inspected every CombinationMechanics property against tactics-v12 resolution. Values are handled in movement, damage, support, status, environmental, scoring and decay phases. `consume` is handled by one-exchange TTL and rejected from restored completed states.
+- Inspected inhabitant placement and intent restoration: only canonical species/perch data survives; phase and footprint recompute from round and catalogue. Story awards require these inhabitants, while ordinary game creation omits them even for a story-shaped map seed.
+- Inspected public pulse resolution: accepted player casts decide interruption before pulses join the same per-cell union. There is no second chemistry pass, private NPC plan or creature resource/score path.
+- Existing strict restore checks ground substrate, exact reaction ID, canonical element order, ice consistency, entity ownership and inhabitants. NPC event records require the saved canonical species, perch and elements. These are schema-consistency checks; local saves are not cryptographic proofs of play.
+- Found no release-blocking transport defect in the inspected code. No production source was changed by this auditor.
+- Added two focused tests to tests/rooms.test.ts: v12 kit/NPC injection rejection with unchanged lock state, including online story-shaped seeds; and released-v11 pending equipment-lock byte preservation, old resolver, secrecy and both protocol11/protocol12 receipt recovery.
+- Both new focused tests passed independently: 2 tests, 2 passed, 0 failed.
+- Follow-up integrated run completed: `node --experimental-strip-types --test tests/rooms.test.ts tests/combinations-v12.test.ts tests/inhabitants-v12.test.ts tests/client-session-v12.test.ts tests/living-world-v12.test.ts tests/game-audio-v12.test.ts` — 94 tests passed, 0 failed, 23.7 seconds. Includes all 63 field execution/restoration cases, all 30 story placement/intent checks, full legal local matches, room concurrency and legacy compatibility.
+- Subsequently reviewed the bounded AI interruption change independently and reran `node --experimental-strip-types --test tests/ai-inhabitants-v12.test.ts`: 4 tests passed, 0 failed. The cases prove a paid counter protects an ally outside its own footprint while leaving the counter's Water field; no-threat pulses are not interrupted; insufficient Flux/friendly fire still prevent the counter; and a previously planned interruption receives no duplicate reward. Source review confirms outside-footprint benefit is compared with and without only the countered pulses, uses complete substrate/prior-cast fields, accounts for enemy benefit, and is capped at plus/minus 12. No extra target-search dimension or hidden enemy plan was introduced.
+
+## Non-blocking design risks to preserve honestly
+
+1. The 63 mechanical fingerprints prove different data, not 63 compelling decisions. Several compounds are simple beneficial combinations; they need match observations before larger numerical tuning.
+2. Current tactical forecasts condition on planned allied moves; collisions and unseen enemy casts can change them. Keep the forecast visibly conditional and retain collision warnings.
+3. AI now deliberately interrupts a visible pulse when its bounded public-state estimate values the protection. The four regression fixtures support that capability, not mastery of all inhabitants, long-range planning or a claim of human-level play.
+4. Neutral creatures are periodically acting environmental characters with authored identities. They are not additional recruitable champions, combat enemies or conversational story characters.
+5. Automated tests and browser-emulated mobile checks do not establish human fun, physical-phone performance, release demand or commercial success.

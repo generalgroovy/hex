@@ -1,0 +1,4 @@
+import {RoomError} from './rooms.ts';
+export {towerRequestBody} from './tower-http-v22.ts';
+export function checkTowerOrigin(request:Request):void{const origin=request.headers.get('origin');if(origin&&origin!==new URL(request.url).origin)throw new RoomError(403,'ORIGIN_REJECTED','Open the game directly to play.');const protocol=request.headers.get('X-Confluence-Protocol');if(protocol!==null&&protocol!=='23')throw new RoomError(426,'CLIENT_UPGRADE_REQUIRED','Reload to use the current tower rules. Your room key stays in this browser.');}
+export function watchedSeat(request:Request):number|undefined{const value=new URL(request.url).searchParams.get('watch');if(value===null)return undefined;if(!/^[0-5]$/.test(value))throw new RoomError(400,'INVALID_SPECTATOR','Choose a player to watch.');return Number(value);}

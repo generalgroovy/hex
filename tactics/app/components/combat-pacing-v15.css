@@ -1,0 +1,30 @@
+/* The page owns the phase rail and six character readouts. Keep the map clear
+   for simultaneous motion, spell geometry, and one final health change. */
+.px-board.px-combat-pacing-v15 .px-crafted.px-action-cast{animation-duration:var(--px-cast-duration),var(--px-cast-duration)}
+.px-board.px-combat-pacing-v15 .px-cast-source{animation-duration:var(--px-cast-duration)}
+.px-board.px-combat-pacing-v15 .px-heal-glow{animation-delay:var(--px-settle-delay)}
+.px-board.px-combat-pacing-v15 .px-cast-event{opacity:1;animation:none;filter:none}
+.px-board.px-combat-pacing-v15[data-viewing-exchange=true] .px-well-values{display:none}
+.px-board.px-combat-pacing-v15.px-resolving .px-board-toolbar{justify-content:flex-end}
+.px-board.px-combat-pacing-v15 .px-event-text{font:800 16px/1 Arial,sans-serif;letter-spacing:0;stroke-width:4px}
+
+/* CSS animations share the presentation clock, but visibility also follows
+   the current phase. This prevents reduced-motion overrides revealing every
+   future projectile, impact and label as soon as an exchange starts. */
+.px-board.px-combat-pacing-v15[data-playback-phase=move] [data-playback-effect],
+.px-board.px-combat-pacing-v15[data-playback-phase=cast] [data-playback-effect=impact],
+.px-board.px-combat-pacing-v15[data-playback-phase=impact] [data-playback-effect=cast],
+.px-board.px-combat-pacing-v15[data-playback-phase=settle] [data-playback-effect]{visibility:hidden}
+
+@media(prefers-reduced-motion:reduce){
+ .px-board.px-combat-pacing-v15 .px-unit-moving{transform:translate(var(--px-static-x,0px),var(--px-static-y,0px))!important}
+ .px-board.px-combat-pacing-v15 .px-ground-contact{display:none}
+ .px-board.px-combat-pacing-v15 .px-event-text{opacity:1;transform:none}
+}
+
+/* Material silhouettes carry the spell; a quiet route makes overlapping flights
+   traceable without adding names or painting the entire map with bright lines. */
+.px-combat-pacing-v15 .px-v15-flight-route{opacity:.24}
+.px-combat-pacing-v15 .px-v15-flight-shadow{stroke:#25332f;stroke-opacity:.55}
+.px-combat-pacing-v15 .px-v15-projectile .px-v9-flight-head{filter:drop-shadow(0 1px 1px #fff3ce99)}
+@media(prefers-reduced-motion:reduce){.px-combat-pacing-v15 .px-v15-flight-route{opacity:.45}.px-combat-pacing-v15 .px-v15-flight-shadow{display:none}}

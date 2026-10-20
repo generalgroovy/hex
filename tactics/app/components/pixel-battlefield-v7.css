@@ -1,0 +1,32 @@
+/* V7 overrides stay within its board; frozen earlier rules retain their layout. */
+.px-board-v7 .px-camera-tools{flex-wrap:wrap;justify-content:flex-end}
+.px-board-v7 .px-board-toolbar{height:auto}
+.px-board-v7 .px-biome-detail{pointer-events:none}
+.px-board-v7 .px-field-rune{filter:drop-shadow(0 1px #fff3ce88)}
+.px-board-v7 .px-cell-description{flex-direction:column;align-items:flex-start;white-space:normal;gap:2px}
+.px-board-v7 .px-cell-description b,.px-board-v7 .px-cell-description>span{overflow:visible;text-overflow:clip;white-space:normal}
+.px-board-v7 .px-board-readout{min-height:44px}
+@media(max-width:850px){.px-board-v7 .px-camera-tools{width:100%;gap:3px;justify-content:flex-end}.px-board-v7 .px-camera-tools button{padding:3px 5px;gap:3px}.px-board-v7 .px-camera-tools button span{font-size:9px}.px-board-v7 .px-pan-toggle span{display:none}.px-board-v7 .px-board-readout{min-height:48px}.px-board-v7 .px-cell-description>span{font-size:10px}}
+
+/* Actors and objectives hold contrast; neutral ground provides the spacing. */
+.px-board-v7 .px-stage{background:#dccc9f}
+.px-board-v7 .px-stage:after{box-shadow:inset 0 0 24px #765b2014}
+.px-board-v7 .px-active-name{fill:#2c2519;stroke:#fff3ce;stroke-width:4px;paint-order:stroke;text-anchor:middle;font:700 16px/1 'Confluence Pixel',monospace;stroke-linejoin:round}
+.px-board-v7 .px-well-badge text,.px-board-v7 .px-overview-units text{font:700 11px/1 'Confluence Pixel',monospace;text-anchor:middle;paint-order:normal}
+.px-board-v7 .px-overview-units text{font-size:12px}
+.px-board-v7.px-tactical-overview .px-bars,.px-board-v7.px-tactical-overview .px-unit-badge,.px-board-v7.px-tactical-overview .px-active-name,.px-board-v7.px-tactical-overview .px-selection-arrow{opacity:0}
+.px-board-v7 .px-range-dot{opacity:.8}
+.px-board-v7 .px-cast-source{opacity:.75}
+.px-board-v7 .px-element-water .px-cast-tracer{stroke-dasharray:18 5;stroke-width:7;stroke-linecap:round}
+.px-board-v7 .px-element-air .px-cast-tracer{stroke-dasharray:14 10;stroke-width:4}
+.px-board-v7 .px-element-earth .px-cast-tracer{stroke-dasharray:5 8;stroke-width:8;stroke-linecap:square}
+.px-board-v7 .px-element-light .px-cast-tracer{stroke-dasharray:none;stroke-width:4}
+.px-board-v7 .px-element-dark .px-cast-tracer{stroke-dasharray:4 4;stroke-width:7}
+.px-board-v7 .px-spell-impact{opacity:0;animation:px-v7-impact-field .85s var(--px-impact-delay,900ms) both;pointer-events:none}
+.px-board-v7 .px-impact-fill{fill-opacity:.42}
+.px-board-v7 .px-impact-edge{stroke-opacity:.9}
+.px-board-v7 .px-impact-sparks{opacity:.8}
+.px-board-v7 .px-event-damage,.px-board-v7 .px-event-heal{font-weight:700;stroke-width:5px}
+@keyframes px-v7-impact-field{0%{opacity:0}12%{opacity:1}35%{opacity:.85}65%{opacity:.55}100%{opacity:0}}
+@media(max-width:850px){.px-board-v7 .px-battlefield{height:clamp(180px,30dvh,250px)}.px-board-v7 .px-board-readout{min-height:44px}.px-board-v7 .px-phase{max-width:calc(100% - 16px);font-size:9px;text-align:center;white-space:normal}}
+@media(prefers-reduced-motion:reduce){.px-board-v7 .px-spell-impact{animation:none!important;opacity:.55}.px-board-v7 .px-cast-source{opacity:.5}}

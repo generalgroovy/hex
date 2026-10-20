@@ -1,0 +1,48 @@
+.b24-insight-trigger,.b24-statuses .b24-insight-trigger{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-height:30px;padding:4px 6px;border:1px solid #bca982;border-radius:4px;background:#fff7e3;color:#342d24;font:600 11px/1.2 Arial,sans-serif;cursor:help;white-space:nowrap}
+.b24-insight-trigger[aria-expanded=true],.b24-insight-trigger:focus-visible{outline:2px solid #2e746b;outline-offset:2px;background:#fffdf2}
+.b24-statuses{display:flex;flex-wrap:wrap;gap:4px;min-width:0}
+.b24-status-symbol{display:grid;place-items:center;width:18px;height:18px;background:#3d352c;border-radius:3px;color:var(--insight-color,#ffe4a7);font-size:14px}
+.b24-statuses .b24-insight-trigger small{font-size:10px;font-weight:500;color:#695b44}
+.b24-insight{position:fixed;z-index:10000;box-sizing:border-box;width:300px;padding:10px 12px;border:2px solid #79654b;border-radius:6px;background:#fff7e4;color:#342d24;box-shadow:0 5px 18px #221c2040;font:13px/1.45 Arial,sans-serif;overflow:auto;overscroll-behavior:contain;text-align:left}
+.b24-insight>header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 3px}
+.b24-insight>header>strong{font-size:15px;line-height:1.2}
+.b24-insight>header>button{display:grid;place-items:center;min-height:32px;width:32px;padding:0;border:0;background:transparent;color:#574735;font-size:22px;cursor:pointer}
+.b24-insight[role=dialog] p{margin:8px 0 0;font-size:13px;line-height:1.45}
+.b24-insight[role=dialog] .b24-insight-duration{margin:0;color:#37665a;font-size:11px;font-weight:700}
+.b24-insight[role=dialog] .b24-insight-counter{padding-top:7px;border-top:1px solid #d9c9a5;color:#695a42;font-size:12px}
+.b24-vitals,:is(.t23-battle,.b24-campaign) .b24-vitals{display:flex;gap:8px;justify-content:center;width:100%;font-size:10px;line-height:1.5;font-variant-numeric:tabular-nums;white-space:nowrap}
+.b24-insight .b24-vitals{justify-content:flex-start;font-size:12px}
+.b24-vitals>span{position:relative;padding-bottom:4px;color:#67573e}
+.b24-vitals>span>b{color:#302d24;font-weight:750}
+.b24-vitals>span::after{content:"";height:2px;position:absolute;inset:auto 0 0;background:linear-gradient(to right,#387a5d var(--fill),#d4c7a8 var(--fill));border-radius:2px}
+.b24-vitals>.b24-flux::after{background:linear-gradient(to right,#5885aa var(--fill),#d4c7a8 var(--fill))}
+:is(.t23-battle,.b24-campaign) .s18-unit-tabs[data-count="1"]{grid-template-columns:1fr}:is(.t23-battle,.b24-campaign) .s18-unit-tabs[data-count="2"]{grid-template-columns:1fr 1fr}
+:is(.t23-battle,.b24-campaign) .s18-unit-tabs>button{height:98px;min-height:98px}
+:is(.t23-battle,.b24-campaign) .s18-unit-tabs strong{font-size:11px}
+:is(.t23-battle,.b24-campaign) .s18-command-heading{min-height:28px;gap:6px}
+:is(.t23-battle,.b24-campaign) .b24-fighter-kind{font-size:11px;font-weight:600;color:#67573e;text-transform:capitalize;min-width:0}
+:is(.t23-battle,.b24-campaign) .b24-affinities{display:flex;gap:6px;align-items:center;margin-right:auto}
+.b24-affinities>span{display:flex;gap:2px;align-items:center;font-size:10px;font-weight:700}
+:is(.t23-battle,.b24-campaign) .s18-command-heading button{min-height:32px;font-weight:600}
+:is(.t23-battle,.b24-campaign) .s18-opponents .b24-vitals{justify-content:flex-start;gap:7px;font-size:10px}
+:is(.t23-battle,.b24-campaign) .s18-opponents .b24-statuses{padding:3px 5px 5px}
+:is(.t23-battle,.b24-campaign) .s18-opponents .b24-statuses .b24-insight-trigger{min-height:28px;padding:3px 5px;font-size:10px}
+:is(.t23-battle,.b24-campaign) .s18-opponents .b24-statuses .b24-status-symbol{width:15px;height:15px;font-size:12px}
+:is(.t23-battle,.b24-campaign) .s18-opponents .c19-enemy>button strong{font-size:12px}
+:is(.t23-battle,.b24-campaign) .s18-inspect-identity .b24-vitals{justify-content:flex-start;font-size:13px;gap:15px}
+:is(.t23-battle,.b24-campaign) .s18-inspect-spells .b24-spell-availability{color:#8a3c2d;font-weight:600}
+@media(max-width:599px),(max-height:600px){
+ :is(.t23-battle,.b24-campaign) .s18-unit-tabs>button{height:48px;min-height:48px;gap:1px}
+ :is(.t23-battle,.b24-campaign) .s18-unit-tabs .b24-vitals{font-size:11px;gap:5px}
+ .s18-in-battle:is(.t23-battle,.b24-campaign) .s18-spells strong{font-size:11px;line-height:1.15}
+ .s18-in-battle:is(.t23-battle,.b24-campaign) .s18-spells>button>small{font-size:11px;line-height:1.2}
+ .s18-in-battle:is(.t23-battle,.b24-campaign) .s18-spells>button{min-height:44px;height:44px}
+ .s18-in-battle:is(.t23-battle,.b24-campaign) .s18-active-spell-effect small,.s18-in-battle:is(.t23-battle,.b24-campaign) .s18-aim-summary>small{font-size:11px;line-height:1.2}
+ .s18-in-battle:is(.t23-battle,.b24-campaign) .s18-aim-summary>strong{font-size:12px}
+ .s18-in-battle:is(.t23-battle,.b24-campaign) .s18-command-heading{display:flex;min-height:36px;flex-shrink:0;margin:0;align-items:center}
+ .s18-in-battle:is(.t23-battle,.b24-campaign) .s18-command-heading button{min-height:36px;padding:4px 8px;font-size:11px}
+ :is(.t23-battle,.b24-campaign) .b24-statuses{gap:4px}
+ .b24-statuses .b24-insight-trigger{min-height:32px}
+ .b24-insight>header>button{min-height:40px;width:40px}
+}
+@media(pointer:coarse){.b24-statuses .b24-insight-trigger,:is(.t23-battle,.b24-campaign) .s18-opponents .b24-statuses .b24-insight-trigger{min-height:40px}.b24-insight>header>button{min-height:44px;width:44px}}

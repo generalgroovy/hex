@@ -1,5 +1,10 @@
 # H.E.X. — Help, Everything eXploded!
 
+This repository contains two related games:
+
+- **[Web tactics game](tactics/README.md)** — simultaneous elemental combat, Story, solo/cooperative Tower and private online Arena. [Play in your browser](https://hex.onetruepath.chatgpt.site/tower) · [Design and implementation handbook](tactics/docs/handbook/README.md) · [Continue development](tactics/docs/handbook/CONTINUATION.md).
+- **Original Godot game** — the movement-led elemental sandbox described below. Its project, tools, art and save formats remain separate from `tactics/`.
+
 Status: **current source p60-be3efd332e1a**, with the October 10, 2026 gameplay/performance qualification and October 11 source-publication cleanup. Dense overlapping fields still miss the 60 FPS budget. See the [implementation and measurements](docs/performance-implementation-20261010.md).
 
 A movement-led elemental combat sandbox in Godot. Move and aim independently,
