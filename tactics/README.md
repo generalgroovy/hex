@@ -57,7 +57,7 @@ React/Vinext, Cloudflare Workers and D1. Node 24 is tested; Node >=22.13 is requ
 ```sh
 npm run install:ci
 npm run db:local
-npm run dev -- --host 127.0.0.1
+npm run dev -- --hostname 127.0.0.1
 npm run typecheck
 npm test
 npm run docs:check
