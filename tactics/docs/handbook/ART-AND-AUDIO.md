@@ -126,15 +126,16 @@ asset-sources/
 
 The content handbook lists the exact accepted filenames. Existing JSON audits retain their historical absolute source paths; use their hashes to match relocated inputs. Do not treat an old developer path as a required installation location. All 30 accepted raw character inputs were present and matched their recorded SHA-256 at inspection, totaling 54,047,366 bytes. The accepted reactive-prop input was 2,362,006 bytes and also matched its audit. These 56,409,372 raw bytes are the accepted external packer inputs selected for the handoff. Earlier exploratory generations are not required to reproduce the current packed outputs. The ground source is already in `public/pixel/environment/wellspring-surfaces-crafted.webp`.
 
-Run from the web application root:
+Repack the bundled accepted art from the web application root:
 
 ```sh
-node scripts/import-pixel-assets.mjs /path/to/original-hex
 node scripts/pack-character-animation.mjs oh_tipi asset-sources/frames/raw-a/oh_tipi.png
 node scripts/pack-character-animation.mjs djonah_thaan asset-sources/frames/raw-a/djonah_thaan-corrected.png
 node scripts/pack-character-animation.mjs juul_i_yaina asset-sources/frames/raw-b/juul_i_yaina.png 2,4
 node scripts/pack-environment-v17.mjs asset-sources/environment/reactive-props-v17.png
 ```
+
+`scripts/import-pixel-assets.mjs <original-root>` is an optional historical refresh tool, not a reconstruction step. It expects a separately supplied original source layout, including `assets/sprites/pixel_cast_v1/manifest.json`; that layout is not guaranteed by the Godot revision at this repository's root. Reproducing this release uses the committed champion atlases, environment sources and portable raw inputs above.
 
 These commands write assets and audits; run them in a reviewable working copy. The original importer requires the original repository's `assets/sprites/pixel_cast_v1/manifest.json` and copies bytes unchanged. The character packer extracts complete alpha islands, thresholds alpha, removes very small islands, applies one scale per character, aligns feet, packs lossless WebP, writes audit records, and regenerates `lib/animation-assets.ts`. The `2,4` flag mirrors only Juul I Yaina's known corrected cel. Djonah Thaan uses the already corrected raw image, not the earlier uncorrected generation.
 
