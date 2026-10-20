@@ -1,0 +1,51 @@
+/* The grid is a planning aid on a continuous landscape. Original H.E.X. pixels. */
+.px-board-v12{border:1px solid #766c4d;box-shadow:0 2px 8px #2c251924;border-radius:7px;background:#e9dfbf}
+.px-board-v12 .px-stage{background:#667750;border:0}
+.px-board-v12 .px-stage:after{box-shadow:inset 0 0 36px #263e2733;border:0}
+.px-board-v12 .px-world-surface{image-rendering:pixelated}
+.px-board-v12 .px-world-prop{pointer-events:none;transition:opacity .16s ease;image-rendering:pixelated}
+.px-board-v12 .px-world-prop.is-canopy-hidden{opacity:.2}
+.px-board-v12 .px-world-prop.is-alive>svg{transform-origin:50% 97%;animation:px-world-leaf 6s var(--world-delay,0s) ease-in-out infinite}
+.px-board-v12 .px-world-water{animation:px-world-water 5s ease-in-out infinite;pointer-events:none}
+.px-board-v12 .px-world-grid{stroke:#304e3428;stroke-width:.65;fill:none;pointer-events:none}
+.px-board-v12 .px-target{stroke-opacity:.8;fill-opacity:.1}
+.px-board-v12 .px-field-tint{stroke-opacity:.35;stroke-width:1;stroke-dasharray:none}
+.px-board-v12 .px-field-rune{opacity:.35}
+.px-board-v12 .px-board-toolbar{padding:3px 8px;min-height:40px;background:#f4ecd8;border-bottom:1px solid #b8b090;box-shadow:none;justify-content:space-between;gap:4px}
+.px-board-v12 .px-camera-tools{gap:2px;flex:1;justify-content:flex-end}
+.px-board-v12 .px-camera-tools button{border:0;box-shadow:none;min-height:36px;background:transparent;border-radius:4px;padding:5px 7px}
+.px-board-v12 .px-camera-tools button[aria-pressed=true]{background:#425d41;color:#fff8e5}
+.px-board-v12 .px-camera-tools button span{font:600 11px Arial,sans-serif}
+.px-board-v12 .px-npc-tools{display:flex;gap:4px;align-items:center;min-width:0}
+.px-board-v12 .px-npc-tools button{font:600 11px Arial,sans-serif;min-height:36px;max-width:150px;padding:5px 7px;border:1px solid #a49971;background:#fbf4de;border-radius:4px;color:#373b2d;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
+.px-board-v12 .px-npc-tools button[aria-pressed=true]{background:#e7d6ac;border-color:#74633e}
+.px-board-v12 .px-npc-tools select{font:600 11px Arial,sans-serif;color:#373b2d;background:#fbf4de;border:1px solid #a49971;border-radius:4px;min-height:36px;max-width:135px;padding:5px}
+.px-board-v12 .px-npc-telegraph{pointer-events:none;fill:#f0c97c;fill-opacity:.16;stroke:#72512d;stroke-width:2;stroke-dasharray:5 4}
+.px-board-v12 .px-npc-telegraph.is-pulse{fill-opacity:.23;stroke:#b05232}
+.px-board-v12 .px-npc-inspect{pointer-events:all;cursor:pointer;outline:none}
+.px-board-v12 .px-npc-inspect:focus-visible{filter:drop-shadow(0 0 5px #fff4be)}
+.px-board-v12 .px-npc-inspect circle{fill:#fff3ce;stroke:#72512d;stroke-width:2}
+.px-board-v12 .px-npc-inspect text{font:700 13px Arial,sans-serif;text-anchor:middle;fill:#543f27}
+.px-board-v12 .px-world-inspection{padding:7px 10px;background:#f7edd2;border-top:1px solid #b9a77d;font:12px/1.4 Arial,sans-serif;display:flex;gap:9px;align-items:flex-start}
+.px-board-v12 .px-world-inspection div{min-width:0;flex:1}
+.px-board-v12 .px-world-inspection strong{color:#4b492f}.px-board-v12 .px-world-inspection p{margin:3px 0 0}
+.px-board-v12 .px-world-inspection button{min-height:36px;min-width:36px;border:0;background:transparent;color:#604c2c;cursor:pointer}
+.px-board-v12 .px-board-readout{background:#f4ecd8;border-color:#b8b090;min-height:38px;font:11px/1.35 Arial,sans-serif}
+.px-board-v12 .px-field-preview{color:#315e56;font-weight:600}
+.px-board-v12 .px-material-compound{pointer-events:none}
+.px-board-v12 .px-material-compound.is-living .px-compound-core{transform-origin:center;animation:px-world-water 4.3s var(--px-material-delay,0s) ease-in-out infinite}
+.px-board-v12.px-tactical-overview .px-world-prop{opacity:.55}.px-board-v12.px-tactical-overview .px-world-prop.is-canopy-hidden{opacity:.12}
+.px-board-v12.px-tactical-overview .px-world-prop>svg,.px-board-v12.px-tactical-overview .px-world-water,.px-board-v12.px-tactical-overview .px-material-compound *{animation:none}
+@keyframes px-world-leaf{0%,100%{transform:skewX(0)}40%{transform:skewX(.5deg)}70%{transform:skewX(-.4deg)}}
+@keyframes px-world-water{0%,100%{opacity:.55}50%{opacity:.85}}
+@media(max-width:850px){.px-board-v12 .px-board-toolbar{min-height:40px;padding:1px 4px;flex-wrap:wrap}.px-board-v12 .px-camera-tools button{min-height:40px;min-width:40px;padding:5px}.px-board-v12 .px-camera-tools button span{font-size:10px}.px-board-v12 .px-npc-tools{width:100%;order:2;overflow:auto;scrollbar-width:none}.px-board-v12 .px-npc-tools:empty{display:none}.px-board-v12 .px-npc-tools button{max-width:none;flex:1;min-height:32px;font-size:10px}.px-board-v12 .px-world-inspection{font-size:11px}.px-board-v12 .px-board-readout{min-height:36px}}
+@media(prefers-reduced-motion:reduce){.px-board-v12 .px-world-prop,.px-board-v12 .px-world-prop>svg,.px-board-v12 .px-world-water,.px-board-v12 .px-material-compound *{animation:none!important;transition:none!important;transform:none!important}}
+/* Two intentional rows on phones. Specificity overrides the historic 44px toolbar height. */
+@media(max-width:850px){
+ .tactics.tx-v12 .px-board.px-board-v12 .px-board-toolbar{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;flex-wrap:nowrap;height:auto;min-height:44px;padding:2px 4px;gap:2px;overflow:visible}
+ .tactics.tx-v12 .px-board.px-board-v12 .px-camera-tools{order:0;display:flex;flex-direction:row;align-items:stretch;justify-content:space-between;flex-wrap:nowrap;flex:none;width:100%;min-width:0;height:44px;gap:2px}
+ .tactics.tx-v12 .px-board.px-board-v12 .px-camera-tools button{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1 1 0;min-width:44px;max-width:none;width:auto;height:44px;min-height:44px;padding:2px;gap:2px;font-size:17px;line-height:1}
+ .tactics.tx-v12 .px-board.px-board-v12 .px-camera-tools button span{display:block;font:600 9px/1.1 Arial,sans-serif;letter-spacing:0;white-space:nowrap}
+ .tactics.tx-v12 .px-board.px-board-v12 .px-npc-tools{order:1;display:flex;flex:none;width:100%;min-width:0;max-width:none;height:44px;overflow:visible}
+ .tactics.tx-v12 .px-board.px-board-v12 .px-npc-tools button,.tactics.tx-v12 .px-board.px-board-v12 .px-npc-tools select{flex:1 1 0;min-width:0;max-width:100%;width:100%;height:44px;min-height:44px;margin:0;padding:6px 10px;font:600 11px/1.2 Arial,sans-serif}
+}

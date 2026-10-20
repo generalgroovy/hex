@@ -1,0 +1,44 @@
+/* Life follows an action. The atlas, its feet, and rigid scenery stay anchored. */
+.px-combat-life .px-world-prop>svg{animation:none;transform:none}
+.px-combat-life .px-crafted.px-action-idle{animation:none;transform:none}
+
+/* The projectile leaves 120 ms into the 450 ms cast. The raised-hand pose and
+   directional release now meet that instant; each voice keeps its own recovery. */
+.px-combat-life .px-crafted.px-action-cast{animation:var(--px-combat-cast,px-combat-open) 450ms cubic-bezier(.22,.7,.3,1) both,px-combat-cast-frames 450ms steps(1,end) both}
+.px-combat-life .px-voice-current{--px-combat-cast:px-combat-flow}
+.px-combat-life .px-voice-spark,.px-combat-life .px-voice-prowl{--px-combat-cast:px-combat-snap}
+.px-combat-life .px-voice-root,.px-combat-life .px-voice-forge{--px-combat-cast:px-combat-weight}
+.px-combat-life .px-voice-ritual{--px-combat-cast:px-combat-flourish}
+@keyframes px-combat-cast-frames{0%,26.65%{background-position-y:0}26.666667%,81%{background-position-y:calc(var(--px-size)*-3)}82%,100%{background-position-y:0}}
+@keyframes px-combat-flow{0%,100%{transform:none}20%{transform:translateX(var(--px-counter-x)) rotate(calc(var(--px-lean)*-.6)) scaleY(var(--px-squash))}26.666667%{transform:translateX(var(--px-cast-x)) rotate(var(--px-lean)) scaleY(var(--px-stretch))}58%{transform:rotate(calc(var(--px-lean)*.3))}76%{transform:rotate(calc(var(--px-lean)*-.2)) scaleY(var(--px-squash))}90%{transform:scaleY(1)}}
+@keyframes px-combat-snap{0%,100%{transform:none}21%{transform:translateX(var(--px-counter-x)) scale(var(--px-stretch),var(--px-squash)) rotate(calc(var(--px-lean)*-.7))}26.666667%{transform:translateX(var(--px-cast-x)) rotate(var(--px-lean)) scaleY(var(--px-stretch))}43%{transform:rotate(calc(var(--px-lean)*-.35)) scaleY(var(--px-squash))}68%{transform:rotate(calc(var(--px-lean)*.13))}}
+@keyframes px-combat-weight{0%,100%{transform:none}21%{transform:scale(var(--px-stretch),var(--px-squash)) rotate(calc(var(--px-lean)*-.6))}26.666667%{transform:rotate(var(--px-lean)) scaleY(var(--px-stretch))}59%{transform:scaleY(var(--px-squash))}85%{transform:rotate(calc(var(--px-lean)*-.2))}}
+@keyframes px-combat-open{0%,100%{transform:none}20%{transform:scaleY(var(--px-squash)) rotate(calc(var(--px-lean)*-.35))}26.666667%{transform:scaleY(var(--px-stretch)) rotate(calc(var(--px-lean)*.7))}65%{transform:rotate(calc(var(--px-lean)*-.2))}89%{transform:scaleY(.997)}}
+@keyframes px-combat-flourish{0%,100%{transform:none}21%{transform:rotate(calc(var(--px-lean)*-.65)) scaleY(var(--px-squash))}26.666667%{transform:translateX(var(--px-cast-x)) rotate(var(--px-lean))}56%{transform:rotate(calc(var(--px-lean)*-.3))}82%{transform:rotate(calc(var(--px-lean)*.1))}}
+
+.px-ground-contact{pointer-events:none;--contact-color:#d5be8b;--contact-light:#eee0bc}
+.px-ground-contact.is-water{--contact-color:#8bd2d3;--contact-light:#e5f2de}
+.px-ground-contact.is-ice{--contact-color:#c8efdf;--contact-light:#f4ffe9}
+.px-ground-contact.is-leaf{--contact-color:#81984e;--contact-light:#bdcc83}
+.px-ground-contact.is-stone{--contact-color:#aab0a0;--contact-light:#dbdcc3}
+.px-contact-particle{opacity:0;fill:var(--contact-color);animation:px-contact-scatter 420ms var(--contact-delay) cubic-bezier(.17,.62,.35,1) both;transform-origin:0 0}
+.px-contact-particle:nth-child(even){fill:var(--contact-light)}
+.px-contact-ring{opacity:0;fill:none;stroke:var(--contact-light);stroke-width:1.6;transform-origin:0 0;animation:px-contact-ring 460ms var(--contact-delay) ease-out both}
+@keyframes px-contact-scatter{0%{opacity:0;transform:translate(0,0)}16%{opacity:.8}48%{opacity:.65;transform:translate(calc(var(--contact-x)*.6),var(--contact-y)) rotate(var(--contact-spin))}100%{opacity:0;transform:translate(var(--contact-x),2px) rotate(var(--contact-spin))}}
+@keyframes px-contact-ring{0%{opacity:0;transform:scale(.3)}18%{opacity:.6}100%{opacity:0;transform:scale(1.35)}}
+
+/* A bird may ruffle a wing, a fox flick its tail, and a moth beat its wings.
+   Stone shells, roots and planted feet do not breathe or levitate. */
+.elemental-creature.ec-combat-life .ec-body,.elemental-creature.ec-combat-life.is-gathering .ec-body{animation:none;transform:none}
+.elemental-creature.ec-combat-life .ec-tail{animation:ec-life-tail 9s var(--ec-life-phase,0s) ease-in-out infinite}
+.elemental-creature.ec-combat-life .ec-wing{animation:ec-life-wing 11s var(--ec-life-phase,0s) ease-in-out infinite}
+.elemental-creature.ec-combat-life.ec-moth .ec-wing{animation:ec-life-moth 1.4s var(--ec-life-phase,0s) ease-in-out infinite}
+.elemental-creature.ec-combat-life .ec-ember{transform-origin:17px -27px;animation:ec-life-ember 2.6s var(--ec-life-phase,0s) steps(3,end) infinite}
+.elemental-creature.ec-combat-life .ec-ready{animation:ec-life-ready 2.8s ease-in-out infinite}
+@keyframes ec-life-tail{0%,72%,100%{transform:none}80%{transform:rotate(-3deg)}90%{transform:rotate(2deg)}}
+@keyframes ec-life-wing{0%,82%,100%{transform:none}87%{transform:scaleX(.95)}93%{transform:scaleX(1.01)}}
+@keyframes ec-life-moth{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.86)}}
+@keyframes ec-life-ember{0%,100%{opacity:.8;transform:scaleY(.9)}48%{opacity:1;transform:scaleY(1.1)}}
+@keyframes ec-life-ready{0%,100%{opacity:.4}40%,60%{opacity:.9}}
+.ec-combat-life.is-paused *{animation:none!important;transform:none}
+@media(prefers-reduced-motion:reduce){.px-combat-life .px-crafted,.ec-combat-life *{animation:none!important;transform:none!important}.px-ground-contact{display:none}}

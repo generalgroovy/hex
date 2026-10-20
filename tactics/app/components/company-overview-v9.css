@@ -1,0 +1,38 @@
+.tactics .cx-company{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:start;min-width:0}
+.tactics .cx-member{min-width:0;background:#f9edce;border:1px solid #b7a177;border-radius:9px;overflow:hidden;box-shadow:0 2px 0 #59422210;color:#2c2519}
+.tactics .cx-member.is-selected{border-color:#496b59;box-shadow:inset 0 3px 0 #496b59,0 2px 0 #59422210}
+.tactics .cx-member-heading{display:flex;align-items:center;gap:4px;padding:6px 10px 0 2px;min-width:0}
+.tactics .cx-identity{display:flex;align-items:center;gap:1px;flex:1;min-width:0;min-height:80px;border:0;background:transparent;padding:0;text-align:left;color:inherit;border-radius:5px}
+.tactics .cx-portrait{display:block;flex:0 0 76px;width:76px;height:78px;overflow:hidden}
+.tactics .cx-identity-text{display:flex;flex-direction:column;gap:4px;min-width:0;padding:7px 0}
+.tactics .cx-identity-text strong{font-family:Arial,sans-serif;font-size:15px;line-height:1.2;overflow-wrap:anywhere}
+.tactics .cx-race{font:12px/1.2 Arial,sans-serif;color:#625033}
+.tactics .cx-replace{flex:0 0 auto;min-height:44px;padding:7px 5px;border:0;background:transparent;font:12px Arial,sans-serif;text-decoration:underline;text-underline-offset:3px;color:#385c4a;border-radius:4px}
+.tactics .cx-affinities{display:flex;flex-wrap:wrap;align-items:center;gap:5px 10px;min-height:30px;padding:0 11px 7px;font:12px/1.2 Arial,sans-serif}
+.tactics .cx-affinities>span{display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+.tactics .cx-affinities b{font-size:12px;color:#3a4e2b;background:#e1e3c4;border-radius:3px;min-width:16px;line-height:17px;text-align:center}
+.tactics .cx-spell-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:0 9px 9px}
+.tactics .cx-spell{display:grid;grid-template-columns:15px 18px minmax(0,1fr);grid-template-rows:auto auto;gap:3px 4px;align-items:start;align-content:center;min-height:68px;padding:7px 6px;border:1px solid #c9b88f;border-left:3px solid var(--cx-element);border-radius:5px;background:#fff6dd;text-align:left;color:inherit;min-width:0}
+.tactics .cx-spell strong{grid-column:3;grid-row:1;font:600 12px/1.25 Arial,sans-serif;overflow-wrap:anywhere;align-self:center}
+.tactics .cx-slot{grid-column:1;grid-row:1;font:11px/18px Arial,sans-serif;color:#786345}
+.tactics .cx-spell>svg{grid-column:2;grid-row:1}
+.tactics .cx-spell-meta{grid-column:2/-1;font:11px/1.2 Arial,sans-serif;color:#645235;white-space:normal}
+.tactics .cx-signature{border-top:1px solid #d7c498;background:#eee0ba}
+.tactics .cx-signature summary{display:flex;align-items:center;gap:8px;min-height:55px;padding:8px 12px;cursor:pointer;list-style:none}
+.tactics .cx-signature summary::-webkit-details-marker{display:none}
+.tactics .cx-signature summary:after{content:'⌄';font:16px Arial,sans-serif;color:#6f5b3b;margin-left:1px}
+.tactics .cx-signature[open] summary:after{content:'⌃'}
+.tactics .cx-signature-star{color:#99722b;font-size:16px}
+.tactics .cx-signature summary>span:nth-child(2){flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.tactics .cx-signature summary strong{font:600 12px/1.2 Arial,sans-serif;overflow-wrap:anywhere}
+.tactics .cx-signature summary small{font:10px/1.15 Arial,sans-serif;color:#715a35}
+.tactics .cx-signature summary>b{white-space:nowrap;font:600 13px Arial,sans-serif}
+.tactics .cx-signature>div{padding:0 12px 10px;font:12px/1.4 Arial,sans-serif}
+.tactics .cx-signature p{margin:0 0 7px}
+.tactics .cx-signature>div>span{font-size:11px;color:#645235}
+.tactics .cx-signature .cx-signature-rule{margin:6px 0 0;color:#645235;font-size:11px}
+.tactics .cx-company button:hover:not(:disabled){background:#f4e6be}
+.tactics .cx-company button:focus-visible,.tactics .cx-signature summary:focus-visible{outline:3px solid #287d7a;outline-offset:-3px}
+.tactics .cx-company button:disabled{cursor:default;opacity:.65}
+@media(max-width:1050px) and (min-width:701px){.tactics .cx-member-heading{flex-wrap:wrap;padding-right:5px}.tactics .cx-identity{flex-basis:100%}.tactics .cx-replace{min-height:32px;margin-left:auto}.tactics .cx-spell{grid-template-columns:12px minmax(0,1fr);gap:4px}.tactics .cx-spell>svg{display:none}.tactics .cx-spell strong{grid-column:2}.tactics .cx-spell-meta{grid-column:1/-1}.tactics .cx-identity-text strong{font-size:14px}}
+@media(max-width:700px){.tactics .cx-company{grid-template-columns:1fr;gap:12px}.tactics .cx-member-heading{padding-right:12px}.tactics .cx-identity{min-height:68px}.tactics .cx-portrait{height:68px}.tactics .cx-spell{min-height:56px;padding:7px 8px}.tactics .cx-spell strong{font-size:13px}.tactics .cx-affinities{padding-bottom:8px}.tactics .cx-signature summary{min-height:52px}.tactics .cx-identity-text strong{font-size:16px}}

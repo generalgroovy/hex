@@ -1,0 +1,30 @@
+/* Preview marks use the field that will form, while ink and hatching keep aim readable. */
+.px-board-v13 .px-field-forecast-marker text{font:700 13px/1 Arial,sans-serif;text-anchor:middle;paint-order:stroke;stroke:#fff7e0;stroke-width:.3px}
+.px-board-v13 .px-planned-fields{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;white-space:normal;overflow:visible;font:11px/1.4 Arial,sans-serif}
+.px-board-v13 .px-planned-field{display:inline-flex;align-items:center;gap:3px;padding:1px 5px;background:#fff7e0;color:#302d25;border-left:3px solid var(--field-color);border-radius:2px}
+.px-board-v13 .px-forecast-caveat{color:#5b563f;font-size:10px}
+.px-board-v13 .px-status-stack{pointer-events:none}
+.px-board-v13 .px-status text{font:700 14px/1 Arial,sans-serif;text-anchor:middle}
+.px-board-v13 .px-status .px-status-duration{font-size:13px;fill:#fff7e0;paint-order:stroke;stroke:#2c2519;stroke-width:2px}
+.px-board-v13 .px-status-overflow text{font:700 10px/1 Arial,sans-serif;text-anchor:middle;fill:#2c2519}
+.px-board-v13 .px-cell-description:has(.px-planned-fields){flex-wrap:wrap;white-space:normal}
+.px-board-v13 .px-cell-description>.px-planned-fields{flex-basis:100%;overflow:visible;text-overflow:clip}
+@media(max-width:850px){.px-board-v13 .px-planned-fields{font-size:10px;gap:3px 5px}.px-board-v13 .px-forecast-caveat{font-size:9px}}
+
+/* One selected route is the visual commitment; teammates remain readable context. */
+.px-board-v13 .px-queued-order.is-secondary{opacity:.48}
+.px-board-v13 .px-queued-order.is-selected .px-move-path-shadow{stroke:#194c49;stroke-width:5;vector-effect:non-scaling-stroke}
+.px-board-v13 .px-queued-order.is-selected .px-move-path{stroke:#fff7de;stroke-width:2.5;vector-effect:non-scaling-stroke;stroke-dasharray:7 4}
+.px-board-v13 .px-queued-order.is-blocked .px-move-path-shadow{stroke:#932f22}
+.px-board-v13 .px-queued-order.is-contested .px-move-path-shadow{stroke:#946110}
+.px-board-v13 .px-selected-landing rect{fill:#e8f1dd;stroke:#205b55;stroke-width:1.5}
+.px-board-v13 .px-selected-landing text{font:700 11px/1 Arial,sans-serif;text-anchor:middle;fill:#1e4b45}
+.px-board-v13 .px-selected-landing.is-blocked rect,.px-board-v13 .px-risk-marker.is-blocked rect{fill:#fff0e4;stroke:#932f22}
+.px-board-v13 .px-selected-landing.is-blocked text,.px-board-v13 .px-risk-marker.is-blocked text{fill:#932f22}
+.px-board-v13 .px-selected-landing.is-contested rect,.px-board-v13 .px-risk-marker.is-contested rect{fill:#fff2ce;stroke:#946110}
+.px-board-v13 .px-selected-landing.is-contested text,.px-board-v13 .px-risk-marker.is-contested text{fill:#77500d}
+.px-board-v13 .px-queued-slide-stop{fill:#e4f7ef;stroke:#286b7c;stroke-width:1.5}
+.px-board-v13 .px-landing-risk{font:800 14px/1 Arial,sans-serif;text-anchor:middle}
+.px-board-v13 .px-risk-marker rect{stroke-width:1.2}
+.px-board-v13 .px-risk-marker text{font:800 14px/1 Arial,sans-serif;text-anchor:middle}
+.px-board-v13 .px-terrain-readout:focus-visible{outline:2px solid #277c79;outline-offset:-2px}

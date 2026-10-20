@@ -1,0 +1,26 @@
+/* Characters and material effects carry the scene. Persistent information is
+   quiet; selection and an actual collision receive the strongest contrast. */
+.px-board.px-combat-clarity-v23 .px-queued-order.is-secondary{opacity:.3}
+.px-board.px-combat-clarity-v23 .px-queued-order.is-related{opacity:.65}
+.px-board.px-combat-clarity-v23 .px-field-rune{opacity:.65}
+.px-board.px-combat-clarity-v23 .px22-field-outline{stroke-opacity:.38;stroke-width:2.5}
+.px-board.px-combat-clarity-v23 .px22-field-edge{stroke-opacity:.7;stroke-width:1.5}
+.px-board.px-combat-clarity-v23 .px-v16-flight-route{opacity:0}
+.px-board.px-combat-clarity-v23 .px-cast-source{fill:currentColor;stroke:#fff3cf;stroke-width:1;shape-rendering:crispEdges}
+.px-board.px-combat-clarity-v23 .px-unit-badge{opacity:.78}
+.px-board.px-combat-clarity-v23 .px-unit-selected .px-unit-badge{opacity:1}
+.px-board.px-combat-clarity-v23[data-viewing-exchange=true] .px-unit-badge{display:none}
+.px-board.px-combat-clarity-v23 .px-v16-clash-name{pointer-events:none}
+.px-board.px-combat-clarity-v23 .px-status-stack[data-contextual=false] .px-status-overflow{display:none}
+.px-board.px-combat-clarity-v23 .px16-field-ember{display:none}
+.px-board.px-combat-clarity-v23[data-viewing-exchange=true] .px22-field-regions{opacity:.65}
+.px23-callout-pop{animation:px23-callout 1300ms steps(1,end) both}
+.px23-callout path{fill:#f7e8bf;stroke:#342d25;stroke-width:2;stroke-linejoin:miter}
+.px23-callout text{font:800 13px/1 Arial,sans-serif;text-anchor:middle;fill:#493b51}
+.px23-callout.is-damage path{fill:#fff0c6;stroke:#973f28}.px23-callout.is-damage text{fill:#8d301e}
+.px23-callout.is-heal path{fill:#e0efd1;stroke:#37684b}.px23-callout.is-heal text{fill:#24573e}
+@keyframes px23-callout{0%{opacity:0;transform:translateY(6px)}8%{opacity:1;transform:translateY(2px)}16%,82%{opacity:1;transform:none}100%{opacity:0;transform:none}}
+@media(prefers-reduced-motion:reduce){
+ .px-board.px-combat-clarity-v23[data-playback-phase=cast] .px-v16-flight-route{opacity:.4}
+ .px23-callout-pop{animation:none!important;opacity:1;transform:none}
+}

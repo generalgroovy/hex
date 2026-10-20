@@ -1,0 +1,30 @@
+.combat-creature-v19{display:inline-flex;position:relative;flex:none;align-items:center;justify-content:center;vertical-align:middle;line-height:0;pointer-events:none;image-rendering:pixelated}
+.combat-creature-v19 svg{width:100%;height:100%;overflow:visible;image-rendering:pixelated}
+.combat-creature-v19 .cc19-frame{opacity:0}
+.combat-creature-v19.cc19-idle .cc19-frame-0{opacity:1}
+.combat-creature-v19 .ec-body,.combat-creature-v19 .ec-tail,.combat-creature-v19 .ec-wing{animation:none;transform:none}
+.combat-creature-v19:not(.cc19-idle) .cc19-frame{animation-duration:var(--cc19-duration,640ms);animation-timing-function:steps(1,end);animation-fill-mode:both}
+.combat-creature-v19:not(.cc19-idle) .cc19-frame-0{animation-name:cc19-pose-0}.combat-creature-v19:not(.cc19-idle) .cc19-frame-1{animation-name:cc19-pose-1}.combat-creature-v19:not(.cc19-idle) .cc19-frame-2{animation-name:cc19-pose-2}.combat-creature-v19:not(.cc19-idle) .cc19-frame-3{animation-name:cc19-pose-3}
+.combat-creature-v19.cc19-walk .cc19-frame{animation-iteration-count:infinite}
+.combat-creature-v19.cc19-walk .cc19-frame-1 .ec-tail{transform:translate(2px,-1px)}
+.combat-creature-v19.cc19-walk .cc19-frame-3 .ec-tail{transform:translate(-1px,1px)}
+.combat-creature-v19.cc19-walk .cc19-frame-1 .ec-wing{transform:translate(0,-3px)}
+.combat-creature-v19.cc19-walk .cc19-frame-3 .ec-wing{transform:translate(0,2px)}
+.combat-creature-v19.cc19-cast .cc19-frame-1 .ec-tail{transform:translate(-2px,1px)}
+.combat-creature-v19.cc19-cast .cc19-frame-2 .ec-wing{transform:translate(0,-4px)}
+.combat-creature-v19.cc19-defeat .cc19-frame-2 .cc19-pose{transform:translate(2px,1px);transform-origin:0 0}
+.combat-creature-v19.cc19-defeat .cc19-frame-3 .cc19-pose{opacity:.48}
+.combat-creature-v19.cc19-defeat .cc19-frame-3 .cc44-material-shadow{opacity:.65}
+.combat-creature-v19.cc19-defeat .cc19-frame-3 .cc19-ingredient-details,.combat-creature-v19.cc19-defeat .cc19-frame-3 .cc19-class-crest{opacity:.3}
+@keyframes cc19-pose-0{0%,24.999%{opacity:1}25%,100%{opacity:0}}
+@keyframes cc19-pose-1{0%,24.999%{opacity:0}25%,49.999%{opacity:1}50%,100%{opacity:0}}
+@keyframes cc19-pose-2{0%,49.999%{opacity:0}50%,74.999%{opacity:1}75%,100%{opacity:0}}
+@keyframes cc19-pose-3{0%,74.999%{opacity:0}75%,100%{opacity:1}}
+/* Non-looping actions settle on their fourth pose. A defeated sprite stays down. */
+@media(prefers-reduced-motion:reduce){
+ .combat-creature-v19 .cc19-frame{animation:none!important;opacity:0!important}
+ .combat-creature-v19 .cc19-frame-0{opacity:1!important}
+ .combat-creature-v19.cc19-defeat .cc19-frame-0{opacity:0!important}
+ .combat-creature-v19.cc19-defeat .cc19-frame-3{opacity:1!important}
+}
+

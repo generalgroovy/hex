@@ -1,0 +1,59 @@
+/* The map is an overview; the room cards are its large equivalent controls. */
+.trm-route{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;width:100%;min-width:0}
+.trm-map{min-width:0;border:1px solid #beaa82;border-radius:8px;background:radial-gradient(ellipse at 50% 55%,#e7dcba,#f7eed5);padding:10px 14px}
+.trm-map>header{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#66533b;margin-bottom:5px}
+.trm-map>header strong{font-family:'Confluence Pixel',monospace;font-size:16px;color:#393426}
+.trm-chart{position:relative;width:100%;min-width:0;height:280px}
+.trm-active-floor{position:absolute;left:16px;right:0;height:36px;transform:translateY(-50%);background:#d3e0b66b;border-block:1px solid #a7b58680;border-radius:4px}
+.trm-paths{position:absolute;width:100%;height:100%;inset:0;overflow:visible;pointer-events:none}
+.trm-paths path{fill:none;stroke:#a79775;stroke-width:1.5;stroke-dasharray:3 5;opacity:.55;vector-effect:non-scaling-stroke}
+.trm-paths path.is-travelled{stroke:#26786c;stroke-width:2.5;stroke-dasharray:none;opacity:1}
+.trm-paths path.is-next{stroke:#7e8861;stroke-width:2;opacity:.8}
+.trm-paths path.is-option{stroke:#397b69;stroke-width:2;opacity:1}
+.trm-floor{position:absolute;left:0;transform:translateY(-50%);font:11px Arial,sans-serif;color:#7a694b}
+.trm-floor[data-active=true]{font-weight:800;color:#255c50}
+.trm-node{position:absolute;transform:translate(-50%,-50%);width:24px;min-height:24px!important;height:24px;padding:0!important;clip-path:polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%);background:#d8cba9!important;border:0!important;color:#756448!important;font-size:16px!important;display:grid;place-items:center;cursor:default}
+.trm-node>span>.t22-room-mark{width:16px;height:16px}
+.trm-node[data-future=true]{opacity:.8}
+.trm-node[data-current=true]{width:32px;min-height:32px!important;height:32px;background:#fcf5dd!important;box-shadow:inset 0 0 0 2px #41796a;cursor:pointer;color:#354a36!important;z-index:2}
+.trm-node[data-chosen=true]{background:#286d64!important;color:#fff3cf!important}
+.trm-node[data-visited=true]{background:#86a086!important;color:#233f31!important}
+.trm-node[data-committed=true]{box-shadow:inset 0 0 0 3px #a47729;background:#f5dda4!important;color:#4f401e!important}
+.trm-node:focus-visible{background:#e6b85a!important;color:#282214!important}
+.trm-path-letter{font:700 12px Arial,sans-serif;line-height:1}
+.trm-node b{position:absolute;right:3px;bottom:3px;font:700 8px Arial;background:#fde5a3;color:#3e3523;line-height:1;padding:1px 2px;border-radius:2px}
+.trm-node[data-company=true]>span{transform:translate(-2px,-2px)}
+.trm-map footer{display:flex;justify-content:center;gap:6px 13px;flex-wrap:wrap;margin-top:4px;font-size:10px;color:#6c5e44;line-height:1.5}
+.trm-map footer>span{display:inline-flex;align-items:center;gap:4px}
+.trm-map footer .t22-room-mark{width:14px;height:14px;flex:none}
+.trm-map footer>.b24-insight-trigger{display:inline-flex;align-items:center;gap:4px;min-height:32px;padding:4px 7px;font-size:12px;line-height:1.3;background:transparent;border:1px solid transparent;color:#51472f}
+.trm-map footer>.b24-insight-trigger:hover,.trm-map footer>.b24-insight-trigger:focus-visible{border-color:#9d8961;background:#fff6de}
+@media(pointer:coarse){.trm-map footer>.b24-insight-trigger{min-height:44px}}
+/* Global button press styling must never shift a map hit target. */
+.trm-map .trm-node{transition:background-color 100ms,box-shadow 100ms}
+.trm-map .trm-node:not(:disabled):active{transform:translate(-50%,-50%)}
+.trm-decisions{display:grid;grid-template-columns:minmax(0,1fr) minmax(290px,.9fr);gap:14px;align-items:start;min-width:0}
+.trm-doors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;align-content:start;align-items:stretch;min-width:0}
+.trm-doors>button{display:grid;grid-template-columns:28px minmax(0,1fr);align-items:start;gap:5px 8px;min-height:68px;min-width:0;padding:10px!important;text-align:left;background:#f7edd4;color:#3d3d2d;border:1px solid #c2af86;border-radius:5px}
+.trm-door-path{display:grid;place-items:center;width:28px;height:28px;flex:none;border:1px solid #b6ac8b;border-radius:4px;font:700 14px Arial,sans-serif;color:#3f6552;background:#e8e7cf}
+.trm-door-path>.t22-room-mark{width:20px;height:20px}
+.trm-door-copy{min-width:0;display:grid;gap:5px}
+.trm-door-copy>strong{font-size:12px;line-height:1.3;overflow-wrap:anywhere}
+.trm-door-copy>small{display:flex;gap:4px;align-items:center;font-size:11px;font-weight:400;line-height:1.3;color:#746447}
+.trm-door-copy .t22-room-mark{width:14px;height:14px;flex:none}
+.trm-doors>button[aria-pressed=true]{background:#e3ebd7;border-color:#327568;box-shadow:inset 0 -3px #327568}
+.trm-doors>button[aria-pressed=true] small{color:#385e4c}
+.trm-doors>button[data-committed=true]{border-top:3px solid #ad8436;padding-top:8px!important}
+.trm-committed{grid-column:1/-1;font-size:10px;line-height:1.3;color:#72551e}
+.trm-door-company{grid-column:1/-1;display:block;min-width:0;padding-top:4px;border-top:1px solid #b8bd9a80;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trm-door-company>span{font-size:11px;font-weight:600;line-height:1.3;color:#375d4a}
+.trm-door-company>span+span::before{content:'·';margin-right:5px;color:#8a9376}
+.trm-doors>button:focus-visible{outline:3px solid #25836e;outline-offset:2px}
+.trm-room{min-width:0}
+.trm-room .t22-choices{grid-template-columns:1fr!important}
+.trm-room .t22-choice{min-width:0}
+.trm-room .t23-scout-budget{margin-top:0}
+@media(min-width:1300px){.trm-decisions{grid-template-columns:minmax(0,1.35fr) minmax(310px,1fr)}.trm-doors{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:761px){.trm-decisions:is([data-room-count="1"],[data-room-count="2"],[data-room-count="3"]){grid-template-columns:minmax(220px,.6fr) minmax(0,1.4fr)}.trm-decisions:is([data-room-count="1"],[data-room-count="2"],[data-room-count="3"]) .trm-doors{grid-template-columns:1fr}}
+@media(max-width:760px){.trm-decisions{grid-template-columns:minmax(0,1fr);gap:12px}.trm-chart{height:252px}.trm-map{padding:9px 10px}.trm-route{gap:12px}.trm-doors>button{min-height:66px}.trm-map footer{gap:4px 10px}}
+@media(max-width:420px){.trm-chart{height:244px}.trm-node{width:18px;height:18px;min-height:18px!important}.trm-node>span>.t22-room-mark{width:12px;height:12px}.trm-node[data-current=true]{width:26px;height:26px;min-height:26px!important}.trm-active-floor{height:29px}.trm-path-letter{font-size:11px}.trm-node b{font-size:7px;right:2px;bottom:2px}.trm-doors{gap:6px}.trm-doors>button{padding:8px!important;grid-template-columns:23px minmax(0,1fr);column-gap:6px;min-height:68px}.trm-door-path{width:23px;height:25px;font-size:12px}.trm-door-copy>strong{font-size:12px}.trm-door-copy>small{font-size:10px}.trm-door-company>span{font-size:10px}.trm-map footer{font-size:9px;gap:4px 8px}}

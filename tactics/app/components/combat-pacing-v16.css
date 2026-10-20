@@ -1,0 +1,81 @@
+/* The page owns the phase rail and six character readouts. Keep the map clear
+   for simultaneous motion, spell geometry, and one final health change. */
+.px-board.px-combat-pacing-v16 .px-champion.px-crafted.px-action-cast{animation:var(--px-crafted-cast-gesture) var(--px-crafted-cast-total) steps(1,end) both,var(--px-crafted-cast-frames) var(--px-crafted-cast-total) steps(1,end) both}
+.px-board.px-combat-pacing-v16 .px-champion.px-crafted.px-action-walk{animation:px-crafted-walk-frames var(--px-gait-duration) steps(1,end) infinite,px-crafted-step var(--px-gait-duration) steps(1,end) infinite,var(--px-route-facings,none) var(--px-route-duration,1800ms) steps(1,end) both}
+.px-board.px-combat-pacing-v16 .px-cast-source{animation-duration:var(--px-cast-duration)}
+.px-board.px-combat-pacing-v16 .px-heal-glow{animation-delay:var(--px-settle-delay)}
+.px-board.px-combat-pacing-v16 .px-cast-event{opacity:1;animation:none;filter:none}
+.px-board.px-combat-pacing-v16[data-viewing-exchange=true] .px-well-values{display:none}
+.px-board.px-combat-pacing-v16.px-resolving .px-board-toolbar{justify-content:flex-end}
+.px-board.px-combat-pacing-v16 .px-event-text{font:800 16px/1 Arial,sans-serif;letter-spacing:0;stroke-width:4px}
+
+/* CSS animations share the presentation clock, but visibility also follows
+   the current phase. This prevents reduced-motion overrides revealing every
+   future projectile, impact and label as soon as an exchange starts. */
+.px-board.px-combat-pacing-v16[data-playback-phase=move] [data-playback-effect],
+.px-board.px-combat-pacing-v16[data-playback-phase=cast] [data-playback-effect=impact],
+.px-board.px-combat-pacing-v16[data-playback-phase=impact] [data-playback-effect=cast],
+.px-board.px-combat-pacing-v16[data-playback-phase=settle] [data-playback-effect]{visibility:hidden}
+
+/* Reach is one quiet region. Its outline and the striped effect footprint use
+   different shapes as well as colour, and never obscure the character art. */
+.px-combat-pacing-v16 .px-target-move{fill:#55c1b2;fill-opacity:.19;stroke:none}
+.px-combat-pacing-v16 .px-target-cast{fill:#ffe4a0;fill-opacity:.12;stroke:none}
+.px-combat-pacing-v16 .px-range-dot{display:none}
+.px-combat-pacing-v16 .px16-range-boundary,.px-combat-pacing-v16 .px16-effect-boundary{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.px-combat-pacing-v16 .px16-range-shadow{stroke:#203e34;stroke-opacity:.65;stroke-width:6}
+.px-combat-pacing-v16 .px16-range-edge{stroke:#a8ead7;stroke-width:3}
+.px-combat-pacing-v16 .px16-range-boundary.is-cast .px16-range-edge{stroke:#ffe5a0;stroke-width:3.5;stroke-dasharray:10 6}
+.px-combat-pacing-v16 .px16-effect-edge{stroke:#fff7df;stroke-width:4.5}
+.px-combat-pacing-v16 .px16-effect-boundary .px16-range-shadow{stroke:#513e27;stroke-width:8}
+.px-combat-pacing-v16 .px16-cast-origin{fill:none;stroke:#fff5ca;stroke-width:3;filter:drop-shadow(0 1px 1px #26372f)}
+.px-combat-pacing-v16 .px16-cast-origin.is-planned ellipse{stroke-dasharray:5 4}
+.px-combat-pacing-v16 .px16-planned-clash>path{fill:#f1edcf;fill-opacity:.85;stroke:#2f6864;stroke-width:3}
+.px-combat-pacing-v16 .px16-planned-clash rect{fill:#1f4a45;stroke:#f4edcf;stroke-width:1}
+.px-combat-pacing-v16 .px16-planned-clash text{fill:#fff3d2;font:700 10px/1 Arial,sans-serif;text-anchor:middle}
+.px-combat-pacing-v16 .px16-range-key{margin-right:auto;display:flex;align-items:center;gap:5px;color:#244c43;font:700 11px/1.1 Arial,sans-serif;white-space:nowrap}
+.px-combat-pacing-v16 .px16-range-key>i{width:11px;height:9px;background:#a8d6bc;border:2px solid #3b7667}
+.px-combat-pacing-v16 .px16-range-key.is-cast>i{background:#edda9d;border:2px dashed #79571c}
+.px-combat-pacing-v16 .px16-range-key span{display:flex;align-items:center;gap:4px;margin-left:5px;color:#55442c}
+.px-combat-pacing-v16 .px16-range-key span i{width:11px;height:9px;border:1px solid #654e2b;background:repeating-linear-gradient(135deg,#fff2cd 0 3px,#887447 3px 4px)}
+.px-combat-pacing-v16 .px-board-toolbar{gap:5px;padding-inline:6px;min-height:44px}
+.px-combat-pacing-v16 .px-camera-tools{gap:3px;min-width:0}
+.px-combat-pacing-v16 .px-camera-tools button{min-width:44px;min-height:44px;padding:5px 7px}
+.px-combat-pacing-v16 .px-camera-tools .px-pan-toggle span{display:none}
+.px-combat-pacing-v16 .px-npc-tools{min-width:0;max-width:45%}
+.px-combat-pacing-v16 .px-npc-tools button,.px-combat-pacing-v16 .px-npc-tools select{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:850px){
+ .px-combat-pacing-v16 .px-camera-tools button span{display:none}
+ .px-combat-pacing-v16 .px-board-toolbar{gap:3px;padding-inline:4px}
+ .px-combat-pacing-v16 .px16-range-key{font-size:10px;gap:3px}
+ .px-combat-pacing-v16 .px16-range-key span{margin-left:2px;gap:3px}
+ .px-combat-pacing-v16 .px-camera-tools{gap:1px}
+ .px-combat-pacing-v16 .px16-range-shadow{stroke-width:7}
+ .px-combat-pacing-v16 .px16-range-edge{stroke-width:4}
+}
+
+@media(prefers-reduced-motion:reduce){
+ .px-board.px-combat-pacing-v16 .px-unit-moving{transform:translate(var(--px-static-x,0px),var(--px-static-y,0px))!important}
+ .px-board.px-combat-pacing-v16 .px-ground-contact{display:none}
+ .px-board.px-combat-pacing-v16 .px-event-text{opacity:1;transform:none}
+}
+
+/* Material silhouettes carry the spell; a quiet route makes overlapping flights
+   traceable without adding names or painting the entire map with bright lines. */
+.px-combat-pacing-v16 .px-v16-flight-route{opacity:.24}
+.px-combat-pacing-v16 .px-v16-flight-shadow{stroke:#25332f;stroke-opacity:.55}
+.px-combat-pacing-v16 .px-v16-projectile .px-v9-flight-head{filter:drop-shadow(0 1px 1px #fff3ce99)}
+.px-combat-pacing-v16 .px-overview-units text{font:700 10px/1 Arial,sans-serif}
+@media(prefers-reduced-motion:reduce){.px-combat-pacing-v16 .px-v16-flight-route{opacity:.45}.px-combat-pacing-v16 .px-v16-flight-shadow{display:none}}
+
+/* A stable selection, a checked blocked step, and a brief healing accent.
+   None of these filters blur the original atlas pixels. */
+.px-board.px-combat-pacing-v16 .px-selection-arrow{animation:none;transform:none}
+.px-board.px-combat-pacing-v16 .px-unit-bounce{animation-name:px16-blocked-step;animation-duration:340ms;animation-timing-function:steps(1,end)}
+.px-board.px-combat-pacing-v16 .px-heal-glow{animation-name:px16-heal-accent;animation-timing-function:steps(1,end)}
+.px-board.px-combat-pacing-v16 .px-cast-source{animation:px16-cast-seal 700ms var(--px-event-delay) steps(1,end) both;filter:none;scale:1}
+.px-board.px-combat-pacing-v16 .px16-cast-origin{filter:none}
+.px-board.px-combat-pacing-v16 .px-v16-projectile .px-v9-flight-head{filter:none}
+@keyframes px16-blocked-step{0%,100%{transform:none}22%,48%{transform:translateX(3px)}70%{transform:translateX(-1px)}}
+@keyframes px16-heal-accent{0%,100%{filter:none}25%,65%{filter:brightness(1.13)}}
+@keyframes px16-cast-seal{0%{opacity:0}18%{opacity:.4}42%{opacity:.7}57%,70%{opacity:1}85%{opacity:.45}100%{opacity:0}}

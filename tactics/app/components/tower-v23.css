@@ -1,0 +1,25 @@
+.t23-watch-panel{display:grid;align-content:start;gap:12px;padding:12px}.t23-watch-panel h2{font-size:20px;margin:0}.t23-watch-panel p{font-size:12px;line-height:1.6;margin:0}.t23-watch-panel button{min-height:42px}.t23-battle[data-spectator=true] .s18-unit-tabs button{opacity:1}.t23-battle[data-spectator=true] .s18-unit-tabs{margin-bottom:6px}@media(max-width:600px){.t23-watch-panel{grid-template-columns:1fr 1fr;padding:8px;gap:7px}.t23-watch-panel h2,.t23-watch-panel p{grid-column:1/-1}.t23-watch-panel p{font-size:10px}.t23-watch-panel button:last-child{grid-column:1/-1}}
+.t23-battle[data-spectator=true] .t23-watch-panel button{font-size:12px}
+@media(max-width:600px){.t23-battle[data-spectator=true] .t23-watch-panel h2,.t23-battle[data-spectator=true] .t23-watch-panel p{display:none}}
+.t23-allied-squads{font-size:11px;border-block:1px solid #c3b18a;margin:4px 8px;padding:7px 0}.t23-allied-squads summary{cursor:pointer;min-height:28px;align-content:center}.t23-allied-squads>div{display:grid;grid-template-columns:1fr 1fr;gap:4px}.t23-allied-squads button{display:flex;align-items:center;gap:5px;text-align:left;padding:4px;min-width:0}.t23-allied-squads strong,.t23-allied-squads small{display:block;font-size:10px}.t23-allied-squads strong{max-width:95px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.t23-allied-squads small{font-size:9px;color:#705e43;margin-top:3px}.t23-link-toggle{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:11px;padding:8px 10px}.t23-link-toggle input{accent-color:#237168;width:17px;height:17px}.t23-link-toggle small{font-size:9px;color:#695a40}.t23-battle[data-large-battle=true] .s18-opponents .c19-enemy{padding:5px 6px}.t23-battle[data-large-battle=true] .c19-enemy>button{min-height:40px;gap:5px}.t23-battle[data-large-battle=true] .c19-enemy>button>span:first-child{transform:scale(.7);margin:-8px}.t23-battle[data-large-battle=true] .c19-enemy strong{font-size:11px}.t23-battle[data-large-battle=true] .c19-enemy small{font-size:10px}.t23-battle .t22-network-status{display:flex;align-items:center;justify-content:center;gap:14px;min-height:30px;font-size:11px}.t23-battle .t22-network-status button{min-height:32px;font-size:11px}
+
+/* A compact, fully clickable row overrides the general form-label grid. */
+.t23-battle label.t23-link-toggle{display:flex;flex-direction:row;align-items:center;align-content:center;justify-content:flex-start;flex-wrap:wrap;gap:3px 6px;min-height:44px;height:auto;padding:3px 6px;margin:0;font-size:11px;line-height:1.25;cursor:pointer;flex:none}
+.t23-battle label.t23-link-toggle>input{flex:0 0 17px;width:17px;min-width:17px;max-width:17px;height:17px;min-height:17px;max-height:17px;margin:0;padding:0}
+.t23-battle label.t23-link-toggle>small{font-size:10px;line-height:1.25;white-space:nowrap}
+.t23-battle[data-large-battle=true] .s18-opponents{gap:1px;padding:6px}
+.t23-battle[data-large-battle=true] .s18-opponents .c19-enemy{padding:0;margin:0}
+.t23-battle[data-large-battle=true] .s18-opponents .c19-enemy>button{height:44px;min-height:44px;padding:0 4px;gap:5px}
+.t23-battle[data-large-battle=true] .s18-opponents .c19-enemy.is-eliminated>button{height:44px!important;min-height:44px!important}
+.t23-battle[data-large-battle=true] .s18-opponents .c19-enemy>div:empty{display:none}
+.t23-battle[data-large-battle=true] .s18-opponents .c19-enemy>div:not(:empty){padding:1px 5px 3px;gap:3px}
+.t23-battle[data-large-battle=true] .s18-opponents .c19-enemy>button>.px-champion,
+.t23-battle[data-large-battle=true] .s18-opponents .c19-enemy>button>.combat-creature-v19{transform:none;margin:0;flex:0 0 40px;width:40px!important;height:40px!important;max-width:40px;max-height:40px}
+.t23-battle[data-large-battle=true] .s18-opponents .c19-enemy>button>.px-champion{--px-size:40px!important;background-size:320px 160px!important}
+@media(min-width:600px) and (min-height:601px){
+ .t23-battle .s18-orders{gap:4px;overflow-y:auto;overscroll-behavior:contain;scroll-padding-bottom:66px}
+ .t23-battle .s18-orders> :not(.s18-resolution):not(.s18-result){flex-shrink:0}
+ .t23-battle .s18-command-dock{position:sticky;bottom:0;z-index:5;background:var(--paper);padding:6px 0 2px;border-top:1px solid var(--line);box-shadow:0 -5px 0 var(--paper)}
+ .t23-battle .s18-command-dock>button{min-height:44px}
+}
+@media(max-width:599px), (max-height:600px){.t23-battle .s18-orders{overflow-y:auto;overscroll-behavior:contain;scroll-padding-bottom:52px}.t23-battle .s18-command-dock{position:sticky;bottom:0;z-index:5;background:var(--paper);box-shadow:0 -4px 0 var(--paper);flex-shrink:0}.t23-battle .t23-allied-squads{margin:0;padding:2px 4px}.t23-battle .t23-allied-squads summary{min-height:24px}.t23-battle .t23-link-toggle{flex-shrink:0}}

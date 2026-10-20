@@ -1,0 +1,3402 @@
+{
+  "experiment": "Final source rules and unchanged initial state. No in-memory rule patches.",
+  "scope": "Paired-seat complementary squads; all 20 rosters; 3 cyclic deployments; built-in and immediate-pressure policies; 120 games per version.",
+  "limits": "Deterministic shallow bots, complementary squads only, three of six possible roster orders, one map. Champion results are associations with squads containing that champion, not isolated strength. Findings do not establish human balance, optimal play, statistical independence, or commercial appeal. Structurally motivated candidates were specified before bounded runs; results informed selection. This final run verifies the retained source rules.",
+  "sourceSHA256": {
+    "game-v1.ts": "289e717e55939eaf581b8f01ec2076b8a044d7489066dbc9df6fa840977ff5e1",
+    "game.ts": "3d281fed4de847e159fd97e9a6ff3178cf31a958cf488fbcc3da07e0d7659b2c"
+  },
+  "summary": {
+    "v2": {
+      "games": 120,
+      "seatWins": [
+        37,
+        82
+      ],
+      "draws": 1,
+      "meanRounds": 6.89,
+      "roundCapGames": 1,
+      "guardActions": 218,
+      "championResults": {
+        "oh_tipi": {
+          "games": 120,
+          "wins": 54,
+          "draws": 1,
+          "scoreRate": 0.454
+        },
+        "wa_bidi": {
+          "games": 120,
+          "wins": 56,
+          "draws": 1,
+          "scoreRate": 0.471
+        },
+        "grace_reava": {
+          "games": 120,
+          "wins": 67,
+          "draws": 1,
+          "scoreRate": 0.563
+        },
+        "treevor_mason": {
+          "games": 120,
+          "wins": 68,
+          "draws": 1,
+          "scoreRate": 0.571
+        },
+        "haara": {
+          "games": 120,
+          "wins": 61,
+          "draws": 1,
+          "scoreRate": 0.512
+        },
+        "s_wayne": {
+          "games": 120,
+          "wins": 51,
+          "draws": 1,
+          "scoreRate": 0.429
+        }
+      }
+    }
+  },
+  "byPolicy": {
+    "v2-builtin": {
+      "games": 60,
+      "seatWins": [
+        20,
+        40
+      ],
+      "draws": 0,
+      "meanRounds": 6.73,
+      "roundCapGames": 0,
+      "guardActions": 218,
+      "championResults": {
+        "oh_tipi": {
+          "games": 60,
+          "wins": 26,
+          "draws": 0,
+          "scoreRate": 0.433
+        },
+        "wa_bidi": {
+          "games": 60,
+          "wins": 26,
+          "draws": 0,
+          "scoreRate": 0.433
+        },
+        "grace_reava": {
+          "games": 60,
+          "wins": 40,
+          "draws": 0,
+          "scoreRate": 0.667
+        },
+        "treevor_mason": {
+          "games": 60,
+          "wins": 30,
+          "draws": 0,
+          "scoreRate": 0.5
+        },
+        "haara": {
+          "games": 60,
+          "wins": 34,
+          "draws": 0,
+          "scoreRate": 0.567
+        },
+        "s_wayne": {
+          "games": 60,
+          "wins": 24,
+          "draws": 0,
+          "scoreRate": 0.4
+        }
+      }
+    },
+    "v2-pressure": {
+      "games": 60,
+      "seatWins": [
+        17,
+        42
+      ],
+      "draws": 1,
+      "meanRounds": 7.05,
+      "roundCapGames": 1,
+      "guardActions": 0,
+      "championResults": {
+        "oh_tipi": {
+          "games": 60,
+          "wins": 28,
+          "draws": 1,
+          "scoreRate": 0.475
+        },
+        "wa_bidi": {
+          "games": 60,
+          "wins": 30,
+          "draws": 1,
+          "scoreRate": 0.508
+        },
+        "grace_reava": {
+          "games": 60,
+          "wins": 27,
+          "draws": 1,
+          "scoreRate": 0.458
+        },
+        "treevor_mason": {
+          "games": 60,
+          "wins": 38,
+          "draws": 1,
+          "scoreRate": 0.642
+        },
+        "haara": {
+          "games": 60,
+          "wins": 27,
+          "draws": 1,
+          "scoreRate": 0.458
+        },
+        "s_wayne": {
+          "games": 60,
+          "wins": 27,
+          "draws": 1,
+          "scoreRate": 0.458
+        }
+      }
+    }
+  },
+  "results": [
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 0,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "grace_reava"
+        ],
+        [
+          "treevor_mason",
+          "haara",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 0,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "treevor_mason",
+          "haara",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 3
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 0,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "wa_bidi",
+          "grace_reava",
+          "oh_tipi"
+        ],
+        [
+          "haara",
+          "s_wayne",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 6
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 0,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "haara",
+          "s_wayne",
+          "treevor_mason"
+        ],
+        [
+          "wa_bidi",
+          "grace_reava",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 6
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 0,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "grace_reava",
+          "oh_tipi",
+          "wa_bidi"
+        ],
+        [
+          "s_wayne",
+          "treevor_mason",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 4
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 0,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "s_wayne",
+          "treevor_mason",
+          "haara"
+        ],
+        [
+          "grace_reava",
+          "oh_tipi",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        7
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 3
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 1,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "treevor_mason"
+        ],
+        [
+          "grace_reava",
+          "haara",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 1,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "haara",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 5
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 1,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "oh_tipi"
+        ],
+        [
+          "haara",
+          "s_wayne",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 1,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "haara",
+          "s_wayne",
+          "grace_reava"
+        ],
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 1
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 1,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "treevor_mason",
+          "oh_tipi",
+          "wa_bidi"
+        ],
+        [
+          "s_wayne",
+          "grace_reava",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 3
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 1,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "s_wayne",
+          "grace_reava",
+          "haara"
+        ],
+        [
+          "treevor_mason",
+          "oh_tipi",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 3
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 2,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "haara"
+        ],
+        [
+          "grace_reava",
+          "treevor_mason",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 2,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "treevor_mason",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 4
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 2,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "wa_bidi",
+          "haara",
+          "oh_tipi"
+        ],
+        [
+          "treevor_mason",
+          "s_wayne",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 3
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 2,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "treevor_mason",
+          "s_wayne",
+          "grace_reava"
+        ],
+        [
+          "wa_bidi",
+          "haara",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 2,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "haara",
+          "oh_tipi",
+          "wa_bidi"
+        ],
+        [
+          "s_wayne",
+          "grace_reava",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 6
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 2,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "s_wayne",
+          "grace_reava",
+          "treevor_mason"
+        ],
+        [
+          "haara",
+          "oh_tipi",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        6
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 6
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 3,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "s_wayne"
+        ],
+        [
+          "grace_reava",
+          "treevor_mason",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 3,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "treevor_mason",
+          "haara"
+        ],
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 4
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 3,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "wa_bidi",
+          "s_wayne",
+          "oh_tipi"
+        ],
+        [
+          "treevor_mason",
+          "haara",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 1
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 3,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "treevor_mason",
+          "haara",
+          "grace_reava"
+        ],
+        [
+          "wa_bidi",
+          "s_wayne",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 3,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "s_wayne",
+          "oh_tipi",
+          "wa_bidi"
+        ],
+        [
+          "haara",
+          "grace_reava",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 8
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 3,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "haara",
+          "grace_reava",
+          "treevor_mason"
+        ],
+        [
+          "s_wayne",
+          "oh_tipi",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        5
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 9
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 4,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "grace_reava",
+          "treevor_mason"
+        ],
+        [
+          "wa_bidi",
+          "haara",
+          "s_wayne"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        5
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 6
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 4,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "wa_bidi",
+          "haara",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "grace_reava",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 5
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 4,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "grace_reava",
+          "treevor_mason",
+          "oh_tipi"
+        ],
+        [
+          "haara",
+          "s_wayne",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 4
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 4,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "haara",
+          "s_wayne",
+          "wa_bidi"
+        ],
+        [
+          "grace_reava",
+          "treevor_mason",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 1
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 4,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "treevor_mason",
+          "oh_tipi",
+          "grace_reava"
+        ],
+        [
+          "s_wayne",
+          "wa_bidi",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 2
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 4,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "s_wayne",
+          "wa_bidi",
+          "haara"
+        ],
+        [
+          "treevor_mason",
+          "oh_tipi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 1
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 5,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "grace_reava",
+          "haara"
+        ],
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "s_wayne"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        5
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 9
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 5,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "grace_reava",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 8
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 5,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "grace_reava",
+          "haara",
+          "oh_tipi"
+        ],
+        [
+          "treevor_mason",
+          "s_wayne",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 5
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 5,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "treevor_mason",
+          "s_wayne",
+          "wa_bidi"
+        ],
+        [
+          "grace_reava",
+          "haara",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 3
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 5,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "haara",
+          "oh_tipi",
+          "grace_reava"
+        ],
+        [
+          "s_wayne",
+          "wa_bidi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 5,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "s_wayne",
+          "wa_bidi",
+          "treevor_mason"
+        ],
+        [
+          "haara",
+          "oh_tipi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 6,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "grace_reava",
+          "s_wayne"
+        ],
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        5
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 9
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 6,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "haara"
+        ],
+        [
+          "oh_tipi",
+          "grace_reava",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 8
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 6,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "grace_reava",
+          "s_wayne",
+          "oh_tipi"
+        ],
+        [
+          "treevor_mason",
+          "haara",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 6
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 6,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "treevor_mason",
+          "haara",
+          "wa_bidi"
+        ],
+        [
+          "grace_reava",
+          "s_wayne",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        10,
+        6
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 6
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 6,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "s_wayne",
+          "oh_tipi",
+          "grace_reava"
+        ],
+        [
+          "haara",
+          "wa_bidi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        8
+      ],
+      "rounds": 8,
+      "actions": 31,
+      "guards": 2
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 6,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "haara",
+          "wa_bidi",
+          "treevor_mason"
+        ],
+        [
+          "s_wayne",
+          "oh_tipi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 7,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "treevor_mason",
+          "haara"
+        ],
+        [
+          "wa_bidi",
+          "grace_reava",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 6
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 7,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "wa_bidi",
+          "grace_reava",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "treevor_mason",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        6
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 6
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 7,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "treevor_mason",
+          "haara",
+          "oh_tipi"
+        ],
+        [
+          "grace_reava",
+          "s_wayne",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        10,
+        6
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 6
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 7,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "s_wayne",
+          "wa_bidi"
+        ],
+        [
+          "treevor_mason",
+          "haara",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 6
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 7,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "haara",
+          "oh_tipi",
+          "treevor_mason"
+        ],
+        [
+          "s_wayne",
+          "wa_bidi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 7,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "s_wayne",
+          "wa_bidi",
+          "grace_reava"
+        ],
+        [
+          "haara",
+          "oh_tipi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        8
+      ],
+      "rounds": 8,
+      "actions": 31,
+      "guards": 2
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 8,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "treevor_mason",
+          "s_wayne"
+        ],
+        [
+          "wa_bidi",
+          "grace_reava",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 8
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 8,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "wa_bidi",
+          "grace_reava",
+          "haara"
+        ],
+        [
+          "oh_tipi",
+          "treevor_mason",
+          "s_wayne"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        5
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 9
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 8,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "treevor_mason",
+          "s_wayne",
+          "oh_tipi"
+        ],
+        [
+          "grace_reava",
+          "haara",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 3
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 8,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "haara",
+          "wa_bidi"
+        ],
+        [
+          "treevor_mason",
+          "s_wayne",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 5
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 8,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "s_wayne",
+          "oh_tipi",
+          "treevor_mason"
+        ],
+        [
+          "haara",
+          "wa_bidi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 8,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "haara",
+          "wa_bidi",
+          "grace_reava"
+        ],
+        [
+          "s_wayne",
+          "oh_tipi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 9,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "haara",
+          "s_wayne"
+        ],
+        [
+          "wa_bidi",
+          "grace_reava",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 5
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 9,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "wa_bidi",
+          "grace_reava",
+          "treevor_mason"
+        ],
+        [
+          "oh_tipi",
+          "haara",
+          "s_wayne"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        5
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 6
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 9,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "haara",
+          "s_wayne",
+          "oh_tipi"
+        ],
+        [
+          "grace_reava",
+          "treevor_mason",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        9
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 1
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 9,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "treevor_mason",
+          "wa_bidi"
+        ],
+        [
+          "haara",
+          "s_wayne",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 4
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 9,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "s_wayne",
+          "oh_tipi",
+          "haara"
+        ],
+        [
+          "treevor_mason",
+          "wa_bidi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "builtin",
+      "pair": 9,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "treevor_mason",
+          "wa_bidi",
+          "grace_reava"
+        ],
+        [
+          "s_wayne",
+          "oh_tipi",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 1
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 0,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "grace_reava"
+        ],
+        [
+          "treevor_mason",
+          "haara",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 0,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "treevor_mason",
+          "haara",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 0,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "wa_bidi",
+          "grace_reava",
+          "oh_tipi"
+        ],
+        [
+          "haara",
+          "s_wayne",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 0,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "haara",
+          "s_wayne",
+          "treevor_mason"
+        ],
+        [
+          "wa_bidi",
+          "grace_reava",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 5,
+      "actions": 19,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 0,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "grace_reava",
+          "oh_tipi",
+          "wa_bidi"
+        ],
+        [
+          "s_wayne",
+          "treevor_mason",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 0,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "s_wayne",
+          "treevor_mason",
+          "haara"
+        ],
+        [
+          "grace_reava",
+          "oh_tipi",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 1,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "treevor_mason"
+        ],
+        [
+          "grace_reava",
+          "haara",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 1,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "haara",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 1,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "oh_tipi"
+        ],
+        [
+          "haara",
+          "s_wayne",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 1,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "haara",
+          "s_wayne",
+          "grace_reava"
+        ],
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 5,
+      "actions": 19,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 1,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "treevor_mason",
+          "oh_tipi",
+          "wa_bidi"
+        ],
+        [
+          "s_wayne",
+          "grace_reava",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        8
+      ],
+      "rounds": 8,
+      "actions": 31,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 1,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "s_wayne",
+          "grace_reava",
+          "haara"
+        ],
+        [
+          "treevor_mason",
+          "oh_tipi",
+          "wa_bidi"
+        ]
+      ],
+      "winner": "draw",
+      "scores": [
+        19,
+        19
+      ],
+      "rounds": 16,
+      "actions": 63,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 2,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "haara"
+        ],
+        [
+          "grace_reava",
+          "treevor_mason",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 2,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "treevor_mason",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 2,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "wa_bidi",
+          "haara",
+          "oh_tipi"
+        ],
+        [
+          "treevor_mason",
+          "s_wayne",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 2,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "treevor_mason",
+          "s_wayne",
+          "grace_reava"
+        ],
+        [
+          "wa_bidi",
+          "haara",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 2,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "haara",
+          "oh_tipi",
+          "wa_bidi"
+        ],
+        [
+          "s_wayne",
+          "grace_reava",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        6
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 2,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "s_wayne",
+          "grace_reava",
+          "treevor_mason"
+        ],
+        [
+          "haara",
+          "oh_tipi",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 8,
+      "actions": 31,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 3,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "s_wayne"
+        ],
+        [
+          "grace_reava",
+          "treevor_mason",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 3,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "treevor_mason",
+          "haara"
+        ],
+        [
+          "oh_tipi",
+          "wa_bidi",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 3,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "wa_bidi",
+          "s_wayne",
+          "oh_tipi"
+        ],
+        [
+          "treevor_mason",
+          "haara",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 3,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "treevor_mason",
+          "haara",
+          "grace_reava"
+        ],
+        [
+          "wa_bidi",
+          "s_wayne",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 3,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "s_wayne",
+          "oh_tipi",
+          "wa_bidi"
+        ],
+        [
+          "haara",
+          "grace_reava",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        8
+      ],
+      "rounds": 8,
+      "actions": 31,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 3,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "haara",
+          "grace_reava",
+          "treevor_mason"
+        ],
+        [
+          "s_wayne",
+          "oh_tipi",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        11,
+        10
+      ],
+      "rounds": 9,
+      "actions": 35,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 4,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "grace_reava",
+          "treevor_mason"
+        ],
+        [
+          "wa_bidi",
+          "haara",
+          "s_wayne"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        10,
+        5
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 4,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "wa_bidi",
+          "haara",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "grace_reava",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 4,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "grace_reava",
+          "treevor_mason",
+          "oh_tipi"
+        ],
+        [
+          "haara",
+          "s_wayne",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        3,
+        9
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 4,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "haara",
+          "s_wayne",
+          "wa_bidi"
+        ],
+        [
+          "grace_reava",
+          "treevor_mason",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 5,
+      "actions": 19,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 4,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "treevor_mason",
+          "oh_tipi",
+          "grace_reava"
+        ],
+        [
+          "s_wayne",
+          "wa_bidi",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        8,
+        9
+      ],
+      "rounds": 8,
+      "actions": 31,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 4,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "s_wayne",
+          "wa_bidi",
+          "haara"
+        ],
+        [
+          "treevor_mason",
+          "oh_tipi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 5,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "grace_reava",
+          "haara"
+        ],
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "s_wayne"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 5,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "grace_reava",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 5,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "grace_reava",
+          "haara",
+          "oh_tipi"
+        ],
+        [
+          "treevor_mason",
+          "s_wayne",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        9
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 5,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "treevor_mason",
+          "s_wayne",
+          "wa_bidi"
+        ],
+        [
+          "grace_reava",
+          "haara",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        6
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 5,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "haara",
+          "oh_tipi",
+          "grace_reava"
+        ],
+        [
+          "s_wayne",
+          "wa_bidi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        8,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 5,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "s_wayne",
+          "wa_bidi",
+          "treevor_mason"
+        ],
+        [
+          "haara",
+          "oh_tipi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 6,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "grace_reava",
+          "s_wayne"
+        ],
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 6,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "wa_bidi",
+          "treevor_mason",
+          "haara"
+        ],
+        [
+          "oh_tipi",
+          "grace_reava",
+          "s_wayne"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 6,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "grace_reava",
+          "s_wayne",
+          "oh_tipi"
+        ],
+        [
+          "treevor_mason",
+          "haara",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 6,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "treevor_mason",
+          "haara",
+          "wa_bidi"
+        ],
+        [
+          "grace_reava",
+          "s_wayne",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 6,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "s_wayne",
+          "oh_tipi",
+          "grace_reava"
+        ],
+        [
+          "haara",
+          "wa_bidi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 6,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "haara",
+          "wa_bidi",
+          "treevor_mason"
+        ],
+        [
+          "s_wayne",
+          "oh_tipi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        8,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 7,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "treevor_mason",
+          "haara"
+        ],
+        [
+          "wa_bidi",
+          "grace_reava",
+          "s_wayne"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        7
+      ],
+      "rounds": 8,
+      "actions": 31,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 7,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "wa_bidi",
+          "grace_reava",
+          "s_wayne"
+        ],
+        [
+          "oh_tipi",
+          "treevor_mason",
+          "haara"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 8,
+      "actions": 31,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 7,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "treevor_mason",
+          "haara",
+          "oh_tipi"
+        ],
+        [
+          "grace_reava",
+          "s_wayne",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 7,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "s_wayne",
+          "wa_bidi"
+        ],
+        [
+          "treevor_mason",
+          "haara",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 7,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "haara",
+          "oh_tipi",
+          "treevor_mason"
+        ],
+        [
+          "s_wayne",
+          "wa_bidi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        8,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 7,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "s_wayne",
+          "wa_bidi",
+          "grace_reava"
+        ],
+        [
+          "haara",
+          "oh_tipi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 8,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "treevor_mason",
+          "s_wayne"
+        ],
+        [
+          "wa_bidi",
+          "grace_reava",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        8
+      ],
+      "rounds": 8,
+      "actions": 31,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 8,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "wa_bidi",
+          "grace_reava",
+          "haara"
+        ],
+        [
+          "oh_tipi",
+          "treevor_mason",
+          "s_wayne"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 8,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "treevor_mason",
+          "s_wayne",
+          "oh_tipi"
+        ],
+        [
+          "grace_reava",
+          "haara",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        6
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 8,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "haara",
+          "wa_bidi"
+        ],
+        [
+          "treevor_mason",
+          "s_wayne",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        9
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 8,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "s_wayne",
+          "oh_tipi",
+          "treevor_mason"
+        ],
+        [
+          "haara",
+          "wa_bidi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 8,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "haara",
+          "wa_bidi",
+          "grace_reava"
+        ],
+        [
+          "s_wayne",
+          "oh_tipi",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        8,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 9,
+      "deployment": 0,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "haara",
+          "s_wayne"
+        ],
+        [
+          "wa_bidi",
+          "grace_reava",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 9,
+      "deployment": 0,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "wa_bidi",
+          "grace_reava",
+          "treevor_mason"
+        ],
+        [
+          "oh_tipi",
+          "haara",
+          "s_wayne"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        10,
+        5
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 9,
+      "deployment": 1,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "haara",
+          "s_wayne",
+          "oh_tipi"
+        ],
+        [
+          "grace_reava",
+          "treevor_mason",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 5,
+      "actions": 19,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 9,
+      "deployment": 1,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "treevor_mason",
+          "wa_bidi"
+        ],
+        [
+          "haara",
+          "s_wayne",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        3,
+        9
+      ],
+      "rounds": 6,
+      "actions": 23,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 9,
+      "deployment": 2,
+      "seatsReversed": false,
+      "rosters": [
+        [
+          "s_wayne",
+          "oh_tipi",
+          "haara"
+        ],
+        [
+          "treevor_mason",
+          "wa_bidi",
+          "grace_reava"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    },
+    {
+      "rules": "v2",
+      "policy": "pressure",
+      "pair": 9,
+      "deployment": 2,
+      "seatsReversed": true,
+      "rosters": [
+        [
+          "treevor_mason",
+          "wa_bidi",
+          "grace_reava"
+        ],
+        [
+          "s_wayne",
+          "oh_tipi",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        6
+      ],
+      "rounds": 7,
+      "actions": 27,
+      "guards": 0
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+.pf-champion{display:block;position:relative;flex:none;pointer-events:none;contain:layout paint}
+.pf-preload{display:none}
+.pf-direction,.pf-paint{display:block;width:100%;height:100%;transform-origin:50% 81.25%}
+.pf-direction{transform:scaleX(var(--pf-flip))}
+.pf-paint{background-repeat:no-repeat;background-size:600% 800%;background-position:0 calc((var(--pf-base-row) + var(--pf-view)*var(--pf-use-view))*100%/7);mask-repeat:no-repeat;mask-mode:alpha;mask-size:600% 800%;mask-position:0 calc((var(--pf-base-row) + var(--pf-view)*var(--pf-use-view))*100%/7);image-rendering:pixelated;animation:var(--pf-animation) var(--pf-duration) steps(1,end) var(--pf-iterations) both;filter:none}
+.pf-paint{animation-delay:var(--pf-delay,0ms)}
+.pf-idle .pf-paint,.pf-manual .pf-paint{animation:none}
+.pf-walk .pf-direction{animation:var(--pf-route-facings,none) var(--px-route-duration,1800ms) steps(1,end) both;animation-delay:var(--pf-delay,0ms)}
+.pf-paused .pf-paint,.pf-paused .pf-direction{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.pf-paint,.pf-direction{animation:none!important}.pf-cast .pf-paint{background-position-x:60%;mask-position-x:60%}.pf-hit .pf-paint{background-position-x:40%;mask-position-x:40%}.pf-defeat .pf-paint{background-position-x:100%;mask-position-x:100%}}

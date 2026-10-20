@@ -1,0 +1,1182 @@
+{
+  "rulesVersion": 6,
+  "generatorVersion": 1,
+  "seedCount": 24,
+  "games": 48,
+  "sourceSha256": {
+    "lib/tactics.ts": "605a6150aeabeeba2bede230cc6a157329b8016276151e675ef8fedbf1bd3ae4",
+    "lib/spells.ts": "b5b77ccea3ce815ebd1ddf09d0d52be7a0b19f177aea082e6776a09b254055d7",
+    "lib/arena.ts": "2d0dafbd12a853ec8d9b766f8b110fb88db2583f9974e4ee3feb3fe9b927e955",
+    "tests/arena-seed-diagnostic.mjs": "9070ed3eef00e8bf74788fc56cef7d2dd10b5068fd78a8ed1a813a4a64b63941"
+  },
+  "seatWins": [
+    24,
+    24
+  ],
+  "draws": 0,
+  "cappedGames": 0,
+  "averageRounds": 9.75,
+  "averageFirstScoreRound": 3.9583333333333335,
+  "mirroredRoundChecks": 234,
+  "fizzles": 0,
+  "bounces": 744,
+  "elapsedNodeMs": 45902,
+  "limitations": [
+    "24 deterministic procedural seeds, paired seat swaps and default loadouts only. Separate unit tests cover200 seeds and the full spell catalogue.",
+    "This shallow public-state policy verifies replay/symmetry and exposes pacing problems; it does not demonstrate human balance or enjoyable maps."
+  ],
+  "runs": [
+    {
+      "seed": "REPLAY-0",
+      "swapped": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "s_wayne",
+          "red_baron"
+        ],
+        [
+          "hesus_christo",
+          "grimm_bow",
+          "biggy_bob"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 0,
+      "scores": [
+        8,
+        4
+      ],
+      "firstScoreRound": 5,
+      "bounces": 14
+    },
+    {
+      "seed": "REPLAY-0",
+      "swapped": true,
+      "rosters": [
+        [
+          "hesus_christo",
+          "grimm_bow",
+          "biggy_bob"
+        ],
+        [
+          "oh_tipi",
+          "s_wayne",
+          "red_baron"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "firstScoreRound": 5,
+      "bounces": 14
+    },
+    {
+      "seed": "REPLAY-1",
+      "swapped": false,
+      "rosters": [
+        [
+          "grace_reava",
+          "wa_bidi",
+          "steezo"
+        ],
+        [
+          "jan_wicked",
+          "ba_djoh",
+          "urzh"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "firstScoreRound": 3,
+      "bounces": 14
+    },
+    {
+      "seed": "REPLAY-1",
+      "swapped": true,
+      "rosters": [
+        [
+          "jan_wicked",
+          "ba_djoh",
+          "urzh"
+        ],
+        [
+          "grace_reava",
+          "wa_bidi",
+          "steezo"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 0,
+      "scores": [
+        8,
+        4
+      ],
+      "firstScoreRound": 3,
+      "bounces": 14
+    },
+    {
+      "seed": "REPLAY-2",
+      "swapped": false,
+      "rosters": [
+        [
+          "treevor_mason",
+          "oll_i",
+          "fluup"
+        ],
+        [
+          "donnok",
+          "djonah_thaan",
+          "luuh_i_zeh"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "firstScoreRound": 1,
+      "bounces": 14
+    },
+    {
+      "seed": "REPLAY-2",
+      "swapped": true,
+      "rosters": [
+        [
+          "donnok",
+          "djonah_thaan",
+          "luuh_i_zeh"
+        ],
+        [
+          "treevor_mason",
+          "oll_i",
+          "fluup"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 0,
+      "scores": [
+        8,
+        4
+      ],
+      "firstScoreRound": 1,
+      "bounces": 14
+    },
+    {
+      "seed": "REPLAY-3",
+      "swapped": false,
+      "rosters": [
+        [
+          "nico_lai",
+          "spai_si",
+          "leaf_hidden"
+        ],
+        [
+          "juul_i_yaina",
+          "faab_i_yaina",
+          "joh_haynes"
+        ]
+      ],
+      "rounds": 10,
+      "winner": 0,
+      "scores": [
+        9,
+        2
+      ],
+      "firstScoreRound": 5,
+      "bounces": 16
+    },
+    {
+      "seed": "REPLAY-3",
+      "swapped": true,
+      "rosters": [
+        [
+          "juul_i_yaina",
+          "faab_i_yaina",
+          "joh_haynes"
+        ],
+        [
+          "nico_lai",
+          "spai_si",
+          "leaf_hidden"
+        ]
+      ],
+      "rounds": 10,
+      "winner": 1,
+      "scores": [
+        2,
+        9
+      ],
+      "firstScoreRound": 5,
+      "bounces": 16
+    },
+    {
+      "seed": "REPLAY-4",
+      "swapped": false,
+      "rosters": [
+        [
+          "ha_rekt",
+          "dr_apex",
+          "haara"
+        ],
+        [
+          "h_le_ne",
+          "fimu_yashiha",
+          "sai_laas"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 0,
+      "scores": [
+        8,
+        6
+      ],
+      "firstScoreRound": 4,
+      "bounces": 12
+    },
+    {
+      "seed": "REPLAY-4",
+      "swapped": true,
+      "rosters": [
+        [
+          "h_le_ne",
+          "fimu_yashiha",
+          "sai_laas"
+        ],
+        [
+          "ha_rekt",
+          "dr_apex",
+          "haara"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 1,
+      "scores": [
+        6,
+        8
+      ],
+      "firstScoreRound": 4,
+      "bounces": 12
+    },
+    {
+      "seed": "REPLAY-5",
+      "swapped": false,
+      "rosters": [
+        [
+          "hesus_christo",
+          "grimm_bow",
+          "biggy_bob"
+        ],
+        [
+          "oh_tipi",
+          "s_wayne",
+          "red_baron"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 1,
+      "scores": [
+        4,
+        9
+      ],
+      "firstScoreRound": 5,
+      "bounces": 14
+    },
+    {
+      "seed": "REPLAY-5",
+      "swapped": true,
+      "rosters": [
+        [
+          "oh_tipi",
+          "s_wayne",
+          "red_baron"
+        ],
+        [
+          "hesus_christo",
+          "grimm_bow",
+          "biggy_bob"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 0,
+      "scores": [
+        9,
+        4
+      ],
+      "firstScoreRound": 5,
+      "bounces": 14
+    },
+    {
+      "seed": "REPLAY-6",
+      "swapped": false,
+      "rosters": [
+        [
+          "jan_wicked",
+          "ba_djoh",
+          "urzh"
+        ],
+        [
+          "grace_reava",
+          "wa_bidi",
+          "steezo"
+        ]
+      ],
+      "rounds": 8,
+      "winner": 1,
+      "scores": [
+        3,
+        9
+      ],
+      "firstScoreRound": 3,
+      "bounces": 12
+    },
+    {
+      "seed": "REPLAY-6",
+      "swapped": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "wa_bidi",
+          "steezo"
+        ],
+        [
+          "jan_wicked",
+          "ba_djoh",
+          "urzh"
+        ]
+      ],
+      "rounds": 8,
+      "winner": 0,
+      "scores": [
+        9,
+        3
+      ],
+      "firstScoreRound": 3,
+      "bounces": 12
+    },
+    {
+      "seed": "REPLAY-7",
+      "swapped": false,
+      "rosters": [
+        [
+          "donnok",
+          "djonah_thaan",
+          "luuh_i_zeh"
+        ],
+        [
+          "treevor_mason",
+          "oll_i",
+          "fluup"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 0,
+      "scores": [
+        9,
+        6
+      ],
+      "firstScoreRound": 4,
+      "bounces": 12
+    },
+    {
+      "seed": "REPLAY-7",
+      "swapped": true,
+      "rosters": [
+        [
+          "treevor_mason",
+          "oll_i",
+          "fluup"
+        ],
+        [
+          "donnok",
+          "djonah_thaan",
+          "luuh_i_zeh"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "firstScoreRound": 4,
+      "bounces": 12
+    },
+    {
+      "seed": "REPLAY-8",
+      "swapped": false,
+      "rosters": [
+        [
+          "juul_i_yaina",
+          "faab_i_yaina",
+          "joh_haynes"
+        ],
+        [
+          "nico_lai",
+          "spai_si",
+          "leaf_hidden"
+        ]
+      ],
+      "rounds": 10,
+      "winner": 1,
+      "scores": [
+        5,
+        10
+      ],
+      "firstScoreRound": 4,
+      "bounces": 16
+    },
+    {
+      "seed": "REPLAY-8",
+      "swapped": true,
+      "rosters": [
+        [
+          "nico_lai",
+          "spai_si",
+          "leaf_hidden"
+        ],
+        [
+          "juul_i_yaina",
+          "faab_i_yaina",
+          "joh_haynes"
+        ]
+      ],
+      "rounds": 10,
+      "winner": 0,
+      "scores": [
+        10,
+        5
+      ],
+      "firstScoreRound": 4,
+      "bounces": 16
+    },
+    {
+      "seed": "REPLAY-9",
+      "swapped": false,
+      "rosters": [
+        [
+          "h_le_ne",
+          "fimu_yashiha",
+          "sai_laas"
+        ],
+        [
+          "ha_rekt",
+          "dr_apex",
+          "haara"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 0,
+      "scores": [
+        9,
+        2
+      ],
+      "firstScoreRound": 4,
+      "bounces": 14
+    },
+    {
+      "seed": "REPLAY-9",
+      "swapped": true,
+      "rosters": [
+        [
+          "ha_rekt",
+          "dr_apex",
+          "haara"
+        ],
+        [
+          "h_le_ne",
+          "fimu_yashiha",
+          "sai_laas"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 1,
+      "scores": [
+        2,
+        9
+      ],
+      "firstScoreRound": 4,
+      "bounces": 14
+    },
+    {
+      "seed": "REPLAY-10",
+      "swapped": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "s_wayne",
+          "red_baron"
+        ],
+        [
+          "hesus_christo",
+          "grimm_bow",
+          "biggy_bob"
+        ]
+      ],
+      "rounds": 10,
+      "winner": 0,
+      "scores": [
+        9,
+        1
+      ],
+      "firstScoreRound": 5,
+      "bounces": 20
+    },
+    {
+      "seed": "REPLAY-10",
+      "swapped": true,
+      "rosters": [
+        [
+          "hesus_christo",
+          "grimm_bow",
+          "biggy_bob"
+        ],
+        [
+          "oh_tipi",
+          "s_wayne",
+          "red_baron"
+        ]
+      ],
+      "rounds": 10,
+      "winner": 1,
+      "scores": [
+        1,
+        9
+      ],
+      "firstScoreRound": 5,
+      "bounces": 20
+    },
+    {
+      "seed": "REPLAY-11",
+      "swapped": false,
+      "rosters": [
+        [
+          "grace_reava",
+          "wa_bidi",
+          "steezo"
+        ],
+        [
+          "jan_wicked",
+          "ba_djoh",
+          "urzh"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 0,
+      "scores": [
+        8,
+        4
+      ],
+      "firstScoreRound": 3,
+      "bounces": 16
+    },
+    {
+      "seed": "REPLAY-11",
+      "swapped": true,
+      "rosters": [
+        [
+          "jan_wicked",
+          "ba_djoh",
+          "urzh"
+        ],
+        [
+          "grace_reava",
+          "wa_bidi",
+          "steezo"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "firstScoreRound": 3,
+      "bounces": 16
+    },
+    {
+      "seed": "REPLAY-12",
+      "swapped": false,
+      "rosters": [
+        [
+          "treevor_mason",
+          "oll_i",
+          "fluup"
+        ],
+        [
+          "donnok",
+          "djonah_thaan",
+          "luuh_i_zeh"
+        ]
+      ],
+      "rounds": 10,
+      "winner": 0,
+      "scores": [
+        8,
+        6
+      ],
+      "firstScoreRound": 4,
+      "bounces": 16
+    },
+    {
+      "seed": "REPLAY-12",
+      "swapped": true,
+      "rosters": [
+        [
+          "donnok",
+          "djonah_thaan",
+          "luuh_i_zeh"
+        ],
+        [
+          "treevor_mason",
+          "oll_i",
+          "fluup"
+        ]
+      ],
+      "rounds": 10,
+      "winner": 1,
+      "scores": [
+        6,
+        8
+      ],
+      "firstScoreRound": 4,
+      "bounces": 16
+    },
+    {
+      "seed": "REPLAY-13",
+      "swapped": false,
+      "rosters": [
+        [
+          "nico_lai",
+          "spai_si",
+          "leaf_hidden"
+        ],
+        [
+          "juul_i_yaina",
+          "faab_i_yaina",
+          "joh_haynes"
+        ]
+      ],
+      "rounds": 11,
+      "winner": 0,
+      "scores": [
+        10,
+        9
+      ],
+      "firstScoreRound": 4,
+      "bounces": 14
+    },
+    {
+      "seed": "REPLAY-13",
+      "swapped": true,
+      "rosters": [
+        [
+          "juul_i_yaina",
+          "faab_i_yaina",
+          "joh_haynes"
+        ],
+        [
+          "nico_lai",
+          "spai_si",
+          "leaf_hidden"
+        ]
+      ],
+      "rounds": 11,
+      "winner": 1,
+      "scores": [
+        9,
+        10
+      ],
+      "firstScoreRound": 4,
+      "bounces": 14
+    },
+    {
+      "seed": "REPLAY-14",
+      "swapped": false,
+      "rosters": [
+        [
+          "ha_rekt",
+          "dr_apex",
+          "haara"
+        ],
+        [
+          "h_le_ne",
+          "fimu_yashiha",
+          "sai_laas"
+        ]
+      ],
+      "rounds": 13,
+      "winner": 0,
+      "scores": [
+        10,
+        8
+      ],
+      "firstScoreRound": 5,
+      "bounces": 22
+    },
+    {
+      "seed": "REPLAY-14",
+      "swapped": true,
+      "rosters": [
+        [
+          "h_le_ne",
+          "fimu_yashiha",
+          "sai_laas"
+        ],
+        [
+          "ha_rekt",
+          "dr_apex",
+          "haara"
+        ]
+      ],
+      "rounds": 13,
+      "winner": 1,
+      "scores": [
+        8,
+        10
+      ],
+      "firstScoreRound": 5,
+      "bounces": 22
+    },
+    {
+      "seed": "REPLAY-15",
+      "swapped": false,
+      "rosters": [
+        [
+          "hesus_christo",
+          "grimm_bow",
+          "biggy_bob"
+        ],
+        [
+          "oh_tipi",
+          "s_wayne",
+          "red_baron"
+        ]
+      ],
+      "rounds": 13,
+      "winner": 1,
+      "scores": [
+        7,
+        9
+      ],
+      "firstScoreRound": 5,
+      "bounces": 24
+    },
+    {
+      "seed": "REPLAY-15",
+      "swapped": true,
+      "rosters": [
+        [
+          "oh_tipi",
+          "s_wayne",
+          "red_baron"
+        ],
+        [
+          "hesus_christo",
+          "grimm_bow",
+          "biggy_bob"
+        ]
+      ],
+      "rounds": 13,
+      "winner": 0,
+      "scores": [
+        9,
+        7
+      ],
+      "firstScoreRound": 5,
+      "bounces": 24
+    },
+    {
+      "seed": "REPLAY-16",
+      "swapped": false,
+      "rosters": [
+        [
+          "jan_wicked",
+          "ba_djoh",
+          "urzh"
+        ],
+        [
+          "grace_reava",
+          "wa_bidi",
+          "steezo"
+        ]
+      ],
+      "rounds": 10,
+      "winner": 1,
+      "scores": [
+        5,
+        8
+      ],
+      "firstScoreRound": 4,
+      "bounces": 16
+    },
+    {
+      "seed": "REPLAY-16",
+      "swapped": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "wa_bidi",
+          "steezo"
+        ],
+        [
+          "jan_wicked",
+          "ba_djoh",
+          "urzh"
+        ]
+      ],
+      "rounds": 10,
+      "winner": 0,
+      "scores": [
+        8,
+        5
+      ],
+      "firstScoreRound": 4,
+      "bounces": 16
+    },
+    {
+      "seed": "REPLAY-17",
+      "swapped": false,
+      "rosters": [
+        [
+          "donnok",
+          "djonah_thaan",
+          "luuh_i_zeh"
+        ],
+        [
+          "treevor_mason",
+          "oll_i",
+          "fluup"
+        ]
+      ],
+      "rounds": 10,
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "firstScoreRound": 4,
+      "bounces": 14
+    },
+    {
+      "seed": "REPLAY-17",
+      "swapped": true,
+      "rosters": [
+        [
+          "treevor_mason",
+          "oll_i",
+          "fluup"
+        ],
+        [
+          "donnok",
+          "djonah_thaan",
+          "luuh_i_zeh"
+        ]
+      ],
+      "rounds": 10,
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "firstScoreRound": 4,
+      "bounces": 14
+    },
+    {
+      "seed": "REPLAY-18",
+      "swapped": false,
+      "rosters": [
+        [
+          "juul_i_yaina",
+          "faab_i_yaina",
+          "joh_haynes"
+        ],
+        [
+          "nico_lai",
+          "spai_si",
+          "leaf_hidden"
+        ]
+      ],
+      "rounds": 11,
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "firstScoreRound": 4,
+      "bounces": 20
+    },
+    {
+      "seed": "REPLAY-18",
+      "swapped": true,
+      "rosters": [
+        [
+          "nico_lai",
+          "spai_si",
+          "leaf_hidden"
+        ],
+        [
+          "juul_i_yaina",
+          "faab_i_yaina",
+          "joh_haynes"
+        ]
+      ],
+      "rounds": 11,
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "firstScoreRound": 4,
+      "bounces": 20
+    },
+    {
+      "seed": "REPLAY-19",
+      "swapped": false,
+      "rosters": [
+        [
+          "h_le_ne",
+          "fimu_yashiha",
+          "sai_laas"
+        ],
+        [
+          "ha_rekt",
+          "dr_apex",
+          "haara"
+        ]
+      ],
+      "rounds": 8,
+      "winner": 1,
+      "scores": [
+        2,
+        10
+      ],
+      "firstScoreRound": 4,
+      "bounces": 12
+    },
+    {
+      "seed": "REPLAY-19",
+      "swapped": true,
+      "rosters": [
+        [
+          "ha_rekt",
+          "dr_apex",
+          "haara"
+        ],
+        [
+          "h_le_ne",
+          "fimu_yashiha",
+          "sai_laas"
+        ]
+      ],
+      "rounds": 8,
+      "winner": 0,
+      "scores": [
+        10,
+        2
+      ],
+      "firstScoreRound": 4,
+      "bounces": 12
+    },
+    {
+      "seed": "REPLAY-20",
+      "swapped": false,
+      "rosters": [
+        [
+          "oh_tipi",
+          "s_wayne",
+          "red_baron"
+        ],
+        [
+          "hesus_christo",
+          "grimm_bow",
+          "biggy_bob"
+        ]
+      ],
+      "rounds": 13,
+      "winner": 0,
+      "scores": [
+        9,
+        7
+      ],
+      "firstScoreRound": 5,
+      "bounces": 24
+    },
+    {
+      "seed": "REPLAY-20",
+      "swapped": true,
+      "rosters": [
+        [
+          "hesus_christo",
+          "grimm_bow",
+          "biggy_bob"
+        ],
+        [
+          "oh_tipi",
+          "s_wayne",
+          "red_baron"
+        ]
+      ],
+      "rounds": 13,
+      "winner": 1,
+      "scores": [
+        7,
+        9
+      ],
+      "firstScoreRound": 5,
+      "bounces": 24
+    },
+    {
+      "seed": "REPLAY-21",
+      "swapped": false,
+      "rosters": [
+        [
+          "grace_reava",
+          "wa_bidi",
+          "steezo"
+        ],
+        [
+          "jan_wicked",
+          "ba_djoh",
+          "urzh"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 0,
+      "scores": [
+        8,
+        6
+      ],
+      "firstScoreRound": 4,
+      "bounces": 12
+    },
+    {
+      "seed": "REPLAY-21",
+      "swapped": true,
+      "rosters": [
+        [
+          "jan_wicked",
+          "ba_djoh",
+          "urzh"
+        ],
+        [
+          "grace_reava",
+          "wa_bidi",
+          "steezo"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 1,
+      "scores": [
+        6,
+        8
+      ],
+      "firstScoreRound": 4,
+      "bounces": 12
+    },
+    {
+      "seed": "REPLAY-22",
+      "swapped": false,
+      "rosters": [
+        [
+          "treevor_mason",
+          "oll_i",
+          "fluup"
+        ],
+        [
+          "donnok",
+          "djonah_thaan",
+          "luuh_i_zeh"
+        ]
+      ],
+      "rounds": 7,
+      "winner": 1,
+      "scores": [
+        2,
+        8
+      ],
+      "firstScoreRound": 2,
+      "bounces": 10
+    },
+    {
+      "seed": "REPLAY-22",
+      "swapped": true,
+      "rosters": [
+        [
+          "donnok",
+          "djonah_thaan",
+          "luuh_i_zeh"
+        ],
+        [
+          "treevor_mason",
+          "oll_i",
+          "fluup"
+        ]
+      ],
+      "rounds": 7,
+      "winner": 0,
+      "scores": [
+        8,
+        2
+      ],
+      "firstScoreRound": 2,
+      "bounces": 10
+    },
+    {
+      "seed": "REPLAY-23",
+      "swapped": false,
+      "rosters": [
+        [
+          "nico_lai",
+          "spai_si",
+          "leaf_hidden"
+        ],
+        [
+          "juul_i_yaina",
+          "faab_i_yaina",
+          "joh_haynes"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 1,
+      "scores": [
+        5,
+        8
+      ],
+      "firstScoreRound": 4,
+      "bounces": 14
+    },
+    {
+      "seed": "REPLAY-23",
+      "swapped": true,
+      "rosters": [
+        [
+          "juul_i_yaina",
+          "faab_i_yaina",
+          "joh_haynes"
+        ],
+        [
+          "nico_lai",
+          "spai_si",
+          "leaf_hidden"
+        ]
+      ],
+      "rounds": 9,
+      "winner": 0,
+      "scores": [
+        8,
+        5
+      ],
+      "firstScoreRound": 4,
+      "bounces": 14
+    }
+  ]
+}

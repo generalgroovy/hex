@@ -1,0 +1,55 @@
+/* Material shapes stay legible at rest. Only the focused battlefield animates
+   persistent fields; bounded particles sit around the feet, behind champions. */
+.px-v9-burning .px-v9-field-flame{transform-origin:0 0;opacity:.86}
+.px-v9-burning .px-v9-field-ember{opacity:.5}
+.is-living.px-v9-burning .px-v9-field-flame{animation:px-v9-field-flame 1.6s calc(var(--px-material-delay,0s) + var(--px-flame-delay,0s)) steps(5,end) infinite}
+.is-living.px-v9-burning .px-v9-field-ember{animation:px-v9-ember-drift 2.4s calc(var(--px-material-delay,0s) + var(--px-flame-delay,0s)) linear infinite}
+.px-v9-steam-puff{opacity:.33;transform-origin:0 5px}
+.is-living .px-v9-steam-puff{animation:px-v9-steam-drift 4.2s calc(var(--px-material-delay,0s) + var(--px-puff-delay,0s)) ease-out infinite}
+.px-v9-ice-gleam{opacity:.65}
+.px-v9-ice-star{opacity:.45;transform-origin:0 0}
+.px-v9-ice.is-living .px-v9-ice-gleam{animation:px-v9-ice-gleam 5.3s var(--px-material-delay,0s) ease-in-out infinite}
+.px-v9-ice.is-living .px-v9-ice-star{animation:px-v9-ice-star 5.3s calc(var(--px-material-delay,0s) - 1.2s) ease-out infinite}
+
+/* Anticipation remains at the caster. A compact head travels for 330 ms and
+   reaches the target exactly when the shared impact phase begins. */
+.tx-v9 .px-cast-event{opacity:1;animation:none;filter:none}
+.px-v9-flight-trail{opacity:0;stroke-dasharray:12 88;stroke-dashoffset:100;animation:px-v9-flight-trail var(--px-flight-duration,330ms) var(--px-flight-delay,570ms) linear both}
+.px-v9-flight-head{opacity:0;offset-distance:0%;offset-rotate:0deg;animation:px-v9-flight-head var(--px-flight-duration,330ms) var(--px-flight-delay,570ms) linear both}
+.px-v9-projectile-lightning .px-v9-flight-trail{stroke:#e8d3f2;stroke-dasharray:22 78}
+.px-v9-projectile-metal .px-v9-flight-trail{stroke:#c9d7cd;stroke-dasharray:9 91}
+.px-v9-projectile-dark .px-v9-flight-trail{stroke-width:4}
+.px-v9-bolt{transform-origin:0 8px;animation:px-v9-bolt-strike .62s var(--px-impact-delay,900ms) both}
+.px-v9-bolt-echo{opacity:0;animation:px-v9-bolt-echo .65s var(--px-impact-delay,900ms) both}
+.px-v9-impact-ring{transform-origin:0 10px;animation:px-v9-impact-ring .7s var(--px-impact-delay,900ms) both}
+.px-v9-metal-spire{transform-origin:0 13px;animation:px-v9-metal-rise .64s calc(var(--px-impact-delay,900ms) + var(--px-spire-delay,0ms)) both}
+.px-v9-metal-glint{animation:px-v9-metal-glint .68s var(--px-impact-delay,900ms) both}
+
+/* Keep the resolver route on the outer layer and give only the atlas figure
+   weight: planted compression, passing pose, light lift, then footfall. */
+.tx-v9 .px-unit-moving .px-crafted.px-action-walk{animation:px-walk-frames var(--px-gait-duration) steps(1,end) infinite,px-v9-walk-weight var(--px-gait-duration) steps(4,end) infinite}
+
+@keyframes px-v9-field-flame{0%,100%{transform:scale(.98,.86) skewX(-3deg)}24%{transform:scale(.9,1.12) skewX(3deg)}48%{transform:scale(1.1,.91) skewX(-2deg)}72%{transform:scale(.95,1.04) skewX(4deg)}}
+@keyframes px-v9-ember-drift{0%{opacity:0;transform:translate(0,3px) scale(.8)}18%{opacity:.8}70%{opacity:.55}100%{opacity:0;transform:translate(var(--px-ember-drift,4px),-22px) scale(.45)}}
+@keyframes px-v9-steam-drift{0%{opacity:0;transform:translate(-2px,3px) scale(.72,.65)}20%{opacity:.36}60%{opacity:.27}100%{opacity:0;transform:translate(var(--px-puff-drift,6px),-12px) scale(1.16,.95)}}
+@keyframes px-v9-ice-gleam{0%,18%,70%,100%{opacity:.25;transform:translateX(-2px)}42%{opacity:.95;transform:translateX(2px)}}
+@keyframes px-v9-ice-star{0%,22%,60%,100%{opacity:0;transform:scale(.7)}35%{opacity:.85;transform:scale(1.15)}47%{opacity:.45;transform:scale(.9)}}
+@keyframes px-v9-flight-trail{0%{opacity:0;stroke-dashoffset:100}12%{opacity:.75}86%{opacity:.7}100%{opacity:0;stroke-dashoffset:0}}
+@keyframes px-v9-flight-head{0%{opacity:0;offset-distance:0%}8%,92%{opacity:1}100%{opacity:0;offset-distance:100%}}
+@keyframes px-v9-bolt-strike{0%{opacity:0;transform:scale(.4,1.3) translateY(-9px)}8%{opacity:1;transform:scale(1.08,1.03)}25%{opacity:1;transform:scale(1)}58%{opacity:.65;transform:scale(.96,.98)}100%{opacity:0;transform:scale(.9,.94)}}
+@keyframes px-v9-bolt-echo{0%,9%{opacity:0}20%{opacity:.9}55%{opacity:.4;transform:translateY(1px)}100%{opacity:0;transform:translateY(4px)}}
+@keyframes px-v9-impact-ring{0%{opacity:0;transform:scale(.3,.5)}20%{opacity:.75}100%{opacity:0;transform:scale(1.25,1.15)}}
+@keyframes px-v9-metal-rise{0%{opacity:0;transform:translateY(8px) scaleY(.15)}18%{opacity:1;transform:translateY(-3px) scaleY(1.08)}36%{transform:translateY(1px) scaleY(.96)}62%{opacity:1;transform:none}100%{opacity:0;transform:translateY(2px) scaleY(.95)}}
+@keyframes px-v9-metal-glint{0%,15%{opacity:0}31%{opacity:1}75%,100%{opacity:0}}
+@keyframes px-v9-walk-weight{0%,50%,100%{transform:scaleY(var(--px-squash))}15%,65%{transform:translateY(calc(var(--px-stride)*-.35)) rotate(calc(var(--px-lean)*.2))}30%{transform:translateY(calc(var(--px-stride)*-1.25)) rotate(calc(var(--px-lean)*.4))}80%{transform:translateY(calc(var(--px-stride)*-1.25)) rotate(calc(var(--px-lean)*-.4))}43%,93%{transform:translateY(1px) scaleY(var(--px-squash))}}
+
+.px-tactical-overview .px-v9-burning *,.px-tactical-overview .px-v9-steam *,.px-tactical-overview .px-v9-ice *{animation:none!important}
+@media(prefers-reduced-motion:reduce){
+ .px-v9-burning *,.px-v9-steam *,.px-v9-ice *,.px-v9-lightning *,.px-v9-metal *{animation:none!important;transform:none!important}
+ .px-v9-field-flame{opacity:.8}.px-v9-field-ember{opacity:.35}.px-v9-steam-puff{opacity:.3}.px-v9-ice-gleam{opacity:.65}.px-v9-ice-star{opacity:.3}
+ .px-v9-flight-head{animation:none!important;display:none}
+ .tx-v9 .px-cast-event{opacity:.55}
+ .px-v9-flight-trail{animation:none!important;opacity:.5;stroke-dasharray:3 5;stroke-dashoffset:0}
+ .px-v9-bolt,.px-v9-metal-spire{opacity:.8}.px-v9-bolt-echo,.px-v9-metal-glint{opacity:.5}.px-v9-impact-ring{opacity:.4}
+ .tx-v9 .px-unit-moving .px-crafted.px-action-walk{animation:none!important;transform:none!important}
+}

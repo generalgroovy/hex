@@ -1,0 +1,117 @@
+/* The battle scope outranks legacy UI selectors regardless of production chunk order. */
+.tactics.tx-v13.tx-playing .tx-selected-order{display:flex;align-items:stretch;gap:4px;min-width:0;min-height:44px;margin:0 0 5px}
+.tactics.tx-v13.tx-playing .tx-selected-order button{min-width:44px;min-height:44px;border:1px solid #b8ad8f;border-radius:4px;background:#f8f3e4;color:#405237;padding:5px;font:600 11px/1.25 Arial,sans-serif;cursor:pointer}
+.tactics.tx-v13.tx-playing .tx-selected-order button[aria-pressed=true]{background:#e0e8d5;border-color:#687c51}
+.tactics.tx-v13.tx-playing .tx-selected-order button:disabled{opacity:.55;cursor:default}
+.tactics.tx-v13.tx-playing .tx-move-order{display:flex;flex:0 1 auto;gap:2px;min-width:0}
+.tactics.tx-v13.tx-playing .tx-selected-order .tx-clear-move{color:#6a5537;background:#efe7d2;font-size:11px}
+.tactics.tx-v13.tx-playing .tx-edit-cast{flex:1;min-width:0;overflow-wrap:anywhere}
+.tactics.tx-v13.tx-playing .tx-selected-order .tx-next-character{flex:none;background:transparent;border-color:transparent;white-space:nowrap}
+.tactics.tx-v13.tx-playing .tx-order-notice{display:flex;align-items:center;gap:4px;margin:0 0 5px;padding:4px 6px;border-left:3px solid #ad772d;border-radius:3px;background:#fbefd0;color:#543c21;font:12px/1.35 Arial,sans-serif}
+.tactics.tx-v13.tx-playing .tx-order-notice>span{flex:1;min-width:0;overflow-wrap:anywhere}
+.tactics.tx-v13.tx-playing .tx-order-notice>button{flex:0 0 auto;min-width:44px;min-height:44px;padding:4px;background:transparent;border:0;border-radius:4px;color:inherit;font:600 11px/1.2 Arial,sans-serif;cursor:pointer}
+.tactics.tx-v13.tx-playing .tx-order-notice>button:last-child{font-size:22px}
+.tactics.tx-v13.tx-playing .tx-selected-order button:focus-visible,.tactics.tx-v13.tx-playing .tx-order-notice>button:focus-visible{outline:3px solid #277c79;outline-offset:1px}
+@media (max-width:850px){
+ .tactics.tx-v13.tx-playing{padding-bottom:calc(66px + env(safe-area-inset-bottom))}
+ .tactics.tx-v13.tx-playing .tx-header{height:44px;min-height:44px;padding:0 8px}
+ .tactics.tx-v13.tx-playing .tx-header .tx-brand,
+ .tactics.tx-v13.tx-playing .tx-header nav>button{height:44px;min-height:44px;padding:4px 7px;font-size:11px}
+ .tactics.tx-v13.tx-playing .tx-battle{padding:2px 6px 12px}
+ .tactics.tx-v13.tx-playing .tx-scoreboard{height:44px;min-height:44px;margin:0 0 3px;padding:0;gap:5px}
+ .tactics.tx-v13.tx-playing .tx-team{gap:4px;min-width:0}
+ .tactics.tx-v13.tx-playing .tx-team>div{min-width:0}
+ .tactics.tx-v13.tx-playing .tx-team strong{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .tactics.tx-v13.tx-playing .tx-team>div>small{font-size:10px;line-height:1.2}
+ .tactics.tx-v13.tx-playing .tx-team>b{font-size:23px}
+ .tactics.tx-v13.tx-playing .tx-round{min-height:40px}
+ .tactics.tx-v13.tx-playing .tx-round>b{font-size:20px;line-height:1.1;margin:1px 0}
+ .tactics.tx-v13.tx-playing .tx-battle-grid{display:flex;flex-direction:column;align-items:stretch;gap:3px;--workspace-coach:0px;--workspace-readout:0px;--workspace-notice:0px;--workspace-exchange:0px}
+ .tactics.tx-v13.tx-playing .tx-battle-grid:has(.tx-turn-coach){--workspace-coach:46px}
+ .tactics.tx-v13.tx-playing .tx-battle-grid:has(.px-terrain-readout){--workspace-readout:44px}
+ .tactics.tx-v13.tx-playing .tx-battle-grid:has(.tx-order-notice){--workspace-notice:56px}
+ .tactics.tx-v13.tx-playing .tx-battle-grid:has(.tx-exchange-strip){--workspace-exchange:42px}
+ .tactics.tx-v13.tx-playing .tx-orders{display:contents;position:static;padding:0;border:0;background:none;box-shadow:none}
+ .tactics.tx-v13.tx-playing .tx-field{order:1;min-width:0;width:100%}
+ .tactics.tx-v13.tx-playing .tx-battle-company{order:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:3px}
+ .tactics.tx-v13.tx-playing .tx-battle-company>button{height:48px;min-height:48px;max-height:48px;padding:2px 5px;gap:3px}
+ .tactics.tx-v13.tx-playing .tx-unit-visual{height:38px}
+ .tactics.tx-v13.tx-playing .tx-unit-info strong{font-size:11px;line-height:1.15}
+ .tactics.tx-v13.tx-playing .tx-unit-info small{margin:2px 0 3px;font-size:10px;line-height:1.1}
+ .tactics.tx-v13.tx-playing .tx-resource-bars{gap:2px}
+ .tactics.tx-v13.tx-playing .tx-turn-coach{min-height:44px;margin:0 0 2px;padding:4px 6px;gap:4px;font-size:11px;line-height:1.25}
+ .tactics.tx-v13.tx-playing .tx-turn-coach button{height:44px;min-height:44px;min-width:44px;margin:-4px -6px -4px 0}
+ .tactics.tx-v13.tx-playing .px-board.px-board-v13 .px-board-toolbar{display:flex;flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:nowrap;height:44px;min-height:44px;padding:0 2px;gap:2px}
+ .tactics.tx-v13.tx-playing .px-board.px-board-v13 .px-npc-tools{display:flex;order:0;flex:0 1 86px;width:86px;min-width:44px;max-width:86px;height:44px;overflow:hidden}
+ .tactics.tx-v13.tx-playing .px-board.px-board-v13 .px-npc-tools button,
+ .tactics.tx-v13.tx-playing .px-board.px-board-v13 .px-npc-tools select{height:44px;min-height:44px;min-width:44px;max-width:100%;padding:3px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .tactics.tx-v13.tx-playing .px-board.px-board-v13 .px-camera-tools{display:flex;flex-direction:row;align-items:stretch;order:1;flex:1 1 auto;width:auto;min-width:0;max-width:100%;height:44px;justify-content:flex-start;flex-wrap:nowrap;gap:1px;overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain}
+ .tactics.tx-v13.tx-playing .px-board.px-board-v13 .px-camera-tools button{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1 0 44px;width:auto;min-width:44px;height:44px;min-height:44px;padding:2px 1px;gap:2px;font-size:17px;line-height:1}
+ .tactics.tx-v13.tx-playing .px-board.px-board-v13 .px-camera-tools button span{font-size:10px;line-height:1.1}
+ .tactics.tx-v13.tx-playing .px-board.px-board-v13 .px-battlefield{height:clamp(170px,calc(100dvh - 432px - var(--workspace-coach) - var(--workspace-readout) - var(--workspace-notice) - var(--workspace-exchange) - env(safe-area-inset-bottom)),440px);min-height:170px;max-height:none;aspect-ratio:auto}
+ .tactics.tx-v13.tx-playing .px-board.px-board-v13 .px-terrain-readout{height:44px;min-height:44px;max-height:44px;padding:3px 6px;overflow-y:auto;align-items:flex-start;scrollbar-width:thin}
+ .tactics.tx-v13.tx-playing .px-board.px-board-v13 .px-terrain-readout .px-cell-description{gap:1px;font-size:11px;line-height:1.2}
+ .tactics.tx-v13.tx-playing .px-board.px-board-v13 .px-terrain-readout .px-cell-description>span{font-size:11px;line-height:1.25}
+ .tactics.tx-v13.tx-playing .tx-planning-tray{order:2;display:flex;flex-direction:column;width:100%;padding:3px 4px;margin:0;border-width:1px;gap:0}
+ .tactics.tx-v13.tx-playing .tx-selected-order{order:0;display:flex;align-items:center;gap:3px;height:44px;min-height:44px;width:100%;margin:0 0 3px}
+ .tactics.tx-v13.tx-playing .tx-selected-order button{min-width:44px;min-height:44px;padding:3px 4px;font:600 11px/1.2 Arial,sans-serif}
+ .tactics.tx-v13.tx-playing .tx-move-order{display:flex;align-items:center;flex:0 1 auto;min-width:0}
+ .tactics.tx-v13.tx-playing .tx-edit-move{white-space:nowrap}
+ .tactics.tx-v13.tx-playing .tx-edit-cast{flex:1;min-width:44px;overflow-wrap:anywhere}
+ .tactics.tx-v13.tx-playing .tx-next-character{flex:0 0 auto;white-space:nowrap}
+ .tactics.tx-v13.tx-playing .tx-order-notice{order:1;margin:0 0 4px;padding:4px 6px;font:11px/1.3 Arial,sans-serif}
+ .tactics.tx-v13.tx-playing .tx-direct-spells{order:2;display:block;width:100%;min-width:0;margin:0}
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin:0}
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells>button,
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells>button:last-child{display:grid;grid-template-columns:16px minmax(0,1fr);grid-column:auto;align-content:center;align-items:center;justify-content:normal;min-width:0;height:56px;min-height:56px;padding:4px 5px;gap:2px 4px;border-radius:5px;text-align:left;box-sizing:border-box}
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells>button:last-child{grid-column:span 2}
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells>button>strong{display:block;min-width:0;min-height:0;width:auto;padding:0;font:700 12px/1.15 Arial,sans-serif;overflow-wrap:anywhere;text-align:left}
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells>button>.tx-glyph{display:inline-flex;align-items:center;justify-content:center;width:16px;height:18px}
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells>button>.tx-glyph>svg{width:16px;height:16px}
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells>button>.tx-action-meta{display:flex;flex-direction:row;flex-wrap:nowrap;grid-column:1/-1;gap:3px 8px;width:auto;padding:0;font:11px/1.2 Arial,sans-serif;text-align:left}
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells>button>.tx-spell-key,
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells>button>.tx-spell-purpose,
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells>button>.tx-footprint-icon,
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells>button>.tx-spell-footprint,
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells>button>.tx-unready-reason,
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells>button>.tx-palette-description,
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells>button>.tx-action-meta>span:nth-child(2){display:none}
+ .tactics.tx-v13.tx-playing .tx-aim-summary{order:3;min-height:44px;margin:3px 0;padding:4px 6px}
+ .tactics.tx-v13.tx-playing .tx-aim-summary strong{font-size:12px;line-height:1.2}
+ .tactics.tx-v13.tx-playing .tx-aim-summary small{font-size:11px;line-height:1.25}
+ .tactics.tx-v13.tx-playing .tx-cast-consequence{order:5;margin-top:4px}
+ .tactics.tx-v13.tx-playing .tx-current-status{order:5;margin:4px 0}
+ .tactics.tx-v13.tx-playing .tx-current-status .tx-status-list{margin:0}
+ .tactics.tx-v13.tx-playing .tx-spell-details{order:6}
+ .tactics.tx-v13.tx-playing .tx-plan-review,.tactics.tx-v13.tx-playing .tx-unit-tools{order:7}
+ .tactics.tx-v13.tx-playing .tx-command-dock{order:4;display:grid;position:fixed;left:6px;right:6px;bottom:0;z-index:40;width:auto;margin:0;padding:4px 3px calc(4px + env(safe-area-inset-bottom));gap:3px;grid-template-columns:.8fr 1fr 1fr 1.4fr}
+ .tactics.tx-v13.tx-playing .tx-command-dock>button,.tactics.tx-v13.tx-playing .tx-command-dock>.tx-lock{min-height:48px;padding:3px;font-size:12px}
+ .tactics.tx-v13.tx-playing .tx-command-dock>.tx-lock{display:flex;flex-direction:column;justify-content:center;grid-column:auto;margin:0;gap:2px}
+ .tactics.tx-v13.tx-playing .tx-command-dock>button>small{display:none}
+ .tactics.tx-v13.tx-playing .tx-command-dock>.tx-lock>.tx-readiness{display:block;font-size:10px;line-height:1.1}
+ .tactics.tx-v13.tx-playing .tx-exchange-strip{margin:3px 0;padding:5px 7px;font-size:11px}
+ .tactics.tx-v13.tx-playing .px-world-inspection button{min-width:44px;min-height:44px}
+ .tactics.tx-v13.tx-playing .tx-unit-tools>button,.tactics.tx-v13.tx-playing .tx-unit-tools summary,
+ .tactics.tx-v13.tx-playing .tx-battle-detail>summary,.tactics.tx-v13.tx-playing .tx-battle-notes>button,
+ .tactics.tx-v13.tx-playing .tx-battle-notes>details>summary{min-height:44px}
+}
+
+/* A finished match leads with its result and the next playable action. */
+@media (max-width:599px){
+ .tactics.tx-v13.tx-playing .tx-battle-grid>.tx-orders>.tx-match-result{order:0}
+ .tactics.tx-v13.tx-playing:has(.tx-match-result){padding-bottom:env(safe-area-inset-bottom)}
+}
+
+/* A wide phone has room for the spell hand beside the map. */
+@media (min-width:600px) and (max-width:850px){
+ .tactics.tx-v13.tx-playing .tx-battle-grid{display:grid;grid-template-columns:minmax(0,1fr) 270px;align-items:start;gap:4px 6px}
+ .tactics.tx-v13.tx-playing .tx-battle-company{grid-column:1/-1;grid-row:1}
+ .tactics.tx-v13.tx-playing .tx-field{grid-column:1;grid-row:2;order:initial}
+ .tactics.tx-v13.tx-playing .tx-planning-tray,.tactics.tx-v13.tx-playing .tx-recovery,.tactics.tx-v13.tx-playing .tx-match-result{grid-column:2;grid-row:2;order:initial}
+ .tactics.tx-v13.tx-playing .tx-match-result{background:#fff8e9;border:1px solid #a59776;border-radius:6px;padding:18px}
+ .tactics.tx-v13.tx-playing .px-board.px-board-v13 .px-battlefield{height:clamp(180px,calc(100dvh - 258px - var(--workspace-coach) - var(--workspace-readout) - var(--workspace-exchange) - env(safe-area-inset-bottom)),540px);min-height:180px}
+ .tactics.tx-v13.tx-playing .tx-planning-tray{padding:3px}
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells>button,
+ .tactics.tx-v13.tx-playing .tx-direct-spells .tx-battle-spells>button:last-child{height:62px;min-height:62px;padding:4px}
+ .tactics.tx-v13.tx-playing .tx-cast-consequence{font-size:11px;padding:6px}
+}

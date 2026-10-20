@@ -1,0 +1,3186 @@
+{
+  "rulesVersion": 6,
+  "seed": 1212504116,
+  "sourceSha256": {
+    "lib/tactics.ts": "605a6150aeabeeba2bede230cc6a157329b8016276151e675ef8fedbf1bd3ae4",
+    "lib/spells.ts": "b5b77ccea3ce815ebd1ddf09d0d52be7a0b19f177aea082e6776a09b254055d7",
+    "lib/arena.ts": "2d0dafbd12a853ec8d9b766f8b110fb88db2583f9974e4ee3feb3fe9b927e955",
+    "lib/roster.ts": "7727380d8afb75c9b047fe21d60d168f7272a495d4f9ad1d7b8ac07a6c38408e",
+    "tests/v6-diagnostic.mjs": "30eaf861fb0e79e5af5fb8f8a4450b6604a8c28232631717033201ca7de1f69d"
+  },
+  "fixture": "Seeded shuffle of all30 champions into10 squads; five opposing squad pairs; three cyclic deployments; default and all48-spell catalog loadout profiles; two related public-state policies; paired exchanged seats. 120 games, no parameter tuning.",
+  "games": 120,
+  "seatWins": [
+    60,
+    60
+  ],
+  "draws": 0,
+  "cappedGames": 4,
+  "averageRounds": 10.05,
+  "averageFirstScoreRound": 3.9,
+  "mirroredRoundChecks": 603,
+  "castCount": 4538,
+  "fizzleCount": 0,
+  "bounceCount": 2118,
+  "shapesCast": {
+    "line": 526,
+    "hex": 3504,
+    "ring": 124,
+    "burst": 384
+  },
+  "distinctSpellsCast": 42,
+  "unusedSpells": [
+    "backdraft",
+    "tidal_surge",
+    "deep_freeze",
+    "raise_cairn",
+    "veil",
+    "reap"
+  ],
+  "policies": [
+    {
+      "name": "native",
+      "seatWins": [
+        30,
+        30
+      ],
+      "draws": 0
+    },
+    {
+      "name": "reserve-and-hold",
+      "seatWins": [
+        30,
+        30
+      ],
+      "draws": 0
+    }
+  ],
+  "elapsedNodeMs": 128726,
+  "limitations": [
+    "Seeded fixtures cover every identity and equip every spell but only five squad pairings and three deployment permutations. They do not cover all team/loadout matchups.",
+    "Seat symmetry verifies engine and policy invariants. These related shallow bots do not prove human balance, strategic depth, enjoyable pacing, browser performance or commercial potential.",
+    "Spells equipped but not cast reflect AI limitations. Every spell has a separate legal-resolution test; neither check proves every tactical interaction."
+  ],
+  "runs": [
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "donnok",
+          "leaf_hidden",
+          "djonah_thaan"
+        ],
+        [
+          "juul_i_yaina",
+          "ha_rekt",
+          "grimm_bow"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        8
+      ],
+      "rounds": 10,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "juul_i_yaina",
+          "ha_rekt",
+          "grimm_bow"
+        ],
+        [
+          "donnok",
+          "leaf_hidden",
+          "djonah_thaan"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        6
+      ],
+      "rounds": 10,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "donnok",
+          "leaf_hidden",
+          "djonah_thaan"
+        ],
+        [
+          "juul_i_yaina",
+          "ha_rekt",
+          "grimm_bow"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        4
+      ],
+      "rounds": 10,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "juul_i_yaina",
+          "ha_rekt",
+          "grimm_bow"
+        ],
+        [
+          "donnok",
+          "leaf_hidden",
+          "djonah_thaan"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 10,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "leaf_hidden",
+          "djonah_thaan",
+          "donnok"
+        ],
+        [
+          "ha_rekt",
+          "grimm_bow",
+          "juul_i_yaina"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        8
+      ],
+      "rounds": 10,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "ha_rekt",
+          "grimm_bow",
+          "juul_i_yaina"
+        ],
+        [
+          "leaf_hidden",
+          "djonah_thaan",
+          "donnok"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        6
+      ],
+      "rounds": 10,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "leaf_hidden",
+          "djonah_thaan",
+          "donnok"
+        ],
+        [
+          "ha_rekt",
+          "grimm_bow",
+          "juul_i_yaina"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        5
+      ],
+      "rounds": 9,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "ha_rekt",
+          "grimm_bow",
+          "juul_i_yaina"
+        ],
+        [
+          "leaf_hidden",
+          "djonah_thaan",
+          "donnok"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        9
+      ],
+      "rounds": 9,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "djonah_thaan",
+          "donnok",
+          "leaf_hidden"
+        ],
+        [
+          "grimm_bow",
+          "juul_i_yaina",
+          "ha_rekt"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        9
+      ],
+      "rounds": 10,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "grimm_bow",
+          "juul_i_yaina",
+          "ha_rekt"
+        ],
+        [
+          "djonah_thaan",
+          "donnok",
+          "leaf_hidden"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        5
+      ],
+      "rounds": 10,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "djonah_thaan",
+          "donnok",
+          "leaf_hidden"
+        ],
+        [
+          "grimm_bow",
+          "juul_i_yaina",
+          "ha_rekt"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        8
+      ],
+      "rounds": 16,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "native",
+      "pair": 0,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "grimm_bow",
+          "juul_i_yaina",
+          "ha_rekt"
+        ],
+        [
+          "djonah_thaan",
+          "donnok",
+          "leaf_hidden"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        5
+      ],
+      "rounds": 16,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "biggy_bob",
+          "s_wayne",
+          "spai_si"
+        ],
+        [
+          "oll_i",
+          "fimu_yashiha",
+          "joh_haynes"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        2,
+        9
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "oll_i",
+          "fimu_yashiha",
+          "joh_haynes"
+        ],
+        [
+          "biggy_bob",
+          "s_wayne",
+          "spai_si"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        2
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "biggy_bob",
+          "s_wayne",
+          "spai_si"
+        ],
+        [
+          "oll_i",
+          "fimu_yashiha",
+          "joh_haynes"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        3
+      ],
+      "rounds": 9,
+      "firstScoreRound": 2
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "oll_i",
+          "fimu_yashiha",
+          "joh_haynes"
+        ],
+        [
+          "biggy_bob",
+          "s_wayne",
+          "spai_si"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        3,
+        8
+      ],
+      "rounds": 9,
+      "firstScoreRound": 2
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "s_wayne",
+          "spai_si",
+          "biggy_bob"
+        ],
+        [
+          "fimu_yashiha",
+          "joh_haynes",
+          "oll_i"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        5
+      ],
+      "rounds": 10,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "fimu_yashiha",
+          "joh_haynes",
+          "oll_i"
+        ],
+        [
+          "s_wayne",
+          "spai_si",
+          "biggy_bob"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        8
+      ],
+      "rounds": 10,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "s_wayne",
+          "spai_si",
+          "biggy_bob"
+        ],
+        [
+          "fimu_yashiha",
+          "joh_haynes",
+          "oll_i"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        8
+      ],
+      "rounds": 12,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "fimu_yashiha",
+          "joh_haynes",
+          "oll_i"
+        ],
+        [
+          "s_wayne",
+          "spai_si",
+          "biggy_bob"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        5
+      ],
+      "rounds": 12,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "spai_si",
+          "biggy_bob",
+          "s_wayne"
+        ],
+        [
+          "joh_haynes",
+          "oll_i",
+          "fimu_yashiha"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        3
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "joh_haynes",
+          "oll_i",
+          "fimu_yashiha"
+        ],
+        [
+          "spai_si",
+          "biggy_bob",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        3,
+        9
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "spai_si",
+          "biggy_bob",
+          "s_wayne"
+        ],
+        [
+          "joh_haynes",
+          "oll_i",
+          "fimu_yashiha"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        10,
+        3
+      ],
+      "rounds": 11,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "native",
+      "pair": 1,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "joh_haynes",
+          "oll_i",
+          "fimu_yashiha"
+        ],
+        [
+          "spai_si",
+          "biggy_bob",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        3,
+        10
+      ],
+      "rounds": 11,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "h_le_ne",
+          "treevor_mason",
+          "steezo"
+        ],
+        [
+          "urzh",
+          "oh_tipi",
+          "luuh_i_zeh"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "urzh",
+          "oh_tipi",
+          "luuh_i_zeh"
+        ],
+        [
+          "h_le_ne",
+          "treevor_mason",
+          "steezo"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        4
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "h_le_ne",
+          "treevor_mason",
+          "steezo"
+        ],
+        [
+          "urzh",
+          "oh_tipi",
+          "luuh_i_zeh"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        8
+      ],
+      "rounds": 9,
+      "firstScoreRound": 1
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "urzh",
+          "oh_tipi",
+          "luuh_i_zeh"
+        ],
+        [
+          "h_le_ne",
+          "treevor_mason",
+          "steezo"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        6
+      ],
+      "rounds": 9,
+      "firstScoreRound": 1
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "treevor_mason",
+          "steezo",
+          "h_le_ne"
+        ],
+        [
+          "oh_tipi",
+          "luuh_i_zeh",
+          "urzh"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 9,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "oh_tipi",
+          "luuh_i_zeh",
+          "urzh"
+        ],
+        [
+          "treevor_mason",
+          "steezo",
+          "h_le_ne"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        4
+      ],
+      "rounds": 9,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "treevor_mason",
+          "steezo",
+          "h_le_ne"
+        ],
+        [
+          "oh_tipi",
+          "luuh_i_zeh",
+          "urzh"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        1,
+        8
+      ],
+      "rounds": 9,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "oh_tipi",
+          "luuh_i_zeh",
+          "urzh"
+        ],
+        [
+          "treevor_mason",
+          "steezo",
+          "h_le_ne"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        1
+      ],
+      "rounds": 9,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "steezo",
+          "h_le_ne",
+          "treevor_mason"
+        ],
+        [
+          "luuh_i_zeh",
+          "urzh",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        10
+      ],
+      "rounds": 10,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "luuh_i_zeh",
+          "urzh",
+          "oh_tipi"
+        ],
+        [
+          "steezo",
+          "h_le_ne",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        10,
+        5
+      ],
+      "rounds": 10,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "steezo",
+          "h_le_ne",
+          "treevor_mason"
+        ],
+        [
+          "luuh_i_zeh",
+          "urzh",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        7
+      ],
+      "rounds": 16,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 2,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "luuh_i_zeh",
+          "urzh",
+          "oh_tipi"
+        ],
+        [
+          "steezo",
+          "h_le_ne",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        7,
+        6
+      ],
+      "rounds": 16,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "sai_laas",
+          "ba_djoh",
+          "nico_lai"
+        ],
+        [
+          "haara",
+          "hesus_christo",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        0
+      ],
+      "rounds": 6,
+      "firstScoreRound": 1
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "haara",
+          "hesus_christo",
+          "grace_reava"
+        ],
+        [
+          "sai_laas",
+          "ba_djoh",
+          "nico_lai"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        0,
+        9
+      ],
+      "rounds": 6,
+      "firstScoreRound": 1
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "sai_laas",
+          "ba_djoh",
+          "nico_lai"
+        ],
+        [
+          "haara",
+          "hesus_christo",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        10,
+        0
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "haara",
+          "hesus_christo",
+          "grace_reava"
+        ],
+        [
+          "sai_laas",
+          "ba_djoh",
+          "nico_lai"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        0,
+        10
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "ba_djoh",
+          "nico_lai",
+          "sai_laas"
+        ],
+        [
+          "hesus_christo",
+          "grace_reava",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        5
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "hesus_christo",
+          "grace_reava",
+          "haara"
+        ],
+        [
+          "ba_djoh",
+          "nico_lai",
+          "sai_laas"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        8
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "ba_djoh",
+          "nico_lai",
+          "sai_laas"
+        ],
+        [
+          "hesus_christo",
+          "grace_reava",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        0
+      ],
+      "rounds": 6,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "hesus_christo",
+          "grace_reava",
+          "haara"
+        ],
+        [
+          "ba_djoh",
+          "nico_lai",
+          "sai_laas"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        0,
+        8
+      ],
+      "rounds": 6,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "nico_lai",
+          "sai_laas",
+          "ba_djoh"
+        ],
+        [
+          "grace_reava",
+          "haara",
+          "hesus_christo"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        0
+      ],
+      "rounds": 8,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "haara",
+          "hesus_christo"
+        ],
+        [
+          "nico_lai",
+          "sai_laas",
+          "ba_djoh"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        0,
+        8
+      ],
+      "rounds": 8,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "nico_lai",
+          "sai_laas",
+          "ba_djoh"
+        ],
+        [
+          "grace_reava",
+          "haara",
+          "hesus_christo"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        0
+      ],
+      "rounds": 9,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "native",
+      "pair": 3,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "haara",
+          "hesus_christo"
+        ],
+        [
+          "nico_lai",
+          "sai_laas",
+          "ba_djoh"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        0,
+        9
+      ],
+      "rounds": 9,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "dr_apex",
+          "red_baron",
+          "jan_wicked"
+        ],
+        [
+          "fluup",
+          "faab_i_yaina",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        0,
+        8
+      ],
+      "rounds": 6,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "fluup",
+          "faab_i_yaina",
+          "wa_bidi"
+        ],
+        [
+          "dr_apex",
+          "red_baron",
+          "jan_wicked"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        0
+      ],
+      "rounds": 6,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "dr_apex",
+          "red_baron",
+          "jan_wicked"
+        ],
+        [
+          "fluup",
+          "faab_i_yaina",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        3,
+        9
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "fluup",
+          "faab_i_yaina",
+          "wa_bidi"
+        ],
+        [
+          "dr_apex",
+          "red_baron",
+          "jan_wicked"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        3
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "red_baron",
+          "jan_wicked",
+          "dr_apex"
+        ],
+        [
+          "faab_i_yaina",
+          "wa_bidi",
+          "fluup"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        9
+      ],
+      "rounds": 8,
+      "firstScoreRound": 1
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "faab_i_yaina",
+          "wa_bidi",
+          "fluup"
+        ],
+        [
+          "red_baron",
+          "jan_wicked",
+          "dr_apex"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        5
+      ],
+      "rounds": 8,
+      "firstScoreRound": 1
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "red_baron",
+          "jan_wicked",
+          "dr_apex"
+        ],
+        [
+          "faab_i_yaina",
+          "wa_bidi",
+          "fluup"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        9,
+        10
+      ],
+      "rounds": 12,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "faab_i_yaina",
+          "wa_bidi",
+          "fluup"
+        ],
+        [
+          "red_baron",
+          "jan_wicked",
+          "dr_apex"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        10,
+        9
+      ],
+      "rounds": 12,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "jan_wicked",
+          "dr_apex",
+          "red_baron"
+        ],
+        [
+          "wa_bidi",
+          "fluup",
+          "faab_i_yaina"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 13,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "wa_bidi",
+          "fluup",
+          "faab_i_yaina"
+        ],
+        [
+          "jan_wicked",
+          "dr_apex",
+          "red_baron"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "rounds": 13,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "jan_wicked",
+          "dr_apex",
+          "red_baron"
+        ],
+        [
+          "wa_bidi",
+          "fluup",
+          "faab_i_yaina"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        1
+      ],
+      "rounds": 10,
+      "firstScoreRound": 6
+    },
+    {
+      "policy": "native",
+      "pair": 4,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "wa_bidi",
+          "fluup",
+          "faab_i_yaina"
+        ],
+        [
+          "jan_wicked",
+          "dr_apex",
+          "red_baron"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        1,
+        8
+      ],
+      "rounds": 10,
+      "firstScoreRound": 6
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 0,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "donnok",
+          "leaf_hidden",
+          "djonah_thaan"
+        ],
+        [
+          "juul_i_yaina",
+          "ha_rekt",
+          "grimm_bow"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        8,
+        9
+      ],
+      "rounds": 11,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 0,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "juul_i_yaina",
+          "ha_rekt",
+          "grimm_bow"
+        ],
+        [
+          "donnok",
+          "leaf_hidden",
+          "djonah_thaan"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        8
+      ],
+      "rounds": 11,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 0,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "donnok",
+          "leaf_hidden",
+          "djonah_thaan"
+        ],
+        [
+          "juul_i_yaina",
+          "ha_rekt",
+          "grimm_bow"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        8
+      ],
+      "rounds": 11,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 0,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "juul_i_yaina",
+          "ha_rekt",
+          "grimm_bow"
+        ],
+        [
+          "donnok",
+          "leaf_hidden",
+          "djonah_thaan"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        8,
+        9
+      ],
+      "rounds": 11,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 0,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "leaf_hidden",
+          "djonah_thaan",
+          "donnok"
+        ],
+        [
+          "ha_rekt",
+          "grimm_bow",
+          "juul_i_yaina"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        6
+      ],
+      "rounds": 10,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 0,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "ha_rekt",
+          "grimm_bow",
+          "juul_i_yaina"
+        ],
+        [
+          "leaf_hidden",
+          "djonah_thaan",
+          "donnok"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        8
+      ],
+      "rounds": 10,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 0,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "leaf_hidden",
+          "djonah_thaan",
+          "donnok"
+        ],
+        [
+          "ha_rekt",
+          "grimm_bow",
+          "juul_i_yaina"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        1
+      ],
+      "rounds": 8,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 0,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "ha_rekt",
+          "grimm_bow",
+          "juul_i_yaina"
+        ],
+        [
+          "leaf_hidden",
+          "djonah_thaan",
+          "donnok"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        1,
+        9
+      ],
+      "rounds": 8,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 0,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "djonah_thaan",
+          "donnok",
+          "leaf_hidden"
+        ],
+        [
+          "grimm_bow",
+          "juul_i_yaina",
+          "ha_rekt"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        8
+      ],
+      "rounds": 10,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 0,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "grimm_bow",
+          "juul_i_yaina",
+          "ha_rekt"
+        ],
+        [
+          "djonah_thaan",
+          "donnok",
+          "leaf_hidden"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        6
+      ],
+      "rounds": 10,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 0,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "djonah_thaan",
+          "donnok",
+          "leaf_hidden"
+        ],
+        [
+          "grimm_bow",
+          "juul_i_yaina",
+          "ha_rekt"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        8,
+        11
+      ],
+      "rounds": 13,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 0,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "grimm_bow",
+          "juul_i_yaina",
+          "ha_rekt"
+        ],
+        [
+          "djonah_thaan",
+          "donnok",
+          "leaf_hidden"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        11,
+        8
+      ],
+      "rounds": 13,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 1,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "biggy_bob",
+          "s_wayne",
+          "spai_si"
+        ],
+        [
+          "oll_i",
+          "fimu_yashiha",
+          "joh_haynes"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        1,
+        9
+      ],
+      "rounds": 9,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 1,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "oll_i",
+          "fimu_yashiha",
+          "joh_haynes"
+        ],
+        [
+          "biggy_bob",
+          "s_wayne",
+          "spai_si"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        1
+      ],
+      "rounds": 9,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 1,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "biggy_bob",
+          "s_wayne",
+          "spai_si"
+        ],
+        [
+          "oll_i",
+          "fimu_yashiha",
+          "joh_haynes"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        4
+      ],
+      "rounds": 10,
+      "firstScoreRound": 2
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 1,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "oll_i",
+          "fimu_yashiha",
+          "joh_haynes"
+        ],
+        [
+          "biggy_bob",
+          "s_wayne",
+          "spai_si"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 10,
+      "firstScoreRound": 2
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 1,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "s_wayne",
+          "spai_si",
+          "biggy_bob"
+        ],
+        [
+          "fimu_yashiha",
+          "joh_haynes",
+          "oll_i"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        9
+      ],
+      "rounds": 11,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 1,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "fimu_yashiha",
+          "joh_haynes",
+          "oll_i"
+        ],
+        [
+          "s_wayne",
+          "spai_si",
+          "biggy_bob"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        5
+      ],
+      "rounds": 11,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 1,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "s_wayne",
+          "spai_si",
+          "biggy_bob"
+        ],
+        [
+          "fimu_yashiha",
+          "joh_haynes",
+          "oll_i"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 12,
+      "firstScoreRound": 7
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 1,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "fimu_yashiha",
+          "joh_haynes",
+          "oll_i"
+        ],
+        [
+          "s_wayne",
+          "spai_si",
+          "biggy_bob"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        6
+      ],
+      "rounds": 12,
+      "firstScoreRound": 7
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 1,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "spai_si",
+          "biggy_bob",
+          "s_wayne"
+        ],
+        [
+          "joh_haynes",
+          "oll_i",
+          "fimu_yashiha"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        5
+      ],
+      "rounds": 10,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 1,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "joh_haynes",
+          "oll_i",
+          "fimu_yashiha"
+        ],
+        [
+          "spai_si",
+          "biggy_bob",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        9
+      ],
+      "rounds": 10,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 1,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "spai_si",
+          "biggy_bob",
+          "s_wayne"
+        ],
+        [
+          "joh_haynes",
+          "oll_i",
+          "fimu_yashiha"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        4
+      ],
+      "rounds": 12,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 1,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "joh_haynes",
+          "oll_i",
+          "fimu_yashiha"
+        ],
+        [
+          "spai_si",
+          "biggy_bob",
+          "s_wayne"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 12,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 2,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "h_le_ne",
+          "treevor_mason",
+          "steezo"
+        ],
+        [
+          "urzh",
+          "oh_tipi",
+          "luuh_i_zeh"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        11,
+        10
+      ],
+      "rounds": 13,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 2,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "urzh",
+          "oh_tipi",
+          "luuh_i_zeh"
+        ],
+        [
+          "h_le_ne",
+          "treevor_mason",
+          "steezo"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        10,
+        11
+      ],
+      "rounds": 13,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 2,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "h_le_ne",
+          "treevor_mason",
+          "steezo"
+        ],
+        [
+          "urzh",
+          "oh_tipi",
+          "luuh_i_zeh"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        11,
+        9
+      ],
+      "rounds": 13,
+      "firstScoreRound": 1
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 2,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "urzh",
+          "oh_tipi",
+          "luuh_i_zeh"
+        ],
+        [
+          "h_le_ne",
+          "treevor_mason",
+          "steezo"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        9,
+        11
+      ],
+      "rounds": 13,
+      "firstScoreRound": 1
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 2,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "treevor_mason",
+          "steezo",
+          "h_le_ne"
+        ],
+        [
+          "oh_tipi",
+          "luuh_i_zeh",
+          "urzh"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 9,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 2,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "oh_tipi",
+          "luuh_i_zeh",
+          "urzh"
+        ],
+        [
+          "treevor_mason",
+          "steezo",
+          "h_le_ne"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        4
+      ],
+      "rounds": 9,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 2,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "treevor_mason",
+          "steezo",
+          "h_le_ne"
+        ],
+        [
+          "oh_tipi",
+          "luuh_i_zeh",
+          "urzh"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        8
+      ],
+      "rounds": 12,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 2,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "oh_tipi",
+          "luuh_i_zeh",
+          "urzh"
+        ],
+        [
+          "treevor_mason",
+          "steezo",
+          "h_le_ne"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        4
+      ],
+      "rounds": 12,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 2,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "steezo",
+          "h_le_ne",
+          "treevor_mason"
+        ],
+        [
+          "luuh_i_zeh",
+          "urzh",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        5,
+        8
+      ],
+      "rounds": 9,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 2,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "luuh_i_zeh",
+          "urzh",
+          "oh_tipi"
+        ],
+        [
+          "steezo",
+          "h_le_ne",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        5
+      ],
+      "rounds": 9,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 2,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "steezo",
+          "h_le_ne",
+          "treevor_mason"
+        ],
+        [
+          "luuh_i_zeh",
+          "urzh",
+          "oh_tipi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        0,
+        9
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 2,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "luuh_i_zeh",
+          "urzh",
+          "oh_tipi"
+        ],
+        [
+          "steezo",
+          "h_le_ne",
+          "treevor_mason"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        0
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 3,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "sai_laas",
+          "ba_djoh",
+          "nico_lai"
+        ],
+        [
+          "haara",
+          "hesus_christo",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        6
+      ],
+      "rounds": 9,
+      "firstScoreRound": 1
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 3,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "haara",
+          "hesus_christo",
+          "grace_reava"
+        ],
+        [
+          "sai_laas",
+          "ba_djoh",
+          "nico_lai"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        9
+      ],
+      "rounds": 9,
+      "firstScoreRound": 1
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 3,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "sai_laas",
+          "ba_djoh",
+          "nico_lai"
+        ],
+        [
+          "haara",
+          "hesus_christo",
+          "grace_reava"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        10,
+        0
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 3,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "haara",
+          "hesus_christo",
+          "grace_reava"
+        ],
+        [
+          "sai_laas",
+          "ba_djoh",
+          "nico_lai"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        0,
+        10
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 3,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "ba_djoh",
+          "nico_lai",
+          "sai_laas"
+        ],
+        [
+          "hesus_christo",
+          "grace_reava",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        1
+      ],
+      "rounds": 9,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 3,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "hesus_christo",
+          "grace_reava",
+          "haara"
+        ],
+        [
+          "ba_djoh",
+          "nico_lai",
+          "sai_laas"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        1,
+        8
+      ],
+      "rounds": 9,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 3,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "ba_djoh",
+          "nico_lai",
+          "sai_laas"
+        ],
+        [
+          "hesus_christo",
+          "grace_reava",
+          "haara"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        0
+      ],
+      "rounds": 6,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 3,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "hesus_christo",
+          "grace_reava",
+          "haara"
+        ],
+        [
+          "ba_djoh",
+          "nico_lai",
+          "sai_laas"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        0,
+        9
+      ],
+      "rounds": 6,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 3,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "nico_lai",
+          "sai_laas",
+          "ba_djoh"
+        ],
+        [
+          "grace_reava",
+          "haara",
+          "hesus_christo"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        1
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 3,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "haara",
+          "hesus_christo"
+        ],
+        [
+          "nico_lai",
+          "sai_laas",
+          "ba_djoh"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        1,
+        9
+      ],
+      "rounds": 9,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 3,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "nico_lai",
+          "sai_laas",
+          "ba_djoh"
+        ],
+        [
+          "grace_reava",
+          "haara",
+          "hesus_christo"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        0
+      ],
+      "rounds": 13,
+      "firstScoreRound": 10
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 3,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "grace_reava",
+          "haara",
+          "hesus_christo"
+        ],
+        [
+          "nico_lai",
+          "sai_laas",
+          "ba_djoh"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        0,
+        9
+      ],
+      "rounds": 13,
+      "firstScoreRound": 10
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 4,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "dr_apex",
+          "red_baron",
+          "jan_wicked"
+        ],
+        [
+          "fluup",
+          "faab_i_yaina",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        0,
+        8
+      ],
+      "rounds": 6,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 4,
+      "deployment": 0,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "fluup",
+          "faab_i_yaina",
+          "wa_bidi"
+        ],
+        [
+          "dr_apex",
+          "red_baron",
+          "jan_wicked"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        0
+      ],
+      "rounds": 6,
+      "firstScoreRound": 3
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 4,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "dr_apex",
+          "red_baron",
+          "jan_wicked"
+        ],
+        [
+          "fluup",
+          "faab_i_yaina",
+          "wa_bidi"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        6,
+        8
+      ],
+      "rounds": 11,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 4,
+      "deployment": 0,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "fluup",
+          "faab_i_yaina",
+          "wa_bidi"
+        ],
+        [
+          "dr_apex",
+          "red_baron",
+          "jan_wicked"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        6
+      ],
+      "rounds": 11,
+      "firstScoreRound": 5
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 4,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "red_baron",
+          "jan_wicked",
+          "dr_apex"
+        ],
+        [
+          "faab_i_yaina",
+          "wa_bidi",
+          "fluup"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        4,
+        9
+      ],
+      "rounds": 8,
+      "firstScoreRound": 1
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 4,
+      "deployment": 1,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "faab_i_yaina",
+          "wa_bidi",
+          "fluup"
+        ],
+        [
+          "red_baron",
+          "jan_wicked",
+          "dr_apex"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        4
+      ],
+      "rounds": 8,
+      "firstScoreRound": 1
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 4,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "red_baron",
+          "jan_wicked",
+          "dr_apex"
+        ],
+        [
+          "faab_i_yaina",
+          "wa_bidi",
+          "fluup"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        9,
+        8
+      ],
+      "rounds": 13,
+      "firstScoreRound": 6
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 4,
+      "deployment": 1,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "faab_i_yaina",
+          "wa_bidi",
+          "fluup"
+        ],
+        [
+          "red_baron",
+          "jan_wicked",
+          "dr_apex"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        8,
+        9
+      ],
+      "rounds": 13,
+      "firstScoreRound": 6
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 4,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": false,
+      "rosters": [
+        [
+          "jan_wicked",
+          "dr_apex",
+          "red_baron"
+        ],
+        [
+          "wa_bidi",
+          "fluup",
+          "faab_i_yaina"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        7,
+        8
+      ],
+      "rounds": 11,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 4,
+      "deployment": 2,
+      "profile": "default",
+      "swapped": true,
+      "rosters": [
+        [
+          "wa_bidi",
+          "fluup",
+          "faab_i_yaina"
+        ],
+        [
+          "jan_wicked",
+          "dr_apex",
+          "red_baron"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        7
+      ],
+      "rounds": 11,
+      "firstScoreRound": 4
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 4,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": false,
+      "rosters": [
+        [
+          "jan_wicked",
+          "dr_apex",
+          "red_baron"
+        ],
+        [
+          "wa_bidi",
+          "fluup",
+          "faab_i_yaina"
+        ]
+      ],
+      "winner": 0,
+      "scores": [
+        8,
+        3
+      ],
+      "rounds": 15,
+      "firstScoreRound": 6
+    },
+    {
+      "policy": "reserve-and-hold",
+      "pair": 4,
+      "deployment": 2,
+      "profile": "catalog",
+      "swapped": true,
+      "rosters": [
+        [
+          "wa_bidi",
+          "fluup",
+          "faab_i_yaina"
+        ],
+        [
+          "jan_wicked",
+          "dr_apex",
+          "red_baron"
+        ]
+      ],
+      "winner": 1,
+      "scores": [
+        3,
+        8
+      ],
+      "rounds": 15,
+      "firstScoreRound": 6
+    }
+  ]
+}

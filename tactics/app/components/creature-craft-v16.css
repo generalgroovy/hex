@@ -1,0 +1,14 @@
+/* Living details use discrete pixel positions; feet and solid bodies stay planted. */
+.elemental-creature.ec-crafted .ec-body{stroke-width:1;paint-order:stroke fill}
+.elemental-creature.ec-crafted .ec-tail{animation:ec-crafted-tail 9s var(--ec-life-phase,0s) steps(1,end) infinite;transform-origin:0 0}
+.elemental-creature.ec-crafted .ec-wing{animation:ec-crafted-feather 11s var(--ec-life-phase,0s) steps(1,end) infinite;transform-origin:0 0}
+.elemental-creature.ec-crafted.ec-moth .ec-wing{animation:ec-crafted-moth 1000ms var(--ec-life-phase,0s) steps(1,end) infinite}
+.elemental-creature.ec-crafted .ec-ember{animation:ec-crafted-ember 1400ms var(--ec-life-phase,0s) steps(1,end) infinite}
+.elemental-creature.ec-crafted .ec-ready{animation:ec-crafted-ready 2200ms steps(1,end) infinite}
+@keyframes ec-crafted-tail{0%,72%,100%{transform:none}80%{transform:translate(1px,-1px)}88%{transform:translate(0,-1px)}94%{transform:none}}
+@keyframes ec-crafted-feather{0%,82%,100%{transform:none}87%{transform:translate(0,-1px)}93%{transform:translate(1px,0)}}
+@keyframes ec-crafted-moth{0%,100%{transform:translate(0,-1px)}25%{transform:none}50%{transform:translate(0,1px)}75%{transform:none}}
+@keyframes ec-crafted-ember{0%,100%{opacity:.8;transform:none}33%{opacity:1;transform:translate(0,-1px)}66%{opacity:.9;transform:none}}
+@keyframes ec-crafted-ready{0%,100%{opacity:.55}35%,70%{opacity:1}}
+.elemental-creature.ec-crafted.is-paused *{animation:none!important;transform:none!important}
+@media(prefers-reduced-motion:reduce){.elemental-creature.ec-crafted *{animation:none!important;transform:none!important}.elemental-creature.ec-crafted .ec-ready{opacity:1}}

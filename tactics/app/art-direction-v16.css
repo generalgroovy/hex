@@ -1,0 +1,359 @@
+/* Current Confluence client: evergreen lacquer, warm paper and etched brass.
+   Retained rules clients keep their original appearance and layout. */
+.tactics.tx-v16.tx-v16.tx-v16{
+ --ink:#233b34;--muted:#586157;--paper:#f2eee3;--paper-light:#fffaf0;--paper-aged:#e5dfcc;
+ --line:#b5ac90;--moss:#31584b;--green:#416e5b;--brass:#997a39;--gold:#997a39;
+ --ui-shell:#203f35;--ui-shell-deep:#173229;--ui-paper:#fffaf0;--ui-divider:#d7d0bc;
+ color:var(--ink);background:#e9e8dc;font-family:'Trebuchet MS',Arial,sans-serif;
+}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-header{background:var(--ui-shell-deep);color:#fff4d5;border-bottom:2px solid #a78e53;box-shadow:0 2px 0 #19392d}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-header .tx-brand{color:#f7ebc7;gap:8px}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-header .tx-brand>span:first-child{color:#f7ebc7}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-brand strong{font:600 23px/1 'Confluence Pixel',monospace;letter-spacing:.07em}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-brand svg{color:#c2b67c}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-header nav button{color:#f7edce;border-radius:4px}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-header nav button:hover{background:#36564a}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-header nav button[aria-pressed=true]{color:#ffe3a4;background:#36564a}
+.tactics.tx-v16.tx-v16.tx-v16 button{transition:background-color 100ms ease,border-color 100ms ease,box-shadow 100ms ease}
+.tactics.tx-v16.tx-v16.tx-v16 button:disabled{opacity:.58}
+.tactics.tx-v16.tx-v16.tx-v16 button:focus-visible,.tactics.tx-v16.tx-v16.tx-v16 input:focus-visible,.tactics.tx-v16.tx-v16.tx-v16 select:focus-visible,.tactics.tx-v16.tx-v16.tx-v16 summary:focus-visible{outline:3px solid #be8e32;outline-offset:2px}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-primary{background:#31584b;color:#fff4d4;border-color:#1f3c32;border-radius:5px;box-shadow:inset 0 1px #ffffff26,0 2px 0 #1a342a;font-weight:700}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-primary:hover:not(:disabled){background:#426e5b}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-primary:active:not(:disabled){transform:none;box-shadow:inset 0 2px 0 #19352b}
+.tactics.tx-v16.tx-v16.tx-v16 input,.tactics.tx-v16.tx-v16.tx-v16 select{accent-color:#31584b;border-color:#afa789;background:#fffcf4;color:#263d34}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-glyph{filter:none}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-unit-accessible{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-mobile-inspect{display:none}
+/* Paused interface portraits always show the front idle cell. Percentage atlas
+   dimensions keep the complete cell when responsive CSS changes the socket. */
+.tactics.tx-v16.tx-v16.tx-v16 .tx-camp .px-champion.px-paused,
+.tactics.tx-v16.tx-v16.tx-v16 .tx-dialog .px-champion.px-paused,
+.tactics.tx-v16.tx-v16.tx-v16 .tx-unit-visual .px-champion.px-paused,
+.tactics.tx-v16.tx-v16.tx-v16 .tx-resolution-portrait .px-champion.px-paused{background-size:800% 400%;background-position:0 0}
+
+/* Character identity leads the camp. Three silhouettes, one editable kit. */
+.tactics.tx-v16.tx-v16.tx-v16 .tx-camp{max-width:1360px;gap:28px;padding:16px 28px;grid-template-areas:none;grid-template-rows:minmax(0,1fr);background:linear-gradient(90deg,#e3e5d7 0,#eeeee3 43%,#f3efe3 100%)}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-camp>.tx-play-setup{grid-area:1 / 1 / 2 / 2;min-width:0;min-height:0}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-camp>.tx-assembly{grid-area:1 / 2 / 2 / 3;min-width:0;min-height:0}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-company-heading{min-height:42px;border-bottom:1px solid #c4c4ad;padding-bottom:5px}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-company-heading h1{font:600 27px/1.1 'Confluence Pixel',monospace;color:#254c3e;letter-spacing:.015em}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-company-heading>strong{display:flex;gap:5px;align-items:baseline;padding:5px 8px;border-radius:4px;background:#dce5d7;color:#315343}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-mode-tabs{padding:4px;background:#d7ddcc;border:1px solid #b3bea8;border-radius:7px;gap:2px}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-mode-tabs>button{color:#4f5f4d;background:transparent;box-shadow:none;border:0}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-mode-tabs>button[aria-pressed=true]{background:#31584b;color:#fff4d4;box-shadow:0 1px 2px #263c3426}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs{gap:7px}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs .cx-identity{height:86px;min-height:86px;padding:4px 7px;gap:5px;border:1px solid #b5bca9;border-radius:6px;background:#f8f4e7;box-shadow:inset 0 1px #fffdf5}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs .cx-identity>.px-champion{display:block;flex:0 0 66px;max-width:66px;align-self:center}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs .cx-identity[aria-pressed=true]{background:#31584b;border-color:#1b3c2e;box-shadow:inset 0 -3px #ad9251;color:#fff4d7}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs .cx-identity[aria-pressed=true] small{color:#dedec3}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs b{font-size:13px;line-height:1.2}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs small{color:#5d6956;font-size:11px}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-member-detail{padding:14px;border:1px solid #b6b39b;border-top:3px solid #8b7949;border-radius:7px;background:#fffaf0;box-shadow:0 3px 9px #213b3010}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-member-detail>header h2{font:600 25px/1.1 'Confluence Pixel',monospace;color:#284c3c;letter-spacing:.01em}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-member-detail>header p{color:#62654f}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-member-detail>header button,.tactics.tx-v16.tx-v16.tx-v16 .cx-affinity-row>button{background:#edf0e2;border-color:#b6bba4;color:#34533f}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-affinity-row{padding:0 0 9px;margin:5px 0 9px;border-bottom:1px solid #e1dbc6}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-affinity-row>div>span{gap:4px}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-affinity-row b{font-size:15px;color:#2b4d3d}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16{gap:7px}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16>button{position:relative;min-height:91px;border-color:#d1cab5;border-left:3px solid var(--cx-element);background:#f3f0e4;padding:9px 19px 9px 9px;gap:8px}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16>button:hover:not(:disabled){background:#fffcf3;box-shadow:inset 0 0 0 1px #b0b79d}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16>button>svg{display:block;width:26px;height:26px;flex:none}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16 strong{font-size:13px;color:#263c31}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16 small{color:#5d6252;line-height:1.3}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16 .cx-slot-index{position:absolute;top:5px;right:6px;color:#6c745e;font-size:10px}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-signature-v16{background:#eee6c9;border-color:#b5a36c;box-shadow:inset 0 1px #fff5cf;padding:8px 11px}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-signature-v16>span{display:grid;gap:3px;flex:1}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-signature-v16>svg{flex:none}
+.tactics.tx-v16.tx-v16.tx-v16 .cx-signature-v16 small{color:#665b3e}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-team-coverage{color:#465d46;padding:3px 0;gap:10px}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-team-coverage>span{display:flex;align-items:center;gap:3px}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-team-help{color:#626650}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-team-help button{color:#345b48;font-weight:700;text-underline-offset:3px}
+.tactics.tx-v16.tx-v16.tx-v16 .story-journey-v16{background:#fffaf0;border-color:#b6b39b;border-top:3px solid #8b7949;box-shadow:0 3px 9px #213b3010;padding:14px}
+.tactics.tx-v16.tx-v16.tx-v16 .story-select{color:#56614d;font-weight:700}
+.tactics.tx-v16.tx-v16.tx-v16 .story-select select{font-size:15px;border-color:#b8bca5;background:#f5f4e7}
+.tactics.tx-v16.tx-v16.tx-v16 .story-character{background:linear-gradient(90deg,#e2e7d5,#f9f7ea);border-radius:5px;padding:2px 5px;margin:7px 0;gap:12px}
+.tactics.tx-v16.tx-v16.tx-v16 .story-character h3{font:600 26px/1.1 'Confluence Pixel',monospace;color:#284c3c}
+.tactics.tx-v16.tx-v16.tx-v16 .story-character p{color:#626650}
+.tactics.tx-v16.tx-v16.tx-v16 .story-affinities{color:#46563e}
+.tactics.tx-v16.tx-v16.tx-v16 .story-detail-v16{color:#424e3d;line-height:1.5}
+.tactics.tx-v16.tx-v16.tx-v16 .story-detail-v16>strong{color:#294b39}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-start-actions{margin-top:3px}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-start-actions>.tx-primary{min-height:50px}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-resume{border:1px solid #7b9275;background:#edf1e2;border-radius:5px;padding:8px 13px;color:#315440;font-weight:700}
+
+/* Battle controls read as a small command instrument, not a second board. */
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing{background:var(--ui-shell)}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-scoreboard{color:#f4ecd0}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-scoreboard .tx-team strong{color:#f4ecd0}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-team>div>small{color:#c8d2b9}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-team>b{display:inline-flex;flex:none;align-items:baseline;justify-content:center;gap:3px;padding:0 4px;line-height:1;font-family:'Confluence Pixel',monospace;color:#fff1bf;font-size:27px;font-variant-numeric:tabular-nums}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-team>b>small{display:inline;margin:0;padding:0;color:#d9ddbd;font:11px/1 Arial,sans-serif}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-team>span:first-child{color:#bcd3b0}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-team-1>span:first-child{color:#e4ae83}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-round{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:center;align-content:center;gap:2px 4px;width:100%;min-height:0;padding:2px 4px;line-height:1;text-align:center;color:#e0dfbd;border-color:#819276}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-round>small{flex:0 0 auto;margin:0;padding:0;font:9px/1 Arial,sans-serif;letter-spacing:.02em}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-round>b{flex:0 0 auto;margin:0;padding:0;font:700 24px/1 'Confluence Pixel',monospace;text-align:center}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-round>span{flex:0 0 100%;margin:0;padding:0;font:9px/1.1 Arial,sans-serif;text-align:center;color:#c8d2b9}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-orders{background:#e4e8d9;border-color:#a2ae94;border-top:3px solid #ac955f;border-radius:6px;padding:7px;gap:6px;box-shadow:0 3px 8px #102a2426}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-phase-rail{background:#f4f0df;border:1px solid #a7ad90;border-radius:5px}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-phase-rail ol{background:#edf0e0}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-phase-rail li{color:#626c57;border-color:transparent;font-weight:700;letter-spacing:.01em}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-phase-rail li[aria-current=step]{color:#fff5d8;background:#3a624e;border-color:#c2a35d}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-phase-rail p{color:#3e5442;background:#f8f4e5}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .px-board{border:1px solid #a5976e;border-radius:6px;box-shadow:0 3px 8px #102a2426}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .px-board .px-board-toolbar{background:#edeedc;color:#40563e;border-bottom:1px solid #bfc4a7}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .px-board .px-camera-tools button{border:0;background:transparent;color:#36583f;border-radius:4px}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .px-board .px-camera-tools button:hover{background:#d7e0c8}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .px-board .px-terrain-readout{background:#f3f0df;color:#3f503d;border-top:1px solid #c6c9ae}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-battle-company{gap:5px}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-battle-company>button{height:108px;min-height:108px;max-height:108px;display:flex;align-items:center;padding:4px;gap:0;border-color:#b9bfa7;background:#f5f3e4;border-radius:5px;overflow:hidden}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-battle-company>button.is-selected{background:#31584b;border-color:#254235;box-shadow:inset 0 -3px #b79c58;color:#fff2d5}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-visual{display:block;position:relative;width:48px;height:48px;flex:0 0 48px;margin:0}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-visual>.px-champion{position:absolute;left:-8px;top:-8px;width:64px!important;height:64px!important;max-width:none}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-visual>b{display:none}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-info{text-align:center}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-info strong{font-size:11px;line-height:1.2;color:inherit}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-info small{font-size:10px;color:#5b654f;margin:3px 0}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-battle-company>button.is-selected .tx-unit-info small{color:#e0e2c5}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-resources{display:block;font-size:10px;line-height:1.2;white-space:nowrap;color:#50634b;margin-bottom:4px}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-resources b{font-weight:700}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-battle-company>button.is-selected .tx-unit-resources{color:#f0e7c7}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-resource-bars{height:3px;display:flex;gap:3px}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-resource-bars>i{width:50%;height:3px;background:linear-gradient(to right,#6b8a49 var(--fill),#c4c9b2 var(--fill))}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-resource-bars>i:last-child{background:linear-gradient(to right,#478691 var(--fill),#c4c9b2 var(--fill))}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-order-mark{top:3px;right:4px;color:#657c5c;font-size:11px;line-height:1}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-order-mark.is-ordered{color:#294e3c;background:#dfe8c8;border-radius:2px;padding:2px}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-command-context{color:#40553f;border-bottom:1px solid #c3cbb3}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-command-context>strong{font-family:'Confluence Pixel',monospace;font-size:18px;color:#294d39}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-command-context>span{color:#52634a;font-size:11px}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-command-context>button{color:#31543f;font-weight:700}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-direct-spells .tx-battle-spells>button{background:#fffbef;border-color:#bec3aa;border-left-color:var(--element-color);border-radius:5px;box-shadow:0 1px 0 #fffdf4}
+/* A glyph is a square grid item, never a 23px text line containing an inline SVG.
+   Explicitly size both layers so icons cannot descend into the Flux row. */
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-direct-spells .tx-battle-spells>button>.tx-glyph{--battle-icon-size:20px;display:flex;align-items:center;justify-content:center;align-self:center;justify-self:center;width:var(--battle-icon-size);height:var(--battle-icon-size);min-width:0;min-height:0;padding:0;margin:0;font-size:0;line-height:0;vertical-align:initial}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-direct-spells .tx-battle-spells>button>.tx-glyph>svg{display:block!important;width:100%;height:100%;max-width:100%;max-height:100%;min-width:0;min-height:0;flex:none;line-height:0;vertical-align:initial}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-direct-spells .tx-battle-spells>button:last-child{background:#ede7ce;border-color:#baab7c;border-left-color:var(--element-color)}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-direct-spells .tx-battle-spells>button.is-active{background:#fffdf5;outline:2px solid var(--element-color);box-shadow:inset 0 -3px color-mix(in srgb,var(--element-color) 25%,transparent)}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-direct-spells .tx-battle-spells>button.is-unready{filter:none;background:#e4e7dc;color:#6b7260;border-left-style:dashed}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-direct-spells .tx-battle-spells>button>strong{color:#2f4537;font-size:12px}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-direct-spells .tx-battle-spells>button>.tx-action-meta{color:#5b6651}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-aim-summary{border-left:3px solid #6e8b5e;background:#f5f2e0;color:#36543c;border-radius:4px}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-aim-summary small{color:#56654c}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-aim-summary .tx-aim-warning{color:#994a29}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-aim-summary>button{font-weight:700;color:#34573e}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-quick-tools button{background:#edf0df;border-color:#b9c4a7;color:#4d6248}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-command-dock>button{background:#f6f4e6;border-color:#b4bca2;color:#36533d}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-command-dock>button[aria-pressed=true]{background:#d2dfc2;border-color:#688357;box-shadow:inset 0 -2px #6c8659}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-command-dock>.tx-lock{background:#31584b;border-color:#1c3a2e;color:#fff2ce;box-shadow:inset 0 1px #f6edc52e,0 2px 0 #213f32}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-command-dock>.tx-lock>.tx-readiness{color:#e2e4c6}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-resolution-character{background:#faf7e9;border-color:#c3c6ab;border-radius:4px}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-resolution-team h2{color:#34533e}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-resolution-action>strong{color:#2d4836}
+.tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-resolution-controls>button{border-radius:4px}
+
+/* Reference surfaces share the same paper, icon vocabulary and selected state. */
+.tactics.tx-v16.tx-v16.tx-v16 .tx-dialog{border:2px solid #718466;border-top:4px solid #9a8450;background:#fffaf0;box-shadow:0 20px 70px #0c281e70;color:#2d4436;border-radius:7px}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-dialog::backdrop{background:#102d26b8;backdrop-filter:blur(2px)}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-dialog-top{border-bottom:1px solid #d8d2ba;padding-bottom:5px}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-dialog-top h2{font:600 25px/1.1 'Confluence Pixel',monospace;color:#2a4f3a}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-dialog-top p{color:#626850}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-dialog-top button{color:#50654a}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-notebook-tabs{border-color:#bdc6aa;gap:3px}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-notebook-tabs>button{color:#5c6a50;border-radius:4px 4px 0 0;background:#efefe1}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-notebook-tabs>button[aria-pressed=true]{background:#31584b;color:#fff3d1;box-shadow:inset 0 -3px #b99e56}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-notebook-content h3,.tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-effect h3{font-family:'Confluence Pixel',monospace;font-size:22px;color:#2b513b}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-notebook-forecast,.tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-effect{background:#edf0e2;color:#40543f;border-color:#69845c}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-notebook-rivals button{background:#edf0e2;border:1px solid #c9cfb7}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-notebook-orders li,.tactics.tx-v16.tx-v16.tx-v16 .tx-notebook-log li{border-color:#d9d7c2}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-pagination button{border-color:#afba9e;background:#edf1e2;color:#3f5e44}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-roster-cards>article{background:#f2f2e5;border:1px solid #bdc6ad;border-top:3px solid #a99a67;border-radius:5px}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-roster-cards>article.is-recruited{background:#e6edd9;border-color:#9dab84}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-roster-cards header>.px-champion{width:74px!important;height:74px!important}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-roster-cards h3{font:600 21px/1.1 'Confluence Pixel',monospace;color:#294d38}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-roster-moves li{border-color:#d4d7bf}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-library-slots button{background:#edf0e1;border:1px solid #bcc7a9;color:#4a5b40;border-radius:4px}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-library-slots button[aria-pressed=true]{background:#31584b;color:#fff4d4;border-color:#284d38;box-shadow:inset 0 -3px #b59b58}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-library-slots button[aria-pressed=true]>.tx-glyph{background:#fff4d5;border-radius:3px;padding:2px}
+.tactics.tx-v16.tx-v16.tx-v16 .affinity-training-label>small{display:inline-flex;align-items:center;gap:3px;color:#5b634e}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-spell-catalogue>button{background:#f1f2e5;border-color:#c2c8ad;border-top-color:var(--element-color);color:#314833;opacity:1}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-spell-catalogue>button.is-affinity-locked{background:#e7e8dc;border-color:#c2c8ad;opacity:1;filter:none}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-spell-catalogue>button.is-affinity-locked>small{color:#80532e}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-spell-catalogue h3{font-family:'Confluence Pixel',monospace;font-size:22px;color:#294c38}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-spell-catalogue p{color:#44513c}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-identity strong{font:600 26px/1.1 'Confluence Pixel',monospace;color:#2e513a}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-spells button{background:#eff0e3;border-color:#bbc6a7;color:#43543d}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-spells button[aria-pressed=true]{background:#dbe6ca;border-color:#738a5f;box-shadow:inset 0 -2px #738a5f}
+.tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-statuses>span{background:#f0e7cc;border-color:#b7a674;color:#695131}
+
+/* Height changes are intentional and bounded. Portraits never replace controls. */
+@media(max-width:1100px){
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-camp{padding:12px;gap:15px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs .cx-identity{height:80px;min-height:80px;flex-direction:column;justify-content:center;gap:1px;padding:3px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs .cx-identity>.px-champion{width:44px!important;height:44px!important;flex:0 0 44px;max-width:44px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs .cx-identity>span{gap:1px;text-align:center;width:100%}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs b{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs small{font-size:10px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-member-detail{padding:9px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-member-detail>header h2{font-size:23px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16>button{padding:7px 15px 7px 6px;gap:5px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16>button>svg{width:21px;height:21px}
+}
+@media(max-width:599px) and (orientation:portrait){
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-camp-tabs{background:#dce3d1;border-color:#b0bea1}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-camp-tabs button{color:#4b6245}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-camp-tabs button[aria-pressed=true]{background:#31584b;color:#fff2cf;box-shadow:inset 0 -2px #b8a265}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-camp{padding:7px;background:#ececdf}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-company-heading{min-height:36px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-company-heading h1{font-size:24px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs{gap:4px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-member-detail{padding:8px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-member-detail>header p{font-size:11px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-affinity-row{margin:2px 0 6px;padding-bottom:4px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16>button{min-height:86px;padding:6px 14px 6px 5px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16 strong{font-size:12px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16 small{font-size:10px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16>button>svg{width:18px;height:18px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-signature-v16{min-height:64px;margin-top:6px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-team-coverage{gap:5px;font-size:10px}
+ .tactics.tx-v16.tx-v16.tx-v16 .story-journey-v16{padding:8px}
+ .tactics.tx-v16.tx-v16.tx-v16 .story-character{padding:1px 4px;margin:5px 0;gap:5px}
+ .tactics.tx-v16.tx-v16.tx-v16 .story-character h3{font-size:24px}
+ .tactics.tx-v16.tx-v16.tx-v16 .story-detail-v16{min-height:140px;font-size:11px;line-height:1.4}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-dialog-top h2{font-size:22px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-roster-cards header{display:flex;flex-direction:row;align-items:center;gap:3px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-roster-cards header>.px-champion{display:block;width:42px!important;height:42px!important;flex:0 0 42px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-roster-cards header>div{min-width:0}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-roster-cards h3{font-size:17px;min-height:0;overflow-wrap:anywhere}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-roster-cards header p{font-size:10px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-spell-catalogue h3{font-size:20px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-identity strong{font-size:22px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-effect h3{font-size:21px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-orders{padding:4px;gap:4px;border-top-width:2px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-battle-company{gap:3px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-battle-company>button{height:66px;min-height:66px;max-height:66px;flex-direction:row;padding:3px;gap:1px;align-items:center}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-visual{width:30px;height:42px;flex:0 0 30px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-visual>.px-champion{width:44px!important;height:44px!important;top:-1px;left:-7px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-info{text-align:left}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-info strong{font-size:10px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-info small{font-size:9px;line-height:1.15;margin:3px 0}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-resources{font-size:9px;margin-bottom:3px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-command-context{display:none}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-mobile-inspect{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-direct-spells .tx-battle-spells>button>strong{font-size:11px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-direct-spells .tx-battle-spells>button>.tx-glyph{--battle-icon-size:15px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-direct-spells .tx-battle-spells>button>.tx-action-meta{font-size:10px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-aim-summary{min-height:44px;padding:2px 5px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-team>b{font-size:23px}
+}
+@media(orientation:landscape) and (max-height:600px){
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-camp-tabs{display:flex;gap:4px;padding:2px 7px;background:#dce3d1;border-bottom:1px solid #b0bea1}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-camp-tabs button{flex:1;min-height:44px;font-size:12px;border-radius:4px;color:#4b6245}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-camp-tabs button[aria-pressed=true]{background:#31584b;color:#fff2cf;box-shadow:inset 0 -2px #b8a265}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-camp{display:block;width:100%;padding:7px;min-height:0}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-camp[data-camp-pane=play] .tx-assembly,.tactics.tx-v16.tx-v16.tx-v16 .tx-camp[data-camp-pane=team] .tx-play-setup{display:none}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-camp>.tx-assembly{max-height:none}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-company-heading,.tactics.tx-v16.tx-v16.tx-v16 .tx-team-coverage,.tactics.tx-v16.tx-v16.tx-v16 .tx-team-help{display:none}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-company-v16{display:grid;grid-template-columns:175px minmax(0,1fr);gap:8px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs{grid-template-columns:1fr;gap:4px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs .cx-identity{flex-direction:row;height:auto;min-height:70px;padding:3px 7px;gap:7px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs .cx-identity>.px-champion{width:58px!important;height:58px!important;flex-basis:58px;max-width:58px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-team-tabs .cx-identity>span{text-align:left;width:auto}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-member-detail{padding:6px 9px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-member-detail>header h2{font-size:22px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-member-detail>header p{font-size:11px;margin-top:2px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-affinity-row{padding:0;margin:0 0 4px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-affinity-row>div>span>span{display:inline}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16{gap:5px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16>button{min-height:58px;padding:5px 15px 5px 8px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16>button>span>small:first-of-type{display:none}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-kit-v16>button>span{gap:3px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-signature-v16{min-height:44px;margin-top:5px;padding:4px 9px}
+ .tactics.tx-v16.tx-v16.tx-v16 .cx-signature-v16>span>small:last-child{display:none}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-play-setup{display:grid;grid-template-columns:110px minmax(0,1fr);gap:5px 8px;align-items:start;max-height:none}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-camp>.tx-play-setup{position:relative}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-mode-tabs{grid-column:1;grid-row:1/8;grid-template-columns:1fr;gap:2px;padding:3px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-play-setup>*:not(.tx-mode-tabs){grid-column:2}
+ .tactics.tx-v16.tx-v16.tx-v16 .story-journey-v16{display:grid;grid-template-columns:190px minmax(0,1fr);grid-template-rows:auto 1fr;gap:5px 12px;padding:8px}
+ .tactics.tx-v16.tx-v16.tx-v16 .story-select{grid-column:1;grid-row:1}
+ .tactics.tx-v16.tx-v16.tx-v16 .story-character{grid-column:1;grid-row:2;flex-direction:column;gap:0;padding:0;margin:0;text-align:center;background:#eaf0de}
+ .tactics.tx-v16.tx-v16.tx-v16 .story-character>.px-champion{width:68px!important;height:68px!important}
+ .tactics.tx-v16.tx-v16.tx-v16 .story-character h3{font-size:20px}
+ .tactics.tx-v16.tx-v16.tx-v16 .story-character p{font-size:11px}
+ .tactics.tx-v16.tx-v16.tx-v16 .story-affinities{font-size:10px;gap:4px;margin-top:3px;justify-content:center}
+ .tactics.tx-v16.tx-v16.tx-v16 .story-affinities svg{width:14px;height:14px}
+ .tactics.tx-v16.tx-v16.tx-v16 .story-journey-v16>.tx-notebook-tabs{grid-column:2;grid-row:1;margin:0;align-self:start}
+ .tactics.tx-v16.tx-v16.tx-v16 .story-detail-v16{grid-column:2;grid-row:2;min-height:140px;font-size:11px;line-height:1.3}
+ .tactics.tx-v16.tx-v16.tx-v16 .story-detail-v16 p{margin:5px 0}
+ .tactics.tx-v16.tx-v16.tx-v16 .story-detail-v16[data-story-panel=challenge]>p:first-of-type{display:none}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-start-actions{margin:0}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-start-actions>.tx-primary{min-height:44px;padding:7px 11px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-play-setup>.tx-older-saves{position:fixed;left:7px;bottom:7px;width:110px;margin:0;z-index:12;border:1px solid #aebc9e;border-radius:4px;background:#f5f4e6}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-older-saves>summary{min-height:44px;padding:3px 7px;gap:5px;font-size:11px;color:#3a563c}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-older-saves[open]>.tx-save-links{position:absolute;left:calc(100% + 8px);bottom:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;width:min(620px,calc(100vw - 145px));max-height:calc(100dvh - 105px);overflow:auto;margin:0;padding:8px;gap:5px;border:2px solid #718466;border-top:3px solid #a28a50;border-radius:5px;background:#fffaf0;box-shadow:0 8px 25px #183a3154}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-save-links>a{display:flex;align-items:center;min-height:44px;padding:5px 7px;font-size:11px;line-height:1.25;border:1px solid #c1cbb2;background:#eff2e3;color:#32533b;border-radius:4px}
+
+ /* Reference dialogs spread horizontally on a short screen; every field and
+    spell description remains in the document instead of being line-clamped. */
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-unit-dialog,.tactics.tx-v16.tx-v16.tx-v16 .tx-candidate{width:min(960px,calc(100vw - 16px));padding:8px;max-height:calc(100dvh - 12px)}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-unit-dialog>.tx-dialog-top,.tactics.tx-v16.tx-v16.tx-v16 .tx-candidate>.tx-dialog-top{min-height:44px;height:44px;padding:0;margin:0 0 5px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-character-sheet{display:grid;grid-template-columns:280px minmax(0,1fr);grid-template-rows:auto auto 1fr;gap:5px 12px;align-items:start}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-identity{grid-area:1 / 1 / 2 / 2;margin:0;gap:5px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-identity>.px-champion{width:62px!important;height:62px!important}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-identity strong{font-size:21px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-identity small{font-size:11px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-affinities{gap:3px 7px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-affinities>span{font-size:10px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-statuses{grid-area:2 / 1 / 3 / 2;margin:0;gap:3px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-statuses>span{font-size:10px;padding:2px 5px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-spells{grid-area:3 / 1 / 4 / 2;grid-template-columns:1fr 1fr;gap:4px;margin:0}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-spells button{height:44px;min-height:44px;padding:4px;font-size:11px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-effect{grid-area:1 / 2 / 4 / 3;margin:0;padding:8px;min-width:0}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-effect h3{font-size:21px;margin-bottom:5px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-effect p{font-size:11px;line-height:1.35;margin:5px 0}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-sheet-effect small{font-size:10px;line-height:1.3;margin-top:4px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-candidate .tx-recruit-confirm{min-height:44px;height:44px;margin-top:5px;padding:5px 10px}
+
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library[open]{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:44px 44px 57px auto minmax(0,1fr) 44px;gap:3px 6px;width:min(960px,calc(100vw - 16px));height:calc(100dvh - 12px);max-height:calc(100dvh - 12px);padding:6px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-dialog-top{grid-area:1 / 1 / 2 / 7;min-width:0;height:44px;min-height:44px;margin:0;padding:0}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-dialog-top>div{min-width:0}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-dialog-top h2{font-size:22px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-dialog-top p{font-size:10px;line-height:1.15;margin-top:2px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-library-slots{grid-area:2 / 1 / 3 / 7;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:0;min-width:0}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library-slots>button{display:flex;flex-direction:row;align-items:center;justify-content:center;min-width:0;min-height:44px;height:44px;padding:4px;gap:4px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library-slots>button>strong{display:block;width:auto;max-width:none;min-width:0;grid-area:auto;font:700 11px/1.2 Arial,sans-serif;white-space:normal;word-break:normal;overflow-wrap:normal}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-catalogue-controls{grid-area:3 / 1 / 4 / 5;display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0;min-width:0;align-items:stretch}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-catalogue-controls label{display:grid;grid-template-rows:11px 44px;gap:2px;font-size:10px;line-height:1.1;min-width:0}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-filter-select{grid-area:3 / 5 / 4 / 7;display:grid;grid-template-rows:11px 44px;gap:2px;margin:0;font-size:10px;line-height:1.1;min-width:0}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library input,.tactics.tx-v16.tx-v16.tx-v16 .tx-library select{min-height:44px;height:44px;margin:0;padding:4px 7px;font-size:12px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-library-feedback{grid-area:4 / 1 / 5 / 7;min-height:13px;margin:0;font-size:10px;line-height:1.2}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-spell-catalogue{grid-area:5 / 1 / 6 / 7;display:grid;grid-template-columns:1fr 1fr;gap:6px;min-height:0;margin:0;align-items:stretch}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library .tx-spell-catalogue>button{min-height:0;height:100%;padding:6px;gap:2px;align-content:start}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library .tx-spell-catalogue>button>div{min-width:0}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library .tx-spell-catalogue h3{font-size:19px;line-height:1.1}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library .tx-spell-level{font-size:9px;line-height:1.1;margin-top:2px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library .tx-spell-catalogue>button>span{font-size:10px;line-height:1.2;margin:1px 0}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library .tx-spell-catalogue p{font-size:11px;line-height:1.25;margin:3px 0}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library .tx-spell-catalogue>button>small{font-size:10px;line-height:1.2}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-result-count{grid-area:6 / 1 / 7 / 3;display:flex;gap:3px;align-items:center;margin:0;font-size:9px;min-width:0}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-result-count>span{max-width:55px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-result-count>button{flex:1;min-width:0;min-height:44px;font-size:10px;line-height:1.15;padding:3px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-pagination{grid-area:6 / 3 / 7 / 5;min-width:0;margin:0;gap:3px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-pagination button{min-width:65px;padding:3px;font-size:10px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-library-done{grid-area:6 / 5 / 7 / 7;min-height:44px;height:44px;margin:0;padding:5px;font-size:12px}
+ .tactics.tx-v16.tx-v16.tx-v16 .tx-library>.tx-empty-state{grid-area:5 / 1 / 6 / 7;margin:0;padding:10px;font-size:12px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-orders{padding:4px;gap:3px;border-top-width:2px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-mobile-inspect{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-battle-company{gap:3px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-battle-company>button{height:46px;min-height:46px;max-height:46px;flex-direction:row;gap:0;padding:2px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-visual{width:25px;height:36px;flex:0 0 25px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-visual>.px-champion{width:36px!important;height:36px!important;top:0;left:-5px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-info{text-align:left}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-info strong{font-size:9px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-info small{display:none}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-unit-resources{font-size:9px;margin:3px 0}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-direct-spells .tx-battle-spells>button>strong{font-size:10px}
+ .tactics.tx-v16.tx-v16.tx-v16.tx-playing .tx-direct-spells .tx-battle-spells>button>.tx-glyph{--battle-icon-size:13px}
+}
+@media(prefers-reduced-motion:reduce){.tactics.tx-v16.tx-v16.tx-v16 button{transition:none}}

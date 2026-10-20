@@ -1,0 +1,96 @@
+/* Rules 12: one planning surface, a larger world, details available on demand. */
+.tactics.tx-v12 .tx-battle{max-width:1640px;padding-top:8px}
+.tactics.tx-v12 .tx-battle-grid{grid-template-columns:minmax(0,1fr) 320px;gap:12px}
+.tactics.tx-v12 .tx-scoreboard{max-width:920px;margin:0 auto 4px;padding:0;min-height:55px}
+.tactics.tx-v12 .tx-team>div>small{display:block;font:11px/1.4 Arial,sans-serif;text-transform:none;letter-spacing:0}
+.tactics.tx-v12 .tx-round>b{font-size:23px}
+.tactics.tx-v12 .tx-orders{padding:9px;background:#fff8e9f2;border-radius:8px;border:1px solid #a59776;box-shadow:0 4px 18px #46391e14}
+.tactics.tx-v12 .tx-battle-company{gap:5px}
+.tactics.tx-v12 .tx-battle-company>button{min-height:59px;padding:3px 7px;border-radius:5px}
+.tactics.tx-v12 .tx-unit-info strong{font:700 13px/1.2 Arial,sans-serif;text-transform:none}
+.tactics.tx-v12 .tx-unit-info small{font-size:11px}
+.tactics.tx-v12 .tx-unit-numbers{font-size:14px}
+.tactics.tx-v12 .tx-action-panel{margin-top:8px;padding-top:0}
+.tactics.tx-v12 .tx-queued-order{margin:0 0 7px;min-height:44px;border:0;background:#e5ead750;border-radius:4px;font-size:11px}
+.tactics.tx-v12 .tx-queued-order>span{display:none}
+.tactics.tx-v12 .tx-queued-order>strong{font-size:11px}
+.tactics.tx-v12 .tx-queued-order>button{min-height:44px;padding:3px 8px}
+.tactics.tx-v12 .tx-direct-spells .tx-battle-spells{gap:5px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.tactics.tx-v12 .tx-direct-spells .tx-battle-spells>button{min-height:67px;border-radius:5px;padding:6px 8px}
+.tactics.tx-v12 .tx-direct-spells .tx-battle-spells>button:last-child{grid-column:1/-1}
+.tactics.tx-v12 .tx-direct-spells .tx-battle-spells>button>strong{font-size:12px;line-height:1.2}
+.tactics.tx-v12 .tx-direct-spells .tx-battle-spells>button>.tx-glyph{width:19px}
+.tactics.tx-v12 .tx-direct-spells .tx-battle-spells>button>.tx-unready-reason{display:none}
+.tactics.tx-v12 .tx-spell-details{margin-top:5px;border-bottom:1px solid #c5b994;font:12px/1.4 Arial,sans-serif}
+.tactics.tx-v12 .tx-spell-details>summary{min-height:44px;font-size:11px;font-weight:600}
+.tactics.tx-v12 .tx-spell-details>p,.tactics.tx-v12 .tx-spell-details>small{display:block;margin:0 0 7px}
+.tactics.tx-v12 .tx-aim-summary{min-height:48px;margin:5px 0;padding:7px;border:0;border-radius:4px;background:#e7eadb}
+.tactics.tx-v12 .tx-aim-summary strong{font-size:12px}
+.tactics.tx-v12 .tx-aim-summary small{font-size:11px;line-height:1.4}
+.tactics.tx-v12 .tx-live-resources{float:right;font-size:11px;font-weight:600;white-space:nowrap;margin:0 0 4px 8px}
+.tactics.tx-v12 .tx-command-dock{position:static;display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin:7px 0 0;padding:0;background:none;border:0;box-shadow:none}
+.tactics.tx-v12 .tx-command-dock>button{min-height:44px;padding:5px;border-radius:4px}
+.tactics.tx-v12 .tx-command-dock>.tx-lock{display:flex;grid-column:1/-1;min-height:46px;justify-content:center}
+.tactics.tx-v12 .tx-command-dock>button>b{font-size:12px}
+.tactics.tx-v12 .tx-command-dock>button>small{font-size:10px}
+.tactics.tx-v12 .tx-unit-tools{gap:7px;margin:5px 0 0}
+.tactics.tx-v12 .tx-unit-tools summary,.tactics.tx-v12 .tx-unit-tools>button{font-size:11px}
+.tactics.tx-v12 .tx-plan-review{margin-top:4px;border:0}
+.tactics.tx-v12 .tx-plan-review summary{min-height:44px}
+.tactics.tx-v12 .tx-phase{min-height:24px;padding:1px 2px}
+.tactics.tx-v12 .tx-phase p{display:none}
+.tactics.tx-v12 .px-board-v7 .px-battlefield{height:clamp(420px,68dvh,760px);min-height:420px}
+.tactics.tx-v12 .tx-combination-guide{max-width:680px;padding:8px 0}
+.tactics.tx-v12 .tx-combination-guide>p{font-size:12px;margin-bottom:8px}
+.tactics.tx-v12 .tx-mixture-ingredients{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}
+.tactics.tx-v12 .tx-mixture-ingredients>button{display:flex;align-items:center;justify-content:center;gap:5px;padding:5px;border:1px solid #b7a684;border-radius:4px;font-size:12px}
+.tactics.tx-v12 .tx-mixture-ingredients>button[aria-pressed=true]{background:#dfe8cf;border-color:#5b713e;box-shadow:inset 0 -2px #5b713e}
+.tactics.tx-v12 .tx-mixture-result{margin:10px 0;padding:12px;border-left:3px solid #67824a;background:#fff9e9}
+.tactics.tx-v12 .tx-mixture-result>strong{font-size:16px}
+.tactics.tx-v12 .tx-mixture-result>p{font-size:13px;line-height:1.5;margin-top:5px}
+.tactics.tx-v12 .tx-combination-guide>small{display:block;font-size:11px;color:#62583e}
+.tactics.tx-v12 .tx-team-coverage{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0;font-size:12px}
+.tactics.tx-v12 .tx-team-coverage>span{display:inline-flex;align-items:center;gap:4px}
+@media(max-width:850px){
+ .tactics.tx-v12.tx-playing{padding-bottom:env(safe-area-inset-bottom)}
+ .tactics.tx-v12 .tx-battle{padding:4px 8px 24px}
+ .tactics.tx-v12 .tx-battle-grid{display:flex;flex-direction:column;gap:5px}
+ .tactics.tx-v12 .tx-orders{display:contents;position:static}
+ .tactics.tx-v12 .tx-field{order:1;width:100%}
+ .tactics.tx-v12 .tx-battle-company{order:0;width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+ .tactics.tx-v12 .tx-battle-company>button{min-height:52px;max-height:60px;flex-direction:row;gap:3px;padding:3px 5px;text-align:left}
+ .tactics.tx-v12 .tx-unit-visual{width:34px;height:42px;flex:0 0 34px}
+ .tactics.tx-v12 .tx-unit-visual>.px-champion{transform:scale(.65);transform-origin:center center;left:-37px;top:-32px}
+ .tactics.tx-v12 .tx-unit-visual>b{display:none}
+ .tactics.tx-v12 .tx-unit-info{min-width:0;width:auto}
+ .tactics.tx-v12 .tx-unit-info strong{font-size:11px}
+ .tactics.tx-v12 .tx-unit-info small{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+ .tactics.tx-v12 .tx-unit-numbers{display:none}
+ .tactics.tx-v12 .tx-order-mark{right:2px;top:2px;font-size:10px}
+ .tactics.tx-v12 .tx-planning-tray{order:2;display:flex;flex-direction:column;width:100%;padding:7px;margin:0;border-radius:6px;background:#fff8e9f5;gap:0}
+ .tactics.tx-v12 .tx-current-status{order:0}
+ .tactics.tx-v12 .tx-queued-order{order:1;width:100%;min-height:32px;margin:0 0 4px;padding:0 5px}
+ .tactics.tx-v12 .tx-queued-order>button{min-height:44px}
+ .tactics.tx-v12 .tx-direct-spells{order:2;display:block;width:100%;margin:0}
+ .tactics.tx-v12 .tx-direct-spells .tx-battle-spells{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin:0}
+ .tactics.tx-v12 .tx-direct-spells .tx-battle-spells>button,.tactics.tx-v12 .tx-direct-spells .tx-battle-spells>button:last-child{grid-column:auto;min-height:66px;height:auto;padding:5px 3px;display:flex;flex-direction:column;justify-content:center;gap:3px}
+ .tactics.tx-v12 .tx-direct-spells .tx-battle-spells>button>strong{font-size:10px;overflow-wrap:anywhere;min-height:24px;display:flex;align-items:center}
+ .tactics.tx-v12 .tx-direct-spells .tx-battle-spells>button>.tx-glyph,.tactics.tx-v12 .tx-spell-key,.tactics.tx-v12 .tx-direct-spells .tx-spell-footprint{display:none}
+ .tactics.tx-v12 .tx-action-meta{font-size:10px}
+ .tactics.tx-v12 .tx-action-meta>span:nth-child(2){display:none}
+ .tactics.tx-v12 .tx-aim-summary{order:3;width:100%;min-height:42px;margin:5px 0}
+ .tactics.tx-v12 .tx-command-dock{order:4;width:100%;grid-template-columns:.8fr 1fr 1fr 1.35fr;position:sticky;bottom:0;z-index:15;padding:5px 0 calc(5px + env(safe-area-inset-bottom));background:#fff8e9}
+ .tactics.tx-v12 .tx-command-dock>.tx-lock{grid-column:auto;display:flex;min-height:44px;margin:0}
+ .tactics.tx-v12 .tx-command-dock small{display:none}
+ .tactics.tx-v12 .tx-spell-details{order:5;width:100%}
+ .tactics.tx-v12 .tx-plan-review,.tactics.tx-v12 .tx-unit-tools{order:6;width:100%}
+ .tactics.tx-v12 .px-board-v7 .px-battlefield{height:clamp(240px,34dvh,300px);min-height:240px}
+ .tactics.tx-v12 .tx-phase{font-size:11px;min-height:22px}
+ .tactics.tx-v12 .tx-scoreboard{min-height:47px;margin-bottom:3px}
+ .tactics.tx-v12 .tx-team>b{font-size:25px}
+ .tactics.tx-v12 .tx-team>div>small{font-size:10px}
+ .tactics.tx-v12 .tx-message{bottom:8px}
+ .tactics.tx-v12 .tx-mixture-ingredients{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:380px){.tactics.tx-v12 .tx-unit-visual{display:none}.tactics.tx-v12 .tx-battle-company>button{min-height:49px}.tactics.tx-v12 .tx-command-dock>button{font-size:11px}.tactics.tx-v12 .tx-direct-spells .tx-battle-spells>button>strong{font-size:10px}}
+@media(max-width:850px) and (orientation:landscape){.tactics.tx-v12 .px-board-v7 .px-battlefield{height:65dvh;min-height:240px}}

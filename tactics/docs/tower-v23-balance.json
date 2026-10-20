@@ -1,0 +1,2014 @@
+{
+  "generatedAt": "2026-10-19T14:46:28.043Z",
+  "finalSourceHashes": {
+    "tower-v23.ts": "2dee999af82500061c593a5d839bebb8cea8814f78e0b8bae2674f6cc4818de6",
+    "tactics-v22.ts": "96706a940e5b66c1057f5f95ca4b855381050028de0533fe7bd2a1e300a8894b"
+  },
+  "policy": "Actual public-state AI and resolver. Full SQUADS1 climbs for three power bands; opening-only SQUADS2/3. Equip two attack elements, heal, best remainder; recruit3, healthy recruit6 otherwise camp6, camp8. Reward recruits, heal if >=5 missing, primary training, othertraining, firstoffer. Replace weakest eligible fighter. No free respec and no forced winners.",
+  "scope": "Three representative starting pairs at affinity4/7/10. Each played a full climb on SQUADS1 and opening-only battles on SQUADS2/3. After observing creature-only stalls, only the4point floor1normal enemy count changed, and all affected cases were rerun. Frozen tactics22 is unchanged.",
+  "evidenceReuse": "The7/10point results retain their original sourcehash. The final edit applies only to4point floor1normal rooms; their codepaths and all combatrules are unchanged. Both original observations and the complete affected rerun are included, rather than mislabeling old data as fresh.",
+  "initial": {
+    "sourceHashes": {
+      "tower-v23.ts": "f047aa6157e503507798a5c568f485ae0a4afac1d525fce3c5c9285058746d2a",
+      "tactics-v22.ts": "96706a940e5b66c1057f5f95ca4b855381050028de0533fe7bd2a1e300a8894b"
+    },
+    "results": [
+      {
+        "seed": "SQUADS1",
+        "starter": "creatures",
+        "power": 4,
+        "fullClimb": true,
+        "phase": "won",
+        "lastFloor": 9,
+        "seconds": 21.45,
+        "rounds": 50,
+        "battles": [
+          {
+            "floor": 1,
+            "map": "arena:2:TOWER-1YKIZA6-1",
+            "enemies": [
+              {
+                "name": "Duskmote",
+                "affinities": {
+                  "dark": 2
+                },
+                "maxHp": 4
+              },
+              {
+                "name": "Brookling",
+                "affinities": {
+                  "water": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 12,
+            "winner": 0,
+            "casts": 27,
+            "collapseDamage": 16,
+            "endingCollapseDamage": 16,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 0
+              },
+              {
+                "id": "companion",
+                "hp": 4
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 2,
+            "map": "arena:2:TOWER-G2XY7J-2",
+            "enemies": [
+              {
+                "name": "Pebble",
+                "affinities": {
+                  "earth": 2
+                },
+                "maxHp": 4
+              },
+              {
+                "name": "Cinder",
+                "affinities": {
+                  "fire": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 8,
+            "winner": 0,
+            "casts": 33,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 4
+              },
+              {
+                "id": "companion",
+                "hp": 4
+              },
+              {
+                "id": "recruit-1-0",
+                "hp": 4
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 4,
+            "map": "arena:2:TOWER-BHY6JT-4",
+            "enemies": [
+              {
+                "name": "Oll' I",
+                "affinities": {
+                  "earth": 3,
+                  "fire": 1,
+                  "light": 1
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Pebble",
+                "affinities": {
+                  "earth": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 5,
+            "winner": 0,
+            "casts": 17,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "companion",
+                "hp": 0
+              },
+              {
+                "id": "recruit-1-0",
+                "hp": 7
+              },
+              {
+                "id": "recruit-3-0",
+                "hp": 8
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 5,
+            "map": "arena:2:TOWER-I7RBFM-5",
+            "enemies": [
+              {
+                "name": "Hesus Christo",
+                "affinities": {
+                  "earth": 3,
+                  "water": 2
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Lanternpaw",
+                "affinities": {
+                  "light": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 5,
+            "winner": 0,
+            "casts": 22,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "companion",
+                "hp": 4
+              },
+              {
+                "id": "recruit-1-0",
+                "hp": 8
+              },
+              {
+                "id": "recruit-3-0",
+                "hp": 8
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 7,
+            "map": "arena:2:TOWER-1AMFOPG-7",
+            "enemies": [
+              {
+                "name": "Ha Rekt",
+                "affinities": {
+                  "water": 4,
+                  "air": 1,
+                  "fire": 1
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Pip",
+                "affinities": {
+                  "air": 2
+                },
+                "maxHp": 4
+              },
+              {
+                "name": "Wicktail",
+                "affinities": {
+                  "fire": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 7,
+            "winner": 0,
+            "casts": 33,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "recruit-1-0",
+                "hp": 8
+              },
+              {
+                "id": "recruit-3-0",
+                "hp": 8
+              },
+              {
+                "id": "recruit-6-0",
+                "hp": 8
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              },
+              {
+                "id": "enemy-2",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 9,
+            "map": "arena:2:TOWER-1RH7YU-9",
+            "enemies": [
+              {
+                "name": "Spai Si",
+                "affinities": {
+                  "air": 5,
+                  "earth": 1,
+                  "light": 1
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Faab I Yaina",
+                "affinities": {
+                  "fire": 4,
+                  "light": 2
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Cinder",
+                "affinities": {
+                  "fire": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 13,
+            "winner": 0,
+            "casts": 62,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "recruit-1-0",
+                "hp": 6
+              },
+              {
+                "id": "recruit-3-0",
+                "hp": 4
+              },
+              {
+                "id": "recruit-6-0",
+                "hp": 1
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              },
+              {
+                "id": "enemy-2",
+                "hp": 0
+              }
+            ]
+          }
+        ],
+        "rewards": [
+          {
+            "floor": 1,
+            "missing": 3,
+            "offered": [
+              "heal:party",
+              "recruit:sai_laas",
+              "recruit:creature-earth-rootspring"
+            ],
+            "chosen": "recruit:sai_laas",
+            "replaced": null
+          },
+          {
+            "floor": 2,
+            "missing": 3,
+            "offered": [
+              "spell:creature_spell:creature-air-whisk",
+              "train:recruit-1-0:air",
+              "heal:party"
+            ],
+            "chosen": "train:recruit-1-0:air",
+            "replaced": "hero"
+          },
+          {
+            "floor": 3,
+            "missing": 3,
+            "offered": [
+              "recruit:haara",
+              "recruit:creature-dark-inkcoil",
+              "recruit:spai_si"
+            ],
+            "chosen": "recruit:haara",
+            "replaced": "hero"
+          },
+          {
+            "floor": 4,
+            "missing": 3,
+            "offered": [
+              "spell:thunderclap",
+              "train:recruit-3-0:light",
+              "heal:party"
+            ],
+            "chosen": "train:recruit-3-0:light",
+            "replaced": "companion"
+          },
+          {
+            "floor": 5,
+            "missing": 0,
+            "offered": [
+              "spell:creature_spell:creature-light-dawnkeeper",
+              "train:recruit-1-0:air",
+              "spell:thunderclap"
+            ],
+            "chosen": "train:recruit-1-0:air",
+            "replaced": "companion"
+          },
+          {
+            "floor": 6,
+            "missing": 0,
+            "offered": [
+              "recruit:joh_haynes",
+              "recruit:creature-water-iceback",
+              "recruit:wa_bidi"
+            ],
+            "chosen": "recruit:joh_haynes",
+            "replaced": "companion"
+          },
+          {
+            "floor": 7,
+            "missing": 0,
+            "offered": [
+              "spell:wind_shear",
+              "train:recruit-1-0:air",
+              "spell:signature_grace_reava"
+            ],
+            "chosen": "train:recruit-1-0:air",
+            "replaced": "recruit-3-0"
+          },
+          {
+            "floor": 8,
+            "missing": 0,
+            "offered": [
+              "train:recruit-3-0:light",
+              "spell:stoneheart",
+              "train:recruit-6-0:earth"
+            ],
+            "chosen": "train:recruit-3-0:light",
+            "replaced": "recruit-3-0"
+          }
+        ]
+      },
+      {
+        "seed": "SQUADS1",
+        "starter": "mixed",
+        "power": 7,
+        "fullClimb": true,
+        "phase": "lost",
+        "lastFloor": 9,
+        "seconds": 15.051,
+        "rounds": 31,
+        "battles": [
+          {
+            "floor": 1,
+            "map": "arena:2:TOWER-1YKIZA6-1",
+            "enemies": [
+              {
+                "name": "Duskmote",
+                "affinities": {
+                  "dark": 2
+                },
+                "maxHp": 4
+              },
+              {
+                "name": "Brookling",
+                "affinities": {
+                  "water": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 4,
+            "winner": 0,
+            "casts": 9,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 8
+              },
+              {
+                "id": "companion",
+                "hp": 4
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 2,
+            "map": "arena:2:TOWER-G2XY7J-2",
+            "enemies": [
+              {
+                "name": "Pebble",
+                "affinities": {
+                  "earth": 2
+                },
+                "maxHp": 4
+              },
+              {
+                "name": "Cinder",
+                "affinities": {
+                  "fire": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 6,
+            "winner": 0,
+            "casts": 18,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 8
+              },
+              {
+                "id": "companion",
+                "hp": 4
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 4,
+            "map": "arena:2:TOWER-BHY6JT-4",
+            "enemies": [
+              {
+                "name": "Oll' I",
+                "affinities": {
+                  "earth": 3,
+                  "fire": 1,
+                  "light": 1
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Pebble",
+                "affinities": {
+                  "earth": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 5,
+            "winner": 0,
+            "casts": 17,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 8
+              },
+              {
+                "id": "companion",
+                "hp": 4
+              },
+              {
+                "id": "recruit-3-0",
+                "hp": 8
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 5,
+            "map": "arena:2:TOWER-I7RBFM-5",
+            "enemies": [
+              {
+                "name": "Hesus Christo",
+                "affinities": {
+                  "earth": 3,
+                  "water": 2
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Lanternpaw",
+                "affinities": {
+                  "light": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 4,
+            "winner": 0,
+            "casts": 18,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 8
+              },
+              {
+                "id": "companion",
+                "hp": 4
+              },
+              {
+                "id": "recruit-3-0",
+                "hp": 8
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 7,
+            "map": "arena:2:TOWER-1AMFOPG-7",
+            "enemies": [
+              {
+                "name": "Ha Rekt",
+                "affinities": {
+                  "water": 5,
+                  "air": 1,
+                  "fire": 1
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Tideplume",
+                "affinities": {
+                  "water": 4
+                },
+                "maxHp": 6
+              },
+              {
+                "name": "Pip",
+                "affinities": {
+                  "air": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 7,
+            "winner": 0,
+            "casts": 35,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 7
+              },
+              {
+                "id": "recruit-3-0",
+                "hp": 8
+              },
+              {
+                "id": "recruit-6-0",
+                "hp": 6
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              },
+              {
+                "id": "enemy-2",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 9,
+            "map": "arena:2:TOWER-1RH7YU-9",
+            "enemies": [
+              {
+                "name": "Spai Si",
+                "affinities": {
+                  "air": 6,
+                  "earth": 1,
+                  "light": 1
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Faab I Yaina",
+                "affinities": {
+                  "fire": 5,
+                  "light": 2
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Saffron",
+                "affinities": {
+                  "fire": 4,
+                  "light": 2
+                },
+                "maxHp": 6
+              }
+            ],
+            "rounds": 5,
+            "winner": 1,
+            "casts": 24,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 0
+              },
+              {
+                "id": "recruit-3-0",
+                "hp": 0
+              },
+              {
+                "id": "recruit-6-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-0",
+                "hp": 7
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              },
+              {
+                "id": "enemy-2",
+                "hp": 0
+              }
+            ]
+          }
+        ],
+        "rewards": [
+          {
+            "floor": 1,
+            "missing": 0,
+            "offered": [
+              "spell:tidal_surge",
+              "train:hero:water",
+              "spell:creature_spell:creature-water-puddle"
+            ],
+            "chosen": "train:hero:water",
+            "replaced": null
+          },
+          {
+            "floor": 2,
+            "missing": 0,
+            "offered": [
+              "spell:creature_spell:creature-fire-wicktail",
+              "train:hero:water",
+              "spell:cauterize"
+            ],
+            "chosen": "train:hero:water",
+            "replaced": null
+          },
+          {
+            "floor": 3,
+            "missing": 0,
+            "offered": [
+              "recruit:hesus_christo",
+              "recruit:creature-dark-inkcoil",
+              "recruit:leaf_hidden"
+            ],
+            "chosen": "recruit:hesus_christo",
+            "replaced": null
+          },
+          {
+            "floor": 4,
+            "missing": 0,
+            "offered": [
+              "spell:creature_spell:creature-black_ice",
+              "train:recruit-3-0:earth",
+              "spell:creature_spell:creature-hailcurrent"
+            ],
+            "chosen": "train:recruit-3-0:earth",
+            "replaced": "companion"
+          },
+          {
+            "floor": 5,
+            "missing": 0,
+            "offered": [
+              "spell:creature_spell:creature-water-puddle",
+              "train:hero:water",
+              "spell:creature_spell:creature-earth-rootspring"
+            ],
+            "chosen": "train:hero:water",
+            "replaced": "companion"
+          },
+          {
+            "floor": 6,
+            "missing": 0,
+            "offered": [
+              "recruit:h_le_ne",
+              "recruit:creature-water-iceback",
+              "recruit:steezo"
+            ],
+            "chosen": "recruit:h_le_ne",
+            "replaced": "companion"
+          },
+          {
+            "floor": 7,
+            "missing": 1,
+            "offered": [
+              "spell:signature_treevor_mason",
+              "train:recruit-3-0:earth",
+              "heal:party"
+            ],
+            "chosen": "train:recruit-3-0:earth",
+            "replaced": "recruit-3-0"
+          },
+          {
+            "floor": 8,
+            "missing": 1,
+            "offered": [
+              "heal:party",
+              "train:recruit-6-0:earth",
+              "spell:creature_spell:creature-water-floodhorn"
+            ],
+            "chosen": "train:recruit-6-0:earth",
+            "replaced": "recruit-6-0"
+          }
+        ]
+      },
+      {
+        "seed": "SQUADS1",
+        "starter": "champions",
+        "power": 10,
+        "fullClimb": true,
+        "phase": "lost",
+        "lastFloor": 7,
+        "seconds": 15,
+        "rounds": 39,
+        "battles": [
+          {
+            "floor": 1,
+            "map": "arena:2:TOWER-1YKIZA6-1",
+            "enemies": [
+              {
+                "name": "Rime",
+                "affinities": {
+                  "water": 4,
+                  "dark": 2
+                },
+                "maxHp": 6
+              },
+              {
+                "name": "Duskmote",
+                "affinities": {
+                  "dark": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 10,
+            "winner": 0,
+            "casts": 29,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 5
+              },
+              {
+                "id": "companion",
+                "hp": 8
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 2,
+            "map": "arena:2:TOWER-G2XY7J-2",
+            "enemies": [
+              {
+                "name": "Vaneheron",
+                "affinities": {
+                  "air": 4
+                },
+                "maxHp": 6
+              },
+              {
+                "name": "Cinder",
+                "affinities": {
+                  "fire": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 10,
+            "winner": 0,
+            "casts": 35,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 8
+              },
+              {
+                "id": "companion",
+                "hp": 6
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 4,
+            "map": "arena:2:TOWER-BHY6JT-4",
+            "enemies": [
+              {
+                "name": "Oll' I",
+                "affinities": {
+                  "earth": 4,
+                  "fire": 1,
+                  "light": 1
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Soot",
+                "affinities": {
+                  "fire": 4,
+                  "dark": 2
+                },
+                "maxHp": 6
+              }
+            ],
+            "rounds": 6,
+            "winner": 0,
+            "casts": 24,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 6
+              },
+              {
+                "id": "companion",
+                "hp": 3
+              },
+              {
+                "id": "recruit-3-0",
+                "hp": 8
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 5,
+            "map": "arena:2:TOWER-I7RBFM-5",
+            "enemies": [
+              {
+                "name": "Hesus Christo",
+                "affinities": {
+                  "earth": 4,
+                  "water": 2
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Tumble",
+                "affinities": {
+                  "air": 4,
+                  "earth": 2
+                },
+                "maxHp": 6
+              }
+            ],
+            "rounds": 5,
+            "winner": 0,
+            "casts": 22,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 8
+              },
+              {
+                "id": "companion",
+                "hp": 8
+              },
+              {
+                "id": "recruit-3-0",
+                "hp": 8
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 7,
+            "map": "arena:2:TOWER-1AMFOPG-7",
+            "enemies": [
+              {
+                "name": "Ha Rekt",
+                "affinities": {
+                  "water": 6,
+                  "air": 1,
+                  "fire": 1
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Tideplume",
+                "affinities": {
+                  "water": 4
+                },
+                "maxHp": 6
+              },
+              {
+                "name": "Whistle",
+                "affinities": {
+                  "air": 4
+                },
+                "maxHp": 6
+              }
+            ],
+            "rounds": 8,
+            "winner": 1,
+            "casts": 34,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 0
+              },
+              {
+                "id": "companion",
+                "hp": 0
+              },
+              {
+                "id": "recruit-6-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-0",
+                "hp": 8
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              },
+              {
+                "id": "enemy-2",
+                "hp": 0
+              }
+            ]
+          }
+        ],
+        "rewards": [
+          {
+            "floor": 1,
+            "missing": 2,
+            "offered": [
+              "spell:shatter",
+              "train:companion:earth",
+              "heal:party"
+            ],
+            "chosen": "train:companion:earth",
+            "replaced": null
+          },
+          {
+            "floor": 2,
+            "missing": 1,
+            "offered": [
+              "spell:creature_spell:creature-earth-cairnback",
+              "train:hero:water",
+              "heal:party"
+            ],
+            "chosen": "train:hero:water",
+            "replaced": null
+          },
+          {
+            "floor": 3,
+            "missing": 1,
+            "offered": [
+              "recruit:biggy_bob",
+              "recruit:creature-dark-inkcoil",
+              "recruit:joh_haynes"
+            ],
+            "chosen": "recruit:biggy_bob",
+            "replaced": null
+          },
+          {
+            "floor": 4,
+            "missing": 5,
+            "offered": [
+              "spell:creature_spell:creature-hailcurrent",
+              "train:hero:water",
+              "heal:party"
+            ],
+            "chosen": "heal:party",
+            "replaced": "recruit-3-0"
+          },
+          {
+            "floor": 5,
+            "missing": 0,
+            "offered": [
+              "spell:creature_spell:creature-water-brookling",
+              "train:hero:water",
+              "spell:creature_spell:creature-earth-burrpaw"
+            ],
+            "chosen": "train:hero:water",
+            "replaced": "recruit-3-0"
+          },
+          {
+            "floor": 6,
+            "missing": 0,
+            "offered": [
+              "recruit:wa_bidi",
+              "recruit:creature-water-iceback",
+              "recruit:steezo"
+            ],
+            "chosen": "recruit:wa_bidi",
+            "replaced": "recruit-3-0"
+          }
+        ]
+      },
+      {
+        "seed": "SQUADS2",
+        "starter": "creatures",
+        "power": 4,
+        "fullClimb": false,
+        "phase": "lost",
+        "lastFloor": 1,
+        "seconds": 1.603,
+        "rounds": 12,
+        "battles": [
+          {
+            "floor": 1,
+            "map": "arena:2:TOWER-2YFM5N-1",
+            "enemies": [
+              {
+                "name": "Pip",
+                "affinities": {
+                  "air": 2
+                },
+                "maxHp": 4
+              },
+              {
+                "name": "Brookling",
+                "affinities": {
+                  "water": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 12,
+            "winner": 1,
+            "casts": 26,
+            "collapseDamage": 16,
+            "endingCollapseDamage": 16,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 0
+              },
+              {
+                "id": "companion",
+                "hp": 0
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 3
+              }
+            ]
+          }
+        ],
+        "rewards": []
+      },
+      {
+        "seed": "SQUADS2",
+        "starter": "mixed",
+        "power": 7,
+        "fullClimb": false,
+        "phase": "reward",
+        "lastFloor": 1,
+        "seconds": 1.407,
+        "rounds": 6,
+        "battles": [
+          {
+            "floor": 1,
+            "map": "arena:2:TOWER-2YFM5N-1",
+            "enemies": [
+              {
+                "name": "Pip",
+                "affinities": {
+                  "air": 2
+                },
+                "maxHp": 4
+              },
+              {
+                "name": "Brookling",
+                "affinities": {
+                  "water": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 6,
+            "winner": 0,
+            "casts": 16,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 8
+              },
+              {
+                "id": "companion",
+                "hp": 4
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          }
+        ],
+        "rewards": []
+      },
+      {
+        "seed": "SQUADS2",
+        "starter": "champions",
+        "power": 10,
+        "fullClimb": false,
+        "phase": "reward",
+        "lastFloor": 1,
+        "seconds": 2.386,
+        "rounds": 7,
+        "battles": [
+          {
+            "floor": 1,
+            "map": "arena:2:TOWER-2YFM5N-1",
+            "enemies": [
+              {
+                "name": "Vesper",
+                "affinities": {
+                  "dark": 4,
+                  "light": 2
+                },
+                "maxHp": 6
+              },
+              {
+                "name": "Pip",
+                "affinities": {
+                  "air": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 7,
+            "winner": 0,
+            "casts": 24,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 4
+              },
+              {
+                "id": "companion",
+                "hp": 8
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          }
+        ],
+        "rewards": []
+      },
+      {
+        "seed": "SQUADS3",
+        "starter": "creatures",
+        "power": 4,
+        "fullClimb": false,
+        "phase": "reward",
+        "lastFloor": 1,
+        "seconds": 1.985,
+        "rounds": 12,
+        "battles": [
+          {
+            "floor": 1,
+            "map": "arena:2:TOWER-K19SLS-1",
+            "enemies": [
+              {
+                "name": "Pebble",
+                "affinities": {
+                  "earth": 2
+                },
+                "maxHp": 4
+              },
+              {
+                "name": "Cinder",
+                "affinities": {
+                  "fire": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 12,
+            "winner": 0,
+            "casts": 25,
+            "collapseDamage": 16,
+            "endingCollapseDamage": 16,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 0
+              },
+              {
+                "id": "companion",
+                "hp": 4
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          }
+        ],
+        "rewards": []
+      },
+      {
+        "seed": "SQUADS3",
+        "starter": "mixed",
+        "power": 7,
+        "fullClimb": false,
+        "phase": "reward",
+        "lastFloor": 1,
+        "seconds": 3.523,
+        "rounds": 10,
+        "battles": [
+          {
+            "floor": 1,
+            "map": "arena:2:TOWER-K19SLS-1",
+            "enemies": [
+              {
+                "name": "Pebble",
+                "affinities": {
+                  "earth": 2
+                },
+                "maxHp": 4
+              },
+              {
+                "name": "Cinder",
+                "affinities": {
+                  "fire": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 10,
+            "winner": 0,
+            "casts": 29,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 8
+              },
+              {
+                "id": "companion",
+                "hp": 4
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          }
+        ],
+        "rewards": []
+      },
+      {
+        "seed": "SQUADS3",
+        "starter": "champions",
+        "power": 10,
+        "fullClimb": false,
+        "phase": "reward",
+        "lastFloor": 1,
+        "seconds": 4.135,
+        "rounds": 8,
+        "battles": [
+          {
+            "floor": 1,
+            "map": "arena:2:TOWER-K19SLS-1",
+            "enemies": [
+              {
+                "name": "Whisper",
+                "affinities": {
+                  "air": 4,
+                  "dark": 2
+                },
+                "maxHp": 6
+              },
+              {
+                "name": "Pebble",
+                "affinities": {
+                  "earth": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 8,
+            "winner": 0,
+            "casts": 28,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 6
+              },
+              {
+                "id": "companion",
+                "hp": 8
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          }
+        ],
+        "rewards": []
+      }
+    ]
+  },
+  "affectedFinal": {
+    "sourceHashes": {
+      "tower-v23.ts": "2dee999af82500061c593a5d839bebb8cea8814f78e0b8bae2674f6cc4818de6",
+      "tactics-v22.ts": "96706a940e5b66c1057f5f95ca4b855381050028de0533fe7bd2a1e300a8894b"
+    },
+    "results": [
+      {
+        "seed": "SQUADS1",
+        "starter": "creatures",
+        "power": 4,
+        "fullClimb": true,
+        "phase": "won",
+        "lastFloor": 9,
+        "seconds": 26.138,
+        "rounds": 39,
+        "battles": [
+          {
+            "floor": 1,
+            "map": "arena:2:TOWER-1YKIZA6-1",
+            "enemies": [
+              {
+                "name": "Brookling",
+                "affinities": {
+                  "water": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 4,
+            "winner": 0,
+            "casts": 6,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 4
+              },
+              {
+                "id": "companion",
+                "hp": 4
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 2,
+            "map": "arena:2:TOWER-G2XY7J-2",
+            "enemies": [
+              {
+                "name": "Pebble",
+                "affinities": {
+                  "earth": 2
+                },
+                "maxHp": 4
+              },
+              {
+                "name": "Cinder",
+                "affinities": {
+                  "fire": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 7,
+            "winner": 0,
+            "casts": 27,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 3
+              },
+              {
+                "id": "companion",
+                "hp": 3
+              },
+              {
+                "id": "recruit-1-0",
+                "hp": 8
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 4,
+            "map": "arena:2:TOWER-BHY6JT-4",
+            "enemies": [
+              {
+                "name": "Oll' I",
+                "affinities": {
+                  "earth": 3,
+                  "fire": 1,
+                  "light": 1
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Pebble",
+                "affinities": {
+                  "earth": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 3,
+            "winner": 0,
+            "casts": 12,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "companion",
+                "hp": 4
+              },
+              {
+                "id": "recruit-1-0",
+                "hp": 7
+              },
+              {
+                "id": "recruit-3-0",
+                "hp": 8
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 5,
+            "map": "arena:2:TOWER-I7RBFM-5",
+            "enemies": [
+              {
+                "name": "Hesus Christo",
+                "affinities": {
+                  "earth": 3,
+                  "water": 2
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Lanternpaw",
+                "affinities": {
+                  "light": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 5,
+            "winner": 0,
+            "casts": 20,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "companion",
+                "hp": 4
+              },
+              {
+                "id": "recruit-1-0",
+                "hp": 8
+              },
+              {
+                "id": "recruit-3-0",
+                "hp": 8
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 7,
+            "map": "arena:2:TOWER-1AMFOPG-7",
+            "enemies": [
+              {
+                "name": "Ha Rekt",
+                "affinities": {
+                  "water": 4,
+                  "air": 1,
+                  "fire": 1
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Pip",
+                "affinities": {
+                  "air": 2
+                },
+                "maxHp": 4
+              },
+              {
+                "name": "Wicktail",
+                "affinities": {
+                  "fire": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 7,
+            "winner": 0,
+            "casts": 33,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "recruit-1-0",
+                "hp": 8
+              },
+              {
+                "id": "recruit-3-0",
+                "hp": 8
+              },
+              {
+                "id": "recruit-6-0",
+                "hp": 8
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              },
+              {
+                "id": "enemy-2",
+                "hp": 0
+              }
+            ]
+          },
+          {
+            "floor": 9,
+            "map": "arena:2:TOWER-1RH7YU-9",
+            "enemies": [
+              {
+                "name": "Spai Si",
+                "affinities": {
+                  "air": 5,
+                  "earth": 1,
+                  "light": 1
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Faab I Yaina",
+                "affinities": {
+                  "fire": 4,
+                  "light": 2
+                },
+                "maxHp": 8
+              },
+              {
+                "name": "Cinder",
+                "affinities": {
+                  "fire": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 13,
+            "winner": 0,
+            "casts": 62,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "recruit-1-0",
+                "hp": 6
+              },
+              {
+                "id": "recruit-3-0",
+                "hp": 4
+              },
+              {
+                "id": "recruit-6-0",
+                "hp": 1
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              },
+              {
+                "id": "enemy-1",
+                "hp": 0
+              },
+              {
+                "id": "enemy-2",
+                "hp": 0
+              }
+            ]
+          }
+        ],
+        "rewards": [
+          {
+            "floor": 1,
+            "missing": 0,
+            "offered": [
+              "recruit:sai_laas",
+              "recruit:creature-earth-rootspring",
+              "recruit:oll_i"
+            ],
+            "chosen": "recruit:sai_laas",
+            "replaced": null
+          },
+          {
+            "floor": 2,
+            "missing": 0,
+            "offered": [
+              "spell:creature_spell:creature-air-whisk",
+              "train:recruit-1-0:air",
+              "spell:wind_shear"
+            ],
+            "chosen": "train:recruit-1-0:air",
+            "replaced": "hero"
+          },
+          {
+            "floor": 3,
+            "missing": 0,
+            "offered": [
+              "recruit:haara",
+              "recruit:creature-dark-inkcoil",
+              "recruit:spai_si"
+            ],
+            "chosen": "recruit:haara",
+            "replaced": "hero"
+          },
+          {
+            "floor": 4,
+            "missing": 0,
+            "offered": [
+              "spell:thunderclap",
+              "train:recruit-3-0:light",
+              "spell:creature_spell:creature-shadowdraft"
+            ],
+            "chosen": "train:recruit-3-0:light",
+            "replaced": "companion"
+          },
+          {
+            "floor": 5,
+            "missing": 0,
+            "offered": [
+              "spell:creature_spell:creature-light-dawnkeeper",
+              "train:recruit-1-0:air",
+              "spell:thunderclap"
+            ],
+            "chosen": "train:recruit-1-0:air",
+            "replaced": "companion"
+          },
+          {
+            "floor": 6,
+            "missing": 0,
+            "offered": [
+              "recruit:joh_haynes",
+              "recruit:creature-water-iceback",
+              "recruit:wa_bidi"
+            ],
+            "chosen": "recruit:joh_haynes",
+            "replaced": "companion"
+          },
+          {
+            "floor": 7,
+            "missing": 0,
+            "offered": [
+              "spell:wind_shear",
+              "train:recruit-1-0:air",
+              "spell:signature_grace_reava"
+            ],
+            "chosen": "train:recruit-1-0:air",
+            "replaced": "recruit-3-0"
+          },
+          {
+            "floor": 8,
+            "missing": 0,
+            "offered": [
+              "train:recruit-3-0:light",
+              "spell:stoneheart",
+              "train:recruit-6-0:earth"
+            ],
+            "chosen": "train:recruit-3-0:light",
+            "replaced": "recruit-3-0"
+          }
+        ]
+      },
+      {
+        "seed": "SQUADS2",
+        "starter": "creatures",
+        "power": 4,
+        "fullClimb": false,
+        "phase": "lost",
+        "lastFloor": 1,
+        "seconds": 3.348,
+        "rounds": 12,
+        "battles": [
+          {
+            "floor": 1,
+            "map": "arena:2:TOWER-2YFM5N-1",
+            "enemies": [
+              {
+                "name": "Brookling",
+                "affinities": {
+                  "water": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 12,
+            "winner": 1,
+            "casts": 24,
+            "collapseDamage": 16,
+            "endingCollapseDamage": 16,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 0
+              },
+              {
+                "id": "companion",
+                "hp": 0
+              },
+              {
+                "id": "enemy-0",
+                "hp": 1
+              }
+            ]
+          }
+        ],
+        "rewards": []
+      },
+      {
+        "seed": "SQUADS3",
+        "starter": "creatures",
+        "power": 4,
+        "fullClimb": false,
+        "phase": "reward",
+        "lastFloor": 1,
+        "seconds": 1.865,
+        "rounds": 7,
+        "battles": [
+          {
+            "floor": 1,
+            "map": "arena:2:TOWER-K19SLS-1",
+            "enemies": [
+              {
+                "name": "Cinder",
+                "affinities": {
+                  "fire": 2
+                },
+                "maxHp": 4
+              }
+            ],
+            "rounds": 7,
+            "winner": 0,
+            "casts": 17,
+            "collapseDamage": 0,
+            "endingCollapseDamage": 0,
+            "finalHealth": [
+              {
+                "id": "hero",
+                "hp": 2
+              },
+              {
+                "id": "companion",
+                "hp": 1
+              },
+              {
+                "id": "enemy-0",
+                "hp": 0
+              }
+            ]
+          }
+        ],
+        "rewards": []
+      }
+    ]
+  },
+  "summary": {
+    "applicableCases": 9,
+    "battles": 23,
+    "openingWins": 8,
+    "openingMedianRounds": 7,
+    "fullClimbs": 3,
+    "fullClears": 1,
+    "fullBattleMedianRounds": 6,
+    "collapseEndingBattles": 1,
+    "atLeast18Rounds": 0
+  },
+  "limitations": [
+    "Small deterministic samples and fixed AI policy, not a human win-rate estimate.",
+    "Only one representative pair per startingpowerband was combat-tested; all435 distinctchampionpairs were structurally validated, not allplayed.",
+    "Creature-only SQUADS2 still loses after12rounds; challenge is not solved by the intro adjustment.",
+    "The mixedpair reaches butloses theboss; thedoublechampionpair losesfloor7 onthefullsample.",
+    "No network/browser/spectator claim is made by these puremodel tests."
+  ]
+}
