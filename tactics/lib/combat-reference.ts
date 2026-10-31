@@ -34,13 +34,13 @@ export function combinationSummary(field:CombinationDefinition):string {
 
 const TOOLKITS:Record<Element,string>={fire:'Burn, burst damage, piercing lightning',water:'Wet, healing, pulls, freezing',earth:'Ward, Anchored, barriers, piercing metal',air:'Pushes, pulls, Haste, Concussed',light:'Healing, cleansing, Clarity, selective damage',dark:'Wither, draining, stolen Flux, Blind'};
 const ROLES:Record<Element,string>={fire:'Pressure',water:'Reshape routes',earth:'Hold ground',air:'Redirect',light:'Protect',dark:'Deny recovery'};
-const ELEMENT_CHOICES:Record<Element,{use:string;risk:string;detail:string;exampleIds:readonly string[]}>={
- fire:{use:'Punish a landing; exploit an existing mark.',risk:'Wet stops Burn; many attacks hit friends.',detail:'Burn adds later pressure. Backdraft needs Burn from before the exchange; Lightning Lance needs earlier Wet. Fire + Water becomes Steam, which halves spell damage instead of keeping Fire’s hazard.',exampleIds:['ember','backdraft','fire_lance']},
- water:{use:'Slow passage, cleanse, or make an ice route.',risk:'Your flood and ice change movement for both sides.',detail:'Magical liquid Water makes entering or leaving cost 2 effort and grants Wet. Freezing unmixed Water creates dry Ice: it slides but does not grant Wet. Natural water is a mixing ingredient, not an active Flood.',exampleIds:['water_jet','cleansing_tide','frostbite']},
- earth:{use:'Block an approach; prepare Ward and Anchored.',risk:'New protection cannot stop this exchange’s hits or pushes.',detail:'Magical Earth slows passage; Earth alone gives no cover. Iron Rampart blocks movement and sight on eligible empty hexes. Piercing attacks bypass Ward and cover; flanks can bypass a wall.',exampleIds:['bulwark','raise_cairn','shatter']},
- air:{use:'Push into danger, pull out of cover, or gain a step.',risk:'Guard reduces force; existing Anchored stops it.',detail:'All pushes and pulls combine before displacement, so opposing forces can cancel. A blocked forced step into a ruin or barrier causes 1 environmental damage and Concussed. Fighters and map edges stop travel without that impact.',exampleIds:['gust','vacuum','tailwind']},
- light:{use:'Recover health, remove ailments, prevent new control.',risk:'Light ground also protects enemies from control.',detail:'Fresh Clarity blocks new Blind, Rooted, Chilled and Concussed immediately; it does not remove existing ailments. Cleansing does. Healing competes with damage for an action; existing Wither reduces aggregate recovery.',exampleIds:['radiant_bolt','clear_sight','aegis']},
- dark:{use:'Tax future healing and punish a depleted enemy.',risk:'Cleanse removes Wither; theft only takes unspent Flux.',detail:'New Wither reduces later healing, not healing in the same exchange. Reap needs existing Wither for its bonus. Drain only heals after actual enemy spell damage; a completely prevented hit yields no drain.',exampleIds:['wither_bolt','reap','essence_theft']},
+const ELEMENT_CHOICES:Record<Element,{use:string;attack:string;risk:string;detail:string;exampleIds:readonly string[]}>={
+ fire:{use:'Punish a landing; exploit an existing mark.',attack:'Apply Burn, then keep pressure on the marked target while it ticks.',risk:'Wet stops Burn; many attacks hit friends.',detail:'Burn adds later pressure. Backdraft needs Burn from before the exchange; Lightning Lance needs earlier Wet. Fire + Water becomes Steam, which halves spell damage instead of keeping Fire’s hazard.',exampleIds:['ember','backdraft','fire_lance']},
+ water:{use:'Slow passage, cleanse, or make an ice route.',attack:'Wet a target for a Fire Lance bonus; chill or pull it out of position.',risk:'Your flood and ice change movement for both sides.',detail:'Magical liquid Water makes entering or leaving cost 2 effort and grants Wet. Freezing unmixed Water creates dry Ice: it slides but does not grant Wet. Natural water is a mixing ingredient, not an active Flood.',exampleIds:['water_jet','cleansing_tide','frostbite']},
+ earth:{use:'Block an approach; prepare Ward and Anchored.',attack:'Crush with direct hits, then close an escape lane with a barrier.',risk:'New protection cannot stop this exchange’s hits or pushes.',detail:'Magical Earth slows passage; Earth alone gives no cover. Iron Rampart blocks movement and sight on eligible empty hexes. Piercing attacks bypass Ward and cover; flanks can bypass a wall.',exampleIds:['bulwark','raise_cairn','shatter']},
+ air:{use:'Push into danger, pull out of cover, or gain a step.',attack:'Push or pull a foe into a hazard, wall, or burst footprint.',risk:'Guard reduces force; existing Anchored stops it.',detail:'All pushes and pulls combine before displacement, so opposing forces can cancel. A blocked forced step into a ruin or barrier causes 1 environmental damage and Concussed. Fighters and map edges stop travel without that impact.',exampleIds:['gust','vacuum','tailwind']},
+ light:{use:'Recover health, remove ailments, prevent new control.',attack:'Radiant hits finish weakened foes; Clarity protects a close advance.',risk:'Light ground also protects enemies from control.',detail:'Fresh Clarity blocks new Blind, Rooted, Chilled and Concussed immediately; it does not remove existing ailments. Cleansing does. Healing competes with damage for an action; existing Wither reduces aggregate recovery.',exampleIds:['radiant_bolt','clear_sight','aegis']},
+ dark:{use:'Tax future healing and punish a depleted enemy.',attack:'Wither first, then land a damage volley before the enemy can recover.',risk:'Cleanse removes Wither; theft only takes unspent Flux.',detail:'New Wither reduces later healing, not healing in the same exchange. Reap needs existing Wither for its bonus. Drain only heals after actual enemy spell damage; a completely prevented hit yields no drain.',exampleIds:['wither_bolt','reap','essence_theft']},
 };
 export const REFERENCE_ELEMENTS=ELEMENT_ORDER.map(element=>({element,name:elementName(element),role:ROLES[element],advanced:ELEMENT_BRANCHES[element],advancedAt:ADVANCED_AFFINITY_THRESHOLD,maxLevel:MAX_AFFINITY_LEVEL,toolkit:TOOLKITS[element],field:COMBINATIONS.find(field=>field.id===element)!,...ELEMENT_CHOICES[element]}));
 export const REFERENCE_INTERACTIONS=COMBINATIONS.filter(field=>field.elements.length>1);
@@ -77,6 +77,66 @@ export function referenceStatusDetail(id:StatusId,spellModel?:SpellModel){
 
 export type ReferencePurpose='shelter'|'recovery'|'movement'|'pressure'|'control'|'flux';
 export const REFERENCE_PURPOSES:readonly {id:ReferencePurpose;name:string}[]=[{id:'shelter',name:'Shelter'},{id:'recovery',name:'Recovery'},{id:'movement',name:'Movement'},{id:'pressure',name:'Pressure'},{id:'control',name:'Control'},{id:'flux',name:'Flux'}];
+/** One concrete offensive setup for every field recipe; these describe play, not extra rules. */
+const PRESSURE_PLAYS:Readonly<Record<string,string>>=Object.freeze({
+ steam:'Advance through enemy spell lanes under half damage, then counter-cast.',
+ magma:'Push a foe onto lava or make its slow crossing cost a turn.',
+ quagmire:'Wet and slow a target; line up Fire Lance for its earlier-Wet bonus.',
+ arcstorm:'Form the field under a likely landing to deal its first damage.',
+ hailcurrent:'Lay ice across a route; Chilled reduces the next move.',
+ sandblast:'Concuss a caster before its next plan to raise its Flux cost.',
+ solar_flare:'Take the field for Flux and a control-safe frontline advance.',
+ mirrorwater:'Hold a contested hex; recovery keeps your attacker in firing range.',
+ crystal_prism:'Ward a lead caster so it can hold range through the next volley.',
+ lightbend:'Use Haste to flank into range before the next burst.',
+ backdraft:'Burn the occupant, then keep pressure on it through the next round.',
+ black_ice:'Root a foe on the ice lane and aim a burst at its trapped position.',
+ blightsoil:'Wither a wounded target before the next healing window.',
+ shadowdraft:'Blind a caster, then close inside its reduced reach.',
+ penumbra:'Contest a spring for +2 Flux and spend it on a stronger cast.',
+ hot_spring:'Hold a slow crossing under cover; recovery keeps your attacker there.',
+ geyser:'Make a foe cross the lane; arrivals take the field’s damage.',
+ glasswind:'Concuss a caster, then cross under cover before its costly reply.',
+ siltstream:'Tax the enemy crossing; use Haste to flank into spell range.',
+ dawn_mist:'Cleanse your lead and cross spell lanes under half damage.',
+ hearthstone:'Anchor a frontliner on the firing hex and heal it there.',
+ lifeclay:'Ward a damaged caster, heal it, then answer from a stable lane.',
+ sunstorm:'Blind the opposing caster; bank Flux for your next volley.',
+ rainbow:'Take the extra step while healing your lead through the approach.',
+ sungrass:'Use its speed and cover to take a firing lane first.',
+ scaldshade:'Wither the target while its spells hit for less; set up a finisher.',
+ cinderbog:'Bait or pull a foe onto the slow, burning arrival hex.',
+ gravewater:'Cross the slow water, cleanse control, and press into spell range.',
+ ashwing:'Use Haste to breach range; weigh that push against Burn’s HP cost.',
+ rimeveil:'Blind a caster, then use the ice lane to close on its short reach.',
+ dustveil:'Hold a slow, sheltered lane; make rivals attack across open ground.',
+ ghostfire:'Form it under a foe for damage while your lead gains Clarity.',
+ moonwell:'Put it under a spell-heavy foe; the Flux tax can price out a cast.',
+ tombglass:'Wither a healer while cover lets your attacker keep the lane.',
+ starless_wind:'Take Haste for a flank; use the Flux tax to weaken a reply.',
+ weatherfront:'Form it beneath a foe for damage, then use Current to press forward.',
+ sunforge:'Cleanse your lead, recover Flux, and keep the attack moving.',
+ stormglass:'Cross under spell shelter; use cheap attacks while Flux is taxed.',
+ brass_canopy:'Take the firing lane under cover and use Flux to sustain casts.',
+ cloudgarden:'Heal the lead, then use Haste to close for a burst.',
+ obsidian_mire:'Choke the crossing and shelter your flank from return fire.',
+ black_squall:'Wither the target, then displace it across the hazardous route.',
+ hollow_furnace:'Concuss a caster; form the field under a foe for first-hit damage.',
+ peatstorm:'Slow the crossing and tax the Flux of a caster forced to hold it.',
+ eclipse_spring:'Pressure the spring occupant with heat; occupy it for healing and Flux.',
+ mourning_sun:'Wither the healer while Ward protects your advancing attacker.',
+ stillwater:'Cleanse your lead, then use the ice lane to flank into range.',
+ ghoststorm:'Blind a caster while spell shelter lets your front line close.',
+ mooncurrent:'Cross the ice lane to flank; the Flux gain funds the next cast.',
+ duskwood:'Own a spring: its extra return offsets the field’s Flux tax.',
+ summerheart:'Take the extra step under healing and Ward to reach firing range.',
+ black_weather:'Shelter your push; force the foe across hazard and Flux tax.',
+ amber_vigil:'Anchor your frontliner against pulls; cleanse it before the attack.',
+ dreaming_sky:'Trade reach for a healed, faster close-in attack.',
+ nightglass:'Push or bait a foe onto the hazard while your lead uses the cover.',
+ elder_grove:'Hold a spring with a frontliner; heal and refill before the next cast.',
+ worldseed:'Use its one-exchange shelter to cleanse, advance, and fund the next volley.',
+});
 /** Uses and cautions follow the complete recipe, never add constituent pair effects. */
 export function referenceMixtureTactics(field:CombinationDefinition){
  const m=field.mechanics,purposes:ReferencePurpose[]=[],cautions:string[]=[];
@@ -96,7 +156,7 @@ export function referenceMixtureTactics(field:CombinationDefinition){
  if(m.statuses?.some(s=>s.id==='wither'))cautions.push('Wither weakens later healing.');
  if(m.statuses?.some(s=>CONTROL.has(s.id)))cautions.push('Clarity / Resolve blocks its control.');
  if(!cautions.length)cautions.push(m.wellBonus?'The spring bonus only helps an occupant.':'Either side can use its benefit.');
- return {purposes,caution:cautions[0],details:cautions.slice(1),duration:field.mechanics.consume?'Disperses after this exchange.':'Formed fields last this exchange and the next unless changed or refreshed.'};
+ return {purposes,pressure:PRESSURE_PLAYS[field.id]??'Shape the ground, then use its movement or status to set up a focused spell.',caution:cautions[0],details:cautions.slice(1),duration:field.mechanics.consume?'Disperses after this exchange.':'Formed fields last this exchange and the next unless changed or refreshed.'};
 }
 
 export type ReferenceForm=Spell['shape']|'self';
