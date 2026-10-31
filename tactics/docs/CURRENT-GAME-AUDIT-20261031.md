@@ -62,7 +62,7 @@ The focused-profile Tower AI previously scored enemy occupancy at the current lo
 
 Validation on the focused `FOCUS42-B` opening diagnostic reduced the Treevor-and-Puddle fight from 12 exchanges before the change to 8 after it. An additional eight-seed first-room diagnostic covered each of the seven suggested solo starters (56 AI-versus-AI fights):
 
-| Starter | Mean exchanges | Max | Player-side wins | No-direct-damage rounds per run | Collapse runs |
+| Starter | Mean exchanges | Max | Owner-0 starter wins | No-direct-damage rounds per run | Collapse runs |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Steam | 5.13 | 11 | 7/8 | 1.13 | 2 |
 | Dusk | 7.25 | 11 | 8/8 | 2.63 | 3 |
@@ -72,6 +72,20 @@ Validation on the focused `FOCUS42-B` opening diagnostic reduced the Treevor-and
 | Oll' I | 4.38 | 11 | 7/8 | 1.25 | 1 |
 | Wa Bidi | 8.25 | 11 | 6/8 | 2.25 | 3 |
 
-These are reproducible AI pacing diagnostics, not evidence of human balance or starter fairness. In particular, the frequent player-side wins show why a human session and a side-swapped balance matrix are still needed before claiming competitive balance.
+These are reproducible AI pacing diagnostics, not evidence of human balance or starter fairness. This original sample kept the starter party on owner 0, so its win column alone could not separate seat from party strength.
+
+The follow-up [`tower-seat-swap-diagnostic.mjs`](../tests/tower-seat-swap-diagnostic.mjs) pairs the same eight seeded first rooms for each starter, then puts the starter party in each seat (112 AI-versus-AI matches total):
+
+| Starter | Starter-party wins / 16 | Mean exchanges | Draws |
+| --- | ---: | ---: | ---: |
+| Steam | 15 | 5.50 | 1 |
+| Dusk | 15 | 8.25 | 0 |
+| Red Baron | 16 | 5.69 | 0 |
+| Steezo | 14 | 7.00 | 1 |
+| Treevor and Puddle | 12 | 9.75 | 2 |
+| Oll' I | 16 | 5.00 | 0 |
+| Wa Bidi | 14 | 7.56 | 2 |
+
+Across the paired set, seat 0 won 52, seat 1 won 54, there were 6 draws and no match hit the 28-exchange diagnostic cap. The starter party won 102/112 (91%). This suggests the opening is forgiving under the mirrored game AI, with a slower and less reliable Stone opening; it does not establish what human players will experience or justify tuning encounter strength on its own. The controlled check separates seat symmetry from party outcome, but only a human playtest can assess whether the opening teaches well and feels satisfying.
 
 The follow-up candidate passed `npm run typecheck`, the full `npm test` suite (1,443 tests, 0 failures, 0 skipped), `npm run build`, `npm run docs:check` (221 links), and `npm run assets:check` (244 references). ESLint passed on `lib/tactics-v22.ts` and `tests/ai-targeting-v45.test.ts`; the repository-wide lint command exits with 301 errors and 316 warnings across the codebase. A local Worker smoke was not repeated for this AI-only follow-up. Public publication remains blocked on the official Sites publisher connection described above.
