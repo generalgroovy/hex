@@ -10,7 +10,7 @@ import {countersElementPulse} from './element-counter-v41.ts';
 import { CHAMPIONS, getChampion,validateAffinityAllocation,affinityTotal } from './roster-v13.ts';
 import {getCreature,teamPerkEffects,CREATURE_PERKS,CREATURE_BOND_RADIUS} from './campaign-creatures-v20.ts';
 import type {AffinityAllocation} from './roster-v11.ts';
-import {arenaRadius,arenaSize,arenaStarts,arenaPlayerCount,validatePlayerCount,arenaHeightAt,arenaWellAt,arenaBiomeAt,baseTerrainAt,generateArena,normalizeArenaMapId,type PlayerCount} from './arena-v17.ts';
+import {arenaRadius,arenaSize,arenaPlayerCount,validatePlayerCount,arenaHeightAt,arenaWellAt,arenaBiomeAt,baseTerrainAt,generateArena,normalizeArenaMapId,type PlayerCount} from './arena-v17.ts';
 import { ALL_SPELLS, availableSpellIds, getSignature, SPELLS, STATUS_DEFINITIONS, defaultLoadout, getSpell, spellCost, spellAccess, validateLoadout,validateLearnedSignatures,spellElements,effectiveSpell,describeSpell,spellScalingSummary } from './spells-v20.ts';
 import type { Biome } from './arena-v17.ts';
 import type { Spell, Status, StatusApplication, StatusId } from './spells-v20.ts';
@@ -66,7 +66,6 @@ const CONTROL: StatusId[] = ['rooted', 'chilled', 'concussed', 'blind'];
 const AILMENTS: StatusId[] = ['burn', 'wither', ...CONTROL];
 const DIRS: Point[] = [{ q: 1, r: 0 }, { q: 1, r: -1 }, { q: 0, r: -1 }, { q: -1, r: 0 }, { q: -1, r: 1 }, { q: 0, r: 1 }];
 
-const DEFAULT = ['oh_tipi', 'wa_bidi', 'treevor_mason'];
 const key = (a: Point) => `${a.q},${a.r}`;
 const same = (a: Point, b: Point) => a.q === b.q && a.r === b.r;
 const point = (a: Point): Point => ({ q: a.q, r: a.r });
@@ -832,6 +831,39 @@ export function chooseAIPlan(state: SimState, player: Player): TeamPlan {
   const enemyGuardWeight=new Map(enemies.map(enemy=>[enemy.id,enemyReadySpells.get(enemy.id)!.length ? 0.35 : 1]));
   const publicPulses=inhabitantPulses(state);
   const forecast=new Map(state.cells.map(cell=>[key(cell),previewField(cell,publicPulses.filter(pulse=>pulse.area.some(point=>same(point,cell))).flatMap(pulse=>pulse.elements))]));
+  type LandingForecast={cell:SimCell;weight:number};
+  const forecastCache=new Map<string,Map<string,LandingForecast[]>>();
+  // A bounded estimate from public movement, current ready spells, terrain and
+  // allied positions. It never reads sealed rival orders or treats a forecast
+  // as certainty. The current hex always keeps a meaningful share of the weight.
+  const forecastEnemyLandings=(allies:SimUnit[])=>{
+    const signature=[...allies].sort((a,b)=>a.id.localeCompare(b.id)).map(ally=>`${ally.id}:${key(ally)}`).join('|');
+    const cached=forecastCache.get(signature);if(cached)return cached;
+    const forecasts=new Map<string,LandingForecast[]>();
+    for(const enemy of enemies){
+      const start=getCell(state,enemy.q,enemy.r)!;
+      const attacks=(enemyReadySpells.get(enemy.id)??[]).map(id=>aiSpell(enemy,id)).filter(spell=>spell.damage>0||spell.push||spell.harmful?.length);
+      const desiredRange=attacks.length?Math.max(1,Math.min(3,Math.max(...attacks.map(spell=>spell.range)))):2;
+      const value=(cell:SimCell)=>{
+        const nearest=Math.min(...allies.map(ally=>distance(cell,ally)));
+        const proximity=nearest>desiredRange?-(nearest-desiredRange)*2.2:-(desiredRange-nearest)*.4;
+        const attackLane=attacks.some(spell=>allies.some(ally=>{
+          const target=getCell(state,ally.q,ally.r)!;
+          return spell.range>0&&distance(cell,target)<=resolvedSpellRange(enemy,spell,cell,target)+spell.radius
+            &&((spell.shape!=='sweep'&&spell.shape!=='wall')||aimDirection(cell,target)>=0)&&aiSight(cell,target);
+        }));
+        return proximity+(attackLane?4:0)+endgamePositionValue(state,cell,enemy.hp)+cell.height*.2+scoreField(forecast.get(key(cell))!,enemy,enemy,cell)*.2;
+      };
+      const stayScore=value(start),moves=legalMoves(state,enemy.id).filter(cell=>!state.units.some(other=>other.id!==enemy.id&&isAlive(other)&&same(other,cell))).map(cell=>({cell,score:value(cell)}));
+      if(!moves.length){forecasts.set(enemy.id,[{cell:start,weight:1}]);continue;}
+      const best=Math.max(...moves.map(candidate=>candidate.score));
+      if(best<stayScore-.8){forecasts.set(enemy.id,[{cell:start,weight:1}]);continue;}
+      const candidates=moves.filter(candidate=>candidate.score>=best-2.5),weights=candidates.map(candidate=>Math.exp(candidate.score-best)),total=weights.reduce((sum,weight)=>sum+weight,0);
+      const moveWeight=best>stayScore+.75 ? .62 : .4;
+      forecasts.set(enemy.id,[{cell:start,weight:1-moveWeight},...candidates.map((candidate,index)=>({cell:candidate.cell,weight:moveWeight*weights[index]/total}))]);
+    }
+    forecastCache.set(signature,forecasts);return forecasts;
+  };
   // Reachability is public information, not a prediction of the sealed enemy plan.
   const contested = new Set(enemies.flatMap((enemy) => legalMoves(state, enemy.id).map(key)));
   const sign = 1; const reserved = new Set<string>(); const orders: Order[] = [];
@@ -946,6 +978,7 @@ export function chooseAIPlan(state: SimState, player: Player): TeamPlan {
       if(same(candidate.cell,unit))delete order.move;else order.move=point(candidate.cell);
       landings = sortedUnits(state.units.filter(actor=>isAlive(actor)&&areAllies(state,actor.owner,player))).map(actor=>({...actor,...(orders.find(other=>other.unitId===actor.id)?.move??point(actor))}));
       possibleAllies=[...landings,...own.filter(actor=>{const landing=landings.find(other=>other.id===actor.id)!;return !same(actor,landing)&&contested.has(key(landing));})];
+      const predictedEnemyLandings=joint?forecastEnemyLandings(landings):new Map<string,LandingForecast[]>();
       const movementAdjustment=joint?Math.min(0,(candidate.score-baselineScore)*.2):0;
     const priorReleases=orders.filter(other=>other.unitId!==unit.id&&other.cast&&other.spellId).map(other=>{
       const caster=own.find(ally=>ally.id===other.unitId)!,spell=aiSpell(caster,other.spellId!);
@@ -1044,6 +1077,27 @@ export function chooseAIPlan(state: SimState, player: Player): TeamPlan {
             score+=2*((shelter(beforeForce,false)-shelter(afterForce,false))*(1-guardWeight)+(shelter(beforeForce,true)-shelter(afterForce,true))*guardWeight);
           }
           score-=scoreField(field,enemy,enemy,getCell(state,enemy.q,enemy.r)!)-scoreField(priorField(enemy),enemy);
+        }
+        if(joint)for(const enemy of enemies){
+          for(const landing of predictedEnemyLandings.get(enemy.id)??[]){
+            if(landing.weight<=0||same(landing.cell,enemy)||!area.some(cell=>same(cell,landing.cell)))continue;
+            const forecastEnemy={...enemy,q:landing.cell.q,r:landing.cell.r},targetSpell=spellAtCell(spell,target,landing.cell);
+            const field=resultAt(landing.cell),prior=priorCasts.filter(cast=>cast.area.some(cell=>same(cell,landing.cell))),earlier=prior.map(cast=>spellAtCell(cast.spell,cast.target,landing.cell));
+            let value=0;
+            const guardWeight=enemyGuardWeight.get(enemy.id)!;
+            for(const [guard,weight] of [[false,1-guardWeight],[true,guardWeight]] as const){
+              if(!weight)continue;
+              const beforeDamage=volleyDamage(priorField(landing.cell),forecastEnemy,earlier,guard),afterDamage=volleyDamage(field,forecastEnemy,[...earlier,targetSpell],guard);
+              value+=weight*((afterDamage-beforeDamage)*3+(beforeDamage<forecastEnemy.hp&&afterDamage>=forecastEnemy.hp?5:0));
+              if(spell.drain&&afterDamage>0)drainPotential+=landing.weight*weight*spell.drain;
+            }
+            value+=harmfulStatusValue(forecastEnemy,targetSpell,fieldEffects(field),earlier)+availableTheft(forecastEnemy,spell.steal??0,earlier);
+            const previous=getCell(state,landing.cell.q,landing.cell.r)!;
+            value-=scoreField(field,forecastEnemy,enemy,previous)-scoreField(priorField(landing.cell),forecastEnemy,enemy,previous);
+            // Reward a well-placed lead without letting one guessed landing
+            // outweigh an attack that already connects on the visible board.
+            score+=landing.weight*value*.7;
+          }
         }
         if(joint&&drainPotential)score+=scoreHealing(unit,drainPotential)*3;
         for (const ally of landings.filter((entry) => area.some((cell) => same(cell, entry)))) {

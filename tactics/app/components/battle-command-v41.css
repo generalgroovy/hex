@@ -39,8 +39,9 @@
 .bc41-battle .bc41-spells{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;flex:none}
 .bc41-battle .bc41-spells>button,.bc41-battle .bc41-spells>button:last-child{position:relative;display:grid;grid-template-columns:22px minmax(0,1fr);grid-template-rows:auto auto auto;align-content:center;align-items:start;gap:2px 5px;grid-column:auto;min-height:72px;height:auto;max-height:none;padding:6px 7px 6px 5px;border:1px solid #bbae8e;border-left:3px solid var(--element);border-radius:5px;background:#faf2d9;color:#293c31;text-align:left;box-shadow:0 1px #9c91751a;overflow:visible}
 .bc41-battle .bc41-spells[data-count="1"]>button,.bc41-battle .bc41-spells[data-count="3"]>button:last-child,.bc41-battle .bc41-spells[data-count="5"]>button:last-child{grid-column:1/-1;min-height:58px}
-.bc41-battle .bc41-spells>button>svg{grid-column:1;grid-row:1/3;max-width:22px}
+.bc41-battle .bc41-spells>button>svg{grid-column:1;grid-row:1;max-width:22px}
 .bc41-battle .bc41-spells>button>strong{grid-column:2;grid-row:1;display:block;font-size:11px;line-height:1.18;white-space:normal;overflow:visible;text-overflow:clip}
+.bc41-battle .bc41-spells>button>.tx-footprint-icon{grid-column:1;grid-row:2;width:22px;height:18px;align-self:center;justify-self:center;color:var(--element);opacity:.82}
 .bc41-battle .bc41-spells>button>small{grid-column:2;grid-row:2;display:block;font-size:10px;line-height:1.25;white-space:normal;color:#526253}
 .bc41-spell-effect{grid-column:1/-1;grid-row:3;font-size:10px;line-height:1.25;color:#495648}
 .bc41-battle .bc41-spells>button[aria-pressed="true"]{background:#fff7dc;outline:2px solid #126e69;outline-offset:-1px;border-color:#126e69;box-shadow:inset 0 -3px #126e69}
@@ -83,7 +84,7 @@
 .bc41-battle .bc41-actions button,.bc41-battle .bc41-order-tools button{min-height:44px}
 .bc41-actions b{font-size:15px}.bc41-actions small{font-size:12px}
 .bc41-battle .bc41-spells>button,.bc41-battle .bc41-spells>button:last-child{height:auto!important;min-height:76px;max-height:none;grid-template-rows:auto auto auto;overflow:hidden;align-content:start}
-.bc41-battle.s18-in-battle .bc41-spells>button>strong{display:block;font-size:14px;line-height:1.25;white-space:normal;overflow-wrap:anywhere;-webkit-line-clamp:unset;overflow:visible}
+.bc41-battle.s18-in-battle .bc41-spells>button>strong{display:block;font-size:14px;line-height:1.25;white-space:normal;overflow-wrap:normal;word-break:normal;-webkit-line-clamp:unset;overflow:visible}
 .bc41-battle .bc41-spells>button>small{font-size:12px;line-height:1.3;white-space:normal}
 .bc41-spell-effect{font-size:12px;line-height:1.3}
 .bc41-battle .bc41-preview{font-size:14px;line-height:1.4}.bc41-preview>strong,.bc41-spell-heading>strong{font-size:15px}.bc41-preview small{font-size:12px}
@@ -158,8 +159,8 @@
 .bc41-mobile-preview strong>b{font-size:16px;font-weight:400;flex:none}
 .bc41-mobile-preview small{display:block;font-size:12px;line-height:1.35;color:#52624c;overflow-wrap:anywhere}
 .bc41-mobile-preview>.bc41-compact-warning small{color:#a13e27;font-weight:700}
-/* Short landscape keeps the action set in view. Full effects remain in each
-   button's accessible name and the selected-action inspector. */
+/* Short landscape keeps a concise consequence visible beside the action set.
+   The selected-action inspector retains the full profile and assumptions. */
 @media(max-height:560px) and (min-width:600px){
  .bc41-battle .s18-workspace{grid-template-columns:min(328px,43vw) minmax(0,1fr)}
  .bc41-battle .s18-orders{padding:4px;gap:3px;scroll-padding-bottom:54px}
@@ -186,8 +187,8 @@
  .bc41-battle .bc41-spells .bc41-spell-effect{display:none}
  .bc41-battle .bc41-mobile-preview>.b24-insight-trigger{min-height:44px;padding:4px 7px}
  .bc41-mobile-preview strong{font-size:14px;line-height:1.2}
- .bc41-mobile-preview small{display:none}
- .bc41-mobile-preview>.bc41-compact-warning small{display:block;font-size:12px}
+ .bc41-mobile-preview small{display:block;font-size:11px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .bc41-mobile-preview>.bc41-compact-warning small{display:block;font-size:12px;white-space:normal;overflow:visible;text-overflow:clip}
  .bc41-battle .bc41-footer.s18-command-dock{grid-column:1/-1;bottom:-4px;margin:0!important;padding:3px 0 0;gap:3px}
  .bc41-battle .bc41-footer button{min-height:44px}
 }
@@ -209,8 +210,10 @@
  .bc41-battle .bc41-actions{grid-column:2;grid-row:1;align-self:stretch;gap:4px}.bc41-battle .bc41-actions button{min-height:64px;height:auto;flex-direction:column;gap:4px;padding:5px}.bc41-actions b{font-size:15px}.bc41-actions small{font-size:11px}
  .bc41-command>.b24-statuses{grid-column:1/-1}
  .bc41-battle .bc41-spells{grid-column:1/-1;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;grid-auto-rows:auto;min-width:0}
- .bc41-battle .bc41-spells>button,.bc41-battle .bc41-spells>button:last-child{grid-column:auto!important;min-height:68px!important;height:auto!important;max-height:none;grid-template-columns:18px minmax(0,1fr);grid-template-rows:auto auto;align-content:center;padding:5px;gap:3px}
- .bc41-battle .bc41-spells>button>svg{grid-row:1;width:18px;height:18px}.bc41-battle .bc41-spells>button>strong{font-size:13px;line-height:1.2}.bc41-battle .bc41-spells>button>small{grid-column:1/-1;grid-row:2;font-size:11px;line-height:1.3}
+  .bc41-battle .bc41-spells>button,.bc41-battle .bc41-spells>button:last-child{grid-column:auto!important;min-height:68px!important;height:auto!important;max-height:none;grid-template-columns:18px minmax(0,1fr);grid-template-rows:auto auto;align-content:center;padding:5px;gap:3px}
+  .bc41-battle .bc41-spells>button>svg{grid-row:1;width:18px;height:18px}.bc41-battle .bc41-spells>button>strong{font-size:13px;line-height:1.2}.bc41-battle .bc41-spells>button>small{grid-column:2;grid-row:2;font-size:10px;line-height:1.3}
+  .bc41-battle .bc41-spells>button>.tx-footprint-icon{grid-column:1;grid-row:2;width:18px;height:16px}
+  .bc41-battle .bc41-spells>button>strong{overflow-wrap:normal;word-break:normal}
  .bc41-battle .bc41-spells[data-count="2"],.bc41-battle .bc41-spells[data-count="4"]{grid-template-columns:repeat(2,minmax(0,1fr))}
  .bc41-spell-effect{display:none}.bc41-battle .bc41-preview,.bc41-battle .bc41-queued,.bc41-battle .bc41-order-tools{display:none}.bc41-mobile-preview{display:block;grid-column:1/-1;min-width:0}
  .bc41-command>.t23-link-toggle{grid-column:1/-1;min-height:44px;margin:0;padding:5px;font-size:13px}.bc41-command>.t23-link-toggle small{font-size:12px}

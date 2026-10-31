@@ -22,7 +22,7 @@ The principal hosts are [`CampaignGameV20`](../../app/components/CampaignGameV20
 | Surface | Current arrangement | Preserve when editing |
 | --- | --- | --- |
 | Desktop battle | Friendly fighters/actions on the left, battlefield in the center, rivals on the right. | Selected fighter, legal options, and commit controls must remain easy to find. Do not cover the relevant board area with repeated explanations. |
-| Narrow battle | The board and bounded order panel stack; the primary action remains available through the compact/sticky command layout. | Keep controls reachable at small height. Internal scrolling is intentional where content exceeds the panel; there is no universal “no scrolling anywhere” guarantee. |
+| Narrow battle | The board and bounded order panel stack; the primary action remains available through the compact/sticky command layout. Short landscape also keeps a one-line selected-action consequence beside the action set. | Keep controls reachable at small height. Internal scrolling is intentional where content exceeds the panel; there is no universal “no scrolling anywhere” guarantee. |
 | Tower route | Full-width route overview, reachable room cards, and one selected room detail. | Every lane/path should fit the overview. Small overview nodes have equivalent large room-card controls. |
 | Character/loadout menu | Current build, affinity, equipped spells, and inspected catalogue choice remain together. | Selection must show legality and consequence before replacing a slot. |
 | Guide | Compact comparison tables with filters/paging and optional detail cards. | Keep scanning useful; move timing/examples into inspection rather than repeating every rule in each row. |
@@ -31,7 +31,7 @@ Focus and overview serve different purposes. Overview shows formation and threat
 
 Natural ground, temporary elemental fields, and decorative scenery are different information layers. Do not make decorative movement resemble a hazard, walkable gap, or active targeting cue. Walls must read as blocking geometry. Current planning-field animation is bounded and applies to temporary fields; it is not blanket scenery sway.
 
-The intended art direction is coherent pixel characters, environment, effects, and advanced-element icons. This is a design requirement; it does not establish that every asset is artistically finished. Inspect assets at their actual displayed scale as well as at source resolution.
+The intended art direction is coherent pixel characters, environment, effects, and advanced-element icons. This is a design requirement; it does not establish that every asset is artistically finished. Inspect assets at their actual displayed scale as well as at source resolution. Spell choices pair their element icon with a small area-shape glyph, so players can compare targeting patterns before selecting one; the accessible name spells out the shape, and the board remains authoritative for the exact affected hexes.
 
 ## Input behavior
 
@@ -134,6 +134,8 @@ Interaction and spell lists are filtered/paged rather than expanded into an unbo
 Detail content should add timing, examples, counters, or a precise assumption. Repeating the same sentence under a tooltip heading is not useful progressive disclosure.
 
 ## Motion, sound, and recovery
+
+When a solo Tower battle is paused, [`TowerGameV23`](../../app/components/TowerGameV23.tsx) shows the saved round and the surviving enemies' current health with their existing portraits. This is a resume aid sourced from the saved battle snapshot; it must not reveal enemy orders or require opening the battle to recover basic context.
 
 Presentation preferences in [`presentation-preferences-v44.ts`](../../lib/presentation-preferences-v44.ts) default sound to off. Sound requires a user gesture to enable; UI/combat levels and reduced intensity are adjustable. Muting, changing level, and enabling sound during replay are handled by [`useBattlePresentationV44`](../../app/components/useBattlePresentationV44.ts) and [`useBattlePlaybackV44`](../../app/components/useBattlePlaybackV44.ts). Meaningful outcomes remain visible without sound.
 
