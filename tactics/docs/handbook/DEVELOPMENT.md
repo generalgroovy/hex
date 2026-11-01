@@ -83,6 +83,12 @@ The installed workflow's location is host-specific and is not a runtime dependen
 
 Deploying to another provider requires an explicit adaptation of Worker bindings, D1 persistence, migrations, routing and hosting identity. Copying `dist/client/` to a static host cannot support the multiplayer APIs. Changing public access, domain or production data is separate from committing source.
 
+### Separate short Pages host
+
+The separate Direct Upload project in [`../../../hosting/pages/wrangler.jsonc`](../../../hosting/pages/wrangler.jsonc) is live at [hex-9o4.pages.dev](https://hex-9o4.pages.dev). Its game modes are [Story](https://hex-9o4.pages.dev/story), [Tower solo](https://hex-9o4.pages.dev/tower), [Tower co-op](https://hex-9o4.pages.dev/tower?play=friends), and [Arena](https://hex-9o4.pages.dev/skirmish). Pages Advanced Mode runs the built Worker for server-rendered routes and `/api/*`, backed by its own Western Europe D1 database, `hex-multiplayer`. The original Sites host and its database remain independent; active rooms and private seat codes do not transfer between the hosts.
+
+For a fresh deployment, use a Wrangler login scoped to `pages:write` and `d1:write`. From `tactics/`, run `npm run build` and `npm run pages:stage`. Then, from `hosting/pages/`, apply remote D1 migrations and run `wrangler pages deploy ../../tactics/dist/pages-release --project-name hex --branch main`. The config pins the Cloudflare account and D1 database. Direct Upload does not deploy automatically on Git pushes; verify the production URL, routes, and online room creation after deployment.
+
 ## Saves, privacy and recovery
 
 Use `/saves` for validated export/import through the UI. Backups may include private multiplayer seat access; keep them out of Git and public issue attachments. Story/Tower progression, settings and tab-scoped seats are distinct from server room data. Read [Architecture](ARCHITECTURE.md) before changing storage keys or protocol versions.

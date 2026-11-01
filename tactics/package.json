@@ -13,6 +13,7 @@
     "typecheck": "node node_modules/typescript/bin/tsc --noEmit --incremental false",
     "docs:check": "node scripts/check-handbook.mjs",
     "assets:check": "node scripts/check-rsc-assets.mjs",
+    "pages:stage": "node scripts/stage-pages-deploy.mjs",
     "db:local": "node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 migrations apply DB --local --config wrangler.local.jsonc --persist-to .wrangler/state",
     "start": "node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js dev --config dist/server/wrangler.json --local --persist-to .wrangler/state --ip 127.0.0.1 --inspector-port 0",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
