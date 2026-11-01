@@ -52,7 +52,20 @@ await cp(clientRoot, outputRoot, { recursive: true });
 await writeFile(marker, `${markerText}\n`);
 await writeFile(
   path.join(outputRoot, "_worker.js"),
-  'export { default } from "../server/index.js";\n',
+  [
+    'import server from "../server/index.js";',
+    "",
+    "export default {",
+    "  async fetch(request, env, ctx) {",
+    '    if (env?.ASSETS && (request.method === "GET" || request.method === "HEAD")) {',
+    "      const asset = await env.ASSETS.fetch(request);",
+    "      if (asset.status !== 404) return asset;",
+    "    }",
+    "    return server.fetch(request, env, ctx);",
+    "  },",
+    "};",
+    "",
+  ].join("\n"),
 );
 
 console.log(`Staged ${outputRoot}`);
