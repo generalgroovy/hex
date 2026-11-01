@@ -9,7 +9,11 @@ export function rscCssManifestOrder(){
   name:'confluence:rsc-css-manifest-order',apply:'build',enforce:'post',
   configResolved(config){
    const manifest=config.plugins.find(plugin=>plugin.name==='rsc:virtual:vite-rsc/assets-manifest');
-   if(!manifest?.generateBundle||!config.plugins.some(plugin=>plugin.name==='vite:css-post'))throw new Error('RSC CSS compatibility hook could not find its build plugins. Review the pinned Vite/RSC versions.');
+   // Vinext also runs child builds that do not have the RSC asset manifest.
+   // The ordering hook only applies to the RSC client build; still fail when
+   // that manifest exists but the pinned Vite CSS extraction hook has drifted.
+   if(!manifest)return;
+   if(!manifest.generateBundle||!config.plugins.some(plugin=>plugin.name==='vite:css-post'))throw new Error('RSC CSS compatibility hook could not find its build plugins. Review the pinned Vite/RSC versions.');
    const hook=manifest.generateBundle;
    if(typeof hook==='function')manifest.generateBundle={order:'post',handler:hook};
    else if(typeof hook.handler==='function')manifest.generateBundle={...hook,order:'post'};
